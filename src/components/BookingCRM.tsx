@@ -144,8 +144,7 @@ export default function BookingCRM({
  handleApplySavedFilter,
  handleSaveCurrentFilter,
  handleDeleteSavedFilter,
- handleClearAllFilters,
- } = useSavedFilters(sectionTab, setSectionTab, initialStatusFilter);
+ handleClearAllFilters} = useSavedFilters(sectionTab, setSectionTab, initialStatusFilter);
  const [isAgentConfigOpen, setIsAgentConfigOpen] = useState(false);
  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -202,8 +201,7 @@ export default function BookingCRM({
  cityCounts,
  displayCityChips,
  handleAddCustomCity,
- handleRemoveCustomCity,
- } = useCityChips(leads, sectionTab, epkConfig, onUpdateEpkConfig, selectedCityFilter, setSelectedCityFilter);
+ handleRemoveCustomCity} = useCityChips(leads, sectionTab, epkConfig, onUpdateEpkConfig, selectedCityFilter, setSelectedCityFilter);
 
  const {
  interactionType, setInteractionType,
@@ -211,8 +209,7 @@ export default function BookingCRM({
  interactionResultado, setInteractionResultado,
  interactionAutor, setInteractionAutor,
  handleAddInteractionLog,
- handleDeleteInteractionLog,
- } = useInteractionLog(selectedLead, setSelectedLead, onUpdateLead);
+ handleDeleteInteractionLog} = useInteractionLog(selectedLead, setSelectedLead, onUpdateLead);
 
  const {
  templateTab, setTemplateTab,
@@ -226,16 +223,14 @@ export default function BookingCRM({
  handleOptimizeTemplate,
  handleTestPrompt,
  handleSaveTemplates,
- handleResetTemplate,
- } = useEmailTemplates();
+ handleResetTemplate} = useEmailTemplates();
 
  const {
  gmailUser, gmailToken,
  isSyncingGmail, gmailStatusMsg,
  handleGmailLogin,
  handleGmailLogout,
- handleSyncGmailForLead,
- } = useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
+ handleSyncGmailForLead} = useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
 
  const [filterByCampaign, setFilterByCampaign] = useState(Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)));
 
@@ -409,8 +404,7 @@ export default function BookingCRM({
  handleScenarioChange,
  handleOpenAdvancedSimulation,
  handleGenerateSimulationEmail,
- handleCommitSimulation,
- } = useNegotiationSimulation(selectedLead, setSelectedLead, onUpdateLead, setManualEmailStatus);
+ handleCommitSimulation} = useNegotiationSimulation(selectedLead, setSelectedLead, onUpdateLead, setManualEmailStatus);
 
 
  // Bulk enrich addresses for all venues & festivals
@@ -460,7 +454,7 @@ export default function BookingCRM({
  return norm ==='medio' || norm ==='productora';
  };
 
- const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
@@ -729,7 +723,7 @@ export default function BookingCRM({
  leadStatusDotColor(normalizeStatus(status));
 
  const getStatusBadgeClass = (status: LeadStatus | string) =>
- leadStatusBadgeClass(normalizeStatus(status), isStitchLight);
+ leadStatusBadgeClass(normalizeStatus(status));
 
  const getStatusLabel = (status: LeadStatus | string) =>
  leadStatusLabel(normalizeStatus(status), String(status));
@@ -942,10 +936,10 @@ export default function BookingCRM({
  };
 
 
- const subCardBg = isStitchLight ?'bg-[var(--bg)]/60' :'bg-[var(--surface)]';
- const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
- const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
+ const subCardBg = 'bg-[var(--bg)]/60';
+ const textTitle = 'text-[var(--ink)]';
+ const textSub = 'text-[var(--ink-2)]';
+ const textMuted = 'text-[var(--ink-2)]';
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !=='todos' ? 1 : 0) + (typeFilter !=='todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
  return (
@@ -1964,8 +1958,7 @@ export default function BookingCRM({
  idsToDelete.forEach(id => onDeleteLead(id));
  }
  }}
- sectionTab={sectionTab}
- isStitchLight={isStitchLight}
+ sectionTab={sectionTab}={}
  />
 
  {/* Main Display Area: Map vs List */}
@@ -1974,8 +1967,7 @@ export default function BookingCRM({
  leads={filteredLeads}
  selectedLead={selectedLead}
  onSelectLead={handleOpenLead}
- onUpdateLead={onUpdateLead}
- isStitchLight={isStitchLight}
+ onUpdateLead={onUpdateLead}={}
  activeCityFilter={selectedCityFilter}
  activeRegionFilter=""
  />
@@ -2024,8 +2016,7 @@ export default function BookingCRM({
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
  onDeleteLead={onDeleteLead}
- sectionTab={sectionTab}
- isStitchLight={isStitchLight}
+ sectionTab={sectionTab}={}
  activeCampaign={activeCampaign}
  onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
  isUploadingLeadLogo={isUploadingLeadLogo}
@@ -2045,8 +2036,7 @@ export default function BookingCRM({
  normalizeStatus={normalizeStatus}
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
- sectionTab={sectionTab}
- isStitchLight={isStitchLight}
+ sectionTab={sectionTab}={}
  activeCampaign={activeCampaign}
  onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
  isUploadingLeadLogo={isUploadingLeadLogo}
@@ -2094,7 +2084,7 @@ export default function BookingCRM({
 
  {isTemplatesSectionOpen && (
  <div className="mt-5 pt-4800/80 space-y-6">
- <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${'-slate-100'}`}>
  <div>
  <h4 className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
  Pautas diferenciadas por categoría
@@ -2103,7 +2093,7 @@ export default function BookingCRM({
 
  {/* Template Tab Selector (7 Categories) */}
  <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  {[
  { id:'salas', label:'🏛️ Salas', icon: Building2 },
@@ -2125,9 +2115,7 @@ export default function BookingCRM({
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ?' bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
- : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />
@@ -2145,14 +2133,14 @@ export default function BookingCRM({
  <>
  <div className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
  templateTab ==='medios'
- ? isStitchLight ?'bg-[var(--alert)]/15 text-[var(--alert)]' :'bg-[var(--alert)]/15 text-[var(--alert)]'
+ ? 'bg-[var(--alert)]/15 text-[var(--alert)]'
  : templateTab ==='grupos'
- ? isStitchLight ? ('bg-[var(--surface)]/15 text-[var(--ok)]') :'bg-[var(--surface)]/15/30 text-[var(--ok)]'
+ ? 'bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'
- ? isStitchLight ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'
+ ? 'bg-[var(--acc)]/10 text-[var(--acc)]'
  : templateTab ==='ayuntamientos'
  ?' bg-[var(--acc)]/10 text-[var(--acc)]/70'
- : isStitchLight ?'bg-[var(--acc)]/15 text-[var(--ink-2)]' :'bg-[var(--acc)]/15 text-[var(--ink-2)]'
+ : 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}>
  <div>
  <strong>{activeTemplate.title}</strong>
@@ -2173,7 +2161,7 @@ export default function BookingCRM({
  )}
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Asunto del Email por Defecto</label>
+ <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>Asunto del Email por Defecto</label>
  <input
  id="template-subject"
  type="text"
@@ -2186,7 +2174,7 @@ export default function BookingCRM({
  </div>
 
  <div className="space-y-1.5">
- <label className={`block text-[10px] font-sans tracking-wider ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
+ <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
  <textarea
  id="template-body"
  rows={8}
@@ -2306,30 +2294,30 @@ export default function BookingCRM({
  </div>
  </div>
 
- <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
+ <ExampleThreadsSection category={templateTab}={} textSub={textSub} />
 
  {/* Success Stats Badge + Reset Button */}
  {templateStats && templateStats[templateTab] && (
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
  <span className="text-[9px] font-sans text-[var(--ink-2)]">📊 Resultados:</span>
- <span className={`text-[9px] font-sans px-2 py-1 rounded ${isStitchLight ?'bg-[var(--tentative)]/10 text-[var(--tentative)]' :'bg-[var(--tentative)]/10 text-[var(--acc)]/80'}`}>
+ <span className={`text-[9px] font-sans px-2 py-1 rounded ${'bg-[var(--tentative)]/10 text-[var(--tentative)]'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
- <span className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-[var(--ok)]/10 text-[var(--ok)]' :'bg-[var(--ok)]/10 text-[var(--ok)]') : (isStitchLight ?'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]' :'bg-[var(--accent-alt)]/10 text-[var(--acc)]/80')}`}>
+ <span className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? ('bg-[var(--ok)]/10 text-[var(--ok)]') : ('bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]')}`}>
  {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
  </span>
  </div>
  {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
  <div className="space-y-1">
  {templateStats[templateTab].invalidEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-[var(--alert)]/10 text-[var(--alert)]' :'bg-[var(--alert)]/90 text-[var(--alert)]/60'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${'bg-[var(--alert)]/10 text-[var(--alert)]'}`}>
  <span>⚠️</span>
  <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
  </div>
  )}
  {templateStats[templateTab].bouncedEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-[var(--acc)]/10 text-[var(--accent-alt)]' :'bg-[var(--accent-alt)]/10 text-[var(--acc)]/80'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${'bg-[var(--acc)]/10 text-[var(--accent-alt)]'}`}>
  <span>📬</span>
  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
  </div>
@@ -2356,9 +2344,7 @@ export default function BookingCRM({
  onClick={handleTestPrompt}
  disabled={isTestingPrompt}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
- isStitchLight
- ?'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover:-neutral-700 text-[var(--ink)]'
+ 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
  {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
@@ -2368,9 +2354,7 @@ export default function BookingCRM({
  id="template-btn-reset"
  onClick={handleResetTemplate}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
  >
@@ -2391,12 +2375,10 @@ export default function BookingCRM({
 
  {/* Test / Prompt Output side */}
  <div className={` rounded-[var(--r-m)] p-4 flex flex-col justify-between ${
- isStitchLight
- ?'bg-[var(--bg)]'
- :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div className="space-y-3">
- <div className={`flex items-center gap-2 pb-2 ${isStitchLight ?'-slate-200' :'-bg-[var(--surface)]'}`}>
+ <div className={`flex items-center gap-2 pb-2 ${'-slate-200'}`}>
  <span className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`} />
  <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
  </div>
@@ -2408,9 +2390,7 @@ export default function BookingCRM({
  {testPromptResult ? (
  <div className="space-y-3">
  <div className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  {testPromptResult}
  </div>
@@ -2493,9 +2473,7 @@ export default function BookingCRM({
  </div>
  ) : (
  <div className={`border-2 rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
- isStitchLight
- ?' text-[var(--ink-2)]'
- :' text-[var(--ink-2)]'
+ ' text-[var(--ink-2)]'
  }`}>
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
  </div>
@@ -2518,8 +2496,7 @@ export default function BookingCRM({
  {/* ADD NEW LEAD / MEDIO MODAL */}
  <NegotiationSimulationModal
  isOpen={isSimulatingAvanzado}
- selectedLead={selectedLead}
- isStitchLight={isStitchLight}
+ selectedLead={selectedLead}={}
  textSub={textSub}
  textMuted={textMuted}
  simulationRole={simulationRole}
@@ -2544,8 +2521,7 @@ export default function BookingCRM({
 
  <AddLeadModal
  isOpen={isAddingLeadModalOpen}
- sectionTab={sectionTab}
- isStitchLight={isStitchLight}
+ sectionTab={sectionTab}={}
  textSub={textSub}
  newLeadData={newLeadData}
  setNewLeadData={setNewLeadData}
@@ -2561,8 +2537,7 @@ export default function BookingCRM({
  />
 
  <GooglePlacesExplorerModal
- isOpen={isPlacesExplorerOpen}
- isStitchLight={isStitchLight}
+ isOpen={isPlacesExplorerOpen}={}
  existingLeads={leads}
  activeCampaign={activeCampaign}
  bandGenre={epkConfig?.genero || (currentUser as any)?.genero ||''}
@@ -2574,8 +2549,7 @@ export default function BookingCRM({
  />
 
  <ExcelImportModal
- isOpen={isExcelImportOpen}
- isStitchLight={isStitchLight}
+ isOpen={isExcelImportOpen}={}
  existingLeads={leads}
  onClose={() => setIsExcelImportOpen(false)}
  onSuccess={(importedLeads, updatedCount) => {
@@ -2590,8 +2564,7 @@ export default function BookingCRM({
  isOpen={isContactEnricherOpen}
  onClose={() => setIsContactEnricherOpen(false)}
  leads={leads}
- onUpdateLead={onUpdateLead}
- isStitchLight={isStitchLight}
+ onUpdateLead={onUpdateLead}={}
  />
 
  <AgentAutonomySettingsModal
@@ -2599,8 +2572,7 @@ export default function BookingCRM({
  onClose={() => setIsAgentConfigOpen(false)}
  bandName={effectiveBandName}
  bandId={currentBandId || currentUser?.band_id ||''}
- currentUser={currentUser}
- isStitchLight={isStitchLight}
+ currentUser={currentUser}={}
  onOpenTemplatesSection={() => {
  setIsTemplatesSectionOpen(true);
  setTimeout(() => {
@@ -2624,8 +2596,7 @@ export default function BookingCRM({
  onClose={() => setIsDuplicatesModalOpen(false)}
  leads={leads}
  onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
- onDeleteLead={onDeleteLead}
- isStitchLight={isStitchLight}
+ onDeleteLead={onDeleteLead}={}
  />
 
 

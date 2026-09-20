@@ -9,15 +9,13 @@ interface CRMContactEnricherModalProps {
  onClose: () => void;
  leads: Lead[];
  onUpdateLead?: (id: string, updatedFields: Partial<Lead>) => void;
- isStitchLight?: boolean;
 }
 
 export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = ({
  isOpen,
  onClose,
  leads,
- onUpdateLead,
- isStitchLight = false
+ onUpdateLead= false
 }) => {
  const [isProcessing, setIsProcessing] = useState(false);
  const [processedCount, setProcessedCount] = useState(0);
@@ -77,7 +75,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] p-6 overflow-hidden ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <div className="flex items-center justify-between pb-4">
  <div className="flex items-center gap-2">
@@ -99,7 +97,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  </div>
 
  <div className="my-5 space-y-4 text-xs">
- <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${'bg-[var(--bg)]'}`}>
  <div className="flex items-center justify-between mb-2">
  <span className="font-semibold text-[var(--ink)]">Salas con información incompleta:</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>

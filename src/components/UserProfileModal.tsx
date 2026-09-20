@@ -8,8 +8,7 @@ import {
  PreferenciaTema,
  guardarPreferencia as guardarPreferenciaEspectro,
  leerPreferencia as leerPreferenciaEspectro,
- resolverTema as resolverTemaEspectro,
-} from'../utils/temaEspectro';
+ resolverTema as resolverTemaEspectro} from'../utils/temaEspectro';
 import { uploadFileToServer } from'../utils/audioStorage';
 import { api, getAuthHeaders } from'../services/api';
 import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from'../utils/planPermissions';
@@ -27,7 +26,6 @@ interface UserProfileModalProps {
  currentUser: User;
  onClose: () => void;
  onUpdateUser: (updatedUser: User) => void;
- isStitchLight?: boolean;
  isAdmin?: boolean;
  onOpenBandManagement?: () => void;
  currentTheme?: ThemeName;
@@ -48,8 +46,7 @@ interface UserProfileModalProps {
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  currentUser,
  onClose,
- onUpdateUser,
- isStitchLight,
+ onUpdateUser
  isAdmin,
  onOpenBandManagement,
  currentTheme,
@@ -337,14 +334,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
  className={`w-full max-w-md rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)]' 
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
+ '-slate-200 bg-[var(--bg)]'
  }`}>
  <div className="flex items-center gap-3">
  <div 
@@ -392,9 +387,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Plan Suscrito & Upgrade Section */}
  <div className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${
- isStitchLight 
- ?'bg-[var(--bg)]' 
- :'bg-gradient-to-r from-amber-950/30 via-[var(--surface)] to-[var(--surface)] /30'
+ 'bg-[var(--bg)]'
  }`}>
  <div className="flex items-center justify-between gap-3">
  <div className="flex items-center gap-2.5">
@@ -448,7 +441,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setName(e.target.value)}
  placeholder="Tu nombre..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-emerald-500/50'
+ 'bg-[var(--bg)]'
  }`}
  required
  />
@@ -465,7 +458,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setInstrument(e.target.value)}
  placeholder="Ej: Violín, Percusión, Batería, Técnico de Sonido"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-emerald-500/50'
+ 'bg-[var(--bg)]'
  }`}
  />
  </div>
@@ -501,7 +494,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </label>
 
  <div className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-3">
  <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden flex items-center justify-center p-1 shrink-0 relative group">
@@ -634,7 +627,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandName(e.target.value)}
  placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -648,7 +641,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandStyle(e.target.value)}
  placeholder="Ej. Indie Rock, Pop..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -660,7 +653,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandLocation(e.target.value)}
  placeholder="Ej. Madrid, Barcelona..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -685,9 +678,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`p-2 rounded-[var(--r-s)] text-left text-[11px] transition-all cursor-pointer ${
  isPlanSelected
  ?'bg-[var(--acc)]/20 /80 text-[var(--acc)]/70'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
  }`}
  >
  <p className="font-bold truncate text-[10px]">{planDef.name.split('')[0]}</p>
@@ -771,7 +762,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <p className="text-[11px] text-[var(--ink-2)]">
  Selecciona tu proyecto principal por defecto o gestiona tus bandas activas:
@@ -788,9 +779,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`w-full p-2.5 rounded-[var(--r-m)] flex items-center justify-between gap-3 transition-all ${
  isSelected
  ?'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ : 'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <button
@@ -869,9 +858,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 active:scale-95 ${
  isSelected
  ?'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70 font-bold'
- : isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover: hover:text-[var(--ink)]'
+ : 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-2 min-w-0">
@@ -893,7 +880,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setShowAppearance(!showAppearance)}
  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
+ 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -1031,7 +1018,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={() => setShowAgentConfig(true)}
  className={`w-full p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:'
+ 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -1062,7 +1049,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Dejar en blanco para mantener la actual..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-0/50'
+ 'bg-[var(--bg)]'
  }`}
  />
  </div>
@@ -1078,7 +1065,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setConfirmPassword(e.target.value)}
  placeholder="Repite la nueva contraseña..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)] focus:-amber-0/50'
+ 'bg-[var(--bg)]'
  }`}
  />
  </div>
@@ -1103,9 +1090,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onOpenBandManagement();
  }}
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
- isStitchLight
- ?'bg-[var(--tentative)]/5 hover:bg-[var(--acc)]/15 text-[var(--ink-2)]'
- :'bg-[var(--tentative)]/15 -indigo-500/30 hover:-indigo-500/60 text-[var(--tentative)]/40'
+ 'bg-[var(--tentative)]/5 hover:bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex items-center gap-2.5">
@@ -1140,7 +1125,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 flex justify-between items-center ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
+ '-slate-200 bg-[var(--bg)]'
  }`}>
  {(isAdmin || currentUser.role ==='leader' || currentUser.role ==='admin') && onOpenBandManagement ? (
  <button
@@ -1171,7 +1156,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
  <div className={`w-full max-w-lg rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
@@ -1395,8 +1380,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onClose={() => setShowAgentConfig(false)}
  bandName={activeBandName || currentUser.bandName}
  bandId={currentUser.band_id}
- currentUser={currentUser}
- isStitchLight={isStitchLight}
+ currentUser={currentUser}={}
  />
  )}
  </div>

@@ -9,7 +9,6 @@ import { useLanguage, SUPPORTED_LANGUAGES } from'../context/LanguageContext';
 
 interface LoginModalProps {
  onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
- isStitchLight?: boolean;
 }
 
 type ViewState ='login' |'register' |'plans' |'activate' |'reset-password';

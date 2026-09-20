@@ -10,8 +10,7 @@ interface AddSongsToSetlistModalProps {
  isOpen: boolean;
  songs: Song[];
  existingSongIds: string[];
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  onClose: () => void;
  onAddSongs: (songIds: string[]) => void;
 }
@@ -20,11 +19,9 @@ export function AddSongsToSetlistModal({
  isOpen,
  songs,
  existingSongIds,
- colors,
- isStitchLight,
+ colors
  onClose,
- onAddSongs,
-}: AddSongsToSetlistModalProps) {
+ onAddSongs}: AddSongsToSetlistModalProps) {
  const [search, setSearch] = useState('');
  const [onlyFavoritos, setOnlyFavoritos] = useState(false);
  const [albumFilter, setAlbumFilter] = useState('todos');
@@ -114,7 +111,7 @@ export function AddSongsToSetlistModal({
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar por título o tonalidad..."
  className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -187,8 +184,7 @@ export function AddSongsToSetlistModal({
  className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
  isSelected
  ?'bg-[var(--surface)]/15/50'
- : isStitchLight
- ?'bg-[var(--bg)] hover:bg-[var(--sunken)]'
+ :?'bg-[var(--bg)] hover:bg-[var(--sunken)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80'
  }`}
  >

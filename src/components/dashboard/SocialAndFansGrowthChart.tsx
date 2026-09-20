@@ -22,7 +22,6 @@ interface SocialAndFansGrowthChartProps {
  fans?: Fan[];
  epkConfig?: Partial<EPKConfig>;
  colors?: ThemeColors;
- isStitchLight?: boolean;
  bandName?: string;
  bandId?: string;
  onNavigate?: (view: any, options?: any) => void;
@@ -32,8 +31,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  metrics = [],
  fans = [],
  epkConfig,
- colors,
- isStitchLight = false,
+ colors= false,
  bandName ='Bakandeya',
  bandId,
  onNavigate
@@ -79,8 +77,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  tiktok: hasTikTok,
  youtube: hasYouTube,
  spotify: hasSpotify,
- fans: true,
- }));
+ fans: true}));
 
  // Selected time period state (7d, 30d, 90d, 1y, all)
  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('30d');
@@ -92,8 +89,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  tiktok: hasTikTok,
  youtube: hasYouTube,
  spotify: hasSpotify,
- fans: true,
- });
+ fans: true});
  }, [hasInstagram, hasTikTok, hasYouTube, hasSpotify]);
 
  // Calculate fan statistics from database
@@ -351,8 +347,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  tiktok: channel ==='tiktok',
  youtube: channel ==='youtube',
  spotify: channel ==='spotify',
- fans: channel ==='fans',
- });
+ fans: channel ==='fans'});
  };
 
  const selectAllChannels = () => {
@@ -361,17 +356,14 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  tiktok: hasTikTok,
  youtube: hasYouTube,
  spotify: hasSpotify,
- fans: true,
- });
+ fans: true});
  };
 
  const hasAnyChannelSelected = Object.values(selectedChannels).some(Boolean);
 
  return (
  <div className={`p-5 rounded-[var(--r-l)] transition-all ${
- isStitchLight 
- ?'bg-[var(--bg)]/90 text-[var(--ink)]' 
- :'bg-[var(--surface)]/90 text-[var(--ink)]'
+ 'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  {/* Header Section */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 /60">
@@ -383,7 +375,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </div>
  <div>
  <h3 className={`text-sm font-bold font-display tracking-wider flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'
+ 'text-[var(--ink)]'
  }`}>
  Evolución de Redes Sociales & Base de Fans en BBDD
  <span className="text-[9px] px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] font-sans font-normal flex items-center gap-1">
@@ -528,9 +520,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  {/* Card 5: Fans Registrados en Base de Datos (Formulario Únete) */}
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${
- isStitchLight 
- ?'bg-[var(--accent-alt)]/10' 
- :'bg-gradient-to-br from-amber-950/30 to-[var(--surface)] /40'
+ 'bg-[var(--accent-alt)]/10'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
@@ -565,7 +555,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <span className="font-bold">Periodo:</span>
  </span>
  <div className={`flex items-center gap-1 p-0.5 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'
+ 'bg-[var(--sunken)]'
  }`}>
  {TIME_PERIOD_OPTIONS.map(opt => {
  const isSelected = selectedPeriod === opt.id;
@@ -577,9 +567,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer ${
  isSelected
  ?' bg-gradient-to-r from-[var(--acc)] to-amber-600 text-[var(--ink)]'
- : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
- :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+ : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
  }`}
  title={opt.label}
  >
@@ -608,9 +596,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="button"
  onClick={selectAllChannels}
  className={`text-[9px] font-sans px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :' bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  title="Restaurar y mostrar todos los canales disponibles"
  >
@@ -827,7 +813,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  </linearGradient>
  </defs>
 
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ?'var(--hair)' :'var(--ink-2)'} />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'var(--hair)'} />
 
  <XAxis 
  dataKey="fecha" 
@@ -853,14 +839,14 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
  <Tooltip 
  contentStyle={{ 
- backgroundColor: isStitchLight ?'#ffffff' :'var(--surface)', 
- borderColor: isStitchLight ?'var(--hair)' :'var(--ink-2)',
+ backgroundColor: '#ffffff', 
+ borderColor: 'var(--hair)',
  borderRadius:'10px',
  fontSize:'11px',
  fontFamily:'monospace',
  boxShadow:'0 10px 25px -5px rgba(0,0,0,0.4)'
  }}
- labelStyle={{ fontWeight:'bold', color: isStitchLight ?'var(--ink)' :'#ffffff', marginBottom:'4px' }}
+ labelStyle={{ fontWeight:'bold', color: 'var(--ink)', marginBottom:'4px' }}
  formatter={(value: any, name: any) => {
  const num = Number(value || 0);
  const formatted = num >= 1000 ? `${num.toLocaleString()} (${(num / 1000).toFixed(1)}k)` : `${num}`;

@@ -5,7 +5,6 @@ import { BandEmailAccountStatus } from'../types';
 
 interface EmailAccountConfigProps {
  bandId: string;
- isStitchLight?: boolean;
 }
 
 type Provider ='gmail' |'outlook' |'other';
@@ -27,7 +26,7 @@ const PROVIDER_PRESETS: Record<Exclude<Provider,'other'>, { smtp_host: string; s
  }
 };
 
-export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, isStitchLight = false }) => {
+export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId= false }) => {
  const [loading, setLoading] = useState<boolean>(true);
  const [saving, setSaving] = useState<boolean>(false);
  const [feedback, setFeedback] = useState<{ type:'success' |'error'; message: string } | null>(null);
@@ -208,7 +207,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  if (loading) {
  return (
  <div className={`p-6 rounded-[var(--r-l)] flex items-center justify-center gap-3 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'
+ 'bg-[var(--surface)]'
  }`}>
  <Loader2 className="w-5 h-5 animate-spin text-[var(--ink-2)]" />
  <span className="text-xs font-sans text-[var(--ink-2)]">Comprobando cuenta de email conectada...</span>
@@ -218,9 +217,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
 
  return (
  <div className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${
- isStitchLight
- ?'bg-[var(--surface)]'
- :'bg-[var(--surface)]/70 text-[var(--ink)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 /60">
  <div className="flex items-center gap-2">
@@ -355,9 +352,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
  provider === p
  ?'bg-[var(--acc)]/20/80 text-[var(--tentative)]/40'
- : isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 /80 text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink-2)]'
+ : 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  {p ==='gmail' ?'Gmail' : p ==='outlook' ?'Outlook' :'Otro (manual)'}
@@ -397,7 +392,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
  </div>
 
  <div className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 ${
- isStitchLight ?'bg-[var(--tentative)]/5/80 text-[var(--tentative)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--tentative)]/5/80 text-[var(--tentative)]'
  }`}>
  <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[var(--ink-2)]" />
  <span>

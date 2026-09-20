@@ -582,8 +582,7 @@ export default function App() {
  medios: leads.filter(l => isMedio(l)).length,
  management: leads.filter(l => isManagement(l)).length,
  bandas: bandsCount,
- calendario: totalEvents === 0 ? 0 : `${activeEvents}/${totalEvents}`,
- } as Record<string, number | string>;
+ calendario: totalEvents === 0 ? 0 : `${activeEvents}/${totalEvents}`} as Record<string, number | string>;
  }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals, bandsCount]);
 
  // Vista agrupada del menú (secciones colapsables) para planes con menú largo y para `promo_plus`/`promo_music`;
@@ -666,7 +665,6 @@ export default function App() {
  ) : (
  <LoginModal
  onLoginSuccess={handleLoginSuccess}
- isStitchLight={false}
  />
  );
  }
@@ -1556,8 +1554,7 @@ export default function App() {
  onAddMetric={handleAddMetric}
  onUpdateMetric={handleUpdateMetric}
  onDeleteMetric={handleDeleteMetric}
- colors={colors}
- isStitchLight={false}
+ colors={colors}={false}
  onNavigate={handleNavigate}
  isPromo={isPromoPlan}
  onUpdateConcert={handleUpdateConcert}
@@ -1654,8 +1651,7 @@ export default function App() {
  currentUser={currentUser}
  users={bandUsers}
  onClose={() => setShowUserManagementModal(false)}
- onRefreshUsers={fetchState}
- isStitchLight={false}
+ onRefreshUsers={fetchState}={false}
  />
  )}
 
@@ -1668,8 +1664,7 @@ export default function App() {
  setCurrentUser(updated);
  localStorage.setItem('bakandeya_user', JSON.stringify(updated));
  fetchState();
- }}
- isStitchLight={false}
+ }}={false}
  isAdmin={isAdmin}
  onOpenBandManagement={() => setShowUserManagementModal(true)}
  currentTheme={currentTheme}
@@ -1691,8 +1686,7 @@ export default function App() {
  {/* Font Selector Modal */}
  {showFontModal && (
  <FontSelectorModal
- onClose={() => setShowFontModal(false)}
- isStitchLight={false}
+ onClose={() => setShowFontModal(false)}={false}
  currentFont={currentFont}
  onSelectFont={(f) => {
  handleFontChange(f);

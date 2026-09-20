@@ -33,7 +33,6 @@ interface LeadDuplicatesModalProps {
  leads: Lead[];
  onUpdateLead?: (lead: Lead) => void;
  onDeleteLead?: (id: string) => void;
- isStitchLight?: boolean;
 }
 
 export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
@@ -41,8 +40,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClose,
  leads,
  onUpdateLead,
- onDeleteLead,
- isStitchLight = false
+ onDeleteLead= false
 }) => {
  const [selectedFilter, setSelectedFilter] = useState<string>('all');
  const [isProcessing, setIsProcessing] = useState(false);
@@ -201,25 +199,20 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  same_email: rawGroups.filter(g => g.matchReason ==='same_email').length,
  same_name_and_city: rawGroups.filter(g => g.matchReason ==='same_name_and_city').length,
  similar_name_same_city: rawGroups.filter(g => g.matchReason ==='similar_name_same_city').length,
- same_website: rawGroups.filter(g => g.matchReason ==='same_website').length,
- };
+ same_website: rawGroups.filter(g => g.matchReason ==='same_website').length};
 
  return (
  <ModalPortal>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-all ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Header */}
  <div
  className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${
- isStitchLight
- ?'bg-[var(--bg)]'
- :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -235,7 +228,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {duplicateGroups.length} {duplicateGroups.length === 1 ?'grupo' :'grupos'}
  </span>
  </div>
- <p className={`text-xs mt-0.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <p className={`text-xs mt-0.5 ${'text-[var(--ink-2)]'}`}>
  Detecta salas y contactos repetidos por email idéntico, nombre y ciudad, o dominios coincidentes.
  </p>
  </div>
@@ -245,9 +238,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  type="button"
  onClick={onClose}
  className={`p-2 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight
- ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ 'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -265,7 +256,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {/* Controls & Filter Bar */}
  <div
  className={`p-3 sm:px-5 flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]/60' :'bg-[var(--surface)]/40'
+ 'bg-[var(--sunken)]/60'
  }`}
  >
  {/* Filter Pills */}
@@ -276,9 +267,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='all'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Todos ({reasonCounts.all})
@@ -290,9 +279,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_email'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Mismo Email ({reasonCounts.same_email})
@@ -305,9 +292,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_name_and_city'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Mismo Nombre y Ciudad ({reasonCounts.same_name_and_city})
@@ -320,9 +305,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='similar_name_same_city'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Nombre Similar ({reasonCounts.similar_name_same_city})
@@ -335,9 +318,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] font-medium transition cursor-pointer shrink-0 ${
  selectedFilter ==='same_website'
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Misma Web ({reasonCounts.same_website})
@@ -378,9 +359,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  <div
  key={group.id}
  className={`rounded-[var(--r-l)] p-4 transition-all ${
- isStitchLight
- ?'bg-[var(--bg)]/70'
- :'bg-[var(--surface)]/60 /90'
+ 'bg-[var(--bg)]/70'
  }`}
  >
  {/* Group Top Info */}
@@ -415,12 +394,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  key={lead.id}
  className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-all ${
  isSuggested
- ? isStitchLight
- ?'bg-[var(--accent-alt)]/10/60'
- :'bg-[var(--surface)] /50'
- : isStitchLight
- ?'bg-[var(--surface)]'
- :'bg-[var(--surface)]'
+ ? 'bg-[var(--accent-alt)]/10/60'
+ : 'bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -526,9 +501,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {/* Footer */}
  <div
  className={`p-3 sm:px-5 flex items-center justify-between text-xs ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
  <span>

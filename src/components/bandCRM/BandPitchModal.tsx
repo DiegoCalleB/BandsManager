@@ -7,7 +7,6 @@ interface BandPitchModalProps {
  isOpen: boolean;
  onClose: () => void;
  band: BandContact | null;
- isStitchLight?: boolean;
  activeCampaign?: any;
  proposedBakandeyaCity:'Madrid' |'Sevilla' |'Ambas';
  setProposedBakandeyaCity: (val:'Madrid' |'Sevilla' |'Ambas') => void;
@@ -22,8 +21,7 @@ interface BandPitchModalProps {
 export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  isOpen,
  onClose,
- band,
- isStitchLight = false,
+ band= false,
  activeCampaign,
  proposedBakandeyaCity,
  setProposedBakandeyaCity,
@@ -44,7 +42,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">

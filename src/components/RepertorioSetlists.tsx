@@ -430,7 +430,7 @@ export default function RepertorioSetlists({
  onNavigate
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
- const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName ||'Tu Banda';
 
  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('repertorio');
@@ -585,8 +585,7 @@ export default function RepertorioSetlists({
  const {
  shareModalData, setShareModalData,
  handleShareSetlist,
- handleShareSong,
- } = useShareModal(songs, bName);
+ handleShareSong} = useShareModal(songs, bName);
 
  // Filter States for Catalog
  const {
@@ -595,8 +594,7 @@ export default function RepertorioSetlists({
  catalogAlbumFilter, setCatalogAlbumFilter,
  catalogStatusFilter, setCatalogStatusFilter,
  albumsList,
- filteredSongs,
- } = useCatalogFilters(songs);
+ filteredSongs} = useCatalogFilters(songs);
 
  // Helper to parse"mm:ss" to seconds
  const parseMmSsToSeconds = (timeStr: string): number => {
@@ -617,8 +615,7 @@ export default function RepertorioSetlists({
  playSignal,
  isPlayerPlaying, setIsPlayerPlaying,
  playerTransposeSemitones,
- handleSelectPlayerSong,
- } = useAudioPlayer();
+ handleSelectPlayerSong} = useAudioPlayer();
 
  // Concert Player (Reproductor de Concierto / Modo Escenario)
  const {
@@ -636,8 +633,7 @@ export default function RepertorioSetlists({
  handleStageSeek,
  handleStagePrev,
  handleStageNext,
- toggleStagePlayPause,
- } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
+ toggleStagePlayPause} = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
 
  // Cola de canciones que gobierna Siguiente/Anterior (y el fundido) de la barra Spotify
  // persistente de abajo — por defecto el catálogo completo (comportamiento de siempre en
@@ -727,8 +723,7 @@ export default function RepertorioSetlists({
  fetch('/api/songs/' + s.id, {
  method:'PUT',
  headers: getHeaders(),
- body: JSON.stringify(s),
- }).catch((err) => console.error('Error updating catalog song order on server:', err));
+ body: JSON.stringify(s)}).catch((err) => console.error('Error updating catalog song order on server:', err));
  });
  };
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más"wow")
@@ -1872,8 +1867,7 @@ export default function RepertorioSetlists({
  nombre: setlistData.nombre,
  descripcion: setlistData.descripcion,
  tipoFormato: setlistData.tipoFormato,
- fechaUltimaEdicion: new Date().toISOString().split('T')[0],
- }
+ fechaUltimaEdicion: new Date().toISOString().split('T')[0]}
  : s
  )
  );
@@ -1883,13 +1877,11 @@ export default function RepertorioSetlists({
  ...existing,
  nombre: setlistData.nombre,
  descripcion: setlistData.descripcion,
- tipoFormato: setlistData.tipoFormato,
- };
+ tipoFormato: setlistData.tipoFormato};
  fetch(`/api/setlists/${setlistData.id}`, {
  method:'PUT',
  headers: getHeaders(),
- body: JSON.stringify(payload),
- }).catch((err) => console.error('Error updating setlist:', err));
+ body: JSON.stringify(payload)}).catch((err) => console.error('Error updating setlist:', err));
  }
  } else {
  const newSetlist: Setlist = {
@@ -1900,16 +1892,14 @@ export default function RepertorioSetlists({
  duracionTotalEstimadaMinutos: 45,
  fechaCreacion: new Date().toISOString().split('T')[0],
  fechaUltimaEdicion: new Date().toISOString().split('T')[0],
- items: [],
- };
+ items: []};
  setSetlists((prev) => [newSetlist, ...prev]);
  setActiveSetlistId(newSetlist.id);
 
  fetch('/api/setlists', {
  method:'POST',
  headers: getHeaders(),
- body: JSON.stringify(newSetlist),
- }).catch((err) => console.error('Error creating setlist on server:', err));
+ body: JSON.stringify(newSetlist)}).catch((err) => console.error('Error creating setlist on server:', err));
  }
  };
 
@@ -2623,8 +2613,7 @@ export default function RepertorioSetlists({
  <div data-modulo="repertorio" className="space-y-3">
  {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
  <RepertorioNavBar
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  activeTab={activeTab}
  setActiveTab={handleTabChange}
  catalogoViewMode={catalogoViewMode}
@@ -2647,20 +2636,8 @@ export default function RepertorioSetlists({
  {activeTab ==='setlists' && (
  <div className="w-full">
  {/* MAIN EDITOR FOR ACTIVE SETLIST */}
- <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 /80`}>
- {activeSetlist ? (
- <>
- {/* CABECERA COMPACTA: nombre del setlist + un único menú"⋯" con las acciones secundarias. */}
- <div className="flex items-center gap-2">
- <input
- type="text"
- value={activeSetlist.nombre}
- onChange={(e) => {
- const val = e.target.value;
- setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? { ...s, nombre: val } : s));
- }}
- title={activeSetlist.descripcion ||'Nombre del repertorio'}
- className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}
+ <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 ${'bg-[var(--surface)]'Nombre del repertorio'}
+ className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${'text-[var(--ink)]'}`}
  />
 
  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap">
@@ -2670,9 +2647,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowPdfPreview(true)}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight 
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  title="Imprimir repertorio o exportar a PDF / atril en papel"
  >
@@ -2686,9 +2661,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowAIAnalysisModal(true)}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 ${
- isStitchLight 
- ?'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
- :'bg-[var(--acc)]/90/50 hover:bg-[var(--acc)]/80/70 text-[var(--acc)]/40 hover:text-[var(--ink)]'
+ 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
  }`}
  title="Cerebro IA: Análisis de narrativa, curva de energía, transiciones de tono y sugerencias"
  >
@@ -2764,9 +2737,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowSetlistActionsMenu((v) => !v)}
  className={`p-1.5 rounded-[var(--r-m)] transition-colors cursor-pointer ${
- isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:'
- :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 hover:'
+ 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:'
  }`}
  title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
  >
@@ -2776,15 +2747,13 @@ export default function RepertorioSetlists({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${
- isStitchLight
- ?' bg-[var(--surface)] text-[var(--ink)]'
- :' bg-[var(--surface)] text-[var(--ink)]'
+ ' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleShareSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ok)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
+ 'hover:bg-[var(--surface)]'
  }`}
  >
  <MessageSquare className="w-3.5 h-3.5 shrink-0" /> Compartir repertorio
@@ -2793,7 +2762,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setAssigningSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ok)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
+ 'hover:bg-[var(--surface)]'
  }`}
  >
  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Asignar a bolo/ensayo
@@ -2802,7 +2771,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setShowPdfPreview(true); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink)] hover:bg-[var(--sunken)]' :'text-[var(--ink)] hover:bg-[var(--surface)]/80'
+ 'text-[var(--ink)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
@@ -2811,7 +2780,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDuplicateSetlist(activeSetlist); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar setlist
@@ -2820,7 +2789,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${
- isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
@@ -2846,7 +2815,7 @@ export default function RepertorioSetlists({
  return (
  <div className="flex flex-col gap-2.5">
  <div className={`flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1.5 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/90'
+ 'bg-[var(--sunken)]'
  }`}>
  {/* Resumen en una línea y botón asistente IA */}
  <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto px-1.5">
@@ -2875,9 +2844,7 @@ export default function RepertorioSetlists({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${
- isStitchLight
- ?' bg-[var(--surface)] text-[var(--ink)]'
- :' bg-[var(--surface)] text-[var(--ink)]'
+ ' bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
  type="button"
@@ -2886,7 +2853,7 @@ export default function RepertorioSetlists({
  setShowAIAnalysisModal(true);
  }}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
+ 'hover:bg-[var(--surface)]'
  }`}
  >
  <span className="text-xs font-semibold text-[var(--acc)] flex items-center gap-1.5">📖 Ver análisis</span>
@@ -2901,7 +2868,7 @@ export default function RepertorioSetlists({
  setShowPerfectSetlistModal(true);
  }}
  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
- isStitchLight ?'hover:bg-[var(--sunken)]' :'hover:bg-[var(--surface)]/80'
+ 'hover:bg-[var(--surface)]'
  }`}
  >
  <span className="text-xs font-semibold text-[var(--ok)] flex items-center gap-1.5">🪄 Generar plan de cambios</span>
@@ -2932,7 +2899,7 @@ export default function RepertorioSetlists({
  {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
  {energyAnalysis.points.length > 0 && (
  <div className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80'
+ 'bg-[var(--bg)]'
  }`}>
  <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
  <span
@@ -3459,8 +3426,7 @@ export default function RepertorioSetlists({
  setNewShortcutLabel={setNewShortcutLabel}
  newShortcutMinutes={newShortcutMinutes}
  setNewShortcutMinutes={setNewShortcutMinutes}
- handleCreateShortcut={handleCreateShortcut}
- isStitchLight={isStitchLight}
+ handleCreateShortcut={handleCreateShortcut}={}
  />
 
  {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
@@ -3538,9 +3504,7 @@ export default function RepertorioSetlists({
  } ${
  isSelected
  ?'border-[var(--acc)] ring-2 ring-indigo-500/20 bg-[var(--tentative)]/10'
- : isStitchLight
- ?'bg-[var(--surface)] hover:'
- :'bg-[var(--surface)]/80 /80 hover:/80'
+ : 'bg-[var(--surface)] hover:'
  }`}
  >
  {/* MAIN ROW - COMPACT */}
@@ -3576,7 +3540,7 @@ export default function RepertorioSetlists({
  </button>
 
  {/* Title + metadata */}
- <span className={`text-sm font-semibold tracking-tight ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
+ <span className={`text-sm font-semibold tracking-tight ${'text-[var(--ink)]'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
  {formatSongTitle(song.titulo)}
  </span>
 
@@ -3877,7 +3841,7 @@ export default function RepertorioSetlists({
 
  {/* EXPANDED DETAILS - Only when isExpanded */}
  {isExpanded && (
- <div className={`border-t px-2.5 py-2 text-[9px] font-sans space-y-1 ${isStitchLight ?'bg-[var(--bg)]' :'bg-black/20'}`}>
+ <div className={`border-t px-2.5 py-2 text-[9px] font-sans space-y-1 ${'bg-[var(--bg)]'}`}>
  {song.cantantePrincipal && (
  <div className="text-[var(--ink-2)]">
  <span className="font-bold text-[var(--ink-2)]">Cantante:</span> {song.cantantePrincipal}
@@ -3901,9 +3865,7 @@ export default function RepertorioSetlists({
  onClick={(e) => e.stopPropagation()}
  onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
  className={`w-full text-[9px] font-sans px-2 py-1 rounded mt-1 ${
- isStitchLight
- ?'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-2)]'
- :'bg-[var(--sunken)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
+ 'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-2)]'
  }`}
  />
 
@@ -4125,8 +4087,7 @@ export default function RepertorioSetlists({
  <DiscografiaView
  songs={songs}
  albumsList={albumsList}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  bandName={bName}
  setSongs={setSongs}
  setSetlists={setSetlists}
@@ -4148,9 +4109,7 @@ export default function RepertorioSetlists({
  <div className="space-y-4">
  {/* CATALOG PLAYLIST HERO BANNER */}
  <div className={`relative overflow-hidden rounded-[var(--r-l)] sm:rounded-3xl p-4 sm:p-5 ${
- isStitchLight
- ?'bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 text-[var(--ink)]'
- :'bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 /80 text-[var(--ink)]'
+ 'bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 text-[var(--ink)]'
  }`}>
  <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
  <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] overflow-hidden flex items-center justify-center group">
@@ -4229,17 +4188,7 @@ export default function RepertorioSetlists({
 
  {/* CATALOG FILTERS BAR */}
  <div className={`p-3.5 sm:p-4 rounded-[var(--r-l)] sm:rounded-3xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80
- }`}>
- <div className="relative flex-1">
- <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--ink-2)] pointer-events-none" />
- <input
- id="search-songs"
- type="text"
- placeholder="Buscar temas por título, tonalidad, voz principal o notas..."
- value={catalogSearch}
- onChange={(e) => setCatalogSearch(e.target.value)}
- className={`w-full rounded-[var(--r-m)] pl-9.5 ${catalogSearch ?'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
+ 'bg-[var(--surface)]'pr-8' :'pr-3'} py-2 text-xs focus:outline-none transition-all ${
 ' bg-[var(--surface)]/60 text-[var(--ink)] focus:ring-1 focus:ring-indigo-500/30 placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -4249,7 +4198,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setCatalogSearch('')}
  className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]'
+ 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  title="Borrar búsqueda"
  >
@@ -4264,7 +4213,7 @@ export default function RepertorioSetlists({
  value={catalogAlbumFilter}
  onChange={(e) => setCatalogAlbumFilter(e.target.value)}
  className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)]/90 text-[var(--ink-2)] /80'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="todos">Todos los Discos / EPs</option>
@@ -4278,7 +4227,7 @@ export default function RepertorioSetlists({
  value={catalogStatusFilter}
  onChange={(e) => setCatalogStatusFilter(e.target.value)}
  className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)]/90 text-[var(--ink-2)] /80'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="todos">Todos los estados</option>
@@ -4293,9 +4242,7 @@ export default function RepertorioSetlists({
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
  groupByAlbum
  ?' bg-[var(--tentative)]/15 text-[var(--tentative)]/50/30'
- : isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:bg-[var(--surface)]'
+ : 'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
  Agrupar por Álbum
@@ -4362,10 +4309,7 @@ export default function RepertorioSetlists({
  )}
 
  {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
- <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/60 /80`}>
- {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
- <div className={`flex items-center justify-between px-4 py-3 text-xs tracking-wider ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-2)]'
+ <div className={`rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden ${'bg-[var(--surface)]'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/40 /80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0">
  <input
@@ -4424,7 +4368,7 @@ export default function RepertorioSetlists({
  {showAlbumHeader && (
  <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]">
  <span>💿 {albumLabel}</span>
- <div className={`h-px flex-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'}`} />
+ <div className={`h-px flex-1 ${'bg-[var(--sunken)]'}`} />
  </div>
  )}
 
@@ -4485,8 +4429,7 @@ export default function RepertorioSetlists({
  setDraggedCatalogSongId(null);
  setDragOverCatalogSongId(null);
  }}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  />
  </React.Fragment>
  );
@@ -4513,8 +4456,7 @@ export default function RepertorioSetlists({
  editingSong={editingSong}
  defaultAlbumForNewSong={defaultAlbumForNewSong}
  albumsList={albumsList}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onClose={() => setShowSongModal(false)}
  onSave={handleSaveSong}
  />
@@ -4522,8 +4464,7 @@ export default function RepertorioSetlists({
  {/* MODAL: ASSIGN SETLIST TO CONCERT OR REHEARSAL */}
  <AssignSetlistModal
  assigningSetlist={assigningSetlist}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  concerts={concerts}
  rehearsals={rehearsals}
  selectedConcertToAssign={selectedConcertToAssign}
@@ -4582,7 +4523,7 @@ export default function RepertorioSetlists({
  name="tipoItem"
  defaultValue={editingShowItem?.tipoItem ||'presentacion'}
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  onChange={(e) => {
  const val = e.target.value as keyof typeof SHOW_ITEM_TYPES;
@@ -4611,7 +4552,7 @@ export default function RepertorioSetlists({
  defaultValue={editingShowItem?.tituloCustom ||'Presentación de la Banda'}
  placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -4631,7 +4572,7 @@ export default function RepertorioSetlists({
  max="60"
  defaultValue={editingShowItem?.duracionEstimadaSegundos ? Math.floor(editingShowItem.duracionEstimadaSegundos / 60) : (editingShowItem?.duracionEstimadaMinutos || 2)}
  className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -4644,7 +4585,7 @@ export default function RepertorioSetlists({
  max="59"
  defaultValue={editingShowItem?.duracionEstimadaSegundos ? (editingShowItem.duracionEstimadaSegundos % 60) : 0}
  className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -4662,7 +4603,7 @@ export default function RepertorioSetlists({
  defaultValue={editingShowItem?.notaTema ||''}
  placeholder="Ej: Foco cenital sobre guitarra solista, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -4766,8 +4707,7 @@ export default function RepertorioSetlists({
  isOpen={showPdfPreview}
  activeSetlist={activeSetlist}
  activeSetlistMetrics={activeSetlistMetrics}
- songs={songs}
- isStitchLight={isStitchLight}
+ songs={songs}={}
  onClose={() => setShowPdfPreview(false)}
  bandName={bName}
  onUpdateSong={handleUpdateSongFromStudio}
@@ -4776,8 +4716,7 @@ export default function RepertorioSetlists({
  {activeStudioSong && (
  <SongStudioModal
  song={activeStudioSong}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onClose={() => {
  setActiveStudioSong(null);
  setActiveStudioOpenIris(false);
@@ -4820,8 +4759,7 @@ export default function RepertorioSetlists({
  isOpen={assignSongsModalData.isOpen}
  albumName={assignSongsModalData.albumName}
  songs={songs}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onClose={() => setAssignSongsModalData(null)}
  onSaveAlbumSongs={handleSaveAlbumSongs}
  />
@@ -4831,8 +4769,7 @@ export default function RepertorioSetlists({
  <SetlistModal
  isOpen={setlistModalData.isOpen}
  setlistToEdit={setlistModalData.setlistToEdit}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onClose={() => setSetlistModalData(null)}
  onSave={handleSaveSetlistModal}
  />
@@ -4843,8 +4780,7 @@ export default function RepertorioSetlists({
  isOpen={isAddSongsModalOpen}
  songs={songs}
  existingSongIds={activeSetlist.items.map(it => it.songId).filter((id): id is string => Boolean(id))}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onClose={() => setIsAddSongsModalOpen(false)}
  onAddSongs={handleAddMultipleSongsToSetlist}
  />
@@ -4856,8 +4792,7 @@ export default function RepertorioSetlists({
  <MemberNotesModal
  isOpen={Boolean(activeMemberNotesSong)}
  song={activeMemberNotesSong}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  bandMembers={bandRosterMembers}
  onClose={() => setActiveMemberNotesSong(null)}
  onSaveSongNotes={handleUpdateSongFromStudio}
@@ -4901,8 +4836,7 @@ export default function RepertorioSetlists({
  onClose={() => setIsSpotifyModalOpen(false)}
  bandName={bName}
  existingSongs={songs}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onSongsImported={(updatedSongs) => {
  setSongs(updatedSongs);
  }}

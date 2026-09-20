@@ -10,8 +10,7 @@ import {
 } from'lucide-react';
 
 interface SocialGrowthPlanViewProps {
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  bandName: string;
  latestMetric: SocialMetric | null;
  epkConfig?: Partial<EPKConfig> | null;
@@ -21,8 +20,7 @@ interface SocialGrowthPlanViewProps {
 }
 
 export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
- colors,
- isStitchLight,
+ colors
  bandName,
  latestMetric,
  epkConfig,
@@ -85,7 +83,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]">
  <Sparkles className="w-4 h-4" />
  </span>
- <h3 className={`text-base font-bold font-display tracking-wider ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <h3 className={`text-base font-bold font-display tracking-wider ${'text-[var(--ink)]'}`}>
  Plan de Crecimiento Musical ({growthPlan.horizonDays} Días)
  </h3>
  <span className="text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ok)]">
@@ -138,7 +136,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {/* Band Profile Analysis Card */}
  {archetype && (
  <div className="mt-4 pt-4 /60 grid grid-cols-1 md:grid-cols-3 gap-3">
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--surface)]/80' :'bg-black/40 /80'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-[10px] font-sans mb-1">
  <Users className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span>Perfil & Audiencia Actual</span>
@@ -151,7 +149,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </p>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--surface)]/80' :'bg-black/40 /80'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-[10px] font-sans mb-1">
  <AlertCircle className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Cuello de Botella a Resolver</span>
@@ -161,7 +159,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  </p>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--surface)]/80' :'bg-black/40 /80'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center gap-1.5 text-[var(--ink-2)] text-[10px] font-sans mb-1">
  <Target className="w-3.5 h-3.5 text-[var(--ok)]" />
  <span>Objetivo de Conversión a Salas</span>
@@ -202,7 +200,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='overview'
  ?'bg-[var(--tentative)]/80 text-[var(--ink)] shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5" />
@@ -214,7 +212,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='weekly'
  ?'bg-[var(--tentative)]/80 text-[var(--ink)] shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Calendar className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -226,7 +224,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='instagram'
  ?'bg-[var(--alert)] text-[var(--ink)] shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
@@ -238,7 +236,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='tiktok'
  ?'bg-[var(--tentative)] text-[var(--ink)] shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Video className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -250,7 +248,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='youtube'
  ?'bg-[var(--alert)] text-[var(--ink)] shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Youtube className="w-3.5 h-3.5 text-[var(--alert)]" />
@@ -262,7 +260,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
  selectedTab ==='spotify'
  ?'bg-[var(--ok)] text-[var(--ink)] shadow'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/80 hover:text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Music2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -277,7 +275,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {growthPlan.overallPillars.map((p, idx) => (
  <div key={idx} className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)] shadow'
+ 'bg-[var(--surface)]'
  }`}>
  <div>
  <div className="flex items-center justify-between mb-2">
@@ -288,7 +286,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {p.weightPercentage}% esfuerzo
  </span>
  </div>
- <h4 className={`text-sm font-bold font-display ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <h4 className={`text-sm font-bold font-display ${'text-[var(--ink)]'}`}>
  {p.pillar}
  </h4>
  <p className="text-xs font-sans text-[var(--ink-2)] mt-2 leading-relaxed">
@@ -309,7 +307,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  
  return (
  <div key={channel.platform} className={`p-4 rounded-[var(--r-m)] transition-all ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-2">
@@ -339,7 +337,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`p-2.5 rounded-[var(--r-s)] flex items-start gap-2.5 cursor-pointer transition-all ${
  completedActions[action.id] 
  ?'bg-[var(--ok-soft)]/30 line-through opacity-70' 
- : isStitchLight ?'bg-[var(--bg)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)]/50 hover:bg-[var(--surface)]'
+ : 'bg-[var(--bg)] hover:bg-[var(--sunken)]'
  }`}
  >
  {completedActions[action.id] ? (
@@ -390,7 +388,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3">
  {growthPlan.weeklyBlueprint.map((dayPlan, idx) => (
  <div key={idx} className={`p-3.5 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div>
  <div className="flex items-center justify-between /60 pb-2 mb-2">
@@ -477,7 +475,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isDone 
  ?'bg-[var(--ok-soft)]/30 opacity-75' 
- : isStitchLight ?'bg-[var(--surface)] hover:bg-[var(--bg)]' :'bg-[var(--surface)] hover:bg-[var(--surface)] shadow'
+ : 'bg-[var(--surface)] hover:bg-[var(--bg)]'
  }`}
  >
  <div className="flex items-start gap-3">
@@ -519,7 +517,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  <div className="lg:col-span-5 space-y-6">
  {/* Hook Formulas for Music Content */}
  <div className={`p-4 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5 mb-3">
  <Flame className="w-4 h-4" />
@@ -550,7 +548,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
  {/* Viral Concepts for Musician Reels */}
  {currentChannel.viralConcepts && currentChannel.viralConcepts.length > 0 && (
  <div className={`p-4 rounded-[var(--r-m)] ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <h4 className="text-xs font-sans font-bold tracking-wider text-[var(--tentative)] flex items-center gap-1.5 mb-3">
  <Lightbulb className="w-4 h-4" />

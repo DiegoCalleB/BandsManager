@@ -26,7 +26,6 @@ interface MultiModelPitchComparatorModalProps {
  onClose: () => void;
  lead: Lead;
  onSelectProposal: (text: string, providerName: string) => void;
- isStitchLight?: boolean;
  activeCampaign?: any;
 }
 
@@ -77,8 +76,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  isOpen,
  onClose,
  lead,
- onSelectProposal,
- isStitchLight = false,
+ onSelectProposal= false,
  activeCampaign
 }) => {
  const [providers, setProviders] = useState<AIProviderInfo[]>([]);

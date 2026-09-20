@@ -9,15 +9,13 @@ interface AIBandScoutModalProps {
  onClose: () => void;
  activeCampaign?: BookingCampaign | null;
  onAddBands: (bands: Partial<BandContact>[]) => void;
- isStitchLight?: boolean;
 }
 
 export function AIBandScoutModal({
  isOpen,
  onClose,
  activeCampaign,
- onAddBands,
- isStitchLight = false
+ onAddBands= false
 }: AIBandScoutModalProps) {
  const [city, setCity] = useState('');
  const [genre, setGenre] = useState('');
@@ -98,11 +96,11 @@ export function AIBandScoutModal({
  onClose();
  };
 
- const bgColor = isStitchLight ?"bg-[var(--surface)]" :"bg-[var(--surface)]";
- const textColor = isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]";
- const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-[var(--ink-2)]";
- const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[var(--surface)]";
- const borderColor = isStitchLight ?"" :"border-[var(--hair)]";
+ const bgColor = "bg-[var(--surface)]";
+ const textColor = "text-[var(--ink)]";
+ const subtextColor = "text-[var(--ink-2)]";
+ const inputBg = "bg-[var(--bg)]";
+ const borderColor = "";
 
  return (
  <ModalPortal>

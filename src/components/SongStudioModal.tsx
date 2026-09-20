@@ -179,7 +179,6 @@ const IrisPrismBanner: React.FC = () => {
 interface SongStudioModalProps {
  song: Song;
  colors: ThemeColors;
- isStitchLight?: boolean;
  onClose: () => void;
  onUpdateSong: (updatedSong: Song) => void;
  currentUsername?: string;
@@ -259,8 +258,7 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
 
 export default function SongStudioModal({
  song,
- colors,
- isStitchLight = false,
+ colors= false,
  onClose,
  onUpdateSong,
  currentUsername ='Tu Nombre',
@@ -294,8 +292,7 @@ export default function SongStudioModal({
  const {
  shareModalData, setShareModalData,
  handleShareSong,
- handleShareIdea,
- } = useStudioShareModal(song);
+ handleShareIdea} = useStudioShareModal(song);
 
  const [playingIdeaId, setPlayingIdeaId] = useState<string | null>(null);
  const [currentTimeMap, setCurrentTimeMap] = useState<Record<string, number>>({});
@@ -306,8 +303,7 @@ export default function SongStudioModal({
  commentTextMap, setCommentTextMap,
  commentTimeTagMap, setCommentTimeTagMap,
  commentTrackTagMap, setCommentTrackTagMap,
- handleAddComment,
- } = useIdeaComments(song, onUpdateSong, currentUsername, currentTimeMap);
+ handleAddComment} = useIdeaComments(song, onUpdateSong, currentUsername, currentTimeMap);
  
  // Audio upload / new idea form state
  const [showAddIdea, setShowAddIdea] = useState(false);
@@ -2218,8 +2214,7 @@ export default function SongStudioModal({
  desfaseMs: tr.desfaseMs ?? 0,
  eqLow: tr.eqLow ?? 0,
  eqMid: tr.eqMid ?? 0,
- eqHigh: tr.eqHigh ?? 0,
- }));
+ eqHigh: tr.eqHigh ?? 0}));
 
  const wavBlob = await exportMasterMixAudioBlob(tracksToMix, resolveAudioUrl);
  const downloadUrl = URL.createObjectURL(wavBlob);
@@ -2354,8 +2349,7 @@ export default function SongStudioModal({
  const rawStream = await getLowLatencyAudioStream({
  echoCancellation: useEchoCancellation,
  noiseSuppression: useNoiseSuppression,
- autoGainControl: false,
- });
+ autoGainControl: false});
  setActiveRecordingStream(rawStream);
 
  let streamToRecord = rawStream;
@@ -2644,8 +2638,7 @@ export default function SongStudioModal({
  includeBass, setIncludeBass,
  drumStyle, setDrumStyle,
  isGeneratingAccompaniment,
- handleGenerateAccompaniment,
- } = useAccompanimentGenerator(song, saveNewTrackToIdea);
+ handleGenerateAccompaniment} = useAccompanimentGenerator(song, saveNewTrackToIdea);
 
  // --- CREATE NEW MAIN IDEA FORM ---
  const startRecording = async () => {
@@ -2653,8 +2646,7 @@ export default function SongStudioModal({
  const rawStream = await getLowLatencyAudioStream({
  echoCancellation: useEchoCancellation,
  noiseSuppression: useNoiseSuppression,
- autoGainControl: false,
- });
+ autoGainControl: false});
  setActiveRecordingStream(rawStream);
 
  let streamToRecord = rawStream;
@@ -3039,7 +3031,7 @@ export default function SongStudioModal({
  ?'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none' 
  :'max-w-4xl rounded-[var(--r-l)] overflow-hidden my-auto max-h-[92vh]'
  } flex flex-col ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)]' :'bg-[var(--bg)]800 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  
  {/* Header Bar */}
@@ -5164,8 +5156,7 @@ export default function SongStudioModal({
  song={song}
  idea={practiceModeIdea}
  tracks={getIdeaTracks(practiceModeIdea)}
- currentUser={currentUser}
- isStitchLight={isStitchLight}
+ currentUser={currentUser}={}
  onClose={() => setPracticeModeIdea(null)}
  onApplyAsMainChords={(cifradoTexto, guiaSustituto) => {
  if (!window.confirm('Esto sustituye el cifrado de acordes principal de la canción (visible para toda la banda) por el detectado en esta pista aislada. ¿Continuar?')) return;

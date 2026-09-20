@@ -36,8 +36,7 @@ const BLOCK_META: Record<string, { icon: string; label: string }> = {
  chapa: { icon:'💬', label:'Chapa con el público' },
  descanso: { icon:'☕', label:'Descanso' },
  bis: { icon:'👏', label:'Bis' },
- otro: { icon:'📋', label:'Bloque' },
-};
+ otro: { icon:'📋', label:'Bloque' }};
 
 const getBlockMeta = (item: SetlistItem) => BLOCK_META[item.bloqueSubtipo ||'otro'] || BLOCK_META.otro;
 const itemLabel = (item: SetlistItem, songs: Song[]) =>
@@ -53,8 +52,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onOpenPracticeMode,
  onUpdateSong,
  currentUser,
- initialMode ='directo',
-}) => {
+ initialMode ='directo'}) => {
  const [currentIndex, setCurrentIndex] = useState(0);
  const [modeArchetype, setModeArchetype] = useState<'directo' |'ensayo'>(initialMode);
  const [showSongListDrawer, setShowSongListDrawer] = useState(false);
@@ -967,8 +965,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  song={internalPracticeSong || currentSong!}
  idea={internalPracticeIdea}
  tracks={getIdeaTracks(internalPracticeIdea)}
- currentUser={currentUser}
- isStitchLight={glareMode}
+ currentUser={currentUser}={glareMode}
  onClose={() => {
  setInternalPracticeIdea(null);
  setInternalPracticeSong(null);

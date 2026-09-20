@@ -14,7 +14,6 @@ export interface ChartWidgetProps {
  currentUser?: any;
  activeBandName?: string;
  colors?: ThemeColors;
- isStitchLight?: boolean;
  onNavigate?: (view: string, options?: any) => void;
  heightMode?:'compact' |'normal' |'tall';
 }

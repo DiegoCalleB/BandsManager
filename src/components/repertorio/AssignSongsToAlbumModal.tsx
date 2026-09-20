@@ -9,8 +9,7 @@ interface AssignSongsToAlbumModalProps {
  isOpen: boolean;
  albumName: string;
  songs: Song[];
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  onClose: () => void;
  onSaveAlbumSongs: (albumName: string, selectedSongIds: string[], albumExtraInfo?: {
  año?: string;
@@ -24,11 +23,9 @@ export function AssignSongsToAlbumModal({
  isOpen,
  albumName,
  songs,
- colors,
- isStitchLight,
+ colors
  onClose,
- onSaveAlbumSongs,
-}: AssignSongsToAlbumModalProps) {
+ onSaveAlbumSongs}: AssignSongsToAlbumModalProps) {
  const currentAlbumSongs = songs.filter(s => (s.albumDisco ||'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set(currentAlbumSongs.map(s => s.id)));
  const [search, setSearch] = useState('');
@@ -80,8 +77,7 @@ export function AssignSongsToAlbumModal({
  año: albumYear,
  portadaUrl: coverUrl,
  tipoTrabajo: albumType,
- descripcion: description,
- });
+ descripcion: description});
  onClose();
  };
 
@@ -113,7 +109,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setCustomAlbumName(e.target.value)}
  placeholder="ej. Lanzamiento Verano 2026"
  className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -126,7 +122,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setAlbumYear(e.target.value)}
  placeholder="ej. 2026"
  className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -139,7 +135,7 @@ export function AssignSongsToAlbumModal({
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
  className={`w-full p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="Álbum Estudio">Álbum Estudio</option>
@@ -159,7 +155,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setCoverUrl(e.target.value)}
  placeholder="https://... o sube imagen"
  className={`flex-1 p-2.5 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
@@ -178,7 +174,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setDescription(e.target.value)}
  placeholder="Notas sobre la producción, estudio de grabación, concepto..."
  className={`w-full p-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -200,7 +196,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar canción en el catálogo para incluir..."
  className={`w-full pl-9 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -215,8 +211,7 @@ export function AssignSongsToAlbumModal({
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-all ${
  isSelected
  ?'bg-[var(--surface)]/20/50 text-[var(--ink)]'
- : isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
+ :?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >

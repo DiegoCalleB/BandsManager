@@ -26,8 +26,7 @@ interface BulkAlbumAudioUploaderModalProps {
  onClose: () => void;
  albumName?: string;
  albumSongs?: Song[];
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  bandId?: string;
  isNewAlbumMode?: boolean;
  onSaveUpdatedSongs: (updatedSongs: Song[], newAlbumName?: string) => void;
@@ -55,8 +54,7 @@ export function BulkAlbumAudioUploaderModal({
  onClose,
  albumName: initialAlbumName ='',
  albumSongs = [],
- colors,
- isStitchLight,
+ colors
  bandId,
  isNewAlbumMode = false,
  onSaveUpdatedSongs
@@ -565,9 +563,7 @@ export function BulkAlbumAudioUploaderModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl overflow-hidden ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Modal Header */}
@@ -614,9 +610,7 @@ export function BulkAlbumAudioUploaderModal({
  value={currentAlbumName}
  onChange={(e) => setCurrentAlbumName(e.target.value)}
  placeholder="Ej. Grandes Éxitos, Maqueta 2026, Álbum Debut..."
- className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink)] }`}
+ className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${?'bg-[var(--surface)] text-[var(--ink)] :'bg-[var(--surface)] text-[var(--ink)] }`}
  />
  </div>
 
@@ -637,8 +631,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-sans font-bold cursor-pointer transition ${
  coverPreviewUrl
  ?'border-[var(--ok)] text-[var(--ok)] bg-[var(--ok)]/10'
- : isStitchLight
- ?' bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
+ :?' bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  :' bg-[var(--surface)] hover:bg-[var(--ink)]/5 text-[var(--ink-2)]'
  }`}
  >
@@ -656,11 +649,9 @@ export function BulkAlbumAudioUploaderModal({
  onClick={() => fileInputRef.current?.click()}
  className={`p-8 rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
  items.length > 0
- ? isStitchLight
- ?'border-[var(--ok)] bg-[var(--ok)]/10/30'
+ ??'border-[var(--ok)] bg-[var(--ok)]/10/30'
  :'border-[var(--hair)]/30 bg-[var(--surface)]/5'
- : isStitchLight
- ?' hover:border-[var(--ok)] hover:bg-[var(--bg)]'
+ :?' hover:border-[var(--ok)] hover:bg-[var(--bg)]'
  :' hover:border-[var(--hair)] hover:bg-[var(--ink)]/5'
  }`}
  >
@@ -754,8 +745,7 @@ export function BulkAlbumAudioUploaderModal({
  ?'border-[var(--ok)]/40 bg-[var(--ok)]/10'
  : item.status ==='error'
  ?'border-[var(--alert)]/40 bg-[var(--alert)]/10'
- : isStitchLight
- ?'bg-[var(--bg)]'
+ :?'bg-[var(--bg)]'
  :'bg-[var(--surface)]/90'
  }`}
  >
@@ -788,9 +778,7 @@ export function BulkAlbumAudioUploaderModal({
  type="text"
  value={item.title}
  onChange={(e) => handleTitleChange(idx, e.target.value)}
- className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
+ className={`text-xs font-bold rounded-[var(--r-s)] px-2.5 py-1 outline-none w-full ${?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  placeholder="Título de la canción"
@@ -817,11 +805,9 @@ export function BulkAlbumAudioUploaderModal({
  onChange={(e) => handleAssignChange(idx, e.target.value)}
  className={`w-full text-xs font-sans rounded-[var(--r-m)] px-3 py-2 cursor-pointer outline-none transition ${
  item.matchedSongId
- ? isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] font-bold'
+ ??'bg-[var(--surface)] text-[var(--ink)] font-bold'
  :'bg-[var(--sunken)]/50 text-[var(--ink)] font-bold'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)]'
+ :?'bg-[var(--surface)] text-[var(--ink-2)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >

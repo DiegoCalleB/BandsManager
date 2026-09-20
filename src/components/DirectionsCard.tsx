@@ -6,16 +6,13 @@ interface DirectionsCardProps {
  locationName: string;
  address?: string;
  className?: string;
- isStitchLight?: boolean;
 }
 
 export default function DirectionsCard({
  query,
  locationName,
  address,
- className ='',
- isStitchLight = false,
-}: DirectionsCardProps) {
+ className =''= false}: DirectionsCardProps) {
  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
  return (

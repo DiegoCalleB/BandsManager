@@ -17,8 +17,7 @@ interface PredefinedScenarios {
 
 interface NegotiationSimulationModalProps {
  isOpen: boolean;
- selectedLead: Lead | null;
- isStitchLight: boolean;
+ selectedLead: Lead | null;: boolean;
  textSub: string;
  textMuted: string;
  simulationRole:'sala' |'banda';
@@ -43,8 +42,7 @@ interface NegotiationSimulationModalProps {
 
 export function NegotiationSimulationModal({
  isOpen,
- selectedLead,
- isStitchLight,
+ selectedLead
  textSub,
  textMuted,
  simulationRole,
@@ -64,8 +62,7 @@ export function NegotiationSimulationModal({
  onCustomInstructionChange,
  onMessageChange,
  onGenerate,
- onCommit,
-}: NegotiationSimulationModalProps) {
+ onCommit}: NegotiationSimulationModalProps) {
  if (!isOpen || !selectedLead) return null;
 
  return (
@@ -73,7 +70,7 @@ export function NegotiationSimulationModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <div className="flex justify-between items-start pb-3">
@@ -115,8 +112,7 @@ export function NegotiationSimulationModal({
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='sala'
  ?' bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'
- : isStitchLight
- ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
@@ -128,8 +124,7 @@ export function NegotiationSimulationModal({
  className={`py-2 px-3 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
  simulationRole ==='banda'
  ?' bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
- : isStitchLight
- ?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ :?'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
@@ -216,9 +211,7 @@ export function NegotiationSimulationModal({
  type="button"
  onClick={onGenerate}
  disabled={isGeneratingSimulation || !simulationCustomInstruction}
- className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${
- isStitchLight
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
+ className={`w-full py-2.5 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] disabled:opacity-40 ${?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-extrabold'
  }`}
  >
@@ -253,9 +246,7 @@ export function NegotiationSimulationModal({
  rows={6}
  value={simulationMessage}
  onChange={(e) => onMessageChange(e.target.value)}
- className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${
- isStitchLight
- ?'bg-[var(--acc)]/15 text-[var(--ink)]'
+ className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${?'bg-[var(--acc)]/15 text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  />
@@ -272,9 +263,7 @@ export function NegotiationSimulationModal({
  <button
  type="button"
  onClick={onClose}
- className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >
@@ -284,9 +273,7 @@ export function NegotiationSimulationModal({
  type="button"
  onClick={onCommit}
  disabled={!simulationMessage || isGeneratingSimulation}
- className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${
- isStitchLight
- ?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
+ className={`px-2 py-1 rounded-[var(--r-s)] font-sans font-bold text-[10px] tracking-wider flex items-center gap-1.5 cursor-pointer shadow active:scale-[0.98] disabled:opacity-40 transition-all ${?'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)]'
  :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-extrabold'
  }`}
  >

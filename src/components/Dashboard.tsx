@@ -287,11 +287,11 @@ export default function Dashboard({
  return matchesSearch && matchesCity && matchesGenre;
  });
 
- const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const subCardBg = isStitchLight ?'bg-[var(--bg)]/80 text-[var(--ink)]' :'bg-[var(--sunken)] text-[var(--ink)]';
- const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
- const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const subCardBg = 'bg-[var(--bg)]/80 text-[var(--ink)]';
+ const textTitle = 'text-[var(--ink)]';
+ const textSub = 'text-[var(--ink-2)]';
+ const textMuted = 'text-[var(--ink-2)]';
 
  // Calculate real metrics from leads
  const isMedio = (l: Lead) => {
@@ -438,7 +438,7 @@ export default function Dashboard({
  const maxPromoFans = 250;
 
  return (
- <div className={`space-y-6 ${isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]"} font-sans w-full max-w-full overflow-x-hidden`}>
+ <div className={`space-y-6 ${"text-[var(--ink)]"} font-sans w-full max-w-full overflow-x-hidden`}>
  <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
  <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">Dashboard</h1>
@@ -509,7 +509,7 @@ export default function Dashboard({
  <div className="flex items-center gap-2.5 flex-wrap">
  {/* Band Filter Mode Toggle */}
  <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]/80'
+ 'bg-[var(--sunken)]'
  }`}>
  <button
  id="dashboard-promo-agenda-all-bands-btn"
@@ -712,7 +712,7 @@ export default function Dashboard({
  ni el CTA de Ko-fi ni cuánta IA llevan gastada este mes. */}
  <div className="space-y-3">
  <AiSupportWidget variant="card" />
- <AiUsageCard isStitchLight={isStitchLight} />
+ <AiUsageCard={} />
  </div>
  </div>
  );
@@ -758,8 +758,7 @@ export default function Dashboard({
  posts={posts}
  epkConfig={epkConfig}
  activeBandName={activeBandName}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  agendaFilterMode={agendaFilterMode}
  onSetAgendaFilterMode={setAgendaFilterMode}
  onNavigate={onNavigate}
@@ -773,8 +772,7 @@ export default function Dashboard({
  rehearsals={rehearsals}
  metrics={metrics}
  fans={fans}
- tours={tours}
- isStitchLight={isStitchLight}
+ tours={tours}={}
  bandName={activeBandName}
  currentUser={currentUser}
  onNavigate={onNavigate}
@@ -820,14 +818,13 @@ export default function Dashboard({
  selectedLead={selectedLead}
  onClose={() => setSelectedLead(null)}
  onUpdateLead={onUpdateLead}
- getStatusBadgeClass={(status) => leadStatusBadgeClass(normalizeStatus(status), isStitchLight)}
+ getStatusBadgeClass={(status) => leadStatusBadgeClass(normalizeStatus(status))}
  getStatusLabel={(status) => leadStatusLabel(normalizeStatus(status), String(status).toUpperCase())}
  getStatusDotColor={(status) => leadStatusDotColor(normalizeStatus(status))}
  normalizeStatus={normalizeStatus}
  normalizeType={normalizeType}
  autoDetectVenueAddress={autoDetectVenueAddress}
- sectionTab="salas"
- isStitchLight={isStitchLight}
+ sectionTab="salas"={}
  />
  )}
 
@@ -836,8 +833,7 @@ export default function Dashboard({
  onClose={() => setIsAutonomyModalOpen(false)}
  bandName={activeBandName}
  bandId={currentBandId || currentUser?.band_id ||''}
- currentUser={currentUser}
- isStitchLight={isStitchLight}
+ currentUser={currentUser}={}
  onOpenTemplatesSection={() => {
  if (onNavigate) onNavigate('booking');
  }}

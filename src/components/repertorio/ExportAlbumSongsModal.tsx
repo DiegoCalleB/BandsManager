@@ -14,7 +14,6 @@ interface ExportAlbumSongsModalProps {
  songs: Song[];
  albumsList: string[];
  bandName?: string;
- isStitchLight?: boolean;
  colors?: ThemeColors;
  onExportAsSetlistPdf?: (albumSongs: Song[], titleName: string) => void;
 }
@@ -27,11 +26,9 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  albumName,
  songs = [],
  albumsList = [],
- bandName ='Banda',
- isStitchLight = false,
+ bandName ='Banda'= false,
  colors,
- onExportAsSetlistPdf,
-}) => {
+ onExportAsSetlistPdf}) => {
  const [selectedAlbum, setSelectedAlbum] = useState<string>(albumName ||'all');
  const [format, setFormat] = useState<ExportFormat>('zip');
  const [includeChords, setIncludeChords] = useState(true);
@@ -43,8 +40,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  const [zipProgress, setZipProgress] = useState<{ current: number; total: number; status: string }>({
  current: 0,
  total: 0,
- status:'',
- });
+ status:''});
  const [zipError, setZipError] = useState<string | null>(null);
 
  // Sync selected album when albumName prop changes
@@ -231,9 +227,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  tipo: s.tipo,
  audioUrl: s.audioPrincipalUrl || (s as any).audioUrl || null,
  portadaUrl: s.portadaUrl || null,
- cifradoTexto: includeChords ? s.cifradoTexto || null : undefined,
- })),
- };
+ cifradoTexto: includeChords ? s.cifradoTexto || null : undefined}))};
  return JSON.stringify(data, null, 2);
  };
 
@@ -334,8 +328,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  setZipProgress({
  current: i + 1,
  total: audioTargets.length,
- status: `Descargando audio (${i + 1}/${audioTargets.length}):"${target.song.titulo}"...`,
- });
+ status: `Descargando audio (${i + 1}/${audioTargets.length}):"${target.song.titulo}"...`});
 
  try {
  const response = await fetch(target.audioUrl!);
@@ -362,14 +355,12 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  setZipProgress({
  current: audioTargets.length,
  total: audioTargets.length,
- status:'Comprimiendo carpeta y generando archivo .ZIP...',
- });
+ status:'Comprimiendo carpeta y generando archivo .ZIP...'});
 
  const zipBlob = await zip.generateAsync({ type:'blob' }, (metadata) => {
  setZipProgress((prev) => ({
  ...prev,
- status: `Empaquetando ZIP (${Math.round(metadata.percent)}%)...`,
- }));
+ status: `Empaquetando ZIP (${Math.round(metadata.percent)}%)...`}));
  });
 
  const downloadUrl = URL.createObjectURL(zipBlob);
@@ -411,9 +402,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div
  className={`w-full max-w-2xl rounded-3xl overflow-hidden flex flex-col max-h-[90vh] transition-all ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Header */}
@@ -455,9 +444,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <select
  value={selectedAlbum}
  onChange={(e) => setSelectedAlbum(e.target.value)}
- className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-all ${
- isStitchLight
- ?'bg-[var(--sunken)] text-[var(--ink)]'
+ className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--ok)]/50 transition-all ${?'bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
@@ -651,9 +638,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  </span>
  </div>
  <div
- className={`p-3 rounded-[var(--r-l)] font-sans text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
- isStitchLight
- ?'bg-[var(--sunken)] text-[var(--ink)]'
+ className={`p-3 rounded-[var(--r-l)] font-sans text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${?'bg-[var(--sunken)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ok)]/90'
  }`}
  >

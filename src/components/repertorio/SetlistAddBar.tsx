@@ -33,8 +33,7 @@ interface SetlistAddBarProps {
  setNewShortcutLabel: (val: string) => void;
  newShortcutMinutes: number;
  setNewShortcutMinutes: (val: number) => void;
- handleCreateShortcut: () => void;
- isStitchLight: boolean;
+ handleCreateShortcut: () => void;: boolean;
 }
 
 export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
@@ -58,9 +57,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  setNewShortcutLabel,
  newShortcutMinutes,
  setNewShortcutMinutes,
- handleCreateShortcut,
- isStitchLight
-}) => {
+ handleCreateShortcut}) => {
  const [showEventMenu, setShowEventMenu] = useState(false);
 
  // Selected item title for insertion mode
@@ -128,7 +125,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  }}
  defaultValue=""
  className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)] hover:' :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:'
+ 'bg-[var(--surface)] text-[var(--ink)] hover:'
  }`}
  >
  <option value="">+ Añadir 1 Tema...</option>

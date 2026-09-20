@@ -11,7 +11,6 @@ interface EventWeatherCardProps {
  city: string;
  dateStr: string; // YYYY-MM-DD
  timeStr?: string; // e.g."21:00"
- isStitchLight?: boolean;
  onAlertsDetected?: (alerts: WeatherAlert[]) => void;
  collapsible?: boolean;
  defaultExpanded?: boolean;
@@ -20,8 +19,7 @@ interface EventWeatherCardProps {
 export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  city,
  dateStr,
- timeStr,
- isStitchLight = false,
+ timeStr= false,
  onAlertsDetected,
  collapsible = false,
  defaultExpanded = false
@@ -118,7 +116,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <span className="text-sm font-bold font-sans text-[var(--acc)]">
  {isLoading ?'...' : (weatherData?.temperature !== undefined ? `${weatherData.temperature}°C` :'--')}
  </span>
- <span className={`text-xs font-medium truncate ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-xs font-medium truncate ${'text-[var(--ink-2)]'}`}>
  {isLoading ?'Consultando tiempo...' : (weatherData?.conditionText ||'Clima')}
  </span>
  {weatherData?.rainProbability !== undefined && (
@@ -141,7 +139,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  )}
  </div>
- <span className={`text-[10px] font-sans block truncate ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-sans block truncate ${'text-[var(--ink-2)]'}`}>
  {weatherData?.cityName || city} · Show {timeStr ||'21:00'}
  </span>
  </div>
@@ -162,9 +160,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  }
 
  return (
- <div className={`rounded-[var(--r-m)] p-4 transition-all duration-200 ${
- isStitchLight 
- ? hasAlerts
+ <div className={`rounded-[var(--r-m)] p-4 transition-all duration-200 ${? hasAlerts
  ? dangerAlertsCount > 0
  ?'bg-gradient-to-br from-rose-50 to-amber-50 text-[var(--ink)]'
  :'bg-gradient-to-br from-amber-50 to-sky-50 text-[var(--ink)]'
@@ -202,7 +198,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  )}
  </div>
- <span className={`text-[10px] font-sans block ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-sans block ${'text-[var(--ink-2)]'}`}>
  {weatherData?.cityName || city} · {dateStr}
  </span>
  </div>
@@ -265,7 +261,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <Calendar className="w-5 h-5 text-[var(--acc)] shrink-0" />
  <div>
  <span className="font-bold text-[var(--acc)]/70 block">Previsión a 14 días vista</span>
- <p className={isStitchLight ?'text-[var(--ink-2)] text-[10px]' :'text-[var(--ink-2)] text-[10px]'}>
+ <p className={'text-[var(--ink-2)] text-[10px]'}>
  {weatherData.conditionText}
  </p>
  </div>
@@ -296,12 +292,12 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {weatherData.temperature}°C
  </span>
  {weatherData.apparentTemperature !== undefined && (
- <span className={`text-[10px] font-sans ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>
  (sensación {weatherData.apparentTemperature}°C)
  </span>
  )}
  </div>
- <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <p className={`text-xs font-medium flex items-center gap-1.5 ${'text-[var(--ink-2)]'}`}>
  <span>{weatherData.conditionText}</span>
  </p>
  </div>

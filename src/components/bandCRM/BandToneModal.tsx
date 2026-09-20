@@ -83,8 +83,7 @@ function toDraft(toneData: ToneAnalysisData | null): ToneDraft {
  matiz_youtube: toneData?.matices_por_red?.youtube ||'',
  matiz_facebook: toneData?.matices_por_red?.facebook ||'',
  puntos_fuertes_para_conectar: toneData?.puntos_fuertes_para_conectar ||'',
- recomendacion_pitch: toneData?.recomendacion_pitch ||'',
- };
+ recomendacion_pitch: toneData?.recomendacion_pitch ||''};
 }
 
 function partirLista(texto: string, separador: RegExp): string[] {
@@ -98,7 +97,6 @@ interface BandToneModalProps {
  isOpen: boolean;
  onClose: () => void;
  band: BandContact | null;
- isStitchLight?: boolean;
  toneData: ToneAnalysisData | null;
  isLoading: boolean;
  /** Si el backend confirmó que este análisis quedó guardado de forma permanente (Supabase). */
@@ -122,8 +120,7 @@ interface BandToneModalProps {
 export const BandToneModal: React.FC<BandToneModalProps> = ({
  isOpen,
  onClose,
- band,
- isStitchLight = false,
+ band= false,
  toneData,
  isLoading,
  isSaved,
@@ -237,11 +234,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  instagram: draft.matiz_instagram.trim(),
  tiktok: draft.matiz_tiktok.trim(),
  youtube: draft.matiz_youtube.trim(),
- facebook: draft.matiz_facebook.trim(),
- },
+ facebook: draft.matiz_facebook.trim()},
  puntos_fuertes_para_conectar: draft.puntos_fuertes_para_conectar.trim(),
- recomendacion_pitch: draft.recomendacion_pitch.trim(),
- };
+ recomendacion_pitch: draft.recomendacion_pitch.trim()};
  const res = await apiFetch('/api/bands/tone-dna', {
  method:'PATCH',
  headers: {'Content-Type':'application/json' },
@@ -262,9 +257,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  }
  };
 
- const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
+ const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-0/50 ${?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`;
  const labelClass ='text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)] block mb-1';
@@ -273,7 +266,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Header */}
  <div className="flex items-center justify-between pb-3 /10">
@@ -482,21 +475,21 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <div className="space-y-4">
  {/* 1. Main Tone Cards */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-sans">
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
  <span className="text-[var(--ink-2)] tracking-wider block text-[9px]">Tono General</span>
  <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
  {toneData.tono_comunicacion ||'No especificado'}
  </span>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
  <span className="text-[var(--ink-2)] tracking-wider block text-[9px]">Tratamiento</span>
  <span className="font-bold text-[var(--ink-2)] block text-xs mt-0.5">
  {toneData.tratamiento_habitual ||'Tú / Informal'}
  </span>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
  <span className="text-[var(--ink-2)] tracking-wider block text-[9px]">Nivel de Energía</span>
  <span className="font-bold text-[var(--ok)] block text-xs mt-0.5">
  {toneData.nivel_energia ||'Alta / Explosiva'}
@@ -505,7 +498,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
 
  {/* 2. Key Vocabulary, Quotes & Emojis */}
- <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--surface)]'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Vocabulario Clave & Muletillas
@@ -630,9 +623,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  readOnly
  rows={6}
  value={toneData.pitch_personalizado_ejemplo}
- className={`w-full p-3 rounded-[var(--r-m)] font-sans text-[10px] leading-relaxed focus:outline-none ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)]'
+ className={`w-full p-3 rounded-[var(--r-m)] font-sans text-[10px] leading-relaxed focus:outline-none ${?'bg-[var(--bg)] text-[var(--ink)]'
  :'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  />

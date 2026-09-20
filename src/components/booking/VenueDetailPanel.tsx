@@ -52,7 +52,6 @@ interface VenueDetailPanelProps {
  normalizeType: (type?: string) => string;
  autoDetectVenueAddress: (venueName: string, city: string) => string;
  sectionTab:'salas' |'medios' |'grupos';
- isStitchLight?: boolean;
  activeCampaign?: any;
  onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
  isUploadingLeadLogo?: boolean;
@@ -69,8 +68,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  normalizeStatus,
  normalizeType,
  autoDetectVenueAddress,
- sectionTab,
- isStitchLight = false,
+ sectionTab= false,
  activeCampaign,
  onLeadLogoUpload,
  isUploadingLeadLogo = false
@@ -187,8 +185,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  telefono: cleanVal(selectedLead.telefono),
  contacto_nombre: cleanVal(selectedLead.contacto_nombre),
  email_contacto: cleanVal(selectedLead.email_contacto),
- direccion: cleanVal(selectedLead.direccion),
- });
+ direccion: cleanVal(selectedLead.direccion)});
  }, [selectedLead?.id, selectedLead?.pitch_generado, selectedLead?.imagen_url, selectedLead?.icono]);
 
  // Los hooks de arriba tienen que ejecutarse siempre en el mismo orden (ver
@@ -939,8 +936,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  selectedLead.direccion || `${selectedLead.nombre_sala}, ${selectedLead.ciudad}`
  }
  locationName={selectedLead.nombre_sala}
- address={selectedLead.direccion || selectedLead.ciudad}
- isStitchLight={isStitchLight}
+ address={selectedLead.direccion || selectedLead.ciudad}={}
  />
  </div>
  </div>
@@ -2009,8 +2005,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <MultiModelPitchComparatorModal
  isOpen={showMultiModelModal}
  onClose={() => setShowMultiModelModal(false)}
- lead={selectedLead}
- isStitchLight={isStitchLight}
+ lead={selectedLead}={}
  activeCampaign={activeCampaign}
  onSelectProposal={(text, providerName) => {
  setEditedPitch(text);
@@ -2028,8 +2023,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  lead={selectedLead}
  onClose={() => setShowBoloConfirmadoModal(false)}
  onConfirmWithSetlist={handleConfirmWithSetlist}
- onConfirmWithoutSetlist={handleConfirmWithoutSetlist}
- isStitchLight={isStitchLight}
+ onConfirmWithoutSetlist={handleConfirmWithoutSetlist}={}
  />
  </div>
  );

@@ -106,9 +106,9 @@ export function leadStatusDotColor(normalizedStatus: string): string {
  return styleFor(normalizedStatus).dot;
 }
 
-export function leadStatusBadgeClass(normalizedStatus: string, isStitchLight: boolean): string {
+export function leadStatusBadgeClass(normalizedStatus: string): string {
  const style = styleFor(normalizedStatus);
- return isStitchLight ? style.badgeLight : style.badgeDark;
+ return style.badgeLight;
 }
 
 export function leadStatusLabel(normalizedStatus: string, fallback: string): string {

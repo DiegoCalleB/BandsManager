@@ -687,7 +687,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  return () => clearInterval(intervalId);
  }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
- const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
  // Auto-scroll chat to bottom on mount and on message/loading updates
  useEffect(() => {
@@ -731,7 +731,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const parts = text.split(/(\*\*.*?\*\*)/g);
  return parts.map((part, i) => {
  if (part.startsWith('**') && part.endsWith('**')) {
- return <strong key={i} className={`font-bold ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--ink-2)]'}`}>{part.slice(2, -2)}</strong>;
+ return <strong key={i} className={`font-bold ${'text-[var(--tentative)]'}`}>{part.slice(2, -2)}</strong>;
  }
  return part;
  });
@@ -1712,16 +1712,16 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  };
 
  return (
- <div className={`flex flex-col ${isFloating ?'h-[550px]' :'h-full min-h-[500px]'} ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]/95'} rounded-[var(--r-l)] overflow-hidden font-sans w-full max-w-full overflow-x-hidden`}>
+ <div className={`flex flex-col ${isFloating ?'h-[550px]' :'h-full min-h-[500px]'} ${'bg-[var(--surface)]'} rounded-[var(--r-l)] overflow-hidden font-sans w-full max-w-full overflow-x-hidden`}>
  {/* Bot Header */}
- <div className={`px-5 py-4 flex items-center justify-between ${isStitchLight ?'bg-[var(--bg)] -slate-200/80' :'bg-[var(--bg)]/90 -bg-[var(--surface)]/60'}`}>
+ <div className={`px-5 py-4 flex items-center justify-between ${'bg-[var(--bg)] -slate-200/80'}`}>
  <div className="flex items-center gap-3">
- <div className={`p-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--tentative)]/5 text-[var(--tentative)]' :'bg-[var(--acc)]/10 -cyan-500/20 text-[var(--acc)]'}`}>
+ <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--tentative)]/5 text-[var(--tentative)]'}`}>
  <Guitar className="w-4 h-4" />
  </div>
  <div>
- <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`}>
- Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block ${isStitchLight ?'bg-[var(--tentative)]/80' :'bg-[var(--acc)]'}`} />
+ <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 ${'text-[var(--ink)]'}`}>
+ Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block ${'bg-[var(--tentative)]/80'}`} />
  </h4>
  <span className="text-[9px] font-sans text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
  </div>
@@ -1777,7 +1777,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  console.error(e);
  }
  }}
- className={`text-[9px] font-sans tracking-wider transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--tentative)]' :'text-[var(--ink-2)] hover:text-[var(--acc)]'}`}
+ className={`text-[9px] font-sans tracking-wider transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${'text-[var(--ink-2)] hover:text-[var(--tentative)]'}`}
  >
  Limpiar Hilo
  </button>
@@ -1786,9 +1786,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  id="close-floating-chat-btn"
  onClick={onClose}
  className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
- isStitchLight 
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]' 
- :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Cerrar Chat"
  >
@@ -1802,7 +1800,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-sans transition-colors ${
  agentsEnabled 
  ? ('bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70')
- : (isStitchLight ?'bg-[var(--ok)]/10/80 -emerald-200/80 text-[var(--ok)]' :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ink-2)]')
+ : ('bg-[var(--ok)]/10/80 -emerald-200/80 text-[var(--ok)]')
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ?'bg-[var(--acc)]/60' :'bg-[var(--ok)]'}`} />
@@ -1821,9 +1819,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
- isStitchLight
- ?'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
- :'bg-[var(--tentative)]/25 hover:bg-[var(--tentative)]/40 text-[var(--acc)]/40'
+ 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'
  }`}
  title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
  >
@@ -1854,7 +1850,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
 
  {/* Messages Thread Container */}
- <div className={`flex-1 p-4 overflow-y-auto space-y-4 ${isStitchLight ?'bg-[var(--bg)]/50' :'bg-[var(--surface)]/20'}`}>
+ <div className={`flex-1 p-4 overflow-y-auto space-y-4 ${'bg-[var(--bg)]/50'}`}>
  {messages.map((msg) => {
  const isBot = msg.sender ==='bot';
  return (
@@ -1862,8 +1858,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Avatar circle */}
  <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
  isBot 
- ? (isStitchLight ?'bg-[var(--tentative)]/5 text-[var(--tentative)]' :'bg-[var(--acc)]/10 -cyan-500/20 text-[var(--acc)]') 
- : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)]')
+ ? ('bg-[var(--tentative)]/5 text-[var(--tentative)]') 
+ : ('bg-[var(--sunken)] text-[var(--ink-2)]')
  }`}>
  {isBot ? <Guitar className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
  </div>
@@ -1872,12 +1868,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Text Bubble */}
  <div className={`p-3.5 rounded-[var(--r-m)] text-xs leading-relaxed ${
  isBot 
- ? (isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)] rounded-tl-none' 
- :'bg-[var(--surface)]/50 -bg-[var(--surface)]/80 rounded-tl-none text-[var(--ink-2)]') 
- : (isStitchLight 
- ?'bg-[var(--tentative)]/5 text-[var(--tentative)] rounded-tr-none' 
- :'bg-[var(--tentative)]/10 -cyan-500/10 rounded-tr-none text-[var(--ink-2)]')
+ ? ('bg-[var(--surface)] text-[var(--ink)] rounded-tl-none') 
+ : ('bg-[var(--tentative)]/5 text-[var(--tentative)] rounded-tr-none')
  }`}>
  <div className="space-y-1">{parseMarkdown(msg.text)}</div>
  <span className="text-[8px] font-sans text-[var(--ink-2)] block mt-2 text-right">
@@ -1891,16 +1883,16 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const pendingActions = nonTriggerActions.filter(a => a.type !=='propose_accompaniment' && a.type !=='propose_melodic_idea' && (a.status ||'pending') ==='pending');
 
  return (
- <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 ${isStitchLight ?'-indigo-100 bg-[var(--tentative)]/5/20' :'-cyan-500/20 bg-[var(--acc)]/5'}`}>
+ <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 ${'-indigo-100 bg-[var(--tentative)]/5/20'}`}>
  <div className="flex items-center justify-between gap-1.5">
- <div className={`flex items-center gap-1.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--acc)]'}`}>
+ <div className={`flex items-center gap-1.5 ${'text-[var(--tentative)]'}`}>
  <Sparkles className="w-3.5 h-3.5" />
  <h5 className="font-sans font-bold text-[9px] tracking-widest">Propuestas del Manager ({nonTriggerActions.length})</h5>
  </div>
  {pendingActions.length > 1 && (
  <button
  onClick={() => handleConfirmAllActions(msg.id, msg.proposedActions || [])}
- className={`text-[9px] font-bold font-sans px-2 py-1 rounded-md transition-all active:scale-95 ${isStitchLight ?'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]' :'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/80'}`}
+ className={`text-[9px] font-bold font-sans px-2 py-1 rounded-md transition-all active:scale-95 ${'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)]'}`}
  >
  ⚡ Aprobar Todos ({pendingActions.length})
  </button>
@@ -1913,7 +1905,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  return (
  <div key={aIdx} className="space-y-2 /20 pt-2 first:border-0 first:pt-0">
- <p className={`text-[11px] leading-relaxed p-2.5 rounded-[var(--r-m)] font-sans ${isStitchLight ?'text-[var(--ink)] bg-[var(--surface)]' :'text-[var(--ink-2)] bg-[var(--surface)]'}`}>
+ <p className={`text-[11px] leading-relaxed p-2.5 rounded-[var(--r-m)] font-sans ${'text-[var(--ink)] bg-[var(--surface)]'}`}>
  {act.description}
  </p>
 
@@ -1924,7 +1916,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const audioState = accompanimentAudio[audioKey];
  return (
  <div className="space-y-2">
- <div className={`text-[9px] font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${isStitchLight ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'}`}>
+ <div className={`text-[9px] font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc)]'}`}>
  <span>{acc.bpm} BPM</span>
  <span>· Tono {acc.keyName}</span>
  <span>· {acc.drumPattern.toUpperCase()}</span>
@@ -1938,12 +1930,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en"{audioState.savedToSong}" (Song Studio)
  </div>
  ) : songPicker[audioKey] ? (
- <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
+ <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
  <p className="text-[10px] font-sans text-[var(--ink-2)]">No he identificado la canción. Elige en cuál guardarla:</p>
  <select
  value={songPicker[audioKey].selectedId}
  onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
- className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black text-[var(--ink-2)]'}`}
+ className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
  >
  <option value="">— Selecciona una canción —</option>
  {songPicker[audioKey].songs.map(s => (
@@ -1954,7 +1946,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleSaveAccompanimentToSong(audioKey, acc, songPicker[audioKey].selectedId)}
  disabled={!songPicker[audioKey].selectedId || audioState.saving}
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${isStitchLight ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
  >
  {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
  {audioState.saving ?'Guardando...' :'Guardar aquí'}
@@ -1965,7 +1957,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleSaveAccompanimentToSong(audioKey, acc)}
  disabled={audioState.saving}
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
  {audioState.saving ?'Guardando...' : (acc.songTitle || acc.songId ? `Guardar en"${acc.songTitle ||'la canción'}"` :'Guardar en el repertorio')}
@@ -1980,7 +1972,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleGenerateAccompanimentAudio(audioKey, acc)}
  disabled={audioState?.loading}
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
  >
  {audioState?.loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <PlayCircle className="w-3.5 h-3.5" />}
  {audioState?.loading ?'Sintetizando...' :'Generar y escuchar'}
@@ -1999,7 +1991,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const audioState = melodicIdeaAudio[audioKey];
  return (
  <div className="space-y-2">
- <div className={`text-[9px] font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${isStitchLight ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'}`}>
+ <div className={`text-[9px] font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--acc)]'}`}>
  <span>{instrumentLabels[idea.instrument]}</span>
  <span>· {idea.bpm} BPM</span>
  <span>· Tono {idea.keyName}</span>
@@ -2013,7 +2005,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleDownloadMelodicIdeaMidi(idea)}
  title="Abre en cualquier DAW o editor de partituras para editarla nota a nota"
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-1.5 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ?'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-transparent hover:bg-[var(--surface)] text-[var(--ink-2)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-1.5 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  <Download className="w-3.5 h-3.5" /> Descargar .mid
  </button>
@@ -2022,12 +2014,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en"{audioState.savedToSong}" (Song Studio)
  </div>
  ) : songPicker[audioKey] ? (
- <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'}`}>
+ <div className={`space-y-1.5 p-2 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
  <p className="text-[10px] font-sans text-[var(--ink-2)]">No he identificado la canción. Elige en cuál guardarla:</p>
  <select
  value={songPicker[audioKey].selectedId}
  onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
- className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-black text-[var(--ink-2)]'}`}
+ className={`w-full text-[11px] font-sans px-2 py-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
  >
  <option value="">— Selecciona una canción —</option>
  {songPicker[audioKey].songs.map(s => (
@@ -2038,7 +2030,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea, songPicker[audioKey].selectedId)}
  disabled={!songPicker[audioKey].selectedId || audioState.saving}
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${isStitchLight ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
  >
  {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
  {audioState.saving ?'Guardando...' :'Guardar aquí'}
@@ -2049,7 +2041,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea)}
  disabled={audioState.saving}
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'}`}
  >
  {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
  {audioState.saving ?'Guardando...' : (idea.songTitle || idea.songId ? `Guardar en"${idea.songTitle ||'la canción'}"` :'Guardar en el repertorio')}
@@ -2064,7 +2056,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => handleGenerateMelodicIdeaAudio(audioKey, idea)}
  disabled={audioState?.loading}
- className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
  >
  {audioState?.loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <PlayCircle className="w-3.5 h-3.5" />}
  {audioState?.loading ?'Sintetizando...' :'Generar y escuchar'}
@@ -2080,7 +2072,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <button
  id={`confirm-proposal-btn-${msg.id}-${aIdx}`}
  onClick={() => handleConfirmAction(msg.id, realIdx, act)}
- className={`flex-1 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
+ className={`flex-1 text-[10px] font-bold font-sans tracking-wider py-2 rounded-[var(--r-s)] transition-all cursor-pointer active:scale-95 active:opacity-90 ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
  >
  ✓ Aprobar esta
  </button>
@@ -2088,9 +2080,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  id={`dismiss-proposal-btn-${msg.id}-${aIdx}`}
  onClick={() => handleDismissAction(msg.id, realIdx, act)}
  className={`px-3 py-2 text-[10px] font-sans rounded-[var(--r-s)] transition-colors cursor-pointer active:scale-95 active:opacity-90 ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  Descartar
@@ -2101,7 +2091,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <CheckCircle className="w-3.5 h-3.5" /> Aprobado e insertado
  </div>
  ) : (
- <div className={`text-[10px] font-sans rounded-[var(--r-s)] p-2 ${isStitchLight ?'text-[var(--ink-2)] bg-[var(--bg)]' :'text-[var(--ink-2)] bg-[var(--surface)]'}`}>
+ <div className={`text-[10px] font-sans rounded-[var(--r-s)] p-2 ${'text-[var(--ink-2)] bg-[var(--bg)]'}`}>
  Propuesta descartada
  </div>
  )}
@@ -2118,20 +2108,20 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  {isLoading && (
  <div className="flex gap-3 max-w-[80%] self-start">
- <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center ${isStitchLight ?'bg-[var(--tentative)]/5 text-[var(--tentative)]' :'bg-[var(--acc)]/10 -cyan-500/20 text-[var(--acc)]'}`}>
+ <div className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center ${'bg-[var(--tentative)]/5 text-[var(--tentative)]'}`}>
  <Guitar className="w-3.5 h-3.5" />
  </div>
- <div className={`p-3.5 rounded-[var(--r-m)] rounded-tl-none text-[11px] font-sans flex items-center gap-2 ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)]' :'bg-[var(--surface)]/50 text-[var(--ink-2)]'}`}>
- <RefreshCw className={`w-3.5 h-3.5 animate-spin ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--acc)]'}`} /> Analizando base de datos Supabase...
+ <div className={`p-3.5 rounded-[var(--r-m)] rounded-tl-none text-[11px] font-sans flex items-center gap-2 ${'bg-[var(--surface)] text-[var(--ink-2)]'}`}>
+ <RefreshCw className={`w-3.5 h-3.5 animate-spin ${'text-[var(--tentative)]'}`} /> Analizando base de datos Supabase...
  </div>
  </div>
  )}
 
  {activeRun && (
- <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 animate-in slide-in-from-bottom-2 fade-in duration-300 ${isStitchLight ?'-indigo-100 bg-[var(--surface)] text-[var(--ink)]' :'-cyan-500/10 bg-[var(--bg)]/80 text-[var(--ink-2)]'}`}>
+ <div className={` rounded-[var(--r-l)] p-4 space-y-3 max-w-sm mt-1 animate-in slide-in-from-bottom-2 fade-in duration-300 ${'-indigo-100 bg-[var(--surface)] text-[var(--ink)]'}`}>
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold tracking-widest">
- <Activity className={`w-3.5 h-3.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--acc)]'}`} />
+ <Activity className={`w-3.5 h-3.5 ${'text-[var(--tentative)]'}`} />
  <span>Monitoreando {activeRun.agentName}</span>
  </div>
  <button 
@@ -2144,7 +2134,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </button>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)] -slate-200/60' :'bg-[var(--bg)]/60 -bg-[var(--surface)]/80'}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--bg)] -slate-200/60'}`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans text-[var(--ink-2)]">Estado</span>
  {activeRun.status ==='queued' && (
@@ -2183,7 +2173,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  let textColor ='text-[var(--ink-2)]';
  if (isStepSuccess) {
  dotColor ='bg-[var(--ok)]';
- textColor = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
+ textColor = 'text-[var(--ink-2)]';
  } else if (isStepFailure) {
  dotColor ='bg-[var(--alert)]';
  textColor ='text-[var(--alert)] font-bold';
@@ -2401,13 +2391,11 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div 
  key={iIdx} 
  className={`p-1.5 rounded text-[9px] font-sans flex flex-col gap-0.5 ${
- isStitchLight 
- ?'bg-[var(--ink)]/60 -slate-200/50 text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/40 bg-[var(--surface)]/60 text-[var(--ink-2)]'
+ 'bg-[var(--ink)]/60 -slate-200/50 text-[var(--ink-2)]'
  }`}
  >
  <div className="flex justify-between items-start">
- <strong className={`${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'} font-semibold truncate`}>
+ <strong className={`${'text-[var(--ink)]'} font-semibold truncate`}>
  {item.nombre_sala}
  </strong>
  <span className="text-[8px] opacity-75 font-sans">{item.ciudad}</span>
@@ -2452,7 +2440,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
 
  {/* Input Message Form Footer */}
- <form onSubmit={handleSendMessage} className={`p-3 flex gap-2 items-end ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--bg)]/90 -bg-[var(--surface)]/60'}`}>
+ <form onSubmit={handleSendMessage} className={`p-3 flex gap-2 items-end ${'bg-[var(--bg)]'}`}>
  <textarea
  id="chatbot-text-input"
  ref={textareaRef}
@@ -2462,9 +2450,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  onKeyDown={handleKeyDown}
  placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
  className={`flex-1 rounded-[var(--r-m)] px-3.5 py-2 text-xs focus:outline-none transition-all font-sans resize-none max-h-28 min-h-[38px] ${
- isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/60 text-[var(--ink-2)] focus:-cyan-500/50 placeholder:text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:-indigo-500 placeholder:text-[var(--ink-2)]'
  }`}
  />
  <button
@@ -2476,7 +2462,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
  isListening
  ?'bg-[var(--alert)] text-[var(--ink)]'
- : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] bg-[var(--surface)]/40')
+ : ('bg-[var(--sunken)] text-[var(--ink-2)]')
  }`}
  >
  <Mic className="w-4 h-4" />
@@ -2487,11 +2473,11 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  disabled={!inputText.trim() || isLoading}
  className={`p-2.5 rounded-[var(--r-m)] font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 ${
  inputText.trim() 
- ? (isStitchLight ?'bg-[var(--tentative)]/80 text-[var(--ink)]' : colors.primary) 
- : (isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)] text-[var(--ink-2)] bg-[var(--surface)]/40')
+ ? ('bg-[var(--tentative)]/80 text-[var(--ink)]' : colors.primary) 
+ : ('bg-[var(--sunken)] text-[var(--ink-2)]')
  }`}
  >
- <Send className={`w-4 h-4 ${isStitchLight && inputText.trim() ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />
+ <Send className={`w-4 h-4 ${&& inputText.trim() ?'text-[var(--ink)]' :'text-[var(--acc-ink)]'}`} />
  </button>
  </form>
 

@@ -874,8 +874,6 @@ https://youtube.com/bakandeya_live
 Bakandeya Agent Manager IA & Músicos`;
  };
 
- const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
-
  return (
  <div className="w-full space-y-6">
  
@@ -1203,8 +1201,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onBulkGeneratePitch={handleBulkGenerateSwaps}
  onBulkToggleFavorite={handleBulkBandToggleFavorite}
  onBulkExportCsv={handleBulkBandExportCsv}
- onBulkDelete={handleBulkBandDelete}
- isStitchLight={isStitchLight}
+ onBulkDelete={handleBulkBandDelete}={}
  />
 
  {/* 3. BAND LIST CONTAINER */}
@@ -1228,8 +1225,7 @@ Bakandeya Agent Manager IA & Músicos`;
  ) : viewMode ==='map' ? (
  <BandMap
  bands={filteredBands}
- onSelectBand={(band) => handleOpenEditModal(band)}
- isStitchLight={isStitchLight}
+ onSelectBand={(band) => handleOpenEditModal(band)}={}
  />
  ) : viewMode ==='grid' ? (
  /* GRID CARDS VIEW */
@@ -1547,7 +1543,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {isAddEditModalOpen && (
  <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-50">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
@@ -1941,8 +1937,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <BandPitchModal
  isOpen={isPitchModalOpen}
  onClose={() => setIsPitchModalOpen(false)}
- band={selectedPitchBand}
- isStitchLight={isStitchLight}
+ band={selectedPitchBand}={}
  activeCampaign={activeCampaign}
  proposedBakandeyaCity={proposedBakandeyaCity}
  setProposedBakandeyaCity={setProposedBakandeyaCity}
@@ -1958,8 +1953,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <BandToneModal
  isOpen={isToneModalOpen}
  onClose={() => setIsToneModalOpen(false)}
- band={selectedToneBand}
- isStitchLight={isStitchLight}
+ band={selectedToneBand}={}
  toneData={toneData}
  isLoading={isAnalyzingTone}
  onReAnalyze={() => selectedToneBand && handleAnalyzeTone(selectedToneBand)}
@@ -1974,8 +1968,7 @@ Bakandeya Agent Manager IA & Músicos`;
  isOpen={isScoutModalOpen}
  onClose={() => setIsScoutModalOpen(false)}
  activeCampaign={activeCampaign}
- onAddBands={handleImportScoutedBands}
- isStitchLight={isStitchLight}
+ onAddBands={handleImportScoutedBands}={}
  />
 
 

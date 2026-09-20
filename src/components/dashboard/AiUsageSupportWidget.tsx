@@ -83,7 +83,6 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => 
 };
 
 interface AiUsageCardProps {
- isStitchLight?: boolean;
 }
 
 // Por debajo de esto no merece la pena ni mostrar la tarjeta: Diego prefiere que una banda que

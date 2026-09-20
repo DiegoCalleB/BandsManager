@@ -28,7 +28,6 @@ interface FansCommunityViewProps {
  effectiveBandName: string;
  effectiveBandLogo?: string;
  colors?: ThemeColors;
- isStitchLight?: boolean;
  onUpdateFan?: (fanId: string, updates: Partial<Fan>) => void;
  onDeleteFan?: (fanId: string) => void;
  onOpenAddModal: () => void;
@@ -40,8 +39,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  concerts = [],
  effectiveBandName,
  effectiveBandLogo,
- colors,
- isStitchLight,
+ colors
  onUpdateFan,
  onDeleteFan,
  onOpenAddModal,

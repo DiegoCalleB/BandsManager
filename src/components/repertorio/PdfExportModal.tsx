@@ -242,8 +242,7 @@ interface PdfExportModalProps {
  isOpen: boolean;
  activeSetlist: Setlist | null;
  activeSetlistMetrics: { formattedTime: string; songCount: number; avgBpm?: number; totalSeconds?: number };
- songs: Song[];
- isStitchLight: boolean;
+ songs: Song[];: boolean;
  bandMembers?: BandMemberOption[];
  bandName?: string;
  bandLogoUrl?: string;
@@ -257,8 +256,7 @@ export function PdfExportModal({
  isOpen,
  activeSetlist,
  activeSetlistMetrics,
- songs,
- isStitchLight,
+ songs
  bandMembers = [],
  bandName ='Tu Banda',
  bandLogoUrl ='',
@@ -1346,7 +1344,7 @@ export function PdfExportModal({
  <div className="fixed inset-0 bg-[var(--scrim)]/90 flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
  <div
  className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  >
  {/* Modal Top Header — recortado a lo esencial en móvil (badge decorativo e info extra
@@ -1355,7 +1353,7 @@ export function PdfExportModal({
  de verdad hace falta ver de un vistazo. */}
  <div
  className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${
- isStitchLight ?' bg-[var(--surface)]' :' bg-[var(--bg)]'
+ ' bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -1396,9 +1394,7 @@ export function PdfExportModal({
  <button
  onClick={onClose}
  className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-95 cursor-pointer ${
- isStitchLight
- ?'hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
- :'hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ 'hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -1408,7 +1404,7 @@ export function PdfExportModal({
 
  {/* Customization Control Panel */}
  <div className={`p-3 sm:px-6 flex flex-col gap-3 text-xs font-sans shrink-0 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/90'
+ 'bg-[var(--surface)]'
  }`}>
  {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
  fila no cabían sin apretarse); en desktop, los botones de siempre, más cómodos con
@@ -1421,7 +1417,7 @@ export function PdfExportModal({
  setPreviewPageIndex(0);
  }}
  className={`sm:hidden flex-1 min-w-0 p-2 rounded-[var(--r-s)] font-bold cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="all_members">👥 Todos los Músicos ({resolvedMembers.length} hojas)</option>
@@ -1479,7 +1475,7 @@ export function PdfExportModal({
  value={selectedMemberId}
  onChange={(e) => setSelectedMemberId(e.target.value)}
  className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-[var(--r-s)] font-bold cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {resolvedMembers.map((m) => (
@@ -1523,7 +1519,7 @@ export function PdfExportModal({
  <button
  onClick={() => setShowAdvancedSettings(v => !v)}
  className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-[var(--r-s)] font-bold cursor-pointer transition-colors ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)]' :'bg-black/40 text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  <span className="flex items-center gap-1.5">
@@ -1662,7 +1658,7 @@ export function PdfExportModal({
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
  {membersToExport.length > 1 && (
  <div className={`px-3 sm:px-6 py-1.5 sm:py-2 flex items-center justify-between gap-2 text-xs font-sans shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--sunken)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <span className="hidden sm:inline font-bold text-[var(--ink-2)] shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
@@ -1694,7 +1690,7 @@ export function PdfExportModal({
  {/* Modal Body: A4 Stage Sheet Real Preview Container */}
  <div
  className={`flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--sunken)]'
+ 'bg-[var(--sunken)]'
  }`}
  >
  {/* Authentic Real Stage Paper Sheet */}
@@ -2055,13 +2051,13 @@ export function PdfExportModal({
  {sizeChoiceDialog && (
  <div className="fixed inset-0 bg-[var(--scrim)]/80 flex items-center justify-center z-[10000] p-4">
  <div className={`rounded-[var(--r-l)] max-w-lg w-full p-6 ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
- <h3 className={`text-lg font-black mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <h3 className={`text-lg font-black mb-2 flex items-center gap-2 ${'text-[var(--ink)]'}`}>
  <Zap className="w-5 h-5 text-[var(--acc)]" />
  ¿Cómo prefieres el repertorio?
  </h3>
- <p className={`text-sm mb-5 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <p className={`text-sm mb-5 ${'text-[var(--ink-2)]'}`}>
  El repertorio casi cabe en una sola hoja, pero necesitaría una letra algo más pequeña
  de lo recomendado para leerse cómodo en escena (~2m). Elige qué prefieres:
  </p>
@@ -2073,10 +2069,10 @@ export function PdfExportModal({
  }}
  className="p-4 rounded-[var(--r-m)] /40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
- <div className={`font-black text-sm mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <div className={`font-black text-sm mb-1 ${'text-[var(--ink)]'}`}>
  📄 1 sola hoja (letra más pequeña)
  </div>
- <div className={`text-xs ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <div className={`text-xs ${'text-[var(--ink-2)]'}`}>
  {sizeChoiceDialog.singleTotalPages} hoja{sizeChoiceDialog.singleTotalPages !== 1 ?'s' :''} en total — todo el repertorio de un vistazo
  </div>
  </button>
@@ -2087,17 +2083,17 @@ export function PdfExportModal({
  }}
  className="p-4 rounded-[var(--r-m)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
- <div className={`font-black text-sm mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
+ <div className={`font-black text-sm mb-1 ${'text-[var(--ink)]'}`}>
  📄📄 Varias hojas (letra más grande)
  </div>
- <div className={`text-xs ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
+ <div className={`text-xs ${'text-[var(--ink-2)]'}`}>
  {sizeChoiceDialog.multiTotalPages} hojas en total — letra al tamaño ideal para leer desde ~2m
  </div>
  </button>
  </div>
  <button
  onClick={() => setSizeChoiceDialog(null)}
- className={`mt-4 text-xs font-sans cursor-pointer ${isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)]' :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`mt-4 text-xs font-sans cursor-pointer ${'text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  Cancelar
  </button>
@@ -2110,8 +2106,7 @@ export function PdfExportModal({
  <MemberNotesModal
  isOpen={Boolean(editingSongForNotes)}
  song={editingSongForNotes}
- colors={{ card:'bg-[var(--surface)]', text:'text-[var(--ink)]' } as any}
- isStitchLight={isStitchLight}
+ colors={{ card:'bg-[var(--surface)]', text:'text-[var(--ink)]' } as any}={}
  bandMembers={resolvedMembers}
  onClose={() => setEditingSongForNotes(null)}
  onSaveSongNotes={(updated) => {

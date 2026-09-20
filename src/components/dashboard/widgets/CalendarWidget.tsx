@@ -8,7 +8,6 @@ export interface CalendarWidgetProps {
  rehearsals: Rehearsal[];
  activeBandName?: string;
  colors: ThemeColors;
- isStitchLight?: boolean;
  agendaFilterMode:'active' |'all';
  onSetAgendaFilterMode: (mode:'active' |'all') => void;
  onNavigate?: (view: string, options?: any) => void;

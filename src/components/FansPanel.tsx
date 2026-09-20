@@ -44,7 +44,6 @@ interface FansPanelProps {
  isScanningMetrics?: boolean;
  isSyncingMetrics?: boolean;
  colors?: ThemeColors;
- isStitchLight?: boolean;
  onNavigate?: (view:'epk') => void;
  isPromo?: boolean;
  onUpdateConcert?: (id: string, updates: Partial<Concert>) => void;
@@ -73,8 +72,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onSyncMetrics,
  isScanningMetrics,
  isSyncingMetrics,
- colors,
- isStitchLight,
+ colors
  onNavigate,
  isPromo = false,
  onUpdateConcert,
@@ -425,8 +423,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  await navigator.share({
  title: `Únete a ${effectiveBandName}`,
  text:'Escanea o entra para unirte a nuestra comunidad.',
- url: qrConcertUrl,
- });
+ url: qrConcertUrl});
  } catch (err) {
  console.log('Share canceled or not supported', err);
  }
@@ -967,8 +964,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  concerts={concerts}
  effectiveBandName={effectiveBandName}
  effectiveBandLogo={effectiveBandLogo}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  onUpdateFan={onUpdateFan}
  onDeleteFan={onDeleteFan}
  onOpenAddModal={() => setShowAddModal(true)}
@@ -1562,8 +1558,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {activeTab ==='metrics' && (
  <div className="space-y-6">
  <ReelsMetricsView
- colors={colors || THEMES.indie_velvet}
- isStitchLight={isStitchLight}
+ colors={colors || THEMES.indie_velvet}={}
  metrics={metrics || []}
  epkConfig={epkConfig}
  currentBandName={effectiveBandName}

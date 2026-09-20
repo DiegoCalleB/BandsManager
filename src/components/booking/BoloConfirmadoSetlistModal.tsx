@@ -23,7 +23,6 @@ interface BoloConfirmadoSetlistModalProps {
  }) => Promise<void> | void;
  onConfirmWithoutSetlist: () => void;
  colors?: ThemeColors;
- isStitchLight?: boolean;
 }
 
 export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProps> = ({
@@ -32,8 +31,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  onClose,
  onConfirmWithSetlist,
  onConfirmWithoutSetlist,
- colors,
- isStitchLight = false
+ colors= false
 }) => {
  const [setlists, setSetlists] = useState<Setlist[]>([]);
  const [songs, setSongs] = useState<Song[]>([]);

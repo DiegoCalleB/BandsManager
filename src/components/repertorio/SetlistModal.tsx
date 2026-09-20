@@ -6,8 +6,7 @@ import { ModalPortal } from'../common/ModalPortal';
 interface SetlistModalProps {
  isOpen: boolean;
  setlistToEdit: Setlist | null;
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  onClose: () => void;
  onSave: (setlistData: { id?: string; nombre: string; descripcion: string; tipoFormato: Setlist['tipoFormato'] }) => void;
 }
@@ -15,11 +14,9 @@ interface SetlistModalProps {
 export function SetlistModal({
  isOpen,
  setlistToEdit,
- colors,
- isStitchLight,
+ colors
  onClose,
- onSave,
-}: SetlistModalProps) {
+ onSave}: SetlistModalProps) {
  const [nombre, setNombre] = useState('');
  const [descripcion, setDescripcion] = useState('');
  const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');
@@ -47,8 +44,7 @@ export function SetlistModal({
  id: setlistToEdit?.id,
  nombre: nombre.trim(),
  descripcion: descripcion.trim(),
- tipoFormato,
- });
+ tipoFormato});
  onClose();
  };
 
@@ -78,7 +74,7 @@ export function SetlistModal({
  onChange={(e) => setNombre(e.target.value)}
  placeholder="ej. Festival Rumba & Rock 2026"
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -89,7 +85,7 @@ export function SetlistModal({
  value={tipoFormato}
  onChange={(e) => setTipoFormato(e.target.value as any)}
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
@@ -108,7 +104,7 @@ export function SetlistModal({
  onChange={(e) => setDescripcion(e.target.value)}
  placeholder="ej. Setlist pensado para festivales con ritmo alto sin pausas..."
  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>

@@ -18,18 +18,16 @@ interface ExampleThread {
 }
 
 interface ExampleThreadsSectionProps {
- category: TemplateCategory;
- isStitchLight: boolean;
+ category: TemplateCategory;: boolean;
  textSub: string;
 }
 
 const RESULTADO_LABEL: Record<string, string> = {
  positiva:'✅ Salió bien',
  negativa:'❌ No prosperó',
- neutral:'➖ Neutro',
-};
+ neutral:'➖ Neutro'};
 
-export function ExampleThreadsSection({ category, isStitchLight, textSub }: ExampleThreadsSectionProps) {
+export function ExampleThreadsSection({ category textSub }: ExampleThreadsSectionProps) {
  const [threads, setThreads] = useState<ExampleThread[]>([]);
  const [isLoading, setIsLoading] = useState(false);
  const [isSaving, setIsSaving] = useState(false);
@@ -118,12 +116,10 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  const res = editingId
  ? await apiFetch(`/api/example-threads/${editingId}`, {
  method:'PUT',
- body: JSON.stringify({ titulo, mensajes: mensajesConTexto, resultado }),
- })
+ body: JSON.stringify({ titulo, mensajes: mensajesConTexto, resultado })})
  : await apiFetch('/api/example-threads', {
  method:'POST',
- body: JSON.stringify({ category, titulo, mensajes: mensajesConTexto, resultado }),
- });
+ body: JSON.stringify({ category, titulo, mensajes: mensajesConTexto, resultado })});
  if (res.success) {
  resetForm();
  setShowForm(false);
@@ -216,7 +212,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  value={titulo}
  onChange={(e) => setTitulo(e.target.value)}
  placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
- className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
+ className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
  />
 
  {mensajes.map((m, idx) => (
@@ -234,7 +230,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  value={m.texto}
  onChange={(e) => handleMessageChange(idx,'texto', e.target.value)}
  placeholder={m.rol ==='banda' ?'Lo que escribimos nosotros...' :'Lo que respondió la sala...'}
- className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
+ className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)]'}`}
  />
  {mensajes.length > 1 && (
  <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer shrink-0">

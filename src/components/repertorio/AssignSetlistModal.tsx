@@ -6,8 +6,7 @@ import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface AssignSetlistModalProps {
  assigningSetlist: Setlist | null;
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  concerts: Concert[];
  rehearsals: Rehearsal[];
  selectedConcertToAssign: string;
@@ -18,8 +17,7 @@ interface AssignSetlistModalProps {
 
 export function AssignSetlistModal({
  assigningSetlist,
- colors,
- isStitchLight,
+ colors
  concerts,
  rehearsals,
  selectedConcertToAssign,

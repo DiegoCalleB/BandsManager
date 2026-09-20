@@ -27,8 +27,7 @@ export interface NewLeadDataState {
 
 interface AddLeadModalProps {
  isOpen: boolean;
- sectionTab:'salas' |'medios' |'grupos';
- isStitchLight: boolean;
+ sectionTab:'salas' |'medios' |'grupos';: boolean;
  textSub: string;
  newLeadData: NewLeadDataState;
  setNewLeadData: React.Dispatch<React.SetStateAction<NewLeadDataState>>;
@@ -45,8 +44,7 @@ interface AddLeadModalProps {
 
 export function AddLeadModal({
  isOpen,
- sectionTab,
- isStitchLight,
+ sectionTab
  textSub,
  newLeadData,
  setNewLeadData,
@@ -96,7 +94,7 @@ export function AddLeadModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-lg p-5 rounded-[var(--r-l)] space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center justify-between pb-3">
@@ -454,9 +452,7 @@ export function AddLeadModal({
  <button
  type="button"
  onClick={onClose}
- className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+ className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] tracking-wider transition-colors cursor-pointer ${?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  :'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  >

@@ -10,7 +10,6 @@ interface VenueMapProps {
  selectedLead: Lead | null;
  onSelectLead: (lead: Lead) => void;
  onUpdateLead: (leadId: string, data: Partial<Lead>) => void;
- isStitchLight?: boolean;
  activeCityFilter?: string;
  activeRegionFilter?: string;
 }
@@ -165,8 +164,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  leads,
  selectedLead,
  onSelectLead,
- onUpdateLead,
- isStitchLight = false,
+ onUpdateLead= false,
  activeCityFilter ='',
  activeRegionFilter =''
 }) => {
@@ -216,8 +214,8 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  const count = cluster.getChildCount();
  let size = 38;
  let bgColor =' var(--acc)';
- let textColor = isStitchLight ?'#ffffff' :'#1c1917';
- let ringColor = isStitchLight ?'rgba(79, 70, 229, 0.25)' :'rgba(242, 202, 80, 0.35)';
+ let textColor = '#ffffff';
+ let ringColor = 'rgba(79, 70, 229, 0.25)';
 
  if (count >= 20) {
  size = 48;
@@ -489,7 +487,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  popupHtml.className ='font-sans p-1 min-w-[200px] text-[var(--ink)]';
  popupHtml.innerHTML = `
  <div style="font-family: system-ui, sans-serif;">
- <div style="font-size: 13px; font-weight: 700; margin-bottom: 2px; color: ${isStitchLight ?'#0f172a' :'#0f172a'};">
+ <div style="font-size: 13px; font-weight: 700; margin-bottom: 2px; color: ${'#0f172a'};">
  ${escapeHtml(lead.nombre_sala)}
  </div>
  <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">
@@ -609,7 +607,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  prevFilterKeyRef.current = currentFilterKey;
  }
  }
- }, [geoPositions, leads, isStitchLight, mapStyle, activeCityFilter, activeRegionFilter]);
+ }, [geoPositions, leads mapStyle, activeCityFilter, activeRegionFilter]);
 
  
  // Invalidate size on container resize (without resetting zoom/bounds on cluster expand)
@@ -664,7 +662,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  return (
  <div className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden transition-all" style={{
- borderColor: isStitchLight ?'#e2e8f0' :'#27272a'
+ borderColor: '#e2e8f0'
  }}>
  <style>{`
  .leaflet-tooltip.custom-venue-map-tooltip {
@@ -685,7 +683,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  {/* City Info Card */}
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${
- isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
  <div>
@@ -714,9 +712,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
  className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${
- isStitchLight
- ?'bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--bg)]/95 hover:bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -725,7 +721,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  {showStyleMenu && (
  <div className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] ${
- isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)] shadow-black/80'
+ 'bg-[var(--surface)]/95 text-[var(--ink)]'
  }`}>
  <div className="text-[10px] font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
  <span>Elegir Capa de Mapa</span>
@@ -741,9 +737,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
  mapStyle === key
  ?'bg-[var(--tentative)]/80 text-[var(--ink)]'
- : isStitchLight
- ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
+ : 'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  <span className="truncate">{MAP_STYLES[key].name}</span>
@@ -757,9 +751,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <button
  onClick={handleRecenter}
  className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${
- isStitchLight
- ?'bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
- :'bg-[var(--bg)]/90 hover:bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  >
  <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -770,7 +762,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  {/* Floating Legend */}
  <div className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 hidden sm:block ${
- isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink-2)]' :'bg-[var(--bg)]/90 text-[var(--ink-2)]'
+ 'bg-[var(--surface)]/90 text-[var(--ink-2)]'
  }`}>
  <div className="font-bold text-[9px] tracking-wider mb-1 text-[var(--ink-2)]">Leyenda</div>
  <div className="flex items-center gap-2">

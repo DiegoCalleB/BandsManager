@@ -32,7 +32,6 @@ export interface DashboardWidgetGridProps {
  epkConfig?: Partial<EPKConfig>;
  activeBandName?: string;
  colors: ThemeColors;
- isStitchLight?: boolean;
  agendaFilterMode:'active' |'all';
  onSetAgendaFilterMode: (mode:'active' |'all') => void;
  onNavigate?: (view: string, options?: any) => void;
@@ -48,8 +47,7 @@ export function DashboardWidgetGrid({
  posts = [],
  epkConfig,
  activeBandName,
- colors,
- isStitchLight = false,
+ colors= false,
  agendaFilterMode,
  onSetAgendaFilterMode,
  onNavigate
@@ -254,8 +252,7 @@ export function DashboardWidgetGrid({
  concerts={concerts}
  rehearsals={rehearsals}
  activeBandName={activeBandName}
- colors={colors}
- isStitchLight={isStitchLight}
+ colors={colors}={}
  agendaFilterMode={agendaFilterMode}
  onSetAgendaFilterMode={onSetAgendaFilterMode}
  onNavigate={onNavigate}
@@ -269,7 +266,7 @@ export function DashboardWidgetGrid({
  case'repertorio_energy':
  return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} />;
  case'crm_pipeline':
- return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <CrmPipelineWidget leads={leads} onNavigate={onNavigate}={} />;
  case'booking_funnel_chart':
  return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
  case'finances_chart':
@@ -277,17 +274,17 @@ export function DashboardWidgetGrid({
  case'social_fans_chart':
  return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} />;
  case'repertorio_summary':
- return <RepertorioWidget onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <RepertorioWidget onNavigate={onNavigate}={} />;
  case'finances_summary':
- return <FinancesWidget concerts={concerts} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <FinancesWidget concerts={concerts} onNavigate={onNavigate}={} />;
  case'social_fans':
- return <SocialFansWidget fans={fans} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <SocialFansWidget fans={fans} onNavigate={onNavigate}={} />;
  case'epk_status':
- return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate}={} />;
  case'ai_agent_status':
- return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate}={} />;
  case'tour_status':
- return <TourStatusWidget tours={tours} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
+ return <TourStatusWidget tours={tours} onNavigate={onNavigate}={} />;
  default:
  return null;
  }
@@ -539,7 +536,7 @@ export function DashboardWidgetGrid({
  </div>
  )}
  <AiSupportWidget variant="card" />
- <AiUsageCard isStitchLight={isStitchLight} />
+ <AiUsageCard={} />
  </div>
 
  {/* MODAL / CATALOGO: AÑADIR NUEVO WIDGET */}

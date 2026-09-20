@@ -16,12 +16,11 @@ export interface ModuleWidgetProps {
  currentUser?: any;
  activeBandName?: string;
  colors?: ThemeColors;
- isStitchLight?: boolean;
  onNavigate?: (view: string, options?: any) => void;
 }
 
 /* 1. CRM PIPELINE WIDGET */
-export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: ModuleWidgetProps) {
+export function CrmPipelineWidget({ leads = [], onNavigate}: ModuleWidgetProps) {
  const urgentRepliesNeeded = leads.filter(l => l.estado ==='interesado' || l.estado ==='negociando');
  const urgentApprovalsNeeded = leads.filter(l => l.estado ==='pendiente_aprobacion' || (l.pitch_generado && l.estado ==='nuevo'));
  const confirmedShows = leads.filter(l => l.estado ==='confirmado');

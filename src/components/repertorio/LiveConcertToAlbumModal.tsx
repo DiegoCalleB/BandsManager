@@ -27,8 +27,7 @@ interface LiveConcertToAlbumModalProps {
  isOpen: boolean;
  onClose: () => void;
  bandName?: string;
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  onSaveAlbumToCatalog: (albumTitle: string, tracks: TrackCutItem[]) => void;
  onSaveSetlist?: (newSetlist: any) => void;
 }
@@ -64,11 +63,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  isOpen,
  onClose,
  bandName ='Nuestra Banda',
- colors,
- isStitchLight,
+ colors
  onSaveAlbumToCatalog,
- onSaveSetlist,
-}) => {
+ onSaveSetlist}) => {
  const [youtubeUrl, setYoutubeUrl] = useState('');
  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
  const [useAi, setUseAi] = useState(true);
@@ -190,8 +187,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const res = await fetch('/api/concert-to-album/save-cookies', {
  method:'POST',
  headers: {'Content-Type':'application/json' },
- body: JSON.stringify({ cookiesText: cookiesInputText.trim() }),
- });
+ body: JSON.stringify({ cookiesText: cookiesInputText.trim() })});
  const data = await res.json();
  if (res.ok && data.success) {
  setHasYoutubeCookies(true);
@@ -261,8 +257,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const uploadRes = await fetch('/api/upload', {
  method:'POST',
  headers: authHeaders,
- body: formData,
- });
+ body: formData});
 
  if (!uploadRes.ok) {
  const errorText = await uploadRes.text();
@@ -300,8 +295,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  const res = await fetch('/api/upload/chunk', {
  method:'POST',
  headers: authHeaders,
- body: formData,
- });
+ body: formData});
 
  if (!res.ok) {
  const errorText = await res.text();
@@ -344,8 +338,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setErrorMessage(null);
  try {
  const res = await apiFetch('/api/concert-to-album/demo-audio', {
- method:'POST',
- });
+ method:'POST'});
  if (res.success && res.filePath) {
  setAnalyzedSourcePath(res.filePath);
  setAudioAvailable(true);
@@ -445,9 +438,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  sourceFilePath,
  useAi,
  transcribeFirst,
- bandName: artistName || bandName,
- }),
- });
+ bandName: artistName || bandName})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -488,9 +479,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  sourceFilePath: analyzedSourcePath,
  tracks,
  albumTitle: albumTitle ||'Directo en Vivo',
- artist: artistName || bandName,
- }),
- });
+ artist: artistName || bandName})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -501,8 +490,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setGeneratedResult({
  albumId: data.albumId,
  deliverablePath: data.deliverablePath,
- tracks: data.tracks,
- });
+ tracks: data.tracks});
  setTracks(data.tracks);
  } catch (err: any) {
  console.error('Error slicing concert:', err);
@@ -541,8 +529,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  start,
  end,
  duration: 180,
- type:'musica',
- };
+ type:'musica'};
  const updated = [...prev, newTrack];
  return updated.map((t, i) => ({ ...t, index: i + 1 }));
  });
@@ -614,8 +601,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  return {
  ...tr,
  title: cleanName,
- type: newType,
- };
+ type: newType};
  });
  });
 
@@ -693,8 +679,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  title: track.title,
  audioUrl: track.audioUrl,
  start: track.start,
- end: track.end,
- });
+ end: track.end});
  setSnippetCurrentTime(cueOffset);
  setSnippetIsPlaying(true);
  setTimeout(() => {
@@ -713,8 +698,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  title: track.title,
  audioUrl:'',
  start: track.start,
- end: track.end,
- });
+ end: track.end});
  setSnippetCurrentTime(cueOffset);
  setSnippetIsPlaying(true);
  return;
@@ -730,9 +714,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  sourceFilePath: analyzedSourcePath,
  start: track.start,
  end: track.end,
- trackIndex: track.index,
- }),
- });
+ trackIndex: track.index})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -747,8 +729,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  title: track.title,
  audioUrl: data.audioUrl,
  start: track.start,
- end: track.end,
- });
+ end: track.end});
  setSnippetCurrentTime(cueOffset);
  setSnippetIsPlaying(true);
  setTimeout(() => {
@@ -777,9 +758,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  tracks,
  bandName: artistName || bandName,
  albumTitle: albumTitle ||'Directo en Vivo',
- useAi,
- }),
- });
+ useAi})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -809,9 +788,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  body: JSON.stringify({
  tracks,
  sourceFilePath: analyzedSourcePath,
- url: youtubeUrl.trim(),
- }),
- });
+ url: youtubeUrl.trim()})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -846,8 +823,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  ...track,
  start: newStart,
  duration: newDuration,
- cueIn: 0,
- };
+ cueIn: 0};
  setTracks(updated);
  };
 
@@ -864,8 +840,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  ...t,
  start: newStart,
  duration: newDuration,
- cueIn: 0,
- };
+ cueIn: 0};
  }
  return t;
  });
@@ -904,8 +879,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  end: maxEnd,
  duration: maxEnd - minStart,
  type: trackA.type ==='musica' || trackB.type ==='musica' ?'musica' :'dialogo',
- speechTranscription: mergedSpeech,
- };
+ speechTranscription: mergedSpeech};
 
  const newArr = [...tracks];
  newArr.splice(idx, 2, mergedTrack);
@@ -936,8 +910,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  end: maxEnd,
  duration: maxEnd - minStart,
  type: hasMusic ?'musica' :'dialogo',
- speechTranscription: mergedSpeech,
- };
+ speechTranscription: mergedSpeech};
 
  const remaining = tracks.filter((t) => !sortedIdxs.includes(t.index));
  const updatedList = [...remaining, mergedTrack].sort((a, b) => a.start - b.start);
@@ -975,8 +948,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  title: orig.title.includes('(Parte') ? orig.title : `${orig.title} (Parte 1)`,
  end: splitPoint,
  duration: Math.max(1, splitPoint - orig.start),
- audioUrl: undefined,
- };
+ audioUrl: undefined};
 
  const part2: TrackCutItem = {
  ...orig,
@@ -984,8 +956,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  start: splitPoint,
  end: orig.end,
  duration: Math.max(1, orig.end - splitPoint),
- audioUrl: undefined,
- };
+ audioUrl: undefined};
 
  const newArr = [...prev];
  newArr.splice(idx, 1, part1, part2);
@@ -1012,9 +983,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  end: track.end,
  trackIndex: track.index,
  audioUrl: track.audioUrl,
- promptContext: `Interludio o presentación del artista (${artistName || bandName}) en el concierto`,
- }),
- });
+ promptContext: `Interludio o presentación del artista (${artistName || bandName}) en el concierto`})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -1050,9 +1019,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  sourceFilePath: analyzedSourcePath,
  start: track.start,
  end: track.end,
- trackIndex: track.index,
- }),
- });
+ trackIndex: track.index})});
 
  if (!response.ok) {
  const errData = await response.json();
@@ -1093,8 +1060,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  setTranscribeAllProgress({
  current: i + 1,
  total: targetTracks.length,
- title: track.title,
- });
+ title: track.title});
 
  try {
  if (track.type ==='dialogo') {
@@ -1111,9 +1077,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  end: track.end,
  trackIndex: track.index,
  audioUrl: track.audioUrl,
- promptContext: `Interludio o presentación del artista (${artistName || bandName}) en el concierto`,
- }),
- });
+ promptContext: `Interludio o presentación del artista (${artistName || bandName}) en el concierto`})});
 
  if (response.ok) {
  const data = await response.json();
@@ -1138,9 +1102,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  sourceFilePath: analyzedSourcePath,
  start: track.start,
  end: track.end,
- trackIndex: track.index,
- }),
- });
+ trackIndex: track.index})});
 
  if (response.ok) {
  const data = await response.json();
@@ -1171,8 +1133,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  tituloCustom: t.title,
  notaTema: t.speechTranscription || (t.type ==='musica' ? `Tonalidad: ${t.tonalidad ||'Mim'} | BPM: ${t.bpm || 120}` :''),
  duracionEstimadaMinutos: Math.max(1, Math.round(t.duration / 60)),
- duracionEstimadaSegundos: t.duration || 180,
- }));
+ duracionEstimadaSegundos: t.duration || 180}));
 
  const totalMinutos = setlistItems.reduce((acc, it) => acc + (it.duracionEstimadaMinutos || 3), 0);
 
@@ -1184,8 +1145,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  duracionTotalEstimadaMinutos: totalMinutos,
  fechaCreacion: new Date().toISOString().split('T')[0],
  fechaUltimaEdicion: new Date().toISOString().split('T')[0],
- items: setlistItems,
- };
+ items: setlistItems};
 
  try {
  if (onSaveSetlist) {
@@ -1227,9 +1187,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
  <div
  className={`relative w-full max-w-5xl my-auto rounded-[var(--r-l)] overflow-hidden ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  } max-h-[92vh] flex flex-col`}
  >
  {/* Modal Header */}
@@ -1257,7 +1215,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={onClose}
  className={`p-2 rounded-[var(--r-s)] transition-colors ${
- isStitchLight ?'hover:bg-[var(--sunken)] text-[var(--ink-2)]' :'hover:bg-[var(--surface)] text-[var(--ink-2)]'
+ 'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  <X className="w-5 h-5" />
@@ -1278,7 +1236,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Step 1: Input & Parameters */}
  <div
  className={`p-5 rounded-[var(--r-m)] space-y-4 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60'
+ 'bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -1322,9 +1280,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  value={youtubeUrl}
  onChange={(e) => setYoutubeUrl(e.target.value)}
  className={`w-full px-3 py-2 text-sm rounded-[var(--r-s)] focus:outline-none focus:ring-2 focus:ring-amber-500 ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -1338,7 +1294,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  accept="video/*,audio/*"
  onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
  className={`w-full text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[var(--acc)] file:text-[var(--ink)] hover:file:bg-[var(--acc)]/80 ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  />
  </div>
@@ -1554,9 +1510,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  value={albumTitle}
  onChange={(e) => setAlbumTitle(e.target.value)}
  className={`px-2.5 py-1 text-xs font-bold rounded ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -1939,8 +1893,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  value={track.title}
  onChange={(e) => handleUpdateTrack(track.index,'title', e.target.value)}
  className={`w-full px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] transition-all ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] focus:'
+ 'bg-[var(--surface)] text-[var(--ink)] focus:'
  : track.type ==='musica'
  ?'bg-[var(--surface)]/90 /40 text-[var(--acc)] placeholder-[var(--ink-2)] focus: focus:ring-1 focus:ring-amber-400'
  :'bg-[var(--surface)]/90/40 text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-400'

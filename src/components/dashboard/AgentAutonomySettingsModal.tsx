@@ -68,7 +68,6 @@ interface AgentAutonomySettingsModalProps {
  bandName?: string;
  bandId?: string;
  currentUser?: any;
- isStitchLight?: boolean;
  initialConfig?: Partial<AgentAutonomyConfig>;
  onSaveConfig?: (config: AgentAutonomyConfig) => void;
  onOpenTemplatesSection?: () => void;
@@ -108,8 +107,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClose,
  bandName ='Tu Banda',
  bandId ='band-bakandeya',
- currentUser,
- isStitchLight = false,
+ currentUser= false,
  initialConfig,
  onSaveConfig,
  onOpenTemplatesSection,
@@ -546,14 +544,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
  <div className={`border rounded-[var(--r-l)] w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
- isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)]' 
- :'bg-[var(--surface)] /30 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  
  {/* Modal Header */}
  <div className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/20 to-orange-500/20 text-[var(--acc)]">
@@ -593,7 +589,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Tab Navigation */}
  <div className={`flex px-4 sm:px-5 gap-2 shrink-0 overflow-x-auto ${
- isStitchLight ?'bg-[var(--sunken)]/60' :'bg-[var(--surface)]/60'
+ 'bg-[var(--sunken)]/60'
  }`}>
  <button
  type="button"
@@ -1128,7 +1124,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  SMTP/IMAP con contraseña de aplicación para Outlook/otros) - misma
  configuración que usa el Agente Enviador programado, sin duplicar aquí
  un mecanismo de conexión distinto al de EmailAccountConfig. */}
- <EmailAccountConfig bandId={bandId || currentUser?.band_id} isStitchLight={isStitchLight} />
+ <EmailAccountConfig bandId={bandId || currentUser?.band_id}={} />
 
  {/* 3. Modo de Despacho de Correo */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
@@ -1973,7 +1969,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Modal Footer */}
  <div className={`p-4 flex flex-wrap items-center justify-between gap-3 shrink-0 ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}>
  <div className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)]">
  <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />

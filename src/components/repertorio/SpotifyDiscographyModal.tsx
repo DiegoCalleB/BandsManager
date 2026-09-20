@@ -55,8 +55,7 @@ interface SpotifyDiscographyModalProps {
  onClose: () => void;
  bandName?: string;
  existingSongs: Song[];
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  onSongsImported: (updatedSongs: Song[]) => void;
 }
 
@@ -65,10 +64,8 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  onClose,
  bandName ='',
  existingSongs = [],
- colors,
- isStitchLight,
- onSongsImported,
-}) => {
+ colors
+ onSongsImported}) => {
  const [searchQuery, setSearchQuery] = useState(bandName);
  const [isSearching, setIsSearching] = useState(false);
  const [isFetchingDiscography, setIsFetchingDiscography] = useState(false);
@@ -211,15 +208,13 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  const toggleSelectAlbum = (albumId: string) => {
  setSelectedAlbumIds((prev) => ({
  ...prev,
- [albumId]: !prev[albumId],
- }));
+ [albumId]: !prev[albumId]}));
  };
 
  const toggleExpandAlbum = (albumId: string) => {
  setExpandedAlbumIds((prev) => ({
  ...prev,
- [albumId]: !prev[albumId],
- }));
+ [albumId]: !prev[albumId]}));
  };
 
  const filteredAlbums = albums.filter((alb) => {
@@ -253,10 +248,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  selectedAlbums: selected,
  options: {
  overwriteDuplicates,
- updateEpkSpotifyUrl: updateEpkUrl,
- },
- }),
- });
+ updateEpkSpotifyUrl: updateEpkUrl}})});
 
  if (!data || !data.success) {
  throw new Error(data?.error ||'Error al guardar la discografía en la base de datos.');
@@ -283,9 +275,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 animate-fadeIn">
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl overflow-hidden transition-all ${
- isStitchLight
- ?'bg-[var(--bg)] text-[var(--ink)]'
- :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* Header Modal Bar */}
@@ -334,9 +324,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
  placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
- className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
+ className={`w-full pl-10 pr-4 py-2.5 rounded-[var(--r-l)] text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[var(--ok)] transition-all ${?'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  :'bg-[var(--surface)] text-[var(--ink)] placeholder:text-[var(--ink-2)]'
  }`}
  />
@@ -370,9 +358,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  {/* Artist Profile Card */}
  {artistProfile && (
  <div
- className={`p-4 rounded-[var(--r-l)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${
- isStitchLight
- ?'bg-[var(--surface)]'
+ className={`p-4 rounded-[var(--r-l)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${?'bg-[var(--surface)]'
  :'bg-[var(--surface)]/90'
  }`}
  >
@@ -444,7 +430,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
  <div className="flex items-center gap-2 flex-wrap">
  {/* Category Filter */}
- <div className={`p-1 rounded-full flex items-center gap-1 ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
+ <div className={`p-1 rounded-full flex items-center gap-1 ${'bg-[var(--surface)]'}`}>
  <button
  type="button"
  onClick={() => setFilterType('todos')}
@@ -510,11 +496,9 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  key={album.id}
  className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
  isSelected
- ? isStitchLight
- ?'border-[var(--hair)] bg-[var(--surface)]'
+ ??'border-[var(--hair)] bg-[var(--surface)]'
  :'border-[var(--hair)]/50 bg-[var(--surface)]/90'
- : isStitchLight
- ?' bg-[var(--ink)]/70 opacity-60'
+ :?' bg-[var(--ink)]/70 opacity-60'
  :' bg-[var(--surface)]/40 opacity-60'
  }`}
  >

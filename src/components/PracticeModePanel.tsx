@@ -57,7 +57,6 @@ interface PracticeModePanelProps {
  idea: SongAudioIdea;
  tracks: AudioTrack[];
  currentUser?: User;
- isStitchLight?: boolean;
  onClose: () => void;
  /** Permite abrir el Modo Studio multipista completo de este tema */
  onOpenStudio?: () => void;
@@ -77,7 +76,7 @@ function formatTime(totalSeconds: number): string {
  return `${m}:${String(s).padStart(2,'0')}`;
 }
 
-export default function PracticeModePanel({ song, idea, tracks, currentUser, isStitchLight, onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
+export default function PracticeModePanel({ song, idea, tracks, currentUser onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
  const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
  const [overrides, setOverrides] = useState<Record<string, TrackOverride>>({});
@@ -505,8 +504,8 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  return { text:'📐 Plantilla genérica (sin IA disponible)', tone:'text-[var(--ink-2)]' };
  };
 
- const panelBg = isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]';
- const cardBg = isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80';
+ const panelBg = 'bg-[var(--surface)] text-[var(--ink)]';
+ const cardBg = 'bg-[var(--bg)]';
 
  return (
  <>
@@ -518,7 +517,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
- <div className={`px-5 py-4 flex items-center justify-between ${isStitchLight ?' bg-[var(--bg)]' :' bg-[var(--surface)]/60'}`}>
+ <div className={`px-5 py-4 flex items-center justify-between ${' bg-[var(--bg)]'}`}>
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
  <Headphones className="w-5 h-5" />
@@ -658,7 +657,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  value={semitonesOffset}
  onChange={(e) => setSemitonesOffset(Number(e.target.value))}
  title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
- className={`text-xs font-sans rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'} ${semitonesOffset !== 0 ?'text-[var(--ink-2)] font-bold' :''}`}
+ className={`text-xs font-sans rounded-[var(--r-s)] px-2 py-1 outline-none ${'bg-[var(--surface)]'} ${semitonesOffset !== 0 ?'text-[var(--ink-2)] font-bold' :''}`}
  >
  {TRANSPOSE_SEMITONE_OPTIONS.map(st => {
  const origKey = song.tonalidad?.trim();

@@ -9,16 +9,13 @@ interface UserManagementModalProps {
  users: User[];
  onClose: () => void;
  onRefreshUsers: () => void;
- isStitchLight?: boolean;
 }
 
 export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  currentUser,
  users,
  onClose,
- onRefreshUsers,
- isStitchLight
-}) => {
+ onRefreshUsers}) => {
  const [activeTab, setActiveTab] = useState<'list' |'create' |'associate'>('list');
  
  // New user form state
@@ -246,9 +243,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
  className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight 
- ?'bg-[var(--surface)] text-[var(--ink)]' 
- :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <datalist id="instrument-suggestions">
@@ -257,7 +252,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </datalist>
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
+ '-slate-200 bg-[var(--bg)]'
  }`}>
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
@@ -285,7 +280,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Tab Selection */}
  <div className={`px-6 pt-3 flex gap-2 ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]/50' :'bg-[var(--surface)]/80 bg-[var(--surface)]/40'
+ '-slate-200 bg-[var(--bg)]/50'
  }`}>
  <button
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
@@ -351,9 +346,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div
  key={u.id}
  className={`p-4 rounded-[var(--r-m)] transition-all ${
- isStitchLight 
- ?'bg-[var(--bg)] -slate-200/80 hover:-slate-300' 
- :'bg-[var(--surface)]/60 bg-[var(--surface)]/80 hover:-neutral-700/80'
+ 'bg-[var(--bg)] -slate-200/80 hover:-slate-300'
  }`}
  >
  <div className="flex flex-wrap items-center justify-between gap-3">
@@ -449,7 +442,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setChangePasswordValue(e.target.value)}
  placeholder="Nueva contraseña secreta..."
  className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${
- isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  />
  <button
@@ -481,7 +474,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewUsername(e.target.value)}
  placeholder="Ej: pablo, carlos, ana"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  required
  />
@@ -497,7 +490,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewEmail(e.target.value)}
  placeholder="Ej: pablo@gmail.com"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  required
  />
@@ -515,7 +508,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewName(e.target.value)}
  placeholder="Ej: Pablo (Violín / Sintetizador)"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  required
  />
@@ -531,7 +524,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Contraseña del usuario"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  required
  />
@@ -546,7 +539,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  value={newRole}
  onChange={(e) => setNewRole(e.target.value as UserRole)}
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  >
  <option value="member">Miembro de Banda (Músico)</option>
@@ -565,7 +558,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewInstrument(e.target.value)}
  placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  />
  <p className="text-[10px] text-[var(--ink-2)]">
@@ -628,7 +621,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setAssocEmail(e.target.value)}
  placeholder="Introduce su email exacto..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  required
  />
@@ -642,7 +635,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  value={assocRole}
  onChange={(e) => setAssocRole(e.target.value as UserRole)}
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="member">Miembro de Banda (Músico)</option>
@@ -661,7 +654,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setAssocInstrument(e.target.value)}
  placeholder="Ej: Guitarra, Bajista, Manager, Coros"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -686,7 +679,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 text-right ${
- isStitchLight ?'-slate-200 bg-[var(--bg)]' :'bg-[var(--surface)] bg-[var(--surface)]/60'
+ '-slate-200 bg-[var(--bg)]'
  }`}>
  <button
  onClick={onClose}

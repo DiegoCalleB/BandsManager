@@ -17,8 +17,7 @@ export interface ActiveTemplateData {
 }
 
 interface TemplateConfigSectionProps {
- colors: ThemeColors;
- isStitchLight: boolean;
+ colors: ThemeColors;: boolean;
  textSub: string;
  textMuted: string;
  templateTab: TemplateCategory;
@@ -40,8 +39,7 @@ interface TemplateConfigSectionProps {
 }
 
 export function TemplateConfigSection({
- colors,
- isStitchLight,
+ colors
  textSub,
  textMuted,
  templateTab,
@@ -59,8 +57,7 @@ export function TemplateConfigSection({
  toneRating: toneRatingProp,
  onToneRatingChange,
  contentRating: contentRatingProp,
- onContentRatingChange,
-}: TemplateConfigSectionProps) {
+ onContentRatingChange}: TemplateConfigSectionProps) {
  const [internalInstruction, setInternalInstruction] = useState('');
  const [internalToneRating, setInternalToneRating] = useState(0);
  const [internalContentRating, setInternalContentRating] = useState(0);
@@ -77,7 +74,7 @@ export function TemplateConfigSection({
  <div className={`${colors.card} p-5 space-y-6`}>
  <div
  className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${
- isStitchLight ?'' :'border-[var(--hair)]'
+ ''
  }`}
  >
  <div>
@@ -97,7 +94,7 @@ export function TemplateConfigSection({
  {/* Template Tab Selector (7 Categories) */}
  <div
  className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${
- isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  >
  {[
@@ -120,9 +117,7 @@ export function TemplateConfigSection({
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
  ?' bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
- : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)]'
- :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />
@@ -141,12 +136,8 @@ export function TemplateConfigSection({
  : templateTab ==='grupos'
  ?' bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'
- ? isStitchLight
- ?'bg-[var(--acc)]/10 text-[var(--acc)]'
- :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'
- : isStitchLight
- ?'bg-[var(--acc)]/15 text-[var(--ink-2)]'
- :'bg-[var(--acc)]/15 text-[var(--ink-2)]'
+ ? 'bg-[var(--acc)]/10 text-[var(--acc)]'
+ : 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}
  >
  <div>
@@ -167,7 +158,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] font-sans tracking-wider ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'
+ 'text-[var(--ink-2)]'
  }`}
  >
  Asunto del Email por Defecto
@@ -185,7 +176,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] font-sans tracking-wider ${
- isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink)]'
+ 'text-[var(--ink-2)]'
  }`}
  >
  Cuerpo de la Plantilla de Correo de Presentación
@@ -314,7 +305,7 @@ export function TemplateConfigSection({
  </div>
  </div>
 
- <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
+ <ExampleThreadsSection category={templateTab}={} textSub={textSub} />
 
  <div className="flex flex-wrap gap-2 pt-2">
  {onOptimizeTemplate && (
@@ -333,9 +324,7 @@ export function TemplateConfigSection({
  onClick={onTestPrompt}
  disabled={isTestingPrompt}
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
- isStitchLight
- ?'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] hover: text-[var(--ink)]'
+ 'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ?'animate-spin' :''}`} />
@@ -356,13 +345,13 @@ export function TemplateConfigSection({
  {/* Test / Prompt Output side */}
  <div
  className={`border rounded-[var(--r-m)] p-4 flex flex-col justify-between ${
- isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-3">
  <div
  className={`flex items-center gap-2 pb-2 ${
- isStitchLight ?'' :'border-[var(--surface)]'
+ ''
  }`}
  >
  <span
@@ -386,9 +375,7 @@ export function TemplateConfigSection({
  <div className="space-y-3">
  <div
  className={`border rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)]'
- :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  >
  {testPromptResult}
@@ -475,9 +462,7 @@ export function TemplateConfigSection({
  ) : (
  <div
  className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
- isStitchLight
- ?' text-[var(--ink-2)]'
- :' text-[var(--ink-2)]'
+ ' text-[var(--ink-2)]'
  }`}
  >
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación

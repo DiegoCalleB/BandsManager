@@ -15,7 +15,6 @@ interface ProfileCompletenessCardProps {
  metrics: SocialMetric[];
  fans?: Fan[];
  tours?: Tour[];
- isStitchLight?: boolean;
  bandName?: string;
  currentUser?: User | null;
  onNavigate?: (view: any, options?: any) => void;
@@ -30,8 +29,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  rehearsals = [],
  metrics = [],
  fans = [],
- tours = [],
- isStitchLight = false,
+ tours = []= false,
  bandName ='Tu Banda',
  currentUser,
  onNavigate,

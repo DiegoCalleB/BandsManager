@@ -12,7 +12,6 @@ import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 
 interface ReelsMetricsViewProps {
  colors: ThemeColors;
- isStitchLight?: boolean;
  metrics: SocialMetric[];
  epkConfig?: Partial<EPKConfig>;
  currentBandName?: string;
@@ -27,8 +26,7 @@ interface ReelsMetricsViewProps {
 }
 
 export function ReelsMetricsView({
- colors,
- isStitchLight,
+ colors
  metrics = [],
  epkConfig,
  currentBandName,
@@ -577,8 +575,7 @@ export function ReelsMetricsView({
  tiktok: true,
  youtube: true,
  spotify: true,
- fans: true,
- });
+ fans: true});
 
  const toggleChannel = (channel:'instagram' |'tiktok' |'youtube' |'spotify' |'fans') => {
  setSelectedChannels(prev => ({
@@ -593,8 +590,7 @@ export function ReelsMetricsView({
  tiktok: channel ==='tiktok',
  youtube: channel ==='youtube',
  spotify: channel ==='spotify',
- fans: channel ==='fans',
- });
+ fans: channel ==='fans'});
  };
 
  const selectAllChannels = () => {
@@ -603,8 +599,7 @@ export function ReelsMetricsView({
  tiktok: true,
  youtube: true,
  spotify: true,
- fans: true,
- });
+ fans: true});
  };
 
  // Dynamic scale computation for visible channels
@@ -651,9 +646,7 @@ export function ReelsMetricsView({
  onClick={() => setActiveMainSection('metrics')}
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='metrics'
- ? isStitchLight
- ?'bg-[var(--surface)] text-[var(--tentative)]'
- :'bg-[var(--ok)] text-[var(--ink)] font-black'
+ ? 'bg-[var(--surface)] text-[var(--tentative)]'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -687,8 +680,7 @@ export function ReelsMetricsView({
 
  {activeMainSection ==='growth_plan' ? (
  <SocialGrowthPlanView
- colors={colors}
- isStitchLight={Boolean(isStitchLight)}
+ colors={colors}={Boolean()}
  bandName={effectiveBandName}
  latestMetric={latestMetric}
  epkConfig={epkConfig}
@@ -782,9 +774,7 @@ export function ReelsMetricsView({
  className={`px-3 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isSyncingMetrics
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- : isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
- :'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingMetrics ?'animate-spin' :''}`} />
@@ -962,7 +952,7 @@ export function ReelsMetricsView({
  {/* Fans Registrados (BBDD / Formulario Únete) Card */}
  {hasFans && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-[var(--accent-alt)]/10/50' :'bg-[var(--surface)]/40 /30'
+ 'bg-[var(--accent-alt)]/10/50'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
@@ -988,7 +978,7 @@ export function ReelsMetricsView({
 
  {/* 2. Recharts Dynamic Adaptive Area Chart */}
  {metrics.length > 0 && (
- <div className={`p-4 sm:p-5 rounded-[var(--r-m)] transition-all ${isStitchLight ?'bg-[var(--bg)]/70' :'bg-[var(--surface)]/70'}`}>
+ <div className={`p-4 sm:p-5 rounded-[var(--r-m)] transition-all ${'bg-[var(--bg)]/70'}`}>
  {/* Header with Title & Scale Badge */}
  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
  <div>
@@ -1012,7 +1002,7 @@ export function ReelsMetricsView({
  <Calendar className="w-3 h-3 text-[var(--tentative)]" /> Periodo:
  </span>
  <div className={`flex items-center gap-0.5 p-0.5 rounded-[var(--r-s)] ${
- isStitchLight ?'bg-[var(--sunken)]/70' :'bg-[var(--surface)]'
+ 'bg-[var(--sunken)]/70'
  }`}>
  {PERIOD_OPTIONS.map(opt => {
  const isSelected = selectedPeriod === opt.id;
@@ -1023,12 +1013,8 @@ export function ReelsMetricsView({
  onClick={() => setSelectedPeriod(opt.id)}
  className={`px-2 py-0.5 rounded text-[9px] font-sans font-bold transition-all cursor-pointer ${
  isSelected
- ? isStitchLight
- ?'bg-[var(--tentative)]/80 text-[var(--ink)]'
- :'bg-[var(--tentative)]/80 text-[var(--ink)]'
- : isStitchLight
- ?'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60'
- :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+ ? 'bg-[var(--tentative)]/80 text-[var(--ink)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/60'
  }`}
  title={opt.label}
  >
@@ -1042,9 +1028,7 @@ export function ReelsMetricsView({
  <button
  onClick={selectAllChannels}
  className={`text-[9px] font-sans px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1 ${
- isStitchLight 
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]' 
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  title="Mostrar todos los canales disponibles"
  >
@@ -1260,7 +1244,7 @@ export function ReelsMetricsView({
  <stop offset="95%" stopColor="var(--alert)" stopOpacity={0}/>
  </linearGradient>
  </defs>
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isStitchLight ?'#e2e8f0' :'#222222'} />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'#e2e8f0'} />
  <XAxis 
  dataKey="fecha" 
  stroke="var(--ink-2)" 
@@ -1282,13 +1266,13 @@ export function ReelsMetricsView({
  />
  <Tooltip 
  contentStyle={{ 
- backgroundColor: isStitchLight ?'var(--surface)' :'var(--surface)', 
- borderColor: isStitchLight ?'var(--hair)' :'var(--ink-2)',
+ backgroundColor: 'var(--surface)', 
+ borderColor: 'var(--hair)',
  borderRadius:'8px',
  fontSize:'10px',
  fontFamily:'monospace'
  }}
- labelStyle={{ fontWeight:'bold', color: isStitchLight ?'var(--ink)' :'var(--surface)' }}
+ labelStyle={{ fontWeight:'bold', color: 'var(--ink)' }}
  />
  {hasInstagram && selectedChannels.instagram && (
  <Area 
@@ -1343,7 +1327,7 @@ export function ReelsMetricsView({
 
  {/* 3. Vistas de Videos & Contenidos Reales (YouTube / Reels) */}
  <div className={`${colors.card} p-5 space-y-4`}>
- <div className={`border-b pb-2 flex items-center justify-between ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
+ <div className={`border-b pb-2 flex items-center justify-between ${''}`}>
  <div>
  <h3 className={`text-xs font-bold font-display tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Video className="w-3.5 h-3.5 text-[var(--ok)]" /> Monitoreo de Views y Contenidos Indexados
@@ -1365,7 +1349,7 @@ export function ReelsMetricsView({
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
  {contentItems.map((item, idx) => (
  <div key={item.id || idx} className={`p-3.5 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-[var(--bg)]/60 /60' :'bg-[var(--surface)]/60'
+ 'bg-[var(--bg)]/60 /60'
  }`}>
  {item.thumbnail_url && (
  <div className="w-full h-24 rounded-[var(--r-s)] overflow-hidden relative bg-[var(--sunken)]">
@@ -1389,7 +1373,7 @@ export function ReelsMetricsView({
  <span className="text-[8px] font-sans text-[var(--ink-2)]">{item.published_at.split('T')[0]}</span>
  )}
  </div>
- <h4 className={`text-xs font-bold line-clamp-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]'}`} title={item.title}>
+ <h4 className={`text-xs font-bold line-clamp-2 ${'text-[var(--ink)]'}`} title={item.title}>
  {item.title}
  </h4>
  </div>
@@ -1421,7 +1405,7 @@ export function ReelsMetricsView({
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Guardar/Editar Log Form (5 columns) */}
  <div className={`lg:col-span-5 ${colors.card} p-5 space-y-4`}>
- <div className={`border-b pb-2 ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
+ <div className={`border-b pb-2 ${''}`}>
  <h3 className={`text-xs font-bold font-display tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Plus className="w-3.5 h-3.5" /> {editingMetricId ?'Editar Checkpoint' :'Nuevo Checkpoint Manual'}
  </h3>
@@ -1587,9 +1571,7 @@ export function ReelsMetricsView({
  type="button"
  onClick={handleCancelEditMetric}
  className={`px-2 py-1 rounded font-sans text-[10px] font-bold tracking-widest cursor-pointer transition-all ${
- isStitchLight
- ?'border text-[var(--ink-2)] bg-[var(--bg)] hover:bg-[var(--sunken)]'
- :'border text-[var(--ink-2)] bg-[var(--surface)] hover:bg-[var(--surface)]/70'
+ 'border text-[var(--ink-2)] bg-[var(--bg)] hover:bg-[var(--sunken)]'
  }`}
  >
  Cancelar
@@ -1601,7 +1583,7 @@ export function ReelsMetricsView({
 
  {/* Historial Tabla (7 columns) */}
  <div className={`lg:col-span-7 ${colors.card} p-5 space-y-4 flex flex-col min-w-0`}>
- <div className={`border-b pb-2 ${isStitchLight ?'' :'border-[var(--hair)]'}`}>
+ <div className={`border-b pb-2 ${''}`}>
  <h3 className={`text-xs font-bold font-display tracking-widest flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
  <Table className="w-3.5 h-3.5" /> Registros Históricos en Supabase ({metrics.length})
  </h3>
@@ -1613,7 +1595,7 @@ export function ReelsMetricsView({
  <div className="overflow-x-auto flex-1 min-h-[300px]">
  <table className="w-full text-left text-[10px] font-sans">
  <thead>
- <tr className={`border-b text-[var(--ink-2)] tracking-wider text-[8px] ${isStitchLight ?'' :'border-[var(--surface)]'}`}>
+ <tr className={`border-b text-[var(--ink-2)] tracking-wider text-[8px] ${''}`}>
  <th className="py-2.5 font-medium">Fecha</th>
  {hasInstagram && <th className="py-2.5 font-medium text-right">Instagram</th>}
  {hasTikTok && <th className="py-2.5 font-medium text-right">TikTok</th>}
@@ -1733,7 +1715,7 @@ export function ReelsMetricsView({
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-in fade-in duration-200">
  <div 
  className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  onClick={(e) => e.stopPropagation()}
  >
@@ -1787,9 +1769,7 @@ export function ReelsMetricsView({
  <div className={`p-4 rounded-[var(--r-m)] ${
  igStatus?.connected 
  ?'bg-[var(--ok)]/10/30 text-[var(--ok)]'
- : isStitchLight
- ?'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ : 'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]'
  }`}>
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-2.5">
@@ -1929,7 +1909,7 @@ export function ReelsMetricsView({
 
  {/* Step by step guide according to Meta Insights Documentation */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-2 text-xs ${
- isStitchLight ?'bg-[var(--bg)] text-[var(--ink-2)]' :'bg-[var(--surface)]/60 text-[var(--ink-2)]'
+ 'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}>
  <div className="font-bold font-sans tracking-wider text-[11px] text-[var(--ink-2)] flex items-center gap-1.5">
  <span>📘</span> Pasos según la documentación oficial de Meta Insights:
@@ -1963,9 +1943,7 @@ export function ReelsMetricsView({
  <button
  onClick={() => setShowIgModal(false)}
  className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans tracking-wider font-bold transition-all cursor-pointer ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  Cerrar
@@ -1979,7 +1957,7 @@ export function ReelsMetricsView({
  {showScanModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden flex flex-col ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Modal Header */}
  <div className="p-5 flex items-center justify-between bg-[var(--surface)]/40">
@@ -2189,9 +2167,7 @@ export function ReelsMetricsView({
  setScanResult(null);
  }}
  className={`px-4 py-2 rounded-[var(--r-m)] text-xs font-sans tracking-wider font-bold transition-all cursor-pointer ${
- isStitchLight
- ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
+ 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}
  >
  Cerrar

@@ -28,7 +28,6 @@ interface ExcelImportModalProps {
  onClose: () => void;
  onSuccess: (importedLeads: Lead[], updatedCount: number) => void;
  existingLeads: Lead[];
- isStitchLight?: boolean;
 }
 
 interface ColumnMapping {
@@ -82,8 +81,7 @@ export function ExcelImportModal({
  isOpen,
  onClose,
  onSuccess,
- existingLeads,
- isStitchLight = false
+ existingLeads= false
 }: ExcelImportModalProps) {
  // Step state: 1 = Upload, 2 = Map Columns, 3 = Preview & Validate, 4 = Result / Enriching
  const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -454,7 +452,7 @@ export function ExcelImportModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div
  className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)]800 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {/* MODAL HEADER */}

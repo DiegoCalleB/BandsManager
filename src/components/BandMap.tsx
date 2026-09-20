@@ -8,7 +8,6 @@ import { escapeHtml } from'../utils/escapeHtml';
 interface BandMapProps {
  bands: BandContact[];
  onSelectBand: (band: BandContact) => void;
- isStitchLight?: boolean;
 }
 
 type MapStyleKey ='voyager' |'satellite' |'osm' |'positron' |'dark';
@@ -117,8 +116,7 @@ function getStatusBadgeConfig(status: BandRelationshipStatus) {
 
 export const BandMap: React.FC<BandMapProps> = ({
  bands,
- onSelectBand,
- isStitchLight = false
+ onSelectBand= false
 }) => {
  const mapRef = useRef<HTMLDivElement | null>(null);
  const leafletMap = useRef<L.Map | null>(null);
@@ -457,7 +455,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  {/* Header Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${
- isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
  <div>
@@ -480,7 +478,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
  className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)]'
+ 'bg-[var(--surface)]/95 text-[var(--ink)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -511,7 +509,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={handleRecenter}
  className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
- isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />

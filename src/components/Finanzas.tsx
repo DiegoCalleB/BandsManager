@@ -134,17 +134,17 @@ export default function Finanzas({
 
  const categories = Array.from(new Set(payments.map(p => p.categoria)));
 
- const isStitchLight = (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const textTitle = isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink-2)]';
- const textSub = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const textMuted = isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]';
- const cardBorder = isStitchLight ?'-slate-200' :'bg-[var(--surface)]';
+ const= (typeof document !==' undefined' && document.documentElement.dataset.theme ===' light') || colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
+ const textTitle = 'text-[var(--ink)]';
+ const textSub = 'text-[var(--ink-2)]';
+ const textMuted = 'text-[var(--ink-2)]';
+ const cardBorder = '-slate-200';
 
  return (
- <div className={`space-y-6 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
+ <div className={`space-y-6 ${'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
  
  {/* Header con Sincronización en Excel */}
- <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <div className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${'-slate-100'}`}>
  <div>
  <h4 className={`text-xs font-sans tracking-widest ${'text-[var(--acc)]'}`}>Finanzas & Libro Contable</h4>
  <h2 className={`text-xl font-bold font-display tracking-wider mt-1 ${textTitle}`}>CONTABILIDAD DE BANDA</h2>
@@ -176,9 +176,7 @@ export default function Finanzas({
  {/* Notificaciones de Sincronización */}
  {syncSuccess && (
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
- isStitchLight 
- ?'bg-[var(--ok)]/10 text-[var(--ok)]' 
- :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
+ 'bg-[var(--ok)]/10 text-[var(--ok)]'
  }`}>
  <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
  <span className="flex-1 font-sans text-[10px]">{syncSuccess}</span>
@@ -187,9 +185,7 @@ export default function Finanzas({
  )}
  {syncError && (
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
- isStitchLight 
- ?'bg-[var(--alert)]/10 text-[var(--alert)]' 
- :'bg-[var(--alert)]/10 -rose-500/20 text-[var(--alert)]'
+ 'bg-[var(--alert)]/10 text-[var(--alert)]'
  }`}>
  <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
  <span className="flex-1 font-sans text-[10px]">{syncError}</span>
@@ -253,14 +249,14 @@ export default function Finanzas({
  </div>
 
  {/* Tabs / Filter Bar */}
- <div className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${isStitchLight ?'-slate-100' :'-[#99907c]/15'}`}>
+ <div className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${'-slate-100'}`}>
  <div className="flex gap-2 flex-wrap">
  <button
  onClick={() => setActiveTab('rentabilidad')}
  className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  activeTab ==='rentabilidad'
  ? colors.primary
- : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <Calculator className="w-3.5 h-3.5" /> Rentabilidad por Bolo
@@ -270,7 +266,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab ==='ledger'
  ? colors.primary
- : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Libro Diario (Historial)
@@ -280,7 +276,7 @@ export default function Finanzas({
  className={`px-3 py-1.5 font-sans text-[10px] font-bold tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer ${
  activeTab ==='analytics'
  ? colors.primary
- : isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  Análisis de Costes (Categorías)
@@ -290,9 +286,7 @@ export default function Finanzas({
  <button
  onClick={() => setIsAddOpen(true)}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
- isStitchLight 
- ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]' 
- :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]'
+ 'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'
  }`}
  >
  <Plus className="w-3.5 h-3.5" /> Registrar Operación
@@ -646,7 +640,7 @@ export default function Finanzas({
  type="button"
  onClick={() => setSearchTerm('')}
  className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ?'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+ 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  title="Borrar búsqueda"
  >
@@ -661,7 +655,7 @@ export default function Finanzas({
  value={typeFilter}
  onChange={(e) => setTypeFilter(e.target.value as any)}
  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="todos">Tipo: Todos</option>
@@ -674,7 +668,7 @@ export default function Finanzas({
  value={categoryFilter}
  onChange={(e) => setCategoryFilter(e.target.value)}
  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="todos">Categoría: Todas</option>
@@ -686,7 +680,7 @@ export default function Finanzas({
  value={statusFilter}
  onChange={(e) => setStatusFilter(e.target.value as any)}
  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-sans focus:outline-none ${
- isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="todos">Estado: Todos</option>
@@ -711,9 +705,7 @@ export default function Finanzas({
  <div
  key={p.id}
  className={`p-3 rounded-[var(--r-m)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
- isStitchLight
- ?'bg-[var(--surface)] hover:-slate-300'
- :'bg-[var(--surface)] -[#99907c]/15 hover:-[#99907c]/30'
+ 'bg-[var(--surface)] hover:-slate-300'
  }`}
  >
  <div className="flex gap-3 items-center min-w-0">
@@ -728,7 +720,7 @@ export default function Finanzas({
  <div className="flex items-center gap-2">
  <h4 className={`text-xs font-bold font-display truncate ${textTitle}`}>{p.concepto}</h4>
  <span className={`text-[8px] px-1.5 py-0.5 rounded font-sans tracking-wider ${
- isStitchLight ?'bg-[var(--sunken)] text-[var(--ink-2)]' :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ 'bg-[var(--sunken)] text-[var(--ink-2)]'
  }`}>
  {p.categoria}
  </span>
@@ -752,9 +744,7 @@ export default function Finanzas({
  onClick={() => handleToggleEstado(p)}
  className={`px-2.5 py-1 text-[9px] font-sans rounded font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ${
  p.estado ==='pagado'
- ? isStitchLight
- ?'bg-[var(--ok)]/10 text-[var(--ok)]'
- :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
+ ? 'bg-[var(--ok)]/10 text-[var(--ok)]'
  :' bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
@@ -841,7 +831,7 @@ export default function Finanzas({
  <span className={`uppercase font-bold ${textTitle}`}>{item.cat}</span>
  <span className={`${textSub}`}>{totalInCat.toLocaleString('es-ES')}€ ({percent.toFixed(1)}%)</span>
  </div>
- <div className={`w-full h-2 rounded-full ${isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]'}`}>
+ <div className={`w-full h-2 rounded-full ${'bg-[var(--surface)]'}`}>
  <div className={`h-2 rounded-full ${item.color}`} style={{ width: `${Math.max(percent, totalInCat > 0 ? 3 : 0)}%` }} />
  </div>
  </div>
@@ -850,7 +840,7 @@ export default function Finanzas({
  </div>
 
  <div className="space-y-4">
- <div className={`p-4 rounded-[var(--r-m)] ${isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/40'} space-y-3 text-xs leading-relaxed`}>
+ <div className={`p-4 rounded-[var(--r-m)] ${'bg-[var(--bg)]'} space-y-3 text-xs leading-relaxed`}>
  <h4 className={`font-sans font-bold tracking-wider ${textTitle}`}>Auditoría Operativa</h4>
  <div className="space-y-2 text-[11px] font-sans text-[var(--ink-2)]">
  <div className="flex justify-between">

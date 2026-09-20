@@ -65,8 +65,7 @@ function saveStoredDiscarded(list: DiscardedPlace[]) {
 }
 
 interface GooglePlacesExplorerModalProps {
- isOpen: boolean;
- isStitchLight: boolean;
+ isOpen: boolean;: boolean;
  onClose: () => void;
  onImportLeads: (leads: Lead[]) => void;
  activeCampaign?: BookingCampaign | null;
@@ -146,8 +145,7 @@ const CATEGORIES: { id: LeadType; label: string; icon: string; desc: string; pla
 ];
 
 export function GooglePlacesExplorerModal({
- isOpen,
- isStitchLight,
+ isOpen
  onClose,
  onImportLeads,
  activeCampaign,
@@ -600,9 +598,7 @@ export function GooglePlacesExplorerModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-[var(--scrim)]/90 overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
  <div
- className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${
- isStitchLight
- ?'bg-[var(--surface)] text-[var(--ink)]'
+ className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${?'bg-[var(--surface)] text-[var(--ink)]'
  :'bg-[var(--surface)] text-[var(--ink)]800'
  }`}
  >
