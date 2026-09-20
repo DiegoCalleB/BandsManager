@@ -18,7 +18,7 @@ interface ExampleThread {
 }
 
 interface ExampleThreadsSectionProps {
- category: TemplateCategory;: boolean;
+ category: TemplateCategory;
  textSub: string;
 }
 
@@ -27,7 +27,7 @@ const RESULTADO_LABEL: Record<string, string> = {
  negativa:'❌ No prosperó',
  neutral:'➖ Neutro'};
 
-export function ExampleThreadsSection({ category textSub }: ExampleThreadsSectionProps) {
+export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSectionProps) {
  const [threads, setThreads] = useState<ExampleThread[]>([]);
  const [isLoading, setIsLoading] = useState(false);
  const [isSaving, setIsSaving] = useState(false);

@@ -2673,7 +2673,7 @@ export default function RepertorioSetlists({
  <span className="hidden sm:inline">Cerebro IA</span>
  <span className="sm:hidden">IA</span>
  {aiAnalysisResult?.overallScore && (
- <span className="px-1.5 py-0.2 rounded-full bg-[var(--tentative)]/20 text-[10px] font-sans font-bold text-[var(--tentative)]/80">
+ <span className="px-1.5 py-0.2 rounded-full bg-[var(--ok)]/20 text-[10px] font-sans font-bold text-[var(--ok)]/80">
  {aiAnalysisResult.overallScore}
  </span>
  )}
@@ -3075,7 +3075,7 @@ export default function RepertorioSetlists({
  if (chapaSuggestion.coste.bpmDiff != null && chapaSuggestion.coste.bpmDiff >= 15) motivos.push(`salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`);
  if (chapaSuggestion.coste.energyDiff != null && chapaSuggestion.coste.energyDiff >= 6) motivos.push('salto grande de energía');
  return (
- <div className="flex flex-wrap items-center gap-2 text-[10px] font-sans text-[var(--ink-3)] bg-[var(--tentative)]/10 rounded-[var(--r-s)] px-2 py-1">
+ <div className="flex flex-wrap items-center gap-2 text-[10px] font-sans text-[var(--ink-3)] bg-[var(--ok)]/10 rounded-[var(--r-s)] px-2 py-1">
  <span>
  💬 Mejor sitio para una chapa: entre <b>"{chapaSuggestion.cancionAntes}"</b> y <b>"{chapaSuggestion.cancionDespues}"</b>
  {motivos.length > 0 ? ` — ${motivos.join(',')}.` :'.'}
@@ -3083,14 +3083,14 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={insertSuggestedChapa}
- className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--tentative)]/60 hover:bg-[var(--tentative)]/80 text-[var(--tentative)]/40 transition-all cursor-pointer font-medium shrink-0"
+ className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/60 hover:bg-[var(--ok)]/80 text-[var(--ok)]/40 transition-all cursor-pointer font-medium shrink-0"
  >
  ➕ Insertar aquí
  </button>
  <button
  type="button"
  onClick={() => setChapaSuggestion(null)}
- className="text-[var(--ink-2)] hover:text-[var(--tentative)]/40 transition-all cursor-pointer shrink-0"
+ className="text-[var(--ink-2)] hover:text-[var(--ok)]/40 transition-all cursor-pointer shrink-0"
  title="Descartar sugerencia"
  >
  ✕
@@ -3353,7 +3353,7 @@ export default function RepertorioSetlists({
  {showHeuristicWarnings && aiAnalysisResult && (
  <div className="space-y-2 pt-2">
  <div className="flex items-center justify-between">
- <span className="text-xs font-bold text-[var(--tentative)]/80">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
+ <span className="text-xs font-bold text-[var(--ok)]/80">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
  <button
  type="button"
  onClick={() => setShowAIAnalysisModal(true)}
@@ -3504,18 +3504,18 @@ export default function RepertorioSetlists({
  className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?'border-[var(--acc)] scale-[1.01] bg-[var(--tentative)]/10' :''
+ isDragOver ?'border-[var(--acc)] scale-[1.01] bg-[var(--ok)]/10' :''
  } ${
  isSelected
- ?'border-[var(--acc)] ring-2 ring-indigo-500/20 bg-[var(--tentative)]/10'
- : 'bg-[var(--surface)] hover:'
+ ?'border-[var(--acc)] ring-2 ring-indigo-500/20 bg-[var(--ok)]/10'
+ : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80'
  }`}
  >
  {/* MAIN ROW - COMPACT */}
  <div className="flex items-center gap-2.5 px-3 py-2 overflow-x-auto">
  {/* Drag Handle */}
  <div
- className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--tentative)] transition-colors shrink-0"
+ className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors shrink-0"
  title="Arrastrar y soltar para reordenar"
  onClick={(e) => e.stopPropagation()}
  >
@@ -3748,10 +3748,10 @@ export default function RepertorioSetlists({
  e.stopPropagation();
  handleOpenStudioModal(song);
  }}
- className="p-0.5 text-[var(--ink-2)] hover:text-[var(--tentative)] transition-colors shrink-0"
+ className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors shrink-0"
  title="Abrir Studio de Grabación Multipista & Pistas"
  >
- <Headphones className="w-3.5 h-3.5 text-[var(--tentative)]" />
+ <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
  </button>
 
  {/* Probar unión con tema anterior con indicador de calidad (✓ o ✕) */}
@@ -3830,7 +3830,7 @@ export default function RepertorioSetlists({
  </div>
  )}
  {userNote && (
- <div className="text-[var(--tentative)]/80 truncate" title={userNote}>
+ <div className="text-[var(--ok)]/80 truncate" title={userNote}>
  👤 {currentUser.name}: {userNote}
  </div>
  )}
@@ -3887,16 +3887,16 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); setActiveChordsSong(song); }}
- className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--tentative)] transition-colors"
+ className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors"
  >
  <FileText className="w-3 h-3" /> Acordes
  </button>
  <button
  type="button"
  onClick={(e) => { e.stopPropagation(); handleOpenStudioModal(song); }}
- className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--tentative)] transition-colors"
+ className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors"
  >
- <Headphones className="w-3 h-3 text-[var(--tentative)]" /> Studio multipista
+ <Headphones className="w-3 h-3 text-[var(--ok)]" /> Studio multipista
  </button>
  </div>
  </div>
@@ -4121,12 +4121,12 @@ export default function RepertorioSetlists({
  isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
  />
  <div className="absolute inset-0 bg-[var(--scrim)]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
- <Sparkles className="w-5 h-5 text-[var(--tentative)]" />
+ <Sparkles className="w-5 h-5 text-[var(--ok)]" />
  </div>
  </div>
 
  <div className="flex-1 min-w-[180px]">
- <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-[var(--tentative)]">
+ <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-[var(--ok)]">
  <Disc3 className="w-3.5 h-3.5 animate-spin-slow" />
  <span>Discografía & Canciones</span>
  </div>
@@ -4171,7 +4171,7 @@ export default function RepertorioSetlists({
  <button
  id="btn-add-song"
  onClick={() => { setEditingSong(null); setShowSongModal(true); }}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir Tema</span>
@@ -4230,7 +4230,7 @@ export default function RepertorioSetlists({
  onClick={() => setGroupByAlbum(!groupByAlbum)}
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
  groupByAlbum
- ?' bg-[var(--tentative)]/15 text-[var(--tentative)]/50/30'
+ ?' bg-[var(--ok)]/15 text-[var(--ok)]/50/30'
  : 'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
@@ -4253,7 +4253,7 @@ export default function RepertorioSetlists({
  <button
  id="btn-add-song-filter"
  onClick={() => { setEditingSong(null); setShowSongModal(true); }}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Añadir Tema</span>
@@ -4264,7 +4264,7 @@ export default function RepertorioSetlists({
  {/* BULK ACTIONS BAR */}
  {selectedCatalogIds.size > 0 && (
  <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${
-' bg-[var(--tentative)]/20/60 text-[var(--tentative)]/40'
+' bg-[var(--ok)]/20/60 text-[var(--ok)]/40'
  }`}>
  <span className="text-xs font-medium">
  {selectedCatalogIds.size} canciones seleccionadas
@@ -4324,7 +4324,7 @@ export default function RepertorioSetlists({
  <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-2)]">
  <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] font-medium">Acordes</span>
- <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50 font-medium">Studio</span>
+ <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)]/50 font-medium">Studio</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">Notas</span>
  <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] font-medium">Editar</span>
  </div>
@@ -4623,7 +4623,7 @@ export default function RepertorioSetlists({
  <button
  type="button"
  onClick={handleStartRecordingShowItem}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer"
  >
  <Mic className="w-3.5 h-3.5" />
  <span>{showItemAudioUrl ?'Regrabar Voz' :'Grabar Voz'}</span>
@@ -4677,7 +4677,7 @@ export default function RepertorioSetlists({
  </button>
  <button
  type="submit"
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--tentative)] text-xs font-sans cursor-pointer flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--ok)] text-xs font-sans cursor-pointer flex items-center gap-1.5"
  >
  <span>Guardar en Setlist</span>
  </button>
@@ -4695,7 +4695,7 @@ export default function RepertorioSetlists({
  isOpen={showPdfPreview}
  activeSetlist={activeSetlist}
  activeSetlistMetrics={activeSetlistMetrics}
- songs={songs
+ songs={songs}
  onClose={() => setShowPdfPreview(false)}
  bandName={bName}
  onUpdateSong={handleUpdateSongFromStudio}

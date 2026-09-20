@@ -965,7 +965,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  song={internalPracticeSong || currentSong!}
  idea={internalPracticeIdea}
  tracks={getIdeaTracks(internalPracticeIdea)}
- currentUser={currentUser}={glareMode}
+ currentUser={currentUser}
+ glareMode={glareMode}
  onClose={() => {
  setInternalPracticeIdea(null);
  setInternalPracticeSong(null);

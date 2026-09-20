@@ -17,7 +17,7 @@ export interface ActiveTemplateData {
 }
 
 interface TemplateConfigSectionProps {
- colors: ThemeColors;: boolean;
+ colors: ThemeColors;
  textSub: string;
  textMuted: string;
  templateTab: TemplateCategory;
@@ -39,7 +39,7 @@ interface TemplateConfigSectionProps {
 }
 
 export function TemplateConfigSection({
- colors
+ colors,
  textSub,
  textMuted,
  templateTab,
@@ -168,8 +168,7 @@ export function TemplateConfigSection({
  type="text"
  value={activeTemplate.subject}
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
- className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
-' bg-[var(--surface)] text-[var(--ink)] }`}
+ className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans bg-[var(--surface)] text-[var(--ink)]`}
  />
  </div>
 
@@ -186,8 +185,7 @@ export function TemplateConfigSection({
  rows={8}
  value={activeTemplate.body}
  onChange={(e) => activeTemplate.setBody(e.target.value)}
- className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
-' bg-[var(--surface)] text-[var(--ink)] }`}
+ className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed bg-[var(--surface)] text-[var(--ink)]`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
  </div>
@@ -205,8 +203,7 @@ export function TemplateConfigSection({
  rows={3}
  value={activeTemplate.guidelines}
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
- className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
-' bg-[var(--surface)] text-[var(--ink)] }`}
+ className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed bg-[var(--surface)] text-[var(--ink)]`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
  </div>
@@ -305,7 +302,7 @@ export function TemplateConfigSection({
  </div>
  </div>
 
- <ExampleThreadsSection category={templateTab textSub={textSub} />
+ <ExampleThreadsSection category={templateTab} textSub={textSub} />
 
  <div className="flex flex-wrap gap-2 pt-2">
  {onOptimizeTemplate && (
