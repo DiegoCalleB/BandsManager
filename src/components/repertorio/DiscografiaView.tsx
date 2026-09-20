@@ -2,6 +2,7 @@ import React, { useState } from'react';
 import { Song, ThemeColors } from'../../types';
 import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from'lucide-react';
 import { AlbumCover } from'../AlbumCover';
+import { PublicoSilhouette } from'../ui/PublicoSilhouette';
 import { uploadFileToServer, saveSongsToLocalStorageSafely } from'../../utils/audioStorage';
 import { apiFetch } from'../../utils/api';
 import { LiveConcertToAlbumModal, TrackCutItem } from'./LiveConcertToAlbumModal';
@@ -876,18 +877,23 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  })}
 
  {filteredAlbums.length === 0 && (
- <div className="text-center py-16 opacity-60">
- <Disc3 className="w-12 h-12 mx-auto mb-3 text-neutral-500" />
- <p className="text-sm font-mono">
- {cleanSearchQuery
- ? `No se encontraron canciones ni discos que coincidan con"${searchQuery}".`
- :'No hay discos creados en esta categoría.'}
+ <div className="text-center py-12 space-y-4">
+ <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto" />
+ <div className="space-y-2">
+ <p className="text-sm font-semibold text-[var(--ink)]">
+ {cleanSearchQuery ? 'No encontramos coincidencias' : 'La discografía está vacía'}
  </p>
+ <p className="text-xs text-[var(--ink-2)] max-w-sm mx-auto">
+ {cleanSearchQuery
+ ? `Ningún disco o tema coincide con"${searchQuery}". Prueba otras palabras clave.`
+ :'Graba tu primer álbum para llevarlo al directo. Cada disco es una historia.'}
+ </p>
+ </div>
  {cleanSearchQuery && (
  <button
  type="button"
  onClick={() => setSearchQuery('')}
- className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 text-xs font-mono font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
+ className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)] border-[var(--hair)]/30 text-xs font-mono font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
  >
  <X className="w-3.5 h-3.5" />
  <span>Limpiar búsqueda</span>

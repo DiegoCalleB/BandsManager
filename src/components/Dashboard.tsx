@@ -4,6 +4,7 @@ import { useLanguage } from'../context/LanguageContext';
 import { isSameBandId } from'../utils/bandUtils';
 import DirectionsCard from'./DirectionsCard';
 import { ThemeToggle } from'./common/ThemeToggle';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 import { AddLeadModal } from'./dashboard/AddLeadModal';
 import { ProfileCompletenessCard } from'./dashboard/ProfileCompletenessCard';
 import { AiSupportWidget, AiUsageCard } from'./dashboard/AiUsageSupportWidget';
@@ -610,16 +611,16 @@ export default function Dashboard({
  ))}
  </div>
  ) : (
- <div className="p-8 rounded-[var(--r-m)] bg-[var(--surface)] text-center space-y-3">
- <Calendar className="w-8 h-8 text-neutral-500 mx-auto" />
+ <div className="p-8 rounded-[var(--r-m)] bg-[var(--surface)] text-center space-y-4">
+ <PublicoSilhouette opacity={0.12} size="large" className="mx-auto" />
  <div>
- <p className="text-sm font-bold text-[var(--sunken)] font-display">No hay próximas fechas programadas</p>
- <p className="text-xs font-mono text-[var(--ink-2)] mt-0.5">Añade conciertos o ensayos desde el calendario para ver tu agenda aquí.</p>
+ <p className="text-sm font-bold text-[var(--ink)] font-display">La sala está vacía</p>
+ <p className="text-xs font-mono text-[var(--ink-2)] mt-0.5">Vamos a llenarla. Programa tu primer bolo o ensayo desde el calendario.</p>
  </div>
  <button
  type="button"
  onClick={() => onNavigate && onNavigate('calendario')}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>Ir al Calendario</span>
