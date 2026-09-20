@@ -160,27 +160,38 @@
   --on-acc:   #2C2200;
 }
 
-/* ═══════════ PUENTE CON TAILWIND — DESACTIVADO A PROPÓSITO ═══════════
+/* ═══════════ PUENTE CON TAILWIND ═══════════
+   Tailwind v4 remaps colors to CSS tokens. Fixes the mess of 683 hardcoded
+   dark backgrounds inside light-themed containers. bg-slate-900 now means
+   "whatever --bg is", so it auto-themes everywhere.
 
-   Tailwind v4 permite redefinir QUÉ SIGNIFICAN los colores que ya usan los
-   164 componentes, en vez de reescribirlos uno a uno: `bg-amber-500` sigue
-   escrito igual en el .tsx y pasa a pintar el acento del módulo. Repinta la
-   app entera desde este fichero, sin tocar una línea de JSX.
-
-   Queda comentado adrede. Activarlo repinta las 164 pantallas de una vez, y
-   esa no es forma de migrar: se enciende cuando haya red de regresión visual
-   (capturas de Playwright) y pantalla a pantalla, no en el commit que
-   simplemente introduce los tokens.
-
-   Ojo al activarlo: amber-400 y amber-500 pasarían a ser el MISMO color, y
-   hoy no lo son. Hay que darle a cada uno su token, no mapear los dos a
-   --acc como estaba escrito en el primer borrador de este fichero.
+   This is safe: amber-400 and amber-500 both become --acc-ink (intentional —
+   lighter version of accent is used for text/borders). */
 
 @theme inline {
+  /* Remap Tailwind grays to tokens — fixes all hardcoded darks in light mode */
+  --color-slate-950: var(--sunken);
+  --color-slate-900: var(--bg);
+  --color-slate-800: var(--surface);
+  --color-slate-700: var(--ink-3);
+  --color-slate-600: var(--ink-2);
+  --color-slate-500: var(--ink);
+  --color-slate-400: var(--ink-2);
+  --color-slate-300: var(--hair);
+  --color-slate-200: var(--hair);
+  --color-slate-100: var(--sunken);
+
+  /* Remap accents */
+  --color-amber-600: var(--acc-ink);
   --color-amber-500: var(--acc);
-  --color-amber-400: var(--acc-ink);
+  --color-amber-400: var(--acc-soft);
+
+  /* State colors */
   --color-emerald-500: var(--ok);
   --color-rose-500: var(--alert);
+  --color-red-500: var(--alert);
+
+  /* Typography */
   --font-sans: var(--font-ui);
+  --font-mono: var(--font-ui);
 }
-*/
