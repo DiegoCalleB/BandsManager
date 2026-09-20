@@ -962,7 +962,7 @@ Bakandeya Agent Manager IA & Músicos`;
  id="band-btn-add-new"
  type="button"
  onClick={handleOpenCreateModal}
- className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span>Nueva Banda</span>
@@ -1628,7 +1628,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <button
  type="button"
  onClick={handleApplyAllAiData}
- className="px-3 py-1 bg-[var(--acc)] text-[var(--acc-ink)] font-bold rounded-[var(--r-s)] text-[10px] hover:bg-[#e0b83e] transition-all cursor-pointer flex items-center gap-1 shadow"
+ className="px-3 py-1 bg-[var(--acc)] text-[var(--acc-ink)] font-bold rounded-[var(--r-s)] text-[10px] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex items-center gap-1 shadow"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Aplicar Todo</span>

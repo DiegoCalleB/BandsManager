@@ -2910,7 +2910,7 @@ export default function CalendarView({
  className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
  isStitchLight
  ?"bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]"
- :"bg-[var(--acc)] hover:bg-[#e2c486] text-[var(--acc-ink)] font-bold"
+ :"bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold"
  }`}
  title="Añadir Concierto, Ensayo o Reunión"
  >
@@ -3226,7 +3226,7 @@ export default function CalendarView({
  devicePrefs[selectedConfigDevice] ==='1'
  ? isStitchLight
  ?"bg-sky-50 border-sky-400/80 text-sky-950 shadow-xs"
- :"bg-[var(--acc)]/10 border-[#d1b375] text-[var(--ink)] shadow-xs"
+ :"bg-[var(--acc)]/10 border-[var(--acc)] text-[var(--ink)] shadow-xs"
  : isStitchLight
  ?"bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"
  :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 border-[var(--hair)]800 text-[var(--ink)]"
@@ -3260,7 +3260,7 @@ export default function CalendarView({
  devicePrefs[selectedConfigDevice] ==='2'
  ? isStitchLight
  ?"bg-sky-50 border-sky-400/80 text-sky-950 shadow-xs"
- :"bg-[var(--acc)]/10 border-[#d1b375] text-[var(--ink)] shadow-xs"
+ :"bg-[var(--acc)]/10 border-[var(--acc)] text-[var(--ink)] shadow-xs"
  : isStitchLight
  ?"bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"
  :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 border-[var(--hair)]800 text-[var(--ink)]"
@@ -5904,7 +5904,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
- isStitchLight ?'bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[#e2c486] text-[var(--acc-ink)] font-bold shadow-amber-0/20'
+ isStitchLight ?'bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold shadow-amber-0/20'
  }`}
  >
  Guardar Concierto
@@ -6188,7 +6188,7 @@ export default function CalendarView({
  <button
  type="submit"
  className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer shadow-md ${
- isStitchLight ?'bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[#e2c486] text-[var(--acc-ink)] font-bold shadow-amber-0/20'
+ isStitchLight ?'bg-amber-600 hover:bg-[var(--acc)] text-[var(--ink)]' :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold shadow-amber-0/20'
  }`}
  >
  Guardar Cambios

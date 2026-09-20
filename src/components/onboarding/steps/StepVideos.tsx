@@ -114,7 +114,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  value={newVideoUrl}
  onChange={(e) => setNewVideoUrl(e.target.value)}
  placeholder="URL de YouTube (https://www.youtube.com/watch?v=... o youtu.be/...)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -138,7 +138,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
  value={newVideoTitle}
  onChange={(e) => setNewVideoTitle(e.target.value)}
  placeholder="Título del vídeo (opcional, se extraerá de la URL si se omite)"
- className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-2/3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
 
  <button

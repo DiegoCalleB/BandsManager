@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
  value={riderTecnicoText}
  onChange={(e) => setRiderTecnicoText(e.target.value)}
  placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus: leading-relaxed"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: leading-relaxed"
  />
  </div>
  </div>

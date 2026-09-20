@@ -112,7 +112,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventTitle}
  onChange={(e) => setNewEventTitle(e.target.value)}
  placeholder="Título / Sala (ej. Concierto Presentación Disco) *"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -144,7 +144,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventCity}
  onChange={(e) => setNewEventCity(e.target.value)}
  placeholder="Ciudad (ej. Madrid)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -154,7 +154,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventVenue}
  onChange={(e) => setNewEventVenue(e.target.value)}
  placeholder="Sala / Recinto (ej. Sala Copérnico)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -164,7 +164,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
  value={newEventTicketUrl}
  onChange={(e) => setNewEventTicketUrl(e.target.value)}
  placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite...)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>

@@ -491,7 +491,7 @@ export function AddLeadModal({
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg ${
  isStitchLight
  ?'bg-sky-500 hover:bg-sky-400 text-[var(--ink)]'
- :'bg-[var(--acc)] hover:bg-[#e2ba40] text-[var(--acc-ink)]'
+ :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)]'
  }`}
  >
  {sectionTab ==='medios' ?'Guardar Medio' : sectionTab ==='grupos' ?'Guardar Contacto' :'Guardar Sala'}

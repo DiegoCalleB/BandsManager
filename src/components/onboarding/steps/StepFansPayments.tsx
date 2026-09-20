@@ -74,7 +74,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={fanCallToAction}
  onChange={(e) => setFanCallToAction(e.target.value)}
  placeholder="Ej. ¡Únete al club y descarga nuestra maqueta inédita!"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -87,7 +87,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={fanWelcomeMessage}
  onChange={(e) => setFanWelcomeMessage(e.target.value)}
  placeholder="Ej. ¡Gracias por apoyarnos en directo! Aquí tienes tu regalo."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -111,7 +111,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={fanRewardDescription}
  onChange={(e) => setFanRewardDescription(e.target.value)}
  placeholder="Ej. Canción acústica inédita en MP3 + Libreto PDF"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -124,7 +124,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={discountCode}
  onChange={(e) => setDiscountCode(e.target.value)}
  placeholder="Ej. DIRECTO10"
- className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus: uppercase"
+ className="w-full px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: uppercase"
  />
  </div>
  </div>
@@ -183,7 +183,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={fanRewardLink}
  onChange={(e) => setFanRewardLink(e.target.value)}
  placeholder="O pega un enlace de descarga externo (Dropbox, Drive, Mega...)"
- className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  )}
@@ -207,7 +207,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={bizumNumber}
  onChange={(e) => setBizumNumber(e.target.value)}
  placeholder="600 000 000"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -220,7 +220,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={revolutTag}
  onChange={(e) => setRevolutTag(e.target.value)}
  placeholder="@tubandatag"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -233,7 +233,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={paypalEmail}
  onChange={(e) => setPaypalEmail(e.target.value)}
  placeholder="paypal.me/tubanda"
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
 
@@ -246,7 +246,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
  value={ibanNumber}
  onChange={(e) => setIbanNumber(e.target.value)}
  placeholder="ES00 0000..."
- className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>

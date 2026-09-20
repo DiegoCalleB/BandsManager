@@ -926,7 +926,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  const detected = autoDetectVenueAddress(selectedLead.nombre_sala, selectedLead.ciudad);
  onUpdateLead(selectedLead.id, { direccion: detected });
  }}
- className="text-xs font-sans font-bold text-[var(--acc)] hover:text-[#facc15] cursor-pointer flex items-center gap-1.5"
+ className="text-xs font-sans font-bold text-[var(--acc)] hover:text-[var(--acc)] cursor-pointer flex items-center gap-1.5"
  >
  <Sparkles className="w-3.5 h-3.5" />
  Auto-detectar dirección exacta
@@ -1588,7 +1588,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  value={feedbackComment}
  onChange={(e) => setFeedbackComment(e.target.value)}
  placeholder="Ej:'Menciona que tocamos en el Viña Rock','Hazlo más corto y directo','Insiste en fecha para un sábado'..."
- className="w-full p-2.5 bg-black/60 rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-zinc-500 font-sans focus:outline-none focus:"
+ className="w-full p-2.5 bg-black/60 rounded-[var(--r-s)] text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  />
  </div>
 

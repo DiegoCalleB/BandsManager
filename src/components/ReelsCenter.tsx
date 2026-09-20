@@ -2235,7 +2235,7 @@ export default function ReelsCenter({
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed animate-pulse'
  : isStitchLight
  ?'bg-indigo-600 hover:bg-indigo-700 text-[var(--ink)]'
- :'bg-[var(--acc)] hover:bg-[#e0b83f] text-[var(--ink)]'
+ :'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--ink)]'
  }`}
  >
  <Sparkles className={`w-3.5 h-3.5 ${isReanalyzingClip ?'animate-spin' :''}`} />
@@ -4010,7 +4010,7 @@ export default function ReelsCenter({
  handleSchedulePost(e);
  }}
  disabled={isScheduling || !editedCopy.trim()}
- className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[#ffc634] active:scale-95 transition-all cursor-pointer text-xs font-mono font-bold disabled:opacity-40"
+ className="flex-1 sm:flex-none px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--acc-ink)] hover:bg-[var(--acc-soft)] active:scale-95 transition-all cursor-pointer text-xs font-mono font-bold disabled:opacity-40"
  >
  {isScheduling ?'Guardando...' :'Aprobar y Programar Post'}
  </button>

@@ -140,7 +140,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  value={spotifyQuery}
  onChange={(e) => setSpotifyQuery(e.target.value)}
  placeholder="Buscar artista o grupo en Spotify..."
- className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full pl-10 pr-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  <button
@@ -277,7 +277,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  value={newManualTitle}
  onChange={(e) => setNewManualTitle(e.target.value)}
  placeholder="Título de la Canción *"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  <div>
@@ -286,7 +286,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  value={newManualTonalidad}
  onChange={(e) => setNewManualTonalidad(e.target.value)}
  placeholder="Tonalidad (ej. Am, Sol)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  <div>
@@ -295,7 +295,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  value={newManualDuracion}
  onChange={(e) => setNewManualDuracion(e.target.value)}
  placeholder="Duración (ej. 3:45)"
- className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 text-xs focus:outline-none focus:"
+ className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
  />
  </div>
  </div>
@@ -331,7 +331,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  value={bulkText}
  onChange={(e) => setBulkText(e.target.value)}
  placeholder={"1. El Despertar\n2. Noche en el Puerto\n3. Tormenta Eléctrica\n4. Último Baile"}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-600 text-xs focus:outline-none focus: font-mono"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: font-mono"
  />
  <div className="flex justify-end">
  <button

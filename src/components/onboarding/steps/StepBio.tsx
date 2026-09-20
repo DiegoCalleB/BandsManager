@@ -45,7 +45,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  value={slogan}
  onChange={(e) => setSlogan(e.target.value)}
  placeholder="Ej. Guitarras afiladas y melodías directas al corazón"
- className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm"
+ className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  <p className="text-[11px] text-[var(--ink-2)] mt-1">
  Aparece en la cabecera del Dossier de Prensa interactivo (EPK) y en el QR de fans.
@@ -72,7 +72,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  value={bio}
  onChange={(e) => setBio(e.target.value)}
  placeholder="Cuenta la trayectoria de la banda, influencias, lanzamientos destacados y lo que transmitís en vuestros conciertos..."
- className="w-full px-4 py-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm leading-relaxed"
+ className="w-full px-4 py-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm leading-relaxed"
  />
  </div>
 
@@ -87,7 +87,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  value={formato}
  onChange={(e) => setFormato(e.target.value)}
  placeholder="Ej. Banda completa, Trío acústico..."
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  </div>
 
@@ -114,7 +114,7 @@ export const StepBio: React.FC<StepBioProps> = ({
  value={duracionDirecto}
  onChange={(e) => setDuracionDirecto(e.target.value)}
  placeholder="Ej. 60 - 75 min"
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus: text-sm"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
  />
  </div>
  </div>

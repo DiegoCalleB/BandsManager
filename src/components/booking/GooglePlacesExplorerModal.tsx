@@ -813,7 +813,7 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSelectedCity(e.target.value)}
  onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder="Ciudad (ej. Granada, Madrid...)"
- className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border-[var(--hair)]800 text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus:border-[var(--acc)]"
+ className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border-[var(--hair)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
  />
  {selectedCity && (
  <button
@@ -835,7 +835,7 @@ export function GooglePlacesExplorerModal({
  onChange={e => setSearchQuery(e.target.value)}
  onKeyDown={e => e.key ==='Enter' && handleSearch()}
  placeholder={CATEGORIES.find(c => c.id === selectedType)?.placeholder ||"Búsqueda opcional..."}
- className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border-[var(--hair)]800 text-[var(--ink)] placeholder-zinc-500 focus:outline-none focus:border-[var(--acc)]"
+ className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-zinc-950 border-[var(--hair)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:border-[var(--acc)]"
  />
  </div>
 
@@ -871,7 +871,7 @@ export function GooglePlacesExplorerModal({
  type="button"
  onClick={() => handleSearch()}
  disabled={isSearching}
- className="px-5 py-2 bg-[var(--acc)] hover:bg-[#d8b03e] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
+ className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50 ml-auto"
  >
  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
  <span>{isSearching ?'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>

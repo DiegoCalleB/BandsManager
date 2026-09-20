@@ -295,7 +295,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  value={customComment}
  onChange={e => setCustomComment(e.target.value)}
  placeholder="Ajuste puntual opcional: Ej.'Destacar que tenemos 100k streams','Proponer viernes o sábado'..."
- className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-[var(--hair)]700 text-xs text-[var(--ink)] placeholder-zinc-500 font-sans focus:outline-none focus:"
+ className="w-full px-3 py-2 bg-black/60 rounded-[var(--r-m)] border-[var(--hair)]700 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] font-sans focus:outline-none focus:"
  onKeyDown={e => {
  if (e.key ==='Enter') handleRunComparison();
  }}
