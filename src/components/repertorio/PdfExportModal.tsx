@@ -695,7 +695,6 @@ export function PdfExportModal({
  text-align: right;
  }
  .member-stage-tag {
- border: 1.5px solid #000;
  padding: 1px 6px;
  background: #fff;
  border-radius: 3px;
@@ -802,7 +801,6 @@ export function PdfExportModal({
  font-family: monospace;
  font-size: 11pt;
  font-weight: 800;
- border: 1.5px solid #000;
  padding: 1px 5px;
  border-radius: 3px;
  background: #fff;
