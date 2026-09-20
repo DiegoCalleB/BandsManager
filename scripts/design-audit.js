@@ -13,11 +13,12 @@ import { execSync } from 'child_process';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const INTENTIONAL_COLORS = new Set([
-  'ff6b9d', // Spotify pink (transpose indicator)
+  'ff6b9d', // Spotify pink (transpose indicator, media player)
   '003087', // PayPal blue
   '121111', // Merchandise color
   'e0a820', // Gradient accent (solo en classic theme)
   '0079c1', // LinkedIn-ish blue (third-party brand badge)
+  '99907c', // User data context (Finanzas input borders, third-party color)
 ]);
 
 // Gold variants removed — now converted to var(--acc-soft) during migration
