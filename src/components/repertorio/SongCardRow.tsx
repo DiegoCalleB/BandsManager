@@ -371,7 +371,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  ? 'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 /40 shadow-xs'
  : isStitchLight
  ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 '
- : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-amber-300 /30'
+ : 'bg-[var(--surface)] hover:bg-neutral-800 text-amber-300 /30'
  }`}
  title={hasIrisStems(song) ? 'Ver pistas e instrumentos separados con Iris' : 'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >
@@ -423,7 +423,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  disabled={!canMoveUp}
  onClick={onMoveUp}
- className="p-0.5 text-text-[var(--ink-2)] hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
+ className="p-0.5 text-[var(--ink-2)] hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
  title="Subir orden"
  >
  <ArrowUp className="w-3 h-3" />
@@ -432,7 +432,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  disabled={!canMoveDown}
  onClick={onMoveDown}
- className="p-0.5 text-text-[var(--ink-2)] hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
+ className="p-0.5 text-[var(--ink-2)] hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
  title="Bajar orden"
  >
  <ArrowDown className="w-3 h-3" />
@@ -555,7 +555,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onClick={() => setShowMenu(false)}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer"
  >
- <ExternalLink className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
+ <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Partitura / Enlace</span>
  </a>
  )}
@@ -572,7 +572,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
- <ArrowUp className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
+ <ArrowUp className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Mover arriba</span>
  </button>
  )}
@@ -585,7 +585,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
  >
- <ArrowDown className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
+ <ArrowDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Mover abajo</span>
  </button>
  )}

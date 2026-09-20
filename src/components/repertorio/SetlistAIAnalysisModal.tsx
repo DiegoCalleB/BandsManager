@@ -477,7 +477,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
  <div
  ref={scrollContainerRef}
- className="bg-bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl pointer-events-auto"
+ className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl pointer-events-auto"
  style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
  >
  {/* Todo lo de aquí dentro (header, gráfico, score, arco, sugerencias, áreas de mejora) es
@@ -488,7 +488,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  hacer scroll por las sugerencias, sin depender de calcular a mano la altura del
  header para un segundo "top" (frágil — ya se rompió una vez al hacer el header más
  compacto). Un solo contenedor sticky con top-0 no necesita ningún offset. */}
- <div className="sticky top-0 z-10 bg-bg-[var(--surface)]">
+ <div className="sticky top-0 z-10 bg-[var(--surface)]">
  {/* Header — arrastrable por si hace falta apartar el modal */}
  <div
  className="border-b p-3 flex justify-between items-center cursor-move select-none"
@@ -499,7 +499,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <Brain className="w-5 h-5 text-purple-400" />
  <div>
  <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
- {setlistName && <p className="text-xs text-text-[var(--ink-2)]">{setlistName}</p>}
+ {setlistName && <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>}
  </div>
  </div>
  <div className="flex items-center gap-1.5">
@@ -592,7 +592,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {!analysis && !loading && !error && (
  <div className="text-center py-8">
  <Brain className="w-12 h-12 text-purple-400/50 mx-auto mb-4" />
- <p className="text-text-[var(--ink-3)] mb-6">
+ <p className="text-[var(--ink-3)] mb-6">
  Haz un análisis profundo de tu setlist con IA. Te daremos sugerencias personalizadas sobre pacing, narrativa y psicología del público.
  </p>
  <button
@@ -607,7 +607,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {loading && (
  <div className="text-center py-12">
  <Loader className="w-8 h-8 animate-spin text-purple-400 mx-auto mb-4" />
- <p className="text-text-[var(--ink-2)]">Analizando tu setlist...</p>
+ <p className="text-[var(--ink-2)]">Analizando tu setlist...</p>
  </div>
  )}
 
@@ -632,7 +632,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {/* Score */}
  <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
  <div className="flex items-center justify-between mb-2">
- <span className="text-sm text-text-[var(--ink-3)] font-medium">Score General</span>
+ <span className="text-sm text-[var(--ink-3)] font-medium">Score General</span>
  <span className="text-lg font-bold text-purple-400">{analysis.overallScore}/100</span>
  </div>
  <div className="w-full bg-neutral-700 rounded-full h-1.5">
@@ -645,14 +645,14 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Narrative Arc */}
  <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
- <p className="text-xs text-text-[var(--ink-2)] mb-1.5">📖 Arco Narrativo</p>
- <p className="text-sm text-bg-[var(--sunken)]">{analysis.narrativeArc}</p>
+ <p className="text-xs text-[var(--ink-2)] mb-1.5">📖 Arco Narrativo</p>
+ <p className="text-sm text-[var(--sunken)]">{analysis.narrativeArc}</p>
  </div>
 
  {/* Psychological Flow */}
  <div className="bg-neutral-800 rounded-[var(--r-s)] p-3 ">
- <p className="text-xs text-text-[var(--ink-2)] mb-1.5">🧠 Flujo Psicológico</p>
- <p className="text-sm text-bg-[var(--sunken)]">{analysis.psychologicalFlow}</p>
+ <p className="text-xs text-[var(--ink-2)] mb-1.5">🧠 Flujo Psicológico</p>
+ <p className="text-sm text-[var(--sunken)]">{analysis.psychologicalFlow}</p>
  </div>
 
  {/* Strengths */}
@@ -669,7 +669,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Suggestions */}
  <div>
- <h3 className="text-sm font-semibold text-bg-[var(--sunken)] mb-3 flex items-center gap-2">
+ <h3 className="text-sm font-semibold text-[var(--sunken)] mb-3 flex items-center gap-2">
  <Zap className="w-3.5 h-3.5 text-purple-400" />
  Sugerencias ({(liveSuggestions || analysis.suggestions).length})
  </h3>
@@ -684,7 +684,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  key={idx}
  className={`rounded-[var(--r-s)] p-3 transition cursor-pointer ${
  isInvalid
- ? 'bg-bg-[var(--surface)] opacity-50'
+ ? 'bg-[var(--surface)] opacity-50'
  : isHighlighted
  ? 'bg-purple-900/30 border-purple-500/50 ring-2 ring-purple-400/30'
  : 'bg-neutral-800 hover:'
@@ -701,7 +701,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="flex-1">
  <div className="flex items-start justify-between gap-2">
  <div>
- <p className="text-sm font-semibold text-bg-[var(--sunken)]">{sugg.title}</p>
+ <p className="text-sm font-semibold text-[var(--sunken)]">{sugg.title}</p>
  <p className="text-[11px] text-neutral-500 mt-0.5">
  {getCategoryIcon(sugg.category)} {sugg.category}
  </p>
@@ -758,21 +758,21 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  <div className="space-y-1.5 text-xs ml-7">
  <div>
- <p className="text-text-[var(--ink-2)]">🔍 Problema:</p>
- <p className="text-text-[var(--ink-3)]">{sugg.issue}</p>
+ <p className="text-[var(--ink-2)]">🔍 Problema:</p>
+ <p className="text-[var(--ink-3)]">{sugg.issue}</p>
  </div>
  <div>
- <p className="text-text-[var(--ink-2)]">💡 Sugerencia:</p>
- <p className="text-bg-[var(--sunken)] font-medium">{sugg.suggestion}</p>
+ <p className="text-[var(--ink-2)]">💡 Sugerencia:</p>
+ <p className="text-[var(--sunken)] font-medium">{sugg.suggestion}</p>
  </div>
  <div>
- <p className="text-text-[var(--ink-2)]">⭐ Impacto:</p>
- <p className="text-text-[var(--ink-3)]">{sugg.impact}</p>
+ <p className="text-[var(--ink-2)]">⭐ Impacto:</p>
+ <p className="text-[var(--ink-3)]">{sugg.impact}</p>
  </div>
  {sugg.songs_involved && sugg.songs_involved.length > 0 && (
  <div>
- <p className="text-text-[var(--ink-2)]">🎵 Canciones:</p>
- <p className="text-text-[var(--ink-3)]">{sugg.songs_involved.join(', ')}</p>
+ <p className="text-[var(--ink-2)]">🎵 Canciones:</p>
+ <p className="text-[var(--ink-3)]">{sugg.songs_involved.join(', ')}</p>
  </div>
  )}
  </div>
@@ -805,7 +805,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="flex gap-2">
  <button
  onClick={handlePrintAnalysis}
- className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
+ className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
  title="Exportar el análisis a PDF/impresión"
  >
  <Printer className="w-4 h-4" />
@@ -814,7 +814,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <button
  onClick={handleDownloadImage}
  disabled={exportingImage}
- className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
+ className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
  title="Descargar el análisis completo como imagen PNG"
  >
  {exportingImage ? <Loader className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
@@ -823,7 +823,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <button
  onClick={handleShareAnalysis}
  disabled={sharing}
- className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
+ className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
  title="Compartir por WhatsApp u otra app"
  >
  {sharing ? <Loader className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}

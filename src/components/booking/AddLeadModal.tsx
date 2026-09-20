@@ -122,7 +122,7 @@ export function AddLeadModal({
  </div>
  <button
  onClick={onClose}
- className="text-text-[var(--ink-2)] hover:text-white p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-white p-1 rounded-[var(--r-s)] transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -481,7 +481,7 @@ export function AddLeadModal({
  className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
  isStitchLight
  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
+ : 'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
  }`}
  >
  Cancelar

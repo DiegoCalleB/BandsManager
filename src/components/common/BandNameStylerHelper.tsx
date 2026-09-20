@@ -59,7 +59,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  onClick={() => setIsOpen(false)}
  />
 
- <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 shadow-2xl z-50 text-bg-[var(--sunken)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
+ <div className="absolute right-0 sm:left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-[var(--r-l)] bg-[var(--surface)] p-4 shadow-2xl z-50 text-[var(--sunken)] animate-in fade-in zoom-in-95 duration-150 space-y-3.5">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[#2b2927] pb-2.5">
  <div className="flex items-center gap-2">
@@ -71,13 +71,13 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <span>Estilos de Banda & Tipografía</span>
  <Zap className="w-3 h-3 text-amber-400" />
  </h4>
- <p className="text-[10px] text-text-[var(--ink-2)] font-mono">100% compatible con Supabase y móviles</p>
+ <p className="text-[10px] text-[var(--ink-2)] font-mono">100% compatible con Supabase y móviles</p>
  </div>
  </div>
  <button
  type="button"
  onClick={() => setIsOpen(false)}
- className="p-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  <X className="w-4 h-4" />
  </button>
@@ -93,7 +93,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
  {/* Presets Grid */}
  <div className="space-y-1.5">
- <label className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] font-bold flex items-center justify-between">
+ <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
  <span>Transformar Nombre Actual:</span>
  <span className="text-amber-400/80 font-normal">Clic para aplicar</span>
  </label>
@@ -106,9 +106,9 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  key={preset.id}
  type="button"
  onClick={() => handleApplyPreset(preset.apply)}
- className="p-2 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 hover:/60 hover:bg-bg-[var(--surface)] text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[52px]"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:/60 hover:bg-[var(--surface)] text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[52px]"
  >
- <div className="flex items-center justify-between text-[10px] text-text-[var(--ink-2)] font-mono group-hover:text-amber-300">
+ <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-mono group-hover:text-amber-300">
  <span>{preset.label}</span>
  <span className="text-xs">{preset.icon}</span>
  </div>
@@ -123,7 +123,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
  {/* Quick Symbols Palette */}
  <div className="space-y-1.5 pt-1 border-t border-[#2b2927]">
- <label className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)] font-bold flex items-center justify-between">
+ <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)] font-bold flex items-center justify-between">
  <span>Insertar Carácter o Símbolo:</span>
  <span className="text-neutral-500 font-normal">Añadir al nombre</span>
  </label>
@@ -133,7 +133,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  key={idx}
  type="button"
  onClick={() => handleInsertSymbol(sym)}
- className="w-7 h-7 rounded-[var(--r-s)] bg-bg-[var(--surface)] hover: hover:bg-amber-500/20 text-bg-[var(--sunken)] hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+ className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] hover: hover:bg-amber-500/20 text-[var(--sunken)] hover:text-white font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
  title={`Insertar ${sym}`}
  >
  {sym}
@@ -147,7 +147,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
  <button
  type="button"
  onClick={handleClean}
- className="inline-flex items-center gap-1 text-[10px] font-mono text-text-[var(--ink-2)] hover:text-rose-300 transition-colors cursor-pointer"
+ className="inline-flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-rose-300 transition-colors cursor-pointer"
  title="Restaurar a texto estándar sin caracteres especiales"
  >
  <RotateCcw className="w-3 h-3" />

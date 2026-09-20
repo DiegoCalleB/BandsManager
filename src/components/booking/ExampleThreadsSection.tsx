@@ -178,7 +178,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  title="Abrir para ver o editar este hilo"
  >
  <div className="min-w-0">
- <span className="font-bold text-bg-[var(--sunken)]">{t.titulo || 'Sin título'}</span>
+ <span className="font-bold text-[var(--sunken)]">{t.titulo || 'Sin título'}</span>
  <span className="text-neutral-500 ml-2">{t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}</span>
  </div>
  <div className="flex items-center gap-1 shrink-0">
@@ -253,7 +253,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  </button>
 
  <div className="flex items-center gap-2">
- <span className="text-[9px] text-text-[var(--ink-2)] font-sans">Resultado:</span>
+ <span className="text-[9px] text-[var(--ink-2)] font-sans">Resultado:</span>
  {(['positiva', 'neutral', 'negativa'] as const).map((r) => (
  <button
  key={r}

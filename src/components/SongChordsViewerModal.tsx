@@ -216,7 +216,7 @@ export function SongChordsViewerModal({
  return (
  <ModalPortal isOpen={true} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
- <div className="relative bg-bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
+ <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
 
  {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
  <button
@@ -229,7 +229,7 @@ export function SongChordsViewerModal({
  </button>
 
  {/* MODAL HEADER */}
- <div className="bg-gradient-to-r from-bg-[var(--surface)] via-bg-[var(--surface)] to-purple-950/40 p-4 pr-12 border-b flex flex-wrap items-center justify-between gap-3 shrink-0">
+ <div className="bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-purple-950/40 p-4 pr-12 border-b flex flex-wrap items-center justify-between gap-3 shrink-0">
  <div className="flex items-center gap-3">
  <div className="p-2.5 rounded-[var(--r-m)] bg-amber-500/20 text-amber-400">
  <Music2 className="w-6 h-6" />
@@ -307,7 +307,7 @@ export function SongChordsViewerModal({
  </div>
 
  {/* TOOLBAR CONTROLS BAR (LaCuerda / Ultimate Guitar Toolbar) */}
- <div className="bg-bg-[var(--surface)]/80 px-4 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 text-xs font-mono shrink-0">
+ <div className="bg-[var(--surface)]/80 px-4 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 text-xs font-mono shrink-0">
  
  {/* TABS SELECTOR */}
  <div className="flex items-center bg-black/50 p-1 rounded-[var(--r-m)] ">
@@ -497,7 +497,7 @@ export function SongChordsViewerModal({
  
  {/* SUBSTITUTE QUICK SUMMARY BANNER */}
  {guiaSustituto?.estructura && (
- <div className="bg-gradient-to-r from-purple-950/40 via-bg-[var(--surface)] to-black p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
+ <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-black p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
  <div className="flex items-center justify-between text-purple-300 font-bold">
  <span className="flex items-center gap-1.5">
  <Zap className="w-4 h-4 text-amber-400" />
@@ -604,7 +604,7 @@ export function SongChordsViewerModal({
  {/* TAB 3: EDIT MODE */}
  {activeTab === 'edit' && (
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
- <div className="bg-bg-[var(--surface)]/90 p-5 rounded-[var(--r-l)] space-y-4">
+ <div className="bg-[var(--surface)]/90 p-5 rounded-[var(--r-l)] space-y-4">
  <div className="flex items-center justify-between border-b pb-3">
  <h3 className="font-bold text-white flex items-center gap-2 text-sm font-mono">
  <Edit3 className="w-4 h-4 text-amber-400" />
@@ -691,7 +691,7 @@ export function SongChordsViewerModal({
 
  {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
  {activeTab === 'chords' && showChordDiagrams && (
- <div className="w-full md:w-64 bg-bg-[var(--surface)] border-t md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
+ <div className="w-full md:w-64 bg-[var(--surface)] border-t md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
  <div className="flex items-center justify-between border-b pb-2">
  <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5">
  🎸 Posiciones de Acordes ({uniqueChords.length})
@@ -823,7 +823,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
  {shape ? (
  <div className="flex justify-center pt-1">
  {/* Simple 6-string Guitar Fretboard Grid Representation */}
- <div className="w-24 bg-bg-[var(--surface)] p-1.5 rounded text-[9px] font-mono">
+ <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-[9px] font-mono">
  {shape.baseFret && shape.baseFret > 1 && (
  <div className="text-[8px] text-amber-400 font-bold text-left pl-1">
  Traste {shape.baseFret}

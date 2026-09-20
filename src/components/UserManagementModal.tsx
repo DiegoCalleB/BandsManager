@@ -257,7 +257,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`w-full max-w-2xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight 
  ? 'bg-white -slate-200 text-[var(--ink)]' 
- : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
+ : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)]'
  }`}
  >
  <datalist id="instrument-suggestions">
@@ -266,7 +266,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </datalist>
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-2.5">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-indigo-500/10 -indigo-500/20 text-indigo-400 flex items-center justify-center">
@@ -279,14 +279,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  Panel Admin
  </span>
  </h3>
- <p className="text-[11px] text-text-[var(--ink-2)] font-mono">
+ <p className="text-[11px] text-[var(--ink-2)] font-mono">
  Crea cuentas, administra roles y gestiona contraseñas para el equipo
  </p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-neutral-800/50 transition-colors"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800/50 transition-colors"
  >
  <X className="w-5 h-5" />
  </button>
@@ -294,14 +294,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Tab Selection */}
  <div className={`px-6 pt-3 flex gap-2 ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]/50' : '-neutral-800/80 bg-bg-[var(--surface)]/40'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]/50' : '-neutral-800/80 bg-[var(--surface)]/40'
  }`}>
  <button
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab === 'list'
  ? '-indigo-400 text-indigo-400'
- : '-transparent text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : '-transparent text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <Users className="w-3.5 h-3.5" />
@@ -312,7 +312,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab === 'create'
  ? '-indigo-400 text-indigo-400'
- : '-transparent text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : '-transparent text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <UserPlus className="w-3.5 h-3.5" />
@@ -323,7 +323,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
  activeTab === 'associate'
  ? 'text-indigo-400 border-b border-indigo-400'
- : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <Link2 className="w-3.5 h-3.5" />
@@ -362,7 +362,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`p-4 rounded-[var(--r-m)] transition-all ${
  isStitchLight 
  ? 'bg-[var(--bg)] -slate-200/80 hover:-slate-300' 
- : 'bg-bg-[var(--surface)]/60 -neutral-800/80 hover:-neutral-700/80'
+ : 'bg-[var(--surface)]/60 -neutral-800/80 hover:-neutral-700/80'
  }`}
  >
  <div className="flex flex-wrap items-center justify-between gap-3">
@@ -376,7 +376,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div>
  <div className="flex items-center gap-2">
  <strong className="font-bold text-sm font-sans">{u.name}</strong>
- <span className="text-xs text-text-[var(--ink-2)] font-mono">@{u.username}</span>
+ <span className="text-xs text-[var(--ink-2)] font-mono">@{u.username}</span>
  {isLeader ? (
  <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-[#d1b375]/15 text-[#d1b375] -amber-500/30 flex items-center gap-1">
  <Shield className="w-2.5 h-2.5" />
@@ -393,7 +393,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </span>
  )}
  </div>
- <div className="text-xs text-text-[var(--ink-2)] flex items-center gap-2 mt-0.5">
+ <div className="text-xs text-[var(--ink-2)] flex items-center gap-2 mt-0.5">
  <span className="flex items-center gap-1">
  <Music className="w-3 h-3 text-emerald-400" />
  <span>{u.instrument || 'Músico'}</span>
@@ -413,11 +413,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold outline-none cursor-pointer transition-all ${
  u.role === 'leader'
  ? 'bg-[#d1b375]/15 text-[#d1b375] -amber-500/40 hover:bg-amber-500/25'
- : 'bg-bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-neutral-800'
+ : 'bg-[var(--surface)] text-blue-300 -blue-500/30 hover:bg-neutral-800'
  } ${isSelf ? 'opacity-70 cursor-not-allowed' : ''}`}
  >
- <option value="member" className="bg-bg-[var(--surface)] text-bg-[var(--sunken)]">Rol: Miembro</option>
- <option value="leader" className="bg-bg-[var(--surface)] text-amber-300">Rol: Admin</option>
+ <option value="member" className="bg-[var(--surface)] text-[var(--sunken)]">Rol: Miembro</option>
+ <option value="leader" className="bg-[var(--surface)] text-amber-300">Rol: Admin</option>
  </select>
 
  <button
@@ -430,7 +430,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  setChangePasswordValue('');
  }
  }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-mono hover:bg-neutral-800 text-text-[var(--ink-3)] transition-colors flex items-center gap-1 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-mono hover:bg-neutral-800 text-[var(--ink-3)] transition-colors flex items-center gap-1 cursor-pointer"
  >
  <Key className="w-3 h-3 text-amber-400" />
  <span>{isEditingThisUser ? 'Cancelar' : 'Contraseña'}</span>
@@ -458,14 +458,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setChangePasswordValue(e.target.value)}
  placeholder="Nueva contraseña secreta..."
  className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono outline-none ${
- isStitchLight ? 'bg-white -slate-200' : 'bg-bg-[var(--surface)] -neutral-700'
+ isStitchLight ? 'bg-white -slate-200' : 'bg-[var(--surface)] -neutral-700'
  }`}
  />
  <button
  type="button"
  onClick={() => handleChangePassword(u.id)}
  disabled={loading}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-bg-[var(--surface)] font-bold text-xs transition-colors flex items-center gap-1"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-emerald-500 hover:bg-emerald-400 text-[var(--surface)] font-bold text-xs transition-colors flex items-center gap-1"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Guardar</span>
@@ -481,7 +481,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <form onSubmit={handleCreateUser} className="space-y-4">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Usuario (para login) *
  </label>
  <input
@@ -490,14 +490,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewUsername(e.target.value)}
  placeholder="Ej: pablo, carlos, ana"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-bg-[var(--surface)] -neutral-800'
+ isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800'
  }`}
  required
  />
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Email *
  </label>
  <input
@@ -506,7 +506,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewEmail(e.target.value)}
  placeholder="Ej: pablo@gmail.com"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-bg-[var(--surface)] -neutral-800'
+ isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800'
  }`}
  required
  />
@@ -515,7 +515,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Nombre Completo *
  </label>
  <input
@@ -524,14 +524,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewName(e.target.value)}
  placeholder="Ej: Pablo (Violín / Sintetizador)"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-bg-[var(--surface)] -neutral-800'
+ isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800'
  }`}
  required
  />
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Contraseña Inicial *
  </label>
  <input
@@ -540,7 +540,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Contraseña del usuario"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-bg-[var(--surface)] -neutral-800'
+ isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800'
  }`}
  required
  />
@@ -548,14 +548,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Rol en la App
  </label>
  <select
  value={newRole}
  onChange={(e) => setNewRole(e.target.value as UserRole)}
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-bg-[var(--surface)] -neutral-800'
+ isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800'
  }`}
  >
  <option value="member">Miembro de Banda (Músico)</option>
@@ -564,7 +564,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Instrumento / Puesto
  </label>
  <input
@@ -574,7 +574,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setNewInstrument(e.target.value)}
  placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-bg-[var(--surface)] -neutral-800'
+ isStitchLight ? 'bg-[var(--bg)] -slate-200' : 'bg-[var(--surface)] -neutral-800'
  }`}
  />
  <p className="text-[10px] text-neutral-500">
@@ -583,7 +583,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1.5">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Color Identificador
  </label>
  <div className="flex items-center gap-2">
@@ -619,7 +619,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  ) : (
  /* Associate Existing User Form */
  <form onSubmit={handleAssociateUser} className="space-y-4">
- <div className="p-4 bg-indigo-500/5 rounded-[var(--r-l)] text-xs text-text-[var(--ink-3)]">
+ <div className="p-4 bg-indigo-500/5 rounded-[var(--r-l)] text-xs text-[var(--ink-3)]">
  <p className="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
  <Sparkles className="w-3.5 h-3.5" />
  <span>¿Músico ya registrado en la plataforma?</span>
@@ -628,7 +628,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Email del Músico Registrado *
  </label>
  <input
@@ -637,21 +637,21 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setAssocEmail(e.target.value)}
  placeholder="Introduce su email exacto..."
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  required
  />
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Rol en esta Banda
  </label>
  <select
  value={assocRole}
  onChange={(e) => setAssocRole(e.target.value as UserRole)}
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  >
  <option value="member">Miembro de Banda (Músico)</option>
@@ -660,7 +660,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  <div className="space-y-1">
- <label className="text-xs font-mono font-semibold text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-semibold text-[var(--ink-2)]">
  Instrumento / Puesto (opcional)
  </label>
  <input
@@ -670,7 +670,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setAssocInstrument(e.target.value)}
  placeholder="Ej: Guitarra, Bajista, Manager, Coros"
  className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ isStitchLight ? 'bg-[var(--bg)] text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  />
  </div>
@@ -695,11 +695,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Modal Footer */}
  <div className={`px-6 py-3 text-right ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-[var(--surface)]/60'
  }`}>
  <button
  onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono -neutral-700 text-text-[var(--ink-3)] hover:bg-neutral-800 transition-colors"
+ className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-mono -neutral-700 text-[var(--ink-3)] hover:bg-neutral-800 transition-colors"
  >
  Cerrar Panel
  </button>

@@ -138,7 +138,7 @@ export function EnsayosManager({
  <h2 className="text-2xl sm:text-3xl font-display font-black text-white">
  Módulo de Ensayos & Local en Vivo
  </h2>
- <p className="text-sm text-text-[var(--ink-2)] max-w-lg mx-auto">
+ <p className="text-sm text-[var(--ink-2)] max-w-lg mx-auto">
  Planifica el orden del día, cronometra tus sesiones, usa el metrónomo en el local y genera actas con IA para tu grupo de WhatsApp.
  </p>
  </div>
@@ -148,7 +148,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-amber-400 text-bg-[var(--surface)] font-mono font-black text-sm uppercase tracking-wider hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-amber-400 text-[var(--surface)] font-mono font-black text-sm uppercase tracking-wider hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-4 h-4" />
  <span>Convocar Primer Ensayo</span>
@@ -193,7 +193,7 @@ export function EnsayosManager({
  </option>
  ))}
  </select>
- <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-text-[var(--ink-2)] pointer-events-none" />
+ <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-[var(--ink-2)] pointer-events-none" />
  </div>
 
  {/* Status Badge */}
@@ -203,7 +203,7 @@ export function EnsayosManager({
  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
  : currentRehearsal?.estado === 'en_curso'
  ? 'bg-amber-400/20 text-amber-300 /40 animate-pulse'
- : 'bg-neutral-800 text-text-[var(--ink-3)] '
+ : 'bg-neutral-800 text-[var(--ink-3)] '
  }`}
  >
  {currentRehearsal?.estado === 'completado'
@@ -220,7 +220,7 @@ export function EnsayosManager({
  setEditingRehearsal(currentRehearsal);
  setShowConvocarModal(true);
  }}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
  title="Editar datos de este ensayo"
  >
  <Edit3 className="w-3.5 h-3.5" />
@@ -229,19 +229,19 @@ export function EnsayosManager({
  </div>
 
  {/* Rehearsal Headline */}
- <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-text-[var(--ink-3)]">
+ <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[var(--ink-3)]">
  <span className="flex items-center gap-1.5 text-zinc-100 font-bold">
  <Calendar className="w-4 h-4 text-amber-400" />
  {currentRehearsal?.fecha} ({currentRehearsal?.hora || '19:30'} - {currentRehearsal?.horaFin || '21:30'})
  </span>
 
- <span className="flex items-center gap-1.5 text-text-[var(--ink-2)]">
+ <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
  <MapPin className="w-3.5 h-3.5 text-neutral-500" />
  {currentRehearsal?.lugar || 'Local de ensayo'}
  </span>
 
  {currentRehearsal?.convocados_nombres && (
- <span className="flex items-center gap-1.5 text-text-[var(--ink-2)]">
+ <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
  <Users className="w-3.5 h-3.5 text-neutral-500" />
  {Array.isArray(currentRehearsal.convocados_nombres)
  ? currentRehearsal.convocados_nombres.join(', ')
@@ -267,7 +267,7 @@ export function EnsayosManager({
  setEditingRehearsal(null);
  setShowConvocarModal(true);
  }}
- className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-bg-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
+ className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-[var(--surface)] hover:bg-amber-300 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer active:scale-95"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Convocar Ensayo</span>
@@ -281,8 +281,8 @@ export function EnsayosManager({
  onClick={() => setActiveTab('orden_del_dia')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab === 'orden_del_dia'
- ? 'bg-amber-400 text-bg-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- : 'text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ : 'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
  <ListOrdered className="w-4 h-4 shrink-0" />
@@ -294,8 +294,8 @@ export function EnsayosManager({
  onClick={() => setActiveTab('modo_local')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab === 'modo_local'
- ? 'bg-amber-400 text-bg-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- : 'text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ : 'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
  <Radio className="w-4 h-4 shrink-0" />
@@ -307,8 +307,8 @@ export function EnsayosManager({
  onClick={() => setActiveTab('grabacion_acta')}
  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer text-center ${
  activeTab === 'grabacion_acta'
- ? 'bg-amber-400 text-bg-[var(--surface)] font-black shadow-md shadow-amber-400/20'
- : 'text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
+ ? 'bg-amber-400 text-[var(--surface)] font-black shadow-md shadow-amber-400/20'
+ : 'text-[var(--ink-2)] hover:text-zinc-200 hover:bg-neutral-800/60'
  }`}
  >
  <Mic className="w-4 h-4 shrink-0" />

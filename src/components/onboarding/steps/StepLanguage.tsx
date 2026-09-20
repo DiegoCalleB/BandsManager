@@ -74,7 +74,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <h3 className="text-base sm:text-lg font-bold font-display text-white">
  ¿En qué idioma quieres trabajar con tu banda?
  </h3>
- <p className="text-xs sm:text-sm text-text-[var(--ink-3)] leading-relaxed">
+ <p className="text-xs sm:text-sm text-[var(--ink-3)] leading-relaxed">
  Selecciona tu idioma principal. Esta configuración adapta al instante la interfaz, el estilo de redacción de los agentes de IA y tu dossier de prensa oficial.
  </p>
  </div>
@@ -111,7 +111,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  }}
  className={`relative p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
  isSelected
- ? 'bg-gradient-to-br from-amber-500/20 via-amber-950/20 to-bg-[var(--surface)]/90 ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/10 scale-[1.01]'
+ ? 'bg-gradient-to-br from-amber-500/20 via-amber-950/20 to-[var(--surface)]/90 ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/10 scale-[1.01]'
  : 'bg-[#181614]/90 hover:bg-[#201d19] border-white/10 hover:border-white/20'
  }`}
  >
@@ -132,7 +132,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  </span>
  )}
  </div>
- <p className="text-[11px] text-text-[var(--ink-2)] font-mono">
+ <p className="text-[11px] text-[var(--ink-2)] font-mono">
  {details.nativeName}
  </p>
  </div>
@@ -149,7 +149,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
 
  {/* Bottom Row: Details & AI Note */}
  <div className="space-y-1.5 pt-2 border-t border-white/5">
- <p className="text-xs text-text-[var(--ink-3)] leading-snug">
+ <p className="text-xs text-[var(--ink-3)] leading-snug">
  {details.description}
  </p>
  <div className="flex items-center gap-1.5 text-[11px] text-amber-300/80 font-mono">
@@ -169,8 +169,8 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <Languages className="w-4 h-4" />
  </div>
  <div>
- <h5 className="text-xs font-bold text-bg-[var(--sunken)]">Panel & Menús</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5 leading-relaxed">
+ <h5 className="text-xs font-bold text-[var(--sunken)]">Panel & Menús</h5>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
  Todos los módulos, botones y tablas cambian de inmediato en tiempo real.
  </p>
  </div>
@@ -181,8 +181,8 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <MessageSquareText className="w-4 h-4" />
  </div>
  <div>
- <h5 className="text-xs font-bold text-bg-[var(--sunken)]">Agentes de IA</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5 leading-relaxed">
+ <h5 className="text-xs font-bold text-[var(--sunken)]">Agentes de IA</h5>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
  Redacción de propuestas y respuestas a salas afinadas según el idioma seleccionado.
  </p>
  </div>
@@ -193,8 +193,8 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
  <FileText className="w-4 h-4" />
  </div>
  <div>
- <h5 className="text-xs font-bold text-bg-[var(--sunken)]">Dossier EPK</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5 leading-relaxed">
+ <h5 className="text-xs font-bold text-[var(--sunken)]">Dossier EPK</h5>
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
  Biografía oficial y fichas técnicas generadas con este idioma por defecto.
  </p>
  </div>

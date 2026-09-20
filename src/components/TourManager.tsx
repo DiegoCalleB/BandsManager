@@ -607,7 +607,7 @@ export default function TourManager({
  ✓ Convocado
  </span>
  ) : (
- <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-neutral-800 text-text-[var(--ink-2)] ">
+ <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-neutral-800 text-[var(--ink-2)] ">
  No convocado
  </span>
  )}
@@ -651,10 +651,10 @@ export default function TourManager({
  </div>
  </div>
  <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
- <button onClick={() => handleOpenEditModal(tour)} className="p-1.5 rounded-[var(--r-s)] hover:bg-neutral-800 text-text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer" title="Editar">
+ <button onClick={() => handleOpenEditModal(tour)} className="p-1.5 rounded-[var(--r-s)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer" title="Editar">
  <Edit3 className="w-4 h-4" />
  </button>
- <button onClick={() => handleDelete(tour.id, tour.nombre)} className="p-1.5 rounded-[var(--r-s)] hover:bg-rose-500/15 text-text-[var(--ink-2)] hover:text-rose-400 transition-colors cursor-pointer" title="Eliminar">
+ <button onClick={() => handleDelete(tour.id, tour.nombre)} className="p-1.5 rounded-[var(--r-s)] hover:bg-rose-500/15 text-[var(--ink-2)] hover:text-rose-400 transition-colors cursor-pointer" title="Eliminar">
  <Trash2 className="w-4 h-4" />
  </button>
  </div>
@@ -663,13 +663,13 @@ export default function TourManager({
  {/* Metrics */}
  <div className="grid grid-cols-3 gap-2 mb-4">
  <div className="p-2.5 rounded-[var(--r-m)] bg-black/40 border-white/5">
- <span className="text-[9px] text-text-[var(--ink-2)] uppercase tracking-wider block font-mono">Logística</span>
+ <span className="text-[9px] text-[var(--ink-2)] uppercase tracking-wider block font-mono">Logística</span>
  <div className="text-xs font-bold text-rose-400 mt-0.5">
  -{totalGastos} €
  </div>
  </div>
  <div className="p-2.5 rounded-[var(--r-m)] bg-black/40 border-white/5">
- <span className="text-[9px] text-text-[var(--ink-2)] uppercase tracking-wider block font-mono">Caché Est.</span>
+ <span className="text-[9px] text-[var(--ink-2)] uppercase tracking-wider block font-mono">Caché Est.</span>
  <div className="text-xs font-bold text-emerald-400 mt-0.5">
  +{totalIngresos} €
  </div>
@@ -685,9 +685,9 @@ export default function TourManager({
 
  {/* Ruta & Paradas */}
  <div>
- <h4 className="text-[10px] uppercase font-mono text-text-[var(--ink-2)] mb-2 flex justify-between items-center">
+ <h4 className="text-[10px] uppercase font-mono text-[var(--ink-2)] mb-2 flex justify-between items-center">
  <span>Ruta ({tour.stops.length} paradas)</span>
- <span className="text-text-[var(--ink-2)] truncate max-w-[200px]" title={tour.vehiculos?.map(v => v.nombre).join(", ") || tour.vehiculo}>
+ <span className="text-[var(--ink-2)] truncate max-w-[200px]" title={tour.vehiculos?.map(v => v.nombre).join(", ") || tour.vehiculo}>
  {tour.vehiculos && tour.vehiculos.length > 1 
  ? `${tour.vehiculos.length} Vehículos` 
  : (tour.vehiculo || '1 Vehículo')}
@@ -749,7 +749,7 @@ export default function TourManager({
  )}
  </div>
 
- <span className="text-[10px] text-text-[var(--ink-2)] font-mono">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono">
  {tour.stops.length} fechas
  </span>
  </div>
@@ -772,13 +772,13 @@ export default function TourManager({
  <Truck className="w-5 h-5 text-sky-400" />
  {editingTour ? 'Editar Gira' : 'Nueva Gira'}
  </h3>
- <p className="text-xs text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-xs text-[var(--ink-2)] mt-0.5">
  Configura la ruta, flota de vehículos, selección de miembros y sincronización automática.
  </p>
  </div>
  <button 
  onClick={() => setIsModalOpen(false)}
- className="p-2 rounded-[var(--r-m)] hover:bg-neutral-800 text-text-[var(--ink-2)] hover:text-white transition-colors text-xl leading-none cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-white transition-colors text-xl leading-none cursor-pointer"
  >
  &times;
  </button>
@@ -820,7 +820,7 @@ export default function TourManager({
  <span className="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
  <Users className="w-4 h-4 text-purple-400" /> Miembros & Formación de la Gira
  </span>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Selecciona si viaja toda la banda o una formación reducida/acústica. Afecta al cálculo de dietas, hoteles y visibilidad en el calendario de cada músico.
  </p>
  </div>
@@ -836,7 +836,7 @@ export default function TourManager({
  className={`px-3 py-1 text-xs font-mono font-bold rounded-md transition-all cursor-pointer ${
  formConvocatoriaTipo === 'completa'
  ? 'bg-purple-600 text-white shadow-sm'
- : 'text-text-[var(--ink-2)] hover:text-white'
+ : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  👥 Banda Completa ({availableMembers.length})
@@ -847,7 +847,7 @@ export default function TourManager({
  className={`px-3 py-1 text-xs font-mono font-bold rounded-md transition-all cursor-pointer ${
  formConvocatoriaTipo === 'parcial'
  ? 'bg-purple-600 text-white shadow-sm'
- : 'text-text-[var(--ink-2)] hover:text-white'
+ : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  👤 Formación Parcial / Reducida
@@ -858,7 +858,7 @@ export default function TourManager({
  {/* Lista de Miembros para Convocatoria */}
  {formConvocatoriaTipo === 'parcial' && (
  <div className="space-y-2.5 animate-in fade-in duration-200">
- <div className="flex justify-between items-center text-[11px] text-text-[var(--ink-2)] font-mono">
+ <div className="flex justify-between items-center text-[11px] text-[var(--ink-2)] font-mono">
  <span>Marca los músicos o miembros del equipo que viajarán en esta gira:</span>
  <div className="flex gap-2">
  <button
@@ -872,7 +872,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => setFormConvocadosIds([])}
- className="text-text-[var(--ink-2)] hover:underline cursor-pointer"
+ className="text-[var(--ink-2)] hover:underline cursor-pointer"
  >
  Limpiar
  </button>
@@ -890,7 +890,7 @@ export default function TourManager({
  className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
  isSelected
  ? 'bg-purple-500/20 border-purple-500/50 text-white shadow-sm'
- : 'bg-black/40 border-white/10 text-text-[var(--ink-2)] hover:border-white/20'
+ : 'bg-black/40 border-white/10 text-[var(--ink-2)] hover:border-white/20'
  }`}
  >
  <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
@@ -900,7 +900,7 @@ export default function TourManager({
  </div>
  <div className="min-w-0 flex-1">
  <div className="text-xs font-bold truncate text-zinc-100">{m.name}</div>
- <div className="text-[10px] text-text-[var(--ink-2)] truncate">{m.instrument || m.role}</div>
+ <div className="text-[10px] text-[var(--ink-2)] truncate">{m.instrument || m.role}</div>
  </div>
  </button>
  );
@@ -918,7 +918,7 @@ export default function TourManager({
  </div>
 
  <div className="flex items-center gap-2">
- <span className="text-text-[var(--ink-2)] font-mono text-[11px]">Dieta / pers. / día:</span>
+ <span className="text-[var(--ink-2)] font-mono text-[11px]">Dieta / pers. / día:</span>
  <input
  type="number"
  min="0"
@@ -926,7 +926,7 @@ export default function TourManager({
  onChange={(e) => setDietaPerPersona(Number(e.target.value))}
  className="w-16 p-1 rounded bg-black/60 border-white/20 text-xs font-mono text-center font-bold text-amber-300"
  />
- <span className="text-text-[var(--ink-2)] text-xs font-mono">€</span>
+ <span className="text-[var(--ink-2)] text-xs font-mono">€</span>
  <button
  type="button"
  onClick={handleAutoCalculateDietas}
@@ -946,7 +946,7 @@ export default function TourManager({
  <span className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider flex items-center gap-1.5">
  <Truck className="w-4 h-4 text-sky-400" /> Flota & Vehículos de la Gira ({formVehiculos.length} {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'})
  </span>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Añade todos los coches o furgonetas que viajan. El consumo de combustible sumará el gasto combinado de la flota.
  </p>
  </div>
@@ -961,7 +961,7 @@ export default function TourManager({
  <button
  type="button"
  onClick={() => recalculateAllFuelStops()}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] border-white/10 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] border-white/10 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer"
  title="Aplica la suma de consumos a las distancias de todas las paradas"
  >
  <Calculator className="w-3.5 h-3.5 text-amber-400" /> Recalcular Paradas
@@ -997,7 +997,7 @@ export default function TourManager({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
  <div>
- <label className="text-[10px] font-mono text-text-[var(--ink-2)] uppercase block mb-1">Cargar Plantilla</label>
+ <label className="text-[10px] font-mono text-[var(--ink-2)] uppercase block mb-1">Cargar Plantilla</label>
  <select
  onChange={(e) => handleApplyPresetToVehicle(vIdx, e.target.value)}
  defaultValue=""
@@ -1011,7 +1011,7 @@ export default function TourManager({
  </div>
 
  <div>
- <label className="text-[10px] font-mono text-text-[var(--ink-2)] uppercase block mb-1">Nombre / Identificador</label>
+ <label className="text-[10px] font-mono text-[var(--ink-2)] uppercase block mb-1">Nombre / Identificador</label>
  <input
  value={veh.nombre}
  onChange={e => handleUpdateVehicle(vIdx, 'nombre', e.target.value)}
@@ -1070,7 +1070,7 @@ export default function TourManager({
  <span className="text-neutral-300 flex items-center gap-1.5">
  📐 <strong className="text-white">Cálculo de Consumo Combinado:</strong>
  </span>
- <div className="text-[11px] text-text-[var(--ink-2)]">
+ <div className="text-[11px] text-[var(--ink-2)]">
  {formVehiculos.map((v, i) => (
  <span key={`veh-fleet-summary-${v.id || i}-${i}`} className="inline-block mr-2">
  • {v.nombre || `Vehículo ${i+1}`}: {v.consumoL100km} {v.tipoCombustible === 'electrico' ? 'kWh' : 'L'}/100km @ {v.precioCarburanteEUR || 1.55}€ (≈ {(((Number(v.consumoL100km) || 0) * (Number(v.precioCarburanteEUR) || 1.55))).toFixed(2)}€/100km)
@@ -1096,7 +1096,7 @@ export default function TourManager({
  <MapPin className="w-4 h-4 text-sky-400" />
  Ruta & Paradas
  </h4>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Cada parada con fecha se reflejará en el calendario de la banda con sus gastos logísticos y convocatoria.
  </p>
  </div>
@@ -1111,12 +1111,12 @@ export default function TourManager({
 
  <div className="space-y-4">
  {formStops.length === 0 ? (
- <div className="p-6 text-center rounded-[var(--r-m)] bg-black/20 border-white/5 text-text-[var(--ink-2)] text-sm italic">
+ <div className="p-6 text-center rounded-[var(--r-m)] bg-black/20 border-white/5 text-[var(--ink-2)] text-sm italic">
  Añade paradas para calcular automáticamente kilometraje, estimación de combustible de todos tus vehículos, dietas y margen financiero.
  </div>
  ) : (
  formStops.map((stop, idx) => (
- <div key={stop.id || `form-stop-${idx}`} className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)]/60 border-white/10 relative group">
+ <div key={stop.id || `form-stop-${idx}`} className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/60 border-white/10 relative group">
  <button
  type="button"
  onClick={() => removeStop(idx)}
@@ -1146,7 +1146,7 @@ export default function TourManager({
 
  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-3">
  <div className="space-y-1">
- <label className="text-[10px] uppercase font-mono text-text-[var(--ink-2)] block">Ciudad</label>
+ <label className="text-[10px] uppercase font-mono text-[var(--ink-2)] block">Ciudad</label>
  <input
  value={stop.ciudad}
  onChange={e => updateStop(idx, 'ciudad', e.target.value)}
@@ -1155,7 +1155,7 @@ export default function TourManager({
  />
  </div>
  <div className="space-y-1">
- <label className="text-[10px] uppercase font-mono text-text-[var(--ink-2)] block">Sala / Festival</label>
+ <label className="text-[10px] uppercase font-mono text-[var(--ink-2)] block">Sala / Festival</label>
  <input
  value={stop.sala}
  onChange={e => updateStop(idx, 'sala', e.target.value)}
@@ -1164,7 +1164,7 @@ export default function TourManager({
  />
  </div>
  <div className="space-y-1">
- <label className="text-[10px] uppercase font-mono text-text-[var(--ink-2)] block">Fecha</label>
+ <label className="text-[10px] uppercase font-mono text-[var(--ink-2)] block">Fecha</label>
  <input
  type="date"
  value={stop.fecha}
@@ -1173,7 +1173,7 @@ export default function TourManager({
  />
  </div>
  <div className="space-y-1">
- <label className="text-[10px] uppercase font-mono text-text-[var(--ink-2)] block flex items-center justify-between">
+ <label className="text-[10px] uppercase font-mono text-[var(--ink-2)] block flex items-center justify-between">
  <span className="flex items-center gap-1">
  <span>Distancia (Km)</span>
  <span title="Calcula combustible combinado para toda la flota automáticamente">
@@ -1226,7 +1226,7 @@ export default function TourManager({
  />
  </div>
  <div>
- <label className="text-[10px] text-text-[var(--ink-2)] block font-mono">Alojamiento (€)</label>
+ <label className="text-[10px] text-[var(--ink-2)] block font-mono">Alojamiento (€)</label>
  <input
  type="number"
  min="0"
@@ -1237,7 +1237,7 @@ export default function TourManager({
  />
  </div>
  <div>
- <label className="text-[10px] text-text-[var(--ink-2)] block font-mono">Dietas Expedición (€)</label>
+ <label className="text-[10px] text-[var(--ink-2)] block font-mono">Dietas Expedición (€)</label>
  <input
  type="number"
  min="0"
@@ -1284,15 +1284,15 @@ export default function TourManager({
  return (
  <div className="p-4 rounded-[var(--r-m)] bg-black/40 border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
  <div>
- <span className="text-[10px] text-text-[var(--ink-2)] uppercase font-mono block">Caché Total Est.</span>
+ <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Caché Total Est.</span>
  <span className="text-base sm:text-lg font-bold text-emerald-400">+{totalIngresos} €</span>
  </div>
  <div>
- <span className="text-[10px] text-text-[var(--ink-2)] uppercase font-mono block">Gastos Logística</span>
+ <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Gastos Logística</span>
  <span className="text-base sm:text-lg font-bold text-rose-400">-{totalGastos} €</span>
  </div>
  <div>
- <span className="text-[10px] text-text-[var(--ink-2)] uppercase font-mono block">Margen Neto Total</span>
+ <span className="text-[10px] text-[var(--ink-2)] uppercase font-mono block">Margen Neto Total</span>
  <span className={`text-base sm:text-lg font-extrabold ${neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
  {neto >= 0 ? `+${neto}` : neto} €
  </span>
@@ -1344,11 +1344,11 @@ export default function TourManager({
  </div>
  <div>
  <h3 className="font-bold text-lg text-white font-display">¿Eliminar esta gira?</h3>
- <p className="text-xs text-text-[var(--ink-2)] mt-0.5">Esta acción eliminará la gira y no se puede deshacer.</p>
+ <p className="text-xs text-[var(--ink-2)] mt-0.5">Esta acción eliminará la gira y no se puede deshacer.</p>
  </div>
  </div>
 
- <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-white/5 text-sm text-bg-[var(--sunken)]">
+ <div className="p-3 rounded-[var(--r-m)] bg-black/40 border-white/5 text-sm text-[var(--sunken)]">
  Gira: <strong className="text-white">{tourToDelete.name}</strong>
  </div>
 

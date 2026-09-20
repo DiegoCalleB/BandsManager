@@ -134,7 +134,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  <h3 className="text-base font-bold font-display uppercase tracking-wider text-zinc-100 flex items-center gap-2">
  Plantillas & Ejemplos Reales de Email
  </h3>
- <p className="text-xs text-text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  Modelos de redacción probados para salas, festivales, medios e intercambios
  </p>
  </div>
@@ -142,7 +142,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
  <button
  onClick={onClose}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -163,7 +163,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  className={`p-3 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-2 cursor-pointer ${
  isSelected
  ? 'bg-amber-500/20 /60 text-amber-300 shadow-md'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between">
@@ -179,7 +179,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  </div>
 
  {/* Selected Template Display Box */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-4">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b ">
  <div>
  <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">
@@ -211,7 +211,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  {/* Subject preview */}
  <div className="space-y-1">
  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Asunto del Correo:</span>
- <div className="p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)] text-xs font-mono font-bold text-amber-300">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-mono font-bold text-amber-300">
  {currentTpl.subject.replace(/{bandName}/g, bandName)}
  </div>
  </div>
@@ -219,7 +219,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
  {/* Body preview */}
  <div className="space-y-1">
  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Cuerpo del Mensaje:</span>
- <pre className="p-4 rounded-[var(--r-s)] bg-bg-[var(--surface)]/90 text-xs font-sans text-bg-[var(--sunken)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
+ <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--sunken)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
  {currentTpl.body.replace(/{bandName}/g, bandName)}
  </pre>
  </div>

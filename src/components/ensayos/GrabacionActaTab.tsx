@@ -214,7 +214,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h3 className="text-sm font-mono font-bold text-zinc-100 uppercase">
  Grabadora de Audio en Vivo
  </h3>
- <p className="text-xs text-text-[var(--ink-2)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Graba tomas completas, riffs o notas de voz directamente desde el micrófono
  </p>
  </div>
@@ -258,7 +258,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={startRecording}
- className="px-6 py-3 rounded-[var(--r-l)] bg-amber-400 hover:bg-amber-300 text-bg-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
+ className="px-6 py-3 rounded-[var(--r-l)] bg-amber-400 hover:bg-amber-300 text-[var(--surface)] font-mono font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg shadow-amber-400/20 active:scale-95 transition-all"
  >
  <Mic className="w-4 h-4" />
  <span>Iniciar Grabación con Micrófono</span>
@@ -295,14 +295,14 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  type="button"
  onClick={() => setRecordingBlobUrl(null)}
- className="px-3 py-1.5 text-xs font-mono text-text-[var(--ink-2)] hover:text-white"
+ className="px-3 py-1.5 text-xs font-mono text-[var(--ink-2)] hover:text-white"
  >
  Descartar
  </button>
  <button
  type="button"
  onClick={handleSaveRecording}
- className="px-4 py-1.5 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 text-bg-[var(--surface)] text-xs font-mono font-bold cursor-pointer"
+ className="px-4 py-1.5 rounded-[var(--r-m)] bg-emerald-500 hover:bg-emerald-400 text-[var(--surface)] text-xs font-mono font-bold cursor-pointer"
  >
  Guardar Grabación
  </button>
@@ -313,10 +313,10 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
 
  {/* Upload Audio File Option */}
  <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)] border-[var(--surface)]">
- <span className="text-xs text-text-[var(--ink-2)]">
+ <span className="text-xs text-[var(--ink-2)]">
  ¿Grabaste con Zoom H4n o grabadora externa?
  </span>
- <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] text-xs font-mono font-bold cursor-pointer transition-colors">
+ <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-xs font-mono font-bold cursor-pointer transition-colors">
  <Upload className="w-3.5 h-3.5" />
  <span>Subir Archivo de Audio</span>
  <input
@@ -394,7 +394,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  Acta de Ensayo Inteligente (Human-in-the-loop)
  </h3>
  </div>
- <p className="text-xs text-text-[var(--ink-2)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Sintetiza automáticamente los temas bordados, fallos detectados y tareas para el grupo de WhatsApp.
  </p>
  </div>
@@ -403,7 +403,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <button
  onClick={handleGenerateAIActa}
  disabled={isGeneratingActa}
- className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-bg-[var(--surface)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-amber-400 text-[var(--surface)] hover:bg-amber-300 disabled:opacity-50 text-xs font-mono font-bold shadow-md shadow-amber-400/20 transition-all cursor-pointer"
  >
  {isGeneratingActa ? (
  <>
@@ -443,7 +443,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h4 className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
  📝 Resumen Ejecutivo
  </h4>
- <p className="text-xs text-text-[var(--ink-3)] leading-relaxed font-sans">
+ <p className="text-xs text-[var(--ink-3)] leading-relaxed font-sans">
  {acta.resumenEjecutivo}
  </p>
  </div>
@@ -454,7 +454,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h4 className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider mb-1.5">
  🟢 Temas Bordados
  </h4>
- <ul className="text-xs text-text-[var(--ink-3)] space-y-1 pl-4 list-disc">
+ <ul className="text-xs text-[var(--ink-3)] space-y-1 pl-4 list-disc">
  {(acta.cancionesDestacadas || acta.cancionesBordadas || []).map((c, i) => (
  <li key={i}>{c}</li>
  ))}
@@ -465,7 +465,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  <h4 className="text-xs font-mono font-bold text-rose-400 uppercase tracking-wider mb-1.5">
  🔴 A Repasar Próximo Día
  </h4>
- <ul className="text-xs text-text-[var(--ink-3)] space-y-1 pl-4 list-disc">
+ <ul className="text-xs text-[var(--ink-3)] space-y-1 pl-4 list-disc">
  {(acta.cancionesAPulir || acta.cancionesParaRepetir || []).map((c, i) => (
  <li key={i}>{c}</li>
  ))}
@@ -482,7 +482,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  {(acta.deberesPorMiembro || []).map((d, i) => (
  <div key={i} className="p-2 rounded-[var(--r-s)] bg-[#1a1918] border-[#2a2825] text-xs">
  <span className="font-mono font-bold text-amber-300 block">{d.miembro}:</span>
- <span className="text-text-[var(--ink-3)]">{d.tarea}</span>
+ <span className="text-[var(--ink-3)]">{d.tarea}</span>
  </div>
  ))}
  </div>

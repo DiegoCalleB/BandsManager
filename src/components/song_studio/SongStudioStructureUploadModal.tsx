@@ -206,7 +206,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  stopCamera();
  onClose();
  }}
- className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white"
  >
  <X className="w-5 h-5" />
  </button>
@@ -280,7 +280,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  >
  <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
  <p className="text-sm font-semibold text-white">Arrastra un archivo aquí</p>
- <p className="text-xs text-text-[var(--ink-2)] mt-1">o haz clic para seleccionar</p>
+ <p className="text-xs text-[var(--ink-2)] mt-1">o haz clic para seleccionar</p>
  <p className="text-xs text-neutral-500 mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
  </div>
  <input
@@ -304,20 +304,20 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {/* Preview */}
  {selectedFile && preview && (
  <div className="space-y-3">
- <div className="bg-bg-[var(--surface)] rounded-[var(--r-s)] p-3">
- <p className="text-xs text-text-[var(--ink-2)] mb-2">
+ <div className="bg-[var(--surface)] rounded-[var(--r-s)] p-3">
+ <p className="text-xs text-[var(--ink-2)] mb-2">
  Archivo seleccionado: <span className="text-white font-semibold">{selectedFile.name}</span>
  </p>
  {selectedFile.type.startsWith('image/') && (
  <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
  )}
  {selectedFile.type === 'application/pdf' && (
- <div className="bg-red-950/20 rounded p-3 text-center text-sm text-text-[var(--ink-3)]">
+ <div className="bg-red-950/20 rounded p-3 text-center text-sm text-[var(--ink-3)]">
  📄 PDF - Se procesará con IA para extraer acordes
  </div>
  )}
  {selectedFile.type.includes('word') && (
- <div className="bg-blue-950/20 rounded p-3 text-center text-sm text-text-[var(--ink-3)]">
+ <div className="bg-blue-950/20 rounded p-3 text-center text-sm text-[var(--ink-3)]">
  📝 Documento Word - Se procesará con IA para extraer acordes
  </div>
  )}
@@ -364,7 +364,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="flex items-center justify-between gap-2">
  <div className="min-w-0">
  <p className="text-xs text-emerald-300 truncate">{song.estructuraDocumentoNombre || 'Documento'}</p>
- <p className="text-xs text-text-[var(--ink-2)] mt-1">
+ <p className="text-xs text-[var(--ink-2)] mt-1">
  Procesado el {new Date(song.estructuraDocumentoProcesadoEn || '').toLocaleDateString('es-ES')}
  </p>
  </div>
@@ -415,7 +415,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  {showComparison && (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
  <div className="space-y-1.5">
- <p className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)]">Documento original</p>
+ <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Documento original</p>
  <div className="bg-black/40 border-white/10 rounded-[var(--r-s)] overflow-hidden max-h-96">
  {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
  <img
@@ -430,14 +430,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  className="w-full h-96 border-0"
  />
  ) : (
- <div className="h-96 flex items-center justify-center text-xs text-text-[var(--ink-2)] p-4 text-center">
+ <div className="h-96 flex items-center justify-center text-xs text-[var(--ink-2)] p-4 text-center">
  Este tipo de documento no se puede previsualizar aquí. Usa "Descargar" para abrirlo.
  </div>
  )}
  </div>
  </div>
  <div className="space-y-1.5">
- <p className="text-[10px] font-mono uppercase tracking-wider text-text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
+ <p className="text-[10px] font-mono uppercase tracking-wider text-[var(--ink-2)]">Acordes extraídos (guardados)</p>
  <div className="bg-black/40 border-white/10 rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
  <pre className="text-[11px] font-mono text-amber-100 whitespace-pre-wrap leading-relaxed">
  {song.cifradoTexto || 'Sin acordes guardados todavía.'}

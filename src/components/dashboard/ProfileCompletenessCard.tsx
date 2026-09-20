@@ -286,7 +286,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {badgeInfo.label}
  </span>
  </div>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  {completedPillarsCount} de {pillars.length} factores configurados para {bandName}.
  </p>
  </div>
@@ -305,9 +305,9 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  <button
  onClick={() => setShowAuditModal(true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-text-[var(--ink-3)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-stone-800 hover:bg-stone-700 text-[var(--ink-3)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
  >
- <HelpCircle className="w-3.5 h-3.5 text-text-[var(--ink-2)]" />
+ <HelpCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Info</span>
  </button>
  
@@ -406,7 +406,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <div 
  key={`exp-${pillar.id}`}
  className={`p-2.5 rounded-[var(--r-m)] flex items-start justify-between gap-3 ${
- pillar.completed ? 'bg-bg-[var(--surface)]/40 /80' : 'bg-amber-500/5 /20'
+ pillar.completed ? 'bg-[var(--surface)]/40 /80' : 'bg-amber-500/5 /20'
  }`}
  >
  <div className="space-y-0.5">
@@ -418,7 +418,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  )}
  <span className="font-bold text-zinc-100 text-xs">{pillar.title}</span>
  </div>
- <p className="text-[10px] text-text-[var(--ink-2)] leading-snug">
+ <p className="text-[10px] text-[var(--ink-2)] leading-snug">
  {pillar.agentImpact}
  </p>
  </div>
@@ -451,7 +451,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  <h3 className="text-lg font-bold font-display uppercase tracking-wider text-zinc-100">
  Entrenamiento de Agentes IA para {bandName}
  </h3>
- <p className="text-xs text-text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  Cómo utiliza cada agente tu información para conseguir más y mejores conciertos
  </p>
  </div>
@@ -459,45 +459,45 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
 
  <button
  onClick={() => setShowAuditModal(false)}
- className="p-1 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
  </div>
 
  <div className="space-y-3 text-xs text-zinc-300 font-sans leading-relaxed">
- <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-1.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
  <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
  <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de Salas & Recintos)
  </h4>
- <p className="text-text-[var(--ink-2)] text-xs">
+ <p className="text-[var(--ink-2)] text-xs">
  Busca automáticamente salas, festivales y fiestas patronales en las regiones seleccionadas. Filtra por aforo y género para encontrar sólo recintos compatibles.
  </p>
  </div>
 
- <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-1.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
  <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
  <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches Personalizados & ADN de Tono)
  </h4>
- <p className="text-text-[var(--ink-2)] text-xs">
+ <p className="text-[var(--ink-2)] text-xs">
  Redacta las propuestas de correo para las salas extrayendo hitos de tu <strong className="text-zinc-100">Biografía</strong>, adjuntando tu <strong className="text-zinc-100">Dossier PDF</strong> y adaptando el vocabulario a la voz de la banda.
  </p>
  </div>
 
- <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-1.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
  <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
  <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI (Negociación de Fechas & Caché)
  </h4>
- <p className="text-text-[var(--ink-2)] text-xs">
+ <p className="text-[var(--ink-2)] text-xs">
  Responde a las salas sobre disponibilidad consultando tu <strong className="text-zinc-100">Calendario</strong>, comprueba el <strong className="text-zinc-100">Rider Técnico</strong> y defiende el presupuesto según tus reglas de <strong className="text-zinc-100">Caché Mínimo</strong>.
  </p>
  </div>
 
- <div className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-1.5">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1.5">
  <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
  <Mail className="w-4 h-4" /> 4. Agente Lector & Enviador (Smart Gate)
  </h4>
- <p className="text-text-[var(--ink-2)] text-xs">
+ <p className="text-[var(--ink-2)] text-xs">
  Despacha los correos aprobados en los horarios de máxima apertura comercial y monitoriza la bandeja de entrada para detectar respuestas de programadores al instante.
  </p>
  </div>

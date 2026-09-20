@@ -67,7 +67,7 @@ export function GlobalCampaignBar({
  </div>
 
  {/* Desktop / Tablet Inline details */}
- <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-text-[var(--ink-3)] mt-0.5">
+ <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-3)] mt-0.5">
  <span className="inline-flex items-center gap-1 text-sky-300 font-medium truncate max-w-[200px]">
  <MapPin className="w-2.5 h-2.5 text-sky-400 shrink-0" />
  {campaign.targetCities?.join(', ') || 'Todas las ciudades'}
@@ -89,7 +89,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => setIsMobileExpanded(prev => !prev)}
- className="sm:hidden p-1 text-text-[var(--ink-2)] hover:text-purple-300 transition-colors shrink-0"
+ className="sm:hidden p-1 text-[var(--ink-2)] hover:text-purple-300 transition-colors shrink-0"
  title={isMobileExpanded ? "Ocultar detalles" : "Ver ciudades y fechas"}
  >
  {isMobileExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -149,7 +149,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={onOpenManager}
- className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-neutral-800 text-text-[var(--ink-3)] hover:text-white transition-colors shrink-0"
+ className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-neutral-800 text-[var(--ink-3)] hover:text-white transition-colors shrink-0"
  title="Gestionar o cambiar campaña activa"
  >
  <Settings2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -159,7 +159,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={onDeactivate}
- className="p-1 rounded-md bg-bg-[var(--surface)]/80 hover:bg-red-950/60 text-text-[var(--ink-2)] hover:text-red-300 hover:border-red-500/40 transition-colors shrink-0"
+ className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-red-950/60 text-[var(--ink-2)] hover:text-red-300 hover:border-red-500/40 transition-colors shrink-0"
  title="Desactivar modo campaña (volver a modo general)"
  >
  <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -171,12 +171,12 @@ export function GlobalCampaignBar({
 
  {/* Mobile Collapsible Details */}
  {isMobileExpanded && (
- <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-text-[var(--ink-3)] flex flex-col gap-1 animate-fade-in relative z-10">
+ <div className="sm:hidden pt-2 mt-2 border-t border-purple-500/20 text-[10px] text-[var(--ink-3)] flex flex-col gap-1 animate-fade-in relative z-10">
  <div className="flex items-center gap-1.5 text-sky-300 font-medium">
  <MapPin className="w-3 h-3 text-sky-400 shrink-0" />
  <span>{campaign.targetCities?.join(', ') || 'Todas las ciudades'}</span>
  </div>
- <div className="flex items-center justify-between text-text-[var(--ink-3)]">
+ <div className="flex items-center justify-between text-[var(--ink-3)]">
  <span className="inline-flex items-center gap-1 text-amber-300 font-mono">
  <Users className="w-3 h-3 text-amber-400 shrink-0" />
  {campaign.minCapacity} - {campaign.maxCapacity} pax

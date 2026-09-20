@@ -95,7 +95,7 @@ export function AssignSongsToAlbumModal({
  {albumName ? `Editar Disco: ${albumName}` : 'Crear Nuevo Disco / Lanzamiento'}
  </h3>
  </div>
- <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-white cursor-pointer">
+ <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-white cursor-pointer">
  <X className="w-5 h-5" />
  </button>
  </div>
@@ -104,7 +104,7 @@ export function AssignSongsToAlbumModal({
  <div className="space-y-3 overflow-y-auto pr-1 max-h-[220px]">
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="sm:col-span-2">
- <label className="block text-xs font-bold text-text-[var(--ink-3)] mb-1">Nombre del Álbum / Disco *</label>
+ <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Nombre del Álbum / Disco *</label>
  <input
  type="text"
  required
@@ -112,20 +112,20 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setCustomAlbumName(e.target.value)}
  placeholder="ej. Lanzamiento Verano 2026"
  className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  </div>
 
  <div>
- <label className="block text-xs font-bold text-text-[var(--ink-3)] mb-1">Año de Lanzamiento</label>
+ <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Año de Lanzamiento</label>
  <input
  type="text"
  value={albumYear}
  onChange={(e) => setAlbumYear(e.target.value)}
  placeholder="ej. 2026"
  className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  </div>
@@ -133,12 +133,12 @@ export function AssignSongsToAlbumModal({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="block text-xs font-bold text-text-[var(--ink-3)] mb-1">Tipo de Trabajo</label>
+ <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Tipo de Trabajo</label>
  <select
  value={albumType}
  onChange={(e) => setAlbumType(e.target.value)}
  className={`w-full p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  >
  <option value="Álbum Estudio">Álbum Estudio</option>
@@ -150,7 +150,7 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div>
- <label className="block text-xs font-bold text-text-[var(--ink-3)] mb-1">Imagen de Portada (Upload o URL)</label>
+ <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Imagen de Portada (Upload o URL)</label>
  <div className="flex gap-2 items-center">
  <input
  type="text"
@@ -158,7 +158,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setCoverUrl(e.target.value)}
  placeholder="https://... o sube imagen"
  className={`flex-1 p-2.5 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-[var(--r-m)] cursor-pointer shrink-0 border-white/10 flex items-center gap-1 text-xs">
@@ -170,21 +170,21 @@ export function AssignSongsToAlbumModal({
  </div>
 
  <div>
- <label className="block text-xs font-bold text-text-[var(--ink-3)] mb-1">Descripción / Notas de Lanzamiento</label>
+ <label className="block text-xs font-bold text-[var(--ink-3)] mb-1">Descripción / Notas de Lanzamiento</label>
  <textarea
  rows={2}
  value={description}
  onChange={(e) => setDescription(e.target.value)}
  placeholder="Notas sobre la producción, estudio de grabación, concepto..."
  className={`w-full p-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none focus:border-[#1db954] ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  </div>
  </div>
 
  <div className="border-t border-white/10 pt-3 flex flex-col flex-1 overflow-hidden">
- <div className="flex items-center justify-between text-xs font-mono text-text-[var(--ink-3)] mb-2">
+ <div className="flex items-center justify-between text-xs font-mono text-[var(--ink-3)] mb-2">
  <span className="font-bold flex items-center gap-1.5">
  <Disc3 className="w-4 h-4 text-[#1db954]" />
  <span>Seleccionar Canciones del Disco ({selectedIds.size} seleccionadas):</span>
@@ -199,7 +199,7 @@ export function AssignSongsToAlbumModal({
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Buscar canción en el catálogo para incluir..."
  className={`w-full pl-9 pr-3 py-2 text-xs font-mono rounded-[var(--r-m)] focus:outline-none ${
- isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-bg-[var(--surface)] text-white '
+ isStitchLight ? 'bg-white text-[var(--ink)] ' : 'bg-[var(--surface)] text-white '
  }`}
  />
  </div>
@@ -216,12 +216,12 @@ export function AssignSongsToAlbumModal({
  ? 'bg-[#1db954]/20 border-[#1db954]/50 text-white'
  : isStitchLight
  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
- : 'bg-neutral-800/60 hover:bg-neutral-800 border-white/5 text-text-[var(--ink-3)]'
+ : 'bg-neutral-800/60 hover:bg-neutral-800 border-white/5 text-[var(--ink-3)]'
  }`}
  >
  <div className="flex items-center gap-3 truncate pr-2">
  <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${
- isSelected ? 'bg-[#1db954] text-black' : 'bg-neutral-700 text-text-[var(--ink-2)]'
+ isSelected ? 'bg-[#1db954] text-black' : 'bg-neutral-700 text-[var(--ink-2)]'
  }`}>
  {isSelected ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Plus className="w-3.5 h-3.5" />}
  </div>
@@ -253,7 +253,7 @@ export function AssignSongsToAlbumModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs text-text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-3)] hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
  >
  Cancelar
  </button>

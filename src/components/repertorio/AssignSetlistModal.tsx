@@ -36,12 +36,12 @@ export function AssignSetlistModal({
  <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
  Asignar Repertorio a Concierto / Ensayo
  </h3>
- <button onClick={onClose} className="text-text-[var(--ink-2)] hover:text-white">
+ <button onClick={onClose} className="text-[var(--ink-2)] hover:text-white">
  <X className="w-4 h-4" />
  </button>
  </div>
 
- <p className="text-[10px] text-text-[var(--ink-3)] font-sans">
+ <p className="text-[10px] text-[var(--ink-3)] font-sans">
  Selecciona el concierto o ensayo al que deseas vincular el repertorio{' '}
  <strong className="text-[#d1b375] font-mono">"{assigningSetlist.nombre}"</strong>:
  </p>
@@ -57,7 +57,7 @@ export function AssignSetlistModal({
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === c.id
  ? ' bg-[#d1b375]/15'
- : ' bg-bg-[var(--surface)]/60'
+ : ' bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ export function AssignSetlistModal({
  />
  <div>
  <div className="font-bold text-white">{c.sala} ({c.ciudad})</div>
- <div className="text-[10px] text-text-[var(--ink-2)]">{c.fecha}</div>
+ <div className="text-[10px] text-[var(--ink-2)]">{c.fecha}</div>
  </div>
  </div>
  </label>
@@ -87,7 +87,7 @@ export function AssignSetlistModal({
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === r.id
  ? 'border-emerald-400 bg-[#10b981]/15'
- : ' bg-bg-[var(--surface)]/60'
+ : ' bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function AssignSetlistModal({
  />
  <div>
  <div className="font-bold text-white">Ensayo en {r.lugar}</div>
- <div className="text-[10px] text-text-[var(--ink-2)]">{r.fecha} a las {r.hora}</div>
+ <div className="text-[10px] text-[var(--ink-2)]">{r.fecha} a las {r.hora}</div>
  </div>
  </div>
  </label>
@@ -111,7 +111,7 @@ export function AssignSetlistModal({
  <div className="pt-3 flex justify-end gap-2">
  <button
  onClick={onClose}
- className="px-2 py-1 rounded-[var(--r-s)] text-text-[var(--ink-3)] text-[10px] font-mono"
+ className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-3)] text-[10px] font-mono"
  >
  Cancelar
  </button>

@@ -265,7 +265,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  {/* Controls & Filter Bar */}
  <div
  className={`p-3 sm:px-5 border-b flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${
- isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-bg-[var(--surface)]/40 '
+ isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-[var(--surface)]/40 '
  }`}
  >
  {/* Filter Pills */}
@@ -380,7 +380,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`rounded-[var(--r-l)] p-4 transition-all ${
  isStitchLight
  ? 'bg-[var(--bg)]/70 shadow-xs'
- : 'bg-bg-[var(--surface)]/60 /90'
+ : 'bg-[var(--surface)]/60 /90'
  }`}
  >
  {/* Group Top Info */}
@@ -420,7 +420,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  : 'bg-[#1e1c15] /50 shadow-xs'
  : isStitchLight
  ? 'bg-white '
- : 'bg-bg-[var(--surface)] '
+ : 'bg-[var(--surface)] '
  }`}
  >
  <div className="space-y-2">

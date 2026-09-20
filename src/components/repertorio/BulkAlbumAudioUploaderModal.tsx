@@ -595,7 +595,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={onClose}
  disabled={isUploading}
- className="p-2.5 rounded-[var(--r-l)] text-text-[var(--ink-2)] hover:text-white hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
+ className="p-2.5 rounded-[var(--r-l)] text-[var(--ink-2)] hover:text-white hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
  >
  <X className="w-5 h-5" />
  </button>
@@ -607,7 +607,7 @@ export function BulkAlbumAudioUploaderModal({
  {isCreatingBrandNewAlbum && (
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-white/5 border-white/10">
  <div className="md:col-span-2 space-y-2">
- <label className="text-xs font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
  Nombre del Álbum / Disco
  </label>
  <input
@@ -618,13 +618,13 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-full text-sm font-bold rounded-[var(--r-m)] px-4 py-2.5 outline-none transition ${
  isStitchLight
  ? 'bg-white text-[var(--ink)] focus:border-emerald-500'
- : 'bg-bg-[var(--surface)] text-white focus:border-[#1db954]'
+ : 'bg-[var(--surface)] text-white focus:border-[#1db954]'
  }`}
  />
  </div>
 
  <div className="space-y-2">
- <label className="text-xs font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)]">
+ <label className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)]">
  Portada del Disco
  </label>
  <input
@@ -642,7 +642,7 @@ export function BulkAlbumAudioUploaderModal({
  ? 'border-emerald-400 text-emerald-400 bg-emerald-500/10'
  : isStitchLight
  ? ' bg-white hover:bg-[var(--bg)] text-[var(--ink-2)]'
- : ' bg-bg-[var(--surface)] hover:bg-white/5 text-text-[var(--ink-3)]'
+ : ' bg-[var(--surface)] hover:bg-white/5 text-[var(--ink-3)]'
  }`}
  >
  <ImageIcon className="w-4 h-4" />
@@ -722,7 +722,7 @@ export function BulkAlbumAudioUploaderModal({
  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
  Subiendo pista {uploadProgress.current} de {uploadProgress.total}...
  </span>
- <span className="text-text-[var(--ink-2)] truncate max-w-[200px]">
+ <span className="text-[var(--ink-2)] truncate max-w-[200px]">
  {uploadProgress.currentName}
  </span>
  </div>
@@ -740,7 +740,7 @@ export function BulkAlbumAudioUploaderModal({
  {/* Tracks List / Matching Table */}
  {items.length > 0 && (
  <div className="space-y-3">
- <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] px-1">
+ <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] px-1">
  <span>{isCreatingBrandNewAlbum ? 'Pistas del Nuevo Álbum' : 'Archivos de Audio & Asignación'}</span>
  <span>{items.length} {items.length === 1 ? 'pista' : 'pistas'}</span>
  </div>
@@ -759,7 +759,7 @@ export function BulkAlbumAudioUploaderModal({
  ? 'border-rose-500/40 bg-rose-500/10'
  : isStitchLight
  ? 'bg-[var(--bg)] '
- : 'bg-bg-[var(--surface)]/90 '
+ : 'bg-[var(--surface)]/90 '
  }`}
  >
  {/* Left: Audio file preview & details */}
@@ -770,7 +770,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
  isPlaying
  ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-white/10 hover:bg-[#1db954] hover:text-black text-text-[var(--ink-3)]'
+ : 'bg-white/10 hover:bg-[#1db954] hover:text-black text-[var(--ink-3)]'
  }`}
  title={isPlaying ? 'Pausar audio' : 'Escuchar previo'}
  >
@@ -801,11 +801,11 @@ export function BulkAlbumAudioUploaderModal({
  </div>
  ) : (
  <p className="text-xs font-bold truncate flex items-center gap-2">
- <FileAudio className="w-3.5 h-3.5 text-text-[var(--ink-2)] shrink-0" />
+ <FileAudio className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
  <span className="truncate">{item.fileName}</span>
  </p>
  )}
- <p className="text-[11px] font-mono text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] font-mono text-[var(--ink-2)] mt-0.5">
  {item.fileSizeFormatted} • {formatSecondsToMmSs(item.durationSeconds)}
  </p>
  </div>
@@ -825,7 +825,7 @@ export function BulkAlbumAudioUploaderModal({
  : 'bg-black border-[#1db954]/50 text-white font-bold'
  : isStitchLight
  ? 'bg-white text-[var(--ink-2)]'
- : 'bg-black text-text-[var(--ink-2)]'
+ : 'bg-black text-[var(--ink-2)]'
  }`}
  >
  <option value="">-- No asignar a ninguna --</option>

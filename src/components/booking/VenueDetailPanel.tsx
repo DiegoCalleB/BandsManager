@@ -1856,7 +1856,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
  interactionType === type
  ? 'bg-[var(--acc)] text-black font-bold shadow-xs'
- : 'text-text-[var(--ink-2)] hover:text-white'
+ : 'text-[var(--ink-2)] hover:text-white'
  }`}
  >
  {type === 'Llamada'
@@ -1910,7 +1910,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  : res === 'Rechazado'
  ? 'bg-rose-500/30 text-rose-300 font-bold'
  : 'bg-sky-500/30 text-sky-300 font-bold'
- : 'bg-zinc-900 text-text-[var(--ink-2)] hover:text-white border-zinc-800'
+ : 'bg-zinc-900 text-[var(--ink-2)] hover:text-white border-zinc-800'
  }`}
  >
  {res}

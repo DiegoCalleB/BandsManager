@@ -37,7 +37,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
  onMouseLeave={() => setShowTooltip(false)}
  >
  <span 
- className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-bg-[var(--surface)] font-black shadow-md shadow-amber-500/20 ring-1 ring-amber-300/50 ${sizeClasses[size]}`}
+ className={`inline-flex items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-[var(--surface)] font-black shadow-md shadow-amber-500/20 ring-1 ring-amber-300/50 ${sizeClasses[size]}`}
  title="Lead Verificado • Conversación activa mediante agentes de IA"
  >
  <Check className={`${iconSizes[size]} stroke-[3.5]`} />
@@ -51,12 +51,12 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
 
  {/* Tooltip Popup */}
  {showTooltip && (
- <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/95 text-bg-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
+ <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/95 text-[var(--sunken)] text-xs shadow-2xl z-50 pointer-events-none backdrop-blur-md">
  <div className="flex items-center gap-1.5 font-bold text-amber-400 mb-1">
  <ShieldCheck className="w-4 h-4 text-amber-400" />
  <span>Lead Verificado por IA</span>
  </div>
- <p className="text-[11px] text-text-[var(--ink-3)] leading-tight">
+ <p className="text-[11px] text-[var(--ink-3)] leading-tight">
  Este contacto ha sido verificado mediante interacción y conversación real lograda por los agentes de IA de Booking.
  </p>
  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-bg-[var(--surface)]/95" />

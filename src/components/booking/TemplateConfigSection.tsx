@@ -124,7 +124,7 @@ export function TemplateConfigSection({
  : 'bg-[var(--acc)] text-[var(--acc-ink)] font-extrabold shadow-md'
  : isStitchLight
  ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
- : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  <IconComp className="w-3.5 h-3.5" />
@@ -348,7 +348,7 @@ export function TemplateConfigSection({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ? 'bg-white hover:bg-[var(--bg)] text-[var(--ink-2)] '
- : 'bg-bg-[var(--surface)] hover: text-neutral-300 '
+ : 'bg-[var(--surface)] hover: text-neutral-300 '
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
@@ -377,7 +377,7 @@ export function TemplateConfigSection({
  <div className="space-y-3">
  <div
  className={`flex items-center gap-2 pb-2 border-b ${
- isStitchLight ? '' : 'border-bg-[var(--surface)]'
+ isStitchLight ? '' : 'border-[var(--surface)]'
  }`}
  >
  <span

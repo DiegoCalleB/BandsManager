@@ -363,7 +363,7 @@ export function CalendarWidget({
  <button
  type="button"
  onClick={() => setCurrentMonthDate(new Date(year, month - 1, 1))}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
@@ -373,7 +373,7 @@ export function CalendarWidget({
  <button
  type="button"
  onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-amber-400 rounded-[var(--r-s)] hover:bg-neutral-800 cursor-pointer"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
@@ -414,8 +414,8 @@ export function CalendarWidget({
  : isToday
  ? 'bg-stone-800 /40 text-amber-400 font-black'
  : dayEvents.length > 0
- ? 'bg-[#121214] /80 text-bg-[var(--sunken)] hover:/30'
- : 'bg-[#121214]/50 /40 text-text-[var(--ink-2)] hover:bg-stone-900'
+ ? 'bg-[#121214] /80 text-[var(--sunken)] hover:/30'
+ : 'bg-[#121214]/50 /40 text-[var(--ink-2)] hover:bg-stone-900'
  }`}
  >
  <span className="leading-none">{dayNum}</span>
@@ -433,9 +433,9 @@ export function CalendarWidget({
  {/* Details for selected day if clicked */}
  {selectedDayStr && (
  <div className="p-3 bg-[#121214] rounded-[var(--r-m)] text-xs font-mono space-y-2">
- <div className="flex items-center justify-between text-text-[var(--ink-3)] pb-1.5 border-b ">
+ <div className="flex items-center justify-between text-[var(--ink-3)] pb-1.5 border-b ">
  <span className="font-bold text-amber-300">Eventos para {selectedDayStr}:</span>
- <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-text-[var(--ink-3)]">✕</button>
+ <button type="button" onClick={() => setSelectedDayStr(null)} className="text-neutral-500 hover:text-[var(--ink-3)]">✕</button>
  </div>
  {(eventsByDayMap.get(selectedDayStr) || []).length > 0 ? (
  (eventsByDayMap.get(selectedDayStr) || []).map(evt => (
@@ -450,14 +450,14 @@ export function CalendarWidget({
  }`}>
  {evt.type}
  </span>
- <p className="font-bold text-bg-[var(--sunken)] mt-1">{evt.title}</p>
- <p className="text-text-[var(--ink-2)] text-[11px]">{evt.location}</p>
+ <p className="font-bold text-[var(--sunken)] mt-1">{evt.title}</p>
+ <p className="text-[var(--ink-2)] text-[11px]">{evt.location}</p>
  </div>
  <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
  </div>
  ))
  ) : (
- <p className="text-text-[var(--ink-2)] italic">No hay eventos programados para este día.</p>
+ <p className="text-[var(--ink-2)] italic">No hay eventos programados para este día.</p>
  )}
  </div>
  )}
@@ -467,7 +467,7 @@ export function CalendarWidget({
  {/* VISTA 3: AGENDA SEMANAL COMPACTA */}
  {viewMode === 'weekly_grid' && (
  <div className="space-y-3">
- <p className="text-xs font-mono text-text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
+ <p className="text-xs font-mono text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
  <div className="grid grid-cols-1 sm:grid-cols-7 gap-2">
  {Array.from({ length: 7 }).map((_, idx) => {
  const date = new Date();
@@ -487,7 +487,7 @@ export function CalendarWidget({
  }`}
  >
  <div className="flex items-center justify-between pb-1 border-b ">
- <span className="uppercase text-[10px] text-text-[var(--ink-2)] font-bold">{dayName}</span>
+ <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">{dayName}</span>
  <span className="font-bold text-amber-400">{dayNum}</span>
  </div>
 

@@ -541,7 +541,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  </div>
 
  {/* Meter track */}
- <div className="w-full bg-bg-[var(--surface)] h-6 rounded-full relative overflow-hidden flex items-center px-1">
+ <div className="w-full bg-[var(--surface)] h-6 rounded-full relative overflow-hidden flex items-center px-1">
  {/* Center target indicator */}
  <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-2 bg-emerald-500/40 z-0" />
  <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-emerald-400 z-10" />

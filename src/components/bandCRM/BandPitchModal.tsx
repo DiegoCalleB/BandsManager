@@ -44,7 +44,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-bg-[var(--sunken)]'
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-[var(--sunken)]'
  }`}>
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
@@ -57,15 +57,15 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  onClick={onClose}
  className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
  >
- <X className="w-5 h-5 text-text-[var(--ink-2)]" />
+ <X className="w-5 h-5 text-[var(--ink-2)]" />
  </button>
  </div>
 
  {/* Config Fields */}
  {!activeCampaign?.isActive && (
- <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-[10px] font-mono">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-mono">
  <div>
- <label className="block text-[10px] text-text-[var(--ink-2)] uppercase mb-1">Ciudad de Bakandeya</label>
+ <label className="block text-[10px] text-[var(--ink-2)] uppercase mb-1">Ciudad de Bakandeya</label>
  <select
  value={proposedBakandeyaCity}
  onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
@@ -78,7 +78,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  </div>
 
  <div>
- <label className="block text-[10px] text-text-[var(--ink-2)] uppercase mb-1">Sala propuesta en Madrid/Sevilla</label>
+ <label className="block text-[10px] text-[var(--ink-2)] uppercase mb-1">Sala propuesta en Madrid/Sevilla</label>
  <input
  type="text"
  value={proposedVenueBakandeya}
@@ -88,7 +88,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  </div>
 
  <div>
- <label className="block text-[10px] text-text-[var(--ink-2)] uppercase mb-1">Periodo / Mes Estimado</label>
+ <label className="block text-[10px] text-[var(--ink-2)] uppercase mb-1">Periodo / Mes Estimado</label>
  <input
  type="text"
  value={proposedMonth}
@@ -106,7 +106,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  <span className="text-[10px] text-neutral-500 lowercase">editable & listo para enviar</span>
  </label>
 
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-[10px] font-mono text-bg-[var(--sunken)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-mono text-[var(--sunken)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
  {pitchText}
  </div>
  </div>
@@ -125,7 +125,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  setCopiedPitch(true);
  setTimeout(() => setCopiedPitch(false), 2000);
  }}
- className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
+ className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] rounded-[var(--r-m)] font-mono text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
  >
  {copiedPitch ? <Check className="w-4 h-4 text-[#10b981]" /> : <Copy className="w-4 h-4" />}
  <span>{copiedPitch ? '¡Copiado!' : 'Copiar Texto'}</span>

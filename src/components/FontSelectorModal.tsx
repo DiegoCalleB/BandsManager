@@ -23,12 +23,12 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
  isStitchLight 
  ? 'bg-white -slate-200 text-[var(--ink)]' 
- : 'bg-bg-[var(--surface)] -neutral-800 text-bg-[var(--sunken)]'
+ : 'bg-[var(--surface)] -neutral-800 text-[var(--sunken)]'
  }`}
  >
  {/* Header */}
  <div className={`px-6 py-4 flex justify-between items-center shrink-0 ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-[var(--surface)]/60'
  }`}>
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shadow-inner shrink-0 ${
@@ -43,7 +43,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  En tiempo real
  </span>
  </h3>
- <p className="text-[11px] text-text-[var(--ink-2)] font-mono">
+ <p className="text-[11px] text-[var(--ink-2)] font-mono">
  Elige la fuente que mejor se adapte a tu gusto visual
  </p>
  </div>
@@ -51,7 +51,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  <button
  onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-neutral-800/50 transition-colors cursor-pointer"
+ className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800/50 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -59,7 +59,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Informative banner */}
  <div className={`px-6 py-3 text-xs flex items-center gap-2.5 ${
- isStitchLight ? 'bg-indigo-50/70 -indigo-100 text-indigo-900' : 'bg-bg-[var(--surface)]/40 -neutral-800 text-text-[var(--ink-3)]'
+ isStitchLight ? 'bg-indigo-50/70 -indigo-100 text-indigo-900' : 'bg-[var(--surface)]/40 -neutral-800 text-[var(--ink-3)]'
  }`}>
  <Info className="w-4 h-4 text-amber-400 shrink-0" />
  <p className="text-[11px] leading-relaxed font-mono">
@@ -83,7 +83,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  : 'bg-amber-500/10 -amber-500 ring-2 ring-amber-500/20 shadow-lg'
  : isStitchLight
  ? 'bg-[var(--bg)] -slate-200 hover:-slate-300 hover:bg-[var(--sunken)]/80'
- : 'bg-bg-[var(--surface)]/60 -neutral-800 hover:-neutral-700 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/60 -neutral-800 hover:-neutral-700 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-start justify-between gap-3 mb-2">
@@ -102,7 +102,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  {preset.badge}
  </span>
  </div>
- <span className="text-[10px] text-text-[var(--ink-2)] font-mono block mt-0.5">
+ <span className="text-[10px] text-[var(--ink-2)] font-mono block mt-0.5">
  {preset.subtitle}
  </span>
  </div>
@@ -118,14 +118,14 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  </div>
  </div>
 
- <p className="text-xs text-text-[var(--ink-2)] leading-relaxed mb-3 font-mono">
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed mb-3 font-mono">
  {preset.description}
  </p>
 
  {/* Live Preview Sample */}
  <div 
  className={`p-3 rounded-[var(--r-s)] text-sm transition-all ${
- isStitchLight ? 'bg-white -slate-200 text-[var(--ink)]' : 'bg-bg-[var(--surface)] -neutral-800/80 text-bg-[var(--sunken)]'
+ isStitchLight ? 'bg-white -slate-200 text-[var(--ink)]' : 'bg-[var(--surface)] -neutral-800/80 text-[var(--sunken)]'
  }`}
  style={{ fontFamily: preset.displayFont }}
  >
@@ -143,7 +143,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Footer */}
  <div className={`px-6 py-3 flex justify-between items-center shrink-0 ${
- isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-bg-[var(--surface)]/60'
+ isStitchLight ? '-slate-200 bg-[var(--bg)]' : '-neutral-800 bg-[var(--surface)]/60'
  }`}>
  <span className="text-[10px] font-mono text-neutral-500">
  Cambio instantáneo guardado en tu navegador

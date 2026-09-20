@@ -492,7 +492,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
  isStitchLight
  ? 'bg-[var(--sunken)] text-[var(--ink)] placeholder-slate-400 focus:bg-white'
- : 'bg-bg-[var(--surface)]/80 text-zinc-100 placeholder-zinc-500 focus:/60'
+ : 'bg-[var(--surface)]/80 text-zinc-100 placeholder-zinc-500 focus:/60'
  }`}
  />
  {searchQuery && (
@@ -508,7 +508,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
 
  {/* Quick Filter Tabs */}
- <div className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-bg-[var(--surface)]/80 '}`}>
+ <div className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 ${isStitchLight ? 'bg-[var(--sunken)] ' : 'bg-[var(--surface)]/80 '}`}>
  <button
  type="button"
  onClick={() => setActiveFilterTab('todos')}
@@ -553,7 +553,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`p-1.5 rounded-[var(--r-m)] transition-all cursor-pointer ${
  isStitchLight
  ? 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- : 'bg-bg-[var(--surface)]/80 text-zinc-300 hover:bg-neutral-800 hover:text-white'
+ : 'bg-[var(--surface)]/80 text-zinc-300 hover:bg-neutral-800 hover:text-white'
  }`}
  title={areAllExpanded ? 'Plegar todos los discos' : 'Desplegar todos los discos'}
  >
@@ -640,7 +640,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 shadow-sm ${
  isStitchLight
  ? ' bg-[var(--bg)]'
- : '/80 bg-bg-[var(--surface)]/40 hover:/80'
+ : '/80 bg-[var(--surface)]/40 hover:/80'
  }`}
  >
  {/* Compact Album Header Bar */}

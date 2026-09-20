@@ -392,7 +392,7 @@ export function EnergyChart({
  }}
  >
  <span className="font-bold text-base" style={{ color: info.hexColor }}>{info.icon} {liveEnergyScore}</span>
- <span className="text-text-[var(--ink-2)]">/20 · {info.label}</span>
+ <span className="text-[var(--ink-2)]">/20 · {info.label}</span>
  </div>
  );
  })()}
@@ -556,12 +556,12 @@ export function EnergyChart({
  <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-[var(--r-s)] shadow-xl max-w-[200px]">
  <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
  {d.isSpeechEvent ? (
- <p className="text-text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
  <span>{d.icon}</span> Interludio / Pausa — meseta de energía
  </p>
  ) : (
  <>
- <p className="text-text-[var(--ink-3)] flex items-center gap-1 mt-0.5">
+ <p className="text-[var(--ink-3)] flex items-center gap-1 mt-0.5">
  <span>{d.icon}</span> {d.label} ({d.score}/20)
  </p>
  {typeof d.bpm === 'number' && (
@@ -576,7 +576,7 @@ export function EnergyChart({
  </p>
  )}
  {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
- <p className="text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[var(--ink-2)] mt-0.5">
  〰️ Ideal aquí: ~{d.idealScore}/20
  </p>
  )}
@@ -595,7 +595,7 @@ export function EnergyChart({
  <span>Unión con #{d.idx}: {d.transitionFromPrev.status === 'ok' ? 'Fluida' : 'Revisar'} ({d.transitionFromPrev.scorePercent}%)</span>
  </div>
  {d.transitionFromPrev.motivos.length > 0 && (
- <p className="text-[8px] text-text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
+ <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
  {d.transitionFromPrev.motivos.join(' · ')}
  </p>
  )}

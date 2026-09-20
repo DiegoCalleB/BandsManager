@@ -76,7 +76,7 @@ export function NegotiationSimulationModal({
  isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#18181b] text-[var(--ink)]'
  }`}
  >
- <div className="flex justify-between items-start border-b border-bg-[var(--sunken)] dark: pb-3">
+ <div className="flex justify-between items-start border-b border-[var(--sunken)] dark: pb-3">
  <div>
  <div className="flex items-center gap-2">
  <Sparkles className="w-5 h-5 text-[#d1b375]/80 animate-pulse" />
@@ -119,7 +119,7 @@ export function NegotiationSimulationModal({
  : 'bg-[var(--acc)] hover:bg-[#ffe28d] text-[var(--acc-ink)]'
  : isStitchLight
  ? 'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
+ : 'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
  }`}
  >
  <Building className="w-4 h-4" /> Sala o Festival (Entrante)
@@ -134,7 +134,7 @@ export function NegotiationSimulationModal({
  : 'bg-sky-500/15 hover:bg-sky-500/15 text-white'
  : isStitchLight
  ? 'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
+ : 'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
  }`}
  >
  <Users className="w-4 h-4" /> Banda Bakandeya (Saliente)
@@ -252,7 +252,7 @@ export function NegotiationSimulationModal({
 
  {/* Output Preview Area */}
  {(simulationGenerated || simulationMessage) && (
- <div className="space-y-2 border-t border-bg-[var(--sunken)] dark: pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+ <div className="space-y-2 border-t border-[var(--sunken)] dark: pt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
  <div className="flex justify-between items-center">
  <label
  className={`block text-[10px] uppercase font-sans tracking-wider ${
@@ -272,7 +272,7 @@ export function NegotiationSimulationModal({
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none font-sans leading-relaxed ${
  isStitchLight
  ? 'bg-sky-500/15 text-[var(--ink)]'
- : 'bg-bg-[var(--surface)] text-bg-[var(--sunken)]'
+ : 'bg-[var(--surface)] text-[var(--sunken)]'
  }`}
  />
  <p className={`text-[10px] font-sans ${textMuted} leading-tight`}>
@@ -284,14 +284,14 @@ export function NegotiationSimulationModal({
  </div>
 
  {/* Footer Buttons */}
- <div className="flex justify-end gap-3.5 border-t border-bg-[var(--sunken)] dark: pt-3 mt-1">
+ <div className="flex justify-end gap-3.5 border-t border-[var(--sunken)] dark: pt-3 mt-1">
  <button
  type="button"
  onClick={onClose}
  className={`px-2 py-1 rounded-[var(--r-s)] font-sans text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
  isStitchLight
  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)]'
+ : 'bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)]'
  }`}
  >
  Cancelar

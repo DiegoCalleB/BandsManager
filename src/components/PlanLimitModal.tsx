@@ -49,7 +49,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  {/* Close Button */}
  <button
  onClick={onClose}
- className="absolute top-4 right-4 p-2 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-m)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="absolute top-4 right-4 p-2 text-[var(--ink-2)] hover:text-white rounded-[var(--r-m)] hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -70,12 +70,12 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  </div>
 
  {/* Non-destructive guarantee notice */}
- <div className="p-4 rounded-[var(--r-l)] bg-bg-[var(--surface)]/90 space-y-2">
+ <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/90 space-y-2">
  <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold">
  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
  <span>Tus datos actuales están 100% seguros y protegidos</span>
  </div>
- <p className="text-xs text-text-[var(--ink-3)] leading-relaxed">
+ <p className="text-xs text-[var(--ink-3)] leading-relaxed">
  Puedes consultar, editar, filtrar y exportar todas tus {currentCount} {info.plural} creadas sin ninguna limitación. Para añadir nuevas {info.plural}, mejora tu plan a <strong className="text-amber-300 font-semibold">{targetPlanDef.name}</strong>.
  </p>
  </div>
@@ -94,11 +94,11 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  </span>
  </div>
 
- <p className="text-xs text-text-[var(--ink-3)]">
+ <p className="text-xs text-[var(--ink-3)]">
  {targetPlanDef.description}
  </p>
 
- <ul className="space-y-1.5 text-xs text-text-[var(--ink-3)]">
+ <ul className="space-y-1.5 text-xs text-[var(--ink-3)]">
  {targetPlanDef.features.slice(0, 3).map((feat, idx) => (
  <li key={idx} className="flex items-center gap-2">
  <Check className="w-3.5 h-3.5 text-amber-400 shrink-0 stroke-[3]" />
@@ -126,7 +126,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-text-[var(--ink-2)] hover:text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
  >
  Continuar en {currentPlanDef.name}
  </button>

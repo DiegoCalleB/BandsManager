@@ -264,15 +264,15 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${
  isStitchLight
  ? 'bg-white text-[var(--ink)]'
- : 'bg-black/40 text-bg-[var(--sunken)]'
+ : 'bg-black/40 text-[var(--sunken)]'
  }`;
- const labelClass = 'text-[9px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] block mb-1';
+ const labelClass = 'text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] block mb-1';
 
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-bg-[var(--sunken)]'
+ isStitchLight ? 'bg-white text-[var(--ink)]' : 'bg-[#1c1b1b] text-[var(--sunken)]'
  }`}>
  {/* Header */}
  <div className="flex items-center justify-between pb-3 border-b /10">
@@ -284,7 +284,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <h3 className="text-sm font-bold font-display uppercase tracking-wider text-amber-400">
  Análisis de ADN de Expresión y Tono: {band.nombre_banda}
  </h3>
- <p className="text-[10px] text-text-[var(--ink-2)] font-mono">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono">
  Rastreo IA Grounding de redes sociales y notas de prensa oficiales
  </p>
  {!isLoading && toneData && !isEditing && isSaved !== undefined && (
@@ -304,7 +304,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && !isLoading && toneData && !isEditing && (
  <button
  onClick={onReAnalyze}
- className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-text-[var(--ink-2)] hover:text-amber-400"
+ className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-amber-400"
  title="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
  >
  <RefreshCw className="w-4 h-4" />
@@ -313,7 +313,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {editable && !isLoading && toneData && !isEditing && (
  <button
  onClick={handleStartEdit}
- className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-text-[var(--ink-2)] hover:text-amber-400"
+ className="p-1.5 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer text-[var(--ink-2)] hover:text-amber-400"
  title="Editar a mano"
  >
  <Pencil className="w-4 h-4" />
@@ -323,7 +323,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  onClick={onClose}
  className="p-1 hover:bg-neutral-800 rounded-[var(--r-s)] transition-colors cursor-pointer"
  >
- <X className="w-5 h-5 text-text-[var(--ink-2)]" />
+ <X className="w-5 h-5 text-[var(--ink-2)]" />
  </button>
  </div>
  </div>
@@ -338,7 +338,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <h4 className="text-xs font-bold font-mono text-amber-400 uppercase tracking-widest">
  Scrapeando redes sociales de {band.nombre_banda}...
  </h4>
- <p className="text-[10px] text-text-[var(--ink-2)] font-mono max-w-md">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono max-w-md">
  Analizando publicaciones de Instagram, TikTok, estilo de comunicación, muletillas y tono de voz con Gemini Search Grounding...
  </p>
  </div>
@@ -471,7 +471,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <button
  onClick={handleCancelEdit}
  disabled={isSaving}
- className="py-2.5 px-4 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 text-text-[var(--ink-3)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+ className="py-2.5 px-4 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 text-[var(--ink-3)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
  >
  <XCircle className="w-3.5 h-3.5" /> Cancelar
  </button>
@@ -481,21 +481,21 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  <div className="space-y-4">
  {/* 1. Main Tone Cards */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)] '}`}>
  <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tono General</span>
  <span className="font-bold text-amber-400 block text-xs mt-0.5">
  {toneData.tono_comunicacion || 'No especificado'}
  </span>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)] '}`}>
  <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tratamiento</span>
  <span className="font-bold text-sky-400 block text-xs mt-0.5">
  {toneData.tratamiento_habitual || 'Tú / Informal'}
  </span>
  </div>
 
- <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)] '}`}>
+ <div className={`p-3 rounded-[var(--r-m)] ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)] '}`}>
  <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Nivel de Energía</span>
  <span className="font-bold text-emerald-400 block text-xs mt-0.5">
  {toneData.nivel_energia || 'Alta / Explosiva'}
@@ -504,9 +504,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
 
  {/* 2. Key Vocabulary, Quotes & Emojis */}
- <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-bg-[var(--surface)]/60 '}`}>
+ <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[var(--surface)]/60 '}`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-text-[var(--ink-2)] flex items-center gap-1.5">
+ <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1.5">
  <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Vocabulario Clave & Muletillas
  </span>
  {toneData.emojis_frecuentes && toneData.emojis_frecuentes.length > 0 && (
@@ -542,7 +542,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  <div className="space-y-1">
  {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
+ <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
  "{quote}"
  </p>
  ))}
@@ -558,7 +558,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </span>
  <div className="space-y-1">
  {toneData.frases_directo_extraidas.map((quote, idx) => (
- <p key={idx} className="text-[10px] font-mono italic text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
+ <p key={idx} className="text-[10px] font-mono italic text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
  "{quote}"
  </p>
  ))}
@@ -580,7 +580,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  ['facebook', 'Facebook'],
  ] as const).map(([key, label]) =>
  toneData.matices_por_red?.[key] ? (
- <p key={key} className="text-[10px] font-mono text-text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
+ <p key={key} className="text-[10px] font-mono text-[var(--ink-3)] bg-black/30 p-1.5 rounded">
  <span className="text-sky-400 font-bold">{label}:</span> {toneData.matices_por_red[key]}
  </p>
  ) : null
@@ -620,7 +620,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </label>
  <button
  onClick={() => handleCopy(toneData.pitch_personalizado_ejemplo || '')}
- className="px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-text-[var(--ink-3)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+ className="px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-[var(--ink-3)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
  >
  {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
  {copied ? '¡Copiado!' : 'Copiar Texto'}
@@ -634,7 +634,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  className={`w-full p-3 rounded-[var(--r-m)] font-mono text-[10px] leading-relaxed focus:outline-none ${
  isStitchLight
  ? 'bg-[var(--bg)] text-[var(--ink)]'
- : 'bg-black/60 text-bg-[var(--sunken)]'
+ : 'bg-black/60 text-[var(--sunken)]'
  }`}
  />
 
@@ -706,7 +706,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
  <ul className="space-y-0.5">
  {reglas.reglas_estilo_aprendidas.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-text-[var(--ink-3)] flex items-start justify-between gap-1.5 group">
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink-3)] flex items-start justify-between gap-1.5 group">
  <span>⭐ {r}</span>
  <button
  onClick={() => handleDeleteLearnedRule('pitch', cat, 'auto', idx)}
@@ -816,7 +816,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
  <ul className="space-y-0.5">
  {reglas.reglas_estilo_aprendidas.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-text-[var(--ink-3)] flex items-start justify-between gap-1.5 group">
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink-3)] flex items-start justify-between gap-1.5 group">
  <span>⭐ {r}</span>
  <button
  onClick={() => handleDeleteLearnedRule('reply', cat, 'auto', idx)}
@@ -875,7 +875,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  </div>
  ) : (
  <div className="py-8 text-center space-y-3">
- <p className="text-xs text-text-[var(--ink-2)] font-mono">No hay análisis generado para esta banda todavía.</p>
+ <p className="text-xs text-[var(--ink-2)] font-mono">No hay análisis generado para esta banda todavía.</p>
  <button
  onClick={onReAnalyze}
  className="px-4 py-2 rounded-[var(--r-m)] bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono font-bold text-xs uppercase tracking-wider cursor-pointer"

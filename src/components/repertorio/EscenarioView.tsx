@@ -193,7 +193,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <select
  value={activeSetlistId}
  onChange={(e) => setActiveSetlistId(e.target.value)}
- className="bg-bg-[var(--surface)] text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-[var(--r-m)] focus:outline-none"
+ className="bg-[var(--surface)] text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-[var(--r-m)] focus:outline-none"
  >
  {setlists.map(s => (
  <option key={s.id} value={s.id}>{s.nombre}</option>
@@ -315,7 +315,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`p-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
  showPedalShortcuts
  ? 'bg-amber-500/20 text-amber-300 /40'
- : 'bg-bg-[var(--surface)] hover:bg-neutral-800 text-zinc-400 border-zinc-700'
+ : 'bg-[var(--surface)] hover:bg-neutral-800 text-zinc-400 border-zinc-700'
  }`}
  title="Atajos de teclado / Pedal Bluetooth para pasar canciones sin manos"
  >
@@ -495,7 +495,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer ${
  showPedalShortcuts 
  ? 'bg-amber-500/20 text-amber-300' 
- : 'bg-bg-[var(--surface)] text-zinc-400 hover:text-white border-white/5'
+ : 'bg-[var(--surface)] text-zinc-400 hover:text-white border-white/5'
  }`}
  >
  <Footprints className="w-3.5 h-3.5" />
@@ -508,7 +508,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  className={`text-[11px] font-mono px-3 py-1.5 rounded-[var(--r-s)] flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
  showChordsPanel 
  ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/50 shadow-sm' 
- : 'bg-bg-[var(--surface)] text-zinc-300 hover:text-white border-white/5'
+ : 'bg-[var(--surface)] text-zinc-300 hover:text-white border-white/5'
  }`}
  >
  <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
@@ -534,7 +534,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  {/* Live Stage Lyrics & Chords Teleprompter Drawer (Offline-safe) */}
  {showChordsPanel && (
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] border-zinc-800 space-y-3 animate-fadeIn">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border-zinc-800 space-y-3 animate-fadeIn">
  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
  <div className="flex items-center gap-2">
  <FileText className="w-4 h-4 text-[#1ed760]" />

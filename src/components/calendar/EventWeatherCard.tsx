@@ -110,8 +110,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  ? 'bg-amber-50 text-[var(--ink)] shadow-xs'
  : 'bg-[var(--bg)] text-[var(--ink)]'
  : hasAlerts
- ? 'bg-amber-950/30 /40 text-bg-[var(--sunken)] shadow-xs'
- : 'bg-bg-[var(--surface)]/80 text-bg-[var(--sunken)]'
+ ? 'bg-amber-950/30 /40 text-[var(--sunken)] shadow-xs'
+ : 'bg-[var(--surface)]/80 text-[var(--sunken)]'
  }`}>
  <div className="flex items-center gap-2.5 min-w-0 flex-1">
  <div className={`p-1.5 rounded-[var(--r-s)] bg-gradient-to-br shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}>
@@ -122,7 +122,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <span className="text-sm font-bold font-mono text-amber-400">
  {isLoading ? '...' : (weatherData?.temperature !== undefined ? `${weatherData.temperature}°C` : '--')}
  </span>
- <span className={`text-xs font-medium truncate ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-bg-[var(--sunken)]'}`}>
+ <span className={`text-xs font-medium truncate ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--sunken)]'}`}>
  {isLoading ? 'Consultando tiempo...' : (weatherData?.conditionText || 'Clima')}
  </span>
  {weatherData?.rainProbability !== undefined && (
@@ -145,7 +145,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  )}
  </div>
- <span className={`text-[10px] font-mono block truncate ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-mono block truncate ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
  {weatherData?.cityName || city} · Show {timeStr || '21:00'}
  </span>
  </div>
@@ -175,9 +175,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  : 'bg-gradient-to-br from-amber-50/70 to-sky-50/70 text-[var(--ink)]' 
  : hasAlerts
  ? dangerAlertsCount > 0
- ? 'bg-gradient-to-br from-rose-950/40 via-bg-[var(--surface)]/90 to-stone-900/90 border-rose-500/40 text-bg-[var(--sunken)] shadow-rose-950/20 shadow-lg'
- : 'bg-gradient-to-br from-amber-950/30 via-bg-[var(--surface)]/90 to-stone-900/90 /40 text-bg-[var(--sunken)] shadow-amber-950/20 shadow-lg'
- : 'bg-gradient-to-br from-stone-900/80 to-bg-[var(--surface)]/80 /25 text-bg-[var(--sunken)]'
+ ? 'bg-gradient-to-br from-rose-950/40 via-[var(--surface)]/90 to-stone-900/90 border-rose-500/40 text-[var(--sunken)] shadow-rose-950/20 shadow-lg'
+ : 'bg-gradient-to-br from-amber-950/30 via-[var(--surface)]/90 to-stone-900/90 /40 text-[var(--sunken)] shadow-amber-950/20 shadow-lg'
+ : 'bg-gradient-to-br from-stone-900/80 to-[var(--surface)]/80 /25 text-[var(--sunken)]'
  }`}>
  {/* Barra superior del widget del tiempo */}
  <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b /15">
@@ -206,7 +206,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  )}
  </div>
- <span className={`text-[10px] font-mono block ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-mono block ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
  {weatherData?.cityName || city} · {dateStr}
  </span>
  </div>
@@ -220,7 +220,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors cursor-pointer flex items-center gap-1 ${
  selectedSlot === 'show'
  ? 'bg-amber-500 text-stone-950 shadow-sm'
- : 'text-text-[var(--ink-2)] hover:text-amber-300'
+ : 'text-[var(--ink-2)] hover:text-amber-300'
  }`}
  >
  <span>Show ({timeStr || '21:00'})</span>
@@ -231,7 +231,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors cursor-pointer flex items-center gap-1 ${
  selectedSlot === 'soundcheck'
  ? 'bg-amber-500 text-stone-950 shadow-sm'
- : 'text-text-[var(--ink-2)] hover:text-amber-300'
+ : 'text-[var(--ink-2)] hover:text-amber-300'
  }`}
  >
  <span>Prueba (18:00)</span>
@@ -240,7 +240,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  type="button"
  onClick={loadWeather}
  title="Actualizar previsión"
- className="p-1 text-text-[var(--ink-2)] hover:text-amber-400 transition-colors cursor-pointer"
+ className="p-1 text-[var(--ink-2)] hover:text-amber-400 transition-colors cursor-pointer"
  >
  <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin text-amber-400' : ''}`} />
  </button>
@@ -249,7 +249,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  type="button"
  onClick={() => setIsExpanded(false)}
  title="Minimizar widget del tiempo"
- className="px-1.5 py-0.5 text-text-[var(--ink-2)] hover:text-amber-300 text-[10px] font-mono flex items-center gap-0.5 transition-colors cursor-pointer border-l /20 ml-0.5"
+ className="px-1.5 py-0.5 text-[var(--ink-2)] hover:text-amber-300 text-[10px] font-mono flex items-center gap-0.5 transition-colors cursor-pointer border-l /20 ml-0.5"
  >
  <span>Minimizar</span>
  <ChevronUp className="w-3 h-3" />
@@ -260,7 +260,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
 
  {/* Contenido principal del tiempo */}
  {isLoading ? (
- <div className="flex items-center justify-center py-4 gap-2 text-xs font-mono text-text-[var(--ink-2)]">
+ <div className="flex items-center justify-center py-4 gap-2 text-xs font-mono text-[var(--ink-2)]">
  <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
  <span>Consultando satélites meteorológicos en directo...</span>
  </div>
@@ -269,17 +269,17 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <Calendar className="w-5 h-5 text-amber-400 shrink-0" />
  <div>
  <span className="font-bold text-amber-300 block">Previsión a 14 días vista</span>
- <p className={isStitchLight ? 'text-[var(--ink-2)] text-[10px]' : 'text-text-[var(--ink-2)] text-[10px]'}>
+ <p className={isStitchLight ? 'text-[var(--ink-2)] text-[10px]' : 'text-[var(--ink-2)] text-[10px]'}>
  {weatherData.conditionText}
  </p>
  </div>
  </div>
  ) : weatherData?.status === 'past' ? (
- <div className="text-[11px] font-mono text-text-[var(--ink-2)] py-1">
+ <div className="text-[11px] font-mono text-[var(--ink-2)] py-1">
  ✓ {weatherData.conditionText}
  </div>
  ) : weatherData?.status === 'error' ? (
- <div className="text-[10px] font-mono text-text-[var(--ink-2)] py-1">
+ <div className="text-[10px] font-mono text-[var(--ink-2)] py-1">
  {weatherData.error || 'Previsión no disponible para esta ubicación'}
  </div>
  ) : weatherData ? (
@@ -300,12 +300,12 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {weatherData.temperature}°C
  </span>
  {weatherData.apparentTemperature !== undefined && (
- <span className={`text-[10px] font-mono ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-text-[var(--ink-2)]'}`}>
+ <span className={`text-[10px] font-mono ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
  (sensación {weatherData.apparentTemperature}°C)
  </span>
  )}
  </div>
- <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-bg-[var(--sunken)]'}`}>
+ <p className={`text-xs font-medium flex items-center gap-1.5 ${isStitchLight ? 'text-[var(--ink-2)]' : 'text-[var(--sunken)]'}`}>
  <span>{weatherData.conditionText}</span>
  </p>
  </div>
@@ -318,7 +318,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.rainProbability || 0) >= 40 
  ? 'bg-sky-500/20 border-sky-500/50 text-sky-300 shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
- : 'bg-black/20 border-white/5 text-text-[var(--ink-3)]'
+ : 'bg-black/20 border-white/5 text-[var(--ink-3)]'
  }`}
  >
  <div className="flex items-center gap-1 text-[10px] font-mono">
@@ -344,7 +344,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.windGusts || 0) >= 40 
  ? 'bg-amber-500/20 /50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.25)]' 
- : 'bg-black/20 border-white/5 text-text-[var(--ink-3)]'
+ : 'bg-black/20 border-white/5 text-[var(--ink-3)]'
  }`}
  >
  <div className="flex items-center gap-1 text-[10px] font-mono">
@@ -358,7 +358,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <span className="text-xs font-bold font-mono text-amber-400 mt-0.5">
  {weatherData.windGusts} km/h
  </span>
- <span className="text-[9px] font-mono text-text-[var(--ink-2)]">
+ <span className="text-[9px] font-mono text-[var(--ink-2)]">
  rachas
  </span>
  </motion.div>
@@ -373,7 +373,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
  Alertas de Escenario y Directo ({weatherData.alerts.length})
  </span>
- <span className="text-[9px] font-mono text-text-[var(--ink-2)]">
+ <span className="text-[9px] font-mono text-[var(--ink-2)]">
  Recomendaciones para rider y banda
  </span>
  </div>
@@ -413,7 +413,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </div>
  <div>
  <div className="flex items-center gap-2 flex-wrap mb-0.5">
- <span className="font-bold font-mono text-xs text-bg-[var(--sunken)] tracking-tight">
+ <span className="font-bold font-mono text-xs text-[var(--sunken)] tracking-tight">
  {alert.title}
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
@@ -433,7 +433,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  <button
  type="button"
  onClick={() => toggleAlertExpand(alert.id)}
- className={`p-1 rounded-md text-text-[var(--ink-2)] hover:text-white transition-colors shrink-0 cursor-pointer ${
+ className={`p-1 rounded-md text-[var(--ink-2)] hover:text-white transition-colors shrink-0 cursor-pointer ${
  isDanger ? 'hover:bg-rose-900/40' : 'hover:bg-amber-900/40'
  }`}
  title={isExpanded ? 'Ocultar recomendaciones' : 'Ver recomendaciones técnicas'}

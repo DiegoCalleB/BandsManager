@@ -201,13 +201,13 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  Previsualización del reproductor
  </span>
  <div
- className={`p-3 rounded-[var(--r-l)] bg-gradient-to-r from-bg-[var(--surface)] via-bg-[var(--surface)] to-bg-[var(--surface)] ${
+ className={`p-3 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--surface)] ${
  config.audioPreview?.habilitado !== false
  ? '/40 shadow-lg'
  : ' opacity-50'
  } flex items-center justify-between gap-3 text-left`}
  >
- <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-bg-[var(--surface)] flex items-center justify-center shrink-0 shadow-md">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-[var(--surface)] flex items-center justify-center shrink-0 shadow-md">
  <Music className="w-5 h-5 fill-bg-[var(--surface)]" />
  </div>
  <div className="min-w-0 flex-1">
@@ -217,7 +217,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  `${currentUser?.bandName || 'Tu Banda'} · Directo Preview`}
  </span>
  </div>
- <p className="text-[10px] text-text-[var(--ink-2)] font-mono truncate">
+ <p className="text-[10px] text-[var(--ink-2)] font-mono truncate">
  {config.audioPreview?.subtitulo?.trim() || 'Dale al play para escuchar cómo sonamos'}
  </p>
  </div>

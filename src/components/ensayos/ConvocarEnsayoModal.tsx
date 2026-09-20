@@ -120,14 +120,14 @@ export function ConvocarEnsayoModal({
  <h3 className="text-base font-display font-bold text-zinc-100">
  {isEditing ? 'Editar Ensayo Convocado' : 'Convocar Nuevo Ensayo'}
  </h3>
- <p className="text-xs text-text-[var(--ink-2)] font-mono">
+ <p className="text-xs text-[var(--ink-2)] font-mono">
  Sincronizado automáticamente con tu Calendario
  </p>
  </div>
  </div>
  <button
  onClick={onClose}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -138,7 +138,7 @@ export function ConvocarEnsayoModal({
  {/* Fecha y Horarios */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Fecha
  </label>
  <input
@@ -150,7 +150,7 @@ export function ConvocarEnsayoModal({
  />
  </div>
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Hora Inicio
  </label>
  <input
@@ -162,7 +162,7 @@ export function ConvocarEnsayoModal({
  />
  </div>
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Hora Fin (Estimada)
  </label>
  <input
@@ -177,7 +177,7 @@ export function ConvocarEnsayoModal({
  {/* Lugar y Duración */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="sm:col-span-2">
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Lugar / Local
  </label>
  <div className="relative">
@@ -193,7 +193,7 @@ export function ConvocarEnsayoModal({
  </div>
  </div>
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Duración (Min)
  </label>
  <input
@@ -210,7 +210,7 @@ export function ConvocarEnsayoModal({
 
  {/* Setlist Asociado */}
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Repertorio / Setlist a Repasar (Opcional)
  </label>
  <div className="relative">
@@ -233,7 +233,7 @@ export function ConvocarEnsayoModal({
  {/* Músicos Convocados */}
  {bandUsers.length > 0 && (
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Músicos Convocados
  </label>
  <div className="flex flex-wrap gap-2 p-2.5 rounded-[var(--r-m)] bg-[#1a1918] border-[#2a2825]">
@@ -247,7 +247,7 @@ export function ConvocarEnsayoModal({
  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-mono transition-all cursor-pointer ${
  isSelected
  ? 'bg-amber-400/20 text-amber-300 font-bold'
- : 'bg-neutral-800/60 text-text-[var(--ink-2)] border-transparent hover:'
+ : 'bg-neutral-800/60 text-[var(--ink-2)] border-transparent hover:'
  }`}
  >
  <Users className="w-3 h-3" />
@@ -265,7 +265,7 @@ export function ConvocarEnsayoModal({
  {/* Objetivos del Ensayo */}
  <div>
  <div className="flex items-center justify-between mb-1.5">
- <label className="text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase">
+ <label className="text-xs font-mono font-bold text-[var(--ink-3)] uppercase">
  Objetivos Principales de la Sesión
  </label>
  <span className="text-[10px] font-mono text-neutral-500">
@@ -311,7 +311,7 @@ export function ConvocarEnsayoModal({
  <button
  type="button"
  onClick={handleAddObjetivo}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-bg-[var(--sunken)] text-xs font-mono font-bold flex items-center gap-1 cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-neutral-800 hover:bg-neutral-700 text-[var(--sunken)] text-xs font-mono font-bold flex items-center gap-1 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir
  </button>
@@ -320,7 +320,7 @@ export function ConvocarEnsayoModal({
 
  {/* Notas Generales */}
  <div>
- <label className="block text-xs font-mono font-bold text-text-[var(--ink-3)] uppercase mb-1.5">
+ <label className="block text-xs font-mono font-bold text-[var(--ink-3)] uppercase mb-1.5">
  Notas / Material a Llevar
  </label>
  <textarea
@@ -337,13 +337,13 @@ export function ConvocarEnsayoModal({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--ink-2)] hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  Cancelar
  </button>
  <button
  type="submit"
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-amber-400 text-bg-[var(--surface)] hover:bg-amber-300 transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-amber-400 text-[var(--surface)] hover:bg-amber-300 transition-all cursor-pointer shadow-md shadow-amber-400/20 active:scale-95"
  >
  {isEditing ? 'Guardar Cambios' : 'Convocar Ensayo'}
  </button>

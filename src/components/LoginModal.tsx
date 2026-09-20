@@ -482,7 +482,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  type="button" 
  onClick={handleGoogleSocialSignIn}
  disabled={loading}
- className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] rounded-[var(--r-l)] text-sm font-medium text-bg-[var(--sunken)] hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
+ className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] rounded-[var(--r-l)] text-sm font-medium text-[var(--sunken)] hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
  >
  <GoogleIcon />
  <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
@@ -492,7 +492,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  return (
  <ModalPortal isOpen={true}>
- <div className="fixed inset-0 z-[9999] p-4 bg-[#09090b] text-bg-[var(--sunken)] overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+ <div className="fixed inset-0 z-[9999] p-4 bg-[#09090b] text-[var(--sunken)] overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div className="min-h-full flex items-center justify-center py-6 md:py-8">
  <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-6xl' : 'max-w-md space-y-6'}`}>
  
@@ -501,7 +501,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  {/* Top Language Switcher */}
  <div className="w-full flex justify-end items-center gap-1.5 mb-1 px-2 z-20">
- <div className="inline-flex items-center gap-1 p-1 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 backdrop-blur-sm">
+ <div className="inline-flex items-center gap-1 p-1 rounded-[var(--r-m)] bg-[var(--surface)]/80 backdrop-blur-sm">
  {SUPPORTED_LANGUAGES.map((l) => {
  const isSelected = currentAppLang === l.code;
  return (
@@ -511,8 +511,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  onClick={() => setAppLang(l.code)}
  className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
  isSelected
- ? 'bg-[var(--acc)] text-bg-[var(--surface)] font-bold shadow-xs scale-105'
- : 'text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] hover:bg-neutral-800'
+ ? 'bg-[var(--acc)] text-[var(--surface)] font-bold shadow-xs scale-105'
+ : 'text-[var(--ink-2)] hover:text-[var(--sunken)] hover:bg-neutral-800'
  }`}
  title={l.label}
  >
@@ -540,7 +540,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setView('register');
  }}
- className="px-3 py-1.5 bg-[var(--acc)] text-bg-[var(--surface)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[#f5d778] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
+ className="px-3 py-1.5 bg-[var(--acc)] text-[var(--surface)] font-bold text-xs rounded-[var(--r-m)] hover:bg-[#f5d778] transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
  >
  <Zap className="w-3.5 h-3.5" />
  <span>Crear / Acceder con Email en 10s</span>
@@ -561,7 +561,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[var(--acc)]/12 rounded-full blur-3xl pointer-events-none animate-pulse" />
  
  <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
- <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[var(--acc)]/45 via-neutral-800/60 to-bg-[var(--surface)]/90 border-2 border-[var(--acc)]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[var(--acc)] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
+ <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[var(--acc)]/45 via-neutral-800/60 to-[var(--surface)]/90 border-2 border-[var(--acc)]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[var(--acc)] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
  {(videoLoadFailed || skipVideo) ? (
  <img
  src={LOGIN_POSTER}
@@ -604,7 +604,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={username}
  onChange={(e) => setUsername(e.target.value)}
  placeholder="Correo electrónico o Usuario"
- className="w-full pl-11 pr-4 py-3.5 bg-[#17171f]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#17171f]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
  required
  />
  </div>
@@ -616,22 +616,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={password}
  onChange={(e) => setPassword(e.target.value)}
  placeholder="Contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[#17171f]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[#17171f]/90 focus:border-[var(--acc)] focus:ring-2 focus:ring-[var(--acc)]/20 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-4 text-neutral-500 hover:text-bg-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
  </div>
 
  {/* Recordar contraseña & Restablecer contraseña */}
- <div className="flex items-center justify-between text-xs text-text-[var(--ink-2)] px-1 pt-0.5">
- <label className="flex items-center gap-2 cursor-pointer select-none text-text-[var(--ink-3)] hover:text-white transition-colors">
- <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ? 'bg-[var(--acc)] border-[var(--acc)] text-bg-[var(--surface)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' : 'bg-[#17171f] /80'}`}>
+ <div className="flex items-center justify-between text-xs text-[var(--ink-2)] px-1 pt-0.5">
+ <label className="flex items-center gap-2 cursor-pointer select-none text-[var(--ink-3)] hover:text-white transition-colors">
+ <div className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ? 'bg-[var(--acc)] border-[var(--acc)] text-[var(--surface)] shadow-[0_0_10px_rgba(242,202,80,0.4)]' : 'bg-[#17171f] /80'}`}>
  <input
  type="checkbox"
  checked={rememberMe}
@@ -660,11 +660,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)] to-[#e6b938] hover:from-[#f7dc82] hover:to-[var(--acc)] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all duration-200 shadow-[0_4px_24px_rgba(242,202,80,0.22)] hover:shadow-[0_6px_30px_rgba(242,202,80,0.35)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)] to-[#e6b938] hover:from-[#f7dc82] hover:to-[var(--acc)] text-[var(--surface)] font-bold text-sm tracking-wide transition-all duration-200 shadow-[0_4px_24px_rgba(242,202,80,0.22)] hover:shadow-[0_6px_30px_rgba(242,202,80,0.35)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
- <span className="w-4 h-4 border-2 border-bg-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
  <span>Entrando...</span>
  </span>
  ) : (
@@ -684,7 +684,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
  <SocialButtons />
 
- <div className="text-center mt-5 text-xs text-text-[var(--ink-2)] flex items-center justify-center gap-2 flex-wrap">
+ <div className="text-center mt-5 text-xs text-[var(--ink-2)] flex items-center justify-center gap-2 flex-wrap">
  <span>¿No tienes cuenta?</span>
  <button 
  type="button"
@@ -706,13 +706,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setActivateStep(1);
  setView('activate');
  }} 
- className="text-text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline cursor-pointer"
+ className="text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline cursor-pointer"
  >
  Activar invitación
  </button>
  </div>
 
- <div className="pt-3 border-t /60 text-center text-[11px] text-text-[var(--ink-2)]/90 flex items-center justify-center gap-1.5 font-medium">
+ <div className="pt-3 border-t /60 text-center text-[11px] text-[var(--ink-2)]/90 flex items-center justify-center gap-1.5 font-medium">
  <Shield className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Acceso seguro cifrado · Datos 100% privados de tu banda</span>
  </div>
@@ -731,14 +731,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setView('login');
  }}
- className="p-2 rounded-[var(--r-m)] bg-[#131317] hover:bg-neutral-800 text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)] transition-colors cursor-pointer shrink-0"
+ className="p-2 rounded-[var(--r-m)] bg-[#131317] hover:bg-neutral-800 text-[var(--ink-2)] hover:text-[var(--sunken)] transition-colors cursor-pointer shrink-0"
  title="Volver al inicio de sesión"
  >
  <ArrowLeft className="w-4 h-4" />
  </button>
  <div>
- <h2 className="text-base font-bold text-bg-[var(--sunken)]">Restablecer contraseña</h2>
- <p className="text-xs text-text-[var(--ink-2)] leading-tight">
+ <h2 className="text-base font-bold text-[var(--sunken)]">Restablecer contraseña</h2>
+ <p className="text-xs text-[var(--ink-2)] leading-tight">
  {resetStep === 1 
  ? 'Introduce tu correo o usuario para recuperar tu acceso.'
  : `Introduce el código para ${resetMaskedEmail || 'tu cuenta'} y tu nueva contraseña.`}
@@ -764,23 +764,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={resetEmailOrUsername}
  onChange={(e) => setResetEmailOrUsername(e.target.value)}
  placeholder="Correo electrónico o Usuario"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
 
- <p className="text-[11px] text-text-[var(--ink-2)] px-1 leading-tight">
+ <p className="text-[11px] text-[var(--ink-2)] px-1 leading-tight">
  ⚡ Te enviaremos un código de verificación de 6 dígitos por correo electrónico para restablecer tu contraseña.
  </p>
 
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
- <span className="w-4 h-4 border-2 border-bg-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
  <span>Generando código...</span>
  </span>
  ) : (
@@ -799,7 +799,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  onChange={(e) => setResetCode(e.target.value)}
  placeholder="Código de 6 dígitos"
  maxLength={6}
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] font-mono tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] font-mono tracking-wider placeholder:font-sans placeholder:tracking-normal placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -813,13 +813,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={resetNewPassword}
  onChange={(e) => setResetNewPassword(e.target.value)}
  placeholder="Nueva contraseña (mín. 6 caracteres)"
- className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowResetNewPassword(!showResetNewPassword)}
- className="absolute right-4 text-neutral-500 hover:text-bg-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -835,7 +835,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={resetConfirmPassword}
  onChange={(e) => setResetConfirmPassword(e.target.value)}
  placeholder="Repite la nueva contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -857,11 +857,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading || (resetConfirmPassword.length > 0 && resetNewPassword !== resetConfirmPassword)}
- className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
- <span className="w-4 h-4 border-2 border-bg-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
  <span>Guardando contraseña...</span>
  </span>
  ) : (
@@ -873,7 +873,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="button"
  onClick={() => setResetStep(1)}
- className="text-xs text-text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline cursor-pointer"
  >
  ¿No te ha llegado el código? Pedir otro
  </button>
@@ -885,7 +885,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="button"
  onClick={() => setView('login')}
- className="text-xs text-text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline font-medium cursor-pointer"
+ className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)] hover:underline font-medium cursor-pointer"
  >
  Volver a Iniciar Sesión
  </button>
@@ -906,14 +906,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regLeaderName}
  onChange={(e) => setRegLeaderName(e.target.value)}
  placeholder="Tu Nombre o Apodo"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
 
  <div className="space-y-1">
  <div className="flex items-center justify-between px-1">
- <span className="text-[11px] font-mono text-text-[var(--ink-2)]">Proyecto Musical:</span>
+ <span className="text-[11px] font-mono text-[var(--ink-2)]">Proyecto Musical:</span>
  <BandNameStylerHelper
  value={regBandName}
  onChange={(styled) => setRegBandName(styled)}
@@ -926,7 +926,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regBandName}
  onChange={(e) => setRegBandName(e.target.value)}
  placeholder="Nombre de la Banda / Artista (Ej: KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑)"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner font-semibold"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner font-semibold"
  required
  />
  </div>
@@ -939,7 +939,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regEmail}
  onChange={(e) => setRegEmail(e.target.value)}
  placeholder="Correo electrónico"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -952,13 +952,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={regPassword}
  onChange={(e) => setRegPassword(e.target.value)}
  placeholder="Contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowRegPassword(!showRegPassword)}
- className="absolute right-4 text-neutral-500 hover:text-bg-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -969,11 +969,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
- <span className="w-4 h-4 border-2 border-bg-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
  <span>Creando cuenta...</span>
  </span>
  ) : (
@@ -994,7 +994,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <SocialButtons />
 
  <div className="text-center mt-8">
- <p className="text-sm text-text-[var(--ink-2)]">
+ <p className="text-sm text-[var(--ink-2)]">
  ¿Ya tienes cuenta?{' '}
  <button onClick={() => setView('login')} className="text-[var(--acc)] hover:underline font-medium cursor-pointer">
  Inicia sesión
@@ -1012,8 +1012,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  {activateStep === 1 ? (
  <div className="space-y-4">
  <div className="text-center space-y-2 mb-4">
- <h2 className="text-lg font-bold text-bg-[var(--sunken)]">Darse de alta como miembro</h2>
- <p className="text-xs text-text-[var(--ink-2)] leading-relaxed">
+ <h2 className="text-lg font-bold text-[var(--sunken)]">Darse de alta como miembro</h2>
+ <p className="text-xs text-[var(--ink-2)] leading-relaxed">
  Si el director de tu banda ya te ha añadido en la lista de miembros, introduce tu correo para activar tu cuenta.
  </p>
  </div>
@@ -1026,7 +1026,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activateEmail}
  onChange={(e) => setActivateEmail(e.target.value)}
  placeholder="Correo electrónico de invitación"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -1034,11 +1034,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
- <span className="w-4 h-4 border-2 border-bg-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
  <span>Comprobando...</span>
  </span>
  ) : (
@@ -1048,8 +1048,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  </form>
 
  {activateEmail.trim().length > 2 && (
- <div className="p-3 bg-[#131317] rounded-[var(--r-l)] text-xs text-text-[var(--ink-3)] space-y-2 animate-in fade-in">
- <p className="font-medium text-bg-[var(--sunken)]">
+ <div className="p-3 bg-[#131317] rounded-[var(--r-l)] text-xs text-[var(--ink-3)] space-y-2 animate-in fade-in">
+ <p className="font-medium text-[var(--sunken)]">
  ¿Quieres registrar tu propia banda en vez de activar una invitación?
  </p>
  <button
@@ -1059,7 +1059,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  setError(null);
  setView('register');
  }}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold transition-all cursor-pointer text-xs flex items-center justify-center gap-2"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold transition-all cursor-pointer text-xs flex items-center justify-center gap-2"
  >
  <Zap className="w-3.5 h-3.5" />
  <span>Crear Banda Nueva con {activateEmail}</span>
@@ -1081,18 +1081,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  ) : (
  <div className="space-y-4">
  <div className="text-center space-y-2 mb-4">
- <h2 className="text-lg font-bold text-bg-[var(--sunken)]">¡Invitación Encontrada!</h2>
+ <h2 className="text-lg font-bold text-[var(--sunken)]">¡Invitación Encontrada!</h2>
  <div className="p-3 bg-[var(--acc)]/5 border-[var(--acc)]/20 rounded-[var(--r-l)] text-xs text-[var(--acc)] space-y-1">
- <p className="font-semibold text-center text-text-[var(--ink-3)]">Banda(s) detectada(s):</p>
+ <p className="font-semibold text-center text-[var(--ink-3)]">Banda(s) detectada(s):</p>
  <ul className="list-disc pl-4 space-y-0.5 text-left max-h-24 overflow-y-auto">
  {activateBandsFound.map((b, idx) => (
- <li key={idx} className="text-text-[var(--ink-3)]">
- <span className="font-semibold text-bg-[var(--sunken)]">{b.bandName}</span> ({b.role === 'leader' ? 'Director' : 'Músico'})
+ <li key={idx} className="text-[var(--ink-3)]">
+ <span className="font-semibold text-[var(--sunken)]">{b.bandName}</span> ({b.role === 'leader' ? 'Director' : 'Músico'})
  </li>
  ))}
  </ul>
  </div>
- <p className="text-xs text-text-[var(--ink-2)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Establece tu nombre real, usuario y contraseña para activar tu cuenta.
  </p>
  </div>
@@ -1105,7 +1105,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activateName}
  onChange={(e) => setActivateName(e.target.value)}
  placeholder="Nombre real completo"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -1117,7 +1117,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activateUsername}
  onChange={(e) => setActivateUsername(e.target.value)}
  placeholder="Nombre de usuario elegido"
- className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  </div>
@@ -1129,13 +1129,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  value={activatePassword}
  onChange={(e) => setActivatePassword(e.target.value)}
  placeholder="Crea tu contraseña"
- className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-bg-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+ className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 focus:border-[var(--acc)]/50 rounded-[var(--r-l)] text-sm text-[var(--sunken)] placeholder:text-neutral-500 outline-none transition-all shadow-inner"
  required
  />
  <button
  type="button"
  onClick={() => setShowActivatePassword(!showActivatePassword)}
- className="absolute right-4 text-neutral-500 hover:text-bg-[var(--sunken)] transition-colors cursor-pointer"
+ className="absolute right-4 text-neutral-500 hover:text-[var(--sunken)] transition-colors cursor-pointer"
  >
  {showActivatePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -1144,11 +1144,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="submit"
  disabled={loading}
- className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+ className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
  >
  {loading ? (
  <span className="flex items-center gap-2">
- <span className="w-4 h-4 border-2 border-bg-[var(--surface)] border-t-transparent rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-[var(--surface)] border-t-transparent rounded-full animate-spin" />
  <span>Activando...</span>
  </span>
  ) : (
@@ -1171,7 +1171,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  )}
 
  <div className="text-center mt-8">
- <p className="text-sm text-text-[var(--ink-2)]">
+ <p className="text-sm text-[var(--ink-2)]">
  ¿Prefieres iniciar sesión?{' '}
  <button 
  type="button"
@@ -1198,17 +1198,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <button
  type="button"
  onClick={() => setView('register')}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[#131317] hover:bg-[#1c1c24] text-xs font-semibold text-text-[var(--ink-3)] hover:text-white transition-colors cursor-pointer"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[#131317] hover:bg-[#1c1c24] text-xs font-semibold text-[var(--ink-3)] hover:text-white transition-colors cursor-pointer"
  >
  <ArrowLeft className="w-3.5 h-3.5" />
  <span>Volver al registro</span>
  </button>
  </div>
 
- <h1 className="text-2xl font-bold text-bg-[var(--sunken)] tracking-tight">
+ <h1 className="text-2xl font-bold text-[var(--sunken)] tracking-tight">
  Plan Promo para <span className="text-[var(--acc)]">{regBandName || 'tu Banda'}</span>
  </h1>
- <p className="text-text-[var(--ink-2)] text-xs">
+ <p className="text-[var(--ink-2)] text-xs">
  Acceso gratuito a Dossier (EPK), Captación de Fans con QR y Calendario.
  </p>
  </div>
@@ -1218,10 +1218,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
  Festivales & Buskers
  </span>
- <span className="text-xl font-black text-white">0€ <span className="text-xs font-normal text-text-[var(--ink-2)]">/ gratis</span></span>
+ <span className="text-xl font-black text-white">0€ <span className="text-xs font-normal text-[var(--ink-2)]">/ gratis</span></span>
  </div>
 
- <ul className="space-y-2 text-xs text-text-[var(--ink-3)]">
+ <ul className="space-y-2 text-xs text-[var(--ink-3)]">
  <li className="flex items-center gap-2">
  <Check className="w-4 h-4 text-[var(--acc)]" />
  <span>Dossier de Prensa Interactivo (EPK)</span>
@@ -1244,7 +1244,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  type="button"
  onClick={() => handlePlanSelect('promo')}
  disabled={loading}
- className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-bg-[var(--surface)] font-bold text-sm tracking-wide transition-all cursor-pointer shadow-md disabled:opacity-50"
+ className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[#f5d778] text-[var(--surface)] font-bold text-sm tracking-wide transition-all cursor-pointer shadow-md disabled:opacity-50"
  >
  {loading ? 'Creando cuenta...' : 'Crear mi Dossier y QR Gratis'}
  </button>

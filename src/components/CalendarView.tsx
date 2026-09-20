@@ -3857,7 +3857,7 @@ export default function CalendarView({
  {selectedEventDetails.type === 'free' ? (
  <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
  {getCampaignsForDate(selectedDateKey).length > 0 ? (
- <div className="w-full text-left rounded-[var(--r-l)] bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-bg-[var(--surface)] p-4 shadow-xl shadow-purple-950/20">
+ <div className="w-full text-left rounded-[var(--r-l)] bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-[var(--surface)] p-4 shadow-xl shadow-purple-950/20">
  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-purple-500/30">
  <div className="flex items-center gap-2">
  <div className="w-8 h-8 rounded-[var(--r-s)] bg-purple-500/20 text-purple-300 flex items-center justify-center">

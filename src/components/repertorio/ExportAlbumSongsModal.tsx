@@ -426,7 +426,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <h2 className="text-base sm:text-xl font-bold font-display truncate">
  Exportar Canciones del Disco
  </h2>
- <p className="text-xs text-text-[var(--ink-2)] truncate">
+ <p className="text-xs text-[var(--ink-2)] truncate">
  Descarga los audios MP3 en ZIP, Excel, M3U playlist o imprime PDF
  </p>
  </div>
@@ -435,7 +435,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer shrink-0"
+ className="p-2 rounded-[var(--r-m)] bg-white/5 hover:bg-white/10 text-[var(--ink-2)] hover:text-white transition-colors cursor-pointer shrink-0"
  title="Cerrar"
  >
  <X className="w-5 h-5" />
@@ -446,7 +446,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <div className="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
  {/* 1. Album Selector */}
  <div className="space-y-1.5">
- <label className="text-xs font-semibold uppercase tracking-wider text-text-[var(--ink-2)] flex items-center justify-between">
+ <label className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)] flex items-center justify-between">
  <span>Seleccionar Álbum / Disco</span>
  <span className="text-[#1ed760] font-mono font-bold text-[11px]">
  {targetSongs.length} {targetSongs.length === 1 ? 'canción' : 'canciones'} ({formattedTotalDuration})
@@ -458,7 +458,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`w-full px-3.5 py-2.5 rounded-[var(--r-l)] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#1db954]/50 transition-all ${
  isStitchLight
  ? 'bg-[var(--sunken)] text-[var(--ink)]'
- : 'bg-bg-[var(--surface)] text-white'
+ : 'bg-[var(--surface)] text-white'
  }`}
  >
  <option value="all">💿 Discografía Completa (Todas las Canciones)</option>
@@ -474,7 +474,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* 2. Format Selection Tabs */}
  <div className="space-y-2">
- <label className="text-xs font-semibold uppercase tracking-wider text-text-[var(--ink-2)]">
+ <label className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  Formato de Exportación
  </label>
  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -504,7 +504,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'csv'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <FileSpreadsheet className={`w-5 h-5 ${format === 'csv' ? 'text-[#1ed760]' : 'text-emerald-400'}`} />
@@ -520,7 +520,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'm3u'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <Music className={`w-5 h-5 ${format === 'm3u' ? 'text-[#1ed760]' : 'text-sky-400'}`} />
@@ -536,7 +536,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'txt'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <FileText className={`w-5 h-5 ${format === 'txt' ? 'text-[#1ed760]' : 'text-amber-400'}`} />
@@ -552,7 +552,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative ${
  format === 'json'
  ? 'bg-[#1db954]/20 border-[#1db954] text-white shadow-lg'
- : 'bg-white/5 border-white/10 text-text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
+ : 'bg-white/5 border-white/10 text-[var(--ink-2)] hover:bg-white/10 hover:text-white'
  }`}
  >
  <Code className={`w-5 h-5 ${format === 'json' ? 'text-[#1ed760]' : 'text-purple-400'}`} />
@@ -585,7 +585,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* 3. Export Options / Toggles */}
  <div className="p-3.5 rounded-[var(--r-l)] bg-white/5 border-white/10 space-y-2.5">
- <span className="text-xs font-semibold text-text-[var(--ink-3)]">Contenido a incluir en la exportación:</span>
+ <span className="text-xs font-semibold text-[var(--ink-3)]">Contenido a incluir en la exportación:</span>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
  <label className="flex items-center gap-2 cursor-pointer select-none">
  <input
@@ -624,7 +624,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  )}
  </div>
  {zipProgress.total > 0 && (
- <div className="w-full h-2 bg-bg-[var(--surface)] rounded-full overflow-hidden">
+ <div className="w-full h-2 bg-[var(--surface)] rounded-full overflow-hidden">
  <div
  className="h-full bg-gradient-to-r from-[#1db954] to-[#1ed760] transition-all duration-300 rounded-full"
  style={{ width: `${Math.round((zipProgress.current / zipProgress.total) * 100)}%` }}
@@ -644,7 +644,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
  {/* 4. Live Preview Box */}
  <div className="space-y-1.5">
- <div className="flex items-center justify-between text-xs text-text-[var(--ink-2)]">
+ <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
  <span className="font-semibold uppercase tracking-wider">Vista previa del archivo</span>
  <span className="font-mono text-[11px] text-neutral-500">
  formato .{getContentForFormat().extension}
@@ -654,7 +654,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  className={`p-3 rounded-[var(--r-l)] font-mono text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
  isStitchLight
  ? 'bg-[var(--sunken)] text-[var(--ink)]'
- : 'bg-bg-[var(--surface)] text-emerald-400/90'
+ : 'bg-[var(--surface)] text-emerald-400/90'
  }`}
  >
  <pre className="whitespace-pre-wrap break-all leading-relaxed">

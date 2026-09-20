@@ -272,10 +272,10 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
  <Building2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
  Embudo de Contrataciones
  </h3>
- <p className="text-[11px] font-mono text-text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
  </div>
  </div>
 
@@ -292,7 +292,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
  </div>
 
  <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[#121214] border-stone-800 text-xs font-mono">
- <span className="text-text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
+ <span className="text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
  <span className="font-bold text-emerald-400 flex items-center gap-1">
  <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
  </span>
@@ -315,7 +315,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
  <div className="text-zinc-300 mt-1">
  Cantidad: <span className="font-bold text-white">{data.count} salas</span>
  </div>
- <div className="text-text-[var(--ink-2)] text-[10px]">
+ <div className="text-[var(--ink-2)] text-[10px]">
  Representa el {pct}% del total
  </div>
  </div>
@@ -362,10 +362,10 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
  Evolución Financiera & Caché
  </h3>
- <p className="text-[11px] font-mono text-text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
  </div>
  </div>
 
@@ -383,11 +383,11 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
 
  <div className="grid grid-cols-2 gap-2 font-mono text-xs text-center">
  <div className="p-2 rounded-[var(--r-m)] bg-[#121214]">
- <span className="text-[10px] text-text-[var(--ink-2)] block uppercase">Ingresos Totales</span>
+ <span className="text-[10px] text-[var(--ink-2)] block uppercase">Ingresos Totales</span>
  <span className="font-bold text-emerald-400 text-sm">+{totalIngresos}€</span>
  </div>
  <div className="p-2 rounded-[var(--r-m)] bg-[#121214]">
- <span className="text-[10px] text-text-[var(--ink-2)] block uppercase">Neto / Beneficio</span>
+ <span className="text-[10px] text-[var(--ink-2)] block uppercase">Neto / Beneficio</span>
  <span className="font-bold text-amber-400 text-sm">+{beneficio}€</span>
  </div>
  </div>
@@ -446,10 +446,10 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display uppercase tracking-wider text-bg-[var(--sunken)]">
+ <h3 className="text-sm font-bold font-display uppercase tracking-wider text-[var(--sunken)]">
  Captación de Fans & QR
  </h3>
- <p className="text-[11px] font-mono text-text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
+ <p className="text-[11px] font-mono text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
  </div>
  </div>
 
@@ -466,7 +466,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
  </div>
 
  <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[#121214] text-xs font-mono">
- <span className="text-text-[var(--ink-2)]">Fans Registrados:</span>
+ <span className="text-[var(--ink-2)]">Fans Registrados:</span>
  <span className="font-bold text-purple-400 text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
  </div>
 

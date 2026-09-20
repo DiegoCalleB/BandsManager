@@ -577,7 +577,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </span>
  )}
  </div>
- <p className="text-xs text-text-[var(--ink-2)] font-sans mt-0.5">
+ <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
  Centraliza la autonomía de envío, horarios comerciales y pautas de redacción para los agentes de Supabase.
  </p>
  </div>
@@ -585,7 +585,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  <button
  onClick={onClose}
- className="p-1.5 text-text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-2)] hover:text-white rounded-[var(--r-s)] hover:bg-neutral-800 transition-colors cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -593,7 +593,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Tab Navigation */}
  <div className={`flex border-b px-4 sm:px-5 gap-2 shrink-0 overflow-x-auto ${
- isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-bg-[var(--surface)]/60 '
+ isStitchLight ? 'bg-[var(--sunken)]/60 ' : 'bg-[var(--surface)]/60 '
  }`}>
  <button
  type="button"
@@ -601,7 +601,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab === 'autonomy'
  ? ' text-amber-400'
- : 'border-transparent text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Sliders className="w-4 h-4" />
@@ -614,7 +614,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab === 'response_strategies'
  ? ' text-amber-400'
- : 'border-transparent text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <MessageSquare className="w-4 h-4 text-purple-400" />
@@ -627,7 +627,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab === 'email_dispatch'
  ? ' text-amber-400'
- : 'border-transparent text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Mail className="w-4 h-4 text-sky-400" />
@@ -643,7 +643,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab === 'schedules'
  ? ' text-amber-400'
- : 'border-transparent text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Clock className="w-4 h-4" />
@@ -656,7 +656,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab === 'tone'
  ? ' text-amber-400'
- : 'border-transparent text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Sparkles className="w-4 h-4" />
@@ -669,7 +669,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab === 'audit_logs'
  ? 'border-emerald-400 text-emerald-400'
- : 'border-transparent text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'border-transparent text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  <Activity className="w-4 h-4 text-emerald-400" />
@@ -684,7 +684,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Read-Only Banner for Non-Admins */}
  {!isAdmin && (
- <div className="p-3 bg-bg-[var(--surface)] border-b text-amber-300 text-xs flex items-center gap-2 px-5">
+ <div className="p-3 bg-[var(--surface)] border-b text-amber-300 text-xs flex items-center gap-2 px-5">
  <Lock className="w-4 h-4 text-amber-400 shrink-0" />
  <span>
  Estás en modo <strong>Solo Lectura</strong>. Solo los miembros con rol de Administrador o Mánager pueden modificar los parámetros de los agentes.
@@ -715,7 +715,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('email_dispatch')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ? 'text-neutral-500 line-through' : 'text-bg-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ? 'text-neutral-500 line-through' : 'text-[var(--sunken)]'}`}>
  {emailAccountConnected ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Conectar el buzón de la banda
  </span>
@@ -726,7 +726,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ? 'text-neutral-500 line-through' : 'text-bg-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ? 'text-neutral-500 line-through' : 'text-[var(--sunken)]'}`}>
  {startupChecklist.toneTrained ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Entrenar el ADN de voz de la banda
  </span>
@@ -737,7 +737,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
  >
- <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ? 'text-neutral-500 line-through' : 'text-bg-[var(--sunken)]'}`}>
+ <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ? 'text-neutral-500 line-through' : 'text-[var(--sunken)]'}`}>
  {startupChecklist.templateCustomized ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full shrink-0" />}
  Personalizar al menos una plantilla de categoría
  </span>
@@ -752,7 +752,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-amber-300">Garantía de Control Humano (Cierre Inviolable):</strong>
- <p className="text-text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-3)] text-[11px]">
  Incluso con la máxima autonomía, <strong className="text-white">ningún trato o contrato se da por cerrado ni ningún email final de confirmación se envía sin la validación previa del mánager</strong> o un miembro de {bandName}.
  </p>
  </div>
@@ -778,7 +778,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.dispatchLevel === 'draft_only'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -790,7 +790,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  <div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Borrador & Aprobación</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans mt-1 leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-1 leading-snug">
  Todos los correos generados se guardan como borrador en la pestaña <strong className="text-zinc-200">Pendiente de Aprobación</strong>. Requiere clic directo.
  </p>
  </div>
@@ -810,7 +810,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.dispatchLevel === 'scheduled_window'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -822,7 +822,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  <div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Envío en Horario Comercial</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans mt-1 leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-1 leading-snug">
  El agente prepara la respuesta y avisa. Si en 3 horas no la cancelas, el sistema la envía automáticamente dentro de las horas configuradas.
  </p>
  </div>
@@ -842,7 +842,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.dispatchLevel === 'autonomous_first_contact'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -854,7 +854,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  <div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Pitch Inicial Automático</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans mt-1 leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans mt-1 leading-snug">
  El primer contacto de presentación (Scout) se envía directamente a salas compatibles. Las respuestas posteriores pasan a borrador.
  </p>
  </div>
@@ -885,13 +885,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.negotiationDepth === 'outreach_only'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
  <span className="text-[9px] font-mono uppercase tracking-widest font-bold text-amber-400">Nivel A</span>
  <h5 className="text-sm font-bold font-display text-zinc-100">Solo "Llamada a la puerta"</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
  El agente solo saluda y envía el Dossier EPK. En cuanto la sala responde con dudas de precio o fecha, el bot se detiene.
  </p>
  </div>
@@ -906,13 +906,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.negotiationDepth === 'filter_conditions'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
  <span className="text-[9px] font-mono uppercase tracking-widest font-bold text-sky-400">Nivel B</span>
  <h5 className="text-sm font-bold font-display text-zinc-100">Filtro de Requisitos & Fechas</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
  Responde sobre disponibilidad de calendario y rider técnico. Confirma si la sala ofrece taquilla/caché dentro de tus límites.
  </p>
  </div>
@@ -927,13 +927,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.negotiationDepth === 'advanced_negotiation'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
  <span className="text-[9px] font-mono uppercase tracking-widest font-bold text-purple-400">Nivel C</span>
  <h5 className="text-sm font-bold font-display text-zinc-100">Negociador hasta Pre-Cierre</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
  Propone fechas alternativas ante solapamientos y formula contraofertas en tu rango de caché. Deja el trato listo para tu firma.
  </p>
  </div>
@@ -942,19 +942,19 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* 3. PARÁMETROS ECONÓMICOS */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-4">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
  <Euro className="w-4 h-4" /> 3. Caché Mínimo por Tipo de Recinto para {bandName}
  </h4>
 
- <p className="text-xs text-text-[var(--ink-2)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Define el caché mínimo aceptable para cada tipo de recinto. Dejar un campo vacío significa que ese tipo no aplica a tus negociaciones.
  </p>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
  {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => (
  <div key={type} className="space-y-1.5">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold block">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
  {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
  </label>
  <div className="relative">
@@ -972,7 +972,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }
  });
  }}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
  placeholder="—"
  />
  <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
@@ -985,7 +985,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
  <Euro className="w-3.5 h-3.5" /> Caché de Inicio de Negociación (opcional)
  </h5>
- <p className="text-xs text-text-[var(--ink-2)]">
+ <p className="text-xs text-[var(--ink-2)]">
  Si la sala pregunta directamente por el caché, el agente responderá con esta cifra en vez del mínimo real, dejando margen para negociar a la baja sin bajar nunca del mínimo. Déjalo vacío para que el agente no mencione cifras salvo que le pregunten.
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -995,7 +995,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  const isBelowMin = typeof minVal === 'number' && typeof negStartVal === 'number' && negStartVal < minVal;
  return (
  <div key={type} className="space-y-1.5">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold block">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
  {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
  </label>
  <div className="relative">
@@ -1013,7 +1013,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }
  });
  }}
- className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ? 'border-red-600' : ''}`}
+ className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ? 'border-red-600' : ''}`}
  placeholder="—"
  />
  <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
@@ -1026,24 +1026,24 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  <div className="pt-2 border-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
- <label className="flex items-center gap-2 cursor-pointer text-text-[var(--ink-3)] font-sans">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-3)] font-sans">
  <input
  type="checkbox"
  disabled={!isAdmin}
  checked={config.autoDeclineUnderMinCache}
  onChange={(e) => setConfig({ ...config, autoDeclineUnderMinCache: e.target.checked })}
- className="rounded bg-bg-[var(--surface)] text-amber-500 focus:ring-amber-500 disabled:opacity-60"
+ className="rounded bg-[var(--surface)] text-amber-500 focus:ring-amber-500 disabled:opacity-60"
  />
  <span>Rechazar amablemente si no se alcanza el caché mínimo</span>
  </label>
 
- <label className="flex items-center gap-2 cursor-pointer text-text-[var(--ink-3)] font-sans">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-3)] font-sans">
  <input
  type="checkbox"
  disabled={!isAdmin}
  checked={config.notifyOnEveryProposal}
  onChange={(e) => setConfig({ ...config, notifyOnEveryProposal: e.target.checked })}
- className="rounded bg-bg-[var(--surface)] text-amber-500 focus:ring-amber-500 disabled:opacity-60"
+ className="rounded bg-[var(--surface)] text-amber-500 focus:ring-amber-500 disabled:opacity-60"
  />
  <span>Notificar en el panel cada vez que se prepare un nuevo correo</span>
  </label>
@@ -1060,21 +1060,21 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <Mail className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-sky-200">Configuración Central de Email para Agentes IA:</strong>
- <p className="text-text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-3)] text-[11px]">
  Aquí defines el buzón oficial y la identidad con la que los agentes redactarán propuestas, crearán borradores en Gmail y gestionarán las respuestas con las salas y promotores.
  </p>
  </div>
  </div>
 
  {/* 1. Remitente e Identidad del Agente */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-4">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
  <AtSign className="w-4 h-4" /> 1. Remitente Oficial de la Banda para los Agentes
  </h4>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className="space-y-1.5">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold flex items-center justify-between">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold flex items-center justify-between">
  <span>Email del Agente / Remitente</span>
  <span className="text-[10px] text-amber-400/80 font-mono">Obligatorio</span>
  </label>
@@ -1083,7 +1083,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  value={config.agentSenderEmail || ''}
  onChange={(e) => setConfig({ ...config, agentSenderEmail: e.target.value })}
- className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
+ className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
  placeholder="ej: booking@tubanda.com o mibanda@gmail.com"
  />
  <p className="text-[10px] text-neutral-500">
@@ -1092,7 +1092,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  <div className="space-y-1.5">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold block">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
  Nombre / Cargo del Remitente
  </label>
  <input
@@ -1100,7 +1100,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  value={config.agentSenderName || ''}
  onChange={(e) => setConfig({ ...config, agentSenderName: e.target.value })}
- className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-sans focus: focus:outline-none disabled:opacity-60"
+ className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-sans focus: focus:outline-none disabled:opacity-60"
  placeholder={`ej: ${bandName} Booking & Management`}
  />
  <p className="text-[10px] text-neutral-500">
@@ -1109,7 +1109,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  <div className="space-y-1.5 sm:col-span-2">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold block">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
  Email de Respuesta (Reply-To) (Opcional)
  </label>
  <input
@@ -1117,7 +1117,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  value={config.agentReplyToEmail || ''}
  onChange={(e) => setConfig({ ...config, agentReplyToEmail: e.target.value })}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60"
  placeholder="ej: contacto@tubanda.com (si es diferente al remitente)"
  />
  </div>
@@ -1131,7 +1131,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <EmailAccountConfig bandId={bandId || currentUser?.band_id} isStitchLight={isStitchLight} />
 
  {/* 3. Modo de Despacho de Correo */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-4">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
  <Send className="w-4 h-4" /> 3. Modo de Despacho del Agente Enviador
  </h4>
@@ -1146,7 +1146,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.dispatchMode !== 'direct_send'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -1157,7 +1157,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <FileEdit className="w-4 h-4 text-amber-400" />
  </div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Crear Borrador en Gmail</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
  El agente prepara el correo en la carpeta "Borradores" de tu Gmail con sala, asunto, pitch y dossier adjunto. Puedes abrirlo, darle tu toque y pulsar Enviar desde Gmail o desde el CRM.
  </p>
  </div>
@@ -1172,7 +1172,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  config.dispatchMode === 'direct_send'
  ? 'bg-amber-500/20 text-amber-200 shadow-md ring-1 ring-amber-500/50'
- : 'bg-bg-[var(--surface)]/80 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="space-y-2">
@@ -1183,7 +1183,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <Send className="w-4 h-4 text-sky-400" />
  </div>
  <h5 className="text-sm font-bold font-display text-zinc-100">Envío Directo tras Aprobación</h5>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans leading-snug">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-snug">
  Tras pulsar "Aprobar Propuesta" o "Aprobar Respuesta" en el CRM, el agente despacha el correo directamente al email de la sala respetando las ventanas horarias comerciales.
  </p>
  </div>
@@ -1199,7 +1199,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="space-y-6">
  
  {/* Presets & Actions */}
- <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)] ">
+ <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] ">
  <div className="flex items-center gap-2">
  <Clock className="w-4 h-4 text-amber-400" />
  <span className="text-xs font-mono font-bold text-zinc-200">Ventanas de Ejecución Comercial:</span>
@@ -1217,14 +1217,14 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={applyPresetCommercial}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] text-[11px] font-mono font-bold transition-all cursor-pointer active:scale-95"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] text-[11px] font-mono font-bold transition-all cursor-pointer active:scale-95"
  >
  🏢 Laborables L-V
  </button>
  <button
  type="button"
  onClick={applyPresetAllDay}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)] text-[11px] font-mono transition-all cursor-pointer active:scale-95"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] text-[11px] font-mono transition-all cursor-pointer active:scale-95"
  >
  ⚡ Toda la Semana (7d)
  </button>
@@ -1243,35 +1243,35 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  +45% Tasa de Respuesta
  </span>
  </div>
- <p className="leading-relaxed text-text-[var(--ink-3)] text-[11px]">
+ <p className="leading-relaxed text-[var(--ink-3)] text-[11px]">
  En la industria del directo, los programadores de salas y festivales dedican el <strong>martes a jueves (10:00 - 14:00)</strong> a cerrar contrataciones. Los lunes gestionan incidencias del fin de semana y los viernes/sábados están en montaje de conciertos en vivo.
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
- <div className="p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)]/80 text-text-[var(--ink-3)] flex flex-col gap-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] flex flex-col gap-0.5">
  <span className="text-amber-400 font-bold">🔥 Martes a Jueves</span>
- <span className="text-text-[var(--ink-2)] font-sans text-[10px]">Ventana dorada de contratación y respuesta.</span>
+ <span className="text-[var(--ink-2)] font-sans text-[10px]">Ventana dorada de contratación y respuesta.</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)]/80 text-text-[var(--ink-3)] flex flex-col gap-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] flex flex-col gap-0.5">
  <span className="text-sky-400 font-bold">⏰ 10:00 a 14:00</span>
- <span className="text-text-[var(--ink-2)] font-sans text-[10px]">Franja de máxima apertura y lectura de email.</span>
+ <span className="text-[var(--ink-2)] font-sans text-[10px]">Franja de máxima apertura y lectura de email.</span>
  </div>
- <div className="p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)]/80 text-text-[var(--ink-3)] flex flex-col gap-0.5">
+ <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-3)] flex flex-col gap-0.5">
  <span className="text-emerald-400 font-bold">🛡️ Smart Gate Supabase</span>
- <span className="text-text-[var(--ink-2)] font-sans text-[10px]">Los agentes solo envían en los días/horas elegidos.</span>
+ <span className="text-[var(--ink-2)] font-sans text-[10px]">Los agentes solo envían en los días/horas elegidos.</span>
  </div>
  </div>
  </div>
 
  {/* Timezone Selector */}
  <div className="space-y-1.5">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold flex items-center gap-1.5">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold flex items-center gap-1.5">
  <Globe className="w-4 h-4 text-amber-400" /> Zona Horaria de la Banda
  </label>
  <select
  disabled={!isAdmin}
  value={timezone}
  onChange={(e) => setTimezone(e.target.value)}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60 cursor-pointer"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-mono focus: focus:outline-none disabled:opacity-60 cursor-pointer"
  >
  {TIMEZONES.map(tz => (
  <option key={tz.value} value={tz.value}>{tz.label}</option>
@@ -1280,7 +1280,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* DÍAS Y HORAS ENVIADOR */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-4">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
  {/* Header Enviador */}
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
@@ -1289,7 +1289,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
  Agente Enviador (Días y Horas de Envío de Pitches)
  </h4>
- <p className="text-[10px] text-text-[var(--ink-2)]">
+ <p className="text-[10px] text-[var(--ink-2)]">
  Días y horas permitidas para despachar correos aprobados a salas de conciertos.
  </p>
  </div>
@@ -1302,8 +1302,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Días de la semana Selector (Enviador) */}
- <div className="space-y-2 pt-1 border-t border-bg-[var(--surface)]">
- <div className="flex items-center justify-between text-[11px] font-mono text-text-[var(--ink-2)]">
+ <div className="space-y-2 pt-1 border-t border-[var(--surface)]">
+ <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
  <span className="font-semibold text-zinc-300 flex items-center gap-1.5">
  <Calendar className="w-3.5 h-3.5 text-amber-400" /> Días de la Semana Habilitados:
  </span>
@@ -1319,21 +1319,21 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setDiasEnviador([1, 2, 3, 4, 5])}
- className="px-2 py-0.5 rounded bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all cursor-pointer"
  >
  L-V
  </button>
  <button
  type="button"
  onClick={() => setDiasEnviador([1, 2, 3, 4, 5, 6, 7])}
- className="px-2 py-0.5 rounded bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all cursor-pointer"
  >
  Todos
  </button>
  <button
  type="button"
  onClick={() => setDiasEnviador([])}
- className="px-2 py-0.5 rounded bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  Limpiar
  </button>
@@ -1355,7 +1355,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  isSelected
  ? 'bg-amber-500/15 text-amber-200 shadow-sm shadow-amber-500/10 ring-1 ring-amber-500/30'
- : 'bg-bg-[var(--surface)]/90 text-text-[var(--ink-2)] hover:text-zinc-200 hover:bg-bg-[var(--surface)]'
+ : 'bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-zinc-200 hover:bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center justify-between w-full">
@@ -1379,8 +1379,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {/* Horas Enviador Grid */}
- <div className="space-y-2 pt-2 border-t border-bg-[var(--surface)]">
- <div className="flex items-center justify-between text-[11px] font-mono text-text-[var(--ink-2)]">
+ <div className="space-y-2 pt-2 border-t border-[var(--surface)]">
+ <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ink-2)]">
  <span className="font-semibold text-zinc-300 flex items-center gap-1.5">
  <Clock className="w-3.5 h-3.5 text-amber-400" /> Horas del Día Habilitadas:
  </span>
@@ -1396,14 +1396,14 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <button
  type="button"
  onClick={() => setHorasEnviador([9, 10, 11, 12, 13, 14, 15, 16, 17, 18])}
- className="px-2 py-0.5 rounded bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] transition-all cursor-pointer"
  >
  Jornada Completa
  </button>
  <button
  type="button"
  onClick={() => setHorasEnviador([])}
- className="px-2 py-0.5 rounded bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-2)] transition-all cursor-pointer"
+ className="px-2 py-0.5 rounded bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-2)] transition-all cursor-pointer"
  >
  Limpiar
  </button>
@@ -1428,8 +1428,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  isSelected
  ? 'bg-amber-500 text-stone-950 shadow-sm font-black'
  : isPrimeTime
- ? 'bg-bg-[var(--surface)] text-amber-300/90 hover:text-white hover:bg-neutral-800'
- : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
+ ? 'bg-[var(--surface)] text-amber-300/90 hover:text-white hover:bg-neutral-800'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-white hover:bg-neutral-800'
  }`}
  >
  {formatted}
@@ -1444,7 +1444,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  scheduler (cada ~60s), porque a diferencia del Enviador (que sí debe respetar
  una ventana comercial para no escribir de madrugada) leer la bandeja y detectar
  respuestas/borradores enviados no tiene ninguna razón para esperar. */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-2">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
  <div className="flex items-center gap-2">
  <Mail className="w-4 h-4 text-sky-400" />
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
@@ -1454,13 +1454,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  Siempre activo
  </span>
  </div>
- <p className="text-[11px] text-text-[var(--ink-2)] font-sans leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
  Revisa tu bandeja constantemente (cada minuto), sin horario configurable: detecta respuestas de las salas y actualiza el hilo del lead, y comprueba si algún borrador de Gmail se ha enviado a mano para marcar el lead como contactado. Las horas y días de abajo son solo para el Agente Enviador (el despacho de propuestas).
  </p>
  </div>
 
  {/* Monitor de Estado de Agentes de Supabase (GitHub Actions) */}
- <div className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-3">
+ <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
  <div className="flex items-center justify-between">
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
  <Activity className="w-4 h-4" /> Estado en Tiempo Real de Agentes (Supabase Engine)
@@ -1471,12 +1471,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
- <div className="p-3 rounded-[var(--r-s)] bg-bg-[var(--surface)]/90 flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
  <div>
  <div className="text-xs font-mono font-bold text-zinc-100">Agente Scout (Búsqueda)</div>
- <div className="text-[10px] text-text-[var(--ink-2)] font-sans">Rastreo de salas y contactos</div>
+ <div className="text-[10px] text-[var(--ink-2)] font-sans">Rastreo de salas y contactos</div>
  </div>
  </div>
  <span className="text-[10px] font-mono text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded font-bold">
@@ -1484,12 +1484,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </span>
  </div>
 
- <div className="p-3 rounded-[var(--r-s)] bg-bg-[var(--surface)]/90 flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
  <div>
  <div className="text-xs font-mono font-bold text-zinc-100">Agente Redactor (Gemini)</div>
- <div className="text-[10px] text-text-[var(--ink-2)] font-sans">Generador de propuestas y pitches</div>
+ <div className="text-[10px] text-[var(--ink-2)] font-sans">Generador de propuestas y pitches</div>
  </div>
  </div>
  <span className="text-[10px] font-mono text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded font-bold">
@@ -1497,12 +1497,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </span>
  </div>
 
- <div className="p-3 rounded-[var(--r-s)] bg-bg-[var(--surface)]/90 flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
  <span className={`w-2.5 h-2.5 rounded-full ${horasEnviador.length > 0 && diasEnviador.length > 0 ? 'bg-emerald-400' : 'bg-amber-400'}`} />
  <div>
  <div className="text-xs font-mono font-bold text-zinc-100">Agente Enviador (Gmail API)</div>
- <div className="text-[10px] text-text-[var(--ink-2)] font-sans">
+ <div className="text-[10px] text-[var(--ink-2)] font-sans">
  {diasEnviador.length}d/sem · {horasEnviador.length}h/día
  </div>
  </div>
@@ -1512,12 +1512,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </span>
  </div>
 
- <div className="p-3 rounded-[var(--r-s)] bg-bg-[var(--surface)]/90 flex items-center justify-between">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
  <span className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse" />
  <div>
  <div className="text-xs font-mono font-bold text-zinc-100">Agente Lector (Clasificador)</div>
- <div className="text-[10px] text-text-[var(--ink-2)] font-sans">
+ <div className="text-[10px] text-[var(--ink-2)] font-sans">
  Revisa la bandeja cada minuto, sin horario
  </div>
  </div>
@@ -1547,7 +1547,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-amber-200">El tono y la biografía se entrenan en Gestión de Banda</strong>
- <p className="text-text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-3)] text-[11px]">
  Para que el Agente Redactor escriba con la voz real de {bandName}, el tono de comunicación, vocabulario propio y biografía se configuran en <strong className="text-zinc-100">ADN de Tono</strong>, dentro de la ficha de la banda - no aquí. Ese es el único sitio donde esos datos llegan de verdad a los pitches y respuestas generados.
  </p>
  </div>
@@ -1559,7 +1559,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
  ¿Quieres entrenar el tono de voz de la banda?
  </h4>
- <p className="text-[11px] text-text-[var(--ink-3)] font-sans mt-0.5">
+ <p className="text-[11px] text-[var(--ink-3)] font-sans mt-0.5">
  Analiza automáticamente vuestras redes sociales, o edita a mano el tono, tratamiento y vocabulario propio en ADN de Tono, dentro de Gestión de Banda.
  </p>
  </div>
@@ -1587,7 +1587,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
  ¿Quieres afinar las plantillas de correo?
  </h4>
- <p className="text-[11px] text-text-[var(--ink-3)] font-sans mt-0.5">
+ <p className="text-[11px] text-[var(--ink-3)] font-sans mt-0.5">
  Puedes personalizar las plantillas específicas para Salas, Festivales, Discotecas y Medios desde Booking CRM.
  </p>
  </div>
@@ -1616,7 +1616,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
  <strong className="font-bold text-purple-200">¿Cómo debe responder el agente cuando una sala contesta?</strong>
- <p className="text-text-[var(--ink-3)] text-[11px]">
+ <p className="text-[var(--ink-3)] text-[11px]">
  Cuando una sala responde a un correo, el Agente Lector detecta automáticamente de qué tipo de mensaje se trata y redacta un borrador. Aquí puedes darle instrucciones concretas para cada tipo de situación, además del tono a aplicar. El borrador siempre queda pendiente de tu aprobación antes de enviarse.
  </p>
  </div>
@@ -1636,7 +1636,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <span className="text-xs font-bold text-sky-200 block">
  Lo que el sistema ya ha aprendido solo de tus respuestas reales
  </span>
- <p className="text-[11px] text-text-[var(--ink-3)] leading-relaxed">
+ <p className="text-[11px] text-[var(--ink-3)] leading-relaxed">
  Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice "sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
  </p>
  </div>
@@ -1657,7 +1657,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 ? (
  <ul className="space-y-0.5">
  {reglas.reglas_estilo_aprendidas.map((r, idx) => (
- <li key={idx} className="text-[10px] font-sans text-text-[var(--ink-3)]">⭐ {r}</li>
+ <li key={idx} className="text-[10px] font-sans text-[var(--ink-3)]">⭐ {r}</li>
  ))}
  </ul>
  ) : (!reglas.reglas_manuales || reglas.reglas_manuales.length === 0) && (
@@ -1682,7 +1682,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider">
  ¿Quieres que aprenda rápido, sin esperar a corregir borradores?
  </h4>
- <p className="text-[11px] text-text-[var(--ink-3)] font-sans mt-0.5">
+ <p className="text-[11px] text-[var(--ink-3)] font-sans mt-0.5">
  Pega 2-3 conversaciones reales (vuestro mensaje + la respuesta de la sala) en Hilos de Email de Ejemplo. Alimentan al instante tanto el pitch inicial como las respuestas, sin esperar a acumular correcciones.
  </p>
  </div>
@@ -1707,7 +1707,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {RESPONSE_TYPES.map((type) => {
  const strategy = getStrategyOrDefault(type.key);
  return (
- <div key={type.key} className="p-4 rounded-[var(--r-m)] bg-bg-[var(--surface)] space-y-3">
+ <div key={type.key} className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-3">
  <div className="flex items-center gap-2">
  <span className="p-1.5 rounded-[var(--r-s)] bg-purple-500/10 text-purple-300">
  {type.icon}
@@ -1716,12 +1716,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
  {type.label}
  </h4>
- <p className="text-[10px] text-text-[var(--ink-2)] font-sans">{type.description}</p>
+ <p className="text-[10px] text-[var(--ink-2)] font-sans">{type.description}</p>
  </div>
  </div>
 
  <div className="space-y-1.5">
- <label className="text-xs font-mono text-text-[var(--ink-2)] font-semibold block">
+ <label className="text-xs font-mono text-[var(--ink-2)] font-semibold block">
  Instrucción para la IA (opcional)
  </label>
  <textarea
@@ -1738,7 +1738,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  ? 'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
  : 'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
  }`}
- className="w-full px-3 py-2 rounded-[var(--r-m)] bg-bg-[var(--surface)] text-zinc-100 text-xs font-sans focus:border-purple-500 focus:outline-none disabled:opacity-60 resize-none"
+ className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-zinc-100 text-xs font-sans focus:border-purple-500 focus:outline-none disabled:opacity-60 resize-none"
  />
  <p className="text-[10px] text-neutral-500">
  Si lo dejas vacío, el agente usa una guía automática genérica para este tipo de respuesta.
@@ -1760,7 +1760,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  } ${
  strategy.tone === toneOption
  ? 'bg-purple-500/20 border-purple-500 text-purple-200'
- : 'bg-bg-[var(--surface)] text-text-[var(--ink-2)] hover:text-zinc-200'
+ : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-zinc-200'
  }`}
  >
  {toneOption === 'neutral' ? 'Neutral' : toneOption === 'enthusiastic' ? 'Entusiasta' : 'Prudente'}
@@ -1769,13 +1769,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  </div>
 
- <label className="flex items-center gap-2 cursor-pointer text-text-[var(--ink-3)] font-sans text-[11px]">
+ <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-3)] font-sans text-[11px]">
  <input
  type="checkbox"
  disabled={!isAdmin}
  checked={strategy.mentionLinks}
  onChange={(e) => updateStrategyField(type.key, 'mentionLinks', e.target.checked)}
- className="rounded bg-bg-[var(--surface)] text-purple-500 focus:ring-purple-500 disabled:opacity-60"
+ className="rounded bg-[var(--surface)] text-purple-500 focus:ring-purple-500 disabled:opacity-60"
  />
  <span>Mencionar enlace al Dossier/EPK si procede</span>
  </label>
@@ -1787,7 +1787,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {isAdmin && (
  <div className="flex items-center justify-between gap-3 pt-1">
  {strategiesFeedback && (
- <span className="text-[11px] font-mono text-text-[var(--ink-3)]">{strategiesFeedback}</span>
+ <span className="text-[11px] font-mono text-[var(--ink-3)]">{strategiesFeedback}</span>
  )}
  <button
  type="button"
@@ -1811,7 +1811,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
  <ShieldCheck className="w-4 h-4" /> Registro de Auditoría de Ejecución de Agentes
  </h4>
- <p className="text-[11px] text-text-[var(--ink-2)] mt-0.5">
+ <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
  Trazabilidad de qué usuario o proceso disparó cada agente, duración y salas impactadas en Supabase.
  </p>
  </div>
@@ -1830,7 +1830,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={loadAuditLogs}
  disabled={loadingAuditLogs}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-bg-[var(--surface)] hover:bg-neutral-800 text-text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-neutral-800 text-[var(--ink-3)] text-xs font-mono flex items-center gap-1.5 cursor-pointer"
  >
  <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ? 'animate-spin' : ''}`} />
  <span>Refrescar</span>
@@ -1840,7 +1840,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  {/* Filtros por Agente */}
  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-mono">
- <span className="text-text-[var(--ink-2)] text-[10px] uppercase font-bold mr-1">Filtrar:</span>
+ <span className="text-[var(--ink-2)] text-[10px] uppercase font-bold mr-1">Filtrar:</span>
  {[
  { id: 'all', label: 'Todos' },
  { id: 'scout', label: 'Scout' },
@@ -1855,7 +1855,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
  auditAgentFilter === f.id
  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-xs'
- : 'bg-bg-[var(--surface)]/60 text-text-[var(--ink-2)] hover:text-bg-[var(--sunken)]'
+ : 'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--sunken)]'
  }`}
  >
  {f.label}
@@ -1864,12 +1864,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
 
  {loadingAuditLogs ? (
- <div className="flex flex-col items-center justify-center py-12 gap-2 text-text-[var(--ink-2)] font-mono text-xs">
+ <div className="flex flex-col items-center justify-center py-12 gap-2 text-[var(--ink-2)] font-mono text-xs">
  <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
  <span>Cargando registros de auditoría desde Supabase...</span>
  </div>
  ) : auditLogs.length === 0 ? (
- <div className="p-8 text-center rounded-[var(--r-m)] bg-bg-[var(--surface)]/60 text-text-[var(--ink-2)] font-mono text-xs space-y-2">
+ <div className="p-8 text-center rounded-[var(--r-m)] bg-[var(--surface)]/60 text-[var(--ink-2)] font-mono text-xs space-y-2">
  <Activity className="w-6 h-6 mx-auto text-neutral-600" />
  <p>Aún no hay registros de auditoría guardados en Supabase.</p>
  </div>
@@ -1889,7 +1889,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  return (
  <div
  key={log.id}
- className="p-3.5 rounded-[var(--r-m)] bg-bg-[var(--surface)]/80 hover: transition-colors space-y-2"
+ className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover: transition-colors space-y-2"
  >
  <div className="flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2">
@@ -1901,7 +1901,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  }`}>
  Agente {log.agente}
  </span>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-text-[var(--ink-3)] ">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-800 text-[var(--ink-3)] ">
  {log.motor || 'supabase_edge'}
  </span>
  <span className={`text-[10px] font-mono font-bold ${isSuccess ? 'text-emerald-400' : isError ? 'text-rose-400' : 'text-amber-400'}`}>
@@ -1909,7 +1909,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </span>
  </div>
 
- <div className="flex items-center gap-2 text-[10px] font-mono text-text-[var(--ink-2)]">
+ <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--ink-2)]">
  <Clock className="w-3 h-3 text-neutral-500" />
  <span>{formattedDate}</span>
  {log.duracion_ms > 0 && (
@@ -1922,10 +1922,10 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {log.mensaje}
  </p>
 
- <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t /60 text-[10px] font-mono text-text-[var(--ink-2)]">
+ <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t /60 text-[10px] font-mono text-[var(--ink-2)]">
  <div className="flex items-center gap-1.5">
  <UserCheck className="w-3 h-3 text-neutral-500" />
- <span>Disparado por: <strong className="text-bg-[var(--sunken)]">{log.usuario_email || log.usuario_id || 'Sistema'}</strong> ({log.disparado_por_tipo})</span>
+ <span>Disparado por: <strong className="text-[var(--sunken)]">{log.usuario_email || log.usuario_id || 'Sistema'}</strong> ({log.disparado_por_tipo})</span>
  </div>
  {affectedCount > 0 && (
  <span className="text-amber-300/90 font-bold">
@@ -1937,20 +1937,20 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  {/* Detalle de leads afectados si existen */}
  {Array.isArray(log.leads_afectados) && log.leads_afectados.length > 0 && (
  <div className="mt-2 pt-2 border-t /40 space-y-1.5">
- <span className="text-[10px] font-mono uppercase font-bold text-text-[var(--ink-2)] tracking-wider flex items-center justify-between">
+ <span className="text-[10px] font-mono uppercase font-bold text-[var(--ink-2)] tracking-wider flex items-center justify-between">
  <span>Salas / Leads Procesados ({log.leads_afectados.length}):</span>
  </span>
  <div className="grid grid-cols-1 gap-1.5">
  {log.leads_afectados.map((item: any, idx: number) => (
- <div key={idx} className="p-2 rounded-[var(--r-s)] bg-bg-[var(--surface)]/70 text-[11px] font-mono flex flex-wrap items-center justify-between gap-2">
+ <div key={idx} className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/70 text-[11px] font-mono flex flex-wrap items-center justify-between gap-2">
  <div className="flex items-center gap-2 min-w-0">
  <span className="text-amber-400 font-bold">🏛️ {item.nombre_sala || 'Sala sin nombre'}</span>
  {item.email_contacto && (
- <span className="text-text-[var(--ink-2)] text-[10px] truncate max-w-[200px]">&lt;{item.email_contacto}&gt;</span>
+ <span className="text-[var(--ink-2)] text-[10px] truncate max-w-[200px]">&lt;{item.email_contacto}&gt;</span>
  )}
  </div>
  <div className="flex items-center gap-2 shrink-0">
- <span className="px-1.5 py-0.5 rounded text-[9px] bg-neutral-800 text-text-[var(--ink-3)] ">
+ <span className="px-1.5 py-0.5 rounded text-[9px] bg-neutral-800 text-[var(--ink-3)] ">
  ID: {item.id}
  </span>
  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-300">
@@ -1976,7 +1976,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className={`p-4 border-t flex flex-wrap items-center justify-between gap-3 shrink-0 ${
  isStitchLight ? 'bg-[var(--bg)] ' : 'bg-[#141312] '
  }`}>
- <div className="flex items-center gap-2 text-xs font-mono text-text-[var(--ink-2)]">
+ <div className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)]">
  <ShieldCheck className="w-4 h-4 text-emerald-400" />
  <span>Aislamiento Multi-Tenant: <strong className="text-zinc-200">{bandId}</strong></span>
  </div>
