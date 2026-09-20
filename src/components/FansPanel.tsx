@@ -20,6 +20,7 @@ import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from'.
 import { useModuleTutorial } from'../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 
 interface FansPanelProps {
  fans: Fan[];
@@ -697,7 +698,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </AreaChart>
  </ResponsiveContainer>
  ) : (
- <div className="flex items-center justify-center h-full text-[var(--ink-2)] text-xs font-mono">No hay datos suficientes</div>
+ <div className="flex flex-col items-center justify-center h-full gap-4">
+ <PublicoSilhouette opacity={0.12} size="medium" />
+ <div className="text-center space-y-1">
+ <p className="text-sm font-semibold text-[var(--ink)]">La sala está vacía</p>
+ <p className="text-xs text-[var(--ink-2)]">Empieza a registrar fans y ve cómo crece tu comunidad</p>
+ </div>
+ </div>
  )}
  </div>
  </div>
