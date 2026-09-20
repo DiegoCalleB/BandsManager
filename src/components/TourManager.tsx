@@ -3,9 +3,10 @@ import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCa
 import { calculateVehiclesFuelCost } from'../utils/tourUtils';
 import { ModalPortal } from'./common/ModalPortal';
 import { HolidayDateWarning } from'./common/HolidayDateWarning';
-import { 
- Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign, 
- Activity, TrendingUp, Calculator, Users, CheckSquare, Square, 
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
+import {
+ Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign,
+ Activity, TrendingUp, Calculator, Users, CheckSquare, Square,
  CheckCircle2, AlertCircle, RefreshCw, ArrowRight, Sparkles, Target
 } from'lucide-react';
 
@@ -557,15 +558,15 @@ export default function TourManager({
  {/* Tour List */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
  {tours.length === 0 ? (
- <div className="col-span-full p-8 text-center rounded-[var(--r-l)] bg-black/20 border-[var(--hair)]">
- <MapPin className={`w-12 h-12 mx-auto mb-4 ${colors.textMuted} opacity-50`} />
- <h3 className={`text-lg font-bold ${colors.text} mb-2`}>No hay giras organizadas</h3>
- <p className={`text-sm ${colors.textMuted} max-w-md mx-auto mb-4`}>
+ <div className="col-span-full p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)]">
+ <PublicoSilhouette opacity={0.12} size="large" className="mx-auto mb-4" />
+ <h3 className="text-lg font-bold text-[var(--ink)] mb-2">La gira está vacía</h3>
+ <p className="text-sm text-[var(--ink-2)] max-w-md mx-auto mb-4">
  Agrupa tus conciertos en giras para calcular mejor los gastos logísticos, combustible de todos tus vehículos, dietas de los músicos convocados, alojamientos y el margen de beneficio neto.
  </p>
  <button
  onClick={handleOpenCreateModal}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 transition-all inline-flex items-center gap-2 cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:opacity-90 transition-all inline-flex items-center gap-2 cursor-pointer"
  >
  <Plus className="w-4 h-4" /> Crear primera gira
  </button>

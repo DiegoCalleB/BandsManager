@@ -28,6 +28,7 @@ import { ModuleTutorialModal } from'./common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from'./common/ModuleTutorialTrigger';
 import { SetlistPerformanceView } from'./SetlistPerformanceView';
 import { HolidayDateWarning } from'./common/HolidayDateWarning';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -2718,10 +2719,10 @@ export default function CalendarView({
  </div>
 
  {dateKeys.length === 0 ? (
- <div className="p-8 text-center rounded-[var(--r-l)] border-dashed /80 bg-[var(--surface)]/40">
- <Calendar className="w-8 h-8 text-[var(--ink-2)] mx-auto mb-2" />
- <p className="text-sm font-bold text-[var(--ink-3)]">No hay eventos en este periodo</p>
- <p className="text-xs text-[var(--ink-2)] mt-1">Usa el botón"Añadir Evento" o cambia de mes para ver otras fechas</p>
+ <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)]">
+ <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto mb-4" />
+ <p className="text-sm font-bold text-[var(--ink)]">El calendario está vacío</p>
+ <p className="text-xs text-[var(--ink-2)] mt-2">Usa el botón"Añadir Evento" o cambia de mes para ver otras fechas</p>
  </div>
  ) : (
  <div className="flex flex-col gap-3">

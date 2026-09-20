@@ -9,6 +9,7 @@ import {
  Volume2, VolumeX, Maximize2, X, Star, Bookmark, ThumbsUp
 } from'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from'recharts';
+import { PublicoSilhouette } from'./ui/PublicoSilhouette';
 
 interface ReelsCenterProps {
  colors: ThemeColors;
@@ -1460,7 +1461,10 @@ export default function ReelsCenter({
  </div>
  ))}
  {posts.filter(r => r.estado ==='borrador').length === 0 && (
- <p className="text-[9px] font-mono text-neutral-500 text-center py-4">No hay borradores</p>
+ <div className="flex flex-col items-center justify-center py-8 gap-2">
+ <PublicoSilhouette opacity={0.1} size="small" />
+ <p className="text-xs text-[var(--ink-2)]">No hay borradores</p>
+ </div>
  )}
  </div>
  </div>
@@ -1514,7 +1518,10 @@ export default function ReelsCenter({
  </div>
  ))}
  {posts.filter(r => r.estado ==='aprobado').length === 0 && (
- <p className="text-[9px] font-mono text-neutral-500 text-center py-4">No hay reels en edición</p>
+ <div className="flex flex-col items-center justify-center py-8 gap-2">
+ <PublicoSilhouette opacity={0.1} size="small" />
+ <p className="text-xs text-[var(--ink-2)]">No hay reels en edición</p>
+ </div>
  )}
  </div>
  </div>
@@ -1564,7 +1571,10 @@ export default function ReelsCenter({
  </div>
  ))}
  {posts.filter(r => r.estado ==='publicado').length === 0 && (
- <p className="text-[9px] font-mono text-neutral-500 text-center py-4">No hay publicaciones completadas</p>
+ <div className="flex flex-col items-center justify-center py-8 gap-2">
+ <PublicoSilhouette opacity={0.1} size="small" />
+ <p className="text-xs text-[var(--ink-2)]">No hay publicaciones completadas</p>
+ </div>
  )}
  </div>
  </div>
