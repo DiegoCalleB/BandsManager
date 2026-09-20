@@ -282,7 +282,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  if (it.type ==='block') {
  return (
  <div key={idx} className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ?'bg-[var(--surface)]/80' :'bg-[var(--surface)] opacity-50'}`}>
- <span className="text-xs text-[var(--sunken)]">📋 {it.titulo} <span className="text-neutral-500">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
+ <span className="text-xs text-[var(--sunken)]">📋 {it.titulo} <span className="text-[var(--ink-2)]">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span></span>
  <button
  type="button"
  onClick={() => toggleBlockIncluded(idx)}
@@ -299,7 +299,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <div key={idx} className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ?'bg-[var(--surface)] opacity-50' :'bg-[var(--surface)]/80'}`}>
  <div className="flex items-center justify-between gap-2">
  <span className="text-xs text-[var(--sunken)] flex items-center gap-1.5">
- <Music className="w-3.5 h-3.5 text-neutral-500 shrink-0" />"{it.detectedTitle}"
+ <Music className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />"{it.detectedTitle}"
  </span>
  {it.action ==='link_matched' && (
  <span className="text-[10px] text-emerald-400 font-mono whitespace-nowrap">✓ {it.matchedSongTitle}</span>

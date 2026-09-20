@@ -308,7 +308,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
  {/* Subtle Notes Preview (desktop only to save vertical mobile space) */}
  {song.notasInternas && (
- <p className="hidden md:block text-[10px] text-neutral-500 line-clamp-1 italic mt-0.5 font-sans">
+ <p className="hidden md:block text-[10px] text-[var(--ink-2)] line-clamp-1 italic mt-0.5 font-sans">
  {song.notasInternas}
  </p>
  )}
