@@ -680,7 +680,7 @@ export function ReelsMetricsView({
 
  {activeMainSection ==='growth_plan' ? (
  <SocialGrowthPlanView
- colors={colors}={Boolean()}
+ colors={colors}
  bandName={effectiveBandName}
  latestMetric={latestMetric}
  epkConfig={epkConfig}
@@ -1859,8 +1859,7 @@ export function ReelsMetricsView({
  placeholder="Pega aquí tu User Access Token con permiso instagram_manage_insights (EAA...)"
  value={igTokenInput}
  onChange={(e) => setIgTokenInput(e.target.value)}
- className={`w-full px-4 py-3 rounded-[var(--r-m)] font-sans text-xs focus:outline-none focus:ring-2 ${
-' bg-[var(--sunken)] text-[var(--ink)] focus:ring-pink-500 }`}
+ className={`w-full px-4 py-3 rounded-[var(--r-m)] font-sans text-xs focus:outline-none focus:ring-2 bg-[var(--sunken)] text-[var(--ink)] focus:ring-pink-500`}
  />
  <div className="absolute right-3 top-3 text-[var(--ink-2)]">
  <Key className="w-4 h-4" />

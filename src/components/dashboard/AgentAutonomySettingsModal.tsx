@@ -1124,7 +1124,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  SMTP/IMAP con contraseña de aplicación para Outlook/otros) - misma
  configuración que usa el Agente Enviador programado, sin duplicar aquí
  un mecanismo de conexión distinto al de EmailAccountConfig. */}
- <EmailAccountConfig bandId={bandId || currentUser?.band_id />
+ <EmailAccountConfig bandId={bandId || currentUser?.band_id} />
 
  {/* 3. Modo de Despacho de Correo */}
  <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">

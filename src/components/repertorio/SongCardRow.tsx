@@ -377,9 +377,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <button
  type="button"
  onClick={onEditSong}
- className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
- : 'bg-[var(--surface)]hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] /70'
- }`}
+ className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)]`}
  title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
  >
  <Edit3 className="w-3.5 h-3.5" />

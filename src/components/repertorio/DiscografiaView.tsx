@@ -359,7 +359,6 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  {safeSongs.length > 1 ? 'lanzamientos' : 'lanzamiento'} • {safeSongs.length} temas
  </p>
  </div>
- </div>
 
  {/* Desktop"+ Nuevo Disco" and"Exportar Canciones" Buttons */}
  <div className="flex items-center gap-2 relative">
@@ -812,7 +811,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  canMoveDown={idx < sortedAlbumSongs.length - 1}
  onMoveUp={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id,'up')}
  onMoveDown={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id,'down')}
- colors={colors
+ colors={colors}
  />
  );
  })}
@@ -860,7 +859,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  isOpen={isLiveConcertModalOpen}
  onClose={() => setIsLiveConcertModalOpen(false)}
  bandName={bandName ||"Nuestra Banda"}
- colors={colors
+ colors={colors}
  onSaveAlbumToCatalog={handleSaveLiveConcertAlbum}
  onSaveSetlist={(newSetlist) => {
  if (setSetlists) {
@@ -888,7 +887,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClose={() => setBulkUploadAlbum(null)}
  albumName={bulkUploadAlbum.name}
  albumSongs={bulkUploadAlbum.songs}
- colors={colors
+ colors={colors}
  bandId={bandName ||"Tu Banda"}
  onSaveUpdatedSongs={(updatedAlbumSongs, newAlbumName) => {
  const existingIds = new Set(songs.map((s) => s.id));
@@ -926,7 +925,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  songs={songs}
  albumsList={allNonEmptyAlbums}
  bandName={bandName ||"Tu Banda"}
- colors={colors
+ colors={colors}
  />
  </div>
  );

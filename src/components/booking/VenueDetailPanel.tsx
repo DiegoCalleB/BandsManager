@@ -2005,7 +2005,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  <MultiModelPitchComparatorModal
  isOpen={showMultiModelModal}
  onClose={() => setShowMultiModelModal(false)}
- lead={selectedLead
+ lead={selectedLead}
  activeCampaign={activeCampaign}
  onSelectProposal={(text, providerName) => {
  setEditedPitch(text);
