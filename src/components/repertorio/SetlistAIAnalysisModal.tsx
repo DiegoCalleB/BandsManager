@@ -282,7 +282,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  const chartSvgUrl = getChartSvgDataUrl();
 
  const suggestionsHtml = analysis.suggestions.map(sugg => `
- <div style="border:1px solid #333; border-radius:8px; padding:14px; margin-bottom:12px; break-inside:avoid;">
+ <div style="background:#1a1a1a; border-radius:12px; padding:14px; margin-bottom:12px; break-inside:avoid;">
  <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
  <span>${getPriorityIcon(sugg.priority)}</span>
  <strong style="font-size:15px;">${escapeHtml(sugg.title)}</strong>
@@ -302,22 +302,22 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <title>Análisis IA - ${escapeHtml(setlistName || setlistId)}</title>
  <style>
  body { font-family: system-ui, -apple-system, sans-serif; margin: 24px; background: #0a0a0a; color: #eee; }
- .header { border-bottom: 3px solid #a855f7; padding-bottom: 14px; margin-bottom: 20px; }
+ .header { padding-bottom: 14px; margin-bottom: 20px; }
  h1 { font-size: 26px; margin: 0; color: #c084fc; letter-spacing: 0.5px; }
  .meta { font-size: 13px; font-family: monospace; color: #999; margin-top: 4px; }
- .score-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+ .score-box { background: #1a1a1a; border-radius: 18px; padding: 14px; margin-bottom: 16px; }
  .score-bar-bg { width: 100%; background: #333; border-radius: 999px; height: 8px; margin-top: 6px; }
  .score-bar-fill { height: 8px; border-radius: 999px; background: linear-gradient(90deg, #a855f7, #c084fc); }
- .chart-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+ .chart-box { background: #1a1a1a; border-radius: 18px; padding: 14px; margin-bottom: 16px; }
  .chart-box img { width: 100%; height: auto; display: block; }
- .info-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+ .info-box { background: #1a1a1a; border-radius: 18px; padding: 14px; margin-bottom: 16px; }
  .info-box p.label { font-size: 12px; color: #999; margin: 0 0 6px 0; }
  .info-box p.value { font-size: 14px; color: #eee; margin: 0; line-height: 1.5; }
- .strengths { background: var(--ok-glow); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
- .improvements { background: var(--acc-glow); border: 1px solid rgba(245,158,11,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+ .strengths { background: #ddf1ee; border-radius: 18px; padding: 14px; margin-bottom: 16px; }
+ .improvements { background: #fde9e7; border-radius: 18px; padding: 14px; margin-bottom: 16px; }
  ul { margin: 6px 0 0 0; padding-left: 18px; font-size: 13px; }
  .footer { margin-top: 24px; font-size: 11px; font-family: monospace; color: #666; text-align: center; }
- @media print { body { background: #fff; color: #111; } .score-box, .chart-box, .info-box { background: #f5f5f5; border-color: #ccc; } .strengths { background: #ecfdf5; } .improvements { background: #fffbeb; } }
+ @media print { body { background: #fff; color: #111; } .score-box, .chart-box, .info-box { background: #f5f5f5; } .strengths { background: #ecfdf5; } .improvements { background: #fffbeb; } }
  </style>
  </head>
  <body>
@@ -489,7 +489,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="sticky top-0 z-10 bg-[var(--surface)]">
  {/* Header — arrastrable por si hace falta apartar el modal */}
  <div
- className="border-b p-3 flex justify-between items-center cursor-move select-none"
+ className="p-3 flex justify-between items-center cursor-move select-none"
  onMouseDown={handleDragStart}
  >
  <div className="flex items-center gap-2.5">
@@ -524,7 +524,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click.
  El ref permite capturar el SVG real (gradientes y colores incluidos) al exportar/compartir. */}
  {hasChart && (
- <div ref={chartContainerRef} className="border-b p-3">
+ <div ref={chartContainerRef} className="p-3">
  <EnergyChart
  setlistKey={setlistId}
  chartData={chartData!}
@@ -610,7 +610,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  )}
 
  {error && (
- <div className="bg-[var(--alert)]/80/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-[var(--alert)]/10 rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <div>
  <p className="font-medium text-[var(--alert)]/40">Error</p>
@@ -655,7 +655,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Strengths */}
  {analysis.strengths.length > 0 && (
- <div className="bg-[var(--ok)]/10 rounded-[var(--r-s)] p-3 border-[var(--ok)]">
+ <div className="bg-[var(--ok)]/10 rounded-[var(--r-s)] p-3">
  <p className="text-xs font-medium text-[var(--ok)] mb-1.5">✓ Fortalezas</p>
  <ul className="space-y-1">
  {analysis.strengths.map((strength, idx) => (
