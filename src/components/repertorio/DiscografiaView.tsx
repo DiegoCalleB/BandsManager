@@ -533,7 +533,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={handleAnalyzeAllDynamics}
  disabled={dynamicsAnalysis?.running}
- className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--tentative)]/40 font-bold text-[11px] font-sans flex items-center gap-1 cursor-pointer transition-all"
+ className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--ok)]/40 font-bold text-[11px] font-sans flex items-center gap-1 cursor-pointer transition-all"
  title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
  >
  {dynamicsAnalysis?.running ? (
@@ -551,8 +551,6 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </button>
  </div>
  )}
- </div>
- </div>
  </div>
 
  {/* Albums Stack */}
