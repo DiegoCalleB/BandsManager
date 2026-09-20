@@ -565,13 +565,13 @@ export function EnergyChart({
  <span>{d.icon}</span> {d.label} ({d.score}/20)
  </p>
  {typeof d.bpm ==='number' && (
- <p className="text-sky-300 mt-0.5">🥁 {d.bpm} BPM</p>
+ <p className="text-[var(--ink-3)] mt-0.5">🥁 {d.bpm} BPM</p>
  )}
  {d.tonalidad && (
  <p className="text-[var(--acc)]/70 mt-0.5">🎼 {d.tonalidad}</p>
  )}
  {d.variance > 0 && (
- <p className="text-sky-300 mt-0.5">
+ <p className="text-[var(--ink-3)] mt-0.5">
  🎧 Dinámica interna: {d.variance >= 6 ?'alta (sube y baja mucho)' : d.variance >= 3 ?'media' :'suave'}
  </p>
  )}

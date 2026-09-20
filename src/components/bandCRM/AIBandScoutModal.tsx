@@ -98,7 +98,7 @@ export function AIBandScoutModal({
  onClose();
  };
 
- const bgColor = isStitchLight ?"bg-white" :"bg-[var(--surface)]";
+ const bgColor = isStitchLight ?"bg-[var(--surface)]" :"bg-[var(--surface)]";
  const textColor = isStitchLight ?"text-[var(--ink)]" :"text-[var(--ink)]";
  const subtextColor = isStitchLight ?"text-[var(--ink-2)]" :"text-[var(--ink-2)]";
  const inputBg = isStitchLight ?"bg-[var(--bg)]" :"bg-[var(--surface)]";

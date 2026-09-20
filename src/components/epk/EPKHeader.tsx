@@ -130,7 +130,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onCopyUrl();
  setShowMobileMenu(false);
  }}
- className="w-full text-left flex items-center gap-2 px-3 py-2 text-stone-200 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
+ className="w-full text-left flex items-center gap-2 px-3 py-2 text-[var(--ink)]/80 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
  >
  {copiedPublicUrl ? (
  <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
@@ -147,9 +147,9 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onOpenTutorial();
  setShowMobileMenu(false);
  }}
- className="w-full text-left flex items-center gap-2 px-3 py-2 text-purple-300 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
+ className="w-full text-left flex items-center gap-2 px-3 py-2 text-[var(--tentative)]/80 hover:bg-[var(--surface)]/60 rounded-[var(--r-s)] transition cursor-pointer"
  >
- <HelpCircle className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+ <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span>Guía interactiva EPK</span>
  </button>
  )}
@@ -268,10 +268,10 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  id="tutorial-trigger-epk"
  type="button"
  onClick={onOpenTutorial}
- className="px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-mono font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
+ className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-mono font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
  title="Abrir guía interactiva del Dossier EPK"
  >
- <HelpCircle className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+ <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span>Guía rápida</span>
  </button>
  )}
@@ -327,7 +327,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasLogo
  ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Logo de la banda (Bloque Archivos)"
  >
@@ -340,7 +340,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasBio
  ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Biografía oficial (Bloque Perfil)"
  >
@@ -353,7 +353,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasDossier
  ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Dossier en PDF (Bloque Archivos)"
  >
@@ -366,7 +366,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition flex items-center gap-1 ${
  health.hasRider
  ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Rider técnico (Bloque Archivos)"
  >
@@ -379,7 +379,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numMiembros > 0
  ?'bg-[var(--ok)]/10 text-[var(--ok)] border-[var(--ok)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Miembros de la formación (Bloque Perfil)"
  >
@@ -391,8 +391,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('musica')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTemas > 0
- ?'bg-sky-500/10 text-sky-400 border-[var(--acc)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ ?'bg-[var(--acc)]/10 text-[var(--ink-2)] border-[var(--acc)]/20'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Temas y audio preview (Bloque Música)"
  >
@@ -404,8 +404,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
  onClick={() => onSelectBlock('donaciones')}
  className={`px-2 py-0.5 rounded-md shrink-0 transition ${
  health.numTraducciones > 0
- ?'bg-purple-500/10 text-purple-300 border-[var(--acc)]/20'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-stone-200'
+ ?'bg-[var(--tentative)]/10 text-[var(--tentative)]/80 border-[var(--acc)]/20'
+ :'bg-[var(--surface)]/80 text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]/80'
  }`}
  title="Versiones en otros idiomas (Bloque Donaciones & Idiomas)"
  >

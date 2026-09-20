@@ -163,7 +163,7 @@ export function MemberNotesModal({
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
  <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden ${
- isStitchLight ?'bg-white' :'bg-[var(--bg)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  {/* Header */}
  <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)] shrink-0">
@@ -198,7 +198,7 @@ export function MemberNotesModal({
  <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
  <span className="text-[var(--ink-2)] uppercase font-bold">Preparación de la banda:</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--ok)]/10 text-[var(--ok)]">✅ {summary.lista} listos</span>
- <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-[var(--acc)]/80">🔶 {summary.casiLista} casi</span>
+ <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]/80">🔶 {summary.casiLista} casi</span>
  <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)]">🌱 {summary.aprendiendo} aprendiendo</span>
  {summary.sinOpinar > 0 && (
  <span className="px-2 py-0.5 rounded-full bg-[var(--surface)]/80 text-[var(--ink-2)]">{summary.sinOpinar} sin marcar</span>
@@ -237,7 +237,7 @@ export function MemberNotesModal({
  onChange={(e) => setGeneralRepertorioNote(e.target.value)}
  placeholder="ej. Arrancar directo tras la cuenta de 4, final en seco..."
  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)] focus:border-[var(--acc)]' :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)] focus:border-[var(--acc)]' :'bg-[var(--surface)] text-[var(--ink-2)] focus:border-[var(--hair)]'
  }`}
  />
  </div>
@@ -261,7 +261,7 @@ export function MemberNotesModal({
  {/* Add Custom Member Form */}
  {showAddCustomMember && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${
- isStitchLight ?'bg-indigo-50/70 border-[var(--acc)]' :'bg-[var(--surface)] border-[var(--hair)]/40'
+ isStitchLight ?'bg-[var(--tentative)]/5/70 border-[var(--acc)]' :'bg-[var(--surface)] border-[var(--hair)]/40'
  }`}>
  <input
  type="text"
@@ -269,7 +269,7 @@ export function MemberNotesModal({
  value={newMemberName}
  onChange={(e) => setNewMemberName(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  <input
@@ -278,7 +278,7 @@ export function MemberNotesModal({
  value={newMemberInstrument}
  onChange={(e) => setNewMemberInstrument(e.target.value)}
  className={`text-xs p-2 rounded-[var(--r-s)] flex-1 min-w-[140px] ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  <div className="flex items-center gap-1.5">

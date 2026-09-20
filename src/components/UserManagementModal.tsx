@@ -266,7 +266,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <div>
  <h3 className="font-bold font-display uppercase tracking-wider text-base flex items-center gap-2">
  <span>Gestión de Miembros de la Banda</span>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400 -indigo-500/30">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
  Panel Admin
  </span>
  </h3>
@@ -374,7 +374,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  <span>Admin</span>
  </span>
  ) : (
- <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-sky-500/15 text-sky-400 -blue-500/30">
+ <span className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -blue-500/30">
  Miembro
  </span>
  )}
@@ -449,14 +449,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  onChange={(e) => setChangePasswordValue(e.target.value)}
  placeholder="Nueva contraseña secreta..."
  className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono outline-none ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}
  />
  <button
  type="button"
  onClick={() => handleChangePassword(u.id)}
  disabled={loading}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
  >
  <Check className="w-3.5 h-3.5" />
  <span>Guardar</span>

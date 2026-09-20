@@ -43,10 +43,10 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     recommendedFor: 'Rock, Metal, Indie, Pop-Rock, Punk, Ska, Mestizaje',
     icon: Flame,
     preview: {
-      bg: 'bg-slate-950',
+      bg: 'bg-[var(--bg)]',
       cardBg: 'bg-[var(--bg)]',
       accent: 'bg-[var(--acc)]',
-      border: 'border-amber-500/40',
+      border: 'border-[var(--hair)]',
       text: 'text-[var(--acc)]/80',
       pill: 'bg-[var(--acc)]/20 text-[var(--acc)]/80'
     }
@@ -60,11 +60,11 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     icon: Feather,
     preview: {
       bg: 'bg-[#f8f8f6]',
-      cardBg: 'bg-white',
+      cardBg: 'bg-[var(--surface)]',
       accent: 'bg-[var(--bg)]',
-      border: 'border-stone-300',
+      border: 'border-[var(--hair)]',
       text: 'text-[var(--ink)]',
-      pill: 'bg-[var(--sunken)]/80 text-stone-800'
+      pill: 'bg-[var(--sunken)]/80 text-[var(--ink)]'
     }
   },
   {
@@ -93,10 +93,10 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
     preview: {
       bg: 'bg-[#181411]',
       cardBg: 'bg-[#241c17]',
-      accent: 'bg-orange-600',
-      border: 'border-orange-700/40',
+      accent: 'bg-[var(--acc)]',
+      border: 'border-[var(--hair)]',
       text: 'text-[var(--acc)]/80',
-      pill: 'bg-orange-950/60 text-[var(--acc)]/80'
+      pill: 'bg-[var(--accent-alt)]/10/60 text-[var(--acc)]/80'
     }
   }
 ];
@@ -277,119 +277,119 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
   switch (templateId) {
     case 'minimal':
       return {
-        pageBg: 'bg-[#f8f8f6] text-[var(--ink)] selection:bg-[var(--bg)] selection:text-white',
-        topBar: 'bg-white/95 border-stone-200 text-[var(--ink)] shadow-xs',
-        topBarBtn: 'bg-stone-100 hover:bg-[var(--sunken)]/80 text-stone-800 border-stone-300',
+        pageBg: 'bg-[#f8f8f6] text-[var(--ink)] selection:bg-[var(--bg)] selection:text-[var(--ink)]',
+        topBar: 'bg-[var(--surface)]/95 border-[var(--hair)] text-[var(--ink)] shadow-xs',
+        topBarBtn: 'bg-[var(--sunken)] hover:bg-[var(--sunken)]/80 text-[var(--ink)] border-[var(--hair)]',
         heroNoPhoto: 'bg-gradient-to-b from-stone-200 via-stone-100 to-[#f8f8f6]',
         heroOverlay: 'bg-gradient-to-t from-[#f8f8f6] via-[#f8f8f6]/85 to-[#f8f8f6]/40',
-        heroTitleClass: 'text-stone-950 leading-[0.92] tracking-normal font-serif text-[13vw] sm:text-[6rem] lg:text-[7.5rem] font-bold',
+        heroTitleClass: 'text-[var(--ink)] leading-[0.92] tracking-normal font-serif text-[13vw] sm:text-[6rem] lg:text-[7.5rem] font-bold',
         heroTitleStyle: { fontFamily: "'Playfair Display', Georgia, serif" },
         heroSubtitle: 'text-[var(--ink-3)] font-serif italic',
-        sectionHeadingClass: 'text-stone-950 border-b border-stone-300 pb-4 font-serif font-bold tracking-normal',
+        sectionHeadingClass: 'text-[var(--ink)] border-b border-[var(--hair)] pb-4 font-serif font-bold tracking-normal',
         sectionHeadingStyle: { fontFamily: "'Playfair Display', Georgia, serif" },
-        card: 'bg-white border-stone-200/90 shadow-xs text-stone-800',
-        cardHighlight: 'bg-white border-stone-300 shadow-xs hover:border-stone-400 text-[var(--ink)]',
+        card: 'bg-[var(--surface)] border-[var(--hair)]/90 shadow-xs text-[var(--ink)]',
+        cardHighlight: 'bg-[var(--surface)] border-[var(--hair)] shadow-xs hover:border-[var(--hair)] text-[var(--ink)]',
         statNumber: 'text-[var(--ink)] font-serif font-bold',
-        badge: 'bg-stone-100 text-stone-800 border-stone-300 font-serif',
-        accentBtn: 'bg-[var(--bg)] hover:bg-stone-800 text-white font-semibold shadow-xs',
-        accentBtnSubtle: 'bg-stone-100 text-[var(--ink)] border-stone-300 hover:bg-[var(--sunken)]/80',
+        badge: 'bg-[var(--sunken)] text-[var(--ink)] border-[var(--hair)] font-serif',
+        accentBtn: 'bg-[var(--bg)] hover:bg-[var(--sunken)] text-[var(--ink)] font-semibold shadow-xs',
+        accentBtnSubtle: 'bg-[var(--sunken)] text-[var(--ink)] border-[var(--hair)] hover:bg-[var(--sunken)]/80',
         accentText: 'text-[var(--ink)]',
-        bookingCard: 'bg-stone-100 border-stone-300 shadow-xs',
-        bookingTitle: 'text-stone-950 font-serif font-bold',
+        bookingCard: 'bg-[var(--sunken)] border-[var(--hair)] shadow-xs',
+        bookingTitle: 'text-[var(--ink)] font-serif font-bold',
         memberRole: 'text-[var(--ink-3)] font-serif italic',
-        memberCard: 'bg-white border-stone-200 shadow-xs',
+        memberCard: 'bg-[var(--surface)] border-[var(--hair)] shadow-xs',
         quoteIcon: 'text-[var(--ink-2)]',
         quoteMedium: 'text-[var(--ink)] font-serif font-bold',
-        footer: 'text-stone-500 border-stone-300',
-        stickyPlayer: 'bg-white/95 border-stone-300 text-[var(--ink)] shadow-xl'
+        footer: 'text-[var(--ink-2)] border-[var(--hair)]',
+        stickyPlayer: 'bg-[var(--surface)]/95 border-[var(--hair)] text-[var(--ink)] shadow-xl'
       };
 
     case 'neon':
       return {
-        pageBg: 'bg-[#090713] text-[var(--tentative)]/20 selection:bg-[var(--tentative)]/80 selection:text-white',
+        pageBg: 'bg-[#090713] text-[var(--tentative)]/20 selection:bg-[var(--tentative)]/80 selection:text-[var(--ink)]',
         topBar: 'bg-[#110d24]/90 border-[var(--tentative)]/20 text-[var(--tentative)]/20 shadow-lg',
         topBarBtn: 'bg-[#181335] hover:bg-[#231b4d] text-[var(--tentative)]/40 border-[var(--tentative)]/40',
         heroNoPhoto: 'bg-gradient-to-br from-[#1b0e3d] via-[#090713] to-[#041d33]/50',
         heroOverlay: 'bg-gradient-to-t from-[#090713] via-[#090713]/85 to-[#090713]/50',
-        heroTitleClass: 'text-white uppercase leading-[0.88] tracking-widest text-[14vw] sm:text-[6.5rem] lg:text-[8rem] font-black drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]',
+        heroTitleClass: 'text-[var(--ink)] uppercase leading-[0.88] tracking-widest text-[14vw] sm:text-[6.5rem] lg:text-[8rem] font-black drop-shadow-[0_0_25px_rgba(217,70,239,0.35)]',
         heroTitleStyle: { fontFamily: "'Space Grotesk', system-ui, sans-serif" },
         heroSubtitle: 'text-[var(--acc)]/80 font-mono tracking-wider',
-        sectionHeadingClass: 'text-white uppercase tracking-wider border-b border-fuchsia-900/60 pb-4',
+        sectionHeadingClass: 'text-[var(--ink)] uppercase tracking-wider border-b border-[var(--hair)] pb-4',
         sectionHeadingStyle: { fontFamily: "'Space Grotesk', system-ui, sans-serif" },
         card: 'bg-[#120e24] border-[var(--tentative)]/20 text-[var(--tentative)]/20',
         cardHighlight: 'bg-[#161030] border-[var(--tentative)]/30 shadow-[0_0_20px_rgba(217,70,239,0.1)] hover:border-[var(--tentative)]/80/50',
         statNumber: 'text-[var(--acc)]/80 font-mono drop-shadow-[0_0_8px_rgba(34,211,238,0.3)]',
         badge: 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--tentative)]/40',
-        accentBtn: 'bg-fuchsia-600 hover:bg-[var(--tentative)] text-white font-bold shadow-[0_0_20px_rgba(217,70,239,0.4)]',
+        accentBtn: 'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold shadow-[0_0_20px_rgba(217,70,239,0.4)]',
         accentBtnSubtle: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--tentative)]/40 hover:bg-[var(--tentative)]/25',
         accentText: 'text-[var(--tentative)]/80',
         bookingCard: 'bg-[#171133] border-[var(--tentative)]/40 text-[var(--tentative)]/20 shadow-[0_0_25px_rgba(var(--tentative-rgb),0.12)]',
         bookingTitle: 'text-[var(--tentative)]/80 font-bold',
         memberRole: 'text-[var(--acc)]/80 font-mono',
-        memberCard: 'bg-[#120e24] border-purple-900/50',
+        memberCard: 'bg-[#120e24] border-[var(--hair)]',
         quoteIcon: 'text-[var(--tentative)]/40',
         quoteMedium: 'text-[var(--acc)]/80',
-        footer: 'text-[var(--tentative)]/60 border-purple-900/60',
+        footer: 'text-[var(--tentative)]/60 border-[var(--hair)]',
         stickyPlayer: 'bg-[#110d24]/95 border-[var(--tentative)]/40 text-[var(--tentative)]/20 shadow-2xl'
       };
 
     case 'vintage':
       return {
-        pageBg: 'bg-[#171310] text-amber-50 selection:bg-orange-600 selection:text-white',
-        topBar: 'bg-[#201a15]/95 border-amber-900/40 text-amber-100 shadow-md',
-        topBarBtn: 'bg-[#2b221c] hover:bg-[#382d25] text-amber-200 border-amber-800/40',
+        pageBg: 'bg-[#171310] text-amber-50 selection:bg-[var(--acc)] selection:text-[var(--ink)]',
+        topBar: 'bg-[#201a15]/95 border-[var(--hair)]/40 text-[var(--ink)] shadow-md',
+        topBarBtn: 'bg-[#2b221c] hover:bg-[#382d25] text-[var(--ink-2)] border-[var(--hair)]/40',
         heroNoPhoto: 'bg-gradient-to-br from-[#2e2119] via-[#171310] to-[#120d0b]',
         heroOverlay: 'bg-gradient-to-t from-[#171310] via-[#171310]/85 to-[#171310]/50',
-        heroTitleClass: 'text-amber-100 uppercase leading-[0.9] tracking-wider text-[14vw] sm:text-[6.5rem] lg:text-[8rem] font-black',
+        heroTitleClass: 'text-[var(--ink)] uppercase leading-[0.9] tracking-wider text-[14vw] sm:text-[6.5rem] lg:text-[8rem] font-black',
         heroTitleStyle: { fontFamily: "'Courier New', Georgia, serif" },
         heroSubtitle: 'text-[var(--acc)]/80 font-mono',
-        sectionHeadingClass: 'text-amber-100 uppercase tracking-wider border-b border-amber-900/50 pb-4',
+        sectionHeadingClass: 'text-[var(--ink)] uppercase tracking-wider border-b border-[var(--hair)]/50 pb-4',
         sectionHeadingStyle: { fontFamily: "'Courier New', Georgia, serif" },
-        card: 'bg-[#201a16] border-amber-900/40 text-amber-100 shadow-md',
-        cardHighlight: 'bg-[#261e19] border-orange-700/35 text-amber-100 hover:border-orange-600/50',
+        card: 'bg-[#201a16] border-[var(--hair)]/40 text-[var(--ink)] shadow-md',
+        cardHighlight: 'bg-[#261e19] border-[var(--hair)] text-[var(--ink)] hover:border-[var(--hair)]',
         statNumber: 'text-[var(--acc)]/80 font-mono',
-        badge: 'bg-orange-950/60 text-[var(--acc)]/80 border-orange-800/60',
-        accentBtn: 'bg-orange-600 hover:bg-[var(--acc)] text-stone-950 font-bold shadow-md',
-        accentBtnSubtle: 'bg-orange-600/15 text-[var(--acc)]/80 border-orange-600/40 hover:bg-orange-600/25',
+        badge: 'bg-[var(--accent-alt)]/10/60 text-[var(--acc)]/80 border-[var(--hair)]',
+        accentBtn: 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold shadow-md',
+        accentBtnSubtle: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border-[var(--hair)] hover:bg-[var(--acc)]/25',
         accentText: 'text-[var(--acc)]/80',
-        bookingCard: 'bg-[#261f1a] border-orange-800/40 text-amber-100 shadow-md',
+        bookingCard: 'bg-[#261f1a] border-[var(--hair)] text-[var(--ink)] shadow-md',
         bookingTitle: 'text-[var(--acc)]/80 font-bold',
         memberRole: 'text-[var(--acc)]/80/90 font-mono',
-        memberCard: 'bg-[#201a16] border-amber-900/40',
-        quoteIcon: 'text-orange-500/40',
+        memberCard: 'bg-[#201a16] border-[var(--hair)]/40',
+        quoteIcon: 'text-[var(--accent-alt)]/40',
         quoteMedium: 'text-[var(--acc)]/80 font-mono',
-        footer: 'text-amber-600/70 border-amber-900/40',
-        stickyPlayer: 'bg-[#201a16]/95 border-orange-700/40 text-amber-100 shadow-2xl'
+        footer: 'text-[var(--accent-alt)]/70 border-[var(--hair)]/40',
+        stickyPlayer: 'bg-[#201a16]/95 border-[var(--hair)] text-[var(--ink)] shadow-2xl'
       };
 
     case 'stage':
     default:
       return {
-        pageBg: 'bg-slate-950 text-slate-100 selection:bg-[var(--acc)] selection:text-slate-950',
-        topBar: 'bg-[var(--bg)]/90 border-slate-800/80 text-slate-100',
-        topBarBtn: 'bg-[var(--ink)]/40 hover:bg-[var(--ink-2)]/40 text-[var(--ink)]/80 border-slate-700',
+        pageBg: 'bg-[var(--bg)] text-[var(--ink)] selection:bg-[var(--acc)] selection:text-[var(--ink)]',
+        topBar: 'bg-[var(--bg)]/90 border-[var(--hair)]/80 text-[var(--ink)]',
+        topBarBtn: 'bg-[var(--ink)]/40 hover:bg-[var(--ink-2)]/40 text-[var(--ink)]/80 border-[var(--hair)]',
         heroNoPhoto: 'bg-gradient-to-br from-slate-900 via-slate-950 to-amber-950/30',
         heroOverlay: 'bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/50',
-        heroTitleClass: 'text-white uppercase leading-[0.88] tracking-tight text-[15vw] sm:text-[7rem] lg:text-[9rem]',
+        heroTitleClass: 'text-[var(--ink)] uppercase leading-[0.88] tracking-tight text-[15vw] sm:text-[7rem] lg:text-[9rem]',
         heroTitleStyle: { fontFamily: "'Anton', 'Oswald', sans-serif" },
-        heroSubtitle: 'text-amber-300',
-        sectionHeadingClass: 'text-white uppercase tracking-wide border-b border-slate-800/80 pb-4',
+        heroSubtitle: 'text-[var(--ink-2)]',
+        sectionHeadingClass: 'text-[var(--ink)] uppercase tracking-wide border-b border-[var(--hair)]/80 pb-4',
         sectionHeadingStyle: { fontFamily: "'Anton', 'Oswald', sans-serif" },
-        card: 'bg-slate-950 border-slate-800',
-        cardHighlight: 'bg-[var(--bg)]/90 border-amber-500/20 shadow-lg hover:border-amber-500/40',
+        card: 'bg-[var(--bg)] border-[var(--hair)]',
+        cardHighlight: 'bg-[var(--bg)]/90 border-[var(--hair)] shadow-lg hover:border-[var(--hair)]',
         statNumber: 'text-[var(--acc)]/80 font-mono',
-        badge: 'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-amber-500/30',
-        accentBtn: 'bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-slate-950 font-bold shadow-lg',
-        accentBtnSubtle: 'bg-[var(--acc)]/15 text-amber-300 border-amber-500/30 hover:bg-[var(--acc)]/25',
+        badge: 'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-[var(--hair)]',
+        accentBtn: 'bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--ink)] font-bold shadow-lg',
+        accentBtnSubtle: 'bg-[var(--acc)]/15 text-[var(--ink-2)] border-[var(--hair)] hover:bg-[var(--acc)]/25',
         accentText: 'text-[var(--acc)]/80',
-        bookingCard: 'bg-[var(--acc)]/10 border-amber-500/30',
+        bookingCard: 'bg-[var(--acc)]/10 border-[var(--hair)]',
         bookingTitle: 'text-[var(--acc)]/80',
         memberRole: 'text-[var(--acc)]/80/90',
-        memberCard: 'bg-slate-950 border-slate-800',
+        memberCard: 'bg-[var(--bg)] border-[var(--hair)]',
         quoteIcon: 'text-[var(--acc)]/40',
         quoteMedium: 'text-[var(--acc)]/80',
-        footer: 'text-[var(--ink-2)] border-slate-800',
-        stickyPlayer: 'bg-[var(--bg)]/95 border-amber-500/40 text-white'
+        footer: 'text-[var(--ink-2)] border-[var(--hair)]',
+        stickyPlayer: 'bg-[var(--bg)]/95 border-[var(--hair)] text-[var(--ink)]'
       };
   }
 }

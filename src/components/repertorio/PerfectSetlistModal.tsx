@@ -456,13 +456,13 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
  <button
  onClick={() => handleGenerateWithFeedback(true)}
  title="Crea una copia nueva desde cero en vez de reutilizar la actual"
- className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  🆕 Nueva copia
  </button>
  <button
  onClick={onClose}
- className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  Cerrar
  </button>

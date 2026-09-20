@@ -20,13 +20,13 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  </button>
 
  <div className="flex items-center gap-3 border-b border-[var(--acc)]/20 pb-4">
- <div className="p-3 rounded-[var(--r-m)] bg-purple-500/20 text-purple-300">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80">
  <Keyboard className="w-6 h-6" />
  </div>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
  Atajos de Teclado Tipo Cubase DAW
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/30 text-purple-200">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">
  Modo Studio
  </span>
  </h3>
@@ -39,7 +39,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Play / Pausa</span>
- <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  Espacio
  </kbd>
  </div>
@@ -60,21 +60,21 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Alternar Bucle (Loop ON/OFF)</span>
- <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  L / /
  </kbd>
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue In (Inicio Bucle)</span>
- <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-indigo-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/50 font-bold shadow">
  I
  </kbd>
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Fijar Cue Out (Fin Bucle)</span>
- <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  O
  </kbd>
  </div>
@@ -95,14 +95,14 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
 
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Retroceder 5s / 15s</span>
- <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  ← / Shift + ←
  </kbd>
  </div>
 
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 border-[var(--hair)] flex items-center justify-between">
  <span className="text-[var(--ink-2)]">Avanzar 5s / 15s</span>
- <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-purple-300 font-bold shadow">
+ <kbd className="px-2 py-1 rounded bg-[var(--sunken)] text-[var(--tentative)]/80 font-bold shadow">
  → / Shift + →
  </kbd>
  </div>
@@ -129,7 +129,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
  <button
  type="button"
  onClick={onClose}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 transition-all cursor-pointer shadow-lg"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-all cursor-pointer shadow-lg"
  >
  Entendido
  </button>

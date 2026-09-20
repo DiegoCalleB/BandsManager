@@ -77,7 +77,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
  <div className={`relative w-full max-w-lg my-auto rounded-[var(--r-l)] shadow-2xl p-6 overflow-hidden ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]'
  }`}>
  <div className="flex items-center justify-between pb-4 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  </div>
 
  {statusMessage && (
- <div className="p-3 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-indigo-300 flex items-center gap-2">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 flex items-center gap-2">
  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />}
  <span>{statusMessage}</span>
  </div>
@@ -125,7 +125,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
  {r.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-[var(--ok)]" /> {r.email}</span>}
  {r.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-[var(--acc)]" /> {r.phone}</span>}
- {r.instagram && <span className="flex items-center gap-1"><Instagram className="w-3 h-3 text-pink-400" /> {r.instagram}</span>}
+ {r.instagram && <span className="flex items-center gap-1"><Instagram className="w-3 h-3 text-[var(--alert)]" /> {r.instagram}</span>}
  </div>
  </div>
  ))}

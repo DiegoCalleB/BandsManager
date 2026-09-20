@@ -231,7 +231,7 @@ export function MetronomeModal({
  <select
  value={selectedSongId}
  onChange={handleSelectSong}
- className="w-full bg-zinc-950 border-[var(--hair)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none focus:/50"
+ className="w-full bg-[var(--bg)] border-[var(--hair)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none focus:/50"
  >
  <option value="">-- Seleccionar Canción --</option>
  {songs.map(song => (

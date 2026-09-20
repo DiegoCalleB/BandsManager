@@ -461,18 +461,18 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("epk")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
  >
- <BookOpen className="w-4 h-4 text-purple-400" />
+ <BookOpen className="w-4 h-4 text-[var(--acc)]" />
  <span>Dossier EPK</span>
  </button>
  {hasModuleAccess(currentUser?.plan,"repertorio") && (
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("repertorio")}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-3)] font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
  >
- <Disc3 className="w-4 h-4 text-sky-400" />
+ <Disc3 className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Repertorio</span>
  </button>
  )}
@@ -673,7 +673,7 @@ export default function Dashboard({
  <div>
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)]">
  <BookOpen className="w-5 h-5" />
  </div>
  <div>
@@ -685,7 +685,7 @@ export default function Dashboard({
  </p>
  </div>
  </div>
- <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/10 text-purple-300">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--tentative)]/10 text-[var(--tentative)]/80">
  Público
  </span>
  </div>
@@ -698,7 +698,7 @@ export default function Dashboard({
  <button
  type="button"
  onClick={() => onNavigate && onNavigate("epk")}
- className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-purple-500 hover:bg-purple-400 text-[var(--ink)] text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+ className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
  >
  <BookOpen className="w-4 h-4" />
  <span>Editar Dossier EPK</span>

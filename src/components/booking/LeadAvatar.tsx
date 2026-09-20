@@ -95,7 +95,7 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
  onError={() => setImgError(true)}
  />
  ) : (
- <div className={`${containerSize} bg-[var(--sunken)] flex items-center justify-center shrink-0 shadow-inner group-hover/avatar:bg-zinc-700 transition-colors`}>
+ <div className={`${containerSize} bg-[var(--sunken)] flex items-center justify-center shrink-0 shadow-inner group-hover/avatar:bg-[var(--ink-3)]/60 transition-colors`}>
  <span>{emoji}</span>
  </div>
  )}

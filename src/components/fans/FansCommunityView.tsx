@@ -169,21 +169,21 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  label:'Superfan Directos',
  icon: Flame,
  bg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
- dot:'bg-rose-400'
+ dot:'bg-[var(--alert)]'
  };
  case'backstage':
  return {
  label:'Backstage VIP',
  icon: Award,
- bg:'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30',
- dot:'bg-purple-400'
+ bg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--acc)]/30',
+ dot:'bg-[var(--acc)]'
  };
  default:
  return {
  label:'Oyente Fiel',
  icon: Music,
  bg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
- dot:'bg-emerald-400'
+ dot:'bg-[var(--ok)]'
  };
  }
  };
@@ -500,7 +500,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
  onClick={() => handleReactFan(fan.id,'guitars')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
  fanUserReactions.guitars 
- ?'bg-purple-500/20 text-purple-300 shadow-xs font-bold' 
+ ?'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 shadow-xs font-bold' 
  :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
  }`}
  title="Púa de Oro / Rock On"

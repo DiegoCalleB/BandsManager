@@ -78,7 +78,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
 
  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] border-[var(--hair)] space-y-1">
  <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
- <Users className="w-3.5 h-3.5 text-pink-400" /> Comunidad / Seguidores
+ <Users className="w-3.5 h-3.5 text-[var(--alert)]" /> Comunidad / Seguidores
  </label>
  <input
  type="text"

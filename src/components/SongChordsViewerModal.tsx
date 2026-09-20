@@ -238,7 +238,7 @@ export function SongChordsViewerModal({
  <div className="flex items-center gap-2">
  <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">{formatSongTitle(song.titulo)}</h2>
  {song.esVersionCovers && (
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-[var(--acc)]/80">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
  Cover
  </span>
  )}
@@ -250,7 +250,7 @@ export function SongChordsViewerModal({
  {song.afinacion && (
  <>
  <span>•</span>
- <span>Afinación: <strong className="text-purple-300">{song.afinacion}</strong></span>
+ <span>Afinación: <strong className="text-[var(--tentative)]/80">{song.afinacion}</strong></span>
  </>
  )}
  {song.duracion && (
@@ -269,10 +269,10 @@ export function SongChordsViewerModal({
  type="button"
  onClick={handleGenerateWithAi}
  disabled={isGeneratingAi}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-purple-600 hover:bg-purple-500 text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
  title={song.audioPrincipalUrl ?'Reanalizar escuchando el audio real de la canción' :'Generar cifrado y guía con IA (sin audio disponible)'}
  >
- <Wand2 className={`w-4 h-4 text-purple-200 ${isGeneratingAi ?'animate-spin' :''}`} />
+ <Wand2 className={`w-4 h-4 text-[var(--acc)]/40 ${isGeneratingAi ?'animate-spin' :''}`} />
  <span>{isGeneratingAi ?'Generando...' :'IA Cifrado'}</span>
  </button>
 
@@ -280,7 +280,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setShowStructureUploadModal(true)}
- className="p-2 rounded-[var(--r-m)] bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 transition cursor-pointer"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)] transition cursor-pointer"
  title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
  >
  <Upload className="w-4 h-4" />
@@ -329,7 +329,7 @@ export function SongChordsViewerModal({
  onClick={() => setActiveTab('substitute')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
  activeTab ==='substitute'
- ?'bg-purple-600 text-[var(--ink)] shadow'
+ ?'bg-[var(--acc)] text-[var(--ink)] shadow'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -407,7 +407,7 @@ export function SongChordsViewerModal({
  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
  className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
  isAutoScrolling
- ?'bg-emerald-600 text-[var(--ink)] animate-pulse'
+ ?'bg-[var(--ok)] text-[var(--ink)] animate-pulse'
  :'bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Iniciar/Pausar Desfile Automático"
@@ -441,7 +441,7 @@ export function SongChordsViewerModal({
  onClick={() => setShowChordDiagrams(!showChordDiagrams)}
  className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
  showChordDiagrams
- ?'bg-purple-950/40 border-[var(--acc)]/50 text-purple-300'
+ ?'bg-[var(--acc)]/90/40 border-[var(--acc)]/50 text-[var(--tentative)]/80'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -498,14 +498,14 @@ export function SongChordsViewerModal({
  {/* SUBSTITUTE QUICK SUMMARY BANNER */}
  {guiaSustituto?.estructura && (
  <div className="bg-gradient-to-r from-purple-950/40 via-[var(--surface)] to-[var(--sunken)] p-3.5 rounded-[var(--r-m)] text-xs font-mono space-y-1.5">
- <div className="flex items-center justify-between text-purple-300 font-bold">
+ <div className="flex items-center justify-between text-[var(--tentative)]/80 font-bold">
  <span className="flex items-center gap-1.5">
  <Zap className="w-4 h-4 text-[var(--acc)]" />
  Estructura Rápida para el Músico:
  </span>
  <button
  onClick={() => setActiveTab('substitute')}
- className="text-[10px] underline text-purple-400 hover:text-[var(--ink)]"
+ className="text-[10px] underline text-[var(--acc)] hover:text-[var(--ink)]"
  >
  Ver Ficha Completa →
  </button>
@@ -528,12 +528,12 @@ export function SongChordsViewerModal({
  <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
  <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] shadow-xl space-y-5">
  <div className="flex items-center gap-3 border-b border-[var(--acc)]/30 pb-4">
- <div className="p-3 rounded-[var(--r-m)] bg-purple-600 text-[var(--ink)] shadow-lg">
+ <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] shadow-lg">
  <UserCheck className="w-6 h-6" />
  </div>
  <div>
  <h3 className="text-lg font-bold text-[var(--ink)]">Ficha de Sustitución Urgente</h3>
- <p className="text-xs text-purple-300 font-mono">
+ <p className="text-xs text-[var(--tentative)]/80 font-mono">
  Resumen express para tocar el tema correctamente en directo o ensayo sin margen de error.
  </p>
  </div>
@@ -569,7 +569,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] border-[var(--hair)]10 space-y-1.5">
- <span className="text-purple-300 font-bold block text-[11px] uppercase tracking-wider">
+ <span className="text-[var(--tentative)]/80 font-bold block text-[11px] uppercase tracking-wider">
  4. Capo / Afinación
  </span>
  <p className="text-[var(--ink-2)] leading-relaxed">
@@ -591,7 +591,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={() => setActiveTab('edit')}
- className="px-4 py-2 rounded-[var(--r-m)] bg-purple-900/60 hover:bg-purple-800 text-purple-200 text-xs font-mono font-bold transition cursor-pointer flex items-center gap-2"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/80/60 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-mono font-bold transition cursor-pointer flex items-center gap-2"
  >
  <Edit3 className="w-4 h-4" />
  <span>Editar esta Ficha de Sustitución</span>
@@ -613,7 +613,7 @@ export function SongChordsViewerModal({
  <button
  type="button"
  onClick={handleSaveEdits}
- className="px-4 py-2 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg"
  >
  <Save className="w-4 h-4" />
  <span>Guardar Cambios</span>
@@ -634,7 +634,7 @@ export function SongChordsViewerModal({
  </div>
 
  <div className="pt-3 border-t space-y-3">
- <h4 className="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider">
+ <h4 className="text-xs font-mono font-bold text-[var(--tentative)]/80 uppercase tracking-wider">
  Campos de la Ficha del Músico Sustituto:
  </h4>
 
@@ -753,8 +753,8 @@ function renderFormattedChordSheet(text: string) {
  // Check if section header like [Intro], [Estribillo], [Solo], etc.
  if (/^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(line.trim())) {
  return (
- <div key={idx} className="text-purple-400 font-bold text-base my-2 pt-2 border-t /60 flex items-center gap-2">
- <span className="px-2.5 py-0.5 rounded bg-purple-950/80 text-purple-300">
+ <div key={idx} className="text-[var(--acc)] font-bold text-base my-2 pt-2 border-t /60 flex items-center gap-2">
+ <span className="px-2.5 py-0.5 rounded bg-[var(--acc)]/90/80 text-[var(--tentative)]/80">
  {line.trim()}
  </span>
  </div>

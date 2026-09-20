@@ -22,11 +22,11 @@ interface BulkBandActionBarProps {
 }
 
 const BAND_STATUS_OPTIONS: { status: BandRelationshipStatus; label: string; color: string; icon: any }[] = [
- { status:'sin_contactar', label:'Sin Contactar', color:'bg-zinc-700/40 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
- { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40', icon: Repeat },
+ { status:'sin_contactar', label:'Sin Contactar', color:'bg-[var(--ink-3)]/60/40 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
+ { status:'intercambio_propuesto', label:'Intercambio Propuesto', color:'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/40', icon: Repeat },
  { status:'pendiente_respuesta', label:'Pendiente Respuesta', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
  { status:'concierto_agendado', label:'Concierto / Bolo Agendado', color:'bg-[var(--ok)]/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },
- { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40', icon: Users },
+ { status:'colegas_aliados', label:'Colegas / Aliados de Gira', color:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/40', icon: Users },
  { status:'no_disponible', label:'No Disponible / Descartado', color:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/40', icon: ShieldAlert },
 ];
 
@@ -124,7 +124,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
+ ?'bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]'
  :'bg-gradient-to-r from-amber-0/20 to-amber-600/20 hover:from-amber-0/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
  }`}
  title="Cambiar estado de relación de las bandas seleccionadas"
@@ -180,11 +180,11 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onBulkGeneratePitch}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
- 'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-purple-200'
+ 'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-[var(--acc)]/40'
  }`}
  title="Redactar propuestas de intercambio (Date Swaps) con IA"
  >
- <Sparkles className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
  <span className="hidden sm:inline">Swaps IA</span>
  <span className="sm:hidden">Swaps</span>
  </button>
@@ -194,7 +194,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={() => onBulkToggleFavorite(true)}
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
- 'bg-[var(--sunken)] hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--acc)]/70'
+ 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 border-[var(--hair)]700 text-[var(--acc)]/70'
  }`}
  title="Marcar bandas como favoritas"
  >
@@ -208,7 +208,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--sunken)] hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--ink)]'
+ :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 border-[var(--hair)]700 text-[var(--ink)]'
  }`}
  title="Exportar bandas seleccionadas a CSV"
  >
@@ -268,7 +268,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(false)}
- className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>
@@ -278,7 +278,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  setIsConfirmDeleteOpen(false);
  onBulkDelete();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
  >
  Sí, eliminar {selectedCount}
  </button>

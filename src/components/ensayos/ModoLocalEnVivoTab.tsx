@@ -365,7 +365,7 @@ export function ModoLocalEnVivoTab({
  <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-mono text-xs font-bold shadow-2xl flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
  swipeToast.dir ==='left' 
  ?'bg-[var(--acc)]/60 text-[var(--ink)] shadow-amber-400/20' 
- :'bg-emerald-400 text-[var(--ink)] border-[var(--ok)] shadow-emerald-400/20'
+ :'bg-[var(--ok)] text-[var(--ink)] border-[var(--ok)] shadow-emerald-400/20'
  }`}>
  <span>{swipeToast.dir ==='left' ?'⏩' :'⏪'}</span>
  <span>{swipeToast.text}</span>
@@ -506,7 +506,7 @@ export function ModoLocalEnVivoTab({
  </div>
  <button
  onClick={() => setViewMode('atril')}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-black cursor-pointer shadow-md transition-all active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-mono font-black cursor-pointer shadow-md transition-all active:scale-95"
  >
  Abrir Atril 📜
  </button>
@@ -580,8 +580,8 @@ export function ModoLocalEnVivoTab({
  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
  className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md ${
  isMetronomeActive
- ?'bg-[var(--alert)] text-[var(--ink)] hover:bg-rose-400 shadow-rose-500/20'
- :'bg-[var(--ok)] text-[var(--ink)] hover:bg-emerald-400 shadow-emerald-500/20'
+ ?'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)] shadow-rose-500/20'
+ :'bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] shadow-emerald-500/20'
  }`}
  >
  {isMetronomeActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -705,7 +705,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === agenda.length - 1}
  onClick={() => setActiveIndex(prev => prev + 1)}
- className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 disabled:opacity-30 font-mono font-black text-xs cursor-pointer transition-all shadow-md shadow-amber-400/20"
+ className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-30 font-mono font-black text-xs cursor-pointer transition-all shadow-md shadow-amber-400/20"
  >
  <span>Siguiente</span>
  <ChevronRight className="w-4 h-4" />
@@ -971,7 +971,7 @@ export function ModoLocalEnVivoTab({
  <button
  disabled={activeIndex === agenda.length - 1}
  onClick={() => setActiveIndex(prev => prev + 1)}
- className="flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-black shadow-md disabled:opacity-30 cursor-pointer transition-all"
+ className="flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-mono font-black shadow-md disabled:opacity-30 cursor-pointer transition-all"
  >
  Siguiente →
  </button>

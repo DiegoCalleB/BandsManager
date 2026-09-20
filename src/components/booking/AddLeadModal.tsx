@@ -96,7 +96,7 @@ export function AddLeadModal({
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
  <div
  className={`w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <div className="flex items-center justify-between pb-3">
@@ -187,7 +187,7 @@ export function AddLeadModal({
  <Sparkles className="w-3 h-3 text-[var(--acc)]" />
  <span>{isSearchingLogo ?'Buscando...' :'🔍 Buscar Logo'}</span>
  </button>
- <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-[var(--hair)]700">
+ <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all border-[var(--hair)]700">
  <Upload className="w-3 h-3 text-[var(--acc)]" />
  <span>{isUploadingLeadLogo ?'Subiendo...' :'Subir Logo'}</span>
  <input
@@ -210,7 +210,7 @@ export function AddLeadModal({
  </div>
 
  {newLeadData.imagen_url ? (
- <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-[var(--r-s)] border-[var(--hair)]800">
+ <div className="flex items-center gap-3 p-2 bg-[var(--bg)] rounded-[var(--r-s)] border-[var(--hair)]800">
  <img
  src={newLeadData.imagen_url}
  alt="Logo"
@@ -243,7 +243,7 @@ export function AddLeadModal({
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  newLeadData.icono === emoji
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110 shadow-md border-[var(--acc)]'
- :'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-zinc-700'
+ :'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
  {emoji}

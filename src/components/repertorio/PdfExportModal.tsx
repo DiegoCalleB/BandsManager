@@ -1357,7 +1357,7 @@ export function PdfExportModal({
  de verdad hace falta ver de un vistazo. */}
  <div
  className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 border-b shrink-0 ${
- isStitchLight ?' bg-white' :' bg-[var(--bg)]'
+ isStitchLight ?' bg-[var(--surface)]' :' bg-[var(--bg)]'
  }`}
  >
  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -1423,7 +1423,7 @@ export function PdfExportModal({
  setPreviewPageIndex(0);
  }}
  className={`sm:hidden flex-1 min-w-0 p-2 rounded-[var(--r-s)] font-bold cursor-pointer ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="all_members">👥 Todos los Músicos ({resolvedMembers.length} hojas)</option>
@@ -1481,7 +1481,7 @@ export function PdfExportModal({
  value={selectedMemberId}
  onChange={(e) => setSelectedMemberId(e.target.value)}
  className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-[var(--r-s)] font-bold cursor-pointer ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {resolvedMembers.map((m) => (
@@ -1525,11 +1525,11 @@ export function PdfExportModal({
  <button
  onClick={() => setShowAdvancedSettings(v => !v)}
  className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-[var(--r-s)] font-bold cursor-pointer transition-colors ${
- isStitchLight ?'bg-white text-[var(--ink-2)]' :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink-2)]' :'bg-black/40 border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
  <span className="flex items-center gap-1.5">
- <Sliders className="w-3.5 h-3.5 text-sky-400" /> Ajustes (letra, tinta, badges)
+ <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" /> Ajustes (letra, tinta, badges)
  </span>
  {showAdvancedSettings ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
  </button>
@@ -1559,7 +1559,7 @@ export function PdfExportModal({
  {/* Handwritten Note Style */}
  <div className="flex items-center gap-2">
  <span className="text-[var(--ink-2)] font-bold flex items-center gap-1">
- <Palette className="w-3.5 h-3.5 text-sky-400" /> Letra Manuscrita:
+ <Palette className="w-3.5 h-3.5 text-[var(--ink-2)]" /> Letra Manuscrita:
  </span>
  <select
  value={handwritingFont}
@@ -1576,7 +1576,7 @@ export function PdfExportModal({
  <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)] border-[var(--hair)]">
  <button
  onClick={() => setHandwritingColor('blue')}
- className={`w-5 h-5 rounded-full bg-blue-600 transition-transform cursor-pointer ${
+ className={`w-5 h-5 rounded-full bg-[var(--tentative)] transition-transform cursor-pointer ${
  handwritingColor ==='blue' ?'ring-2 ring-white scale-110' :'opacity-60 hover:opacity-100'
  }`}
  title="Tinta Azul Rotulador"
@@ -1590,14 +1590,14 @@ export function PdfExportModal({
  />
  <button
  onClick={() => setHandwritingColor('red')}
- className={`w-5 h-5 rounded-full bg-red-600 transition-transform cursor-pointer ${
+ className={`w-5 h-5 rounded-full bg-[var(--alert)] transition-transform cursor-pointer ${
  handwritingColor ==='red' ?'ring-2 ring-white scale-110' :'opacity-60 hover:opacity-100'
  }`}
  title="Tinta Roja Marcador"
  />
  <button
  onClick={() => setHandwritingColor('purple')}
- className={`w-5 h-5 rounded-full bg-purple-600 transition-transform cursor-pointer ${
+ className={`w-5 h-5 rounded-full bg-[var(--acc)] transition-transform cursor-pointer ${
  handwritingColor ==='purple' ?'ring-2 ring-white scale-110' :'opacity-60 hover:opacity-100'
  }`}
  title="Tinta Violeta"
@@ -1702,7 +1702,7 @@ export function PdfExportModal({
  {/* Authentic Real Stage Paper Sheet */}
  <div
  ref={sheetRef}
- className="relative overflow-hidden bg-white text-[var(--ink)] p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
+ className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
  style={{
  width:'210mm',
  minHeight:'297mm',
@@ -1762,7 +1762,7 @@ export function PdfExportModal({
  </div>
  </div>
 
- <div className="border-2 border-[var(--hair)] bg-white p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
+ <div className="border-2 border-[var(--hair)] bg-[var(--surface)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
  <div className="text-[6pt] font-mono font-bold text-[var(--ink-2)] uppercase tracking-widest">
  {!isCurrentMaster ?'REPERTORIO PERSONALIZADO' :'COPIA DE CONTROL'}
  </div>
@@ -1920,7 +1920,7 @@ export function PdfExportModal({
  </span>
 
  {showTonality && s.tonalidad && (
- <span className="font-mono text-[11pt] font-black border-2 border-[var(--hair)] px-1.5 py-0.5 rounded bg-white text-[var(--ink)] leading-none ml-1 shrink-0">
+ <span className="font-mono text-[11pt] font-black border-2 border-[var(--hair)] px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--ink)] leading-none ml-1 shrink-0">
  {s.tonalidad}
  </span>
  )}
@@ -1972,7 +1972,7 @@ export function PdfExportModal({
  title="Editar notas manuscritas de esta canción"
  className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-2)] rounded font-mono text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
  >
- <Edit3 className="w-3 h-3 text-emerald-600" />
+ <Edit3 className="w-3 h-3 text-[var(--ok)]" />
  <span>Editar Nota</span>
  </button>
  )}
@@ -2057,7 +2057,7 @@ export function PdfExportModal({
  {sizeChoiceDialog && (
  <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
  <div className={`rounded-[var(--r-l)] shadow-2xl max-w-lg w-full p-6 ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}>
  <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  <Zap className="w-5 h-5 text-[var(--acc)]" />
@@ -2087,7 +2087,7 @@ export function PdfExportModal({
  setSizeChoiceDialog(null);
  handlePrint('multi');
  }}
- className="p-4 rounded-[var(--r-m)] border-2 border-[var(--acc)]/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
+ className="p-4 rounded-[var(--r-m)] border-2 border-[var(--acc)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
  >
  <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ?'text-[var(--ink)]' :'text-[var(--ink)]'}`}>
  📄📄 Varias hojas (letra más grande)

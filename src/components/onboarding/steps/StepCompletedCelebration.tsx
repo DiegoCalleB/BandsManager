@@ -106,7 +106,7 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <button
  type="button"
  onClick={() => copyToClipboard(epkUrl,'epk')}
- className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace EPK"
  >
  {copiedEpk ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
@@ -118,10 +118,10 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--bg)]/90 shadow-lg space-y-3 relative overflow-hidden group">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- <Heart className="w-5 h-5 text-pink-400" />
+ <Heart className="w-5 h-5 text-[var(--alert)]" />
  <h4 className="text-sm font-semibold text-[var(--ink)]">Landing & QR de Fans</h4>
  </div>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-medium">
+ <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
  Para Conciertos
  </span>
  </div>
@@ -135,14 +135,14 @@ export const StepCompletedCelebration: React.FC<StepCompletedCelebrationProps> =
  href="/fans"
  target="_blank"
  rel="noreferrer"
- className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-pink-500 hover:bg-pink-400 text-[var(--ink)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+ className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
  >
  <ExternalLink className="w-3.5 h-3.5" /> Ver Landing Fans
  </a>
  <button
  type="button"
  onClick={() => copyToClipboard(fansUrl,'fans')}
- className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
+ className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] text-xs transition-colors flex items-center justify-center"
  title="Copiar enlace Fans"
  >
  {copiedFans ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}

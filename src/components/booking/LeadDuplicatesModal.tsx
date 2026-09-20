@@ -416,7 +416,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-all ${
  isSuggested
  ? isStitchLight
- ?'bg-amber-50/60'
+ ?'bg-[var(--accent-alt)]/10/60'
  :'bg-[var(--surface)] /50 shadow-xs'
  : isStitchLight
  ?'bg-[var(--surface)]'
@@ -467,7 +467,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  )}
 
  {lead.website && (
- <div className="flex items-center gap-1.5 truncate text-[11px] text-sky-400">
+ <div className="flex items-center gap-1.5 truncate text-[11px] text-[var(--ink-2)]">
  <Globe className="w-3 h-3 shrink-0" />
  <span className="truncate">{lead.website}</span>
  </div>

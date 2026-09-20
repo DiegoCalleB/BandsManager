@@ -232,15 +232,15 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  // Color accents based on module
  const accentStyles = {
  purple: {
- badgeBg:'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30',
- iconBox:'bg-purple-500/20 text-purple-400 border-[var(--acc)]/30 shadow-purple-500/10',
- activeDot:'bg-purple-400 w-7',
- primaryBtn:'bg-purple-600 hover:bg-purple-500 text-[var(--ink)] shadow-purple-900/30',
- hookBorder:'border-[var(--acc)]/25 bg-purple-500/10 text-[var(--ink)]',
- highlightText:'text-purple-400',
- targetCard:'border-[var(--acc)]/40 bg-purple-500/5',
- targetBadge:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/30',
- targetBtn:'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-[var(--acc)]/40'
+ badgeBg:'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border-[var(--acc)]/30',
+ iconBox:'bg-[var(--tentative)]/20 text-[var(--acc)] border-[var(--acc)]/30 shadow-purple-500/10',
+ activeDot:'bg-[var(--acc)] w-7',
+ primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] shadow-purple-900/30',
+ hookBorder:'border-[var(--acc)]/25 bg-[var(--tentative)]/10 text-[var(--ink)]',
+ highlightText:'text-[var(--acc)]',
+ targetCard:'border-[var(--acc)]/40 bg-[var(--tentative)]/5',
+ targetBadge:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/30',
+ targetBtn:'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80 border-[var(--acc)]/40'
  },
  amber: {
  badgeBg:'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
@@ -254,22 +254,22 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40'
  },
  blue: {
- badgeBg:'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30',
- iconBox:'bg-sky-500/20 text-sky-400 border-[var(--acc)]/30 shadow-sky-500/10',
- activeDot:'bg-sky-400 w-7',
- primaryBtn:'bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-sky-900/30',
- hookBorder:'border-[var(--acc)]/25 bg-sky-500/10 text-sky-100',
- highlightText:'text-sky-400',
- targetCard:'border-[var(--acc)]/40 bg-sky-500/5',
- targetBadge:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/30',
- targetBtn:'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-[var(--acc)]/40'
+ badgeBg:'bg-[var(--acc)]/15 text-[var(--ink-3)] border-[var(--acc)]/30',
+ iconBox:'bg-[var(--acc)]/20 text-[var(--ink-2)] border-[var(--acc)]/30 shadow-sky-500/10',
+ activeDot:'bg-[var(--tentative)] w-7',
+ primaryBtn:'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold shadow-sky-900/30',
+ hookBorder:'border-[var(--acc)]/25 bg-[var(--acc)]/10 text-[var(--tentative)]/40',
+ highlightText:'text-[var(--ink-2)]',
+ targetCard:'border-[var(--acc)]/40 bg-[var(--acc)]/5',
+ targetBadge:'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/30',
+ targetBtn:'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)] border-[var(--acc)]/40'
  },
  emerald: {
  badgeBg:'bg-[var(--ok)]/15 text-[var(--ink-2)] border-[var(--ok)]/30',
  iconBox:'bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/30 shadow-emerald-500/10',
- activeDot:'bg-emerald-400 w-7',
- primaryBtn:'bg-[var(--ok)] hover:bg-emerald-400 text-white font-black shadow-emerald-900/30',
- hookBorder:'border-[var(--ok)]/25 bg-[var(--ok)]/10 text-emerald-100',
+ activeDot:'bg-[var(--ok)] w-7',
+ primaryBtn:'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black shadow-emerald-900/30',
+ hookBorder:'border-[var(--ok)]/25 bg-[var(--ok)]/10 text-[var(--ok)]/40',
  highlightText:'text-[var(--ok)]',
  targetCard:'border-[var(--ok)]/40 bg-[var(--ok)]/5',
  targetBadge:'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/30',
@@ -278,9 +278,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  rose: {
  badgeBg:'bg-[var(--alert)]/15 text-[var(--ink-2)] border-[var(--alert)]/30',
  iconBox:'bg-[var(--alert)]/20 text-[var(--alert)] border-[var(--alert)]/30 shadow-rose-500/10',
- activeDot:'bg-rose-400 w-7',
- primaryBtn:'bg-[var(--alert)] hover:bg-rose-400 text-[var(--ink)] font-bold shadow-rose-900/30',
- hookBorder:'border-[var(--alert)]/25 bg-[var(--alert)]/10 text-rose-100',
+ activeDot:'bg-[var(--alert)] w-7',
+ primaryBtn:'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold shadow-rose-900/30',
+ hookBorder:'border-[var(--alert)]/25 bg-[var(--alert)]/10 text-[var(--alert)]/40',
  highlightText:'text-[var(--alert)]',
  targetCard:'border-[var(--alert)]/40 bg-[var(--alert)]/5',
  targetBadge:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/30',
@@ -399,7 +399,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
  idx === currentStepIndex
  ? accentStyles.activeDot
- :'w-1.5 bg-stone-700 hover:bg-stone-500'
+ :'w-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]'
  }`}
  title={`Ir al paso ${idx + 1}`}
  />
@@ -491,7 +491,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* Nombre del elemento simulando botón o control */}
- <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-stone-950/90 border-[var(--hair)] text-xs shadow-inner">
+ <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 border-[var(--hair)] text-xs shadow-inner">
  <span className="text-[var(--acc)] font-mono font-black text-xs shrink-0">
  {currentStep.uiTarget.type ==='button' ?'▶' :'▪'}
  </span>
@@ -543,7 +543,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  </div>
 
  {/* BOTTOM ACTIONS BAR */}
- <div className="p-3.5 sm:p-4 border-t border-[var(--hair)]/80 bg-stone-950/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
+ <div className="p-3.5 sm:p-4 border-t border-[var(--hair)]/80 bg-[var(--bg)]/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
  {/* Don't show again toggle */}
  <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-2)]/80">
  <input
@@ -563,7 +563,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
  id={`tutorial-prev-btn-${moduleId}`}
  type="button"
  onClick={handlePrev}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink)]/80 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
  >
  <ChevronLeft className="w-3.5 h-3.5" />
  <span>Anterior</span>

@@ -445,7 +445,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <AlertTriangle className="w-6 h-6 animate-pulse" />
  </div>
  <div>
- <p className="text-sm sm:text-base font-bold text-rose-100">
+ <p className="text-sm sm:text-base font-bold text-[var(--alert)]/40">
  Problema con el cobro de tu suscripción
  </p>
  <p className="text-xs text-[var(--ink-2)]/90 mt-0.5">
@@ -457,7 +457,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  type="button"
  onClick={handleOpenCustomerPortal}
  disabled={isOpeningPortal}
- className="px-4 py-2.5 rounded-[var(--r-m)] bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+ className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
  >
  {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
  <span>Actualizar tarjeta en Stripe</span>
@@ -652,7 +652,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  const getBadgeStyle = (type: PlanCardData['badgeType']) => {
  switch (type) {
  case'blue':
- return'bg-sky-500/15 text-sky-300 border-[var(--acc)]/30';
+ return'bg-[var(--acc)]/15 text-[var(--ink-3)] border-[var(--acc)]/30';
  case'silver':
  return'bg-[var(--sunken)]/15 text-[var(--ink-2)] /30';
  case'gold':
@@ -671,7 +671,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  case'gold':
  return'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-[var(--ink)] font-black shadow-lg shadow-amber-0/20';
  case'emerald':
- return'bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20';
+ return'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20';
  }
  };
 
@@ -763,7 +763,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-[var(--acc)]/60 text-[var(--on-acc)] shadow-sm'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-emerald-400 text-[var(--ink)] shadow-sm'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <Gift className="w-4 h-4 stroke-[2.5]" />
@@ -774,7 +774,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  plan.isPopular
  ?'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
  : plan.id ==='cabeza_de_cartel'
- ?'bg-emerald-400/20 text-[var(--ink-2)]'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  :'bg-[var(--sunken)]/20 text-[var(--ink-2)]'
  }`}>
  {plan.stickerGift.tag}
@@ -925,7 +925,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  {/* Header Row on Desktop */}
  <div className="hidden lg:grid grid-cols-12 gap-4 p-4 bg-[var(--surface)] border-b border-[var(--hair)] text-xs font-mono font-bold uppercase text-[var(--ink-2)]">
  <div className="col-span-4">Módulo / Funcionalidad</div>
- <div className="col-span-2 text-center text-sky-400">Ensayo (0€)</div>
+ <div className="col-span-2 text-center text-[var(--ink-2)]">Ensayo (0€)</div>
  <div className="col-span-2 text-center text-[var(--ink-2)]">Local (12€/m)</div>
  <div className="col-span-2 text-center text-[var(--acc)]/70 font-black">De Gira (29€/m) ⭐</div>
  <div className="col-span-2 text-center text-[var(--ok)] font-black">Cabeza de Cartel (79€/m)</div>
@@ -1069,8 +1069,8 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  </div>
 
  <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
- <div className="flex items-center gap-2 text-sky-300 font-mono font-bold text-xs">
- <Lock className="w-4 h-4 text-sky-400" />
+ <div className="flex items-center gap-2 text-[var(--ink-3)] font-mono font-bold text-xs">
+ <Lock className="w-4 h-4 text-[var(--ink-2)]" />
  <span>Cero Borrado de Datos</span>
  </div>
  <p className="text-xs text-[var(--ink-2)] leading-relaxed">

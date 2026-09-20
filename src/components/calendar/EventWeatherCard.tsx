@@ -122,7 +122,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {isLoading ?'Consultando tiempo...' : (weatherData?.conditionText ||'Clima')}
  </span>
  {weatherData?.rainProbability !== undefined && (
- <span className="text-[11px] font-mono text-sky-400 flex items-center gap-0.5 font-semibold">
+ <span className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-0.5 font-semibold">
  <Droplets className="w-3 h-3" />
  {weatherData.rainProbability}% lluvia
  </span>
@@ -195,7 +195,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {hasAlerts && (
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  dangerAlertsCount > 0
- ?'bg-[var(--alert)] text-white shadow-xs'
+ ?'bg-[var(--alert)] text-[var(--ink)] shadow-xs'
  :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  }`}>
  {dangerAlertsCount > 0 ?'Alerta Activa' :'Aviso Meteo'}
@@ -313,7 +313,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  whileHover={{ scale: 1.05 }}
  className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
  (weatherData.rainProbability || 0) >= 40 
- ?'bg-sky-500/20 border-[var(--acc)]/50 text-sky-300 shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
+ ?'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--ink-3)] shadow-[0_0_12px_rgba(14,165,233,0.25)]' 
  :'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)]'
  }`}
  >
@@ -321,15 +321,15 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  {(weatherData.rainProbability || 0) >= 40 ? (
  <AnimatedWeatherIcon iconType="rain" size="xs" />
  ) : (
- <Droplets className="w-3 h-3 text-sky-400" />
+ <Droplets className="w-3 h-3 text-[var(--ink-2)]" />
  )}
  <span>Lluvia</span>
  </div>
- <span className="text-xs font-bold font-mono text-sky-400 mt-0.5">
+ <span className="text-xs font-bold font-mono text-[var(--ink-2)] mt-0.5">
  {weatherData.rainProbability}%
  </span>
  {(weatherData.rainVolumeMm || 0) > 0 && (
- <span className="text-[9px] font-mono text-sky-400/80">
+ <span className="text-[9px] font-mono text-[var(--ink-2)]/80">
  {weatherData.rainVolumeMm} mm
  </span>
  )}
@@ -386,7 +386,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  animate={{ opacity: 1, y: 0 }}
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
- ? 'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-rose-100 shadow-rose-950/30 shadow-md'
+ ? 'bg-[var(--alert-soft)] border-[var(--alert)]/50 text-[var(--alert)]/40 shadow-rose-950/30 shadow-md'
  : 'bg-[var(--acc-soft)] /40 text-[var(--acc)] shadow-amber-950/20 shadow-md'
  }`}
  >
@@ -410,7 +410,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </span>
  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
  isDanger
- ?'bg-[var(--alert)] text-white shadow-xs'
+ ?'bg-[var(--alert)] text-[var(--ink)] shadow-xs'
  :'bg-[var(--acc)] text-[var(--on-acc)] shadow-xs'
  }`}>
  {isDanger ?'Peligro Extremo' :'Precaución'}

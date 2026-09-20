@@ -659,7 +659,7 @@ export function BulkAlbumAudioUploaderModal({
  className={`p-8 border-2 border-dashed rounded-3xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
  items.length > 0
  ? isStitchLight
- ?'border-[var(--ok)] bg-emerald-50/30'
+ ?'border-[var(--ok)] bg-[var(--ok)]/10/30'
  :'border-[var(--hair)]/30 bg-[var(--surface)]/5'
  : isStitchLight
  ?' hover:border-[var(--ok)] hover:bg-[var(--bg)]'
@@ -862,7 +862,7 @@ export function BulkAlbumAudioUploaderModal({
  </span>
  )}
  {item.status ==='transcribing' && (
- <span className="p-1 text-purple-400" title="Analizando letra y acordes con IA...">
+ <span className="p-1 text-[var(--acc)]" title="Analizando letra y acordes con IA...">
  <RefreshCw className="w-4 h-4 animate-spin" />
  </span>
  )}
@@ -901,7 +901,7 @@ export function BulkAlbumAudioUploaderModal({
  </span>
  )}
  {item.status ==='transcribing' && (
- <span className="px-2 py-1 rounded bg-purple-500/10 text-purple-300 text-[11px] font-mono flex items-center gap-1">
+ <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-[11px] font-mono flex items-center gap-1">
  <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Analizando acordes (IA)
  </span>
  )}

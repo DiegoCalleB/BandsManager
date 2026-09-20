@@ -182,16 +182,16 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
- <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-zinc-950 p-6 space-y-5 text-[var(--ink)] shadow-2xl max-h-[90vh] overflow-y-auto">
+ <div className="w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--bg)] p-6 space-y-5 text-[var(--ink)] shadow-2xl max-h-[90vh] overflow-y-auto">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--hair)] pb-3">
  <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-purple-600/30 text-purple-400 flex items-center justify-center">
+ <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc)]/30 text-[var(--acc)] flex items-center justify-center">
  <FileText className="w-5 h-5" />
  </div>
  <div>
  <h3 className="text-base font-bold">Subir Estructura de Canción</h3>
- <p className="text-xs text-purple-300 font-mono">PDF, imagen o Word → IA extrae acordes</p>
+ <p className="text-xs text-[var(--tentative)]/80 font-mono">PDF, imagen o Word → IA extrae acordes</p>
  </div>
  </div>
  <button
@@ -208,14 +208,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
  {/* Messages */}
  {successMessage && (
- <div className="p-3 rounded-[var(--r-s)] bg-green-950/30 text-xs text-green-200 flex items-center gap-2">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-xs text-[var(--ok)]/60 flex items-center gap-2">
  <CheckCircle className="w-4 h-4" />
  {successMessage}
  </div>
  )}
 
  {errorMessage && (
- <div className="p-3 rounded-[var(--r-s)] bg-red-950/30 text-xs text-red-200 flex items-center gap-2">
+ <div className="p-3 rounded-[var(--r-s)] bg-[var(--alert)]/90/30 text-xs text-[var(--alert)]/40 flex items-center gap-2">
  <AlertCircle className="w-4 h-4" />
  {errorMessage}
  </div>
@@ -223,11 +223,11 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
  {/* Processing status */}
  {isProcessing && (
- <div className="p-4 rounded-[var(--r-s)] bg-purple-950/30 text-sm text-purple-200 flex items-center gap-3">
+ <div className="p-4 rounded-[var(--r-s)] bg-[var(--acc)]/90/30 text-sm text-[var(--acc)]/40 flex items-center gap-3">
  <Loader className="w-4 h-4 animate-spin" />
  <div>
  <p className="font-semibold">{processingMessage ||'Procesando...'}</p>
- <p className="text-xs text-purple-300 mt-1">Esto puede tomar 10-30 segundos</p>
+ <p className="text-xs text-[var(--tentative)]/80 mt-1">Esto puede tomar 10-30 segundos</p>
  </div>
  </div>
  )}
@@ -251,13 +251,13 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <div className="flex gap-2">
  <button
  onClick={handleCameraCapture}
- className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-green-600 hover:bg-green-700 text-[var(--ink)] text-sm font-semibold transition"
+ className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] text-sm font-semibold transition"
  >
  📸 Capturar Foto
  </button>
  <button
  onClick={stopCamera}
- className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] text-sm font-semibold transition"
+ className="flex-1 px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
  >
  Cancelar
  </button>
@@ -272,7 +272,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  onClick={() => fileInputRef.current?.click()}
  className="border-2 border-dashed border-[var(--acc)]/30 rounded-[var(--r-s)] p-8 text-center cursor-pointer hover:border-[var(--acc)]/60 transition"
  >
- <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+ <Upload className="w-8 h-8 mx-auto mb-2 text-[var(--acc)]" />
  <p className="text-sm font-semibold text-[var(--ink)]">Arrastra un archivo aquí</p>
  <p className="text-xs text-[var(--ink-2)] mt-1">o haz clic para seleccionar</p>
  <p className="text-xs text-[var(--ink-2)] mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
@@ -287,7 +287,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
 
  <button
  onClick={startCamera}
- className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-blue-600 hover:bg-blue-700 text-[var(--ink)] text-sm font-semibold transition flex items-center justify-center gap-2"
+ className="w-full px-4 py-2.5 rounded-[var(--r-s)] bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--ink)] text-sm font-semibold transition flex items-center justify-center gap-2"
  >
  <Camera className="w-4 h-4" />
  Hacer Foto desde Cámara
@@ -306,12 +306,12 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
  )}
  {selectedFile.type ==='application/pdf' && (
- <div className="bg-red-950/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
+ <div className="bg-[var(--alert)]/90/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
  📄 PDF - Se procesará con IA para extraer acordes
  </div>
  )}
  {selectedFile.type.includes('word') && (
- <div className="bg-blue-950/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
+ <div className="bg-[var(--tentative)]/10/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
  📝 Documento Word - Se procesará con IA para extraer acordes
  </div>
  )}
@@ -323,14 +323,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  setSelectedFile(null);
  setPreview(null);
  }}
- className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] text-sm font-semibold transition"
+ className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
  >
  Cambiar Archivo
  </button>
  <button
  onClick={handleProcessWithAI}
  disabled={isProcessing}
- className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-purple-600 hover:bg-purple-700 disabled:bg-neutral-600 text-[var(--ink)] text-sm font-semibold transition"
+ className="flex-1 px-4 py-2 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)] disabled:bg-[var(--sunken)] text-[var(--ink)] text-sm font-semibold transition"
  >
  ✨ Procesar con IA
  </button>
@@ -368,7 +368,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  onClick={() => setShowComparison(v => !v)}
  className={`px-3 py-1.5 rounded text-xs font-semibold transition flex items-center gap-1 ${
  showComparison
- ?'bg-purple-600 hover:bg-purple-700 text-[var(--ink)]'
+ ?'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)]'
  :'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'
  }`}
  >
@@ -378,7 +378,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  href={song.estructuraDocumentoUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-[var(--ink)] text-xs font-semibold transition flex items-center gap-1"
+ className="px-3 py-1.5 rounded bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] text-xs font-semibold transition flex items-center gap-1"
  >
  <Download className="w-3 h-3" />
  Descargar
@@ -394,8 +394,8 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
  disabled={isSavingVerified}
  className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
  song.estructuraVerificada
- ?'bg-emerald-600/20 text-[var(--ink-2)] hover:bg-emerald-600/30'
- :'bg-amber-600/20 text-[var(--acc)]/80 hover:bg-amber-600/30'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30'
+ :'bg-[var(--accent-alt)]/20 text-[var(--acc)]/80 hover:bg-[var(--accent-alt)]/30'
  }`}
  >
  <ShieldCheck className="w-3.5 h-3.5" />

@@ -90,7 +90,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)]">
  <Music className="w-5 h-5" />
  </div>
  <div>
@@ -114,7 +114,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
 
  <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
  <div className="flex items-center gap-3">
- <Disc3 className="w-8 h-8 text-purple-400 animate-spin-slow shrink-0" />
+ <Disc3 className="w-8 h-8 text-[var(--acc)] animate-spin-slow shrink-0" />
  <div>
  <span className="text-xl font-mono font-bold text-[var(--ink-2)]">{songCount}</span>
  <p className="text-xs font-mono text-[var(--ink-2)]">Temas guardados en catálogo</p>
@@ -224,7 +224,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)]">
  <BookOpen className="w-5 h-5" />
  </div>
  <div>
@@ -248,14 +248,14 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
 
  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
  <div>
- <span className="text-xs font-mono font-bold text-purple-300">EPK Activo & Listo</span>
+ <span className="text-xs font-mono font-bold text-[var(--tentative)]/80">EPK Activo & Listo</span>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">Optimizado para agentes y programadores</p>
  </div>
  <a
  href="/epk"
  target="_blank"
  rel="noopener noreferrer"
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-purple-500/20 text-purple-300 font-mono text-xs font-bold hover:bg-purple-500/30 transition-all"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-mono text-xs font-bold hover:bg-[var(--tentative)]/30 transition-all"
  >
  Ver EPK Vivo ↗
  </a>
@@ -313,7 +313,7 @@ export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) 
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
  <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink-2)]">
  <Truck className="w-5 h-5" />
  </div>
  <div>

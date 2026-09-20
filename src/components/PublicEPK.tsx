@@ -320,7 +320,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  <span className="text-[11px] font-mono font-medium truncate max-w-[85px] sm:max-w-[110px]">
  @{username}
  </span>
- <span className="text-[10px] font-semibold text-pink-400 group-hover/ig:text-pink-300 shrink-0 ml-0.5">
+ <span className="text-[10px] font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)]/60 shrink-0 ml-0.5">
  {ctaText.split('')[0]} ↗
  </span>
  </a>
@@ -347,7 +347,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  </div>
  </section>
 
- <section className={`${styles.bookingCard} rounded-[var(--r-l)] p-6 space-y-5 flex flex-col justify-between print: print:bg-white print:text-[var(--ink)]`}>
+ <section className={`${styles.bookingCard} rounded-[var(--r-l)] p-6 space-y-5 flex flex-col justify-between print: print:bg-[var(--surface)] print:text-[var(--ink)]`}>
  <div className="space-y-3">
  <h3 className={`text-lg font-bold ${styles.bookingTitle} print:text-[var(--ink)] flex items-center gap-2`}>
  <Mail className="w-5 h-5" /> {t('contactoTitulo')}
@@ -606,7 +606,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-white text-xs font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] text-xs font-bold hover:bg-[var(--ok)] transition-colors"
  >
  <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
  </a>
@@ -626,7 +626,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
  };
 
  return (
- <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-white print:text-[var(--ink)]`}>
+ <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-[var(--surface)] print:text-[var(--ink)]`}>
  {/* Top Floating Action Bar (Hidden on Print) */}
  <div className={`fixed top-0 left-0 right-0 ${styles.topBar} backdrop-blur-md border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
  <div className="flex items-center gap-3">

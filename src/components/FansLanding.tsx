@@ -668,7 +668,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <span className={`${isFull ?'text-sm sm:text-base' :'text-xs'} font-extrabold text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition-colors block truncate leading-tight`}>
  PayPal
  </span>
- <span className={`${isFull ?'text-xs' :'text-[10px]'} text-sky-200 font-mono block truncate group-hover:text-[var(--ink)] leading-tight`}>
+ <span className={`${isFull ?'text-xs' :'text-[10px]'} text-[var(--tentative)]/40 font-mono block truncate group-hover:text-[var(--ink)] leading-tight`}>
  {paypalDisplay.replace(/^paypal\.me\//,'@')}
  </span>
  </div>
@@ -972,7 +972,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  target="_blank"
  rel="noopener noreferrer"
  onClick={() => trackClick('whatsapp_share','','success')}
- className="py-2.5 px-3 rounded-[var(--r-s)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
+ className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
  >
  <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
  </a>
@@ -1125,7 +1125,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="pt-2 space-y-2">
  {isConcertLink ? (
  <div>
- <span className="text-[var(--ok)] font-bold px-3.5 py-1.5 bg-emerald-400/10 rounded-full inline-flex items-center gap-1.5 text-xs">
+ <span className="text-[var(--ok)] font-bold px-3.5 py-1.5 bg-[var(--ok)]/10 rounded-full inline-flex items-center gap-1.5 text-xs">
  <span>{concertName ? t('thanksConcertWithName', { concertName: sanitizeConcertDisplayName(concertName) }) : t('thanksConcertGeneric')}</span>
  </span>
  </div>
@@ -1336,7 +1336,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  href={c.entradasUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-white text-[10px] font-bold hover:bg-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] text-[10px] font-bold hover:bg-[var(--ok)] transition-colors"
  >
  <Ticket className="w-3 h-3" /> Comprar Entradas
  </a>
@@ -1654,7 +1654,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  <div className="pt-4 border-t text-right">
  <button
  onClick={() => setShowPrivacyModal(false)}
- className="px-5 py-2.5 bg-[var(--acc)] hover:bg-amber-600 text-[var(--ink)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] transition-colors"
+ className="px-5 py-2.5 bg-[var(--acc)] hover:bg-[var(--accent-alt)] text-[var(--ink)] font-bold font-mono text-xs uppercase tracking-wider rounded-[var(--r-m)] transition-colors"
  >
  {t('understood')}
  </button>

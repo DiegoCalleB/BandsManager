@@ -243,11 +243,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  onClick={() => setExportFormat('json')}
  className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
  exportFormat ==='json'
- ?'bg-sky-500/20 border-[var(--acc)]/60 text-sky-200 font-bold'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)]/60 text-[var(--tentative)]/40 font-bold'
  :'bg-[var(--bg)]/60 border-[var(--hair)]800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
  }`}
  >
- <FileCode className="w-4 h-4 text-sky-400 shrink-0" />
+ <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
  <div>
  <span className="text-xs block">JSON Datos (.json)</span>
  <span className="text-[10px] text-[var(--ink-2)] font-normal">Objeto raw estructurado</span>
@@ -266,7 +266,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="checkbox"
  checked={includePitch}
  onChange={(e) => setIncludePitch(e.target.checked)}
- className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-zinc-950"
+ className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-[var(--bg)]"
  />
  <span>Incluir Pitch / Propuesta IA</span>
  </label>
@@ -276,7 +276,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  type="checkbox"
  checked={includeNotes}
  onChange={(e) => setIncludeNotes(e.target.checked)}
- className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-zinc-950"
+ className="rounded border-[var(--hair)]700 text-[var(--acc)] focus:ring-amber-0/20 bg-[var(--bg)]"
  />
  <span>Incluir Historial y Notas</span>
  </label>
@@ -289,7 +289,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  <button
  type="button"
  onClick={onClose}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] transition cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition cursor-pointer"
  >
  Cancelar
  </button>

@@ -163,7 +163,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  return (
  <ModalPortal isOpen={isOpen} onClose={onClose}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
- <div className="w-full max-w-lg bg-zinc-950 border-[var(--hair)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+ <div className="w-full max-w-lg bg-[var(--bg)] border-[var(--hair)]800 rounded-3xl p-5 sm:p-6 text-[var(--ink)] space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
  
  {/* Header */}
  <div className="flex justify-between items-start border-b border-[var(--hair)]800/80 pb-3">

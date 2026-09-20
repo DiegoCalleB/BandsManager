@@ -172,7 +172,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <FileCode className="w-4 h-4 text-[var(--acc)]" />
  Vectorial SVG (.svg)
  </span>
- <span className="text-[10px] font-mono font-bold bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-md">
  Imprentas / Lonas
  </span>
  </div>
@@ -195,7 +195,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  <ImageIcon className="w-4 h-4 text-[var(--acc)]" />
  PNG Ultra HD 4K
  </span>
- <span className="text-[10px] font-mono font-bold bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-md">
+ <span className="text-[10px] font-mono font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-md">
  3000 x 3000 px
  </span>
  </div>

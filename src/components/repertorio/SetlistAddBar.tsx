@@ -128,7 +128,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  }}
  defaultValue=""
  className={`text-xs py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none focus:ring-1 focus:ring-indigo-500/50 cursor-pointer font-medium truncate max-w-[190px] sm:max-w-[260px] transition-colors ${
- isStitchLight ?'bg-white text-[var(--ink)] hover:' :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)] hover:' :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:'
  }`}
  >
  <option value="">+ Añadir 1 Tema...</option>
@@ -151,7 +151,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => handleAddItemToSetlist(undefined,'bloque_header','⚡ Bloque Nuevo')}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-indigo-300 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
  title="Añadir un encabezado de bloque para estructurar el concierto"
  >
  <span>⚡</span>
@@ -162,10 +162,10 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setShowEventMenu(v => !v)}
- className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
+ className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shadow-xs"
  title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
  >
- <Zap className="w-3.5 h-3.5 text-sky-400" />
+ <Zap className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Eventos & Shows</span>
  <ChevronDown className={`w-3 h-3 transition-transform ${showEventMenu ?'rotate-180' :''}`} />
  </button>
@@ -211,7 +211,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  setEditingShowItem(null);
  setShowShowItemModal(true);
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 font-medium transition flex items-center gap-2 cursor-pointer"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 font-medium transition flex items-center gap-2 cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Evento a Medida (Nombre, Audio, Minutos)...</span>
@@ -228,7 +228,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  <button
  type="button"
  onClick={() => setIsAddingShortcut(true)}
- className="text-[10px] text-teal-300 hover:underline flex items-center gap-0.5 cursor-pointer"
+ className="text-[10px] text-[var(--ok)] hover:underline flex items-center gap-0.5 cursor-pointer"
  >
  <Plus className="w-3 h-3" /> Nuevo
  </button>
@@ -276,7 +276,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  type="button"
  onClick={handleCreateShortcut}
  disabled={!newShortcutLabel.trim()}
- className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
+ className="px-2.5 py-1 rounded-md bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs disabled:opacity-40 cursor-pointer"
  >
  Guardar
  </button>
@@ -298,7 +298,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
  {customShortcuts.map(sc => (
  <div
  key={sc.id}
- className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-[var(--ok)]/10 text-teal-300 text-xs"
+ className="group/sc relative inline-flex items-center rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ok)] text-xs"
  >
  <button
  type="button"

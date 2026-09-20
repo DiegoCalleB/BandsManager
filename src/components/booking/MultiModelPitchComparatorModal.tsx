@@ -628,7 +628,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  <button
  type="button"
  onClick={onClose}
- className="px-3 py-1 bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
+ className="px-3 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-s)] text-xs cursor-pointer font-sans"
  >
  Cerrar
  </button>

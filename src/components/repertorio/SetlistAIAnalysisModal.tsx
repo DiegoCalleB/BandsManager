@@ -494,7 +494,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  >
  <div className="flex items-center gap-2.5">
  <Move className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
- <Brain className="w-5 h-5 text-purple-400" />
+ <Brain className="w-5 h-5 text-[var(--acc)]" />
  <div>
  <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
  {setlistName && <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>}
@@ -555,7 +555,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  ?'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
  : w.type ==='success'
  ?'bg-[var(--ok)]/10 text-[var(--ink-2)] border-[var(--ok)]/30'
- :'bg-sky-500/10 text-sky-300 border-[var(--acc)]/30'
+ :'bg-[var(--acc)]/10 text-[var(--ink-3)] border-[var(--acc)]/30'
  } ${isHighlighted ?'ring-2 ring-white/60' :''}`}
  style={{ cursor: hasSongs ?'pointer' :'default' }}
  onMouseEnter={() => { if (hasSongs) onHighlightSongs?.(w.songTitles!); }}
@@ -589,13 +589,13 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="p-4 space-y-4">
  {!analysis && !loading && !error && (
  <div className="text-center py-8">
- <Brain className="w-12 h-12 text-purple-400/50 mx-auto mb-4" />
+ <Brain className="w-12 h-12 text-[var(--acc)]/50 mx-auto mb-4" />
  <p className="text-[var(--ink-2)] mb-6">
  Haz un análisis profundo de tu setlist con IA. Te daremos sugerencias personalizadas sobre pacing, narrativa y psicología del público.
  </p>
  <button
  onClick={handleAnalyze}
- className="bg-purple-600 hover:bg-purple-700 text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+ className="bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
  >
  Iniciar Análisis IA
  </button>
@@ -604,20 +604,20 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {loading && (
  <div className="text-center py-12">
- <Loader className="w-8 h-8 animate-spin text-purple-400 mx-auto mb-4" />
+ <Loader className="w-8 h-8 animate-spin text-[var(--acc)] mx-auto mb-4" />
  <p className="text-[var(--ink-2)]">Analizando tu setlist...</p>
  </div>
  )}
 
  {error && (
- <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-[var(--alert)]/80/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
  <div>
- <p className="font-medium text-red-200">Error</p>
- <p className="text-sm text-red-300">{error}</p>
+ <p className="font-medium text-[var(--alert)]/40">Error</p>
+ <p className="text-sm text-[var(--alert)]/60">{error}</p>
  <button
  onClick={handleAnalyze}
- className="mt-3 text-sm text-red-300 hover:text-red-200 underline"
+ className="mt-3 text-sm text-[var(--alert)]/60 hover:text-[var(--alert)]/40 underline"
  >
  Reintentar
  </button>
@@ -631,7 +631,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm text-[var(--ink-2)] font-medium">Score General</span>
- <span className="text-lg font-bold text-purple-400">{analysis.overallScore}/100</span>
+ <span className="text-lg font-bold text-[var(--acc)]">{analysis.overallScore}/100</span>
  </div>
  <div className="w-full bg-[var(--surface)]/70 rounded-full h-1.5">
  <div
@@ -655,11 +655,11 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
  {/* Strengths */}
  {analysis.strengths.length > 0 && (
- <div className="bg-green-900/20 rounded-[var(--r-s)] p-3 border-[var(--ok)]">
- <p className="text-xs font-medium text-green-300 mb-1.5">✓ Fortalezas</p>
+ <div className="bg-[var(--ok)]/10 rounded-[var(--r-s)] p-3 border-[var(--ok)]">
+ <p className="text-xs font-medium text-[var(--ok)] mb-1.5">✓ Fortalezas</p>
  <ul className="space-y-1">
  {analysis.strengths.map((strength, idx) => (
- <li key={idx} className="text-xs text-green-200">• {strength}</li>
+ <li key={idx} className="text-xs text-[var(--ok)]/60">• {strength}</li>
  ))}
  </ul>
  </div>
@@ -668,7 +668,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  {/* Suggestions */}
  <div>
  <h3 className="text-sm font-semibold text-[var(--ink-2)] mb-3 flex items-center gap-2">
- <Zap className="w-3.5 h-3.5 text-purple-400" />
+ <Zap className="w-3.5 h-3.5 text-[var(--acc)]" />
  Sugerencias ({(liveSuggestions || analysis.suggestions).length})
  </h3>
  <div className="space-y-3">
@@ -684,7 +684,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  isInvalid
  ?'bg-[var(--surface)] opacity-50'
  : isHighlighted
- ?'bg-purple-900/30 border-[var(--acc)]/50 ring-2 ring-purple-400/30'
+ ?'bg-[var(--acc)]/80/30 border-[var(--acc)]/50 ring-2 ring-purple-400/30'
  :'bg-[var(--surface)]/80 hover:'
  }`}
  onMouseEnter={() => {
@@ -743,7 +743,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  e.stopPropagation();
  handleApplySuggestion(idx);
  }}
- className="shrink-0 px-2 py-0.5 rounded bg-purple-700/50 hover:bg-purple-600 text-[var(--ink)] font-bold text-[10px] font-mono transition whitespace-nowrap"
+ className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] font-mono transition whitespace-nowrap"
  title="Mover la canción a la posición sugerida"
  >
  ✓ Aplicar
@@ -831,13 +831,13 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
  <div className="flex gap-3">
  <button
  onClick={handleAnalyze}
- className="flex-1 bg-purple-600 hover:bg-purple-700 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  🔄 Re-analizar
  </button>
  <button
  onClick={onClose}
- className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  Cerrar
  </button>

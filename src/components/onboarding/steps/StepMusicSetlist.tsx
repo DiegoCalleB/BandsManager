@@ -409,7 +409,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
  type="button"
  onClick={() => onGenerateSetlist(45)}
  disabled={isCreatingSetlist || totalImportedSongsCount === 0}
- className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] border-[var(--hair)] text-xs font-medium transition-colors disabled:opacity-50"
+ className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] border-[var(--hair)] text-xs font-medium transition-colors disabled:opacity-50"
  >
  <Clock className="w-3.5 h-3.5" />
  Crear Setlist Festival / Showcase (45 min)

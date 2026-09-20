@@ -652,7 +652,7 @@ export function ReelsMetricsView({
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='metrics'
  ? isStitchLight
- ?'bg-[var(--surface)] text-indigo-600 shadow-sm'
+ ?'bg-[var(--surface)] text-[var(--tentative)] shadow-sm'
  :'bg-[var(--ok)] text-[var(--ink)] shadow-md shadow-emerald-500/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
@@ -767,7 +767,7 @@ export function ReelsMetricsView({
  className={`flex-1 md:flex-initial px-4 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all ${
  isScanningMetrics
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- :'bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] shadow-lg shadow-emerald-900/30'
+ :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] shadow-lg shadow-emerald-900/30'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${isScanningMetrics ?'animate-spin' :''}`} />
@@ -809,7 +809,7 @@ export function ReelsMetricsView({
  'bg-[var(--surface)]/40 border-[var(--alert)]/30'
  }`}>
  <div className="flex items-center justify-between">
- <span className="text-[10px] font-mono uppercase tracking-wider text-pink-500 font-bold flex items-center gap-1.5">
+ <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--alert)] font-bold flex items-center gap-1.5">
  <Instagram className="w-3.5 h-3.5" /> Instagram
  </span>
  <div className="flex items-center gap-1.5">
@@ -962,7 +962,7 @@ export function ReelsMetricsView({
  {/* Fans Registrados (BBDD / Formulario Únete) Card */}
  {hasFans && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
- isStitchLight ?'bg-amber-50/50 shadow-sm' :'bg-[var(--surface)]/40 /30'
+ isStitchLight ?'bg-[var(--accent-alt)]/10/50 shadow-sm' :'bg-[var(--surface)]/40 /30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
@@ -1057,7 +1057,7 @@ export function ReelsMetricsView({
  {/* Period Summary Stats Badge if available */}
  {periodSummaryStats && (
  <div className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-[9px] font-mono flex items-center justify-between flex-wrap gap-2 ${
- 'bg-indigo-950/20 text-[var(--tentative)]/80 border-[var(--acc)]/20'
+ 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/20'
  }`}>
  <div className="flex items-center gap-1.5">
  <TrendingUp className="w-3 h-3 text-[var(--tentative)]" />
@@ -1087,7 +1087,7 @@ export function ReelsMetricsView({
  {hasInstagram && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
- ? 'bg-pink-950/30 border-[var(--alert)]/40 text-[var(--alert)]/80 shadow-sm shadow-pink-950/20'
+ ? 'bg-[var(--alert)]/15 border-[var(--alert)]/40 text-[var(--alert)]/80 shadow-sm shadow-pink-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1096,7 +1096,7 @@ export function ReelsMetricsView({
  title={selectedChannels.instagram ?"Ocultar Instagram del gráfico" :"Mostrar Instagram en el gráfico"}
  >
  <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ?'bg-[var(--alert)] animate-pulse' :'bg-[var(--ink-2)]/40'}`}></span>
- <Instagram className="w-3 h-3 text-pink-500" />
+ <Instagram className="w-3 h-3 text-[var(--alert)]" />
  <span className="font-bold">Instagram</span>
  <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--alert)]/15 font-mono">
  {(latestMetric?.instagram_followers || latestMetric?.instagram || 0).toLocaleString()}
@@ -1121,7 +1121,7 @@ export function ReelsMetricsView({
  {hasTikTok && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
- ? 'bg-cyan-950/30 border-[var(--acc)]/40 text-[var(--acc)]/80 shadow-sm shadow-cyan-950/20'
+ ? 'bg-[var(--tentative)]/15 border-[var(--acc)]/40 text-[var(--acc)]/80 shadow-sm shadow-cyan-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1155,7 +1155,7 @@ export function ReelsMetricsView({
  {hasYouTube && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
- ? 'bg-red-950/30 border-[var(--alert)]/40 text-red-300 shadow-sm shadow-red-950/20'
+ ? 'bg-[var(--alert)]/90/30 border-[var(--alert)]/40 text-[var(--alert)]/60 shadow-sm shadow-red-950/20'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1403,7 +1403,7 @@ export function ReelsMetricsView({
  href={item.url}
  target="_blank"
  rel="noreferrer"
- className="p-1 rounded bg-neutral-500/10 hover:bg-neutral-500/20 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-1 text-[9px] font-mono"
+ className="p-1 rounded bg-[var(--surface)]0/10 hover:bg-[var(--surface)]0/20 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-center gap-1 text-[9px] font-mono"
  title="Ver contenido"
  >
  <span>Ver</span>
@@ -1447,7 +1447,7 @@ export function ReelsMetricsView({
  <div className="grid grid-cols-2 gap-2">
  <div className="space-y-1">
  <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--ink-2)] flex items-center gap-1">
- <Instagram className="w-3 h-3 text-pink-500" /> Insta Segs.
+ <Instagram className="w-3 h-3 text-[var(--alert)]" /> Insta Segs.
  </label>
  <input
  type="number"
@@ -1582,7 +1582,7 @@ export function ReelsMetricsView({
  className={`flex-1 py-2.5 rounded-[var(--r-m)] font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-1.5 transition-all ${
  isSavingMetric
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- : 'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/15'
+ : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/15'
  }`}
  >
  {isSavingMetric ?'Guardando...' : editingMetricId ?'Actualizar Snapshot' :'Añadir Snapshot'}
@@ -1595,7 +1595,7 @@ export function ReelsMetricsView({
  className={`px-2 py-1 rounded font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer transition-all ${
  isStitchLight
  ?'border text-[var(--ink-2)] bg-[var(--bg)] hover:bg-[var(--sunken)]'
- :'border text-[var(--ink-2)] bg-[var(--surface)] hover:bg-neutral-850'
+ :'border text-[var(--ink-2)] bg-[var(--surface)] hover:bg-[var(--surface)]/70'
  }`}
  >
  Cancelar
@@ -1663,7 +1663,7 @@ export function ReelsMetricsView({
  const formattedDate = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(-2)}` : m.fecha;
 
  return (
- <tr key={`${m.id ||'metric'}-${index}`} className={`hover:bg-neutral-500/5 transition-colors ${
+ <tr key={`${m.id ||'metric'}-${index}`} className={`hover:bg-[var(--surface)]0/5 transition-colors ${
  editingMetricId === m.id 
  ? 'bg-[var(--acc)]/5' 
  :''
@@ -1739,7 +1739,7 @@ export function ReelsMetricsView({
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 backdrop-blur-sm animate-in fade-in duration-200">
  <div 
  className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  onClick={(e) => e.stopPropagation()}
  >
@@ -1772,8 +1772,8 @@ export function ReelsMetricsView({
  {/* Modal Body */}
  <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
  {/* Official Documentation Reference */}
- <div className="p-3.5 rounded-[var(--r-m)] bg-pink-950/20 flex items-center justify-between gap-3">
- <div className="flex items-center gap-2.5 text-xs text-pink-200">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 flex items-center justify-between gap-3">
+ <div className="flex items-center gap-2.5 text-xs text-[var(--alert)]/40">
  <ExternalLink className="w-4 h-4 text-[var(--alert)] shrink-0" />
  <span>
  Documentación Oficial Meta: <strong className="text-[var(--ink)]">Instagram Platform Insights API</strong>
@@ -1794,7 +1794,7 @@ export function ReelsMetricsView({
  igStatus?.connected 
  ?'bg-[var(--ok)]/10 border-[var(--ok)]/30 text-[var(--ok)]'
  : isStitchLight
- ?'bg-amber-50 text-amber-800'
+ ?'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}>
  <div className="flex items-start justify-between gap-3">
@@ -1986,7 +1986,7 @@ export function ReelsMetricsView({
  {showScanModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-md animate-in fade-in duration-200">
  <div className={`w-full max-w-xl rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {/* Modal Header */}
  <div className="p-5 border-b flex items-center justify-between bg-[var(--surface)]/40">
@@ -2018,7 +2018,7 @@ export function ReelsMetricsView({
  <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
  {/* Feedback messages */}
  {scanError && (
- <div className="p-3.5 rounded-[var(--r-m)] bg-red-950/20 text-red-300 text-xs flex items-center gap-2">
+ <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/90/20 text-[var(--alert)]/60 text-xs flex items-center gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
  <span>{scanError}</span>
  </div>
@@ -2113,7 +2113,7 @@ export function ReelsMetricsView({
  {/* Result Preview Card */}
  {scanResult && (
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-300 ${
- 'bg-indigo-950/20 border-[var(--acc)]/30'
+ 'bg-[var(--tentative)]/20 border-[var(--acc)]/30'
  }`}>
  <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-2">
  <div className="text-xs font-bold font-mono uppercase tracking-wider text-[var(--tentative)]/80 flex items-center gap-2">

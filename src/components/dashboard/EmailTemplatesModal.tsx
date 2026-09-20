@@ -41,7 +41,7 @@ Mánager Virtual & Booking Team de {bandName}`
  title:'2. Propuesta de Intercambio de Fechas entre Bandas (Co-headlining)',
  type:'Intercambio de bolos',
  icon: MessageSquareCode,
- badgeColor:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/30',
+ badgeColor:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/30',
  subject:'Propuesta de bolo conjunto e intercambio de sala - {bandName} x {nombre_banda_amiga}',
  body: `¡Hola compas de {nombre_banda_amiga}!
 
@@ -85,7 +85,7 @@ Prensa & Comunicación - {bandName}`
  title:'4. Recordatorio Educado a Sala sin Respuesta (A los 7-10 días)',
  type:'Seguimiento',
  icon: RefreshCw,
- badgeColor:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/30',
+ badgeColor:'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/30',
  subject:'Re: Propuesta de Concierto - {bandName} en {nombre_sala}',
  body: `Hola de nuevo, equipo de {nombre_sala},
 

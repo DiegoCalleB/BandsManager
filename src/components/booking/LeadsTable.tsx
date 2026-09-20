@@ -271,10 +271,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  <a
  href={`tel:${lead.telefono}`}
  onClick={(e) => e.stopPropagation()}
- className="p-2 sm:px-2.5 sm:py-1.5 bg-sky-950/80 hover:bg-sky-900 text-sky-300 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
+ className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--bg)]/80 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs min-h-[38px]"
  title="Llamar directamente por teléfono"
  >
- <PhoneCall className="w-4 h-4 text-sky-400" />
+ <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
  <span className="hidden xs:inline text-[11px]">Llamar</span>
  </a>
  ) : null}
@@ -303,7 +303,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
  isDetailOpen
  ?'bg-[var(--acc)] text-[var(--on-acc)] shadow-sm'
- :'bg-[var(--sunken)] text-[var(--ink)] hover:bg-zinc-700'
+ :'bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
  <Eye className="w-3.5 h-3.5" />

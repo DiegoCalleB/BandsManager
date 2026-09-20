@@ -292,16 +292,16 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  {onOpenAutonomyModal && (
  <button
  onClick={() => onOpenAutonomyModal()}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
  >
- <Sliders className="w-3.5 h-3.5 text-purple-400" />
+ <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span className="hidden xs:inline">Autonomía & Caché</span>
  </button>
  )}
 
  <button
  onClick={() => setShowAuditModal(true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-stone-700 text-[var(--ink-2)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
  >
  <HelpCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span>Info</span>
@@ -309,7 +309,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  
  <button
  onClick={() => setIsExpanded(!isExpanded)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-stone-700 text-[var(--acc)] text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--acc)] text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
  title="Expandir/colapsar checklist"
  >
  <span>{isExpanded ?'Ocultar' :'Ver checklist'}</span>

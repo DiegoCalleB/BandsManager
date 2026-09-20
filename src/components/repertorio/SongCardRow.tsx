@@ -217,10 +217,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`truncate text-xs sm:text-sm font-semibold tracking-tight ${
  isPlayingCurrent
  ? isStitchLight
- ?'text-emerald-900 font-bold'
+ ?'text-[var(--ok)] font-bold'
  :'text-[var(--ok)] font-bold'
  : isStitchLight
- ?'text-[var(--ink)] hover:text-indigo-600'
+ ?'text-[var(--ink)] hover:text-[var(--tentative)]'
  :'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
  }`}
  title={displayTitle}
@@ -295,7 +295,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  <span>{isDriveAudio ?'Drive' :'Audio'}</span>
  </span>
  ) : ideasCount > 0 ? (
- <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-indigo-300">
+ <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
  <Headphones className="w-2.5 h-2.5" />
  <span>{ideasCount} ideas</span>
  </span>
@@ -500,7 +500,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  setShowMenu(false);
  onOpenStudio();
  }}
- className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+ className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/50 transition-colors flex items-center gap-2 cursor-pointer font-bold"
  >
  <Headphones className="w-3.5 h-3.5 text-[var(--tentative)]" />
  <span>Abrir Studio / Grabadora</span>

@@ -104,7 +104,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
  Margen de Beneficio
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-purple-500/10 text-purple-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">
  <Calculator className="w-5 h-5" />
  </div>
  </div>

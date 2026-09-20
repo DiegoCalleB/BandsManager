@@ -505,7 +505,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  return { text:'📐 Plantilla genérica (sin IA disponible)', tone:'text-[var(--ink-2)]' };
  };
 
- const panelBg = isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]';
+ const panelBg = isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink-2)]';
  const cardBg = isStitchLight ?'bg-[var(--bg)]' :'bg-[var(--surface)]/60 /80';
 
  return (
@@ -563,7 +563,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={applyPresetPracticeWithBand}
  disabled={!myTrack}
- className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+ className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
  >
  <Headphones className="w-4 h-4" />
  <span className="text-[11px] font-mono font-semibold text-center">Tocar con la banda<br />(silencia mi pista)</span>
@@ -571,7 +571,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={applyPresetLearnMyPart}
  disabled={!myTrack}
- className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-violet-300 hover:bg-[var(--tentative)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+ className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
  >
  <GraduationCap className="w-4 h-4" />
  <span className="text-[11px] font-mono font-semibold text-center">Aprender mi parte<br />(aísla mi pista)</span>
@@ -581,7 +581,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {/* Transporte + velocidad + loop */}
  <div className={`rounded-[var(--r-m)] p-3 space-y-3 ${cardBg}`}>
  <div className="flex items-center gap-3">
- <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-emerald-400">
+ <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-[var(--ok)]">
  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
  </button>
  <span className="text-[11px] font-mono text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
@@ -658,7 +658,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  value={semitonesOffset}
  onChange={(e) => setSemitonesOffset(Number(e.target.value))}
  title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
- className={`text-xs font-mono rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ?'bg-white' :'bg-[var(--surface)]'} ${semitonesOffset !== 0 ?'text-sky-400 font-bold' :''}`}
+ className={`text-xs font-mono rounded-[var(--r-s)] px-2 py-1 outline-none ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'} ${semitonesOffset !== 0 ?'text-[var(--ink-2)] font-bold' :''}`}
  >
  {TRANSPOSE_SEMITONE_OPTIONS.map(st => {
  const origKey = song.tonalidad?.trim();
@@ -736,7 +736,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  onClick={handleAutoBalance}
  disabled={isAutoBalancing}
  title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
- className="flex items-center gap-1 text-[10px] font-mono text-sky-400 hover:text-sky-300 disabled:opacity-50"
+ className="flex items-center gap-1 text-[10px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-3)] disabled:opacity-50"
  >
  {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
  {isAutoBalancing ?'Analizando...' :'Auto-Balance'}
@@ -788,7 +788,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
  title="Detectar acordes escuchando solo esta pista aislada"
  disabled={isLoadingThis}
- className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-indigo-300 disabled:opacity-50"
+ className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--tentative)]/50 disabled:opacity-50"
  >
  {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
  </button>
@@ -809,7 +809,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  {onApplyAsMainChords && (
  <button
  onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
- className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-indigo-300 hover:bg-[var(--tentative)]/25"
+ className="flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/25"
  >
  <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
  </button>
@@ -830,14 +830,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
  <button
  onClick={() => handleExport('sin-mi-pista')}
  disabled={!myTrack || isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='sin-mi-pista' ?'Generando…' :'Sin mi pista'}
  </button>
  <button
  onClick={() => handleExport('solo-mi-pista')}
  disabled={!myTrack || isExporting !== null}
- className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-violet-300 hover:bg-[var(--tentative)]/20 disabled:opacity-40"
+ className="flex items-center gap-1.5 text-[11px] font-mono px-3 py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--acc)]/50 hover:bg-[var(--tentative)]/20 disabled:opacity-40"
  >
  <Download className="w-3.5 h-3.5" /> {isExporting ==='solo-mi-pista' ?'Generando…' :'Solo mi pista'}
  </button>

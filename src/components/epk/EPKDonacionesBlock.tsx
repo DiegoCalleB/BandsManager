@@ -69,10 +69,10 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  {/* APOYO ECONÓMICO / DONACIONES */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
  <div className="flex items-center justify-between border-b pb-3 flex-wrap gap-2">
- <h3 className="text-base sm:text-lg font-bold text-sky-400 flex items-center gap-2">
+ <h3 className="text-base sm:text-lg font-bold text-[var(--ink-2)] flex items-center gap-2">
  <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones (Revolut, PayPal & Bizum)
  </h3>
- <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-full">
+ <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
  Crowdfunding Directo
  </span>
  </div>
@@ -111,7 +111,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z" />
  </svg>
  </div>
- <label className="text-xs font-semibold text-sky-200">Revolut (Revtag)</label>
+ <label className="text-xs font-semibold text-[var(--tentative)]/40">Revolut (Revtag)</label>
  </div>
  <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-[var(--acc)] rounded-[var(--r-s)] px-2.5">
  <span className="text-[10px] text-[var(--ink-2)] font-mono">revolut.me/</span>
@@ -140,7 +140,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }));
  }}
  placeholder="tubanda"
- className="w-full bg-transparent py-1.5 text-xs text-sky-300 font-bold outline-none font-mono"
+ className="w-full bg-transparent py-1.5 text-xs text-[var(--ink-3)] font-bold outline-none font-mono"
  />
  </div>
  </div>
@@ -151,7 +151,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <div className="w-5 h-5 rounded-md bg-[var(--bg)] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
  <PayPalLogo className="w-full h-full fill-[var(--surface)]" />
  </div>
- <label className="text-xs font-semibold text-blue-200">PayPal (paypal.me)</label>
+ <label className="text-xs font-semibold text-[var(--tentative)]/40">PayPal (paypal.me)</label>
  </div>
  <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:border-[var(--acc)] rounded-[var(--r-s)] px-2.5">
  <span className="text-[10px] text-[var(--ink-2)] font-mono">paypal.me/</span>
@@ -227,11 +227,11 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  (config.donacionRevolut?.metodoPorDefecto ||'revolut') ==='revolut'
- ?'bg-sky-500/20 border-[var(--acc)] text-sky-300 shadow-sm'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)] text-[var(--ink-3)] shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
- <span className="w-2 h-2 rounded-full bg-sky-400" />
+ <span className="w-2 h-2 rounded-full bg-[var(--tentative)]" />
  Revolut
  </button>
  <button
@@ -244,7 +244,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  }
  className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
  config.donacionRevolut?.metodoPorDefecto ==='paypal'
- ?'bg-blue-500/20 border-[var(--acc)] text-[var(--acc)]/80 shadow-sm'
+ ?'bg-[var(--tentative)]/50/20 border-[var(--acc)] text-[var(--acc)]/80 shadow-sm'
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -265,7 +265,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
- <span className="w-2 h-2 rounded-full bg-emerald-400" />
+ <span className="w-2 h-2 rounded-full bg-[var(--ok)]" />
  Bizum
  </button>
  </div>
@@ -313,7 +313,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  <button
  type="button"
  onClick={() => setShowFansPreviewModal(true)}
- className="text-[11px] font-mono text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
+ className="text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink-3)] font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
  title="Abrir simulador interactivo del formulario Únete"
  >
  <Eye className="w-3.5 h-3.5" /> Ver Formulario Únete
@@ -369,12 +369,12 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
  </div>
 
  {errorTraduccion && (
- <div className="rounded-[var(--r-m)] bg-[var(--alert)]/10 text-red-300 p-3 text-xs flex items-start gap-2">
+ <div className="rounded-[var(--r-m)] bg-[var(--alert)]/10 text-[var(--alert)]/60 p-3 text-xs flex items-start gap-2">
  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" /> <span>{errorTraduccion}</span>
  </div>
  )}
  {avisoTraduccion && (
- <div className="rounded-[var(--r-m)] bg-sky-500/10 text-sky-300 p-3 text-xs flex items-start gap-2">
+ <div className="rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-3)] p-3 text-xs flex items-start gap-2">
  <Info className="w-4 h-4 shrink-0 mt-0.5" /> <span>{avisoTraduccion}</span>
  </div>
  )}

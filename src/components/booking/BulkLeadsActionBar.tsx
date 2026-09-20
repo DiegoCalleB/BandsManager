@@ -24,15 +24,15 @@ interface BulkLeadsActionBarProps {
 }
 
 const STATUS_OPTIONS: { status: LeadStatus; label: string; color: string; icon: any }[] = [
- { status:'nuevo', label:'Nuevo Lead', color:'bg-blue-500/20 text-[var(--acc)]/80 border-[var(--acc)]/40', icon: Sparkles },
+ { status:'nuevo', label:'Nuevo Lead', color:'bg-[var(--tentative)]/50/20 text-[var(--acc)]/80 border-[var(--acc)]/40', icon: Sparkles },
  { status:'pendiente_aprobacion', label:'Pendiente Aprobación', color:'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40', icon: Clock },
  { status:'aprobado', label:'Aprobado (Listo para envío)', color:'bg-[var(--ok)]/20 text-[var(--ink-2)] border-[var(--ok)]/40', icon: CheckCircle2 },
- { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-sky-500/20 text-sky-300 border-[var(--acc)]/40', icon: Send },
+ { status:'esperando_respuesta', label:'Esperando Respuesta', color:'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/40', icon: Send },
  { status:'contactado', label:'Contactado', color:'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-[var(--acc)]/40', icon: MessageSquare },
- { status:'respondido', label:'Respondido / Conversación', color:'bg-[var(--tentative)]/20 text-indigo-300 border-[var(--acc)]/40', icon: MessageSquare },
- { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40', icon: ArrowRight },
+ { status:'respondido', label:'Respondido / Conversación', color:'bg-[var(--tentative)]/20 text-[var(--tentative)]/50 border-[var(--acc)]/40', icon: MessageSquare },
+ { status:'negociando', label:'Negociando Caché / Fecha', color:'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 border-[var(--acc)]/40', icon: ArrowRight },
  { status:'confirmado', label:'Confirmado (Cerrado)', color:'bg-[var(--ok)]/30 text-[var(--ink)] border-[var(--ok)]', icon: CheckCircle2 },
- { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-zinc-700/50 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
+ { status:'aplazado', label:'Aplazado (Próxima temp.)', color:'bg-[var(--ink-3)]/60/50 text-[var(--ink-2)] border-[var(--hair)]600', icon: Clock },
  { status:'no_interesado', label:'No Interesado / Descartado', color:'bg-[var(--alert)]/20 text-[var(--ink-2)] border-[var(--alert)]/40', icon: ShieldAlert },
 ];
 
@@ -134,7 +134,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
  isStitchLight
- ?'bg-amber-100 hover:bg-amber-200 text-amber-900'
+ ?'bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]'
  :'bg-gradient-to-r from-amber-0/20 to-amber-600/20 hover:from-amber-0/30 hover:to-amber-600/30 /50 text-[var(--ink)]'
  }`}
  title="Cambiar el estado de todos los seleccionados"
@@ -190,11 +190,11 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onBulkGeneratePitches}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
- 'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-purple-200'
+ 'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800 border-[var(--acc)]/50 text-[var(--acc)]/40'
  }`}
  title="Generar propuestas de pitch con IA para todos los seleccionados"
  >
- <Sparkles className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
+ <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] animate-pulse" />
  <span className="hidden sm:inline">Pitches IA</span>
  <span className="sm:hidden">Pitch</span>
  </button>
@@ -204,11 +204,11 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onBulkEnrich}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer ${
- 'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-[var(--acc)]/50 text-sky-200'
+ 'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800 border-[var(--acc)]/50 text-[var(--tentative)]/40'
  }`}
  title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
  >
- <Search className="w-3.5 h-3.5 text-sky-400" />
+ <Search className="w-3.5 h-3.5 text-[var(--ink-2)]" />
  <span className="hidden sm:inline">Enriquecer IA</span>
  <span className="sm:hidden">Enriquecer</span>
  </button>
@@ -218,7 +218,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={() => onBulkToggleFavorite(true)}
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
- 'bg-[var(--sunken)] hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--acc)]/70'
+ 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 border-[var(--hair)]700 text-[var(--acc)]/70'
  }`}
  title="Marcar como favoritos"
  >
@@ -232,7 +232,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-semibold transition-all flex items-center gap-1 cursor-pointer ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]'
- :'bg-[var(--sunken)] hover:bg-zinc-700 border-[var(--hair)]700 text-[var(--ink)]'
+ :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 border-[var(--hair)]700 text-[var(--ink)]'
  }`}
  title="Exportar selección a CSV"
  >
@@ -292,7 +292,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <button
  type="button"
  onClick={() => setIsConfirmDeleteOpen(false)}
- className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] transition-colors cursor-pointer"
+ className="px-3.5 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] transition-colors cursor-pointer"
  >
  Cancelar
  </button>
@@ -302,7 +302,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  setIsConfirmDeleteOpen(false);
  onBulkDelete();
  }}
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] shadow-md transition-colors cursor-pointer"
  >
  Sí, eliminar {selectedCount}
  </button>

@@ -58,7 +58,7 @@ export function GlobalCampaignBar({
 
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className="text-[8px] font-mono font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-purple-500/25 text-purple-200 shrink-0">
+ <span className="text-[8px] font-mono font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-[var(--tentative)]/25 text-[var(--acc)]/40 shrink-0">
  🎯 CAMPAÑA
  </span>
  <h2 className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate" title={campaign.name}>
@@ -68,8 +68,8 @@ export function GlobalCampaignBar({
 
  {/* Desktop / Tablet Inline details */}
  <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-2)] mt-0.5">
- <span className="inline-flex items-center gap-1 text-sky-300 font-medium truncate max-w-[200px]">
- <MapPin className="w-2.5 h-2.5 text-sky-400 shrink-0" />
+ <span className="inline-flex items-center gap-1 text-[var(--ink-3)] font-medium truncate max-w-[200px]">
+ <MapPin className="w-2.5 h-2.5 text-[var(--ink-2)] shrink-0" />
  {campaign.targetCities?.join(',') ||'Todas las ciudades'}
  </span>
  <span className="text-[var(--ink-2)]">•</span>
@@ -78,8 +78,8 @@ export function GlobalCampaignBar({
  {campaign.minCapacity}-{campaign.maxCapacity} pax
  </span>
  <span className="text-[var(--ink-2)]">•</span>
- <span className="inline-flex items-center gap-1 text-pink-300 font-mono font-semibold truncate max-w-[180px]">
- <Calendar className="w-2.5 h-2.5 text-pink-400 shrink-0" />
+ <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-mono font-semibold truncate max-w-[180px]">
+ <Calendar className="w-2.5 h-2.5 text-[var(--alert)] shrink-0" />
  {campaign.targetDatesText || `${campaign.targetDates?.length || 0} fechas`}
  </span>
  </div>
@@ -89,7 +89,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={() => setIsMobileExpanded(prev => !prev)}
- className="sm:hidden p-1 text-[var(--ink-2)] hover:text-purple-300 transition-colors shrink-0"
+ className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--tentative)]/80 transition-colors shrink-0"
  title={isMobileExpanded ?"Ocultar detalles" :"Ver ciudades y fechas"}
  >
  {isMobileExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -105,12 +105,12 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('booking', { campaignFilter: campaign.id })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='booking'
- ?'bg-purple-500 text-[var(--ink)] shadow-xs'
- :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
+ ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
+ :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver salas objetivo de esta campaña en Booking CRM"
  >
- <Building2 className="w-3 h-3 text-purple-300 shrink-0" />
+ <Building2 className="w-3 h-3 text-[var(--tentative)]/80 shrink-0" />
  <span>Salas ({matchingLeads.length})</span>
  </button>
 
@@ -120,12 +120,12 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('calendario', { selectedDate: firstTargetDate })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='calendario'
- ?'bg-purple-500 text-[var(--ink)] shadow-xs'
- :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
+ ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
+ :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver fechas de la campaña en el Calendario"
  >
- <Calendar className="w-3 h-3 text-pink-300 shrink-0" />
+ <Calendar className="w-3 h-3 text-[var(--alert)]/60 shrink-0" />
  <span>Calendario</span>
  </button>
 
@@ -135,12 +135,12 @@ export function GlobalCampaignBar({
  onClick={() => onNavigate('bandas', { campaignCities: campaign.targetCities })}
  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs ${
  currentView ==='bandas'
- ?'bg-purple-500 text-[var(--ink)] shadow-xs'
- :'bg-purple-950/60 hover:bg-purple-900/80 text-purple-200'
+ ?'bg-[var(--tentative)] text-[var(--ink)] shadow-xs'
+ :'bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40'
  }`}
  title="Ver grupos en las ciudades objetivo para Co-booking"
  >
- <Users className="w-3 h-3 text-sky-300 shrink-0" />
+ <Users className="w-3 h-3 text-[var(--ink-3)] shrink-0" />
  <span className="hidden sm:inline">Co-booking</span>
  <span className="sm:hidden">Bandas</span>
  </button>
@@ -159,7 +159,7 @@ export function GlobalCampaignBar({
  <button
  type="button"
  onClick={onDeactivate}
- className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-red-950/60 text-[var(--ink-2)] hover:text-red-300 hover:border-[var(--alert)]/40 transition-colors shrink-0"
+ className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90/60 text-[var(--ink-2)] hover:text-[var(--alert)]/60 hover:border-[var(--alert)]/40 transition-colors shrink-0"
  title="Desactivar modo campaña (volver a modo general)"
  >
  <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -172,8 +172,8 @@ export function GlobalCampaignBar({
  {/* Mobile Collapsible Details */}
  {isMobileExpanded && (
  <div className="sm:hidden pt-2 mt-2 border-t border-[var(--acc)]/20 text-[10px] text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
- <div className="flex items-center gap-1.5 text-sky-300 font-medium">
- <MapPin className="w-3 h-3 text-sky-400 shrink-0" />
+ <div className="flex items-center gap-1.5 text-[var(--ink-3)] font-medium">
+ <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
  <span>{campaign.targetCities?.join(',') ||'Todas las ciudades'}</span>
  </div>
  <div className="flex items-center justify-between text-[var(--ink-2)]">
@@ -181,8 +181,8 @@ export function GlobalCampaignBar({
  <Users className="w-3 h-3 text-[var(--acc)] shrink-0" />
  {campaign.minCapacity} - {campaign.maxCapacity} pax
  </span>
- <span className="inline-flex items-center gap-1 text-pink-300 font-mono font-semibold">
- <Calendar className="w-3 h-3 text-pink-400 shrink-0" />
+ <span className="inline-flex items-center gap-1 text-[var(--alert)]/60 font-mono font-semibold">
+ <Calendar className="w-3 h-3 text-[var(--alert)] shrink-0" />
  {campaign.targetDatesText || `${campaign.targetDates?.length || 0} fechas`}
  </span>
  </div>

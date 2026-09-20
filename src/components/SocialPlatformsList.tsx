@@ -110,17 +110,17 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  instagram: {
  label:'Instagram',
- colorClass:'text-pink-400',
+ colorClass:'text-[var(--alert)]',
  bgClass:'bg-gradient-to-r from-[var(--acc)]/10 via-pink-500/10 to-amber-0/10',
  borderClass:'border-[var(--alert)]/30',
- hoverClass:'hover:from-[var(--acc)]/20 hover:via-pink-500/20 hover:to-amber-0/20 hover:border-[var(--alert)]/50 hover:text-pink-300'
+ hoverClass:'hover:from-[var(--acc)]/20 hover:via-pink-500/20 hover:to-amber-0/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60'
  },
  youtube: {
  label:'YouTube',
  colorClass:'text-[var(--alert)]',
  bgClass:'bg-[var(--alert)]/10',
  borderClass:'border-[var(--alert)]/30',
- hoverClass:'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-red-300'
+ hoverClass:'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60'
  },
  tiktok: {
  label:'TikTok',
@@ -138,17 +138,17 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  bandcamp: {
  label:'Bandcamp',
- colorClass:'text-teal-300',
+ colorClass:'text-[var(--ok)]',
  bgClass:'bg-[var(--ok)]/10',
  borderClass:'border-[var(--ok)]/30',
- hoverClass:'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-teal-200'
+ hoverClass:'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ok)]/60'
  },
  facebook: {
  label:'Facebook',
  colorClass:'text-[var(--acc)]',
- bgClass:'bg-blue-500/10',
+ bgClass:'bg-[var(--tentative)]/50/10',
  borderClass:'border-[var(--acc)]/30',
- hoverClass:'hover:bg-blue-500/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80'
+ hoverClass:'hover:bg-[var(--tentative)]/50/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80'
  },
  twitter: {
  label:'X / Twitter',
@@ -166,24 +166,24 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
  },
  revolut: {
  label:'Revolut',
- colorClass:'text-sky-300',
- bgClass:'bg-sky-500/10',
+ colorClass:'text-[var(--ink-3)]',
+ bgClass:'bg-[var(--acc)]/10',
  borderClass:'border-[var(--acc)]/30',
- hoverClass:'hover:bg-sky-500/20 hover:border-[var(--acc)]/50 hover:text-sky-200'
+ hoverClass:'hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--tentative)]/40'
  },
  paypal: {
  label:'PayPal',
- colorClass:'text-sky-400',
+ colorClass:'text-[var(--ink-2)]',
  bgClass:'bg-[var(--bg)]/15',
  borderClass:'border-[var(--hair)]/40',
- hoverClass:'hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-sky-300'
+ hoverClass:'hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-[var(--ink-3)]'
  },
  whatsapp: {
  label:'WhatsApp',
  colorClass:'text-[var(--ok)]',
- bgClass:'bg-emerald-600/10',
+ bgClass:'bg-[var(--ok)]/10',
  borderClass:'border-[var(--ok)]/30',
- hoverClass:'hover:bg-emerald-600/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]'
+ hoverClass:'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]'
  }
 };
 

@@ -1019,7 +1019,7 @@ export default function App() {
     className="flex items-center gap-3 w-full cursor-pointer text-left group"
    >
     <div 
-     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-white text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
+     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
      style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
     >
      {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
@@ -1285,7 +1285,7 @@ export default function App() {
     className="flex items-center gap-3 w-full cursor-pointer text-left group"
    >
     <div 
-     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-white text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
+     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
      style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
     >
      {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
@@ -1348,16 +1348,16 @@ export default function App() {
 
  {/* Sync warning if backend fails */}
  {syncStatus === 'error' && (
- <div className="mb-4 p-3 bg-[var(--alert)]/10 border-[var(--alert)]/20 rounded-lg text-rose-300 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+ <div className="mb-4 p-3 bg-[var(--alert)]/10 border-[var(--alert)]/20 rounded-lg text-[var(--alert)]/60 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
  <div className="flex gap-2 items-center">
- <ShieldAlert className="w-5 h-5 text-rose-300 shrink-0" />
+ <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
  <span>
  <strong>Modo Simulación Activo:</strong> No se pudo conectar con el servidor Express backend local. Los cambios actuales se almacenarán temporalmente en memoria.
  </span>
  </div>
  <button
  onClick={() => fetchState()}
- className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 border-[var(--alert)]/20 text-rose-300 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
+ className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 border-[var(--alert)]/20 text-[var(--alert)]/60 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
  >
  Reintentar Conexión
  </button>
@@ -1369,7 +1369,7 @@ export default function App() {
  {isLoading ? (
  <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
  <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
- <p className="text-xs text-neutral-400 font-mono">Cargando base de datos Bakandeya...</p>
+ <p className="text-xs text-[var(--ink-3)] font-mono">Cargando base de datos Bakandeya...</p>
  </div>
  ) : (
  <Suspense fallback={
@@ -1603,8 +1603,8 @@ export default function App() {
  ) : (
  <div className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}>
  <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
- <h3 className="text-sm font-mono font-bold text-rose-300 uppercase tracking-wider">Acceso Restringido</h3>
- <p className="text-xs text-neutral-400 max-w-md mx-auto">
+ <h3 className="text-sm font-mono font-bold text-[var(--alert)]/60 uppercase tracking-wider">Acceso Restringido</h3>
+ <p className="text-xs text-[var(--ink-3)] max-w-md mx-auto">
  El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda.
  </p>
  </div>
@@ -1738,10 +1738,10 @@ export default function App() {
  onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
  className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full shadow-2xl flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
  isFloatingChatOpen
- ? 'bg-rose-600 text-white hover:bg-rose-700'
+ ? 'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
  : isChatLoading
- ? 'bg-[var(--tentative)]/80 text-white hover:bg-[var(--tentative)] shadow-indigo-500/30 ring-2 ring-cyan-400/50'
- : 'bg-[var(--ok)] hover:bg-emerald-400 text-zinc-950 hover:scale-105 shadow-emerald-500/20'
+ ? 'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] shadow-indigo-500/30 ring-2 ring-cyan-400/50'
+ : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105 shadow-emerald-500/20'
  }`}
  title={isChatLoading ? "Agente AI ejecutando en segundo plano..." : "Abrir Agente Mánager AI"}
  >
@@ -1755,8 +1755,8 @@ export default function App() {
  ) : (
  <Guitar className="w-5 h-5" />
  )}
- <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-emerald-300 animate-ping'}`} />
- <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-cyan-300' : 'bg-emerald-400'}`} />
+ <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`} />
+ <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--tentative)]/50' : 'bg-[var(--ok)]'}`} />
  </div>
  <span className="text-xs font-mono font-bold uppercase tracking-wider hidden sm:inline-block pr-1">
  {isChatLoading ? 'Ejecutando...' : 'Agente AI'}

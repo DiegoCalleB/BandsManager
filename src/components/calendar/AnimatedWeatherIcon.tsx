@@ -147,13 +147,13 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  <motion.div
  animate={{ opacity: [0.2, 0.45, 0.2] }}
  transition={{ duration: 2.5, repeat: Infinity, ease:"easeInOut" }}
- className="absolute inset-0 rounded-full bg-sky-500/15 blur-sm"
+ className="absolute inset-0 rounded-full bg-[var(--acc)]/15 blur-sm"
  />
  {/* Nube con lluvia */}
  <motion.div
  animate={{ y: [-0.5, 0.5, -0.5] }}
  transition={{ duration: 2, repeat: Infinity, ease:"easeInOut" }}
- className="relative z-10 text-sky-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]"
+ className="relative z-10 text-[var(--ink-2)] drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]"
  >
  <CloudRain className={currentSize.icon} />
  </motion.div>
@@ -171,7 +171,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeIn",
  delay: 0.1 
  }}
- className="w-0.5 h-1.5 rounded-full bg-sky-300"
+ className="w-0.5 h-1.5 rounded-full bg-[var(--tentative)]/40"
  />
  <motion.div
  animate={{ 
@@ -184,7 +184,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeIn",
  delay: 0.5 
  }}
- className="w-0.5 h-1.5 rounded-full bg-sky-400"
+ className="w-0.5 h-1.5 rounded-full bg-[var(--tentative)]"
  />
  </div>
  )}
@@ -370,7 +370,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
  };
  case'rain':
  return {
- bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-sky-500/20 border-[var(--acc)]/50 text-sky-300',
+ bg: isDanger ?'bg-[var(--alert)]/25 border-[var(--alert)]/60 text-[var(--ink)]' :'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--ink-3)]',
  glow: isDanger ?'shadow-[0_0_8px_rgba(244,63,94,0.3)]' :'shadow-[0_0_8px_rgba(14,165,233,0.3)]'
  };
  case'snow':

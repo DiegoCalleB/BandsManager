@@ -150,7 +150,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
  className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/10 /60 shadow-lg shadow-amber-0/10 ring-1 ring-amber-0/30'
- :'bg-[var(--bg)]/90 border-[var(--hair)] hover:/30 hover:bg-zinc-850'
+ :'bg-[var(--bg)]/90 border-[var(--hair)] hover:/30 hover:bg-[var(--bg)]'
  }`}
  >
  <div className="flex items-center justify-between gap-2 mb-2">

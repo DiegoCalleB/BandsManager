@@ -185,7 +185,7 @@ export function SongModal({
  }
  }}
  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. Brisa y Cacharros"
  />
@@ -206,7 +206,7 @@ export function SongModal({
  type="text"
  defaultValue={editingSong?.tonalidad ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. Lam / Am"
  />
@@ -226,7 +226,7 @@ export function SongModal({
  type="number"
  defaultValue={editingSong?.bpm || 120}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. 128"
  />
@@ -242,7 +242,7 @@ export function SongModal({
  value={minutos}
  onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
  className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[var(--ok)] ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="Min"
  />
@@ -255,7 +255,7 @@ export function SongModal({
  value={segundos}
  onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
  className={`w-1/2 p-2 rounded-[var(--r-s)] focus:outline-none text-center font-bold text-[var(--ok)] ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="Seg"
  />
@@ -290,7 +290,7 @@ export function SongModal({
  onChange={(e) => setCustomAlbumInput(e.target.value)}
  placeholder="Escribe el nombre del nuevo disco..."
  className={`w-full mt-1.5 p-2 rounded-[var(--r-s)] focus:outline-none border-[var(--hair)]/50 ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  )}
@@ -303,7 +303,7 @@ export function SongModal({
  type="text"
  defaultValue={editingSong?.genero ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. Rock Rumba"
  />
@@ -317,7 +317,7 @@ export function SongModal({
  name="tipo"
  defaultValue={editingSong?.tipo ||'propio'}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="propio">Propio / Original</option>
@@ -332,7 +332,7 @@ export function SongModal({
  name="estadoTema"
  defaultValue={editingSong?.estadoTema ||'listo'}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="listo">⚡ Listo para Directo</option>
@@ -352,7 +352,7 @@ export function SongModal({
  name="energia"
  defaultValue={energiaDefault}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  <option value="20">💣 Explosiva / Clímax (Hit)</option>
@@ -369,7 +369,7 @@ export function SongModal({
  type="text"
  defaultValue={editingSong?.cantantePrincipal ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. Voz Principal"
  />
@@ -384,7 +384,7 @@ export function SongModal({
  type="text"
  defaultValue={editingSong?.afinacion ||'E Standard'}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. Drop D, Eb Standard"
  />
@@ -397,7 +397,7 @@ export function SongModal({
  type="url"
  defaultValue={editingSong?.enlaceAcordes ||''}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="https://drive.google.com/..."
  />
@@ -411,7 +411,7 @@ export function SongModal({
  rows={2}
  defaultValue={editingSong?.notasInternas ||''}
  className={`w-full p-2.5 rounded-[var(--r-s)] focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  placeholder="ej. Intro solo con viento, estribillo fuerte..."
  />
@@ -453,7 +453,7 @@ export function SongModal({
  defaultValue={editingSong?.notasRepertorio ||''}
  placeholder="ej. Entrar directos sin intro..."
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none text-xs ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -479,7 +479,7 @@ export function SongModal({
  onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
  placeholder={`Notas específicas para ${member.name} (${member.instrument})...`}
  className={`w-full p-2 rounded-[var(--r-s)] focus:outline-none text-xs ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>

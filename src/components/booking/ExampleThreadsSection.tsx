@@ -216,7 +216,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  value={titulo}
  onChange={(e) => setTitulo(e.target.value)}
  placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
- className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
+ className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
  />
 
  {mensajes.map((m, idx) => (
@@ -234,7 +234,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
  value={m.texto}
  onChange={(e) => handleMessageChange(idx,'texto', e.target.value)}
  placeholder={m.rol ==='banda' ?'Lo que escribimos nosotros...' :'Lo que respondió la sala...'}
- className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
+ className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'}`}
  />
  {mensajes.length > 1 && (
  <button type="button" onClick={() => handleRemoveMessageRow(idx)} className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] cursor-pointer shrink-0">

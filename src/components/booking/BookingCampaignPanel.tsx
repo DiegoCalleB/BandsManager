@@ -176,7 +176,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  </button>
  </div>
  ))}
- <div className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100/80 text-blue-700 px-3 py-1.5 rounded-[var(--r-s)] border-[var(--acc)] border-dashed transition-colors">
+ <div className="flex items-center gap-1.5 bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/10/80 text-[var(--tentative)] px-3 py-1.5 rounded-[var(--r-s)] border-[var(--acc)] border-dashed transition-colors">
  <Plus className="w-3.5 h-3.5 shrink-0" />
  <span className="text-xs font-semibold shrink-0">Añadir Fecha:</span>
  <input 
@@ -189,7 +189,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  }
  e.target.value =''; // reset after selection
  }}
- className="text-xs font-semibold text-blue-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
+ className="text-xs font-semibold text-[var(--tentative)] bg-transparent border-0 p-0 focus:ring-0 cursor-pointer"
  title="Seleccionar nueva fecha para añadir"
  />
  </div>
@@ -271,7 +271,7 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
  <span>{activeCampaign?.minCapacity} - {activeCampaign?.maxCapacity} pax</span>
  </div>
  <div className="flex items-center gap-2 bg-[var(--ink)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-sm">
- <Calendar className="w-4 h-4 text-pink-300" />
+ <Calendar className="w-4 h-4 text-[var(--alert)]/60" />
  <span>{activeCampaign?.targetDates?.length || 0} fechas ({activeCampaign?.targetDatesText})</span>
  </div>
  </div>

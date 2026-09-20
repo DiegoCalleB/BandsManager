@@ -367,7 +367,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  return (
  <div
  className={`p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl shadow-xl transition-all ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)]/95 backdrop-blur-sm'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 backdrop-blur-sm'
  }`}
  >
  {/* Top Controls Bar (Search + Quick Filters + Actions) */}
@@ -569,17 +569,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  type="button"
  onClick={handleAnalyzeAllDynamics}
  disabled={dynamicsAnalysis?.running}
- className="px-2 py-1 rounded-[var(--r-m)] bg-sky-600/20 hover:bg-sky-600/30 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
+ className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-3)] hover:text-[var(--tentative)]/40 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
  title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
  >
  {dynamicsAnalysis?.running ? (
  <>
- <Loader2 className="w-3 h-3 animate-spin text-sky-400" />
+ <Loader2 className="w-3 h-3 animate-spin text-[var(--ink-2)]" />
  <span>{dynamicsAnalysis.done}/{dynamicsAnalysis.total}</span>
  </>
  ) : (
  <>
- <Headphones className="w-3 h-3 text-sky-400" />
+ <Headphones className="w-3 h-3 text-[var(--ink-2)]" />
  <span className="hidden xs:inline">Audio IA</span>
  <span>({songsPendingDynamicsAnalysis.length})</span>
  </>
@@ -698,7 +698,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={handlePlayAlbum}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
  title={isPlayingAlbum ?'Pausar disco' :'Reproducir disco'}
  >
  {isPlayingAlbum ? (
@@ -756,7 +756,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
  isStitchLight
- ?'bg-emerald-50 border-[var(--ok)] text-emerald-800 hover:bg-emerald-100'
+ ?'bg-[var(--ok)]/10 border-[var(--ok)] text-[var(--ok)] hover:bg-[var(--ok)]/20'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"

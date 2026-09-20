@@ -223,9 +223,9 @@ export function getSongMemberNote(song?: any, memberKey?: string, memberName?: s
 export type ReadinessLevel = 'aprendiendo' | 'casi_lista' | 'lista';
 
 export const READINESS_LEVELS: { value: ReadinessLevel; label: string; icon: string; colorClass: string }[] = [
-  { value: 'aprendiendo', label: 'Aprendiendo', icon: '🌱', colorClass: 'text-[var(--acc)]/80 bg-[var(--acc)]/10 border-amber-500/30' },
-  { value: 'casi_lista', label: 'Casi lista', icon: '🔶', colorClass: 'text-[var(--acc)]/80 bg-orange-500/10 border-orange-500/30' },
-  { value: 'lista', label: 'Lista para directo', icon: '✅', colorClass: 'text-[var(--ok)] bg-[var(--ok)]/10 border-emerald-500/30' }
+  { value: 'aprendiendo', label: 'Aprendiendo', icon: '🌱', colorClass: 'text-[var(--acc)]/80 bg-[var(--acc)]/10 border-[var(--hair)]' },
+  { value: 'casi_lista', label: 'Casi lista', icon: '🔶', colorClass: 'text-[var(--acc)]/80 bg-[var(--acc)]/10 border-[var(--hair)]' },
+  { value: 'lista', label: 'Lista para directo', icon: '✅', colorClass: 'text-[var(--ok)] bg-[var(--ok)]/10 border-[var(--ok)]/30' }
 ];
 
 /** Nivel de preparación de UN miembro concreto con una canción (null = todavía no ha opinado). */

@@ -72,7 +72,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  Tasa de Respuesta
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-blue-500/10 text-blue-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/50/10 text-[var(--tentative)]">
  <MessageSquare className="w-5 h-5" />
  </div>
  </div>
@@ -94,7 +94,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-2)]">
  Aforo Total Potencial
  </span>
- <div className="p-2 rounded-[var(--r-m)] bg-purple-500/10 text-purple-500">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">
  <TrendingUp className="w-5 h-5" />
  </div>
  </div>

@@ -59,7 +59,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
  {/* Informative banner */}
  <div className={`px-6 py-3 text-xs flex items-center gap-2.5 ${
- isStitchLight ?'bg-indigo-50/70 text-indigo-900' :'bg-[var(--surface)]/40 text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--tentative)]/5/70 text-[var(--tentative)]' :'bg-[var(--surface)]/40 text-[var(--ink-2)]'
  }`}>
  <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
  <p className="text-[11px] leading-relaxed font-mono">
@@ -94,7 +94,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  preset.id ==='plus_jakarta'
  ?'bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/30'
  : preset.isSoft
- ?'bg-sky-500/15 text-sky-400 -indigo-500/25'
+ ?'bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/25'
  :'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/25'
  }`}>
  {preset.badge}
@@ -123,7 +123,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  {/* Live Preview Sample */}
  <div 
  className={`p-3 rounded-[var(--r-s)] text-sm transition-all ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] bg-[var(--surface)]/80 text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] bg-[var(--surface)]/80 text-[var(--ink-2)]'
  }`}
  style={{ fontFamily: preset.displayFont }}
  >

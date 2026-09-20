@@ -14,39 +14,39 @@ interface LeadStatusStyle {
 const DEFAULT_STYLE: LeadStatusStyle = {
   dot: 'bg-[var(--ink-2)]/40',
   badgeLight: 'bg-slate-50 text-[var(--ink-2)]',
-  badgeDark: 'bg-neutral-800/60 text-neutral-400',
+  badgeDark: 'bg-[var(--sunken)]/60 text-[var(--ink-3)]',
   label: '',
 };
 
 export const LEAD_STATUS_STYLES: Record<string, LeadStatusStyle> = {
   nuevo: {
     dot: 'bg-[var(--acc)]/80',
-    badgeLight: 'bg-amber-50 text-amber-800 border border-amber-200',
+    badgeLight: 'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)] border border-[var(--hair)]',
     badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-[var(--acc)]/30',
     label: 'Por contactar',
   },
   esperando_respuesta: {
-    dot: 'bg-sky-400',
-    badgeLight: 'bg-sky-50 text-sky-700 border border-sky-200',
-    badgeDark: 'bg-[var(--acc)]/15 text-[var(--ink-3)] border border-sky-500/30',
+    dot: 'bg-[var(--tentative)]',
+    badgeLight: 'bg-[var(--tentative)]/10 text-[var(--tentative)] border border-[var(--tentative)]/30',
+    badgeDark: 'bg-[var(--acc)]/15 text-[var(--ink-3)] border border-[var(--tentative)]/30',
     label: 'Contactado',
   },
   enviado: {
-    dot: 'bg-sky-400',
-    badgeLight: 'bg-sky-50 text-sky-700 border border-sky-200',
-    badgeDark: 'bg-[var(--acc)]/15 text-[var(--ink-3)] border border-sky-500/30',
+    dot: 'bg-[var(--tentative)]',
+    badgeLight: 'bg-[var(--tentative)]/10 text-[var(--tentative)] border border-[var(--tentative)]/30',
+    badgeDark: 'bg-[var(--acc)]/15 text-[var(--ink-3)] border border-[var(--tentative)]/30',
     label: 'Contactado',
   },
   respondido: {
     dot: 'bg-[var(--tentative)]/80',
-    badgeLight: 'bg-indigo-50 text-indigo-700 border border-indigo-200',
-    badgeDark: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border border-indigo-500/30',
+    badgeLight: 'bg-[var(--tentative)]/5 text-[var(--tentative)] border border-[var(--hair)]',
+    badgeDark: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border border-[var(--tentative)]/30',
     label: 'En conversación',
   },
   negociando: {
-    dot: 'bg-purple-400',
-    badgeLight: 'bg-purple-50 text-purple-700 border border-purple-200',
-    badgeDark: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border border-purple-500/30',
+    dot: 'bg-[var(--acc)]',
+    badgeLight: 'bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--hair)]',
+    badgeDark: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80 border border-[var(--hair)]',
     label: 'Negociando',
   },
   confirmado: {
@@ -57,19 +57,19 @@ export const LEAD_STATUS_STYLES: Record<string, LeadStatusStyle> = {
   },
   aplazado: {
     dot: 'bg-[var(--acc)]',
-    badgeLight: 'bg-yellow-50 text-yellow-800 border border-yellow-200',
+    badgeLight: 'bg-[var(--surface)] text-[var(--accent-alt)] border border-[var(--hair)]',
     badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-[var(--acc)]/30',
     label: 'Aplazado ⏳',
   },
   no_interesado: {
-    dot: 'bg-neutral-500',
-    badgeLight: 'bg-[var(--surface)] text-[var(--ink-2)] border border-slate-200',
-    badgeDark: 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/50',
+    dot: 'bg-[var(--surface)]0',
+    badgeLight: 'bg-[var(--surface)] text-[var(--ink-2)] border border-[var(--hair)]',
+    badgeDark: 'bg-[var(--sunken)]/80 text-[var(--ink-3)] border border-[var(--hair)]',
     label: 'Descartado',
   },
   pendiente_aprobacion: {
     dot: 'bg-[var(--acc)]/80 animate-pulse',
-    badgeLight: 'bg-amber-50 text-amber-700 border border-amber-300',
+    badgeLight: 'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)] border border-[var(--hair)]',
     badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-[var(--acc)]/40',
     label: 'Borrador por aprobar',
   },
@@ -93,8 +93,8 @@ export const LEAD_STATUS_STYLES: Record<string, LeadStatusStyle> = {
   },
   borrador_creado: {
     dot: 'bg-[var(--acc)]/80',
-    badgeLight: 'bg-cyan-50 text-cyan-700 border border-cyan-300',
-    badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-cyan-500/40',
+    badgeLight: 'bg-[var(--surface)] text-[var(--tentative)] border border-[var(--hair)]',
+    badgeDark: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 border border-[var(--hair)]',
     label: 'Borrador en tu email 📝',
   },
 };

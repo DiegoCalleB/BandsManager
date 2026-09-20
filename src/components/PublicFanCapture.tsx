@@ -142,7 +142,7 @@ export const PublicFanCapture: React.FC = () => {
  /* FORM CARD */
  <form onSubmit={handleSubmit} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 shadow-2xl space-y-4 backdrop-blur-md">
  {errorMsg && (
- <div className="p-3 bg-red-950/80 text-red-200 text-xs rounded-[var(--r-m)] font-medium">
+ <div className="p-3 bg-[var(--alert)]/90/80 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
  ⚠️ {errorMsg}
  </div>
  )}

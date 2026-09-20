@@ -654,7 +654,7 @@ export function SongTransitionPreviewModal({
  🎼 {itemA?.tonalidadDeseada || songA.tonalidad ||'Sin tono'}
  </span>
  {songA.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-mono text-[9px] font-semibold">
  🥁 {songA.bpm} BPM
  </span>
  )}
@@ -712,7 +712,7 @@ export function SongTransitionPreviewModal({
  </span>
  )}
  {audioSourceTypeA ==='custom' && (
- <span className="text-sky-400 font-semibold flex items-center gap-1 truncate max-w-[130px]">
+ <span className="text-[var(--ink-2)] font-semibold flex items-center gap-1 truncate max-w-[130px]">
  <Upload className="w-3 h-3 shrink-0" />
  {customFileNameA ||'Local'}
  </span>
@@ -744,7 +744,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => fileInputRefA.current?.click()}
- className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -789,7 +789,7 @@ export function SongTransitionPreviewModal({
  <div>
  <div className="flex items-center justify-between mb-0.5">
  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ink-2)] flex items-center gap-1">
- <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+ <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
  #{indexB + 1} Siguiente
  </span>
  <div className="flex items-center gap-1">
@@ -797,7 +797,7 @@ export function SongTransitionPreviewModal({
  🎼 {itemB?.tonalidadDeseada || songB.tonalidad ||'Sin tono'}
  </span>
  {songB.bpm && (
- <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-sky-300 font-mono text-[9px] font-semibold">
+ <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] border-[var(--hair)]700 text-[var(--ink-3)] font-mono text-[9px] font-semibold">
  🥁 {songB.bpm} BPM
  </span>
  )}
@@ -855,7 +855,7 @@ export function SongTransitionPreviewModal({
  </span>
  )}
  {audioSourceTypeB ==='custom' && (
- <span className="text-sky-400 font-semibold flex items-center gap-1 truncate max-w-[130px]">
+ <span className="text-[var(--ink-2)] font-semibold flex items-center gap-1 truncate max-w-[130px]">
  <Upload className="w-3 h-3 shrink-0" />
  {customFileNameB ||'Local'}
  </span>
@@ -887,7 +887,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={() => fileInputRefB.current?.click()}
- className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-zinc-700 transition cursor-pointer shrink-0"
+ className="text-[9px] text-[var(--ink-2)] hover:text-[var(--ink)] px-1.5 py-0.2 rounded bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 transition cursor-pointer shrink-0"
  title="Subir archivo .mp3/.wav propio para probar"
  >
  📁 Subir
@@ -1148,7 +1148,7 @@ export function SongTransitionPreviewModal({
  </span>
  {isPlaying && (
  <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1 animate-pulse">
- <span className="w-1 h-1 rounded-full bg-emerald-400" />
+ <span className="w-1 h-1 rounded-full bg-[var(--ok)]" />
  Sonando
  </span>
  )}
@@ -1305,7 +1305,7 @@ export function SongTransitionPreviewModal({
  </div>
 
  <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] border-[var(--hair)]800 space-y-0.5">
- <div className="flex items-center gap-1 text-[11px] font-bold text-sky-300">
+ <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--ink-3)]">
  <Zap className="w-3 h-3" />
  <span>Salto BPM</span>
  </div>
@@ -1358,7 +1358,7 @@ export function SongTransitionPreviewModal({
  onInsertInterludio(itemA.id);
  onClose();
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--ink-3)] text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
  >
  <MessageSquarePlus className="w-3 h-3" />
  <span>Insertar Chapa</span>
@@ -1373,7 +1373,7 @@ export function SongTransitionPreviewModal({
  onSwapSongs(indexA, indexB);
  onClose();
  }}
- className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] border-[var(--hair)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+ className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] border-[var(--hair)]700 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
  >
  <ArrowLeftRight className="w-3 h-3" />
  <span>Invertir (A ⇄ B)</span>
@@ -1384,7 +1384,7 @@ export function SongTransitionPreviewModal({
  <button
  type="button"
  onClick={onClose}
- className="px-3.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
+ className="px-3.5 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[11px] font-bold transition cursor-pointer"
  >
  Cerrar
  </button>

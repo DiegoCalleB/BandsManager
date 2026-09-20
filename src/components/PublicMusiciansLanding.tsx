@@ -159,8 +159,8 @@ export const PublicMusiciansLanding: React.FC = () => {
  {/* Background Ambient Glows */}
  <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
  <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[var(--acc)]/10 rounded-full blur-[120px]" />
- <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-yellow-600/10 rounded-full blur-[140px]" />
- <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-amber-700/10 rounded-full blur-[140px]" />
+ <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-[var(--accent-alt)]/10 rounded-full blur-[140px]" />
+ <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[var(--accent-alt)]/10 rounded-full blur-[140px]" />
  </div>
 
  {/* Sticky Navigation / Header */}

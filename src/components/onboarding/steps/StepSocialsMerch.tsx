@@ -43,7 +43,7 @@ export const StepSocialsMerch: React.FC<StepSocialsMerchProps> = ({
  {/* Instagram */}
  <div>
  <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5 flex items-center gap-1.5">
- <Instagram className="w-3.5 h-3.5 text-pink-400" />
+ <Instagram className="w-3.5 h-3.5 text-[var(--alert)]" />
  Instagram (Perfil o URL)
  </label>
  <input

@@ -156,7 +156,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  <span className={`text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${tpl.preview.pill}`}>
  {tpl.badge}
  </span>
- <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-stone-700/60" />
+ <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--sunken)]/60" />
  </div>
  <div className="space-y-0.5 sm:space-y-1">
  <div className={`text-[10px] sm:text-xs font-bold ${tpl.preview.text} truncate`}>
@@ -164,7 +164,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  </div>
  <div className="flex items-center gap-1 sm:gap-1.5">
  <div className={`h-1.5 sm:h-2 w-8 sm:w-12 rounded-sm ${tpl.preview.accent}`} />
- <div className="h-1.5 sm:h-2 w-5 sm:w-8 rounded-sm bg-stone-700/50" />
+ <div className="h-1.5 sm:h-2 w-5 sm:w-8 rounded-sm bg-[var(--sunken)]/50" />
  </div>
  </div>
  </div>
@@ -196,7 +196,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  className={`block w-full py-0.5 sm:py-1 text-center rounded-md sm:rounded-[var(--r-s)] text-[10px] sm:text-[11px] font-bold font-mono transition ${
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
- :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-stone-200'
+ :'bg-[var(--surface)]/60 text-[var(--ink-2)] hover:text-[var(--ink)]/80'
  }`}
  >
  {isSelected ?'✓ Activa' :'Elegir'}
@@ -269,8 +269,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  key={item.id}
  className={`flex items-center justify-between gap-3 p-3 rounded-[var(--r-m)] transition ${
  item.isVisible
- ?'bg-[var(--surface)] border-[var(--hair)]/90 text-stone-200'
- :'bg-stone-950/60 border-[var(--hair)] text-[var(--ink-2)] opacity-60'
+ ?'bg-[var(--surface)] border-[var(--hair)]/90 text-[var(--ink)]/80'
+ :'bg-[var(--bg)]/60 border-[var(--hair)] text-[var(--ink-2)] opacity-60'
  }`}
  >
  {/* ÍNDICE Y METADATOS */}
@@ -330,7 +330,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  disabled={isFirst}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isFirst
- ?'opacity-30 cursor-not-allowed bg-stone-950 border-[var(--hair)] text-[var(--ink-3)]'
+ ?'opacity-30 cursor-not-allowed bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-3)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] border-[var(--hair)] cursor-pointer'
  }`}
  title="Subir posición"
@@ -345,7 +345,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
  disabled={isLast}
  className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
  isLast
- ?'opacity-30 cursor-not-allowed bg-stone-950 border-[var(--hair)] text-[var(--ink-3)]'
+ ?'opacity-30 cursor-not-allowed bg-[var(--bg)] border-[var(--hair)] text-[var(--ink-3)]'
  :'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] border-[var(--hair)] cursor-pointer'
  }`}
  title="Bajar posición"

@@ -475,7 +475,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  }}
  className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
  isCatSelected
- ?'bg-[var(--ok)] text-white shadow-xs'
+ ?'bg-[var(--ok)] text-[var(--ink)] shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
  }`}
  >
@@ -507,7 +507,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  p.category ==='ukulele'
  ?'bg-[var(--acc)]/20 text-[var(--acc)]/70'
  : p.category ==='bass'
- ?'bg-blue-500/20 text-[var(--acc)]/80'
+ ?'bg-[var(--tentative)]/50/20 text-[var(--acc)]/80'
  :'bg-[var(--ok)]/20 text-[var(--ink-2)]'
  }`}>
  {p.category ==='ukulele' ?'Uke' : p.category ==='bass' ?'Bajo' :'Guitar'}
@@ -544,16 +544,16 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="w-full bg-[var(--surface)] h-6 rounded-full relative overflow-hidden flex items-center px-1">
  {/* Center target indicator */}
  <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-2 bg-[var(--ok)]/40 z-0" />
- <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-emerald-400 z-10" />
+ <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-[var(--ok)] z-10" />
 
  {/* Needle pointer */}
  <div 
  className={`absolute top-0.5 bottom-0.5 w-3.5 rounded-full transition-all duration-100 z-20 shadow-md ${
  isTunedIn 
- ?'bg-emerald-400 shadow-emerald-500/80 scale-110' 
+ ?'bg-[var(--ok)] shadow-emerald-500/80 scale-110' 
  : currentCents < -5 
  ?'bg-[var(--acc)]/60 shadow-amber-0/50' 
- :'bg-rose-400 shadow-rose-500/50'
+ :'bg-[var(--alert)] shadow-rose-500/50'
  }`}
  style={{ left: `calc(${needlePercent}% - 7px)` }}
  />
@@ -609,7 +609,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  className={`w-full py-3 rounded-[var(--r-m)] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 ${
  isListening
  ?'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] shadow-sm'
- :'bg-[var(--ok)] hover:bg-emerald-400 text-white font-black shadow-lg shadow-emerald-500/20'
+ :'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black shadow-lg shadow-emerald-500/20'
  }`}
  >
  {isListening ? (

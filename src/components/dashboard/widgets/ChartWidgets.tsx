@@ -260,7 +260,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
  <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-sky-500/15 text-sky-400 shrink-0">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink-2)] shrink-0">
  <Building2 className="w-5 h-5" />
  </div>
  <div>
@@ -419,7 +419,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
  <div className="flex items-center justify-between pb-2.5 border-b border-[var(--hair)]">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-purple-500/15 text-purple-400 shrink-0">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)] shrink-0">
  <Users className="w-5 h-5" />
  </div>
  <div>
@@ -444,7 +444,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
 
  <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-mono">
  <span className="text-[var(--ink-2)]">Fans Registrados:</span>
- <span className="font-bold text-purple-400 text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
+ <span className="font-bold text-[var(--acc)] text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
  </div>
 
  <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>

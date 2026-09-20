@@ -634,7 +634,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandName(e.target.value)}
  placeholder="Ej. Los Nocturnos, Cuarteto Acústico..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none font-medium ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -648,7 +648,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandStyle(e.target.value)}
  placeholder="Ej. Indie Rock, Pop..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -660,7 +660,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onChange={(e) => setCreateBandLocation(e.target.value)}
  placeholder="Ej. Madrid, Barcelona..."
  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] text-[var(--ink)]'
  }`}
  />
  </div>
@@ -711,7 +711,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={handleCreateBandInProfile}
  disabled={isCreatingBand || !createBandName.trim()}
- className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)] hover:bg-emerald-400 text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
  >
  {isCreatingBand ? (
  <>
@@ -752,7 +752,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={handleConfirmDeleteBandInProfile}
  disabled={!!deletingBandId}
- className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
+ className="px-3 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm"
  >
  {deletingBandId ? (
  <>
@@ -1104,8 +1104,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  }}
  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
  isStitchLight
- ?'bg-indigo-50 hover:bg-sky-500/15 text-sky-400'
- :'bg-indigo-950/30 -indigo-500/30 hover:-indigo-500/60 text-indigo-200'
+ ?'bg-[var(--tentative)]/5 hover:bg-[var(--acc)]/15 text-[var(--ink-2)]'
+ :'bg-[var(--tentative)]/15 -indigo-500/30 hover:-indigo-500/60 text-[var(--tentative)]/40'
  }`}
  >
  <div className="flex items-center gap-2.5">
@@ -1115,7 +1115,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className="text-[10px] opacity-75 font-sans">Crear nuevos músicos, cambiar sus contraseñas y permisos</div>
  </div>
  </div>
- <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 -indigo-500/30">Abrir &rarr;</span>
+ <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">Abrir &rarr;</span>
  </button>
  </div>
  )}
@@ -1171,7 +1171,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
  <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
  <div className={`w-full max-w-lg rounded-[var(--r-l)] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] /30 text-[var(--ink-2)]'
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] border-b /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
@@ -1211,7 +1211,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  if (res.success && res.url) window.location.href = res.url;
  } catch (e) {}
  }}
- className="px-3 py-1 bg-rose-600 hover:bg-[var(--alert)] text-[var(--ink)] font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
+ className="px-3 py-1 bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-mono font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
  >
  Actualizar Tarjeta
  </button>

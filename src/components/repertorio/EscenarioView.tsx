@@ -295,7 +295,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <span className={`w-2 h-2 rounded-full transition-all duration-75 ${
  stageIsPlaying 
  ? (metronomeTick ?'bg-[var(--acc)]/60 scale-125 shadow-[0_0_8px_var(--acc)]' :'bg-[var(--acc-soft)] scale-90')
- :'bg-zinc-600'
+ :'bg-[var(--ink-2)]/60'
  }`} />
  {currentStageSong.bpm || 120} BPM
  </span>

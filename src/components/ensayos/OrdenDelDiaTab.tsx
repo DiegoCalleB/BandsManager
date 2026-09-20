@@ -23,11 +23,11 @@ interface OrdenDelDiaTabProps {
 
 const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
  cancion: { label:'Canción de Repertorio', icon:'🎵', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]', border:'/20' },
- calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-orange-500/10', text:'text-[var(--acc)]/80', border:'border-[var(--acc)]/20' },
+ calentamiento: { label:'Calentamiento / Sonido', icon:'🔥', bg:'bg-[var(--acc)]/10', text:'text-[var(--acc)]/80', border:'border-[var(--acc)]/20' },
  pausa: { label:'Pausa / Descanso / Birra', icon:'☕', bg:'bg-[var(--surface)]/80', text:'text-[var(--ink-2)]', border:'' },
- seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-purple-500/10', text:'text-purple-400', border:'border-[var(--acc)]/20' },
+ seccion_especifica: { label:'Sección Específica (Solo, Coros, Intro)', icon:'🎯', bg:'bg-[var(--tentative)]/10', text:'text-[var(--acc)]', border:'border-[var(--acc)]/20' },
  improvisacion: { label:'Jam / Improvisación / Riff', icon:'🎸', bg:'bg-[var(--ok)]/10', text:'text-[var(--ok)]', border:'border-[var(--ok)]/20' },
- outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-sky-500/10', text:'text-sky-400', border:'border-[var(--acc)]/20' },
+ outro: { label:'Repaso Final / Feedback', icon:'🏁', bg:'bg-[var(--acc)]/10', text:'text-[var(--ink-2)]', border:'border-[var(--acc)]/20' },
 };
 
 // 1x1 transparent drag ghost image
@@ -354,10 +354,10 @@ export function OrdenDelDiaTab({
  {setlists.length > 0 && (
  <button
  onClick={() => setShowImportSetlistModal(true)}
- className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-[var(--r-m)] bg-purple-500/15 text-purple-300 hover:bg-purple-500/25 transition-all text-xs font-mono font-bold cursor-pointer"
+ className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/25 transition-all text-xs font-mono font-bold cursor-pointer"
  title="Importar temas directamente de un repertorio o setlist de la banda"
  >
- <FolderInput className="w-3.5 h-3.5 text-purple-400" />
+ <FolderInput className="w-3.5 h-3.5 text-[var(--acc)]" />
  <span>Cargar Repertorio</span>
  </button>
  )}
@@ -492,7 +492,7 @@ export function OrdenDelDiaTab({
  setSelectedSongIds([]);
  setShowAddSongModal(true);
  }}
- className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 text-xs font-mono font-bold shadow-sm shadow-amber-400/20 transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-mono font-bold shadow-sm shadow-amber-400/20 transition-all cursor-pointer"
  >
  <Plus className="w-3.5 h-3.5" />
  <span>+ Añadir Canciones</span>
@@ -517,7 +517,7 @@ export function OrdenDelDiaTab({
  setSelectedSongIds([]);
  setShowAddSongModal(true);
  }}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-mono font-bold hover:bg-amber-300 cursor-pointer shadow-md"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] text-xs font-mono font-bold hover:bg-[var(--acc)] cursor-pointer shadow-md"
  >
  + Añadir Canciones del Repertorio
  </button>
@@ -525,7 +525,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => setShowImportSetlistModal(true)}
- className="px-4 py-2 rounded-[var(--r-m)] bg-purple-500/20 text-purple-300 text-xs font-mono font-bold hover:bg-purple-500/30 cursor-pointer"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-mono font-bold hover:bg-[var(--tentative)]/30 cursor-pointer"
  >
  ⚡ Cargar Repertorio Completo
  </button>
@@ -866,7 +866,7 @@ export function OrdenDelDiaTab({
  type="button"
  disabled={selectedSongIds.length === 0}
  onClick={handleConfirmAddSongs}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-[var(--acc)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
  >
  <Plus className="w-4 h-4 stroke-[3]" />
  <span>Añadir {selectedSongIds.length > 0 ? `${selectedSongIds.length} Canciones en Orden` :'Canciones'}</span>
@@ -885,7 +885,7 @@ export function OrdenDelDiaTab({
  <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] shadow-2xl my-auto flex flex-col border-[var(--hair)] bg-[var(--surface)] text-[var(--ink)]">
  <div className="flex justify-between items-center pb-3 border-b border-[var(--surface)]">
  <div className="flex items-center gap-2">
- <FolderInput className="w-5 h-5 text-purple-400" />
+ <FolderInput className="w-5 h-5 text-[var(--acc)]" />
  <h3 className="text-sm font-bold font-mono uppercase text-[var(--ink)]">
  Cargar Repertorio al Ensayo
  </h3>
@@ -930,7 +930,7 @@ export function OrdenDelDiaTab({
  <button
  type="button"
  onClick={() => handleImportSetlist(st, true)}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 transition-colors cursor-pointer"
+ className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80 transition-colors cursor-pointer"
  title="Reemplaza el orden del día completo con este setlist"
  >
  Reemplazar todo
@@ -1051,7 +1051,7 @@ export function OrdenDelDiaTab({
  </button>
  <button
  type="submit"
- className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-amber-300 cursor-pointer shadow-md"
+ className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] cursor-pointer shadow-md"
  >
  Añadir Bloque
  </button>

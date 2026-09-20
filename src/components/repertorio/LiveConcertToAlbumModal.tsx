@@ -1338,7 +1338,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  accept="video/*,audio/*"
  onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
  className={`w-full text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[var(--acc)] file:text-[var(--ink)] hover:file:bg-[var(--acc)]/80 ${
- isStitchLight ?'bg-white' :'bg-[var(--surface)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]'
  }`}
  />
  </div>
@@ -1458,7 +1458,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleLoadDemoAudio}
  disabled={isLinkingLocalFile}
- className="px-3 py-2 bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md disabled:opacity-50"
+ className="px-3 py-2 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold rounded-[var(--r-s)] flex items-center gap-1.5 transition-all text-xs shadow-md disabled:opacity-50"
  title="Cargar audio de ensayo demo instantáneamente para probar muestras y transcripciones"
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--ink)]" />
@@ -1563,7 +1563,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  <button
  onClick={() => setShowQuickNamingModal(true)}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80/30 text-sky-200 hover:bg-[var(--acc)]/80/50 flex items-center gap-1.5 transition-all shadow-sm"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80/30 text-[var(--tentative)]/40 hover:bg-[var(--acc)]/80/50 flex items-center gap-1.5 transition-all shadow-sm"
  title="Abrir asistente para nombrar todos los temas y speeches rápidamente o pegar tu setlist"
  >
  <Tag className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -1573,7 +1573,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleAutoDetectCues}
  disabled={isDetectingCues || tracks.length === 0}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80/30 text-sky-200 hover:bg-[var(--acc)]/80/50 flex items-center gap-1.5 transition-all shadow-sm"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)]/80/30 text-[var(--tentative)]/40 hover:bg-[var(--acc)]/80/50 flex items-center gap-1.5 transition-all shadow-sm"
  title="Analiza la envolvente de audio para detectar con precisión el ataque musical de cada tema, descartando ruidos, charla o aplausos"
  >
  <Target className={`w-3.5 h-3.5 text-[var(--ink-2)] ${isDetectingCues ?'animate-spin' :''}`} />
@@ -1583,7 +1583,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {tracks.some((t) => t.type ==='musica' && typeof t.cueIn ==='number' && t.cueIn > 0.2) && (
  <button
  onClick={handleSnapAllTracksToCues}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-sky-400 shadow-md flex items-center gap-1.5 font-bold animate-pulse"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--tentative)] shadow-md flex items-center gap-1.5 font-bold animate-pulse"
  title="Ajusta automáticamente los tiempos de inicio de todos los temas musicales al punto CUE exacto de entrada musical"
  >
  <Target className="w-3.5 h-3.5" />
@@ -1604,7 +1604,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <button
  onClick={handleTranscribeAllConcert}
  disabled={isTranscribingAll || tracks.length === 0}
- className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-emerald-600/30 text-[var(--ink)] hover:bg-emerald-600/50 flex items-center gap-1.5 transition-all disabled:opacity-50"
+ className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-s)] bg-[var(--ok)]/30 text-[var(--ink)] hover:bg-[var(--ok)]/50 flex items-center gap-1.5 transition-all disabled:opacity-50"
  title="Transcribir automáticamente todo el concierto (letras, acordes y speeches) usando Gemini IA"
  >
  <Sparkles className={`w-3.5 h-3.5 text-[var(--ok)] ${isTranscribingAll ?'animate-spin' :''}`} />
@@ -1707,7 +1707,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="flex items-center gap-2.5">
  <Sparkles className="w-5 h-5 text-[var(--ok)] animate-spin shrink-0" />
  <div>
- <div className="font-extrabold text-emerald-100 flex items-center gap-1.5">
+ <div className="font-extrabold text-[var(--ok)]/40 flex items-center gap-1.5">
  <span>Transcribiendo concierto completo con IA</span>
  <span className="text-[10px] bg-[var(--ok)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-full font-mono">
  {transcribeAllProgress.current} / {transcribeAllProgress.total}
@@ -1814,7 +1814,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* CUE In detected badge & snap buttons */}
  {typeof track.cueIn ==='number' && track.cueIn > 0.1 && (
- <div className="flex items-center gap-1.5 bg-sky-950/70 text-sky-200 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono shadow-sm">
+ <div className="flex items-center gap-1.5 bg-[var(--bg)]/70 text-[var(--tentative)]/40 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-mono shadow-sm">
  <Target className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
  <span className="text-[11px]">
  CUE: <strong>+{track.cueIn.toFixed(1)}s</strong>
@@ -2488,7 +2488,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {hasYoutubeCookies ? (
  <button
  onClick={handleDeleteCookies}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-red-300 text-xs font-bold transition-all"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--alert)]/60 text-xs font-bold transition-all"
  >
  Eliminar cookies actuales
  </button>
@@ -2762,7 +2762,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  type="button"
  onClick={handleApplyBatchPastedNames}
  disabled={!batchPastedText.trim()}
- className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-sky-400 text-[var(--ink)] font-extrabold text-xs shadow-lg shadow-sky-500/20 disabled:opacity-50 transition-all flex items-center gap-1.5"
+ className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-extrabold text-xs shadow-lg shadow-sky-500/20 disabled:opacity-50 transition-all flex items-center gap-1.5"
  >
  <Check className="w-4 h-4" />
  <span>Aplicar Nombres a las Pistas</span>

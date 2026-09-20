@@ -1033,7 +1033,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
  {/* Stepper Progress Bar */}
  {!isCelebrationStep && (
- <div className="px-5 sm:px-6 py-2.5 bg-zinc-950/60 border-b border-[var(--hair)] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+ <div className="px-5 sm:px-6 py-2.5 bg-[var(--bg)]/60 border-b border-[var(--hair)] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
  {activeSteps.map((step, idx) => {
  const isCurrent = idx === currentStepIndex;
  const isPassed = idx < currentStepIndex;
@@ -1354,7 +1354,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
  {/* Footer Controls */}
  {!isCelebrationStep && (
- <div className="p-4 sm:p-5 border-t border-[var(--hair)] bg-zinc-950/80 flex items-center justify-between">
+ <div className="p-4 sm:p-5 border-t border-[var(--hair)] bg-[var(--bg)]/80 flex items-center justify-between">
  <div>
  {currentStepIndex > 0 ? (
  <button

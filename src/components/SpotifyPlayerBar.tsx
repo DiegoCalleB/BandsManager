@@ -555,7 +555,7 @@ export default function SpotifyPlayerBar({
  <div className="flex items-center gap-2">
  <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition">{song.titulo}</h4>
  {isDrive && (
- <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-[var(--acc)]/80 shrink-0">
+ <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--tentative)]/50/20 text-[var(--acc)]/80 shrink-0">
  Drive
  </span>
  )}
@@ -574,7 +574,7 @@ export default function SpotifyPlayerBar({
  <span>•</span>
  <span>{song.bpm} BPM</span>
  {isCrossfading && nextQueueSong && (
- <span className="text-sky-400 font-semibold animate-pulse hidden xs:inline">
+ <span className="text-[var(--ink-2)] font-semibold animate-pulse hidden xs:inline">
  • 🔀 → {nextQueueSong.titulo}
  </span>
  )}
@@ -668,7 +668,7 @@ export default function SpotifyPlayerBar({
  </button>
  )}
  {isDrive && (
- <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-[var(--acc)]/80 shrink-0">
+ <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--tentative)]/50/20 text-[var(--acc)]/80 shrink-0">
  Drive
  </span>
  )}
@@ -684,7 +684,7 @@ export default function SpotifyPlayerBar({
  </span>
  )}
  {isTransposingAudio && (
- <span className="ml-1 text-sky-400 font-bold animate-pulse text-[10px]" title="Procesando trasposición DSP con Pedalboard de Spotify">
+ <span className="ml-1 text-[var(--ink-2)] font-bold animate-pulse text-[10px]" title="Procesando trasposición DSP con Pedalboard de Spotify">
  🎛️ Pedalboard...
  </span>
  )}
@@ -694,7 +694,7 @@ export default function SpotifyPlayerBar({
  {isCrossfading && nextQueueSong && (
  <>
  <span>•</span>
- <span className="text-sky-400 font-semibold animate-pulse">🔀 → {nextQueueSong.titulo}</span>
+ <span className="text-[var(--ink-2)] font-semibold animate-pulse">🔀 → {nextQueueSong.titulo}</span>
  </>
  )}
  </div>
@@ -765,7 +765,7 @@ export default function SpotifyPlayerBar({
  onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
  className={`p-1.5 rounded-full transition-all cursor-pointer text-sm ${
  crossfadeEnabled
- ?'text-sky-400 bg-sky-400/10'
+ ?'text-[var(--ink-2)] bg-[var(--tentative)]/10'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title={crossfadeEnabled ?"Fundido entre temas activado (5s)" :"Activar fundido entre temas (5s)"}
@@ -777,7 +777,7 @@ export default function SpotifyPlayerBar({
  <select
  value={playbackRate}
  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
- className="bg-[var(--surface)] text-[var(--ok)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)]"
+ className="bg-[var(--surface)] text-[var(--ok)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none border-[var(--hair)]"
  title="Velocidad de Reproducción"
  >
  <option value={0.5}>0.5x</option>
@@ -791,7 +791,7 @@ export default function SpotifyPlayerBar({
  <select
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
- className={`bg-[var(--surface)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border-[var(--hair)] ${
+ className={`bg-[var(--surface)] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none border-[var(--hair)] ${
  transposeSemitones !== 0 ?'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' :'text-[var(--ink-2)]'
  }`}
  title="Trasposición de Tono (Nativa en tiempo real Web Audio)"

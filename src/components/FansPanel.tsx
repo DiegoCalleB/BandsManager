@@ -626,7 +626,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  </div>
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
  <p className="text-xs font-bold text-[var(--ink-2)] uppercase tracking-widest mb-2 font-mono">Clics Totales en QR & Redes</p>
- <h3 className="text-4xl font-black text-sky-400 font-display flex items-center gap-2">
+ <h3 className="text-4xl font-black text-[var(--ink-2)] font-display flex items-center gap-2">
  <ExternalLink className="w-7 h-7" />
  {Object.entries(clickStats).filter(([k]) => !k.endsWith('_last_at')).reduce((a, b) => a + Number(b[1] || 0), 0)}
  </h3>
@@ -1181,7 +1181,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
  {/* Contenido principal: el QR, grande y arriba del todo */}
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col items-center text-center space-y-4">
- <div id="qr-code-svg-container" className="p-4 bg-white rounded-[var(--r-l)] shadow-2xl border-4 inline-block relative">
+ <div id="qr-code-svg-container" className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] shadow-2xl border-4 inline-block relative">
  <QRCode value={qrConcertUrl} size={210} level="H" />
  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
  {effectiveBandLogo ? (
@@ -1247,7 +1247,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => { setShowQrMoreMenu(false); handleDownloadSvg(); }}
  disabled={isExportingDirect}
- className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-sky-300 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-3)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
  >
  <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG (imprenta/lonas)
  </button>
@@ -1255,7 +1255,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  type="button"
  onClick={() => { setShowQrMoreMenu(false); handleDownloadPng4k(); }}
  disabled={isExportingDirect}
- className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-purple-300 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--tentative)]/80 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
  >
  <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra HD 4K
  </button>
@@ -1392,8 +1392,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {/* Apoyo Económico / Revolut: se configura ahora desde el Dossier EPK, fuente única
  del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
  <div className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-3">
- <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
- <Heart className="w-4 h-4 text-sky-400" />
+ <label className="text-xs font-bold text-[var(--ink-2)] uppercase font-mono tracking-wider flex items-center gap-2">
+ <Heart className="w-4 h-4 text-[var(--ink-2)]" />
  Colaboración Económica & Donaciones (Revolut, PayPal y Bizum)
  </label>
  <p className="text-[11px] text-[var(--ink-2)] font-mono">
@@ -1404,7 +1404,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  type="button"
  onClick={() => onNavigate?.('epk')}
- className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-[var(--ink)] text-xs font-bold font-mono rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
+ className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] text-xs font-bold font-mono rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
  >
  <ExternalLink className="w-3.5 h-3.5" /> Configurar en el Dossier EPK
  </button>

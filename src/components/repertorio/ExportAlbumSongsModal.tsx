@@ -523,7 +523,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
- <Music className={`w-5 h-5 ${format ==='m3u' ?'text-[var(--ok)]' :'text-sky-400'}`} />
+ <Music className={`w-5 h-5 ${format ==='m3u' ?'text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
  <div>
  <div className="text-xs font-bold">Playlist M3U</div>
  <div className="text-[10px] opacity-70">VLC / Reprod.</div>
@@ -555,7 +555,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  :'bg-[var(--ink)]/5 border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10 hover:text-[var(--ink)]'
  }`}
  >
- <Code className={`w-5 h-5 ${format ==='json' ?'text-[var(--ok)]' :'text-purple-400'}`} />
+ <Code className={`w-5 h-5 ${format ==='json' ?'text-[var(--ok)]' :'text-[var(--acc)]'}`} />
  <div>
  <div className="text-xs font-bold">JSON Data</div>
  <div className="text-[10px] opacity-70">Backup</div>
@@ -671,10 +671,10 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
  <button
  type="button"
  onClick={handlePrintSetlist}
- className="px-3.5 py-2.5 rounded-[var(--r-l)] bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
+ className="px-3.5 py-2.5 rounded-[var(--r-l)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--tentative)]/80 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
  title="Convertir canciones del disco en un setlist para imprimir en PDF"
  >
- <Printer className="w-4 h-4 text-purple-400" />
+ <Printer className="w-4 h-4 text-[var(--acc)]" />
  <span>Imprimir PDF Escenario</span>
  </button>
  )}

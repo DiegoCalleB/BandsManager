@@ -196,7 +196,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
  <button
  id="btn-add-submit"
  type="submit"
- className="px-2 py-1 bg-zinc-100 hover:bg-[var(--surface)] text-zinc-900 font-mono font-bold text-[10px] uppercase rounded-[var(--r-s)] transition-all cursor-pointer shadow-lg shadow-zinc-500/10"
+ className="px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-mono font-bold text-[10px] uppercase rounded-[var(--r-s)] transition-all cursor-pointer shadow-lg shadow-zinc-500/10"
  >
  Confirmar Registro
  </button>

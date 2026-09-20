@@ -3967,7 +3967,7 @@ export default function SongStudioModal({
  {isPlaying ? (
  <span className="w-2 h-2 rounded-full bg-[var(--ok)]/80 animate-ping" />
  ) : (
- <span className="w-2 h-2 rounded-full bg-neutral-500" />
+ <span className="w-2 h-2 rounded-full bg-[var(--surface)]0" />
  )}
  {isPlaying ?'Reproduciendo...' :'Detenido'}
  </span>
@@ -4889,7 +4889,7 @@ export default function SongStudioModal({
  const curTime = currentTimeMap[activeIdea.id] || 0;
  const dur = durationMap[activeIdea.id] || 0;
  return (
- <div className="border-t border-[var(--hair)] bg-zinc-950/95 backdrop-blur-sm px-3 sm:px-4 py-2 flex items-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.4)]">
+ <div className="border-t border-[var(--hair)] bg-[var(--bg)]/95 backdrop-blur-sm px-3 sm:px-4 py-2 flex items-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.4)]">
  <button
  type="button"
  onClick={() => togglePlayIdea(activeIdea)}
@@ -5062,7 +5062,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setShowCubaseHelp(false)}
- className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-white bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] transition-all cursor-pointer shadow-lg"
+ className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] transition-all cursor-pointer shadow-lg"
  >
  Entendido
  </button>
@@ -5775,7 +5775,7 @@ export default function SongStudioModal({
  {/* MODAL DE PROGRESO DE SEPARACIÓN DE STEMS IA */}
  {stemProgressModal && stemProgressModal.isOpen && !stemProgressModal.minimized && (
  <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
- <div className="bg-zinc-950 rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+ <div className="bg-[var(--bg)] rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
 
  {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
  -mx-6 cancela el padding del modal para que ocupe todo el ancho, de borde a borde. */}
@@ -6238,7 +6238,7 @@ export default function SongStudioModal({
  : stemProgressModal.errorType ==='audio_unsupported' || stemProgressModal.errorType ==='ffmpeg_codec_unsupported'
  ?'bg-[var(--acc)]/5/40 border-[var(--acc)]/50 text-[var(--acc)]/40'
  : stemProgressModal.errorType ==='gpu_failure'
- ?'bg-fuchsia-950/40 border-[var(--acc)]/50 text-fuchsia-200'
+ ?'bg-[var(--acc)]/20 border-[var(--acc)]/50 text-[var(--acc)]/40'
  : stemProgressModal.errorType ==='server_error'
  ?'bg-[var(--surface)]/90 /50 text-[var(--ink-2)]'
  : stemProgressModal.errorProvider ==='gemini'
@@ -6453,7 +6453,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null)}
- className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-[var(--r-l)] bg-zinc-950/95 backdrop-blur-md shadow-2xl p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
+ className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-[var(--r-l)] bg-[var(--bg)]/95 backdrop-blur-md shadow-2xl p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
  !terminado
  ?'border /40 hover:/70'
  : esError

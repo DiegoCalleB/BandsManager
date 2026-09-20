@@ -572,7 +572,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <ShieldCheck className="w-3 h-3" /> Mánager / Admin
  </span>
  ) : (
- <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-700/50 text-[var(--ink-2)] border-[var(--hair)]600 flex items-center gap-1 font-bold">
+ <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--ink-3)]/60/50 text-[var(--ink-2)] border-[var(--hair)]600 flex items-center gap-1 font-bold">
  <Lock className="w-3 h-3" /> Modo Lectura (Músico)
  </span>
  )}
@@ -1059,7 +1059,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-sky-500/10 to-indigo-500/10 text-[var(--ink-3)] text-xs flex items-start gap-3">
  <Mail className="w-5 h-5 text-[var(--ink-2)] shrink-0 mt-0.5" />
  <div className="space-y-1 leading-relaxed">
- <strong className="font-bold text-sky-200">Configuración Central de Email para Agentes IA:</strong>
+ <strong className="font-bold text-[var(--tentative)]/40">Configuración Central de Email para Agentes IA:</strong>
  <p className="text-[var(--ink-2)] text-[11px]">
  Aquí defines el buzón oficial y la identidad con la que los agentes redactarán propuestas, crearán borradores en Gmail y gestionarán las respuestas con las salas y promotores.
  </p>
@@ -1514,7 +1514,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
  <div className="p-3 rounded-[var(--r-s)] bg-[var(--surface)]/90 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
- <span className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse" />
+ <span className="w-2.5 h-2.5 rounded-full bg-[var(--tentative)] animate-pulse" />
  <div>
  <div className="text-xs font-mono font-bold text-[var(--ink)]">Agente Lector (Clasificador)</div>
  <div className="text-[10px] text-[var(--ink-2)] font-sans">
@@ -1522,7 +1522,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  </div>
  </div>
  </div>
- <span className="text-[10px] font-mono text-[var(--ink-3)] bg-sky-950/60 px-2 py-0.5 rounded font-bold">
+ <span className="text-[10px] font-mono text-[var(--ink-3)] bg-[var(--bg)]/60 px-2 py-0.5 rounded font-bold">
  En Escucha
  </span>
  </div>
@@ -1633,11 +1633,11 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  <div className="flex items-start gap-2">
  <Brain className="w-4 h-4 text-[var(--ink-2)] shrink-0 mt-0.5" />
  <div className="space-y-1">
- <span className="text-xs font-bold text-sky-200 block">
+ <span className="text-xs font-bold text-[var(--tentative)]/40 block">
  Lo que el sistema ya ha aprendido solo de tus respuestas reales
  </span>
  <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
- Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice"sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
+ Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice"sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-[var(--tentative)]/40">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
  </p>
  </div>
  </div>
@@ -1693,7 +1693,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClose();
  onOpenTemplatesSection();
  }}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-sky-400 text-white text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+ className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
  >
  Ver Hilos de Ejemplo ➔
  </button>
@@ -1775,7 +1775,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  disabled={!isAdmin}
  checked={strategy.mentionLinks}
  onChange={(e) => updateStrategyField(type.key,'mentionLinks', e.target.checked)}
- className="rounded bg-[var(--surface)] text-purple-500 focus:ring-purple-500 disabled:opacity-60"
+ className="rounded bg-[var(--surface)] text-[var(--acc)] focus:ring-purple-500 disabled:opacity-60"
  />
  <span>Mencionar enlace al Dossier/EPK si procede</span>
  </label>
@@ -1793,7 +1793,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  type="button"
  onClick={handleSaveResponseStrategies}
  disabled={isSavingStrategies}
- className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-purple-400 text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
+ className="ml-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
  >
  {isSavingStrategies ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
  <span>{isSavingStrategies ?'Guardando...' :'Guardar Estrategias de Respuesta'}</span>

@@ -438,32 +438,32 @@ export function diagnoseTransition(songA: Song, songB: Song): TransitionDiagnosi
   // Determine Verdict & Artistic Intent
   let verdictStatus: TransitionVerdict['status'] = 'buena';
   let badgeLabel = 'Transición Favorable';
-  let badgeClass = 'bg-[var(--ok)]/15 text-[var(--ok)] border-emerald-500/30';
+  let badgeClass = 'bg-[var(--ok)]/15 text-[var(--ok)] border-[var(--ok)]/30';
   let summary = 'Enlace recomendado con buen flujo musical y dinámico.';
   let artisticIntent = 'Mantiene la atención y enriquece la narrativa del concierto.';
 
   if (clampedScore >= 90) {
     verdictStatus = 'excelente';
     badgeLabel = '🟢 Enlace Impecable';
-    badgeClass = 'bg-[var(--ok)]/20 text-emerald-300 border-emerald-500/50 shadow-sm';
+    badgeClass = 'bg-[var(--ok)]/20 text-[var(--ok)]/60 border-[var(--ok)]/50 shadow-sm';
     summary = 'Transición perfecta en armonía y tempo. Flujo ideal para sonar como una banda de primer nivel.';
     artisticIntent = 'Conexión orgánica sin fisuras que maximiza el impacto en directo.';
   } else if (clampedScore >= 70) {
     verdictStatus = 'buena';
     badgeLabel = '🟡 Recomendada con Matices';
-    badgeClass = 'bg-[var(--acc)]/20 text-amber-300 border-amber-500/40';
+    badgeClass = 'bg-[var(--acc)]/20 text-[var(--ink-2)] border-[var(--hair)]';
     summary = 'Transición sólida. Requiere cuidar la entrada o el remate de platos según las recomendaciones.';
     artisticIntent = 'Aporta dinamismo y variación al show con un mínimo control de directo.';
   } else if (clampedScore >= 50) {
     verdictStatus = 'precaucion';
     badgeLabel = '🟠 Riesgosa / Requiere Ajuste';
-    badgeClass = 'bg-orange-500/20 text-[var(--acc)]/80 border-orange-500/40';
+    badgeClass = 'bg-[var(--acc)]/20 text-[var(--acc)]/80 border-[var(--hair)]';
     summary = 'Existe un salto notable de tempo o tensión armónica. Conviene prepararla en el local de ensayo.';
     artisticIntent = 'Efecto de contraste fuerte; debe ejecutarse con determinación.';
   } else {
     verdictStatus = 'desaconsejada';
     badgeLabel = '🔴 Choque / Desaconsejada Directa';
-    badgeClass = 'bg-[var(--alert)]/20 text-rose-300 border-rose-500/50';
+    badgeClass = 'bg-[var(--alert)]/20 text-[var(--alert)]/60 border-[var(--hair)]';
     summary = 'Choque armónico o corte dinámico severo. Se aconseja meter un bloque hablado o cambiar el orden.';
     artisticIntent = 'Riesgo alto de desafinación o desconexión del público.';
   }

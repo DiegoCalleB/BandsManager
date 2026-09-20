@@ -47,7 +47,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  const activeSetlist = setlists.find(s => s.id === activeSetlistId) || setlists[0];
 
  return (
- <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ?'bg-white' :'bg-[var(--surface)]/95 /80'} space-y-2.5 shadow-sm`}>
+ <header className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-[var(--r-l)] ${isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--surface)]/95 /80'} space-y-2.5 shadow-sm`}>
  {/* Top Row: Title + 2 Main Pillars (Setlists vs Discografía) */}
  <div className="flex items-center justify-between gap-2">
  {/* Module Title */}
@@ -189,7 +189,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 transition cursor-pointer ${
  isSelected
  ?'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-semibold'
- : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-white/5'
+ : isStitchLight ?'text-[var(--ink-2)] hover:bg-[var(--sunken)]' :'text-[var(--ink-2)] hover:bg-[var(--surface)]/5'
  }`}
  >
  <div className="min-w-0 truncate">

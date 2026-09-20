@@ -360,7 +360,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  const marker = L.marker(pos, { icon: customIcon });
 
  const popupHtml = document.createElement('div');
- popupHtml.className ='font-sans p-1 min-w-[220px] text-zinc-800';
+ popupHtml.className ='font-sans p-1 min-w-[220px] text-[var(--ink)]';
  popupHtml.innerHTML = `
  <div style="font-family: system-ui, sans-serif;">
  <div style="font-size: 14px; font-weight: 800; color: ${inkColor}; margin-bottom: 2px;">
@@ -463,7 +463,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  {/* Header Overlay */}
  <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
  <div className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] backdrop-blur-md shadow-md flex items-center gap-2 font-mono text-xs ${
- isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}>
  <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
  <div>
@@ -486,7 +486,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={() => setShowStyleMenu(!showStyleMenu)}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
- isStitchLight ?'bg-white/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)]/95 text-[var(--ink)]' :'bg-[var(--bg)]/95 text-[var(--ink)]'
  }`}
  >
  <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -517,7 +517,7 @@ export const BandMap: React.FC<BandMapProps> = ({
  <button
  onClick={handleRecenter}
  className={`px-3 py-2 rounded-[var(--r-m)] backdrop-blur-md font-mono text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
- isStitchLight ?'bg-white/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink)]' :'bg-[var(--bg)]/90 text-[var(--ink)]'
  }`}
  >
  <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />

@@ -213,7 +213,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <div className="bg-[var(--surface)] rounded-[var(--r-s)] w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl pointer-events-auto">
  <div className="sticky top-0 z-10 bg-[var(--surface)] border-b p-3 flex justify-between items-center">
  <div className="flex items-center gap-2.5">
- <ImagePlus className="w-5 h-5 text-sky-400" />
+ <ImagePlus className="w-5 h-5 text-[var(--ink-2)]" />
  <h2 className="text-base font-bold">Importar Repertorio de Foto/PDF</h2>
  </div>
  <button onClick={handleClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
@@ -224,7 +224,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <div className="p-4 space-y-4">
  {!reviewItems && !analyzing && (
  <div className="text-center py-8 space-y-4">
- <ImagePlus className="w-12 h-12 text-sky-400/50 mx-auto" />
+ <ImagePlus className="w-12 h-12 text-[var(--ink-2)]/50 mx-auto" />
  <p className="text-[var(--ink-2)]">
  Sube una foto o PDF de un repertorio ya impreso (a mano o a máquina) — la IA lee los
  temas en orden y los casa contra tu catálogo antes de crear nada.
@@ -233,12 +233,12 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  type="file"
  accept="image/*,.pdf"
  onChange={(e) => setFile(e.target.files?.[0] || null)}
- className="text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-sky-700 file:text-[var(--ink)] file:text-xs file:font-medium mx-auto block"
+ className="text-xs text-[var(--ink-2)] file:mr-3 file:py-1.5 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:bg-[var(--tentative)] file:text-[var(--ink)] file:text-xs file:font-medium mx-auto block"
  />
  {file && (
  <button
  onClick={handleAnalyze}
- className="bg-sky-600 hover:bg-sky-700 text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
+ className="bg-[var(--tentative)] hover:bg-[var(--tentative)] text-[var(--ink)] px-6 py-2 rounded-[var(--r-s)] transition font-medium"
  >
  Analizar
  </button>
@@ -248,15 +248,15 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
  {analyzing && (
  <div className="text-center py-12">
- <Loader className="w-8 h-8 animate-spin text-sky-400 mx-auto mb-4" />
+ <Loader className="w-8 h-8 animate-spin text-[var(--ink-2)] mx-auto mb-4" />
  <p className="text-[var(--ink-2)]">Leyendo el repertorio...</p>
  </div>
  )}
 
  {error && (
- <div className="bg-red-900/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
+ <div className="bg-[var(--alert)]/80/20 border-[var(--alert)] rounded-[var(--r-s)] p-4 flex gap-3">
  <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
- <p className="text-sm text-red-300">{error}</p>
+ <p className="text-sm text-[var(--alert)]/60">{error}</p>
  </div>
  )}
 
@@ -286,7 +286,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <button
  type="button"
  onClick={() => toggleBlockIncluded(idx)}
- className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink-2)] font-mono"
+ className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] font-mono"
  >
  {it.included ?'Descartar' :'Incluir'}
  </button>
@@ -351,13 +351,13 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
  <button
  onClick={handleCreate}
  disabled={creating || !setlistName.trim()}
- className="flex-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
+ className="flex-1 bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
  >
  {creating ? <Loader className="w-4 h-4 animate-spin" /> :'✓ Crear Repertorio'}
  </button>
  <button
  onClick={handleClose}
- className="flex-1 bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
+ className="flex-1 bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm"
  >
  Cancelar
  </button>

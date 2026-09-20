@@ -1212,7 +1212,7 @@ export default function BookingCRM({
  setIsContactEnricherOpen(true);
  setIsMobileToolsOpen(false);
  }}
- className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 transition-all cursor-pointer shadow-sm active:scale-98"
+ className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-gradient-to-r from-[var(--tentative)]/60 to-[var(--acc)]/60 hover:from-[var(--tentative)]/80 hover:to-[var(--acc)]/80 text-[var(--tentative)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
  >
  <span className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--tentative)]" />
@@ -1490,7 +1490,7 @@ export default function BookingCRM({
  onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
  className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
  onlyVerifiedFilter
- ?'bg-sky-500/20 text-sky-300 border-[var(--acc)]/50'
+ ?'bg-[var(--acc)]/20 text-[var(--ink-3)] border-[var(--acc)]/50'
  :'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1541,14 +1541,14 @@ export default function BookingCRM({
  />
  <button
  type="submit"
- className="px-2.5 py-1.5 bg-emerald-600 hover:bg-[var(--ok)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
+ className="px-2.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
  >
  Guardar
  </button>
  <button
  type="button"
  onClick={() => setIsSavingFilterOpen(false)}
- className="p-1.5 bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink-2)] rounded-[var(--r-s)] cursor-pointer"
+ className="p-1.5 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-s)] cursor-pointer"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1637,7 +1637,7 @@ export default function BookingCRM({
  className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
  typeFilter === t.key
  ?'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-sm'
- :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-zinc-700'
+ :'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
  }`}
  >
  {t.label}
@@ -1739,7 +1739,7 @@ export default function BookingCRM({
  </span>
  )}
  {onlyVerifiedFilter && (
- <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 shrink-0">
+ <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-3)] shrink-0">
  ✔ Verificados
  <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer"><X className="w-3 h-3" /></button>
  </span>
@@ -2149,10 +2149,10 @@ export default function BookingCRM({
  : templateTab ==='grupos'
  ? isStitchLight ? ('bg-[var(--surface)]/15 text-[var(--ok)]') :'bg-[var(--surface)]/15/30 text-[var(--ok)]'
  : templateTab ==='discotecas'
- ? isStitchLight ?'bg-purple-50 text-purple-900' :'bg-purple-500/10 text-purple-300'
+ ? isStitchLight ?'bg-[var(--acc)]/10 text-[var(--acc)]' :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'
  : templateTab ==='ayuntamientos'
  ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70'
- : isStitchLight ?'bg-sky-500/15 text-sky-400' :'bg-sky-500/15 text-sky-400'
+ : isStitchLight ?'bg-[var(--acc)]/15 text-[var(--ink-2)]' :'bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}>
  <div>
  <strong>{activeTemplate.title}</strong>
@@ -2313,23 +2313,23 @@ export default function BookingCRM({
  <div className="space-y-2 pt-3 pb-2">
  <div className="flex flex-wrap gap-2 items-center">
  <span className="text-[9px] font-mono text-[var(--ink-2)]">📊 Resultados:</span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-blue-100 text-blue-700' :'bg-blue-950 text-[var(--acc)]/80'}`}>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ?'bg-[var(--tentative)]/10 text-[var(--tentative)]' :'bg-[var(--tentative)]/10 text-[var(--acc)]/80'}`}>
  {templateStats[templateTab].totalUses} usos
  </span>
- <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-green-100 text-green-700' :'bg-green-950 text-green-300') : (isStitchLight ?'bg-yellow-100 text-yellow-700' :'bg-yellow-950 text-[var(--acc)]/80')}`}>
+ <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ?'bg-[var(--ok)]/10 text-[var(--ok)]' :'bg-[var(--ok)]/10 text-[var(--ok)]') : (isStitchLight ?'bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]' :'bg-[var(--accent-alt)]/10 text-[var(--acc)]/80')}`}>
  {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
  </span>
  </div>
  {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
  <div className="space-y-1">
  {templateStats[templateTab].invalidEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-red-100 text-red-700' :'bg-red-950 text-red-300'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-[var(--alert)]/10 text-[var(--alert)]' :'bg-[var(--alert)]/90 text-[var(--alert)]/60'}`}>
  <span>⚠️</span>
  <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
  </div>
  )}
  {templateStats[templateTab].bouncedEmails > 0 && (
- <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-orange-100 text-orange-700' :'bg-orange-950 text-[var(--acc)]/80'}`}>
+ <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ?'bg-[var(--acc)]/10 text-[var(--accent-alt)]' :'bg-[var(--accent-alt)]/10 text-[var(--acc)]/80'}`}>
  <span>📬</span>
  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
  </div>
@@ -2370,7 +2370,7 @@ export default function BookingCRM({
  className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${
  isStitchLight
  ?'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
- :'bg-[var(--surface)]/70 hover:bg-neutral-600 text-[var(--ink)]'
+ :'bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink)]'
  }`}
  title="Restaurar valores por defecto de esta plantilla"
  >
@@ -2381,7 +2381,7 @@ export default function BookingCRM({
  id="template-btn-save"
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- 'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
+ 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices

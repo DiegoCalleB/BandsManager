@@ -177,7 +177,7 @@ export default function Finanzas({
  {syncSuccess && (
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
- ?'bg-emerald-50 text-emerald-800' 
+ ?'bg-[var(--ok)]/10 text-[var(--ok)]' 
  :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
  }`}>
  <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
@@ -188,7 +188,7 @@ export default function Finanzas({
  {syncError && (
  <div className={`p-2 px-3 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${
  isStitchLight 
- ?'bg-rose-50 text-rose-800' 
+ ?'bg-[var(--alert)]/10 text-[var(--alert)]' 
  :'bg-[var(--alert)]/10 -rose-500/20 text-[var(--alert)]'
  }`}>
  <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
@@ -291,8 +291,8 @@ export default function Finanzas({
  onClick={() => setIsAddOpen(true)}
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
  isStitchLight 
- ?'bg-[var(--tentative)]/80 hover:bg-indigo-700 text-[var(--ink)] shadow-sm' 
- :'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-md'
+ ?'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] shadow-sm' 
+ :'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-md'
  }`}
  >
  <Plus className="w-3.5 h-3.5" /> Registrar Operación
@@ -424,7 +424,7 @@ export default function Finanzas({
  <span className="font-bold text-[var(--ink)] block">{c.fecha}</span>
  <span className="text-[10px] text-[var(--ink-2)] capitalize">{c.tipo}</span>
  {c.giraNombre && (
- <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-mono">
+ <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] font-mono">
  🚐 {c.giraNombre}
  </span>
  )}
@@ -433,7 +433,7 @@ export default function Finanzas({
  <span className="font-bold text-[var(--ink)] block">{c.sala}</span>
  <span className="text-[10px] text-[var(--ink-2)]">{c.ciudad}</span>
  {c.convocatoria_tipo ==="parcial" ? (
- <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(",")}>
+ <span className="inline-block mt-0.5 text-[9px] text-[var(--tentative)]/80 bg-[var(--tentative)]/10 px-1.5 py-0.2 rounded font-mono" title={c.convocados_nombres?.join(",")}>
  👤 Parcial ({numConvocados} miembros)
  </span>
  ) : (
@@ -465,7 +465,7 @@ export default function Finanzas({
  <span className="block text-[10px] text-[var(--ink-2)] font-normal">
  Margen: {margenPct}%
  </span>
- <span className="block text-[9px] text-purple-300 font-normal">
+ <span className="block text-[9px] text-[var(--tentative)]/80 font-normal">
  Reparto: {netoPorMusico >= 0 ?"+" + netoPorMusico : netoPorMusico}€/músico
  </span>
  </td>
@@ -661,7 +661,7 @@ export default function Finanzas({
  value={typeFilter}
  onChange={(e) => setTypeFilter(e.target.value as any)}
  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-mono focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
  }`}
  >
  <option value="todos">Tipo: Todos</option>
@@ -674,7 +674,7 @@ export default function Finanzas({
  value={categoryFilter}
  onChange={(e) => setCategoryFilter(e.target.value)}
  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-mono focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
  }`}
  >
  <option value="todos">Categoría: Todas</option>
@@ -686,7 +686,7 @@ export default function Finanzas({
  value={statusFilter}
  onChange={(e) => setStatusFilter(e.target.value as any)}
  className={` rounded-[var(--r-s)] text-xs py-1.5 px-3 font-mono focus:outline-none ${
- isStitchLight ?'bg-white text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
+ isStitchLight ?'bg-[var(--surface)] text-[var(--ink)]' :'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)]'
  }`}
  >
  <option value="todos">Estado: Todos</option>
@@ -753,7 +753,7 @@ export default function Finanzas({
  className={`px-2.5 py-1 text-[9px] font-mono rounded font-bold uppercase transition-all flex items-center gap-1 cursor-pointer active:scale-95 ${
  p.estado ==='pagado'
  ? isStitchLight
- ?'bg-emerald-50 text-emerald-700'
+ ?'bg-[var(--ok)]/10 text-[var(--ok)]'
  :'bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ok)]'
  : 'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}

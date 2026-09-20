@@ -91,7 +91,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
  type="button"
  onClick={onAddPhotoUrl}
  disabled={!newPhotoUrl.trim()}
- className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
+ className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1"
  >
  <Plus className="w-3.5 h-3.5" /> Añadir
  </button>

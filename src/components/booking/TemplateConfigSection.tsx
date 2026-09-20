@@ -142,11 +142,11 @@ export function TemplateConfigSection({
  ? 'bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'
  ? isStitchLight
- ?'bg-purple-50 text-purple-900'
- :'bg-purple-500/10 text-purple-300'
+ ?'bg-[var(--acc)]/10 text-[var(--acc)]'
+ :'bg-[var(--tentative)]/10 text-[var(--tentative)]/80'
  : isStitchLight
- ?'bg-sky-500/15 text-sky-400'
- :'bg-sky-500/15 text-sky-400'
+ ?'bg-[var(--acc)]/15 text-[var(--ink-2)]'
+ :'bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}
  >
  <div>
@@ -348,7 +348,7 @@ export function TemplateConfigSection({
  id="template-btn-save"
  onClick={onSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
- 'bg-[var(--sunken)] hover:bg-zinc-700 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
+ 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] shadow-lg shadow-[var(--acc)]/10'
  }`}
  >
  Guardar Plantillas y Directrices

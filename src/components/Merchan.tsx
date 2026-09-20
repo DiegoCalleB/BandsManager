@@ -359,7 +359,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
  {/* Panel de Control */}
  <div className={`lg:col-span-4 p-5 rounded-[var(--r-l)] shadow-xl space-y-6 h-fit ${
- isStitchLight ?'bg-white' :'bg-[var(--bg)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  
  <div className="space-y-3">
@@ -505,8 +505,8 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
 
  {/* Opción de recorte de fondo / rembg */}
- <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-indigo-950/20 border-[var(--acc)]/30'}`}>
- <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-700' :'text-[var(--tentative)]'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--tentative)]/20 border-[var(--acc)]/30'}`}>
+ <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--tentative)]'}`}>
  <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de Fondo (Canvas Layering)
  </label>
  <p className="text-[10px] font-mono text-[var(--ink-2)]">
@@ -553,8 +553,8 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  )}
 
  {productType ==='pegatina' && (
- <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-indigo-900/10 border-[var(--acc)]/20'}`}>
- <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-indigo-600' :'text-[var(--tentative)]'}`}>
+ <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--tentative)]/10 border-[var(--acc)]/20'}`}>
+ <label className={`block text-[10px] uppercase font-mono font-bold tracking-wider flex items-center gap-1.5 ${isStitchLight ?'text-[var(--tentative)]' :'text-[var(--tentative)]'}`}>
  <QrCode className="w-3.5 h-3.5" /> Link de redirección del QR
  </label>
  <input
@@ -597,7 +597,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* Zona de Vista Previa y Galería */}
  <div className={`lg:col-span-8 p-6 rounded-[var(--r-l)] shadow-xl space-y-6 min-h-[500px] flex flex-col ${
- isStitchLight ?'bg-white' :'bg-[var(--bg)]'
+ isStitchLight ?'bg-[var(--surface)]' :'bg-[var(--bg)]'
  }`}>
  <div className="flex items-center justify-between">
  <h2 className={`font-mono text-xs uppercase font-bold tracking-widest flex items-center gap-2 ${isStitchLight ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
@@ -630,7 +630,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div key={design.id} className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all shadow-xl flex flex-col items-center justify-center p-6 ${design.type ==='camiseta' ? (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]') : (isStitchLight ?'bg-[var(--sunken)]' :'bg-[var(--surface)]')}`}>
  
  {design.type ==='pegatina' ? (
- <div className="w-52 h-52 bg-white shadow-2xl flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden">
+ <div className="w-52 h-52 bg-[var(--surface)] shadow-2xl flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 border-4 border-[var(--hair)] rounded-[var(--r-s)] overflow-hidden">
  {design.assetType ==='portada' || design.assetType ==='custom' ? (
  <ResolvedBgImage className="h-36 w-full bg-cover bg-center" url={displayGraphic} />
  ) : (
@@ -638,15 +638,15 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  <div className="w-full h-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${displayGraphic})`, filter:'invert(1)' }} />
  </div>
  )}
- <div className="h-16 w-full bg-white flex items-center justify-between px-3 border-t border-[var(--hair)]">
+ <div className="h-16 w-full bg-[var(--surface)] flex items-center justify-between px-3 border-t border-[var(--hair)]">
  <div className="font-mono text-[10px] text-[var(--ink)] uppercase font-black leading-tight">
- {displayBandName.toUpperCase()}<br/><span className="text-amber-600">SCAN QR</span>
+ {displayBandName.toUpperCase()}<br/><span className="text-[var(--accent-alt)]">SCAN QR</span>
  </div>
  <div className="relative w-12 h-12 flex items-center justify-center">
  <QRCode value={design.qrUrl || qrUrl} size={44} level="H" />
  {bandLogoUrl && (
  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
- <div className="w-3.5 h-3.5 bg-white rounded-sm flex items-center justify-center overflow-hidden border-[var(--hair)] p-0.5">
+ <div className="w-3.5 h-3.5 bg-[var(--surface)] rounded-sm flex items-center justify-center overflow-hidden border-[var(--hair)] p-0.5">
  <img src={bandLogoUrl} alt="Logo" className="w-full h-full object-cover rounded-sm" />
  </div>
  </div>
@@ -694,7 +694,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  link.click();
  }}
  className={`px-4 py-2 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex items-center gap-2 shadow-lg transition ${
- 'bg-[var(--acc)] text-[#121111] hover:bg-white'
+ 'bg-[var(--acc)] text-[#121111] hover:bg-[var(--surface)]'
  }`}
  >
  <Download className="w-4 h-4" />
@@ -702,7 +702,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </button>
  <button 
  onClick={() => handleDelete(design.id)}
- className="px-4 py-2 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex items-center gap-2 bg-rose-600/90 text-[var(--ink)] hover:bg-rose-600 shadow-lg transition"
+ className="px-4 py-2 rounded-[var(--r-m)] font-mono text-xs font-bold uppercase flex items-center gap-2 bg-[var(--alert)]/90 text-[var(--ink)] hover:bg-[var(--alert)] shadow-lg transition"
  >
  <Trash2 className="w-4 h-4" />
  Eliminar
@@ -710,7 +710,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  </div>
  
  <div className={`absolute bottom-3 left-3 px-2 py-1 rounded-md text-[9px] font-mono uppercase font-bold z-20 ${
- isStitchLight ?'bg-white/90 text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/90 text-[var(--ink-2)]'
+ isStitchLight ?'bg-[var(--surface)]/90 text-[var(--ink-2)] shadow-sm' :'bg-[var(--surface)]/90 text-[var(--ink-2)]'
  }`}>
  {design.type} • {design.assetType ==='custom' ?'Imagen propia' : design.assetType}
  </div>

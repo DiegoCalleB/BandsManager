@@ -80,9 +80,9 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       label: 'Balada / Acústica',
       icon: '🌙',
       hexColor: '#0284c7',
-      bgClass: 'bg-sky-500/15',
-      textClass: 'text-sky-400',
-      borderClass: 'border-sky-500/30'
+      bgClass: 'bg-[var(--acc)]/15',
+      textClass: 'text-[var(--ink-2)]',
+      borderClass: 'border-[var(--tentative)]/30'
     };
   }
 
@@ -95,7 +95,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       hexColor: '#059669',
       bgClass: 'bg-[var(--ok)]/15',
       textClass: 'text-[var(--ok)]',
-      borderClass: 'border-emerald-500/30'
+      borderClass: 'border-[var(--ok)]/30'
     };
   }
 
@@ -108,7 +108,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       hexColor: '#a16207',
       bgClass: 'bg-[var(--acc)]/15',
       textClass: 'text-[var(--acc)]/80',
-      borderClass: 'border-amber-500/30'
+      borderClass: 'border-[var(--hair)]'
     };
   }
 
@@ -203,7 +203,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           hexColor: isBis ? '#a21caf' : '#64748b',
           bgClass: isBis ? 'bg-[var(--tentative)]/15' : 'bg-[var(--ink-2)]/40/30',
           textClass: isBis ? 'text-[var(--tentative)]/80' : 'text-[var(--ink-2)]',
-          borderClass: isBis ? 'border-[var(--tentative)]/30' : 'border-slate-700/40'
+          borderClass: isBis ? 'border-[var(--tentative)]/30' : 'border-[var(--hair)]'
         }
       });
     }
