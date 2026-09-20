@@ -139,7 +139,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
  <a
  href={generatedAudioUrl}
  download={`soundtrack-${song?.titulo ||'band'}.wav`}
- className="px-3 py-1 bg-[var(--acc)] text-black text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-[var(--acc)]/60 transition"
+ className="px-3 py-1 bg-[var(--acc)] text-[var(--acc-ink)] text-xs font-bold rounded-[var(--r-s)] flex items-center gap-1 hover:bg-[var(--acc)]/60 transition"
  >
  <Download className="w-3.5 h-3.5" /> Descargar WAV
  </a>

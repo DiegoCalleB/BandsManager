@@ -52,7 +52,7 @@ export const AlbumCover: React.FC<AlbumCoverProps> = ({
  e.stopPropagation();
  if (onPlay) onPlay(e);
  }}
- className={`absolute bottom-3 right-3 w-12 h-12 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black shadow-2xl flex items-center justify-center transform transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95 z-20 ${
+ className={`absolute bottom-3 right-3 w-12 h-12 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] shadow-2xl flex items-center justify-center transform transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95 z-20 ${
  isPlaying 
  ?'translate-y-0 opacity-100 ring-2 ring-white/50 scale-105' 
  :'translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'

@@ -348,7 +348,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('1')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1'
- ?'bg-[var(--acc)] text-black shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -359,7 +359,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('100')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='100'
- ?'bg-[var(--acc)] text-black shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -370,7 +370,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  onClick={() => setVolumeScale('1000')}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
  volumeScale ==='1000'
- ?'bg-[var(--acc)] text-black shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

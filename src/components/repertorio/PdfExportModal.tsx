@@ -1384,7 +1384,7 @@ export function PdfExportModal({
  <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
  <button
  onClick={() => handlePrint()}
- className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-black active:scale-95 hover:shadow-[var(--ok)]/20"
+ className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95 hover:shadow-[var(--ok)]/20"
  >
  <Printer className="w-4 h-4" />
  {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según

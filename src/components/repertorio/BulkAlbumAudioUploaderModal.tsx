@@ -930,7 +930,7 @@ export function BulkAlbumAudioUploaderModal({
  type="button"
  onClick={handleStartUpload}
  disabled={isUploading || items.length === 0}
- className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-black text-xs font-mono font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-mono font-bold shadow-lg flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isUploading ? (
  <>

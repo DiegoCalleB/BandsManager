@@ -143,7 +143,7 @@ export function SongModal({
  <button
  type="button"
  onClick={() => fileInputRef.current?.click()}
- className="px-2.5 py-1 text-[10px] rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-extrabold cursor-pointer transition-transform active:scale-95"
+ className="px-2.5 py-1 text-[10px] rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold cursor-pointer transition-transform active:scale-95"
  >
  Examinar...
  </button>
@@ -501,7 +501,7 @@ export function SongModal({
  </button>
  <button
  type="submit"
- className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-black transition-transform active:scale-95 cursor-pointer shadow-lg"
+ className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer shadow-lg"
  >
  Guardar Canción
  </button>

@@ -766,7 +766,7 @@ export function SongTransitionPreviewModal({
  <div
  className={`w-7 h-7 rounded-full flex items-center justify-center transition ${
  currentGains.isCrossfading
- ?'bg-[var(--acc)] text-black scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] scale-110 shadow-lg shadow-amber-500/30 animate-pulse'
  :'bg-[var(--surface)] text-[var(--ink-2)] border-[var(--hair)]'
  }`}
  >
@@ -935,7 +935,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
  playbackMode ==='synth'
- ?'bg-[var(--acc)]/60 text-black shadow-sm'
+ ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -973,7 +973,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='crossfade'
- ?'bg-[var(--acc)] text-black shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -987,7 +987,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='segue'
- ?'bg-[var(--acc)] text-black shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1001,7 +1001,7 @@ export function SongTransitionPreviewModal({
  }}
  className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition cursor-pointer ${
  config.style ==='pause'
- ?'bg-[var(--acc)] text-black shadow-sm'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

@@ -3642,7 +3642,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => handleSetTonalidadDeseada(it.id, note)}
  className={`px-1 py-1 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
- desiredKey === note ?'bg-[var(--acc)] text-black' :'bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70'
+ desiredKey === note ?'bg-[var(--acc)] text-[var(--acc-ink)]' :'bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  >
  {note}
@@ -3743,7 +3743,7 @@ export default function RepertorioSetlists({
  onClick={() => handleSetEnergiaManual(song, it.id, val)}
  className={`w-5 h-5 rounded text-[9px] font-mono font-bold flex items-center justify-center transition disabled:opacity-50 ${
  currentVal1a10 === val
- ?'bg-[var(--acc)] text-black'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)]'
  :'bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  >
@@ -3758,7 +3758,7 @@ export default function RepertorioSetlists({
  })()}
 
  {isSelected && (
- <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-[var(--acc)] text-black shrink-0">
+ <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-[var(--acc)] text-[var(--acc-ink)] shrink-0">
  📌
  </span>
  )}
@@ -4074,7 +4074,7 @@ export default function RepertorioSetlists({
  />
 
  {isSelected && (
- <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-[var(--acc)] text-black shrink-0">
+ <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-[var(--acc)] text-[var(--acc-ink)] shrink-0">
  📌
  </span>
  )}

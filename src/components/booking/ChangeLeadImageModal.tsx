@@ -252,7 +252,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
  type="button"
  onClick={handleSaveCustomUrl}
  disabled={!customUrl.trim()}
- className="px-3 py-1.5 bg-[var(--acc)] text-black font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition-colors disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--acc)] text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-s)] hover:bg-[var(--acc)]/60 transition-colors disabled:opacity-50"
  >
  Guardar
  </button>

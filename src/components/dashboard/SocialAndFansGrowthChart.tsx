@@ -817,7 +817,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <button
  type="button"
  onClick={selectAllChannels}
- className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-mono text-[10px] font-bold transition-all cursor-pointer"
+ className="mt-3 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-mono text-[10px] font-bold transition-all cursor-pointer"
  >
  Activar todos los canales
  </button>

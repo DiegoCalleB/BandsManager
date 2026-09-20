@@ -625,7 +625,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  onClick={() => setBillingPeriod('annual')}
  className={`relative px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
  billingPeriod ==='annual'
- ?'bg-[var(--acc)]/60 text-black shadow-lg shadow-amber-400/20 font-black'
+ ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-lg shadow-amber-400/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -761,7 +761,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <div className="flex items-start gap-2.5">
  <div className={`p-1.5 rounded-[var(--r-m)] shrink-0 ${
  plan.isPopular
- ?'bg-[var(--acc)]/60 text-black shadow-sm'
+ ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm'
  : plan.id ==='cabeza_de_cartel'
  ?'bg-emerald-400 text-black shadow-sm'
  :'bg-slate-300 text-black'
@@ -810,7 +810,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
  <li key={idx} className="flex items-start gap-2.5 text-xs">
  {feat.included ? (
  <div className={`p-0.5 rounded-full mt-0.5 shrink-0 ${
- plan.isPopular ?'bg-[var(--acc)]/60 text-black' :'bg-emerald-500/20 text-emerald-400'
+ plan.isPopular ?'bg-[var(--acc)]/60 text-[var(--acc-ink)]' :'bg-emerald-500/20 text-emerald-400'
  }`}>
  <Check className="w-3 h-3 stroke-[3]" />
  </div>

@@ -790,7 +790,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleApprovePitchDirectly}
  disabled={isCreatingDraft}
- className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
  <span>{isCreatingDraft ?'Creando borrador...' :'Aprobar'}</span>
@@ -1028,7 +1028,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  <button
  onClick={handleSaveLeadInfo}
- className="px-3 py-1 text-xs rounded bg-[var(--acc)] text-black font-bold hover:bg-[var(--acc)]/60 cursor-pointer shadow-sm"
+ className="px-3 py-1 text-xs rounded bg-[var(--acc)] text-[var(--acc-ink)] font-bold hover:bg-[var(--acc)]/60 cursor-pointer shadow-sm"
  >
  Guardar
  </button>
@@ -1152,7 +1152,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setEditedLeadInfo(prev => ({ ...prev, icono: emoji }))}
  className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
  editedLeadInfo.icono === emoji
- ?'bg-[var(--acc)] text-black font-bold scale-110 shadow-md'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold scale-110 shadow-md'
  :'bg-zinc-800/80 text-[var(--ink-2)] hover:bg-zinc-700'
  }`}
  >
@@ -1415,7 +1415,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  type="button"
  onClick={handleApprovePitchDirectly}
  disabled={isCreatingDraft}
- className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+ className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)] font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
  >
  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
  <span>{isCreatingDraft ?'Creando borrador...' : (isReplyStage ?'Aprobar Respuesta' :'Aprobar Pitch')}</span>
@@ -1483,7 +1483,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  </button>
  <button
  onClick={handleSavePitch}
- className="px-3 py-1 bg-[var(--acc)] text-black font-bold rounded text-xs hover:bg-[var(--acc)]/60 cursor-pointer"
+ className="px-3 py-1 bg-[var(--acc)] text-[var(--acc-ink)] font-bold rounded text-xs hover:bg-[var(--acc)]/60 cursor-pointer"
  >
  Guardar y Aprobar
  </button>
@@ -1858,7 +1858,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  onClick={() => setInteractionType(type)}
  className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
  interactionType === type
- ?'bg-[var(--acc)] text-black font-bold shadow-xs'
+ ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold shadow-xs'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

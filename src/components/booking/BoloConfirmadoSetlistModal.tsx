@@ -328,7 +328,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  </div>
 
  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
- isSelected ?' bg-[var(--acc)]/60 text-black' :'border-[var(--hair)]700'
+ isSelected ?' bg-[var(--acc)]/60 text-[var(--acc-ink)]' :'border-[var(--hair)]700'
  }`}>
  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
  </div>

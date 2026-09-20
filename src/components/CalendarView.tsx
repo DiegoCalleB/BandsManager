@@ -3131,7 +3131,7 @@ export default function CalendarView({
  title={isCalendarFullscreen ?"Salir de pantalla completa (Esc)" :"Ver el calendario a pantalla completa"}
  className={`px-2 py-1 text-[10px] font-mono font-bold rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
  isCalendarFullscreen
- ?"bg-[var(--acc)] text-black font-black shadow-lg shadow-amber-500/20"
+ ?"bg-[var(--acc)] text-[var(--acc-ink)] font-black shadow-lg shadow-amber-500/20"
  : isStitchLight
  ?"bg-[var(--sunken)] hover:bg-slate-300 text-[var(--ink)]"
  :"bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30"

@@ -596,7 +596,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={togglePlayPause}
- className="w-8 h-8 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-bold flex items-center justify-center shadow-md cursor-pointer transition hover:scale-105 active:scale-95"
+ className="w-8 h-8 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center shadow-md cursor-pointer transition hover:scale-105 active:scale-95"
  title={isPlaying ?"Pausar" :"Reproducir"}
  >
  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
@@ -745,7 +745,7 @@ export default function SpotifyPlayerBar({
  {/* Play / Pause - Authentic Spotify Green Circle */}
  <button
  onClick={togglePlayPause}
- className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-bold flex items-center justify-center shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
+ className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
  title={isPlaying ?"Pausar" :"Reproducir Canción"}
  >
  {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}

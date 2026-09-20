@@ -139,7 +139,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  )}
  {hasAlerts && (
  <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
- dangerAlertsCount > 0 ?'bg-rose-500 text-[var(--ink)] animate-pulse' :'bg-[var(--acc)] text-black'
+ dangerAlertsCount > 0 ?'bg-rose-500 text-[var(--ink)] animate-pulse' :'bg-[var(--acc)] text-[var(--acc-ink)]'
  }`}>
  {dangerAlertsCount > 0 ?'⚠️ Alerta Clima' :'Aviso Meteo'}
  </span>

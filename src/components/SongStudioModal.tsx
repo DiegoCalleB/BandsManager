@@ -4063,7 +4063,7 @@ export default function SongStudioModal({
  <span className="hidden sm:inline">Comparar Motor</span>
  </button>
  {hasSoloInIdea && (
- <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-[var(--acc)]/60 text-black flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
+ <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-[var(--acc)]/60 text-[var(--acc-ink)] flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
  <Volume2 className="w-3 h-3" /> SOLO (S) ACTIVO
  </span>
  )}
@@ -4191,7 +4191,7 @@ export default function SongStudioModal({
  onClick={() => handleToggleSoloTrack(idea, tr.id)}
  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all shrink-0 ${
  isSolo
- ?'bg-[var(--acc)]/60 text-black shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60'
+ ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60'
  :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:text-[var(--ink)] hover:bg-[var(--surface)]/70'
  }`}
  title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
@@ -4595,7 +4595,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(120)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-[var(--acc)] text-black font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
  title="Recorte estándar para altavoces o auriculares de cable en PC (120ms)"
  >
  PC (120ms)
@@ -4603,7 +4603,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(240)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-[var(--acc)] text-black font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
  title="Recorte para teléfonos móviles y tablets (240ms)"
  >
  Móvil (240ms)
@@ -4611,7 +4611,7 @@ export default function SongStudioModal({
  <button
  type="button"
  onClick={() => setAutoLatencyTrimMs(300)}
- className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-[var(--acc)] text-black font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ?'bg-[var(--acc)] text-[var(--acc-ink)] font-bold' :'bg-white/10 hover:bg-white/20 text-[var(--ink)]'}`}
  title="Recorte para auriculares Bluetooth tipo AirPods o Sony (300ms)"
  >
  Bluetooth (300ms)

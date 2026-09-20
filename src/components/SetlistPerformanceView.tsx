@@ -448,7 +448,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  onClick={() => setModeArchetype('directo')}
  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
  modeArchetype ==='directo'
- ? glareMode ?'bg-[var(--acc)]/60 text-black shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
+ ? glareMode ?'bg-[var(--acc)]/60 text-[var(--acc-ink)] shadow-sm' :'bg-[var(--acc)] text-[var(--acc-ink)] shadow-sm'
  : glareMode ?'text-zinc-600 hover:text-black' :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -1388,7 +1388,7 @@ const ChordSheetPage: React.FC<{
  onClick={onToggleTeleprompterPlay}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
  isTeleprompterPlaying
- ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-black'
+ ?'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--acc-ink)]'
  :'bg-emerald-600 hover:bg-emerald-500 text-[var(--ink)]'
  }`}
  title="Pausar o reanudar teleprompter (o pulsar Espacio)"

@@ -203,7 +203,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
  <button
  onClick={() => setShowPdfPreview(true)}
- className="px-2 py-1 bg-[var(--acc)] text-black font-mono font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[var(--acc)]/50/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+ className="px-2 py-1 bg-[var(--acc)] text-[var(--acc-ink)] font-mono font-extrabold text-[10px] rounded-[var(--r-m)] hover:bg-[var(--acc)]/50/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
  >
  <Printer className="w-4 h-4" />
  <span>Imprimir / Exportar</span>
@@ -372,7 +372,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  {/* Play / Pause Circular Main Button */}
  <button
  onClick={toggleStagePlayPause}
- className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-extrabold flex items-center justify-center shadow-xl shadow-[var(--ok)]/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+ className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold flex items-center justify-center shadow-xl shadow-[var(--ok)]/25 cursor-pointer hover:scale-105 active:scale-95 transition-all"
  title={stageIsPlaying ?"Pausar show" :"Iniciar directo"}
  >
  {stageIsPlaying ? (

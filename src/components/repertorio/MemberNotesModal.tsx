@@ -285,7 +285,7 @@ export function MemberNotesModal({
  <button
  type="button"
  onClick={handleAddCustomMember}
- className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-black font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
+ className="px-3 py-2 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
  >
  Añadir
  </button>
@@ -395,7 +395,7 @@ export function MemberNotesModal({
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer shadow-lg ${
  savedSuccess 
  ?'bg-emerald-500 text-[var(--ink)]' 
- :'bg-[var(--surface)] hover:bg-[var(--surface)] text-black'
+ :'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)]'
  }`}
  >
  {savedSuccess ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
