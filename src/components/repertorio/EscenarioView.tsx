@@ -448,7 +448,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  backgroundImage: 'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0, 0, 0, 0.5) 3px, rgba(0, 0, 0, 0.5) 6px)'
  }}
  />
- <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-white shadow-[0_0_8px_#ffffff] opacity-90" />
+ <div className="absolute right-0 top-0 bottom-0 w-1.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.15)] opacity-90" />
  </div>
 
  <input
