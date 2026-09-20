@@ -30,12 +30,13 @@ const LoadingFallback = () => (
  width: 32,
  height: 32,
  borderRadius:' 9999px',
- border:' 3px solid rgba(var(--ink-rgb, 42, 46, 53), 0.15)',
- borderTopColor:' var(--acc)',
+ boxShadow:' inset 0 0 0 3px rgba(var(--ink-rgb, 42, 46, 53), 0.15), inset 0 0 0 3px var(--acc)',
  animation:' spin 0.8s linear infinite'
  }}
  />
- <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+ <style>{`
+  @keyframes spin { to { transform: rotate(360deg); } }
+ `}</style>
  </div>
 );
 

@@ -170,7 +170,6 @@ export const BandMap: React.FC<BandMapProps> = ({
  background-color: ${bgColor};
  color: ${textColor};
  border-radius: 50%;
- box-shadow: 0 4px 12px rgba(0,0,0,0.3);
  font-weight: 800;
  font-family: monospace;
  font-size: 13px;
@@ -337,7 +336,6 @@ export const BandMap: React.FC<BandMapProps> = ({
  background: ${surfaceColor};
  border-radius: 20px;
  padding: 3px 8px 3px 4px;
- box-shadow: 0 4px 14px var(--shadow-dark);
  white-space: nowrap;">
  ${bandIconHtml}
  <span style="
@@ -397,7 +395,6 @@ export const BandMap: React.FC<BandMapProps> = ({
  width: 100%;
  background: ${surfaceColor};
  color: ${accColor};
- border: none;
  padding: 6px 10px;
  border-radius: 8px;
  font-size: 11px;

@@ -292,7 +292,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  </motion.div>
  <div>
  <div className="flex items-baseline gap-1.5">
- <span className="text-2xl font-bold font-sans tracking-tight text-[var(--acc)] drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+ <span className="text-2xl font-bold font-sans tracking-tight text-[var(--acc)]">
  {weatherData.temperature}°C
  </span>
  {weatherData.apparentTemperature !== undefined && (

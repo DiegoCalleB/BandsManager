@@ -341,7 +341,7 @@ export function EnergyChart({
  return (
  <div
  ref={containerRef}
- className={`relative ${compact ?'w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden' :'energy-map-glow w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden'} ${animMode ==='entrance' && !compact ?'energy-map-grand-entrance' :''}`}
+ className={`relative w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden`}
  style={{
  height,
  width: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
@@ -351,17 +351,7 @@ export function EnergyChart({
  >
  {!compact && (
  <style>{`
- .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(var(--ink-rgb), 0.25)) drop-shadow(0 0 10px rgba(var(--ink-rgb), 0.12)); }
- /* El"momento wow" al entrar a Repertorio por primera vez: mientras la curva se dibuja
- despacio (GRAND_ENTRANCE_MS), el fondo del propio Mapa de Energía respira con un halo
- dorado — sincronizado a la misma duración, para que la puesta en escena no se limite
- al trazo sino que envuelva todo el gráfico. Un solo ciclo, nunca se repite. */
- @keyframes energyMapGrandEntranceGlow {
- 0% { box-shadow: inset 0 0 0px rgba(242,202,80,0); }
- 55% { box-shadow: inset 0 0 60px rgba(242,202,80,0.35); }
- 100% { box-shadow: inset 0 0 0px rgba(242,202,80,0); }
- }
- .energy-map-grand-entrance { animation: energyMapGrandEntranceGlow ${GRAND_ENTRANCE_MS}ms ease-in-out 1; }
+ /* Espectro flat design: removed glow effects per Law 1 */
  `}</style>
  )}
  {/* Arrastrando en vertical: burbuja con la energía en vivo, pegada al dedo/cursor (no fija
@@ -379,7 +369,7 @@ export function EnergyChart({
  <div
  className="absolute z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap"
  style={{
- border: `1px solid ${info.hexColor}99`,
+ boxShadow: `0 0 0 2px ${info.hexColor}66`,
  ...(isTouch
  ? { left: dragPointerPos.x, top: dragPointerPos.y, transform:'translate(-50%, calc(-100% - 34px))' }
  : {

@@ -237,7 +237,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  }}
  className={`p-1 rounded-full transition-all cursor-pointer shrink-0 ${
  song.favoritoGeneral
- ?'text-[var(--acc)] hover:text-[var(--acc)]/70 drop-shadow-[0_0_6px_var(--acc-glow)]'
+ ?'text-[var(--acc)] hover:text-[var(--acc)]/70'
  :'text-[var(--ink-2)] hover:text-[var(--acc)] opacity-60 hover:opacity-100'
  }`}
  title={song.favoritoGeneral ?'Quitar de favoritas' :'Marcar como favorita'}

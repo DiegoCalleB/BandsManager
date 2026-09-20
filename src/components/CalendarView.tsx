@@ -6774,7 +6774,7 @@ export default function CalendarView({
  <img
  src={modalBandInfo.logoUrl}
  alt={modalBandInfo.name}
- className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+ className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0"
  onError={(e) => {
  (e.currentTarget as HTMLElement).style.display ='none';
  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
@@ -6782,7 +6782,7 @@ export default function CalendarView({
  }}
  />
  ) : null}
- <span className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black drop-shadow-lg ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ?'hidden' :''}`}>
+ <span className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ?'hidden' :''}`}>
  {modalBandInfo.initials}
  </span>
  <div className="min-w-0 flex-1">

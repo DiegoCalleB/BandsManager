@@ -266,7 +266,7 @@ export function MetronomeModal({
  </button>
 
  <div className="flex flex-col items-center">
- <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)] drop-shadow-md">
+ <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)]">
  {bpm}
  </span>
  <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">

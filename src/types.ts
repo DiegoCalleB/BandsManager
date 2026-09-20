@@ -897,7 +897,6 @@ export interface ThemeColors {
  name: string;
  bg: string;
  card: string;
- border: string;
  primary: string;
  primaryHover: string;
  text: string;

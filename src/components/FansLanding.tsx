@@ -1107,17 +1107,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
  src={logoUrl} 
  alt={bandName} 
  onError={() => setImgError(true)}
- className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)] /40 bg-[var(--surface)] drop-shadow-[0_0_15px_var(--acc-glow)]" 
+ className="w-24 h-24 mx-auto object-contain p-1 rounded-[var(--r-l)] /40 bg-[var(--surface)]" 
  />
  </div>
  ) : (
- <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2 drop-shadow-[0_0_20px_var(--acc-glow)]">
+ <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2">
  <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
  <span className="text-[10px] font-black text-[var(--acc)]/70 font-display tracking-wider line-clamp-1">{bandName}</span>
  </div>
  )}
  <div className="space-y-1">
- <h1 className="text-3xl font-black text-[var(--ink)] font-display tracking-widest drop-shadow-md">
+ <h1 className="text-3xl font-black text-[var(--ink)] font-display tracking-widest">
  {t('joinTitle', { bandName })}
  </h1>
  <p className="text-amber-0/80 text-[10px] font-sans tracking-widest font-bold">{t('officialChannel')}</p>

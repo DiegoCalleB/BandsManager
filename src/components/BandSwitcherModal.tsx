@@ -643,7 +643,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  src={band.logoUrl}
  alt={band.bandName}
  onError={() => setFailedLogos(prev => new Set(prev).add(band.band_id))}
- className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+ className="w-full h-full object-contain filter group-hover:scale-105 transition-transform duration-300"
  referrerPolicy="no-referrer"
  />
  ) : (

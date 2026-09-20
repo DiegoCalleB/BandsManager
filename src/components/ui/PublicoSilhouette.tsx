@@ -68,9 +68,7 @@ export const PublicoSilhouette: React.FC<PublicoSilhouetteProps> = ({
  viewBox="0 0 100 100"
  xmlns="http://www.w3.org/2000/svg"
  className={`${className} ${animated ?' animate-pulse' :' '}`}
- style={{
- filter: animated ? `drop-shadow(0 0 ${dims.width / 4}px rgba(154, 95, 181, 0.4))` :' none',
- }}
+ style={{}}
  >
  {/* Ground/stage line - subtle */}
  <line x1="10" y1="85" x2="90" y2="85" stroke={svgColor} strokeWidth="1" opacity="0.5" />

@@ -2626,7 +2626,6 @@ export default function ReelsCenter({
  className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover pointer-events-none opacity-80"
  allow="autoplay; encrypted-media"
  title="Highlight Clip Video Player"
- style={{ border: 0 }}
  />
  </div>
  );
@@ -3014,7 +3013,6 @@ export default function ReelsCenter({
  className="absolute w-[280%] h-full left-1/2 -translate-x-1/2 object-cover"
  allow="autoplay; encrypted-media; picture-in-picture"
  title="Expanded Highlight Video Player"
- style={{ border: 0 }}
  />
  </div>
  );

@@ -670,12 +670,12 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {design.assetType ==='portada' ? (
  <ResolvedBgImage className="w-24 h-24 rounded-[var(--r-s)] bg-cover bg-center" url={displayGraphic} />
  ) : (
- <div 
- className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-all" 
- style={{ 
+ <div
+ className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-all"
+ style={{
  backgroundImage: `url(${displayGraphic})`,
- filter: (design.assetType ==='logo' && !isLightColor(design.shirtColor ||'#121111')) ?'invert(1) drop-shadow(0 4px 6px var(--shadow-dark))' :'drop-shadow(0 4px 6px var(--shadow-soft))'
- }} 
+ filter: (design.assetType ==='logo' && !isLightColor(design.shirtColor ||'#121111')) ?'invert(1)' :''
+ }}
  />
  )}
  </div>

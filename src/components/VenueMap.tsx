@@ -239,7 +239,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  background-color: ${bgColor};
  color: ${textColor};
  border-radius: 50%;
- box-shadow: 0 0 0 5px ${ringColor}, 0 6px 16px rgba(0,0,0,0.3);
+ box-shadow: 0 0 0 2px ${ringColor};
  font-weight: 800;
  font-family: ui-monospace, monospace;
  font-size: ${size > 42 ?'13px' :'11px'};
@@ -418,8 +418,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  justify-content: center;
  font-size: 11px;
  margin-right: 4px;
- font-weight: bold;
- box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3);">
+ font-weight: bold;">
  ${fallbackIcon}
  </div>
  `;
@@ -444,7 +443,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  background: #ffffff;
  border-radius: 20px;
  padding: 2px 8px 2px 3px;
- box-shadow: 0 2px 8px rgba(0,0,0,0.35);
  white-space: nowrap;
  position: relative;
  z-index: 2;
@@ -513,7 +511,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  flex: 1;
  background: #4f46e5;
  color: white;
- border: none;
  padding: 6px 8px;
  border-radius: 6px;
  font-size: 11px;
@@ -525,7 +522,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <button id="pop-approve-${lead.id}" style="
  background: var(--ok);
  color: white;
- border: none;
  padding: 6px 8px;
  border-radius: 6px;
  font-size: 11px;
@@ -674,7 +670,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  .leaflet-tooltip.custom-venue-map-tooltip {
  background: #ffffff !important;
  border-radius: 12px !important;
- box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
  padding: 0 !important;
  color: #0f172a !important;
  pointer-events: none !important;

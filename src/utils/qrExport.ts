@@ -437,12 +437,12 @@ export function printHighQualityFlyer(options: {
  width: 100%;
  max-width: 680px;
  margin: 0 auto;
- border: 6px solid var(--acc);
  border-radius: 28px;
  padding: 40px 32px;
  text-align: center;
  background: #ffffff;
  position: relative;
+ box-shadow: 0 0 0 3px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
  }
  .logo-box {
  margin: 0 auto 16px auto;
@@ -501,9 +501,8 @@ export function printHighQualityFlyer(options: {
  display: inline-block;
  padding: 20px;
  background: #ffffff;
- border: 4px solid var(--acc);
  border-radius: 24px;
- box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+ box-shadow: 0 0 0 2px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
  }
  .qr-wrapper svg {
  width: 280px;
@@ -519,8 +518,7 @@ export function printHighQualityFlyer(options: {
  height: 64px;
  background: #ffffff;
  border-radius: 16px;
- border: 3px solid var(--acc);
- box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+ box-shadow: 0 0 0 2px var(--acc-soft), 0 4px 12px rgba(0,0,0,0.15);
  display: flex;
  align-items: center;
  justify-content: center;
@@ -534,8 +532,7 @@ export function printHighQualityFlyer(options: {
  }
  .url-box {
  margin-top: 24px;
- background: #f8fafc;
- border: 1px solid #e2e8f0;
+ background: #e8eef5;
  border-radius: 12px;
  padding: 10px 16px;
  font-family: monospace;

@@ -334,7 +334,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  <Heart 
  className={`w-5 h-5 transition-all transform group-active:scale-125 ${
  isCurrentSongFavorited 
- ?'fill-[var(--ok)] text-[var(--ok)] drop-shadow-[0_0_8px_rgba(var(--ok-rgb), 0.5)] scale-110' 
+ ?'fill-[var(--ok)] text-[var(--ok)] scale-110' 
  :'text-[var(--ink-2)] group-hover:text-[var(--ink)]'
  }`}
  />

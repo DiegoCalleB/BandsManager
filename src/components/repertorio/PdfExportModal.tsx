@@ -1038,7 +1038,7 @@ export function PdfExportModal({
  // calculan el layout interno de un iframe de tamaño cero con fiabilidad, y acaban midiendo
  // con un viewport por defecto en vez del ancho real que le pasamos al contenido. Se mantiene
  // fuera de la pantalla visible con left/top muy negativos en vez de con tamaño cero.
- measureFrame.style.cssText = `position:fixed;left:-99999px;top:-99999px;width:${PAGE_CONTENT_WIDTH_PX + 40}px;height:3000px;border:0;visibility:hidden;`;
+ measureFrame.style.cssText = `position:fixed;left:-99999px;top:-99999px;width:${PAGE_CONTENT_WIDTH_PX + 40}px;height:3000px;visibility:hidden;`;
  document.body.appendChild(measureFrame);
 
  const measureDoc = measureFrame.contentDocument;

@@ -60,7 +60,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"linear" 
  }}
- className="relative z-10 flex items-center justify-center text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+ className="relative z-10 flex items-center justify-center text-[var(--acc)]"
  >
  <Sun className={currentSize.icon} />
  </motion.div>
@@ -82,7 +82,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="absolute top-0 right-0 z-0 text-[var(--acc)] drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+ className="absolute top-0 right-0 z-0 text-[var(--acc)]"
  >
  <Sun className={currentSize.sub} />
  </motion.div>
@@ -97,7 +97,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="relative z-10 text-[var(--ink)]/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+ className="relative z-10 text-[var(--ink)]/95"
  >
  <CloudSun className={currentSize.icon} />
  </motion.div>
@@ -133,7 +133,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="relative z-10 text-[var(--ink-2)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+ className="relative z-10 text-[var(--ink-2)]"
  >
  <Cloud className={currentSize.icon} />
  </motion.div>
@@ -153,7 +153,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  <motion.div
  animate={{ y: [-0.5, 0.5, -0.5] }}
  transition={{ duration: 2, repeat: Infinity, ease:"easeInOut" }}
- className="relative z-10 text-[var(--ink-2)] drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]"
+ className="relative z-10 text-[var(--ink-2)]"
  >
  <CloudRain className={currentSize.icon} />
  </motion.div>
@@ -210,9 +210,9 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  />
  {/* Nube con rayo principal */}
  <motion.div
- animate={{ 
+ animate={{
  y: [-0.5, 0.5, -0.5],
- filter: ['brightness(1)','brightness(1.5) drop-shadow(0 0 10px rgba(250,204,21,0.8))','brightness(1)'
+ filter: ['brightness(1)','brightness(1.5)','brightness(1)'
  ]
  }}
  transition={{ 
@@ -221,7 +221,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  times: [0, 0.1, 1],
  ease:"easeInOut" 
  }}
- className="relative z-10 text-[var(--acc)]/80 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"
+ className="relative z-10 text-[var(--acc)]/80"
  >
  <CloudLightning className={currentSize.icon} />
  </motion.div>
@@ -250,7 +250,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  rotate: { duration: 12, repeat: Infinity, ease:"linear" },
  y: { duration: 3, repeat: Infinity, ease:"easeInOut" }
  }}
- className="relative z-10 text-[var(--acc)]/80 drop-shadow-[0_0_8px_rgba(103,232,249,0.6)]"
+ className="relative z-10 text-[var(--acc)]/80"
  >
  <Snowflake className={currentSize.icon} />
  </motion.div>
@@ -271,7 +271,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  repeat: Infinity, 
  ease:"easeInOut" 
  }}
- className="relative z-10 text-[var(--ink-2)] drop-shadow-[0_0_6px_rgba(148,163,184,0.3)]"
+ className="relative z-10 text-[var(--ink-2)]"
  >
  <CloudFog className={currentSize.icon} />
  </motion.div>
@@ -293,7 +293,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-[var(--alert)] drop-shadow-[0_0_8px_rgba(251,113,133,0.5)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
+ severity ==='danger' ?'text-[var(--alert)]'
  }`}
  >
  <Wind className={currentSize.icon} />
@@ -314,7 +314,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-[var(--alert)] drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+ severity ==='danger' ?'text-[var(--alert)]'
  }`}
  >
  <Thermometer className={currentSize.icon} />
@@ -336,7 +336,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
  ease:"easeInOut" 
  }}
  className={`relative z-10 ${
- severity ==='danger' ?'text-[var(--alert)] drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]' :'text-[var(--acc)] drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+ severity ==='danger' ?'text-[var(--alert)]'
  }`}
  >
  <AlertTriangle className={currentSize.icon} />

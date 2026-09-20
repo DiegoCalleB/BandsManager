@@ -207,7 +207,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  <YAxis domain={[0, 20]} hide />
  <XAxis dataKey="num" hide />
  <Tooltip
- contentStyle={{ background:'var(--surface)', border:'none', borderRadius:' var(--r-m)', fontSize: 11 }}
+ contentStyle={{ background:'var(--surface)', borderRadius:' var(--r-m)', fontSize: 11 }}
  labelFormatter={(num) => chartData.find(d => d.num === num)?.title || `Tema ${num}`}
  formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ??' '} BPM`,' Energía']}
  />
