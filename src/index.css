@@ -69,9 +69,9 @@ html, body {
 button, input, textarea, select, iframe {
   border: none;
 }
-:focus-within {
-  outline: 2px solid var(--acc);
-  outline-offset: 2px;
+/* Focus ring only on interactive elements, not their ancestors */
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none;
 }
 
 /* Iconography with clean precision */
