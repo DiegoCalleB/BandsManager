@@ -2670,7 +2670,6 @@ export default function RepertorioSetlists({
  <div data-modulo="repertorio" className="space-y-3">
  {/* REPERTORIO UNIFIED NAV BAR: Título, tabs segmentadas (Setlists & Directo / Catálogo & Discografía) y acciones rápidas */}
  <RepertorioNavBar
- colors={colors}
  activeTab={activeTab}
  setActiveTab={handleTabChange}
  catalogoViewMode={catalogoViewMode}
