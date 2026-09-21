@@ -180,11 +180,8 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  useEffect(() => {
  try {
- // Mismo caché que RepertorioSetlists.tsx (band_songs_<banda>), nunca el catálogo global de
- // Bakandeya: de lo contrario cualquier banda que compartiese navegador con una sesión de
- // Bakandeya veía sus portadas de álbum en el selector del taller.
  const key = `band_songs_${cleanBand ||'default'}`;
- const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+ const saved = localStorage.getItem(key);
  if (saved) {
  const songs = JSON.parse(saved);
  const albumsMap = new Map<string, string>();

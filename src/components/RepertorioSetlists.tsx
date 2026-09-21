@@ -506,7 +506,7 @@ export default function RepertorioSetlists({
  const [songs, setSongs] = useState<Song[]>(() => {
  try {
  const key = `band_songs_${cleanBand ||'default'}`;
- const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+ const saved = localStorage.getItem(key);
  const parsed = saved ? JSON.parse(saved) : [];
  const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((s: any) => {
  const sId = (s?.id ||'').toLowerCase();
@@ -526,7 +526,7 @@ export default function RepertorioSetlists({
  const [setlists, setSetlists] = useState<Setlist[]>(() => {
  try {
  const key = `band_setlists_${cleanBand ||'default'}`;
- const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
+ const saved = localStorage.getItem(key);
  const parsed = saved ? JSON.parse(saved) : [];
  const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((sl: any) => {
  const slId = (sl?.id ||'').toLowerCase();
@@ -1116,12 +1116,12 @@ export default function RepertorioSetlists({
  const keyS = `band_songs_${cleanBand ||'default'}`;
  const keySt = `band_setlists_${cleanBand ||'default'}`;
  try {
- const savedS = localStorage.getItem(keyS) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+ const savedS = localStorage.getItem(keyS);
  const parsedS = savedS ? JSON.parse(savedS) : [];
  const sanitizedS = sanitizeBandSongs(parsedS);
  setSongs(sanitizedS.length > 0 ? sanitizedS : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
 
- const savedSt = localStorage.getItem(keySt) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
+ const savedSt = localStorage.getItem(keySt);
  const parsedSt = savedSt ? JSON.parse(savedSt) : [];
  const sanitizedSt = sanitizeBandSetlists(parsedSt);
  setSetlists(sanitizedSt.length > 0 ? sanitizedSt : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS));
