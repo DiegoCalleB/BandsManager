@@ -58,7 +58,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  if (activeSetlist && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
  chartData = activeSetlist.items.map((item: any, idx: number) => {
  const matchedSong = songsList.find(s => s.id === item.song_id || s.titulo === item.title || s.id === item.songId) || item.song;
- const energyVal = item.energia || matchedSong?.energiaVariacion || matchedSong?.energia || 12;
+ const energyVal = item.energia || matchedSong?.energia || 12;
  const energyInfo = getEnergyInfo(energyVal);
  return {
  num: idx + 1,
