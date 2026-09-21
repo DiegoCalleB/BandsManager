@@ -522,6 +522,22 @@ export default function RepertorioSetlists({
  }
  });
 
+ useEffect(() => {
+ let isMounted = true;
+ const loadSongs = async () => {
+ try {
+ const res = await api.getSongs();
+ if (isMounted && res?.songs && Array.isArray(res.songs)) {
+ setSongs(res.songs);
+ }
+ } catch (err) {
+ console.error('Failed to load songs:', err);
+ }
+ };
+ loadSongs();
+ return () => { isMounted = false; };
+ }, [cleanBand]);
+
  // Setlists State
  const [setlists, setSetlists] = useState<Setlist[]>(() => {
  try {
