@@ -538,7 +538,7 @@ export function EnergyChart({
  )}
 
  <RechartsTooltip
- cursor={{ stroke:'#666', strokeDasharray:'3 3' }}
+ cursor={{ stroke:'var(--ink-2)', strokeDasharray:'3 3' }}
  content={({ active, payload }: any) => {
  if (!active || !payload?.length) return null;
  const d = payload[0].payload;
