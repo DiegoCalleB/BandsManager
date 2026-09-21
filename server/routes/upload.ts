@@ -8,6 +8,28 @@ import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 
+// Patrones de archivos privados que usan signed URLs
+const PRIVATE_FILE_PATTERNS = [
+  /^stems\//,
+  /^epk\/.*\/(guide|specs|rider)\./,
+  /^audio\//,
+  /^rehearsals\//
+];
+
+function isPrivateFile(storagePath: string): boolean {
+  return PRIVATE_FILE_PATTERNS.some(pattern => pattern.test(storagePath));
+}
+
+function sanitizeUrlForLogging(url: string | null): string {
+  if (!url) return "N/A";
+  try {
+    const urlObj = new URL(url);
+    return `[${urlObj.pathname.split('/').pop()}]`;
+  } catch {
+    return "[file]";
+  }
+}
+
 /**
  * Optimizador transparente de archivos de audio.
  * Si el usuario sube un archivo de audio (.wav, .flac, .aiff, .m4a, .wma, etc. o mp3 pesado > 2MB),
@@ -243,14 +265,13 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
       });
     }
 
-    const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(testPath);
+    // No devolver URL crudo en test, solo confirmar que funciona
     await supabase.storage.from(bucketName).remove([testPath]);
 
     return res.json({
       success: true,
       bucket: bucketName,
-      message: "¡Conexión y subida a Supabase exitosas!",
-      publicUrl: publicUrlData?.publicUrl
+      message: "¡Conexión y subida a Supabase exitosas!"
     });
   } catch (err: any) {
     return res.json({ success: false, error: err.message || String(err) });
@@ -439,13 +460,25 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
             .upload(storagePath, fileContent, { contentType: mimeType, upsert: true });
 
           if (!error) {
-            const { data: publicUrlData } = supabase.storage
-              .from(bucketName)
-              .getPublicUrl(storagePath);
+            // Archivos privados: usar signed URL (válida 1 hora)
+            if (isPrivateFile(storagePath)) {
+              const { data, error: signError } = await supabase.storage
+                .from(bucketName)
+                .createSignedUrl(storagePath, 3600);
+              if (!signError && data?.signedUrl) {
+                finalUrl = data.signedUrl;
+                storageEngine = "supabase";
+              }
+            } else {
+              // Archivos públicos: URL pública normal
+              const { data: publicUrlData } = supabase.storage
+                .from(bucketName)
+                .getPublicUrl(storagePath);
 
-            if (publicUrlData?.publicUrl) {
-              finalUrl = publicUrlData.publicUrl;
-              storageEngine = "supabase";
+              if (publicUrlData?.publicUrl) {
+                finalUrl = publicUrlData.publicUrl;
+                storageEngine = "supabase";
+              }
             }
           } else {
             uploadError = error;

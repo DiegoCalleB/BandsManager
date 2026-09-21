@@ -9,6 +9,16 @@ import { getSupabase } from '../../db/core.js';
 import { dbUpsertSong } from '../../db/repertoire.js';
 import { Song } from '../../../src/types.js';
 
+// Patrones de archivos privados
+const PRIVATE_FILE_PATTERNS = [
+  /^epk\/.*\/(guide|specs|rider)\./,
+  /^audio\//
+];
+
+function isPrivateFile(storagePath: string): boolean {
+  return PRIVATE_FILE_PATTERNS.some(pattern => pattern.test(storagePath));
+}
+
 const router = express.Router();
 
 // Multer setup for structure uploads
@@ -147,6 +157,19 @@ async function uploadFileToSupabase(
     throw new Error('Error al guardar el archivo');
   }
 
+  // Archivos privados: usar signed URL (válida 1 hora)
+  if (isPrivateFile(storagePath)) {
+    const { data, error } = await supabaseClient.storage
+      .from(bucketName)
+      .createSignedUrl(storagePath, 3600);
+
+    if (error || !data?.signedUrl) {
+      throw new Error('Error al crear URL de acceso al archivo');
+    }
+    return data.signedUrl;
+  }
+
+  // Archivos públicos: URL pública normal
   const { data: publicUrlData } = supabaseClient.storage
     .from(bucketName)
     .getPublicUrl(storagePath);

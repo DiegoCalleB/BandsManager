@@ -12,11 +12,46 @@
 import fs from "fs";
 import { getSupabaseClient, getBucketName } from "../routes/upload.js";
 
+// Archivos que son públicos por diseño (no necesitan signed URL)
+const PUBLIC_FILE_PATTERNS = [
+  /^epk\/.*\/logo\./,           // Logos públicos de EPK
+  /^bandas\/.*\/cover\./,       // Portadas de canciones
+  /^fans\/.*\/avatar\./         // Avatares de fans
+];
+
+// Archivos que deben estar protegidos (stems, EPK privado, etc.)
+const PRIVATE_FILE_PATTERNS = [
+  /^stems\//,                   // Stems isolados
+  /^epk\/.*\/(guide|specs)\./,  // Rider técnico privado
+  /^audio\//,                   // Audio sin procesar
+  /^rehearsals\//               // Grabaciones de ensayos
+];
+
 /**
- * Sube un fichero local a Supabase Storage y devuelve su URL pública, o null si Supabase no
- * está configurado, el fichero no existe, o la subida falla. Nunca lanza: subir el fichero a
- * almacenamiento permanente es una mejora, no el resultado en sí — si falla, quien llama debe
- * poder seguir sirviendo el fichero desde el disco local exactamente como hacía antes.
+ * Determina si un archivo debe tener URL firmada (privada) o pública.
+ */
+function isPrivateFile(storageSubPath: string): boolean {
+  return PRIVATE_FILE_PATTERNS.some(pattern => pattern.test(storageSubPath));
+}
+
+/**
+ * Sanitiza URLs para logs: oculta el proyecto Supabase y estructura interna.
+ */
+function sanitizeUrlForLogging(url: string | null): string {
+  if (!url) return "N/A";
+  try {
+    const urlObj = new URL(url);
+    return `[${urlObj.pathname.split('/').pop()}] (signed URL)`;
+  } catch {
+    return "[secure URL]";
+  }
+}
+
+/**
+ * Sube un fichero local a Supabase Storage y devuelve su URL (pública o firmada según tipo).
+ * Para archivos privados: URL firmada con vencimiento 1 hora.
+ * Para archivos públicos: URL pública (sin exposición de estructura Supabase).
+ * Nunca lanza: subir es una mejora, no el resultado en sí.
  */
 export async function uploadToSupabaseIfAvailable(
   localFilePath: string,
@@ -37,27 +72,44 @@ export async function uploadToSupabaseIfAvailable(
       });
 
     if (uploadError) {
-      console.warn(`[Supabase Upload Notice] Failed for ${storageSubPath}:`, uploadError.message);
+      console.warn(`[Supabase Upload Notice] Failed for file ${storageSubPath.split('/').pop()}`);
       return null;
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(storageSubPath);
+    let url: string | null = null;
 
-    if (publicUrlData?.publicUrl) {
-      console.log(`[Supabase Storage] Successfully uploaded: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
-      return publicUrlData.publicUrl;
+    if (isPrivateFile(storageSubPath)) {
+      // Archivos privados: URL firmada, válida 1 hora
+      const { data, error } = await supabase.storage
+        .from(bucketName)
+        .createSignedUrl(storageSubPath, 3600); // 1 hora
+
+      if (error) {
+        console.warn(`[Supabase Signed URL Error] for ${storageSubPath.split('/').pop()}`);
+        return null;
+      }
+      url = data?.signedUrl || null;
+    } else {
+      // Archivos públicos: URL pública
+      const { data: publicUrlData } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(storageSubPath);
+      url = publicUrlData?.publicUrl || null;
+    }
+
+    if (url) {
+      console.log(`[Supabase Storage] Successfully uploaded: ${sanitizeUrlForLogging(url)}`);
+      return url;
     }
   } catch (err: any) {
-    console.warn(`[Supabase Storage Error] ${storageSubPath}:`, err.message || err);
+    console.warn(`[Supabase Storage Error]`, err.message || err);
   }
   return null;
 }
 
 /**
- * Sube un Buffer en memoria directamente a Supabase Storage y devuelve su URL pública.
- * Evita tener que escribir en disco temporal cuando se descargan streams remotos.
+ * Sube un Buffer en memoria a Supabase Storage y devuelve su URL (pública o firmada).
+ * Igual que uploadToSupabaseIfAvailable pero para streams/buffers sin escribir en disco.
  */
 export async function uploadBufferToSupabase(
   buffer: Buffer,
@@ -77,20 +129,37 @@ export async function uploadBufferToSupabase(
       });
 
     if (uploadError) {
-      console.warn(`[Supabase Buffer Upload Notice] Failed for ${storageSubPath}:`, uploadError.message);
+      console.warn(`[Supabase Buffer Upload Notice] Failed for ${storageSubPath.split('/').pop()}`);
       return null;
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(storageSubPath);
+    let url: string | null = null;
 
-    if (publicUrlData?.publicUrl) {
-      console.log(`[Supabase Storage] Stem uploaded directly to permanent storage: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
-      return publicUrlData.publicUrl;
+    if (isPrivateFile(storageSubPath)) {
+      // Archivos privados: URL firmada, válida 1 hora
+      const { data, error } = await supabase.storage
+        .from(bucketName)
+        .createSignedUrl(storageSubPath, 3600);
+
+      if (error) {
+        console.warn(`[Supabase Signed URL Error] for ${storageSubPath.split('/').pop()}`);
+        return null;
+      }
+      url = data?.signedUrl || null;
+    } else {
+      // Archivos públicos: URL pública
+      const { data: publicUrlData } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(storageSubPath);
+      url = publicUrlData?.publicUrl || null;
+    }
+
+    if (url) {
+      console.log(`[Supabase Storage] Buffer upload successful: ${sanitizeUrlForLogging(url)}`);
+      return url;
     }
   } catch (err: any) {
-    console.warn(`[Supabase Storage Buffer Error] ${storageSubPath}:`, err.message || err);
+    console.warn(`[Supabase Storage Buffer Error]`, err.message || err);
   }
   return null;
 }
