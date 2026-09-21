@@ -69,7 +69,10 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
  }`}
  aria-expanded={isOpen}
  >
- <span className="flex items-center gap-1.5">
+ <span className="flex items-center gap-1.5" onClick={(e) => {
+ e.stopPropagation();
+ handleHeaderClick();
+ }}>
  {isGroupActive && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]" />}
  <span>{t(group.titleKey, group.titleDefault)}</span>
  </span>

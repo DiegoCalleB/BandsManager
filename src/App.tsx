@@ -606,14 +606,16 @@ export default function App() {
 
  const toggleNavGroup = (groupId: string) => {
  setOpenNavGroupIds(prev => {
- // Si cierra un grupo abierto, solo toggle
- if (prev[groupId]) {
+ const isCurrentlyOpen = !!prev[groupId];
+ if (isCurrentlyOpen) {
+ // Cierra el grupo
  const newState = { ...prev };
  delete newState[groupId];
  return newState;
- }
- // Si abre un grupo, cierra todos los demás (accordion)
+ } else {
+ // Abre solo este grupo (accordion)
  return { [groupId]: true };
+ }
  });
  };
 
