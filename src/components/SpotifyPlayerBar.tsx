@@ -777,7 +777,7 @@ export default function SpotifyPlayerBar({
  <select
  value={playbackRate}
  onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
- className="bg-[var(--surface)] text-[var(--ok)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none"
+ className="bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-all"
  title="Velocidad de Reproducción"
  >
  <option value={0.5}>0.5x</option>
@@ -791,10 +791,10 @@ export default function SpotifyPlayerBar({
  <select
  value={transposeSemitones}
  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
- className={`bg-[var(--surface)] text-[10px] font-sans rounded px-1.5 py-1 cursor-pointer hover:bg-[var(--ink-3)]/60 focus:outline-none ${
- transposeSemitones !== 0 ?'text-[var(--alert)] font-bold/30' :'text-[var(--ink-2)]'
+ className={`bg-[var(--sunken)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-all ${
+ transposeSemitones !== 0 ?'text-[var(--alert)]' :'text-[var(--ink-2)]'
  }`}
- title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
+ title="Trasposición de Tono"
  >
  {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
  const origKey = song?.tonalidad?.trim();

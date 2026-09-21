@@ -16,6 +16,7 @@ interface DiscografiaViewProps {
  albumsList: string[];
  colors: ThemeColors
  bandName?: string;
+ bandLogoUrl?: string;
  setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
  setSetlists?: React.Dispatch<React.SetStateAction<any[]>>;
  toggleFavoriteSong: (id: string) => void;
@@ -63,6 +64,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  albumsList = [],
  colors,
  bandName,
+ bandLogoUrl,
  setSongs,
  setSetlists,
  toggleFavoriteSong,
@@ -582,7 +584,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  return oA - oB;
  });
 
- const coverUrl = rawAlbumSongs.find((s) => s.portadaUrl)?.portadaUrl;
+ const coverUrl = rawAlbumSongs.find((s) => s.portadaUrl)?.portadaUrl || bandLogoUrl;
  const isExpanded = cleanSearchQuery ? true : expandedAlbums[album] === true;
 
  const isPlayingAlbum = !!(
@@ -661,17 +663,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <button
  type="button"
  onClick={handlePlayAlbum}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+ className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1 transition-all cursor-pointer"
  title={isPlayingAlbum ?'Pausar disco' :'Reproducir disco'}
  >
  {isPlayingAlbum ? (
  <>
- <Pause className="w-3.5 h-3.5 fill-current" />
+ <Pause className="w-3 h-3 fill-current" />
  <span className="hidden xs:inline">Pausar</span>
  </>
  ) : (
  <>
- <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+ <Play className="w-3 h-3 fill-current ml-0.5" />
  <span className="hidden xs:inline">Play</span>
  </>
  )}

@@ -4103,6 +4103,7 @@ export default function RepertorioSetlists({
  albumsList={albumsList}
  colors={colors}
  bandName={bName}
+ bandLogoUrl={bandLogoUrl}
  setSongs={setSongs}
  setSetlists={setSetlists}
  toggleFavoriteSong={handleToggleFavorite}
