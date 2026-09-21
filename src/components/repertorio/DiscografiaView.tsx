@@ -449,7 +449,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
 
  {/* Filter Pills, Search Bar, Expand All, & Mobile Create Album */}
- <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+ <div className="w-full flex items-center gap-2 flex-col sm:flex-row">
  {/* Search Input Bar */}
  <div className="relative flex-1 min-w-[140px]">
  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] pointer-events-none" />
