@@ -356,7 +356,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  };
 
  return (
- <div className="w-full flex flex-col gap-4">
+ <div className="w-full flex flex-col gap-4" data-modulo="discografia">
  {/* Header: Stats */}
  <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all bg-[var(--surface)]">
  <p className="text-[var(--ink-2)] text-xs">
