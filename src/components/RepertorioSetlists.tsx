@@ -654,9 +654,10 @@ export default function RepertorioSetlists({
  if (songsWithAudio.length > 0) {
  const randomSong = songsWithAudio[Math.floor(Math.random() * songsWithAudio.length)];
  setCurrentSong(randomSong);
+ setPlayerIsPlaying(true);
  }
  }
- }, [songs, playerCurrentSong, setCurrentSong]);
+ }, [songs, playerCurrentSong, setCurrentSong, setPlayerIsPlaying]);
 
  // Concert Player (Reproductor de Concierto / Modo Escenario)
  const {

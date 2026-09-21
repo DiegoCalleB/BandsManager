@@ -169,7 +169,7 @@ export default function SpotifyPlayerBar({
  return () => {
  isMounted = false;
  };
- }, [song, transposeSemitones]);
+ }, [song]);
 
  // Sync isPlaying state to parent if callback provided
  useEffect(() => {
