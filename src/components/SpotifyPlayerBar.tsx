@@ -533,11 +533,11 @@ export default function SpotifyPlayerBar({
  // h-16) — con el mismo z-index, cuál tapa a cuál dependería del orden en el DOM y podría acabar
  // esta barra debajo de esa. Se renderiza vía portal a document.body (ver
  // RepertorioSetlists.tsx), así que z-50 la deja siempre por encima sin pelear por el orden.
- // left-0 en móvil, md:left-[240px] en desktop para no tapar el sidebar (w-[240px]) de App.tsx.
- // En móvil: bottom-[64px] para no tapar la barra de navegación inferior (h-16 = 64px).
- // Cuando está minimizado, ajustar el bottom para que solo se vea la tira de ~2.5rem sin tapar el navbar.
+ // Móvil: left-0, bottom-[64px] (bajo el nav inferior h-16 = 64px).
+ // Desktop: md:left-[248px] (240px sidebar + 8px gap), md:bottom-5 (espacio al piso), md:right-5 (espacio al lado).
+ // Así el reproductor flota debajo del sidebar con margen, nunca sobre ella.
  return (
- <div className="fixed bottom-[64px] md:bottom-0 left-0 md:left-[240px] right-0 z-50 transition-all duration-300">
+ <div className="fixed bottom-[64px] md:bottom-5 left-0 md:left-[248px] md:right-5 z-50 transition-all duration-300">
  {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
  en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
  <audio
