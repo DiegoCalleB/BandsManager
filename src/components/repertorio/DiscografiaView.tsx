@@ -354,7 +354,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  };
 
  return (
- <div className="space-y-4">
+ <div className="w-full flex flex-col gap-4">
  <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all bg-[var(--surface)]">
  <p className="text-[var(--ink-2)] text-xs">
  {safeSongs.length > 1 ? 'lanzamientos' : 'lanzamiento'} • {safeSongs.length} temas
@@ -554,7 +554,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
 
  {/* Albums Stack */}
- <div className="space-y-4">
+ <div className="w-full flex flex-col gap-4">
  {filteredAlbums.map((album) => {
  const rawAlbumSongs = safeSongs.filter((s) => {
  const songAlbum = (s.albumDisco || s.album ||'').trim();
