@@ -511,7 +511,8 @@ export default function RepertorioSetlists({
  const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((s: any) => {
  const sId = (s?.id ||'').toLowerCase();
  if (sId.startsWith('sample-track-')) return true;
- return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
+ if (sId.startsWith('live_song_')) return true;
+ return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId);
  }) : []);
  if (sanitized.length > 0) {
  return sanitized;
