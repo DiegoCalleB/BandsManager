@@ -619,7 +619,7 @@ export default function SpotifyPlayerBar({
  </div>
 
  {/* Right: Quick Controls */}
- <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+ <div className="flex items-center gap-2 sm:gap-2 shrink-0">
  <button
  type="button"
  onClick={() => handlePrev()}
@@ -658,7 +658,11 @@ export default function SpotifyPlayerBar({
 
  <button
  type="button"
- onClick={onClosePlayer}
+ onClick={(e) => {
+ e.preventDefault();
+ e.stopPropagation();
+ onClosePlayer();
+ }}
  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
  title="Cerrar Reproductor"
  >
@@ -929,7 +933,12 @@ export default function SpotifyPlayerBar({
 
  {/* Close Player */}
  <button
- onClick={onClosePlayer}
+ type="button"
+ onClick={(e) => {
+ e.preventDefault();
+ e.stopPropagation();
+ onClosePlayer();
+ }}
  className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all ml-1"
  title="Cerrar Reproductor"
  >
