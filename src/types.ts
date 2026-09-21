@@ -335,10 +335,17 @@ export interface Concert {
   customQrSlug?: string;
   entradasUrl?: string;
   entradasLugarFisico?: string;
+  precioEntradaEstimado?: number;
   logisticaTecnica?: TechnicalLogistics;
   contactosClave?: KeyContactItem[];
   cierreMaterial?: CierreMaterialItem[];
   merchControl?: MerchControlBolo;
+  // Métricas de convocatoria real e historial para la IA de booking
+  asistencia_propia?: number;
+  asistencia_otras_bandas?: number;
+  bandas_compartidas?: string[];
+  post_show_review?: string;
+  es_hito_destacado?: boolean;
 }
 
 export interface EmailSignatureConfig {
@@ -696,7 +703,7 @@ export interface UserWithHash extends User {
   salt: string;
 }
 
-export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz';
+export type ThemeName = 'analog_light' | 'analog_dark' | 'legato_light' | 'legato_dark' | 'spectrum_light' | 'spectrum_dark' | 'backstage_dark' | 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz';
 
 // Patrones de batería soportados por el sintetizador de acompañamiento (src/utils/accompanimentSynth.ts),
 // compartido entre el generador del Song Studio y las bases rítmicas propuestas por el chatbot.
@@ -895,6 +902,7 @@ export interface SetlistShortcut {
 
 export interface ThemeColors {
   name: string;
+  mode?: 'light' | 'dark';
   bg: string;
   card: string;
   border: string;
@@ -1036,4 +1044,27 @@ export interface BandToneDnaExpression {
   terminos_a_evitar?: string[];
   ultimo_auto_refinamiento?: string;
 }
+
+export interface CustomAlertRule {
+  id: string;
+  name: string;
+  description: string;
+  category: 'booking' | 'finanzas' | 'ensayos' | 'epk';
+  requiredModule: string;
+  enabled: boolean;
+  daysThreshold?: number;
+  notifyInApp: boolean;
+  notifyEmail: boolean;
+  targetRoleOnly?: boolean;
+}
+
+export interface AlertSettingsConfig {
+  emailNotificationsEnabled: boolean;
+  inAppNotificationsEnabled: boolean;
+  digestFrequency: 'realtime' | 'daily_digest' | 'weekly_digest';
+  recipientEmail?: string;
+  recipientRole: 'leader_only' | 'all_members';
+  rules: CustomAlertRule[];
+}
+
 

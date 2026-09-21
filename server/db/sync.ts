@@ -165,10 +165,10 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     runOfShow,
     gearChecklists,
     epkConfig: epkConfig || (cleanId === 'bakandeya' ? {
-      biografia: "Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
+      biografia: "Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
       logoUrl: "/logo_bakandeya.jpg",
       bandPhotos: ["/logo_bakandeya.jpg"],
-      riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para sección de metales (2 x SM57 / clip condenser)\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)",
+      riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 2 Micrófonos dinámicos vocal (Shure SM58)\n- Líneas de inyección DI para violín solista y sintetizadores analógicos/secuencias\n- Microfonía para percusión y batería estándar en vivo (Kick, Snare, 2 Toms, Overheads)\n- 1 Línea DI para bajo eléctrico",
       enlacesRedes: {
         spotify: "https://open.spotify.com/artist/bakandeya",
         youtube: "https://youtube.com/@bakandeya_oficial",

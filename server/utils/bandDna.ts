@@ -61,6 +61,8 @@ export interface BandDnaProfile {
   categoryTemplateCustomInstruction?: string;
   categoryTemplateBody?: string;
   categoryTemplateSubject?: string;
+  // Histórico de hitos y convocatoria real de conciertos
+  concertHighlightsText?: string;
 }
 
 function strOrUndef(v: any): string | undefined {
@@ -189,6 +191,46 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     if (parts.length > 0) cifrasClaveTexto = parts.join(" • ");
   }
 
+  // Extracción de Convocatoria Real e Hitos Destacados
+  const allConcerts = Array.isArray(state?.concerts) ? state.concerts : [];
+  const bandConcerts = allConcerts.filter((c: any) => {
+    if (!c) return false;
+    const cBand = String(c.band_id || c.bandId || "").toLowerCase();
+    return cBand === bandId.toLowerCase() || cBand === cleanId.toLowerCase() || cBand === `band-${cleanId}`.toLowerCase();
+  });
+
+  const concertHighlightItems: string[] = [];
+  const pastOrHighlights = bandConcerts.filter((c: any) => 
+    c.es_hito_destacado || 
+    (c.asistencia_propia && c.asistencia_propia > 0) || 
+    (c.aforo_vendido && c.aforo_vendido > 0) || 
+    (c.post_show_review && c.post_show_review.trim().length > 0)
+  );
+
+  pastOrHighlights.sort((a: any, b: any) => {
+    if (a.es_hito_destacado && !b.es_hito_destacado) return -1;
+    if (!a.es_hito_destacado && b.es_hito_destacado) return 1;
+    const astA = Number(a.asistencia_propia || a.aforo_vendido || 0);
+    const astB = Number(b.asistencia_propia || b.aforo_vendido || 0);
+    return astB - astA;
+  });
+
+  pastOrHighlights.slice(0, 5).forEach((c: any) => {
+    const salaInfo = `${c.sala || 'Sala'}, ${c.ciudad || 'Ciudad'} (${c.fecha || 'Fecha'})`;
+    const propia = Number(c.asistencia_propia || c.aforo_vendido || 0);
+    const total = c.aforo_total ? ` / Aforo: ${c.aforo_total}` : '';
+    const deOtras = Number(c.asistencia_otras_bandas || 0);
+    const otrasInfo = deOtras > 0 ? ` (Público propio: ~${propia}, público de otros grupos: ~${deOtras})` : '';
+    const cart = Array.isArray(c.bandas_compartidas) && c.bandas_compartidas.length > 0 ? ` [Compartido con: ${c.bandas_compartidas.join(', ')}]` : '';
+    const rev = c.post_show_review ? ` — Resumen/Sensaciones: "${c.post_show_review.trim()}"` : '';
+    const hitoBadge = c.es_hito_destacado ? '⭐ [HITO DESTACADO]' : '•';
+    concertHighlightItems.push(`${hitoBadge} ${salaInfo}: ${propia} asistentes propios${total}${otrasInfo}${cart}${rev}`);
+  });
+
+  const concertHighlightsText = concertHighlightItems.length > 0 
+    ? concertHighlightItems.join('\n')
+    : "Sin hitos o asistencia registradas aún.";
+
   // Enlaces oficiales
   const baseUrl = process.env.APP_URL || "https://bandmanager.io";
   const epkUrl = `${baseUrl}/epk?band=${encodeURIComponent(bandId || cleanId)}`;
@@ -304,7 +346,8 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     categoryTemplateGuidelines,
     categoryTemplateCustomInstruction,
     categoryTemplateBody,
-    categoryTemplateSubject
+    categoryTemplateSubject,
+    concertHighlightsText
   };
 }
 
@@ -396,6 +439,10 @@ ${campaignSection}
 4. CONDICIONES ECONÓMICAS Y CO-BOOKING:
    - Modelo: ${bandDna.flexibilidadEconomica}
    - Co-booking: ${bandDna.propuestaCoBooking}
+
+5. HISTORIAL DE CONVOCATORIA REAL Y HITOS DESTACADOS DE CONCIERTOS PASADOS:
+${bandDna.concertHighlightsText ? bandDna.concertHighlightsText.split('\n').map(line => `   - ${line}`).join('\n') : "   - Sin hitos de asistencia específicos registrados aún. Usa la cifra general de directos."}
+   * DIRECTIVA DE PRUEBA SOCIAL REAL: Si arriba figuran recintos o salas donde la banda tuvo buena asistencia o lleno propio, cita esos datos reales de manera natural (ej: "En nuestra última actuación en [Ciudad] en la sala [Sala], metimos a [X] espectadores..."). Da máxima veracidad y credibilidad al programador exponiendo el público propio real sin exageraciones.
 ${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
 5. REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER PARA "${categoryKey.toUpperCase()}" (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
 ${bandDna.reglasManuales.map(r => `   - 🔒 ${r}`).join("\n")}
@@ -477,30 +524,91 @@ ${Object.keys(applicableNegotiationStartCaches).length > 0
 NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas explícitamente "no bajamos de X euros". Estas cifras son SOLO para tu propia evaluación estratégica y para responder si preguntan directamente.
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
-📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):
+📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP & DETECCIÓN):
 ═════════════════════════════════════════════════════════════════════
 1. ${languageHint.instruction}
-2. ADAPTACIÓN DE ENFOQUE POR TIPO (MÁXIMA PERSONALIZACIÓN AL RECINTO):
-   - SALAS / CLUB DE DIRECTO: Enfoque directo a ese público local específico. Destaca que el show es festivo, bailable y garantiza consumo de barra; ofrece montaje rápido y flexibilidad en taquilla o co-booking con banda local. PROHIBIDO: no menciones "aforos de 300-500 personas" — habla de la sala ESPECÍFICA.
-   - FESTIVALES: Resalta la conexión masiva, el alto impacto en horarios nocturnos/tardes y la agilidad en cambio de set.
-   - DISCOTECAS / CLUBS: Presenta el show como Live Set nocturno bailable de madrugada entre DJs. Personaliza el enfoque: ¿qué público tiene esa discoteca? ¿Qué vibe? Menciona cómo el directo encaja en su programación específica.
-   - MEDIOS / RADIO / PRENSA: Enfoque informativo y de colaboración cultural; ofrece temas en calidad broadcast (WAV), entrevistas o acústicos (¡JAMÁS pedir bolos ni taquilla a un medio!).
-   - GRUPOS / ARTISTAS: Enfoque de colega de profesión para compartir concierto, fecha doble o intercambio (Date Swap en su ciudad y en la nuestra).
-   - AYUNTAMIENTOS / FIESTAS: Destaca el carácter festivo e intergeneracional, la solvencia técnica y la facturación formal.
-3. TONO, ESTRUCTURA Y FIRMA ÚNICA:
-   - Saludo cercano y personalizado (ej: "Hola equipo de [Sala]").
-   - Gancho inicial directo conectando con la fecha objetivo de la gira (ej. 4 de diciembre en Madrid).
-   - Resumen conciso de propuesta, formato y facilidad técnica sin rodeos.
-   - Referencia limpia al dossier: indicar que al pie disponen del Dossier Oficial y EPK con el directo y el rider técnico.
-   - Cierre con pregunta abierta orientada a agenda (ej. "¿Cómo tenéis la agenda para coordinar esa fecha?").
-   - Cierre cordial de una sola frase (ej: "¡Un saludo!" o "Quedamos a vuestra disposición.").
+2. ADAPTACIÓN DE ENFOQUE Y PALANCAS DE NEGOCIACIÓN DE MÁNAGERS ÉLITE (POR VERTICAL):
+   - SALAS / CLUBES DE DIRECTO (Palanca: Reducción de riesgo económico + Dinamización de barra):
+     * Muestra conocimiento de la realidad de las salas: el programador busca rentabilizar la noche y no perder dinero en personal/sonido.
+     * Enmarca la fecha dentro de una ruta geográfica o eje de gira activo (ej: "Aprovechando nuestra ruta por [Provincia/Zona] en [Mes]..."), lo que transmite movimiento profesional real.
+     * Aplica la técnica de Opciones Múltiples (Holds/Pencil-in): propone una fecha principal y una alternativa secundaria o fin de semana de respaldo para no perder el contacto si el día exacto está ocupado.
+     * Ofrece un compromiso de promoción local concreta (ej: apoyo en difusión geolocalizada en la zona de la sala y cartelera local, no solo "redes").
+     * Enfatiza que el show es bailable y festivo, generando muy buen ambiente y conexión con el público.
+     * Si procede de forma natural, abre la puerta a compartir cartel con alguna banda local afín para sumar públicos locales.
+     * Si la sala estuviera llena, deja la puerta abierta para quedar en la Lista de Retén de Emergencia por si se cae algún grupo a última hora.
+     * VERACIDAD TÉCNICA OBLIGATORIA: Argumentos técnicos específicos (como In-Ear Monitors, batería electrónica o escenario silencioso) SOLO se mencionan si están explícitamente declarados en el Rider Técnico o Ficha de la banda. NUNCA inventar equipamiento que la banda no posea.
+     * PROHIBIDO: referencias genéricas a "aforos de X personas"; habla exclusivamente de esa sala específica.
+
+   - FESTIVALES (Palanca: Eficiencia operativa + Rotación de escenario + Ajuste a slot):
+     * El director artístico y el jefe de producción buscan cero retrasos en el escenario y máxima fluidez entre artistas.
+     * Respeta la ventana de programación de festivales (6 a 12 meses vista) e incluye referencias a otros festivales o eventos pasados como prueba social de solvencia en directo.
+     * Resalta el cambio de set ultra-rápido (15-20 min), montaje limpio y adaptabilidad total a horarios de tarde o madrugada.
+     * Destaca un directo de ritmo alto y sostenido que mantiene la energía del público arriba en el recinto.
+
+   - DISCOTECAS / CLUBS (Palanca: Continuidad de pista de baile + Live Set nocturno bailable):
+     * El promotor de clubbing busca propuestas con pulso que mantengan la pista de baile activa y sumen un directo vibrante a su noche.
+     * Presenta el show como un Live Set bailable de madrugada (fusión electrónica/orgánica), ideal para calentar la pista y crear una atmósfera de fiesta muy viva.
+
+   - AYUNTAMIENTOS / FIESTAS / CULTURA (Palanca: Solvencia administrativa + Seguridad jurídica + Show intergeneracional):
+     * Al concejal y al técnico de cultura les preocupa la burocracia, la factura formal, el cumplimiento de normativa laboral y que el show sea apto para todos los públicos.
+     * Respeta la ventana presupuestaria municipal (3 a 6 meses vista).
+     * Destaca la facturación oficial inmediata, solvencia técnica, puntualidad de producción y un espectáculo enérgico pero respetuoso e intergeneracional.
+
+   - GRUPOS / ARTISTAS (Palanca: Reciprocidad real + Reparto de gastos + Date Swap):
+     * Un músico busca no perder dinero viajando fuera y asegurar público en su ciudad.
+     * Habla de colega a colega con propuesta ganar-ganar: intercambio de fechas (nosotros os invitamos a tocar en nuestra zona compartiendo sala y taquilla, y montamos la vuelta en vuestra ciudad).
+     * Destaca el compartir backline (batería/amplis) para reducir costes de furgoneta y logística.
+
+   - MEDIOS / RADIO / PRENSA (Palanca: Facilidad de contenido + Calidad broadcast):
+     * El periodista busca contenido interesante sin rodeos ni notas de prensa infumables.
+     * Ofrece temas en WAV/broadcast listos para sonar, disponibilidad para entrevistas breves o acústicos en estudio. JAMÁS pidas fechas ni taquilla a un medio.
+3. TONO, RITMO Y ESTRUCTURA HUMANA (ESTRUCTURA DE ALTA CONVERSIÓN EN 3 PASOS < 140 PALABRAS):
+   - Redacta como un mánager de primer nivel escribiendo un correo directo de trabajo de menos de 140 palabras, optimizado para lectura en diagonal de 5 segundos en móvil.
+   - Saludo camaleónico según destinatario:
+     * Para Salas/Clubes: "Buenas equipo de [Sala]," o "Hola [Nombre]," (NUNCA "Hola, equipo..." con coma tras Hola).
+     * Para Fundaciones / Teatros / Auditorios: "Buenas equipo de [Nombre]," o "Hola [Nombre],"
+     * Para Festivales: "Hola [Nombre]," o "Buenas gente de [Festival],"
+     * Para Ayuntamientos: "Estimado/a [Nombre]," u "Hola [Nombre],"
+     * Para Medios: "Buenas [Nombre]," o "Hola gente de [Medio],"
+   - PASO 1 — HALAGO SINCERO, AFINIDAD Y CONTEXTO DE RUTA (Línea 1-3):
+     * RECONOCIMIENTO Y AFINIDAD REAL ("Hacer la pelota" con clase, criterio y empatía): Muestra conocimiento e interés sincero por el espacio. Reconoce su labor cuidando la música en directo en su ciudad ("Seguimos de cerca lo que programáis en [Ciudad] y nos gusta mucho el mimo que ponéis en la cartelera...", "Conocemos vuestra trayectoria acogiendo directos con personalidad...", "Nos gusta mucho la línea de artistas y propuestas que estáis trayendo esta temporada...").
+     * Enmarca la fecha dentro de un corredor de gira o ruta activa (ej: "Aprovechando que estamos cerrando ruta por [Zona/Provincia] en [Mes]...").
+   - PASO 2 — MICRO-PRESENTACIÓN Y ENCAJE ARTÍSTICO SEGÚN EL TIPO DE ESPACIO:
+     * PARA SALAS / CLUBES DE DIRECTO: Define la personalidad musical, género y energía del show (bailable, festivo, conexión con el público y buen ambiente).
+     * PARA DISCOTECAS / CLUBS NOCTURNOS: Enfatiza el formato Live Set bailable y la energía de club.
+     * PARA FUNDACIONES, TEATROS, AUDITORIOS Y CENTROS CULTURALES: ¡PROHIBIDO hablar de dinamizar barras o copas! Enfócate en la calidad artística, la riqueza tímbrica e instrumental (el protagonismo del violín, la versatilidad sonora) y el respeto a la acústica y al público del espacio.
+     * CERO DETALLES OPERATIVOS O DE TIEMPOS (montajes, desmontajes, minutos, riders, fórmulas de taquilla/caché): Los programadores tienen años de oficio; viendo los vídeos y el dossier ya conocen al instante el tipo de montaje y dimensiones. En este primer contacto céntrate exclusivamente en la música, la afinidad con el espacio y las ganas de colaborar.
+   - PASO 3 — INTERÉS POR SU PROGRAMACIÓN Y LLAMADA A LA ACCIÓN (CTA) CERCANA:
+     * Interésate con humildad y curiosidad por su criterio: "¿Cómo tenéis enfocada la programación para el próximo trimestre o encajaría una propuesta así en vuestros ciclos?". Una pregunta simple y directa que el programador pueda responder en 5 segundos.
+   - CADENCIA Y SEGUIMIENTO SEGÚN ETAPA DE CONTACTO (3 TOQUES):
+     * TOQUE 1 (Pitch Inicial): Estructura estándar de 3 pasos (< 120 palabras).
+     * TOQUE 2 (Seguimiento / Bump a los 7-10 días): Máximo 45 palabras. PROHIBIDO decir "¿Pudiste ver el correo anterior?". Aporta siempre una novedad o hito reciente de la gira (ej: "Actualizo ruta: acabamos de confirmar parada en [Ciudad Vecina] para ese finde, por lo que nos encaja perfecto completar la fecha con vosotros el viernes/sábado...").
+     * TOQUE 3 (Break-up cordial a los 21+ días): Máximo 35 palabras. Cierre elegante que libera la presión y genera alta tasa de respuesta (ej: "Imagino que tendréis la programación de este trimestre completa. Cerramos la ruta por ahora para no insistir y os tenemos muy presentes para la próxima temporada. ¡Un abrazo!").
+   - Despedida natural según destinatario:
+     * Para Salas/Festivales: "¡Un abrazo y seguimos hablando!" o "¡Un saludo!"
+     * Para Ayuntamientos: "Un cordial saludo,"
    - REGLA DE NO DOBLE FIRMA: NUNCA escribas bloques de firma manuales, números de teléfono, correos, nombres ni cargos al final del texto. El sistema inserta automáticamente la firma visual única con el dossier y las redes oficiales de la banda (Instagram, Facebook, TikTok).
-4. PROHIBICIONES ESTRICTAS:
+4. PROHIBICIONES Y LISTA NEGRA ANTI-IA (PATRONES PROHIBIDOS EXPRESAMENTE):
+   - LISTA NEGRA DE MULETILLAS E IA-ISMOS (PROHIBIDAS DE FORMA ABSOLUTA):
+     * "Espero que este correo te encuentre bien"
+     * "Nos complace / nos alegra en gran medida ponernos en contacto"
+     * "En el cambiante / dinámico / competitivo panorama actual"
+     * "Sumergirse en", "un tapiz de", "a la vanguardia", "un sinfín de", "resonar con"
+     * "Es fundamental destacar", "en última instancia", "experiencia inolvidable", "marcar un hito"
+     * "Quedamos a su entera disposición" (usar en su lugar: "¿Cómo lo veis?", "¿Hablamos esta semana?", "Un saludo.")
+     * "Agent Manager IA" o cualquier alusión a "IA", "inteligencia artificial" o "bot" en la firma o el texto.
    - NUNCA inventar instrumentos de viento (trompetas, saxos, trombones) para Bakandeya.
-   - PROHIBIDAS las frases hechas y clichés ("espero que te encuentres bien", "en el competitivo panorama actual", "una experiencia inolvidable").
    - NO incluir enlaces a Spotify/YouTube en el texto del cuerpo; toda la referencia se canaliza a través del dossier oficial en la firma.
    - NUNCA menciones "aforos de X-Y personas" ni hagas referencias genéricas a "salas de aforo medio". Personaliza SIEMPRE a la sala específica del destinatario.
-   - PROHIBIDO repetir fechas múltiples veces en el mismo email. Menciona las fechas de campaña UNA SOLA VEZ, de forma clara y directa. Si hay variedad de opciones, lístalasde forma compacta ("4, 5, 11 o 12 de diciembre") pero NO repitas la misma información en párrafos diferentes.
+   - PROHIBIDO repetir fechas múltiples veces en el mismo email. Menciona las fechas de campaña UNA SOLA VEZ, de forma clara y directa. Si hay variedad de opciones, lístalas de forma compacta ("4, 5, 11 o 12 de diciembre") pero NO repitas la misma información en párrafos diferentes.
+5. BARRERA ANTI-ALUCINACIÓN Y VERACIDAD DE DATOS ABSOLUTA:
+   - PROHIBIDO TONO ROGANTE O SUMISO: NUNCA uses expresiones como "agradeceríamos una oportunidad", "si tuvierais a bien" o "esperamos contar con su gracia". Habla de igual a igual como profesional del sector que ofrece un producto de entretenimiento rentable y con capacidad de llenar el recinto.
+   - PROHIBIDO ARCHIVOS ADJUNTOS PESADOS O PDFs: La referencia es SIEMPRE la URL del Dossier interactivo (EPK) en la firma. Nunca sugieras adjuntar archivos pesados que puedan activar filtros de Spam.
+   - PARA SEGUIMIENTOS / FOLLOW-UPS A LOS 5 DÍAS: NUNCA envíes un seco "¿Pudiste ver el correo anterior?". Aporta siempre una novedad o hito reciente de la gira (ej: "Aprovecho para actualizarte: acabamos de confirmar la parada en [Ciudad Vecina] para ese finde, así que nos encaja perfecto cerrar [Ciudad] el viernes...").
+   - ZERO ALUCINACIÓN DE EQUIPO Y RIDER: Queda terminantemente prohibido inventar marcas de monitores, sistemas in-ear, tipo de batería o microfonía. Usa ÚNICAMENTE los datos del Rider Técnico declarados por la banda.
+   - ZERO ALUCINACIÓN DE CIFRAS Y HITOS: No inventar reproducciones en Spotify, venta de entradas pasadas, premios o festivales en los que la banda no haya tocado. Si no constan cifras de la banda, utiliza ganchos cualitativos (fuerza del directo, estilo festivo, propuesta bailable).
+   - ZERO ALUCINACIÓN DE COMPONENTES Y NOMBRES: No inventar nombres de músicos, integrantes o cargos que no figuren en la ficha oficial.
+   - ZERO ALUCINACIÓN DE PRECIOS Y CACHÉS: No mencionar tarifas, cachés ni cifras económicas en el correo salvo que estén explícitamente parametrizadas o la sala haya preguntado directamente por ello.
    - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.`;
 }
 
@@ -547,10 +655,10 @@ ${responseStrategy.mentionLinks !== false ? `MENCIONAR ENLACES: Sí, incluye ref
 `;
   } else if (responseType) {
     const autoGuidance: Record<string, string> = {
-      price_negotiation: `Tu objetivo es demostrar que la banda es flexible en condiciones económicas. Menciona brevemente el modelo de contratación (taquilla compartida, caché variable, co-booking). No entres en cifras concretas a menos que sea absolutamente necesario - esos detalles van en un documento separado o llamada.`,
-      confirmation: `El tono debe ser muy positivo y entusiasta. Confirma lo que ellos proponen, expresa emoción de la banda, y asegúrate de que queda claro que ya hay acuerdo. Ofrece coordinación técnica o logística si es necesario.`,
-      rejection: `El tono debe ser cálido, profesional y sin frustración. Agradece sinceramente su tiempo y consideración, respeta su decisión, y deja siempre la puerta abierta para futuras colaboraciones sin ser insistente.`,
-      follow_up: `Responde directamente a las preguntas específicas. Si piden información, proporciona lo que necesitan del Dossier o del modelo de la banda. Mantén la respuesta enfocada y breve.`,
+      price_negotiation: `Tu objetivo es demostrar que la banda es flexible en condiciones económicas. Si la sala pone objeciones de caché o presupuesto ajustado, ofrece alternativas viables: modelo de taquilla con mínimo garantizado, o co-booking con una banda local para sumar audiencias y repartir gastos de sala. No entres en disputas de cifras; mantén la conversación enfocada en la rentabilidad de la fecha para ambas partes.`,
+      confirmation: `El tono debe ser muy positivo y profesional. IMPORTANTE (SALVAGUARDA DE MÁNGER / DISPONIBILIDAD): Si la sala propone o acepta una fecha, NO cierres el trato de forma 100% vinculante e irrevocable de inmediato a menos que el usuario lo haya pedido explícitamente. Plantea dejar la fecha en "Pre-reserva" (Hold / Option 1) durante 24-48 horas mientras el mánager termina de cuadrar logística y disponibilidad interna de los músicos antes de firmar contrato. Expresa entusiasmo de la banda, agradece la fecha propuesta y ofrece coordinar rider y datos en cuanto la pre-reserva quede confirmada.`,
+      rejection: `El tono debe ser cálido, profesional y sin frustración. Agradece sinceramente su tiempo y respuesta. Si alegan que la programación está llena, ofrece quedar en su "Lista de Retén / Emergencia" por si algún grupo causa baja a última hora, y tantea con elegancia en qué mes abrirán la recepción para la siguiente temporada.`,
+      follow_up: `Responde directamente a las preguntas específicas de forma concisa. Si piden información técnica o referencias de audio, remite al Dossier Oficial en la firma. Mantén la respuesta enfocada y con una llamada a la acción clara.`,
       neutral: `Responde de forma amable, profesional y breve sin asumir nada sobre las intenciones de quien escribe.`
     };
 
@@ -624,12 +732,22 @@ ${historialTexto}
 "${sanitizeExternalText(incomingMessage, 2000)}"
 ${conditionalGuidanceSection}${feedbackSection}
 ═════════════════════════════════════════════════════════════════════
-📐 DIRECTRICES DE LA RESPUESTA:
+📐 DIRECTRICES DE LA RESPUESTA (ANTI-AI SLOP & DETECCIÓN):
 ═════════════════════════════════════════════════════════════════════
 1. ${languageHint.instruction}
 2. Responde específicamente a lo que dice el mensaje entrante: si pide fecha, propón o confirma fecha; si pregunta precio/condiciones, responde con el modelo económico de la banda; si pone objeciones, gestiónalas sin ser insistente; si es un rechazo claro, agradece con cortesía y deja la puerta abierta sin insistir.
-3. NO repitas la presentación completa de la banda como si fuera el primer contacto: ya la tienen, ve al grano de esta respuesta concreta.
-4. Mantén el mismo tono y vocabulario que muestran los ejemplos reales de respuestas anteriores y las reglas de estilo aprendidas, si los hay (máxima prioridad); usa el contexto de identidad de redes sociales solo como enriquecimiento de fondo.
+3. NO repitas la presentación completa de la banda como si fuera el primer contacto: ya la tienen, ve directo al grano.
+4. TONO, RITMO Y ESTRUCTURA HUMANA:
+   - Redacta de forma cercana, natural y profesional, alternando frases cortas con explicaciones fluidas.
+   - EVITA incluir listas con viñetas o subtítulos en negrita. Responde en párrafos limpios y breves.
+   - LISTA NEGRA DE MULETILLAS (PROHIBIDAS DE FORMA ABSOLUTA):
+     * "Espero que este correo te encuentre bien"
+     * "Nos complace / nos alegra en gran medida"
+     * "En el cambiante / dinámico / competitivo panorama actual"
+     * "Sumergirse en", "un tapiz de", "a la vanguardia", "un sinfín de", "resonar con"
+     * "Es fundamental destacar", "experiencia inolvidable", "marcar un hito"
+     * "Quedamos a su entera disposición" (usar en su lugar: "¿Cómo lo veis?", "¿Hablamos esta semana?", "Un saludo.")
+     * "Agent Manager IA" o cualquier alusión a "IA", "inteligencia artificial" o "bot" en la firma o el texto.
 5. REGLA DE NO DOBLE FIRMA: no escribas bloques de firma manuales al final; el sistema añade la firma automáticamente.
 6. Devuelve ÚNICAMENTE el cuerpo del email de respuesta, sin asunto ni metadatos.`;
 }
@@ -694,109 +812,89 @@ export function generateSmartDnaPitchFallback(params: {
 
   // 1. CASO: MEDIOS / PRENSA / RADIO / PODCAST
   if (leadTipo.includes("medio") || leadTipo.includes("prensa") || leadTipo.includes("radio") || leadTipo.includes("podcast")) {
-    return `${greetingPerson}${ciudadStr}:
+    return `${greetingPerson}:
 ${customNote}
-Os escribimos desde el equipo de **${bandDna.bandName}** (${bandDna.genero}). Os hacemos llegar nuestra propuesta informativa con motivo de nuestra gira de conciertos y lanzamientos 2026.
+Os escribo en representación de ${bandDna.bandName} (${bandDna.genero}) para haceros llegar nuestro dossier de prensa con motivo del lanzamiento de nuevo material y la gira 2026.
 
-${bandDna.biografia}
+Estaríamos encantados de enviaros los temas en calidad broadcast (WAV) para vuestra programación, o ponernos a disposición para entrevistas o acústicos en estudio.
 
-Nos encantaría ponernos a vuestra disposición para:
-• Remitiros temas en calidad broadcast / WAV para sonar en vuestra programación.
-• Entrevistas, acústicos en directo en estudio o reseñas del nuevo material.
+Tenéis acceso a todos los audios, vídeos de directo y kit de prensa en el Dossier Oficial & EPK adjunto al pie.
 
-Tenéis acceso a todos los temas, material audiovisual y kit de prensa completo en nuestro **Dossier Oficial & EPK** que encontraréis referenciado al pie de este correo.
+Muchas gracias por apoyar la música independiente en directo.
 
-Quedamos a vuestra entera disposición para cualquier contenido o consulta. ¡Muchas gracias por apoyar la música independiente en directo!
-
-Un cordial saludo,`;
+Un saludo,`;
   }
 
   // 2. CASO: FESTIVALES DE MÚSICA
   if (leadTipo.includes("festiv")) {
-    return `Estimada organización y equipo de programación de ${salaNombre}${ciudadStr}:
+    return `Hola equipo de programación de ${salaNombre}${ciudadStr}:
 ${customNote}
-Nos ponemos en contacto desde la oficina de **${bandDna.bandName}** para presentar nuestra propuesta artística (${bandDna.genero}) de cara a la próxima edición de vuestro festival.
+Os escribo desde la oficina de ${bandDna.bandName} (${bandDna.genero}) para presentar la propuesta de directo de cara a la próxima edición de vuestro festival.
 
-${bandDna.bandName} ofrece un espectáculo en directo de alto impacto concebido para escenarios de festival (${bandDna.duracionDirecto}):
-• ${bandDna.formato} con un directo potente, dinámico y festivo (${bandDna.instrumentacion}).
-• Montaje rápido y rotación ágil de escenario (${bandDna.montajeRapido}), facilitando la operativa técnica del festival.
-• ${bandDna.cifrasClaveTexto}
+Traemos un show de ${bandDna.duracionDirecto} de alta energía pensado para grandes escenarios. Además, nuestro montaje es muy limpio (${bandDna.montajeRapido}), lo que facilita rotaciones de escenario rápidas y ágiles durante el festival.
 
-Disponéis de nuestro **Dossier Oficial, EPK y Rider Técnico** completo con vídeos de directo y temas al pie de la firma de este mensaje.
+Podéis consultar nuestro Dossier Oficial, EPK y Rider Técnico en el enlace referenciado al pie de este mensaje.
 
-Estaríamos encantados de enviaros nuestra propuesta económica y disponibilidad de fechas para valorar nuestra incorporación al cartel.
+Estaremos encantados de enviaros propuesta económica y disponibilidad para valorar nuestra incorporación al cartel.
 
-Atentamente,`;
+Un saludo,`;
   }
 
   // 3. CASO: DISCOTECAS Y CLUBS NOCTURNOS
   if (leadTipo.includes("disco") || leadTipo.includes("club")) {
-    return `${greetingPerson}${ciudadStr}:
+    return `${greetingPerson}:
 ${customNote}
-Os escribimos desde el equipo de **${bandDna.bandName}** (${bandDna.genero}) para proponeros nuestro formato especial de **Live Set nocturno**, diseñado específicamente para la sesión de madrugada en clubes y discotecas.
+Os escribo desde el equipo de ${bandDna.bandName} (${bandDna.genero}) para proponeros un formato especial de Live Set nocturno, diseñado para la sesión de madrugada en clubes y discotecas.
 
-Nuestra propuesta combina secuencias electrónicas analógicas, percusión en vivo y violín enérgico, creando un puente perfecto entre la fuerza de la música en directo y la pista de baile entre sesiones de DJs.
+Combina electrónica, percusión en vivo y violín enérgico en un show de ${bandDna.duracionDirecto}, perfecto para mantener la pista de baile encendida entre sesiones de DJs.
 
-Detalles de la propuesta:
-• Show continuo y bailable (${bandDna.duracionDirecto}) adaptado al público de noche${aforoStr}.
-• Montaje técnico limpio y ágil (${bandDna.montajeRapido}).
-• Flexibilidad total de condiciones (taquilla con consumición o caché acordado).
+Podéis consultar el dossier interactivo y rider técnico en el pie de este correo.
 
-Podéis consultar nuestro dossier interactivo y rider técnico al pie de este correo.
+¿Cómo tenéis la agenda de los próximos meses para coordinar una fecha?
 
-¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha de sesión?
-
-Un saludo cordial,`;
+Un saludo,`;
   }
 
   // 4. CASO: AYUNTAMIENTOS / FIESTAS POPULARES
   if (leadTipo.includes("ayunt") || leadTipo.includes("fiesta") || leadTipo.includes("municip")) {
     return `Estimados responsables del Área de Cultura y Festejos de ${salaNombre}${ciudadStr}:
 ${customNote}
-Nos dirigimos a ustedes desde la representación de **${bandDna.bandName}** (${bandDna.genero}) para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales de la próxima temporada.
+Nos dirigimos a ustedes desde la representación de ${bandDna.bandName} (${bandDna.genero}) para presentar nuestra propuesta de concierto de cara a la programación cultural y fiestas de la próxima temporada.
 
-${bandDna.biografia}
-Es un espectáculo de 90 minutos de alta energía, familiar, participativo y muy bailable, ideal para plazas públicas y eventos al aire libre. Contamos con amplia solvencia técnica, facturación oficial y rigurosa puntualidad de producción.
+Ofrecemos un espectáculo participativo y de alta energía, adecuado para todos los públicos en plazas y recintos al aire libre. Disponemos de solvencia técnica, facturación oficial y rigurosa puntualidad en producción.
 
-Disponen del Dossier de Prensa y Rider Técnico oficial referenciado al pie de esta comunicación.
+Tienen a su disposición el Dossier de Prensa y Rider Técnico oficial referenciado al pie.
 
-Quedamos a su entera disposición para remitirles nuestro rider técnico y propuesta presupuestaria formal.
+Quedamos a su disposición para remitirles la propuesta presupuestaria formal.
 
-Cordialmente,`;
+Atentamente,`;
   }
 
   // 5. CASO: GRUPOS / ARTISTAS (DATE SWAP / CO-BOOKING)
   if (leadTipo.includes("grup") || leadTipo.includes("artist") || leadTipo.includes("banda")) {
-    return `¡Buenas, compañeros de ${salaNombre}! 🎸🔥
+    return `¡Buenas, gente de ${salaNombre}!
 ${customNote}
-Os escribimos directamente desde **${bandDna.bandName}** (${bandDna.genero}, con base en ${bandDna.ciudadBase}).
+Os escribo desde ${bandDna.bandName} (${bandDna.genero}, con base en ${bandDna.ciudadBase}). Nos gusta mucho vuestro proyecto y queríamos proponeros un intercambio de fechas (date swap) para esta temporada.
 
-Seguimos vuestra trayectoria y nos gusta mucho vuestro proyecto. Estamos organizando fechas de gira y queríamos proponeros un **intercambio de fechas / co-booking (Date Swap)**:
-1. Montamos una fecha conjunta en nuestra ciudad (${bandDna.ciudadBase}), compartiendo cartel, backline y taquilla al 50%.
-2. Coordinamos la fecha de vuelta en vuestra ciudad (${ciudad || "vuestra zona"}) para sumar ambos públicos locales y rentabilizar gastos de viaje.
+La idea sería montar una fecha conjunta en nuestra zona (${bandDna.ciudadBase}) compartiendo sala y taquilla, y coordinar la fecha de vuelta en ${ciudad || "vuestra zona"} para sumar públicos y compartir gastos.
 
-Podéis consultar nuestro directo, dossier y propuesta en el enlace de la firma al pie de este mensaje.
+Podéis consultar nuestro directo y dossier en el enlace al pie.
 
-¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos una breve llamada para cuadrar calendarios?
+¿Cómo lo veis? ¿Hablamos por WhatsApp esta semana para cuadrar calendarios?
 
-¡Un fuerte abrazo!`;
+¡Un abrazo!`;
   }
 
   // 6. CASO ESTÁNDAR: SALAS Y TEATROS DE CONCIERTOS
-  return `${greetingPerson}${ciudadStr}:
+  return `${greetingPerson}:
 ${customNote}
-Os escribimos desde el equipo de **${bandDna.bandName}** (${bandDna.genero}). Seguimos de cerca la programación de ${salaNombre} y creemos que nuestra propuesta de directo encaja perfectamente con vuestra línea artística y vuestro público habitual.
+Os escribo desde ${bandDna.bandName} (${bandDna.genero}). Seguimos de cerca la programación de ${salaNombre} y nos encantaría cuadrar fecha en vuestra sala para los próximos meses.
 
-**Sobre nuestra propuesta de directo:**
-• **Formato:** ${bandDna.formato} — show continuo, dinámico y participativo (${bandDna.instrumentacion}) con una duración de ${bandDna.duracionDirecto}.
-• **Producción:** Montaje y prueba de sonido ágil (${bandDna.montajeRapido}) con rider técnico limpio y eficiente${aforoStr}.
-• **Condiciones:** ${bandDna.flexibilidadEconomica} Además, tenemos total disposición para colaborar con bandas locales de ${ciudad || "la zona"} para asegurar convocatoria y venta de barra.
+${campaignIntro} Traemos un directo enérgico (${bandDna.duracionDirecto}), muy bailable y pensado para mover público local y dinamizar la barra. Montamos rápido con un rider técnico muy ágil (${bandDna.montajeRapido}) y tenemos total flexibilidad en las condiciones (taquilla, co-booking con banda local o caché).
 
-Tenéis a vuestra disposición el **Dossier Oficial, EPK y Rider Técnico** completo con vídeos de directo y audios referenciado en la firma al pie de este mensaje.
+Tenéis a vuestra disposición el Dossier Oficial, EPK y Rider Técnico en el enlace referenciado al pie.
 
-${campaignIntro} ¿Cómo tenéis la agenda para valorar una fecha conjunta?
+¿Cómo tenéis la agenda para valorar disponibilidad de fechas?
 
-¡Muchas gracias por vuestro tiempo y por seguir apostando por la música en directo!
-
-Un saludo cordial,`;
+Un saludo,`;
 }

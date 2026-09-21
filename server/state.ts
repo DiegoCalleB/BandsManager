@@ -12,10 +12,10 @@ const INITIAL_RUN_OF_SHOW: Record<string, any[]> = {
   '2026-07-23': [
     { id: 'ros-1', time: '17:00', activity: 'Llegada a la sala y descarga de bártulos', done: true },
     { id: 'ros-2', time: '17:30', activity: 'Montaje de escenario e in-ears', done: true },
-    { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de metales y bases)', done: true },
+    { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de violín, sintes y bases)', done: true },
     { id: 'ros-4', time: '19:30', activity: 'Cena de la banda / Catering', done: false },
     { id: 'ros-5', time: '21:00', activity: 'Apertura de puertas', done: false },
-    { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎺💥', done: false },
+    { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎻💥', done: false },
     { id: 'ros-7', time: '23:30', activity: 'Merchandising, firmas y recogida de equipo', done: false },
   ],
   '2026-07-15': [
@@ -28,7 +28,7 @@ const INITIAL_RUN_OF_SHOW: Record<string, any[]> = {
 const INITIAL_GEAR_CHECKLISTS: Record<string, any[]> = {
   '2026-07-23': [
     { id: 'gear-1', label: 'Teclado Korg SV-2 + Stand', checked: true },
-    { id: 'gear-2', label: 'Sección Metales (Sordinas y atril)', checked: true },
+    { id: 'gear-2', label: 'Estuche Violín electroacústico + Arco y resina', checked: true },
     { id: 'gear-3', label: 'Banderola de Escenario Bakandeya', checked: false },
     { id: 'gear-4', label: 'Merchandising (Camisetas, Pegatinas, CDs)', checked: false },
     { id: 'gear-5', label: 'Cables Jack / XLR de recambio', checked: true },

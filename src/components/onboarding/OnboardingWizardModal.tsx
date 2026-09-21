@@ -407,6 +407,11 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [newEventCity, setNewEventCity] = useState(city || 'Madrid');
   const [newEventVenue, setNewEventVenue] = useState('');
   const [newEventTicketUrl, setNewEventTicketUrl] = useState('');
+  const [newEventAttendancePropia, setNewEventAttendancePropia] = useState<number>(0);
+  const [newEventAttendanceOtras, setNewEventAttendanceOtras] = useState<number>(0);
+  const [newEventSharedBands, setNewEventSharedBands] = useState<string>('');
+  const [newEventPostShowReview, setNewEventPostShowReview] = useState<string>('');
+  const [newEventIsMilestone, setNewEventIsMilestone] = useState<boolean>(false);
 
   // --- Step 12: Fotos EPK ---
   const [photos, setPhotos] = useState<string[]>(epkConfig?.bandPhotos || (epkConfig as any)?.fotos || []);
@@ -793,6 +798,11 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       ciudad: newEventCity,
       lugar: newEventVenue,
       enlaceEntradas: newEventTicketUrl.trim(),
+      asistencia_propia: newEventAttendancePropia,
+      asistencia_otras_bandas: newEventAttendanceOtras,
+      bandas_compartidas: newEventSharedBands ? newEventSharedBands.split(',').map(s => s.trim()).filter(Boolean) : [],
+      post_show_review: newEventPostShowReview.trim(),
+      es_hito_destacado: newEventIsMilestone,
     };
     setEvents(prev => [...prev, newEv]);
 
@@ -813,18 +823,28 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         fecha: newEv.fecha,
         ciudad: newEv.ciudad || city,
         cache: cacheSala || 0,
-        aforo_vendido: 0,
+        aforo_vendido: newEv.asistencia_propia || 0,
         aforo_total: 200,
         contrato_firmado: false,
         estado_pago: 'pendiente',
         notas: newEv.titulo,
         tipo: newEventType === 'festival' ? 'festival' : 'sala',
+        asistencia_propia: newEv.asistencia_propia || 0,
+        asistencia_otras_bandas: newEv.asistencia_otras_bandas || 0,
+        bandas_compartidas: newEv.bandas_compartidas || [],
+        post_show_review: newEv.post_show_review || '',
+        es_hito_destacado: newEv.es_hito_destacado || false,
       } as any);
     }
 
     setNewEventTitle('');
     setNewEventVenue('');
     setNewEventTicketUrl('');
+    setNewEventAttendancePropia(0);
+    setNewEventAttendanceOtras(0);
+    setNewEventSharedBands('');
+    setNewEventPostShowReview('');
+    setNewEventIsMilestone(false);
   };
 
   const handleRemoveEvent = (id: string) => {
@@ -1296,6 +1316,16 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 setNewEventVenue={setNewEventVenue}
                 newEventTicketUrl={newEventTicketUrl}
                 setNewEventTicketUrl={setNewEventTicketUrl}
+                newEventAttendancePropia={newEventAttendancePropia}
+                setNewEventAttendancePropia={setNewEventAttendancePropia}
+                newEventAttendanceOtras={newEventAttendanceOtras}
+                setNewEventAttendanceOtras={setNewEventAttendanceOtras}
+                newEventSharedBands={newEventSharedBands}
+                setNewEventSharedBands={setNewEventSharedBands}
+                newEventPostShowReview={newEventPostShowReview}
+                setNewEventPostShowReview={setNewEventPostShowReview}
+                newEventIsMilestone={newEventIsMilestone}
+                setNewEventIsMilestone={setNewEventIsMilestone}
                 onAddEvent={handleAddEvent}
                 onRemoveEvent={handleRemoveEvent}
               />

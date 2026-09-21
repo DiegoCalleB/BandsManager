@@ -26,10 +26,28 @@ const COUNTRY_LANGUAGE_MAP: { keywords: string[]; code: string; name: string }[]
   { keywords: ['países bajos', 'holanda', 'netherlands'], code: 'nl', name: 'neerlandés' },
   { keywords: ['bélgica', 'belgium'], code: 'fr', name: 'francés' },
   { keywords: ['suiza', 'switzerland'], code: 'de', name: 'alemán' },
-  // Reino Unido, Irlanda y EE.UU. compartían resultado en dos entradas distintas: ahora salen
-  // de la MISMA lista que decide a qué idioma del EPK apunta el enlace del pitch
-  // (src/i18n/epkTranslations.ts), para que el correo y el dossier no se contradigan.
   { keywords: KEYWORDS_ANGLOFONOS, code: 'en', name: 'inglés' },
+];
+
+const REGIONAL_LANGUAGE_MAP: { keywords: string[]; code: string; name: string; instruction: string }[] = [
+  {
+    keywords: ['catalunya', 'cataluña', 'girona', 'lleida', 'tarragona', 'barcelona'],
+    code: 'ca',
+    name: 'catalán',
+    instruction: 'El destinatario se ubica en Cataluña. Si la comunicación de la sala o sus notas están en catalán, o si la banda prefiere el idioma local, redacta el pitch en catalán natural y profesional del sector musical. En caso de duda, el español neutro fluido o catalán natural son igualmente bienvenidos.'
+  },
+  {
+    keywords: ['euskadi', 'país vasco', 'guipúzcoa', 'gipuzkoa', 'vizcaya', 'bizkaia', 'álava', 'araba'],
+    code: 'eu',
+    name: 'euskera',
+    instruction: 'El destinatario se ubica en el País Vasco/Euskadi. Si la sala programa habitualmente en euskera o lo solicita la banda, adapta el saludo y presentación con cortesía en euskera natural del circuito musical.'
+  },
+  {
+    keywords: ['galicia', 'a coruña', 'coruña', 'pontevedra', 'lugo', 'ourense'],
+    code: 'gl',
+    name: 'gallego',
+    instruction: 'El destinatario se ubica en Galicia. Si la sala o la banda usan gallego, redacta el pitch en gallego natural y fluido del sector cultural.'
+  }
 ];
 
 const SPANISH_HINT: PitchLanguageHint = {
@@ -41,12 +59,24 @@ const SPANISH_HINT: PitchLanguageHint = {
 export function detectPitchLanguage(lead: LeadLocationLike): PitchLanguageHint {
   const haystack = ` ${lead.direccion || ''} ${lead.region || ''} ${lead.ciudad || ''} `.toLowerCase();
 
+  // 1. Detectar idioma internacional
   for (const entry of COUNTRY_LANGUAGE_MAP) {
     if (entry.keywords.some(kw => haystack.includes(kw))) {
       return {
         code: entry.code,
         name: entry.name,
         instruction: `El destinatario está en un país de habla ${entry.name} (según su dirección/ciudad) — escribe el pitch ÍNTEGRAMENTE en ${entry.name} natural y profesional, adaptando el tono al mundillo musical local. No lo escribas en español.`
+      };
+    }
+  }
+
+  // 2. Detectar región con lengua cooficial para enriquecer la instrucción
+  for (const reg of REGIONAL_LANGUAGE_MAP) {
+    if (reg.keywords.some(kw => haystack.includes(kw))) {
+      return {
+        code: 'es',
+        name: 'español (con adaptación regional)',
+        instruction: `${SPANISH_HINT.instruction} Nota regional: ${reg.instruction}`
       };
     }
   }

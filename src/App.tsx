@@ -76,7 +76,7 @@ import { useLanguage } from './context/LanguageContext';
 import {
   Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
   FileCheck, CheckSquare, MessageSquareCode, RefreshCw,
-  Settings, X, Bot, Guitar, Flame, Type, Heart, ChevronDown, Lock, Zap, Target
+  Settings, X, Bot, Guitar, Flame, Type, Heart, ChevronDown, Lock, Zap, Target, Sun, Moon
 } from 'lucide-react';
 
 export default function App() {
@@ -436,7 +436,7 @@ export default function App() {
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
     const saved = localStorage.getItem('bakandeya_theme') as ThemeName;
     if (!saved || saved === ('stitch_light' as any) || !(saved in THEMES)) {
-      return 'indie_velvet';
+      return 'analog_dark';
     }
     return saved;
   });
@@ -471,9 +471,6 @@ export default function App() {
       // Confirm to backend and update Supabase & memory state
       const targetBand = bandParam || currentUser?.band_id;
 
-      // El plan lo decide Stripe, no esta URL: le pasamos el id de la sesión de Checkout para
-      // que el servidor lo verifique. Sin él no hay nada que confirmar y basta con refrescar,
-      // que el webhook de Stripe ya habrá hecho (o hará) el alta.
       if (sessionParam) {
         api.confirmPaymentSuccess({
           sessionId: sessionParam,
@@ -486,9 +483,6 @@ export default function App() {
           refreshSession();
           fetchState();
         });
-        // El plan del usuario ya no se escribe aquí desde el `?plan=` de la URL: eso desbloqueaba
-        // en local la interfaz del plan de pago con solo visitar la dirección. Lo trae
-        // `refreshSession()` del servidor, que es quien sabe qué se ha pagado.
       } else {
         refreshSession();
         fetchState();
@@ -500,12 +494,25 @@ export default function App() {
     }
   }, []);
 
-  const colors: ThemeColors = THEMES[currentTheme] || THEMES.indie_velvet;
+  const colors: ThemeColors = THEMES[currentTheme] || THEMES.analog_dark;
 
   // Persist Theme Selection
   const handleThemeChange = (theme: ThemeName) => {
     setCurrentTheme(theme);
     localStorage.setItem('bakandeya_theme', theme);
+  };
+
+  const handleToggleMode = () => {
+    const isDark = (THEMES[currentTheme]?.mode || 'light') === 'dark';
+    if (isDark) {
+      if (currentTheme.includes('legato')) handleThemeChange('legato_light');
+      else if (currentTheme.includes('spectrum')) handleThemeChange('spectrum_light');
+      else handleThemeChange('analog_light');
+    } else {
+      if (currentTheme.includes('legato')) handleThemeChange('legato_dark');
+      else if (currentTheme.includes('spectrum')) handleThemeChange('spectrum_dark');
+      else handleThemeChange('analog_dark');
+    }
   };
 
   const activeBandConcerts = React.useMemo(() => {
@@ -1386,6 +1393,8 @@ export default function App() {
               currentUser={currentUser}
               bandName={currentActiveBandName}
               currentBandId={currentActiveBandId}
+              concerts={activeBandConcerts || concerts}
+              tours={tours}
             />
           )}
  {currentView === 'bandas' && (

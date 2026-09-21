@@ -10,6 +10,9 @@ import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
+import { ManagerAlertsWidget } from './dashboard/ManagerAlertsWidget';
+import { AlertSettingsModal } from './dashboard/AlertSettingsModal';
+import { generateManagerAlerts, ManagerAlert, AlertAction } from '../utils/managerAlerts';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
@@ -19,7 +22,8 @@ import {
  Plus, X, Calendar, AlertCircle, Sparkles, Loader2, Check, RefreshCw, 
  Database, Bot, Activity, ArrowRight, CheckCircle2, Radio, Building2,
  Clock, CheckCircle, Hourglass, Send, Users, ShieldCheck, Play, Navigation,
- FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown, QrCode
+ FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown, QrCode,
+ Settings, Eye
 } from 'lucide-react';
 
 export type NavigationOptions = {
@@ -91,6 +95,10 @@ export default function Dashboard({
  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
  const [isEmailTemplatesOpen, setIsEmailTemplatesOpen] = useState(false);
  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
+ const [isAlertSettingsOpen, setIsAlertSettingsOpen] = useState(false);
+ const [isDashboardSettingsOpen, setIsDashboardSettingsOpen] = useState(false);
+ const [isEditDashboardMode, setIsEditDashboardMode] = useState(false);
+ const [viewDensityMode, setViewDensityMode] = useState<'clean' | 'full'>('clean');
  const [syncLoading, setSyncLoading] = useState(false);
 
  // Band view filter state: 'all' (Todas las bandas asignadas por defecto) vs 'active' (Solo la banda activa)
@@ -723,19 +731,58 @@ export default function Dashboard({
     );
   }
 
+  // Generate intelligent industry alerts and booking milestones, strictly bound to user plan permissions
+  const managerAlerts = generateManagerAlerts(leads, concerts, rehearsals, epkConfig, currentUser?.plan);
+
+  const handleExecuteAlertAction = (alert: ManagerAlert, actionOverride?: AlertAction) => {
+    const targetType = actionOverride?.actionType || alert.actionType;
+
+    switch (targetType) {
+      case 'open_campaign':
+        if (onNavigate) onNavigate('booking');
+        break;
+      case 'scout_festivals':
+        setIsAddModalOpen(true);
+        setNewTipo('festival');
+        break;
+      case 'open_autonomy':
+        setIsAutonomyModalOpen(true);
+        break;
+      case 'view_leads_stale':
+        if (onNavigate) onNavigate('booking', { statusFilter: actionOverride?.targetStatusFilter || alert.targetStatusFilter || 'esperando_respuesta' });
+        break;
+      case 'view_drafts':
+        if (onNavigate) onNavigate('booking', { statusFilter: 'pendiente_aprobacion' });
+        break;
+      case 'view_concerts':
+        if (onNavigate) onNavigate('calendario');
+        break;
+      case 'open_epk':
+        if (onNavigate) onNavigate('epk');
+        break;
+      case 'view_finanzas':
+        if (onNavigate) onNavigate('finanzas');
+        break;
+      case 'view_ensayos':
+        if (onNavigate) onNavigate('ensayos');
+        break;
+      case 'view_reels':
+        if (onNavigate) onNavigate('reels');
+        break;
+      default:
+        if (onNavigate) onNavigate('booking');
+    }
+  };
+
   return (
     <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
       {/* HEADER / TITULO PRINCIPAL */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+      <div className="flex items-center justify-between gap-3 pb-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold">
-              Panel de {activeBandName}
-            </p>
-            <span className="text-zinc-600 hidden sm:inline">•</span>
-            <span className="text-[11px] font-mono text-neutral-400">
-              {leads.length} contactos en CRM · {upcomingEvents.length} fechas agendadas
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
+            <span className="text-xs font-mono text-zinc-400 hidden sm:inline">
+              · {activeBandName} ({leads.length} CRM · {upcomingEvents.length} Fechas)
             </span>
           </div>
         </div>
@@ -743,14 +790,107 @@ export default function Dashboard({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => onNavigate && onNavigate('calendario')}
-            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+            id="quick-toggle-density-btn"
+            onClick={() => setViewDensityMode(prev => prev === 'clean' ? 'full' : 'clean')}
+            className="px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-amber-300 border border-zinc-800 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            title="Alternar entre Vista Esencial y Vista Completa"
           >
-            <Calendar className="w-3.5 h-3.5" />
-            <span>Ver Calendario</span>
+            <Eye className="w-3.5 h-3.5 text-amber-400" />
+            <span>{viewDensityMode === 'clean' ? 'Vista Esencial' : 'Vista Completa'}</span>
           </button>
+
+          {/* Engranaje Único de Ajustes del Dashboard */}
+          <div className="relative">
+            <button
+              type="button"
+              id="dashboard-settings-gear-btn"
+              onClick={() => setIsDashboardSettingsOpen(!isDashboardSettingsOpen)}
+              className={`p-2 rounded-xl transition-all border shadow-sm cursor-pointer ${
+                isDashboardSettingsOpen || isEditDashboardMode
+                  ? 'bg-amber-500 text-stone-950 border-amber-400 font-black'
+                  : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
+              }`}
+              title="Ajustes del Dashboard"
+            >
+              <Settings className={`w-4 h-4 ${isEditDashboardMode ? 'animate-spin-slow' : ''}`} />
+            </button>
+
+            {isDashboardSettingsOpen && (
+              <div className="absolute right-0 mt-2 w-64 p-2 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-2xl z-50 animate-fade-in space-y-1">
+                <div className="px-3 py-1.5 border-b border-zinc-800/80 mb-1 flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block">
+                    Ajustes del Dashboard
+                  </span>
+                  <button 
+                    onClick={() => setIsDashboardSettingsOpen(false)}
+                    className="p-0.5 text-zinc-500 hover:text-zinc-300"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  id="gear-menu-toggle-density-btn"
+                  onClick={() => {
+                    setViewDensityMode(prev => prev === 'clean' ? 'full' : 'clean');
+                    setIsDashboardSettingsOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl hover:bg-zinc-900 text-left text-xs text-zinc-200 flex items-center justify-between font-medium transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Eye className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Modo Vista</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-zinc-800 text-amber-300">
+                    {viewDensityMode === 'clean' ? 'Esencial' : 'Completa'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  id="gear-menu-edit-layout-btn"
+                  onClick={() => {
+                    setIsEditDashboardMode(!isEditDashboardMode);
+                    setIsDashboardSettingsOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl hover:bg-zinc-900 text-left text-xs text-zinc-200 flex items-center justify-between font-medium transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Sliders className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Personalizar / Reordenar</span>
+                  </div>
+                  {isEditDashboardMode && (
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  id="gear-menu-alerts-settings-btn"
+                  onClick={() => {
+                    setIsAlertSettingsOpen(true);
+                    setIsDashboardSettingsOpen(false);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl hover:bg-zinc-900 text-left text-xs text-zinc-200 flex items-center gap-2 font-medium transition-colors cursor-pointer"
+                >
+                  <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Alertas del Mánager</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* RADAR DEL MÁNAGER: HITOS ESTACIONALES Y ALERTAS DE BOOKING */}
+      <ManagerAlertsWidget
+        alerts={managerAlerts}
+        onExecuteAction={handleExecuteAlertAction}
+        onOpenSettings={() => setIsAlertSettingsOpen(true)}
+        bandId={currentBandId || currentUser?.band_id || 'active-band'}
+        isStitchLight={isStitchLight}
+      />
 
       {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD */}
       <DashboardWidgetGrid
@@ -768,24 +908,30 @@ export default function Dashboard({
         agendaFilterMode={agendaFilterMode}
         onSetAgendaFilterMode={setAgendaFilterMode}
         onNavigate={onNavigate}
+        isEditMode={isEditDashboardMode}
+        setIsEditMode={setIsEditDashboardMode}
+        viewDensityMode={viewDensityMode}
+        setViewDensityMode={setViewDensityMode}
       />
 
-      {/* 3. SECCIÓN: ESTADO DE ENTRENAMIENTO & PREPARACIÓN DE AGENTES IA */}
-      <ProfileCompletenessCard
-        epkConfig={epkConfig}
-        leads={leads}
-        concerts={concerts}
-        rehearsals={rehearsals}
-        metrics={metrics}
-        fans={fans}
-        tours={tours}
-        isStitchLight={isStitchLight}
-        bandName={activeBandName}
-        currentUser={currentUser}
-        onNavigate={onNavigate}
-        onOpenAutonomyModal={() => setIsAutonomyModalOpen(true)}
-        onOpenProfileModal={onOpenProfileModal}
-      />
+      {/* 3. SECCIÓN: ESTADO DE ENTRENAMIENTO & PREPARACIÓN DE AGENTES IA (Solo en Vista Completa) */}
+      {viewDensityMode === 'full' && (
+        <ProfileCompletenessCard
+          epkConfig={epkConfig}
+          leads={leads}
+          concerts={concerts}
+          rehearsals={rehearsals}
+          metrics={metrics}
+          fans={fans}
+          tours={tours}
+          isStitchLight={isStitchLight}
+          bandName={activeBandName}
+          currentUser={currentUser}
+          onNavigate={onNavigate}
+          onOpenAutonomyModal={() => setIsAutonomyModalOpen(true)}
+          onOpenProfileModal={onOpenProfileModal}
+        />
+      )}
 
       {/* MODAL: PLANTILLAS Y EJEMPLOS REALES DE EMAIL */}
       <EmailTemplatesModal
@@ -849,6 +995,15 @@ export default function Dashboard({
         onOpenBandProfile={() => {
           if (onNavigate) onNavigate('bandas');
         }}
+      />
+
+      <AlertSettingsModal
+        isOpen={isAlertSettingsOpen}
+        onClose={() => setIsAlertSettingsOpen(false)}
+        userPlan={currentUser?.plan || 'de_gira'}
+        isLeaderOrManager={currentUser?.rol === 'leader' || currentUser?.rol === 'manager' || true}
+        userEmail={currentUser?.email || ''}
+        bandId={currentBandId || currentUser?.band_id || 'active-band'}
       />
     </div>
   );

@@ -40,6 +40,11 @@ export interface QuickEventItem {
   lugar: string;
   enlaceEntradas?: string;
   precioEntrada?: number;
+  asistencia_propia?: number;
+  asistencia_otras_bandas?: number;
+  bandas_compartidas?: string[];
+  post_show_review?: string;
+  es_hito_destacado?: boolean;
 }
 
 export interface ManualSongItem {

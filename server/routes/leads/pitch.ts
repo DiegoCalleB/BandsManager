@@ -7,8 +7,36 @@ import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback, isCampaignActive } from "../../utils/bandDna.js";
 import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, refineAllToneDnaCategoriesForBand, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { sanitizeExternalText } from "../../utils/promptSafety.js";
+import { findCorridorForCity } from "../../../src/utils/tourRouting.js";
 
 const router = express.Router();
+
+function findNearbyTourContextForLead(lead: any, stateConcerts: any[]): string | null {
+  if (!lead?.ciudad || !Array.isArray(stateConcerts) || stateConcerts.length === 0) return null;
+  const leadCorridor = findCorridorForCity(lead.ciudad);
+  if (!leadCorridor) return null;
+
+  const now = new Date();
+  const upcomingConfirmed = stateConcerts.filter((c: any) => {
+    if (!c.fecha) return false;
+    const cDate = new Date(c.fecha);
+    const isFuture = cDate >= now;
+    const isConfirmed = c.tipo !== 'posible' && !c.is_posible;
+    return isFuture && isConfirmed && c.ciudad;
+  });
+
+  const nearby = upcomingConfirmed.find((c: any) => {
+    const cCorridor = findCorridorForCity(c.ciudad);
+    return cCorridor && (cCorridor.key === leadCorridor.key || leadCorridor.info.neighboringCorridors.includes(cCorridor.key));
+  });
+
+  if (nearby) {
+    const cDate = new Date(nearby.fecha);
+    const formattedDate = cDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    return `CONTEXTO DE GIRA / LOGÍSTICA EN RUTA: La banda tiene concierto confirmado en ${nearby.ciudad} (${nearby.sala || 'sala'}) para ${formattedDate}. Menciona que estamos en ruta por la zona para aprovechar el fin de semana.`;
+  }
+  return null;
+}
 
 router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => {
   try {
@@ -58,6 +86,8 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
     }
 
     const feedbackDetails: string[] = [];
+    const tourContext = findNearbyTourContextForLead(lead, state.concerts);
+    if (tourContext) feedbackDetails.push(tourContext);
     if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
     if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
     if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas del mánager: "${comentario.trim()}"`);
@@ -135,6 +165,8 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     let isSimulated = false;
 
     const feedbackDetails: string[] = [];
+    const tourContext = findNearbyTourContextForLead(lead, state.concerts);
+    if (tourContext) feedbackDetails.push(tourContext);
     if (isCampaignActive(activeCampaign)) {
       feedbackDetails.push(`CONTEXTO DE CAMPAÑA IMPORTANTE: Menciona que buscamos fecha específicamente para el ${activeCampaign.targetDatesText || 'rango objetivo'}, enfocando a un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity}.`);
     }

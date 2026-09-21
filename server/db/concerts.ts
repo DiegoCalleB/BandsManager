@@ -40,7 +40,12 @@ export async function dbGetConcerts(bandId: string | string[]) {
     idioma: c.idioma || undefined,
     customQrUrl: c.custom_qr_url || c.customQrUrl || undefined,
     entradasUrl: c.entradas_url || c.entradasUrl || undefined,
-    entradasLugarFisico: c.entradas_lugar_fisico || c.entradasLugarFisico || undefined
+    entradasLugarFisico: c.entradas_lugar_fisico || c.entradasLugarFisico || undefined,
+    asistencia_propia: Number(c.asistencia_propia ?? c.asistenciaPropia ?? 0),
+    asistencia_otras_bandas: Number(c.asistencia_otras_bandas ?? c.asistenciaOtrasBandas ?? 0),
+    bandas_compartidas: Array.isArray(c.bandas_compartidas || c.bandasCompartidas) ? (c.bandas_compartidas || c.bandasCompartidas) : [],
+    post_show_review: String(c.post_show_review || c.postShowReview || ""),
+    es_hito_destacado: Boolean(c.es_hito_destacado ?? c.esHitoDestacado ?? false)
   }));
 }
 
@@ -91,7 +96,12 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     is_posible: Boolean(concert.is_posible ?? concert.isPosible),
     custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null,
     entradas_url: concert.entradas_url || concert.entradasUrl || null,
-    entradas_lugar_fisico: concert.entradas_lugar_fisico || concert.entradasLugarFisico || null
+    entradas_lugar_fisico: concert.entradas_lugar_fisico || concert.entradasLugarFisico || null,
+    asistencia_propia: Number(concert.asistencia_propia ?? concert.asistenciaPropia ?? 0),
+    asistencia_otras_bandas: Number(concert.asistencia_otras_bandas ?? concert.asistenciaOtrasBandas ?? 0),
+    bandas_compartidas: Array.isArray(concert.bandas_compartidas || concert.bandasCompartidas) ? (concert.bandas_compartidas || concert.bandasCompartidas) : [],
+    post_show_review: concert.post_show_review || concert.postShowReview || "",
+    es_hito_destacado: Boolean(concert.es_hito_destacado ?? concert.esHitoDestacado)
   };
 
   let data: any = null;

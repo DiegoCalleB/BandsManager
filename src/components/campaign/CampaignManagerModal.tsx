@@ -3,9 +3,10 @@ import { BookingCampaign, PitchTemplateCategory } from '../../types';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import {
   Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Sparkles,
-  ChevronRight, Compass, ArrowRight, ShieldCheck, Flame,
+  ChevronRight, Compass, ArrowRight, ShieldCheck, Flame, Wand2,
   Building2, Tent, Disc3, Radio, Briefcase, Landmark
 } from 'lucide-react';
+import { GenerateAllTemplatesModal } from '../booking/GenerateAllTemplatesModal';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -56,6 +57,65 @@ export function CampaignManagerModal({
   });
   const [newCityInput, setNewCityInput] = useState('');
   const [activePitchCategory, setActivePitchCategory] = useState<PitchTemplateCategory>('salas');
+  const [isMultiTemplatesModalOpen, setIsMultiTemplatesModalOpen] = useState(false);
+  const [isGeneratingAllTemplates, setIsGeneratingAllTemplates] = useState(false);
+  const [templateGenerationFeedback, setTemplateGenerationFeedback] = useState<string | null>(null);
+
+  const handleGenerateAllCampaignTemplates = async (baseProposal: string): Promise<boolean> => {
+    setIsGeneratingAllTemplates(true);
+    setTemplateGenerationFeedback(null);
+    try {
+      const res = await fetch('/api/templates/generate-all', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(localStorage.getItem('bakandeya_token') || localStorage.getItem('token')
+            ? { 'x-auth-token': (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))! }
+            : {})
+        },
+        body: JSON.stringify({
+          baseProposal,
+          saveToDatabase: false,
+          campaignContext: {
+            name: formData.name,
+            targetCities: formData.targetCities,
+            targetDates: formData.targetDates,
+            minCapacity: formData.minCapacity,
+            maxCapacity: formData.maxCapacity,
+            notes: formData.notes
+          }
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && data.generatedResults) {
+        const newTemplates: Record<PitchTemplateCategory, string> = {
+          ...(formData.customPitchTemplates || {}),
+          salas: data.generatedResults.salas?.body || '',
+          festivales: data.generatedResults.festivales?.body || '',
+          discotecas: data.generatedResults.discotecas?.body || '',
+          medios: data.generatedResults.medios?.body || '',
+          grupos: data.generatedResults.grupos?.body || '',
+          managements: data.generatedResults.managements?.body || '',
+          ayuntamientos: data.generatedResults.ayuntamientos?.body || '',
+        };
+        setFormData(prev => ({
+          ...prev,
+          customPitchTemplates: newTemplates
+        }));
+        setTemplateGenerationFeedback('✨ Se han adaptado y aplicado con éxito las 7 plantillas para esta campaña.');
+        return true;
+      } else {
+        setTemplateGenerationFeedback(data.error || 'Error al generar las plantillas de campaña.');
+        return false;
+      }
+    } catch (err: any) {
+      console.error('Error in handleGenerateAllCampaignTemplates:', err);
+      setTemplateGenerationFeedback('⚠️ Error de conexión al generar las plantillas.');
+      return false;
+    } finally {
+      setIsGeneratingAllTemplates(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -389,15 +449,35 @@ export function CampaignManagerModal({
               </div>
 
               {/* Campaign-specific pitch templates, one per lead use case */}
-              <div>
-                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1 flex items-center gap-2">
-                  Plantilla de Pitch de Campaña por Caso de Uso (opcional)
-                  {filledPitchCategoriesCount > 0 && (
-                    <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                      {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length} definidas
-                    </span>
-                  )}
-                </label>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-2">
+                    Plantillas de Pitch de Campaña por Caso de Uso
+                    {filledPitchCategoriesCount > 0 && (
+                      <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                        {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length} definidas
+                      </span>
+                    )}
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsMultiTemplatesModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-gradient-to-r from-purple-600/30 to-purple-500/20 hover:from-purple-600/50 hover:to-purple-500/30 text-purple-300 border border-purple-500/40 hover:border-purple-400 hover:text-white transition-all shadow-sm active:scale-95 cursor-pointer"
+                    title="Adapta automáticamente el mensaje y objetivo de esta campaña a las 7 categorías de recintos"
+                  >
+                    <Wand2 className="w-3.5 h-3.5 text-purple-400" />
+                    <span>Generar las 7 con IA</span>
+                  </button>
+                </div>
+
+                {templateGenerationFeedback && (
+                  <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs flex items-center justify-between">
+                    <span>{templateGenerationFeedback}</span>
+                    <button type="button" onClick={() => setTemplateGenerationFeedback(null)} className="font-bold text-purple-400 hover:text-white ml-2">✕</button>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {PITCH_CATEGORIES.map(cat => {
                     const hasContent = !!(formData.customPitchTemplates?.[cat.id] || '').trim();
@@ -661,6 +741,24 @@ export function CampaignManagerModal({
             Cerrar
           </button>
         </div>
+
+        {/* Multi-templates generator modal for this campaign */}
+        <GenerateAllTemplatesModal
+          isOpen={isMultiTemplatesModalOpen}
+          onClose={() => setIsMultiTemplatesModalOpen(false)}
+          initialBaseText={formData.notes || ''}
+          onGenerateAll={handleGenerateAllCampaignTemplates}
+          isGenerating={isGeneratingAllTemplates}
+          mode="campaign"
+          campaignContext={{
+            name: formData.name,
+            targetCities: formData.targetCities,
+            targetDates: formData.targetDates,
+            minCapacity: formData.minCapacity,
+            maxCapacity: formData.maxCapacity,
+            notes: formData.notes
+          }}
+        />
 
       </div>
     </div>

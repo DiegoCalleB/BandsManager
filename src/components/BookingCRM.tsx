@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from '../types';
+import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig, Concert, Tour } from '../types';
 import DirectionsCard from './DirectionsCard';
 import { apiFetch } from '../utils/api';
 import { uploadFileToServer } from '../utils/audioStorage';
@@ -11,9 +11,9 @@ import { useGmailIntegration } from '../hooks/useGmailIntegration';
 import { useNegotiationSimulation } from '../hooks/useNegotiationSimulation';
 import {
  Target, Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, RotateCcw,
- MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
+ MapPin, Users, Bot, MessageSquare, MessageSquareText, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
- Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy
+ Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy, Wand2
 } from 'lucide-react';
 import { VenueMap } from './VenueMap';
 import { AddLeadModal } from './booking/AddLeadModal';
@@ -24,11 +24,15 @@ import { ExportLeadsModal } from './booking/ExportLeadsModal';
 import { LeadDuplicatesModal } from './booking/LeadDuplicatesModal';
 import { findDuplicateLeads } from '../utils/duplicateLeads';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
+import { TemplateRecommendationsCard } from './booking/TemplateRecommendationsCard';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
+import { GenerateAllTemplatesModal } from './booking/GenerateAllTemplatesModal';
 import { LeadsTable } from './booking/LeadsTable';
 import { VenueDetailPanel } from './booking/VenueDetailPanel';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
+import { MorningBriefingRadar } from './booking/MorningBriefingRadar';
+import { RoadbookContractModal } from './booking/RoadbookContractModal';
 import { isLeadVerificado } from '../utils/leadReliability';
 import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from '../utils/campaignMatch';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
@@ -82,6 +86,8 @@ interface BookingCRMProps {
   bandName?: string;
   activeCampaign?: BookingCampaign | null;
   onCampaignChange?: (campaign: BookingCampaign | null) => void;
+  concerts?: Concert[];
+  tours?: Tour[];
 }
 
 import {
@@ -118,7 +124,9 @@ export default function BookingCRM({
   currentUser,
   bandName,
   activeCampaign,
-  onCampaignChange
+  onCampaignChange,
+  concerts = [],
+  tours = []
 }: BookingCRMProps) {
   const bookingTutorial = useModuleTutorial('booking');
   const effectiveBandName = bandName || 'Tu Banda';
@@ -214,20 +222,24 @@ export default function BookingCRM({
    handleDeleteInteractionLog,
  } = useInteractionLog(selectedLead, setSelectedLead, onUpdateLead);
 
- const {
-   templateTab, setTemplateTab,
-   testPromptResult, isTestingPrompt,
-   isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
-   templateCustomInstruction, setTemplateCustomInstruction,
-   templateToneRating, setTemplateToneRating,
-   templateContentRating, setTemplateContentRating,
-   templateStats,
-   getActiveTemplateData,
-   handleOptimizeTemplate,
-   handleTestPrompt,
-   handleSaveTemplates,
-   handleResetTemplate,
- } = useEmailTemplates();
+  const {
+    templateTab, setTemplateTab,
+    testPromptResult, isTestingPrompt,
+    isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
+    isGeneratingAllTemplates, handleGenerateAllFromBase,
+    templateCustomInstruction, setTemplateCustomInstruction,
+    templateToneRating, setTemplateToneRating,
+    templateContentRating, setTemplateContentRating,
+    templateStats,
+    getActiveTemplateData,
+    handleOptimizeTemplate,
+    handleTestPrompt,
+    handleSaveTemplates,
+    handleResetTemplate,
+  } = useEmailTemplates();
+
+  const [crmTemplateSubTab, setCrmTemplateSubTab] = useState<'plantilla' | 'hilos'>('plantilla');
+  const [isMultiTemplatesModalOpen, setIsMultiTemplatesModalOpen] = useState(false);
 
  const {
    gmailUser, gmailToken,
@@ -291,6 +303,11 @@ export default function BookingCRM({
  const duplicateGroups = useMemo(() => findDuplicateLeads(leads), [leads]);
  const duplicateGroupsCount = duplicateGroups.length;
  const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
+
+ // Roadbook & Contract Modal State
+ const [isRoadbookModalOpen, setIsRoadbookModalOpen] = useState(false);
+ const [roadbookModalLead, setRoadbookModalLead] = useState<Lead | null>(null);
+ const [venueDetailInitialTab, setVenueDetailInitialTab] = useState<'info' | 'emails' | 'copilot' | 'bitacora'>('info');
 
  const handleTriggerEnviadorAgent = async (leadId?: string) => {
    setIsDispatchingEmails(true);
@@ -387,7 +404,7 @@ export default function BookingCRM({
 
 
  // Email thread and manual dispatch states
- const [activeTab, setActiveTab] = useState<'info' | 'emails'>('info');
+ const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'copilot' | 'bitacora'>('info');
  const [manualEmailBody, setManualEmailBody] = useState('');
  const [manualEmailSubject, setManualEmailSubject] = useState('');
  const [manualEmailSender, setManualEmailSender] = useState('Bakandeya Agent Manager IA');
@@ -741,23 +758,28 @@ export default function BookingCRM({
  const getStatusLabel = (status: LeadStatus | string) =>
  leadStatusLabel(normalizeStatus(status), String(status));
 
- const handleOpenLead = (lead: Lead) => {
- setSelectedLead(lead);
- setEditedPitch(lead.pitch_generado || '');
- setIsEditingPitch(false);
- setIsEditingLeadInfo(false);
- setIsRejecting(false);
- setRejectionNotes('');
- 
- // Automatically switch to emails tab for negotiating or interested leads, else info
- setActiveTab(lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
- setManualEmailBody('');
- setManualEmailSubject(lead.hilo_emails && lead.hilo_emails.length > 0 ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}` : `Propuesta de concierto: ${effectiveBandName}`);
- setManualEmailStatus('');
+ const handleOpenLead = (lead: Lead, options?: { tab?: 'info' | 'emails' | 'copilot' | 'bitacora'; pitchDraft?: string }) => {
+  setSelectedLead(lead);
+  if (options?.pitchDraft) {
+    setEditedPitch(options.pitchDraft);
+  } else {
+    setEditedPitch(lead.pitch_generado || '');
+  }
+  setIsEditingPitch(false);
+  setIsEditingLeadInfo(false);
+  setIsRejecting(false);
+  setRejectionNotes('');
+  
+  const targetTab = options?.tab || (lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
+  setActiveTab(targetTab);
+  setVenueDetailInitialTab(targetTab);
+  setManualEmailBody('');
+  setManualEmailSubject(lead.hilo_emails && lead.hilo_emails.length > 0 ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}` : `Propuesta de concierto: ${effectiveBandName}`);
+  setManualEmailStatus('');
 
- setTimeout(() => {
- interventionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
- }, 100);
+  setTimeout(() => {
+  interventionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
  };
 
  const handleStartEditLeadInfo = () => {
@@ -967,91 +989,9 @@ export default function BookingCRM({
  
    {/* Header: Tabs + Unified Action Buttons */}
   <div className="flex flex-col gap-3">
-    <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-      {/* SECCIONES PRINCIPALES DE CONTACTOS: ESCENARIOS, MEDIOS Y MANAGEMENT/PRODUCTORAS */}
-      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/90 border border-white/5 overflow-x-auto w-full sm:w-auto scrollbar-none">
-        <button
-          id="section-tab-salas"
-          type="button"
-          onClick={() => handleSelectSectionTab('salas')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-            sectionTab === 'salas'
-              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
-          }`}
-        >
-          <Building2 className="w-3.5 h-3.5 shrink-0" />
-          <span>Escenarios</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
-            sectionTab === 'salas' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
-          }`}>
-            {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))).length}
-          </span>
-        </button>
-
-        <button
-          id="section-tab-medios"
-          type="button"
-          onClick={() => handleSelectSectionTab('medios')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-            sectionTab === 'medios'
-              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
-          }`}
-        >
-          <Radio className="w-3.5 h-3.5 shrink-0" />
-          <span>Medios y Prensa</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
-            sectionTab === 'medios' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
-          }`}>
-            {leads.filter(l => normalizeType(l.tipo) === 'medio').length}
-          </span>
-        </button>
-
-        <button
-          id="section-tab-grupos"
-          type="button"
-          onClick={() => handleSelectSectionTab('grupos')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-            sectionTab === 'grupos'
-              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
-          }`}
-        >
-          <Briefcase className="w-3.5 h-3.5 shrink-0" />
-          <span>Management & Productoras</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
-            sectionTab === 'grupos' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
-          }`}>
-            {leads.filter(l => ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => normalizeType(l.tipo).includes(t))).length}
-          </span>
-        </button>
-
-        <button
-          id="section-tab-bandas"
-          type="button"
-          onClick={() => {
-            if (onNavigate) {
-              onNavigate('bandas');
-            } else if (onSectionChange) {
-              onSectionChange('bandas');
-            }
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
-          title="Ver Red de Co-Booking y Grupos Amigos"
-        >
-          <Users className="w-3.5 h-3.5 shrink-0 text-[#f2ca50]" />
-          <span>Grupos</span>
-          {typeof bandsCount === 'number' && bandsCount > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold bg-zinc-800 text-zinc-400">
-              {bandsCount}
-            </span>
-          )}
-        </button>
-      </div>
-
+    <div className="flex items-center justify-end gap-2">
       {/* UNIFIED ACTION BUTTONS */}
-      <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+      <div className="flex items-center gap-1.5 w-full sm:w-auto justify-stretch sm:justify-end">
         <button
           id="add-new-lead-btn"
           type="button"
@@ -1076,35 +1016,52 @@ export default function BookingCRM({
             });
             setIsAddingLeadModalOpen(true);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-sm active:scale-95 cursor-pointer"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-sm active:scale-95 cursor-pointer"
           title="Añadir contacto"
         >
           <PlusCircle className="w-3.5 h-3.5" />
-          <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
+          <span>+ {sectionTab === 'medios' ? 'Medio' : sectionTab === 'grupos' ? 'Contacto' : 'Escenario'}</span>
         </button>
 
-        <ModuleTutorialTrigger
-          moduleId="booking"
-          onClick={bookingTutorial.openTutorial}
-        />
+        <div className="hidden sm:inline-flex">
+          <ModuleTutorialTrigger
+            moduleId="booking"
+            onClick={bookingTutorial.openTutorial}
+          />
+        </div>
 
         <button
           id="export-leads-btn"
           type="button"
           onClick={() => setIsExportLeadsOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 shadow-sm active:scale-95 cursor-pointer"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 shadow-sm active:scale-95 cursor-pointer"
           title="Exportar base de datos a Excel / CSV o JSON"
         >
           <Download className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="hidden sm:inline">Exportar Leads</span>
-          <span className="sm:hidden">Exportar</span>
+          <span>Exportar Leads</span>
+        </button>
+
+        <button
+          id="open-templates-direct-btn"
+          type="button"
+          onClick={() => {
+            setIsTemplatesSectionOpen(true);
+            setTimeout(() => {
+              document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+          }}
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 shadow-sm active:scale-95 cursor-pointer"
+          title="Configurar plantillas de correo y entrenar el Redactor con hilos reales de conversación"
+        >
+          <MessageSquareText className="w-3.5 h-3.5 text-amber-400" />
+          <span>Plantillas & Hilos IA</span>
         </button>
 
         <button
           id="open-tools-btn"
           type="button"
           onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+          className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
             isMobileToolsOpen
               ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
               : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:text-white hover:bg-zinc-800'
@@ -1112,8 +1069,7 @@ export default function BookingCRM({
           title="Herramientas, Scout, Excel y Agentes IA"
         >
           <Bot className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">Herramientas e IA</span>
-          <span className="sm:hidden">Herramientas</span>
+          <span>IA & Herramientas</span>
           {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
             <span className="px-1.5 py-0.2 rounded-full bg-indigo-500/30 text-indigo-200 text-[10px] font-mono font-bold">
               {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
@@ -1247,6 +1203,40 @@ export default function BookingCRM({
             type="button"
             onClick={() => {
               setIsMobileToolsOpen(false);
+              setIsTemplatesSectionOpen(true);
+              setTimeout(() => {
+                document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 60);
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+          >
+            <span className="flex items-center gap-2">
+              <MessageSquareText className="w-4 h-4 text-amber-400" />
+              <span>Plantillas & Hilos de Ejemplo (Redactor AI)</span>
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileToolsOpen(false);
+              setRoadbookModalLead(selectedLead || leads[0] || null);
+              setIsRoadbookModalOpen(true);
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+          >
+            <span className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-amber-400" />
+              <span>Hoja de Ruta (Roadbook) & Contratos</span>
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileToolsOpen(false);
               setIsExportLeadsOpen(true);
             }}
             className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 transition-all cursor-pointer active:scale-98"
@@ -1307,7 +1297,7 @@ export default function BookingCRM({
      </div>
 
      {/* Tipo Dropdown Selector */}
-     <div className="relative shrink-0">
+     <div className="relative shrink-0 hidden sm:block">
        <select
          id="crm-type-filter-select"
          value={typeFilter}
@@ -1400,7 +1390,7 @@ export default function BookingCRM({
    </div>
 
    {/* View Mode Toggle Switcher */}
-   <div className={`p-1 rounded-xl flex items-center justify-between sm:justify-start gap-1 shrink-0 ${
+   <div className={`p-1 rounded-xl items-center justify-between sm:justify-start gap-1 shrink-0 hidden sm:flex ${
      isStitchLight ? 'bg-slate-100 border border-slate-200' : 'bg-[#131313] border border-white/5'
    }`}>
      <button
@@ -1489,6 +1479,139 @@ export default function BookingCRM({
         >
           <X className="w-4 h-4" />
         </button>
+      </div>
+
+      {/* 0. Filter drawer Category and View Mode Selectors */}
+      <div className="space-y-3 pb-3 border-b border-white/10">
+        <div>
+          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Categoría de Contactos</p>
+          <div className="grid grid-cols-3 gap-1 p-1 bg-black/40 rounded-xl border border-neutral-800">
+            <button
+              type="button"
+              onClick={() => handleSelectSectionTab('salas')}
+              className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                sectionTab === 'salas'
+                  ? 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Escenarios</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectSectionTab('medios')}
+              className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                sectionTab === 'medios'
+                  ? 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              <Radio className="w-3.5 h-3.5" />
+              <span>Medios</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectSectionTab('grupos')}
+              className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                sectionTab === 'grupos'
+                  ? 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Management</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="sm:hidden">
+          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Modo de Vista</p>
+          <div className="grid grid-cols-3 gap-1 p-1 bg-black/40 rounded-xl border border-neutral-800">
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode('grid');
+                setIsMobileFiltersOpen(false);
+              }}
+              className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Tarjetas</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode('table');
+                setIsMobileFiltersOpen(false);
+              }}
+              className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                viewMode === 'table'
+                  ? 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              <List className="w-3.5 h-3.5" />
+              <span>Detalles</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode('map');
+                setIsMobileFiltersOpen(false);
+              }}
+              className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                viewMode === 'map'
+                  ? 'bg-sky-500 text-slate-950 font-bold shadow-xs'
+                  : 'bg-sky-500/15 text-sky-300 border border-sky-500/20'
+              }`}
+            >
+              <MapIcon className="w-3.5 h-3.5 shrink-0 text-sky-400" />
+              <span>Mapa</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Tipo de Espacio</p>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value as any)}
+            className="w-full px-3 py-2 bg-black/60 text-white rounded-xl text-xs font-semibold font-sans border border-neutral-800 focus:border-[#f2ca50] focus:ring-1 focus:ring-[#f2ca50]/30 cursor-pointer"
+          >
+            {sectionTab === 'medios' ? (
+              <>
+                <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
+                <option value="radio">📻 Radios</option>
+                <option value="tv">📺 TV</option>
+                <option value="prensa">📰 Prensa</option>
+                <option value="redes">📱 Redes</option>
+                <option value="podcast">🎙️ Podcasts</option>
+              </>
+            ) : sectionTab === 'grupos' ? (
+              <>
+                <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
+                <option value="grupo">🎸 Grupos</option>
+                <option value="agencia">💼 Agencias</option>
+                <option value="manager">👔 Mánagers</option>
+                <option value="productora">🎬 Productoras</option>
+                <option value="sello">💿 Sellos</option>
+              </>
+            ) : (
+              <>
+                <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
+                <option value="sala">🏛️ Salas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sala').length})</option>
+                <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
+                <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
+                <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
+              </>
+            )}
+          </select>
+        </div>
       </div>
 
       {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
@@ -1789,6 +1912,27 @@ export default function BookingCRM({
     </div>
   )}
 
+  {/* 🌟 MORNING BRIEFING & RADAR DEL MÁNAGER (5-MINUTE DAILY ACTION RADAR) */}
+  <div className="mb-2">
+    <MorningBriefingRadar
+      leads={leads}
+      concerts={concerts}
+      tours={tours}
+      onSelectLead={(lead, options) => {
+        handleOpenLead(lead, options);
+      }}
+      onApproveLead={(lead) => {
+        onUpdateLead(lead.id, { estado: 'aprobado_propuesta' });
+      }}
+      onOpenRoadbookModal={(lead) => {
+        setRoadbookModalLead(lead || selectedLead || leads[0] || null);
+        setIsRoadbookModalOpen(true);
+      }}
+      isStitchLight={isStitchLight}
+      bandName={effectiveBandName}
+    />
+  </div>
+
   {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
   <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
     {([
@@ -2056,6 +2200,11 @@ export default function BookingCRM({
         activeCampaign={activeCampaign}
         onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
         isUploadingLeadLogo={isUploadingLeadLogo}
+        initialTab={venueDetailInitialTab}
+        onOpenRoadbookModal={(lead) => {
+          setRoadbookModalLead(lead);
+          setIsRoadbookModalOpen(true);
+        }}
       />
     </div>
   )}
@@ -2120,435 +2269,28 @@ export default function BookingCRM({
     </div>
 
     {isTemplatesSectionOpen && (
-      <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
-        <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
-          <div>
-            <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
-              Pautas diferenciadas por categoría
-            </h4>
-          </div>
-
-          {/* Template Tab Selector (7 Categories) */}
-          <div className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
-            isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
-          }`}>
-            {[
-              { id: 'salas', label: '🏛️ Salas', icon: Building2 },
-              { id: 'festivales', label: '🎪 Festivales', icon: Tent },
-              { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
-              { id: 'medios', label: '📻 Medios', icon: Radio },
-              { id: 'grupos', label: '🎸 Grupos', icon: Users },
-              { id: 'managements', label: '💼 Managements', icon: Briefcase },
-              { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
-            ].map((tab) => {
-              const isActive = templateTab === tab.id;
-              const IconComp = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  id={`template-tab-${tab.id}`}
-                  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
-                  className={`py-1.5 px-2.5 rounded-lg text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
-                    isActive
-                      ? isStitchLight
-                        ? 'bg-white text-sky-400 shadow-sm'
-                        : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-md'
-                      : isStitchLight
-                      ? 'text-slate-500 hover:text-slate-800'
-                      : 'text-neutral-400 hover:text-neutral-200'
-                  }`}
-                >
-                  <IconComp className="w-3.5 h-3.5" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
- {/* Category Notice Banner */}
- {(() => {
- const activeTemplate = getActiveTemplateData();
- return (
- <>
- <div className={`p-3 rounded-xl text-[10px] font-sans flex items-center justify-between ${
- templateTab === 'medios'
- ? isStitchLight ? 'bg-rose-500/15 text-rose-400' : 'bg-rose-500/15 text-rose-400'
- : templateTab === 'grupos'
- ? isStitchLight ? (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]') : 'bg-[#10b981]/15/30 text-[#10b981]'
- : templateTab === 'discotecas'
- ? isStitchLight ? 'bg-purple-50 text-purple-900' : 'bg-purple-500/10 text-purple-300'
- : templateTab === 'ayuntamientos'
- ? isStitchLight ? 'bg-amber-50 text-amber-900' : 'bg-amber-500/10 text-amber-300'
- : isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400'
- }`}>
- <div>
- <strong>{activeTemplate.title}</strong>
- <p className="text-[10px] opacity-80 mt-0.5">
- {activeTemplate.desc}
- </p>
- </div>
- </div>
-
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- {/* Form Side */}
- <div className="space-y-4">
- {optimizationFeedbackMsg && (
-   <div className="p-3 bg-amber-500/15 border border-amber-500/30 text-amber-200 text-[11px] rounded-xl flex items-center justify-between font-sans animate-in fade-in">
-     <span>{optimizationFeedbackMsg}</span>
-     <button onClick={() => setOptimizationFeedbackMsg(null)} className="text-amber-400 font-bold ml-2 hover:text-white cursor-pointer">✕</button>
-   </div>
- )}
-
- <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>Asunto del Email por Defecto</label>
- <input
- id="template-subject"
- type="text"
- value={activeTemplate.subject}
- onChange={(e) => activeTemplate.setSubject(e.target.value)}
- className={`w-full rounded-lg px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
- isStitchLight
- ? 'bg-white text-slate-800 focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[#131313] text-[#e5e2e1] focus:-[#f2ca50]/50'
- }`}
- />
- </div>
-
- <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>Cuerpo de la Plantilla de Correo de Presentación</label>
- <textarea
- id="template-body"
- rows={8}
- value={activeTemplate.body}
- onChange={(e) => activeTemplate.setBody(e.target.value)}
- className={`w-full rounded-lg p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- isStitchLight
- ? 'bg-white text-slate-800 focus:-indigo-500 focus:ring-1 focus:ring-indigo-500'
- : 'bg-[#131313] text-[#e5e2e1] focus:-[#f2ca50]/50'
- }`}
- placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
- />
- </div>
-
- <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-sans tracking-wider flex items-center gap-1.5 ${isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'}`}>
- <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
- </label>
- <textarea
- id="template-guidelines"
- rows={3}
- value={activeTemplate.guidelines}
- onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
- className={`w-full rounded-lg p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
- isStitchLight
- ? 'bg-white text-slate-800 focus:-indigo-500'
- : 'bg-[#131313] text-[#e5e2e1] focus:-[#ffb596]/50'
- }`}
- placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
- />
- </div>
-
- <div className="space-y-3 p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10">
- <div className="flex items-center justify-between">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
- <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
- </label>
- {(templateToneRating > 0 || templateContentRating > 0 || templateCustomInstruction) && (
- <button 
- type="button" 
- onClick={() => {
-   setTemplateToneRating(0);
-   setTemplateContentRating(0);
-   setTemplateCustomInstruction('');
- }}
- className="text-[9px] text-amber-400 font-bold hover:underline cursor-pointer"
- >
- Limpiar todo
- </button>
- )}
- </div>
-
- {/* Estrellitas de Tono y Contenido */}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
- {/* Tono y Estilo */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
- <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateToneRating > 0 ? `${templateToneRating}/5` : 'Sin calificar'}
- </span>
- </div>
- <div className="flex items-center gap-1">
- {[1, 2, 3, 4, 5].map((star) => (
- <button
- key={`crm-template-tone-${star}`}
- type="button"
- onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-   templateToneRating >= star ? 'text-amber-400' : 'text-neutral-600'
- }`}
- title={`Calificar tono y estilo: ${star}/5`}
- >
- <Star className="w-4 h-4 fill-current" />
- </button>
- ))}
- </div>
- </div>
-
- {/* Contenido y Estructura */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
- <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateContentRating > 0 ? `${templateContentRating}/5` : 'Sin calificar'}
- </span>
- </div>
- <div className="flex items-center gap-1">
- {[1, 2, 3, 4, 5].map((star) => (
- <button
- key={`crm-template-content-${star}`}
- type="button"
- onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
-   templateContentRating >= star ? 'text-amber-400' : 'text-neutral-600'
- }`}
- title={`Calificar contenido y estructura: ${star}/5`}
- >
- <Star className="w-4 h-4 fill-current" />
- </button>
- ))}
- </div>
- </div>
- </div>
-
- <div className="space-y-1 pt-1">
- <label className="block text-[10px] uppercase font-sans font-bold tracking-wider text-amber-300 flex items-center gap-1.5">
- <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Comentario o Corrección Directa
- </label>
- <textarea
- id="template-custom-instruction"
- rows={2}
- value={templateCustomInstruction}
- onChange={(e) => setTemplateCustomInstruction(e.target.value)}
- className="w-full rounded-lg p-2.5 text-[10px] bg-[#131313] text-[#e5e2e1] border border-amber-500/30 focus:border-amber-400 focus:outline-none font-sans leading-relaxed"
- placeholder="Ej: 'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
- />
- </div>
- <div className="text-[9px] text-amber-300/80 font-sans leading-tight">
- 💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la IA usará tus valoraciones para optimizar la plantilla.
- </div>
- </div>
-
- <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
-
- {/* Success Stats Badge + Reset Button */}
- {templateStats && templateStats[templateTab] && (
-   <div className="space-y-2 pt-3 pb-2">
-     <div className="flex flex-wrap gap-2 items-center">
-       <span className="text-[9px] font-mono text-neutral-400">📊 Resultados:</span>
-       <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
-         {templateStats[templateTab].totalUses} usos
-       </span>
-       <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ? 'bg-green-100 text-green-700' : 'bg-green-950 text-green-300') : (isStitchLight ? 'bg-yellow-100 text-yellow-700' : 'bg-yellow-950 text-yellow-300')}`}>
-         {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
-       </span>
-     </div>
-     {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
-       <div className="space-y-1">
-         {templateStats[templateTab].invalidEmails > 0 && (
-           <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
-             <span>⚠️</span>
-             <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
-           </div>
-         )}
-         {templateStats[templateTab].bouncedEmails > 0 && (
-           <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-orange-100 text-orange-700' : 'bg-orange-950 text-orange-300'}`}>
-             <span>📬</span>
-             <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
-           </div>
-         )}
-       </div>
-     )}
-   </div>
- )}
-
- <div className="flex flex-wrap gap-2 pt-2">
- <button
- id="template-btn-optimize"
- type="button"
- onClick={handleOptimizeTemplate}
- disabled={isOptimizingTemplate}
- className="py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
- title="Re-redacta la plantilla y sus pautas integrando todo el feedback histórico de valoraciones del mánager"
- >
- <Sparkles className={`w-3.5 h-3.5 text-amber-400 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
- <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
- </button>
- <button
- id="template-btn-test"
- onClick={handleTestPrompt}
- disabled={isTestingPrompt}
- className={`px-2 py-1 font-sans text-[10px] rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
- isStitchLight
- ? 'bg-white hover:bg-slate-50 text-slate-700'
- : 'bg-neutral-900 hover:-neutral-700 text-neutral-300'
- }`}
- >
- {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
- <span>Probar Prompt</span>
- </button>
- <button
- id="template-btn-reset"
- onClick={handleResetTemplate}
- className={`px-2 py-1 font-sans text-[10px] rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
- isStitchLight
- ? 'bg-slate-200 hover:bg-slate-300 text-slate-600'
- : 'bg-neutral-700 hover:bg-neutral-600 text-neutral-300'
- }`}
- title="Restaurar valores por defecto de esta plantilla"
- >
- <RotateCcw className="w-3 h-3" />
- <span>Restaurar</span>
- </button>
- <button
- id="template-btn-save"
- onClick={handleSaveTemplates}
- className={`flex-1 py-2 font-sans font-bold text-[10px] uppercase tracking-wider rounded-lg transition-all cursor-pointer text-center active:scale-95 ${
- isStitchLight
- ? 'bg-sky-500/15 hover:bg-sky-500/15 text-white shadow-md shadow-indigo-100'
- : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 shadow-lg shadow-[#f2ca50]/10'
- }`}
- >
- Guardar Plantillas y Directrices
- </button>
- </div>
- </div>
-
- {/* Test / Prompt Output side */}
- <div className={` rounded-xl p-4 flex flex-col justify-between ${
- isStitchLight
- ? 'bg-slate-50'
- : 'bg-[#131313]'
- }`}>
- <div className="space-y-3">
- <div className={`flex items-center gap-2 pb-2 ${isStitchLight ? '-slate-200' : '-neutral-900'}`}>
- <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStitchLight ? 'bg-sky-500/15' : 'bg-[#f2ca50]'}`} />
- <h4 className={`text-[10px] font-sans uppercase tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
- </div>
- 
- <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
- Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y pautas, las mezcla con los detalles del contacto capturado por el <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado para que lo revises en esta misma pantalla.
- </div>
-
- {testPromptResult ? (
- <div className="space-y-3">
- <div className={`rounded-lg p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${
- isStitchLight
- ? 'bg-white text-slate-700 border border-slate-200'
- : 'bg-[#1c1b1b] text-neutral-300 border border-neutral-800'
- }`}>
- {testPromptResult}
- </div>
-
- {/* Valoración directa del resultado generado en la simulación */}
- <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 space-y-2">
- <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5 font-sans">
- <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" /> Valorar esta plantilla / resultado
- </span>
- {(templateToneRating > 0 || templateContentRating > 0) && (
- <span className="text-[9px] text-amber-400 font-mono">
- Tono: {templateToneRating || '-'}/5 | Contenido: {templateContentRating || '-'}/5
- </span>
- )}
- </div>
-
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
- {/* Tono */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
- <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Tono y Estilo</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateToneRating > 0 ? `${templateToneRating}/5` : '⭐'}
- </span>
- </div>
- <div className="flex items-center gap-1">
- {[1, 2, 3, 4, 5].map((star) => (
- <button
- key={`sandbox-tone-${star}`}
- type="button"
- onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateToneRating >= star ? 'text-amber-400' : 'text-neutral-600'
- }`}
- title={`Calificar tono: ${star}/5`}
- >
- <Star className="w-4 h-4 fill-current" />
- </button>
- ))}
- </div>
- </div>
-
- {/* Contenido */}
- <div className="p-2 bg-[#131313] rounded-lg border border-amber-500/20 space-y-1">
- <div className="flex items-center justify-between">
- <span className="text-[10px] font-bold text-amber-200">Contenido y Estructura</span>
- <span className="text-[10px] font-mono text-amber-400 font-bold">
- {templateContentRating > 0 ? `${templateContentRating}/5` : '⭐'}
- </span>
- </div>
- <div className="flex items-center gap-1">
- {[1, 2, 3, 4, 5].map((star) => (
- <button
- key={`sandbox-content-${star}`}
- type="button"
- onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
- className={`p-0.5 rounded hover:bg-amber-500/20 transition-colors cursor-pointer ${
- templateContentRating >= star ? 'text-amber-400' : 'text-neutral-600'
- }`}
- title={`Calificar contenido: ${star}/5`}
- >
- <Star className="w-4 h-4 fill-current" />
- </button>
- ))}
- </div>
- </div>
- </div>
-
- <button
- type="button"
- onClick={handleOptimizeTemplate}
- disabled={isOptimizingTemplate}
- className="w-full py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
- >
- <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
- <span>Re-generar plantilla usando estas valoraciones ✨</span>
- </button>
- </div>
- </div>
- ) : (
- <div className={`border-2 border-dashed rounded-lg p-12 text-center text-[10px] font-sans ${
- isStitchLight
- ? 'border-slate-200 text-slate-400'
- : 'border-neutral-800 text-neutral-600'
- }`}>
- Haz clic en "Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
- </div>
- )}
- </div>
-
- <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
- Módulo de Modelado AI de BandManager. Powered by Gemini.
- </div>
- </div>
- </div>
- </>
- );
- })()}
- </div>
- )}
+      <div className="mt-5 pt-4 border-t border-zinc-800/80">
+        <TemplateConfigSection
+          colors={colors}
+          isStitchLight={isStitchLight}
+          textSub={textSub}
+          textMuted={textMuted}
+          templateTab={templateTab}
+          onSelectTemplateTab={setTemplateTab}
+          activeTemplate={getActiveTemplateData()}
+          isTestingPrompt={isTestingPrompt}
+          testPromptResult={testPromptResult}
+          onTestPrompt={handleTestPrompt}
+          onSaveTemplates={handleSaveTemplates}
+          onOptimizeTemplate={handleOptimizeTemplate}
+          isOptimizingTemplate={isOptimizingTemplate}
+          onGenerateAllTemplates={handleGenerateAllFromBase}
+          isGeneratingAllTemplates={isGeneratingAllTemplates}
+          optimizationFeedbackMsg={optimizationFeedbackMsg}
+          onClearFeedbackMsg={() => setOptimizationFeedbackMsg(null)}
+        />
+      </div>
+    )}
 
  </div>
 
@@ -2665,6 +2407,19 @@ export default function BookingCRM({
     isStitchLight={isStitchLight}
   />
 
+  <RoadbookContractModal
+    isOpen={isRoadbookModalOpen}
+    onClose={() => {
+      setIsRoadbookModalOpen(false);
+      setRoadbookModalLead(null);
+    }}
+    lead={roadbookModalLead}
+    leads={leads}
+    concerts={concerts}
+    bandName={effectiveBandName}
+    isStitchLight={isStitchLight}
+  />
+
 
 
   {/* BULK PROGRESS MODAL */}
@@ -2685,6 +2440,38 @@ export default function BookingCRM({
     onClose={bookingTutorial.closeTutorial}
     moduleId="booking"
   />
+
+  {/* MOBILE FLOATING ACTION BUTTON (FAB) FOR ZERO-FRICTION CREATION */}
+  <button
+    id="mobile-fab-add-lead"
+    type="button"
+    onClick={() => {
+      setNewLeadData({
+        nombre_sala: '',
+        ciudad: '',
+        region: 'Nacional',
+        direccion: '',
+        aforo: 0,
+        tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
+        email_contacto: '',
+        telefono: '',
+        website: '',
+        instagram: '',
+        fuente: '',
+        genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
+        notas: '',
+        pitch_generado: '',
+        icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
+        imagen_url: ''
+      });
+      setIsAddingLeadModalOpen(true);
+    }}
+    className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
+    style={{ animationDuration: '3s' }}
+    title="Añadir contacto"
+  >
+    <Plus className="w-6 h-6 stroke-[3]" />
+  </button>
 
  </div>
  );

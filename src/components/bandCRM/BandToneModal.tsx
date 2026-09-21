@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
-import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap } from 'lucide-react';
+import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap, MessageSquareText, Building2, Tent, Disc3, Users, Briefcase, Landmark } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { apiFetch } from '../../utils/api';
 import { api } from '../../services/api';
+import { ExampleThreadsSection } from '../booking/ExampleThreadsSection';
+import type { TemplateCategory } from '../booking/TemplateConfigSection';
 
 const CATEGORY_LABELS: Record<string, string> = {
   salas: '🏛️ Salas',
@@ -139,6 +141,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isTraining, setIsTraining] = useState(false);
   const [trainMessage, setTrainMessage] = useState<string | null>(null);
+  const [activeModalTab, setActiveModalTab] = useState<'tone' | 'threads'>('tone');
+  const [selectedCategoryThread, setSelectedCategoryThread] = useState<TemplateCategory>('salas');
   // Edición manual de reglas aprendidas: clave compuesta "mode:categoria" (ej. "reply:salas")
   // para poder tener en curso ediciones de pitch y de respuesta a la vez sin pisarse.
   const [savingRuleKey, setSavingRuleKey] = useState<string | null>(null);
@@ -328,6 +332,86 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
           </div>
         </div>
 
+        {/* Main Tabs Navigation */}
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/5">
+          <button
+            type="button"
+            onClick={() => setActiveModalTab('tone')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activeModalTab === 'tone'
+                ? isStitchLight
+                  ? 'bg-amber-500 text-stone-950 shadow-md font-extrabold'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-md font-extrabold'
+                : 'text-neutral-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>ADN de Tono & Personalidad</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveModalTab('threads')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activeModalTab === 'threads'
+                ? isStitchLight
+                  ? 'bg-amber-500 text-stone-950 shadow-md font-extrabold'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-md font-extrabold'
+                : 'text-neutral-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <MessageSquareText className="w-3.5 h-3.5" />
+            <span>Hilos Reales de Ejemplo (Entrenar IA)</span>
+          </button>
+        </div>
+
+        {activeModalTab === 'threads' ? (
+          <div className="space-y-4 animate-in fade-in duration-150">
+            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-sans space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-amber-400">
+                <Brain className="w-4 h-4" /> Aprendizaje Few-Shot con Conversaciones Reales
+              </div>
+              <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                Pega aquí correos y conversaciones reales (tanto iniciales como respuestas a negociaciones) que representen exactamente cómo habla tu banda. La IA usará estos ejemplos reales para replicar tu vocabulario, cercanía y forma de negociar.
+              </p>
+            </div>
+
+            {/* Category selector */}
+            <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-black/40 border border-white/5">
+              {[
+                { id: 'salas', label: '🏛️ Salas' },
+                { id: 'festivales', label: '🎪 Festivales' },
+                { id: 'discotecas', label: '🪩 Discotecas' },
+                { id: 'medios', label: '📻 Medios' },
+                { id: 'grupos', label: '🎸 Grupos' },
+                { id: 'managements', label: '💼 Managements' },
+                { id: 'ayuntamientos', label: '🎉 Ayuntamientos' }
+              ].map((cat) => {
+                const isActive = selectedCategoryThread === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSelectedCategoryThread(cat.id as TemplateCategory)}
+                    className={`py-1 px-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-amber-400 text-black shadow-sm font-extrabold'
+                        : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <ExampleThreadsSection
+              category={selectedCategoryThread}
+              isStitchLight={isStitchLight}
+              textSub={isStitchLight ? 'text-slate-500' : 'text-neutral-400'}
+            />
+          </div>
+        ) : (
+          <>
         {/* Loading State */}
         {isLoading ? (
           <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center">
@@ -883,6 +967,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               Iniciar Análisis de Tono
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
     </div>

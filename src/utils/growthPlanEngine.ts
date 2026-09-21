@@ -50,6 +50,7 @@ export interface GrowthPlan {
     optimalPostingTime: string;
   }[];
   channels: ChannelRecommendation[];
+  channelPlaybooks?: ChannelRecommendation[];
 }
 
 export function getDeterministicGrowthPlan(
@@ -649,6 +650,12 @@ export function getDeterministicGrowthPlan(
       }
     ],
     channels: [
+      instagramRec,
+      tiktokRec,
+      youtubeRec,
+      spotifyRec
+    ],
+    channelPlaybooks: [
       instagramRec,
       tiktokRec,
       youtubeRec,

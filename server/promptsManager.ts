@@ -91,22 +91,19 @@ export const DEFAULT_CATEGORY_TEMPLATES: Record<string, CategoryTemplateConfig> 
   salas: {
     category: "salas",
     title: "Salas y Teatros de Conciertos",
-    subject: "Propuesta de concierto 2026: {{nombre_banda}} en {{nombre_sala}}",
-    body: `Hola equipo de booking de {{nombre_sala}},
+    subject: "Propuesta de directo: {{nombre_banda}} en {{nombre_sala}}",
+    body: `Buenas equipo de {{nombre_sala}}:
 
-Nos dirigimos a vosotros desde {{nombre_banda}}, proyecto independiente de música en directo ({{estilo}}).
+Os escribo desde {{nombre_banda}} ({{estilo}}). Seguimos de cerca vuestra programación y el mimo que ponéis en los directos, y nos encantaría cuadrar fecha en vuestra sala aprovechando que estamos preparando ruta por la zona para los próximos meses.
 
-Seguimos la programación de {{nombre_sala}} y creemos que nuestro directo encaja perfectamente con vuestra línea artística. Ofrecemos un espectáculo enérgico y profesional de directo probado en múltiples salas y escenarios.
+Llevamos un directo en cuarteto muy vivo y dinámico, pensado para conectar de verdad con el público y generar muy buena energía de principio a fin.
 
-Detalles técnicos y de producción:
-- Formato adaptado y versátil.
-- Material promocional, dossier y enlaces de escucha: {{website}}
+Tenéis el dossier oficial con vídeos en directo y rider completo al pie.
 
-Nos gustaría consultar vuestra disponibilidad de fechas para la próxima temporada y valorar propuesta de condiciones (alquiler, taquilla compartida o caché).
+¿Cómo tenéis enfocada la programación para el próximo trimestre o qué fechas soléis tener disponibles para directos de fuera?
 
-Quedamos a vuestra disposición. Un saludo cordial,
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono profesional, cercano y apasionado por el directo. Enfócate en la calidad musical, la energía en vivo y la facilidad logística. Adapta el mensaje al aforo y estilo de la sala.",
+¡Un saludo!`,
+    guidelines: "Tono natural, directo y cercano sin clichés de IA. Muestra interés genuino por su programación y labor cultural antes de presentar la banda. Evita listas de viñetas simétricas y lenguaje corporativo acartonado.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",
@@ -115,7 +112,7 @@ Quedamos a vuestra disposición. Un saludo cordial,
         timestamp: new Date().toISOString(),
         toneRating: 5,
         contentRating: 5,
-        comment: "Plantilla base genérica con marcadores de banda y estilo.",
+        comment: "Plantilla base humana, con interés genuino por la programación y sin clichés robóticos de IA.",
         source: "system"
       }
     ],
@@ -124,23 +121,20 @@ Quedamos a vuestra disposición. Un saludo cordial,
   festivales: {
     category: "festivales",
     title: "Festivales de Música",
-    subject: "Propuesta de contratación para cartel 2026: {{nombre_banda}} (Live Set)",
-    body: `Estimada organización de {{nombre_sala}},
+    subject: "Propuesta de contratación cartel 2026: {{nombre_banda}} ({{estilo}})",
+    body: `Hola equipo de programación de {{nombre_sala}},
 
-Escribimos en representación de {{nombre_banda}} para presentar nuestra propuesta artística ({{estilo}}) de cara a la próxima edición de vuestro festival.
+Os escribo en representación de {{nombre_banda}} ({{estilo}}) para presentar la propuesta de directo de cara a la próxima edición de vuestro festival.
 
-{{nombre_banda}} es un proyecto de alto impacto para escenarios de festivales, destacando por una propuesta enérgica, bailable y con gran conexión con el público.
+Ofrecemos un show de alto ritmo pensado para grandes escenarios, con un directo muy festivo y bailable que funciona genial en horarios de tarde o noche. Además, nuestro montaje es rápido y eficiente, adaptándonos fácilmente a los cambios de set de festival.
 
-Puntos clave de la propuesta:
-- Espectáculo dinámico adaptado a horarios de máxima afluencia.
-- Montaje técnico limpio y adaptable a cambios rápidos de escenario.
-- Dossier completo y enlaces de escucha: {{website}}
+Tenéis disponible nuestro Dossier Oficial, EPK y Rider Técnico en el pie de este correo para consultar vídeos de directo y audios.
 
-Estaríamos encantados de enviaros nuestro rider técnico y propuesta económica para vuestra consideración.
+Estaremos encantados de enviaros la propuesta económica y disponibilidad de agenda para valorar nuestra incorporación al cartel.
 
-Atentamente,
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono enérgico, enfocado al impacto en festival y grandes aforos. Destaca el ritmo, la conexión con el público y la rapidez en cambios de escenario.",
+Un saludo,
+Booking & Management — {{nombre_banda}}`,
+    guidelines: "Tono enérgico, enfocado al impacto en festival y agilidad técnica. Sin muletillas de IA ni lenguaje acartonado.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",
@@ -150,21 +144,19 @@ Atentamente,
   discotecas: {
     category: "discotecas",
     title: "Discotecas y Clubbing Nocturno",
-    subject: "Propuesta Live Set: {{nombre_banda}} en {{nombre_sala}}",
-    body: `Hola equipo de programación de {{nombre_sala}},
+    subject: "Propuesta Live Set nocturno: {{nombre_banda}} en {{nombre_sala}}",
+    body: `Buenas equipo de {{nombre_sala}}:
 
-Os escribimos desde {{nombre_banda}} para presentar nuestro formato especial de directo ({{estilo}}), diseñado para la sesión nocturna de clubes y discotecas.
+Os escribo desde {{nombre_banda}} para proponeros un formato de Live Set nocturno ({{estilo}}), pensado específicamente para sesiones de discoteca y club.
 
-Nuestro formato integra secuencias, percusión en vivo y energía escénica, creando un puente perfecto entre la música en directo y la pista de baile en horario de madrugada.
+Es un directo enérgico y muy bailable que combina electrónica analógica, violín y base rítmica para encender la pista y sumar un momento de música en vivo potente a vuestra noche.
 
-- Formato ideal para sesiones entre DJs o como show principal de la noche.
-- Escucha y vídeos en directo: {{website}}
+Tenéis vídeos de directo y audios en el dossier al pie.
 
-¿Tenéis fechas disponibles para este trimestre para coordinar una sesión?
+¿Cómo tenéis enfocada la programación de directos de madrugada para las próximas semanas?
 
-Saludos cordiales,
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono moderno, enfocado a clubes y discotecas de noche. Resalta el formato bailable perfecto para la madrugada.",
+¡Un saludo!`,
+    guidelines: "Tono nocturno y directo para discotecas. Destaca la energía del Live Set y el buen encaje con la fiesta sin entrar en detalles de minutos de montaje.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",
@@ -174,18 +166,19 @@ Saludos cordiales,
   medios: {
     category: "medios",
     title: "Medios de Comunicación, Radio y Prensa",
-    subject: "[Nota de Prensa / Dossier] {{nombre_banda}} presenta su nuevo lanzamiento y gira 2026",
-    body: `Hola equipo de redacción de {{nombre_sala}},
+    subject: "[Nota de prensa] {{nombre_banda}} presenta gira 2026 y nuevo material",
+    body: `Hola equipo de {{nombre_sala}},
 
-Nos ponemos en contacto desde {{nombre_banda}}, proyecto independiente de música en directo ({{estilo}}).
+Os escribo desde {{nombre_banda}} ({{estilo}}) para haceros llegar nuestro dossier de prensa con motivo del lanzamiento de nuestro nuevo material y la gira de conciertos 2026.
 
-Les remitimos nuestro último comunicado de prensa y dossier promocional con motivo de nuestra gira de conciertos y lanzamientos 2026. Nos encantaría enviarles material en calidad broadcast para sonar en su programa/radio, o ponernos a su disposición para entrevistas, acústicos en directo o reseñas.
+Estaríamos encantados de enviaros los temas en calidad broadcast (WAV) para sonar en vuestra programación, o ponernos a vuestra disposición para entrevistas, acústicos o reseñas.
 
-Dossier y videoclip oficial: {{website}}
+Tenéis el dossier interactivo con videoclips y audios en el enlace al pie.
 
-Muchas gracias por su apoyo a la difusión de la música independiente,
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono periodístico, profesional y directo para medios de comunicación. Dirígete al redactor, locutor o equipo de prensa. IMPORTANTE: No pidas fechas de conciertos ni taquillas.",
+Muchas gracias por apoyar la música independiente,
+
+Prensa & Comunicación — {{nombre_banda}}`,
+    guidelines: "Tono periodístico, claro y directo. Sin pedir taquillas ni fechas de conciertos.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",
@@ -195,24 +188,20 @@ Muchas gracias por su apoyo a la difusión de la música independiente,
   grupos: {
     category: "grupos",
     title: "Grupos y Bandas para Intercambio de Fechas",
-    subject: "Propuesta de concierto compartido e intercambio de fechas: {{nombre_banda}} x {{nombre_sala}}",
-    body: `¡Buenas chavales de {{nombre_sala}}!
+    subject: "Concierto compartido e intercambio de fechas: {{nombre_banda}} x {{nombre_sala}}",
+    body: `¡Buenas, gente de {{nombre_sala}}!
 
-Os escribimos desde {{nombre_banda}}, banda de {{estilo}}. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
+Os escribo desde {{nombre_banda}} ({{estilo}}). Nos gusta mucho lo que hacéis y creemos que nuestros estilos encajarían muy bien en una fecha compartida.
 
-Queremos proponer un INTERCAMBIO DE FECHAS / CO-BOOKING para esta temporada:
-1. Os invitamos a tocar con nosotros en nuestra ciudad compartiendo escenario y taquilla.
-2. Vosotros nos invitáis a tocar en {{ciudad}} en vuestro espacio habitual.
+Queríamos proponeros un intercambio de fechas (date swap): os invitamos a tocar con nosotros en nuestra zona compartiendo escenario y taquilla, y montamos la fecha de vuelta en vuestra ciudad para sumar públicos locales y compartir gastos.
 
-Así aseguramos llenar las dos salas sumando ambos públicos y compartimos gastos de viaje y backline.
+Podéis escuchar lo que hacemos en el enlace de abajo.
 
-Podéis escuchar lo que hacemos aquí: {{website}}
-
-¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos llamada esta semana?
+¿Cómo lo veis? ¿Hablamos por WhatsApp esta semana para cuadrarlo?
 
 ¡Un abrazo!
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono de músico a músico: cercano, colega, directo y colaborativo. Propón claramente la estrategia de ganar-ganar (date swap), compartir público local y abaratar gastos.",
+{{nombre_banda}}`,
+    guidelines: "Tono de músico a músico: cercano, colega, directo y colaborativo. Sin fórmulas de IA.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",
@@ -223,19 +212,19 @@ Podéis escuchar lo que hacemos aquí: {{website}}
     category: "managements",
     title: "Agencias de Management y Booking",
     subject: "Propuesta de colaboración / Roster: {{nombre_banda}} ({{estilo}})",
-    body: `Estimado equipo de {{nombre_sala}},
+    body: `Hola equipo de {{nombre_sala}},
 
-Nos dirigimos a vuestra agencia para presentar la propuesta artística de {{nombre_banda}} ({{estilo}}) con vista a posibles colaboraciones, coproducciones o inclusión en vuestro catálogo de booking para giras y festivales 2026.
+Os escribo en representación de {{nombre_banda}} ({{estilo}}) para presentar nuestra propuesta artística de cara a posibles colaboraciones, coproducciones o incorporación a vuestro catálogo de booking para 2026.
 
-{{nombre_banda}} es un proyecto consolidado que destaca por una logística ágil, alta rentabilidad en venta de entradas y un directo arrollador probado en salas y festivales.
+Es un proyecto con un directo muy sólido, buena respuesta en venta de entradas y una logística de producción muy eficiente y fácil de girar.
 
-Dossier corporativo y enlaces: {{website}}
+Podéis consultar el dossier corporativo con vídeos de directo y datos de gira en el enlace al pie.
 
-Estaríamos encantados de agendar una breve reunión telefónica para valorar posibles sinergias.
+Estaré encantado de hacer una breve llamada cuando os vaya bien para comentar posibles sinergias.
 
-Atentamente,
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono ejecutivo-musical profesional para mánagers, agencias y agentes de booking. Destaca la profesionalidad técnica, el atractivo comercial y la facilidad logística.",
+Un saludo,
+Booking & Management — {{nombre_banda}}`,
+    guidelines: "Tono profesional y directo para agencias y mánagers. Muestra solvencia técnica y atractivo comercial.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",
@@ -245,20 +234,20 @@ Atentamente,
   ayuntamientos: {
     category: "ayuntamientos",
     title: "Ayuntamientos y Fiestas Patronales",
-    subject: "Propuesta de concierto para fiestas patronales: {{nombre_banda}} en {{nombre_sala}}",
+    subject: "Propuesta de concierto cultural / Fiestas patronales: {{nombre_banda}} en {{nombre_sala}}",
     body: `Estimados responsables del Área de Cultura y Festejos de {{nombre_sala}},
 
-Nos dirigimos a ustedes desde la representación de {{nombre_banda}} ({{estilo}}) para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales de la próxima temporada.
+Nos dirigimos a ustedes desde la representación de {{nombre_banda}} ({{estilo}}) para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y festejos de la próxima temporada.
 
-Ofrecemos un espectáculo de alta energía, familiar, participativo y muy bailable, ideal para plazas públicas y eventos al aire libre. Contamos con amplia solvencia técnica, facturación oficial y rigurosa puntualidad de producción.
+Ofrecemos un espectáculo participativo y de alta energía, adecuado para todos los públicos en plazas y recintos al aire libre. Disponemos de solvencia técnica, facturación oficial y rigurosa puntualidad en producción.
 
-Material promocional, dossier y rider técnico: {{website}}
+Tienen a su disposición el Dossier Oficial y Rider Técnico en el enlace referenciado al pie.
 
-Quedamos a su entera disposición para remitirles nuestro rider técnico y propuesta presupuestaria formal.
+Quedamos a su disposición para remitirles la propuesta presupuestaria formal.
 
-Cordialmente,
-{{nombre_banda}} Agent Manager IA`,
-    guidelines: "Tono formal e institucional, mucho más protocolario que el de una sala de conciertos: dirígete a \"ustedes\"/\"responsables del Área de Cultura\", no tutees. Destaca la solvencia técnica, la facturación oficial (factura, no taquilla) y el carácter festivo pero intergeneracional (apto para todos los públicos). Nunca uses jerga informal ni emojis.",
+Atentamente,
+Oficina de Producción — {{nombre_banda}}`,
+    guidelines: "Tono formal e institucional. Dirígete a 'ustedes', destaca facturación oficial y solvencia técnica sin perder agilidad.",
     toneRating: 5,
     contentRating: 5,
     customInstruction: "",

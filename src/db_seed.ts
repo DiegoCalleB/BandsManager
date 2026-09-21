@@ -938,7 +938,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     id: 'post-1783938497260',
     fecha: '2026-07-16 20:30',
     plataforma: 'Instagram',
-    contenido: 'Cuando el ska se junta con los metales del este... ¡explota la cabeza! 🤯 Siente el poder del bajo y dinos: ¿del 1 al 10 cuánto te apetece bailar esto hoy? 👇🎉 #Bakandeya #SkaFusión #BajoPoderoso #MusicaIndie #FestaMajor #ConciertosEspaña',
+    contenido: 'Cuando el ska balcánico se junta con el violín endiablado... ¡explota la cabeza! 🤯 Siente el poder del bajo y los sintes. Dinos: ¿del 1 al 10 cuánto te apetece bailar esto hoy? 👇🎉 #Bakandeya #BalkanSka #ViolinEnVivo #SkaFusión #MusicaIndie #ConciertosEspaña',
     estado: 'aprobado',
     responsable: 'Diego'
   },

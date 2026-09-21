@@ -115,6 +115,11 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 3. **Ciclo de Vida de los Agentes de Booking:**
    * **Scout:** Descubre y enriquece salas en Supabase, las marca como estado `nuevo`.
    * **Redactor:** Genera propuesta personalizada por IA, marca sub-estado como `pendiente_aprobacion` (lead listo para revisión humana).
+     * **Directrices de redacción del pitch (`server/utils/bandDna.ts`, `server/promptsManager.ts`):**
+       - Estructura breve (<140 palabras), cercana y humana sin clichés ni jerga corporativa.
+       - **Halago sincero y conocimiento del espacio:** Iniciar reconociendo la trayectoria del espacio, el mimo en su cartelera y su labor cultural en la ciudad.
+       - **Adaptación por tipo de espacio:** En fundaciones/teatros/auditorios enfocar en calidad acústica, riqueza tímbrica/instrumental y respeto al espacio (jamás hablar de copas o dinamizar barras); en salas y discotecas enfocar en energía y ambiente.
+       - **Cero obsesión operativa en primer contacto:** Prohibido meter muletillas de tiempos ("montamos en 30 min", "recogemos en 5 min", "rider ágil", "taquilla o caché") en el correo inicial. Los programadores ya juzgan el montaje viendo los vídeos del dossier/EPK.
    * **Usuario (Human-in-the-Loop):** Lee/edita el borrador y aprueba explícitamente, transicionando a `aprobado_propuesta` (pitch inicial) o `aprobado_respuesta` (réplica a sala).
    * **Enviador** (`server/services/agentEngine.ts`): Lee leads en estado aprobado, despacha respetando ventana comercial de la banda y rate-limits. Registra el envío en `lead_messages`.
    * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.

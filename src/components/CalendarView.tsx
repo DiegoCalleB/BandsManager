@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Rehearsal, Concert, ThemeColors, BookingCampaign, KeyContactItem, TechnicalLogistics, CierreMaterialItem, MerchBoloItem, MerchControlBolo } from '../types';
+import { calcularBreakEvenConcierto } from '../utils/breakEvenCalculator';
 import DirectionsCard from './DirectionsCard';
 import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2, MessageCircle, MessageSquare, Share2, AlertTriangle, Thermometer, Edit, Phone, Wrench, ShieldCheck, Truck, Volume2, Zap, CheckCircle2, RotateCcw, UserCheck, Layers, ArrowUpRight, Shirt, Coins, CreditCard, Banknote, Calculator, ShoppingBag, Tag } from 'lucide-react';
 import { EventWeatherCard } from './calendar/EventWeatherCard';
@@ -649,7 +650,7 @@ export default function CalendarView({
  };
 
  const [activeTab, setActiveTab] = useState<'runofshow' | 'tecnica' | 'contactos' | 'merchan' | 'cierre' | 'gear' | 'roadbook'>('runofshow');
- const [modalActiveTab, setModalActiveTab] = useState<'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'cierre'>('resumen');
+ const [modalActiveTab, setModalActiveTab] = useState<'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'postshow' | 'cierre'>('resumen');
 
  // Roadbooks state per event date
  interface RoadbookInfo {
@@ -746,7 +747,7 @@ export default function CalendarView({
  }
  ],
  cierreMaterial: [
- { id: 'cm-1', categoria: 'escenario', item: 'Instrumentos principales y estuches rígidos (guitarras, bajo, metales/teclado)', checked: false },
+ { id: 'cm-1', categoria: 'escenario', item: 'Instrumentos principales y estuches rígidos (guitarras, bajo, violín, sintes/teclado)', checked: false },
  { id: 'cm-2', categoria: 'escenario', item: 'Pedaleras de efectos, alimentadores y fuentes de corriente', checked: false },
  { id: 'cm-3', categoria: 'escenario', item: 'Cables jack / XLR propios, alargaderas y adaptadores', checked: false },
  { id: 'cm-4', categoria: 'escenario', item: 'Petacas de in-ears, auriculares y transmisores inalámbricos', checked: false },
@@ -1272,7 +1273,13 @@ export default function CalendarView({
  idioma: editDraft.idioma || undefined,
  setlistId: editDraft.setlistId || undefined,
  entradasUrl: editDraft.entradasUrl?.trim() || undefined,
- entradasLugarFisico: editDraft.entradasLugarFisico?.trim() || undefined
+ entradasLugarFisico: editDraft.entradasLugarFisico?.trim() || undefined,
+  precioEntradaEstimado: Number(editDraft.precioEntradaEstimado) || undefined,
+ asistencia_propia: Number(editDraft.asistencia_propia) || 0,
+ asistencia_otras_bandas: Number(editDraft.asistencia_otras_bandas) || 0,
+ bandas_compartidas: Array.isArray(editDraft.bandas_compartidas) ? editDraft.bandas_compartidas : (typeof editDraft.bandas_compartidas === 'string' ? (editDraft.bandas_compartidas as string).split(',').map((s: string) => s.trim()).filter(Boolean) : []),
+ post_show_review: editDraft.post_show_review?.trim() || '',
+ es_hito_destacado: Boolean(editDraft.es_hito_destacado)
  });
  setViewingConcert(null);
  setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
@@ -1797,10 +1804,10 @@ export default function CalendarView({
  '2026-07-23': [
  { id: 'ros-1', time: '17:00', activity: 'Llegada a la sala y descarga de bártulos', done: true },
  { id: 'ros-2', time: '17:30', activity: 'Montaje de escenario e in-ears', done: true },
- { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de metales y bases)', done: true },
+ { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de violín, sintes y bases)', done: true },
  { id: 'ros-4', time: '19:30', activity: 'Cena de la banda / Catering', done: false },
  { id: 'ros-5', time: '21:00', activity: 'Apertura de puertas', done: false },
- { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎺💥', done: false },
+ { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎻💥', done: false },
  { id: 'ros-7', time: '23:30', activity: 'Merchandising, firmas y recogida de equipo', done: false },
  ],
  '2026-07-15': [
@@ -1813,7 +1820,7 @@ export default function CalendarView({
  const defaultInitialGear: Record<string, GearItem[]> = {
  '2026-07-23': [
  { id: 'gear-1', label: 'Teclado Korg SV-2 + Stand', checked: true },
- { id: 'gear-2', label: 'Sección Metales (Sordinas y atril)', checked: true },
+ { id: 'gear-2', label: 'Estuche Violín electroacústico + Arco y resina', checked: true },
  { id: 'gear-3', label: 'Banderola de Escenario Bakandeya', checked: false },
  { id: 'gear-4', label: 'Merchandising (Camisetas, Pegatinas, CDs)', checked: false },
  { id: 'gear-5', label: 'Cables Jack / XLR de recambio', checked: true },
@@ -4328,19 +4335,46 @@ export default function CalendarView({
  </div>
  )}
  {!isPromoPlan && selectedEventDetails.type === 'concert' && selectedConcert && (() => {
- const g = selectedConcert.gastosDetalle;
- const totalG = g ? ((g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)) : (selectedConcert.gastosEstimadosTipicos || 150);
- const net = (selectedConcert.cache || 0) - totalG;
+ const analysis = calcularBreakEvenConcierto(selectedConcert, 'Madrid', 4);
+ const net = analysis.beneficioNetoEstimado;
  return (
- <div className={`flex items-center justify-between text-[10px] pt-1.5 mt-1`}>
- <span className={`font-mono ${textSub}`}>Rentabilidad neta:</span>
- <span className={`font-bold font-mono px-2 py-0.5 rounded-full ${
- net < 0 ? 'bg-rose-950/80 text-rose-400' :
- net < 150 ? 'bg-amber-950/80 text-amber-300' :
- 'bg-emerald-950/80 text-emerald-400'
- }`}>
- {net >= 0 ? `+${net}€ Neto` : `${net}€ En pérdidas`}
- </span>
+ <div className={`p-3 rounded-xl mt-3 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-neutral-950 border border-neutral-900'} space-y-2`}>
+   <div className="flex items-center justify-between text-[11px] font-bold">
+     <span className={textTitle}>📊 Viabilidad del Bolo</span>
+     <span className={`px-2 py-0.5 rounded-full text-[10px] ${
+       analysis.estadoRentabilidad === 'beneficio' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+       analysis.estadoRentabilidad === 'cubierto' ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' :
+       analysis.estadoRentabilidad === 'perdida_moderada' ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' :
+       'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+     }`}>
+       {analysis.estadoRentabilidad === 'beneficio' ? 'Rentable' :
+        analysis.estadoRentabilidad === 'cubierto' ? 'Al límite' :
+        analysis.estadoRentabilidad === 'perdida_moderada' ? 'Pérdida Leve' : 'Riesgo'}
+     </span>
+   </div>
+
+   <div className="grid grid-cols-2 gap-2 pt-1">
+     <div className="bg-black/30 p-1.5 rounded-lg border border-neutral-800/40">
+       <span className="text-[9px] text-neutral-400 block font-mono">Gastos Estimados</span>
+       <span className="text-xs font-bold text-rose-400 font-mono">{analysis.gastosTotalesEstimados} €</span>
+     </div>
+     <div className="bg-black/30 p-1.5 rounded-lg border border-neutral-800/40">
+       <span className="text-[9px] text-neutral-400 block font-mono">Para Cubrir Gastos</span>
+       <span className="text-xs font-bold text-amber-300 font-mono">
+         {analysis.entradasParaBreakEven > 0 ? `${analysis.entradasParaBreakEven} entradas` : 'Cubierto'}
+       </span>
+     </div>
+   </div>
+
+   <div className="text-[10px] font-mono leading-relaxed pt-1 flex items-center justify-between border-t border-neutral-800/30">
+     <span className={textSub}>Resultado neto estimado:</span>
+     <span className={`font-bold font-mono ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+       {net >= 0 ? `+${net}€ Neto` : `${net}€ En pérdidas`}
+     </span>
+   </div>
+   <p className="text-[9px] font-sans text-neutral-400/90 italic mt-1 leading-normal">
+     {analysis.mensajeStatus}
+   </p>
  </div>
  );
  })()}
@@ -6029,13 +6063,117 @@ export default function CalendarView({
  />
  </div>
  <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Entradas Vendidas</label>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Entradas Vendidas Total</label>
  <input
  type="number"
  value={editDraft.aforo_vendido || 0}
  onChange={(e) => setEditDraft(prev => prev ? { ...prev, aforo_vendido: Number(e.target.value) } : prev)}
  className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ </div>
+
+ {/* Sección de Convocatoria Real e Histórico Post-Show para IA */}
+ <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-2.5 my-2">
+ <div className="flex items-center justify-between">
+ <span className="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1.5">
+ <Users className="w-3.5 h-3.5 text-amber-400" />
+ Convocatoria Real & Resumen Post-Show (Para Agente IA)
+ </span>
+ <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-mono text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/40 hover:bg-amber-500/30">
+ <input
+ type="checkbox"
+ checked={Boolean(editDraft.es_hito_destacado)}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, es_hito_destacado: e.target.checked } : prev)}
+ className="accent-amber-500 rounded"
+ />
+ <span>⭐ Hito Destacado</span>
+ </label>
+ </div>
+
+ <div className="grid grid-cols-2 gap-2">
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-300 mb-0.5">Asistentes Propios Banda</label>
+ <input
+ type="number"
+ value={editDraft.asistencia_propia ?? editDraft.aforo_vendido ?? 0}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, asistencia_propia: Number(e.target.value) } : prev)}
+ placeholder="ej. 250"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-white text-slate-900 border border-slate-200' : 'bg-neutral-900 text-white border border-neutral-700'
+ }`}
+ />
+ </div>
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-300 mb-0.5">Público de Otras Bandas</label>
+ <input
+ type="number"
+ value={editDraft.asistencia_otras_bandas ?? 0}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, asistencia_otras_bandas: Number(e.target.value) } : prev)}
+ placeholder="ej. 100"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-white text-slate-900 border border-slate-200' : 'bg-neutral-900 text-white border border-neutral-700'
+ }`}
+ />
+ </div>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-300 mb-0.5">Grupos Compartidos en Cartel</label>
+ <input
+ type="text"
+ value={Array.isArray(editDraft.bandas_compartidas) ? editDraft.bandas_compartidas.join(', ') : (editDraft.bandas_compartidas || '')}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, bandas_compartidas: e.target.value.split(',').map(s => s.trim()).filter(Boolean) as any } : prev)}
+ placeholder="ej. Sin Propina, La Pegatina (separados por coma)"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-white text-slate-900 border border-slate-200' : 'bg-neutral-900 text-white border border-neutral-700'
+ }`}
+ />
+ </div>
+
+ <div>
+ <div className="flex items-center justify-between mb-0.5">
+ <label className="text-[10px] font-mono text-neutral-300">Nota / Resumen Post-Show del Concierto</label>
+ <button
+ type="button"
+ onClick={() => {
+ const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+ if (!SpeechRecognition) {
+ onShowNotification?.('El dictado por voz no está soportado en este navegador. Escribe la nota a mano.', 'info');
+ return;
+ }
+ try {
+ const rec = new SpeechRecognition();
+ rec.lang = 'es-ES';
+ rec.onresult = (ev: any) => {
+ const text = ev.results[0][0].transcript;
+ if (text) {
+ setEditDraft(prev => prev ? {
+ ...prev,
+ post_show_review: ((prev.post_show_review || '') + ' ' + text).trim()
+ } : prev);
+ }
+ };
+ rec.start();
+ } catch (err) {
+ console.error(err);
+ }
+ }}
+ className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 flex items-center gap-1 cursor-pointer"
+ title="Dictar nota por voz desde el micro"
+ >
+ <span>🎙️</span> Dictar por voz
+ </button>
+ </div>
+ <textarea
+ rows={2}
+ value={editDraft.post_show_review || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, post_show_review: e.target.value } : prev)}
+ placeholder="ej. Llenazo total en la sala. Buena venta de camisetas y respuesta brutal del público."
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-white text-slate-900 border border-slate-200' : 'bg-neutral-900 text-white border border-neutral-700'
  }`}
  />
  </div>
@@ -7021,6 +7159,25 @@ export default function CalendarView({
                  {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/25 font-mono">
                      {modalRoadbook.merchControl.items.length}
+                   </span>
+                 )}
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setModalActiveTab('postshow')}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                   modalActiveTab === 'postshow'
+                     ? 'bg-amber-500 text-stone-950 shadow-sm'
+                     : isStitchLight
+                     ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                     : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+                 }`}
+               >
+                 <Users className="w-3.5 h-3.5" />
+                 <span>4. Público & Post-Show</span>
+                 {selectedConcert?.es_hito_destacado && (
+                   <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-amber-400 text-black font-black">
+                     ⭐ Hito
                    </span>
                  )}
                </button>
@@ -8247,7 +8404,111 @@ export default function CalendarView({
                );
              })()}
 
-             {/* TAB 4: 5. CHECKLIST CIERRE DE MATERIAL */}
+             {/* TAB 4: PÚBLICO & RESUMEN POST-SHOW */}
+             {modalActiveTab === 'postshow' && (
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between pb-1 border-b border-amber-500/20 flex-wrap gap-2">
+                   <div className="flex items-center gap-2">
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-amber-500 text-stone-950">
+                       Sección 4
+                     </span>
+                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+                       Convocatoria Real, Bandas del Cartel & Sensaciones Post-Show
+                     </h3>
+                   </div>
+                   {selectedConcert && (
+                     <button
+                       type="button"
+                       onClick={() => {
+                         setShowEventFichaModal(false);
+                         setViewingConcert(selectedConcert);
+                       }}
+                       className="px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 transition-colors flex items-center gap-1 cursor-pointer"
+                     >
+                       <Edit className="w-3.5 h-3.5" />
+                       <span>Editar Convocatoria / Dictar Nota</span>
+                     </button>
+                   )}
+                 </div>
+
+                 <p className={`text-xs font-sans leading-relaxed ${textSub}`}>
+                   Registra la asistencia propia real y las impresiones tras el directo. Esta información alimenta directamente la inteligencia del <strong className="text-amber-400">Agente de IA Booking</strong> para usarse como prueba social irrefutable y objetiva al negociar con nuevas salas y festivales.
+                 </p>
+
+                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                   <div className={`p-3.5 rounded-xl border ${isStitchLight ? 'bg-amber-50/60 border-amber-200' : 'bg-amber-950/20 border-amber-500/30'}`}>
+                     <div className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider mb-1">
+                       👥 Asistencia Propia Estimada
+                     </div>
+                     <div className="text-2xl font-black font-mono text-amber-300">
+                       {selectedConcert?.asistencia_propia ?? selectedConcert?.aforo_vendido ?? 0} <span className="text-xs font-normal text-neutral-400">espectadores</span>
+                     </div>
+                     <p className="text-[10px] font-mono text-neutral-400 mt-1">
+                       Público que acudió específicamente a ver a la banda.
+                     </p>
+                   </div>
+
+                   <div className={`p-3.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}>
+                     <div className="text-[10px] font-mono text-neutral-400 font-bold uppercase tracking-wider mb-1">
+                       🎸 Público de Otros Grupos
+                     </div>
+                     <div className="text-2xl font-black font-mono text-white">
+                       {selectedConcert?.asistencia_otras_bandas ?? 0} <span className="text-xs font-normal text-neutral-400">espectadores</span>
+                     </div>
+                     <p className="text-[10px] font-mono text-neutral-400 mt-1">
+                       Afluencia aportada por el resto del cartel.
+                     </p>
+                   </div>
+
+                   <div className={`p-3.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}>
+                     <div className="text-[10px] font-mono text-neutral-400 font-bold uppercase tracking-wider mb-1">
+                       ⭐ Hito de Booking
+                     </div>
+                     <div className="text-sm font-bold font-mono mt-1">
+                       {selectedConcert?.es_hito_destacado ? (
+                         <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 inline-flex items-center gap-1">
+                           ⭐ HITO DESTACADO DE LA BANDA
+                         </span>
+                       ) : (
+                         <span className="text-neutral-400 font-normal text-xs">
+                           Estándar (marcar si fue un lleno/éxito clave)
+                         </span>
+                       )}
+                     </div>
+                   </div>
+                 </div>
+
+                 <div className={`p-4 rounded-xl border space-y-2 ${isStitchLight ? 'bg-white border-slate-200' : 'bg-[#131313] border-neutral-800'}`}>
+                   <h4 className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5">
+                     <Music className="w-3.5 h-3.5" />
+                     <span>Bandas & Cartel Compartido</span>
+                   </h4>
+                   <p className={`text-xs font-mono ${textTitle}`}>
+                     {Array.isArray(selectedConcert?.bandas_compartidas) && selectedConcert.bandas_compartidas.length > 0
+                       ? selectedConcert.bandas_compartidas.join(', ')
+                       : (selectedConcert?.bandas_compartidas || 'Concierto individual en solitario')}
+                   </p>
+                 </div>
+
+                 <div className={`p-4 rounded-xl border space-y-2 ${isStitchLight ? 'bg-amber-50/40 border-amber-200' : 'bg-neutral-900 border-amber-500/30'}`}>
+                   <h4 className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5">
+                     <Sparkles className="w-3.5 h-3.5" />
+                     <span>Resumen / Sensaciones Post-Show (Usado por la IA)</span>
+                   </h4>
+                   {selectedConcert?.post_show_review ? (
+                     <p className={`text-xs font-sans italic leading-relaxed ${textTitle}`}>
+                       &ldquo;{selectedConcert.post_show_review}&rdquo;
+                     </p>
+                   ) : (
+                     <p className="text-xs font-mono text-neutral-400 italic">
+                       Sin nota de voz ni resumen escrito registrado todavía. Pulsa &quot;Editar Convocatoria&quot; arriba para añadir la nota de voz desde el camerino o furgoneta.
+                     </p>
+                   )}
+                 </div>
+               </div>
+             )}
+
+             {/* TAB 5: CHECKLIST CIERRE DE MATERIAL */}
              {modalActiveTab === 'cierre' && (
                <div className="space-y-4">
                  <div className="flex items-center justify-between pb-1 border-b border-purple-500/20 flex-wrap gap-2">

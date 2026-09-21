@@ -246,18 +246,48 @@ function generateFallbackReply(lead: any, incomingMessage: string, responseType:
 
   switch (responseType) {
     case "confirmation":
-      return `Hola ${name},\n\nMuchas gracias por confirmarlo. Estamos muy emocionados de poder compartir escenario en ${sala}.\n\nQuedamos a vuestra disposición para cuadrar los últimos detalles técnicos y de producción.\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Muchas gracias por la propuesta, nos hace mucha ilusión la fecha en ${sala}.
+
+Para dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold) durante 48 horas? En cuanto lo tengamos coordinado os confirmo de inmediato para formalizar contrato y rider.
+
+Un abrazo,`;
 
     case "price_negotiation":
-      return `Hola ${name},\n\nGracias por vuestro interés. Disponemos de amplia flexibilidad en condiciones: taquilla compartida, caché fijo, o cualquier modelo que funcione mejor para ${sala}.\n\nOs envío en un mensaje posterior nuestra propuesta económica detallada.\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Gracias por la respuesta. Tenemos total flexibilidad en formato (taquilla compartida, fecha doble con banda local o acuerdo de caché) para adaptar el modelo a lo que mejor funcione en ${sala}.
+
+Si os parece, comentamos por aquí o en una breve llamada para ajustar la cifra según la fecha que tengáis libre.
+
+Un saludo,`;
 
     case "rejection":
-      return `Hola ${name},\n\nAgradecemos sinceramente vuestro tiempo y consideración. Esperamos poder colaborar en futuros proyectos.\n\n¡Mucho ánimo con la programación de ${sala}!\n\nUn saludo cordial,`;
+      return `Hola ${name},
+
+Muchas gracias por responder y por valorar la propuesta. Una lástima que no encaje esta vez, pero dejamos la puerta abierta para próximas giras.
+
+¡Mucha suerte con la programación de ${sala}!
+
+Un saludo,`;
 
     case "follow_up":
-      return `Hola ${name},\n\nEncantados de aclarar cualquier duda. Disponemos de toda la información en nuestro Dossier Oficial (enlace en la firma), pero con gusto respondemos a lo que necesitéis.\n\n¿Cuál es la mejor forma de ponernos en contacto para resolver esto?\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Encantados de comentar cualquier detalle. Tenemos el rider y dossier listos, y nos adaptamos a lo que mejor os venga.
+
+¿Cómo lo veis para hablarlo esta semana?
+
+Un saludo,`;
 
     default:
-      return `Hola ${name},\n\nMuchas gracias por vuestra respuesta. Nos encantaría seguir hablando para cuadrar los detalles.\n\n¿Cómo tenéis la agenda para coordinar una llamada o cerrar los últimos detalles?\n\n¡Un saludo!`;
+      return `Hola ${name},
+
+Muchas gracias por la respuesta. Seguimos a vuestra disposición para lo que necesitéis.
+
+¿Cómo os viene mejor que lo coordinemos?
+
+Un saludo,`;
   }
 }

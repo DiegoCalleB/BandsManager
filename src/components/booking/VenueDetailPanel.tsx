@@ -11,6 +11,7 @@ import { apiFetch } from '../../utils/api';
 import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
 import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
+import { DealAndLogisticsCopilot } from './DealAndLogisticsCopilot';
 import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import {
@@ -36,7 +37,12 @@ import {
   Upload,
   Undo2,
   RotateCcw,
-  Layers
+  Layers,
+  ShieldAlert,
+  Clock,
+  Sliders,
+  DollarSign,
+  CalendarCheck
 } from 'lucide-react';
 
 interface VenueDetailPanelProps {
@@ -55,6 +61,8 @@ interface VenueDetailPanelProps {
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
+  initialTab?: 'info' | 'emails' | 'copilot' | 'bitacora';
+  onOpenRoadbookModal?: (lead: Lead) => void;
 }
 
 export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
@@ -72,10 +80,18 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   isStitchLight = false,
   activeCampaign,
   onLeadLogoUpload,
-  isUploadingLeadLogo = false
+  isUploadingLeadLogo = false,
+  initialTab = 'info',
+  onOpenRoadbookModal
 }) => {
   // Active Tab inside panel
-  const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'bitacora'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'copilot' | 'bitacora'>(initialTab);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab, selectedLead?.id]);
 
   // Edit Lead State
   const [isEditingLeadInfo, setIsEditingLeadInfo] = useState(false);
@@ -998,6 +1014,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         <button
           type="button"
+          onClick={() => setActiveTab('copilot')}
+          className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
+            activeTab === 'copilot'
+              ? 'border-b-2 border-emerald-400 text-emerald-400'
+              : 'text-zinc-400 hover:text-zinc-200'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Copiloto & P&L</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('bitacora')}
           className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'bitacora'
@@ -1463,6 +1492,64 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
             )}
 
+            {/* Quick Manager Safeguard Pills */}
+            <div className="bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                  Salvaguardas de Mánager (Insertar cláusula con 1 clic):
+                </span>
+                <span className="text-[9px] text-zinc-400 font-sans">
+                  Protege a la banda antes de enviar
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  {
+                    id: 'hold',
+                    label: '⏳ Pedir Pre-reserva (Hold 48h)',
+                    text: '\n\nPara dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold / Option 1) durante 48 horas? En cuanto lo coordinemos os damos confirmación definitiva para formalizar contrato y rider.',
+                    color: 'hover:border-amber-500/60 text-amber-300 bg-amber-500/10'
+                  },
+                  {
+                    id: 'curfew',
+                    label: '⏰ Preguntar Curfew / Horarios',
+                    text: '\n\nPor coordinar bien la duración del pase y prueba de sonido: ¿cuál es el horario estricto de finalización de música en vivo (curfew) de la sala y tenéis limitador de decibelios?',
+                    color: 'hover:border-sky-500/60 text-sky-300 bg-sky-500/10'
+                  },
+                  {
+                    id: 'taquilla',
+                    label: '💰 Clarificar Gastos Taquilla',
+                    text: '\n\nRespecto a las condiciones de taquilla: ¿en el reparto pactado están ya incluidos el técnico de sonido de la sala y portería, o existe algún canon o gasto fijo deducible antes de la liquidación?',
+                    color: 'hover:border-emerald-500/60 text-emerald-300 bg-emerald-500/10'
+                  },
+                  {
+                    id: 'rider',
+                    label: '🎛️ Confirmar D.I. y Rider',
+                    text: '\n\nEn cuanto a producción: llevamos violín electroacústico, sintes y bases, por lo que requerimos 3 líneas directas D.I. activas y envíos para nuestros in-ears. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?',
+                    color: 'hover:border-purple-500/60 text-purple-300 bg-purple-500/10'
+                  }
+                ].map((pill) => (
+                  <button
+                    key={pill.id}
+                    type="button"
+                    onClick={() => {
+                      const current = editedPitch || selectedLead.pitch_generado || '';
+                      if (!current.includes(pill.text.trim())) {
+                        const updated = (current + pill.text).trim();
+                        setEditedPitch(updated);
+                        setIsEditingPitch(true);
+                      }
+                    }}
+                    className={`px-2 py-1 rounded-lg border border-zinc-700/80 text-[10px] font-sans font-medium flex items-center gap-1 transition-all cursor-pointer ${pill.color}`}
+                    title="Inserta esta cláusula protectora al final del borrador actual"
+                  >
+                    <span>{pill.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {isEditingPitch ? (
               <div className="space-y-2">
                 <textarea
@@ -1825,7 +1912,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         </div>
       )}
 
-      {/* TAB 3: CONTACT BITÁCORA */}
+      {/* TAB 3: COPILOTO DE CIERRE, LOGÍSTICA & P&L */}
+      {activeTab === 'copilot' && (
+        <DealAndLogisticsCopilot
+          lead={selectedLead}
+          latestIncomingMessage={
+            hiloCompleto.filter(m => m.remitente === 'sala').slice(-1)[0]?.mensaje || selectedLead.ultimo_mensaje_recibido
+          }
+          isStitchLight={isStitchLight}
+          onOpenRoadbookModal={onOpenRoadbookModal}
+        />
+      )}
+
+      {/* TAB 4: CONTACT BITÁCORA */}
       {activeTab === 'bitacora' && (
         <div className="bg-[#1A1918] rounded-xl p-4 space-y-3 border border border-amber-500/20">
           <div className="flex items-center justify-between">

@@ -810,4 +810,109 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
   }
 });
 
+import { dbGetAlertSettings, dbUpsertAlertSettings } from "../db/alertSettings.js";
+
+// GET /api/bands/alert-settings
+router.get("/bands/alert-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbGetAlertSettings(bandId);
+    return res.json({ success: true, settings });
+  } catch (err: any) {
+    console.error("Error obteniendo configuración de alertas:", err);
+    return res.status(500).json({ error: err?.message || "Error consultando alertas" });
+  }
+});
+
+// POST /api/bands/alert-settings
+router.post("/bands/alert-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const success = await dbUpsertAlertSettings(bandId, req.body || {});
+    return res.json({ success });
+  } catch (err: any) {
+    console.error("Error guardando configuración de alertas:", err);
+    return res.status(500).json({ error: err?.message || "Error guardando alertas" });
+  }
+});
+
+// POST /api/bands/trigger-alert-digest - Enviar email de resumen ejecutivo de alertas
+router.post("/bands/trigger-alert-digest", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbGetAlertSettings(bandId);
+
+    const recipientEmail = settings?.recipient_email || req.user?.email || req.user?.username;
+    if (!recipientEmail) {
+      return res.status(400).json({ error: "No se ha configurado un email de destino para las alertas." });
+    }
+
+    const state = loadState();
+    const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === bandId || b.id === bandId);
+    const bandName = bandInfo?.nombre_banda || bandInfo?.bandName || req.user?.bandName || "Tu Banda";
+
+    const leads = (state.leads || []).filter((l: any) => l.band_id === bandId || l.bandId === bandId);
+    const concerts = (state.concerts || []).filter((c: any) => c.band_id === bandId || c.bandId === bandId);
+
+    // Conteo de elementos pendientes
+    const pendingDraftsCount = leads.filter((l: any) => l.estado === 'pendiente_aprobacion' || l.estado === 'borrador_creado').length;
+    const staleLeadsCount = leads.filter((l: any) => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length;
+    const confirmedShowsCount = concerts.filter((c: any) => c.estado === 'confirmado' || new Date(c.fecha) >= new Date()).length;
+
+    const emailSubject = `📊 Resumen Ejecutivo & Alertas de Booking - ${bandName}`;
+
+    const htmlBody = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto;">
+        <div style="border-bottom: 2px solid #f59e0b; padding-bottom: 16px; margin-bottom: 24px;">
+          <h1 style="color: #f59e0b; font-size: 22px; margin: 0 0 4px 0;">⚡ Radar del Mánager — ${bandName}</h1>
+          <p style="color: #94a3b8; font-size: 13px; margin: 0;">Resumen ejecutivo automático de actividad y alertas de booking.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+          <div style="background-color: #1e293b; padding: 16px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
+            <span style="font-size: 20px; font-weight: bold; color: #38bdf8; display: block;">${pendingDraftsCount}</span>
+            <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Borradores IA</span>
+          </div>
+          <div style="background-color: #1e293b; padding: 16px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
+            <span style="font-size: 20px; font-weight: bold; color: #fbbf24; display: block;">${staleLeadsCount}</span>
+            <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Salas a Seguir</span>
+          </div>
+          <div style="background-color: #1e293b; padding: 16px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
+            <span style="font-size: 20px; font-weight: bold; color: #34d399; display: block;">${confirmedShowsCount}</span>
+            <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Bolos Activos</span>
+          </div>
+        </div>
+
+        <div style="background-color: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 24px;">
+          <h3 style="color: #f8fafc; font-size: 15px; margin-top: 0; margin-bottom: 12px;">🎪 Recomendación Estacional del Mánager</h3>
+          <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin: 0;">
+            Estamos en ventana activa de contratación de <strong>festivales de verano y cierres de salas</strong>. Se recomienda revisar las propuestas preparadas por la IA y enviar los emails de seguimiento correspondientes.
+          </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid #334155;">
+          <a href="${process.env.APP_URL || 'https://bandmanager.io'}" style="background-color: #f59e0b; color: #0f172a; font-weight: bold; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; display: inline-block;">Acceder a BandManager.io</a>
+        </div>
+      </div>
+    `;
+
+    const result = await sendTransactionalEmail({
+      to: recipientEmail,
+      subject: emailSubject,
+      html: htmlBody
+    });
+
+    return res.json({
+      success: true,
+      emailSent: result.success,
+      recipient: recipientEmail,
+      error: result.error
+    });
+  } catch (err: any) {
+    console.error("Error en /bands/trigger-alert-digest:", err);
+    return res.status(500).json({ error: err?.message || "Error al enviar el resumen por email" });
+  }
+});
+
 export default router;
+

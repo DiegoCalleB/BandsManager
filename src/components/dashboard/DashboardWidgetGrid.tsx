@@ -36,6 +36,10 @@ export interface DashboardWidgetGridProps {
   agendaFilterMode: 'active' | 'all';
   onSetAgendaFilterMode: (mode: 'active' | 'all') => void;
   onNavigate?: (view: string, options?: any) => void;
+  isEditMode?: boolean;
+  setIsEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
+  viewDensityMode?: 'clean' | 'full';
+  setViewDensityMode?: React.Dispatch<React.SetStateAction<'clean' | 'full'>>;
 }
 
 export function DashboardWidgetGrid({
@@ -52,9 +56,23 @@ export function DashboardWidgetGrid({
   isStitchLight = false,
   agendaFilterMode,
   onSetAgendaFilterMode,
-  onNavigate
+  onNavigate,
+  isEditMode: externalEditMode,
+  setIsEditMode: externalSetIsEditMode,
+  viewDensityMode: externalDensityMode,
+  setViewDensityMode: externalSetViewDensityMode
 }: DashboardWidgetGridProps) {
   const userPlan = currentUser?.plan;
+
+  // Internal fallback state if props not passed
+  const [internalDensityMode, setInternalDensityMode] = useState<'clean' | 'full'>('clean');
+  const [internalEditMode, setInternalEditMode] = useState(false);
+
+  const viewDensityMode = externalDensityMode ?? internalDensityMode;
+  const setViewDensityMode = externalSetViewDensityMode ?? setInternalDensityMode;
+
+  const isEditMode = externalEditMode ?? internalEditMode;
+  const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
 
   // Load saved widgets from user preferences or use default, filtering by module access
   const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as DashboardWidgetConfig[] | undefined;
@@ -70,7 +88,6 @@ export function DashboardWidgetGrid({
     });
   });
 
-  const [isEditMode, setIsEditMode] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [isSaving, setIsSaving] = useState(false);
@@ -294,7 +311,7 @@ export function DashboardWidgetGrid({
   };
 
   // Filter visible widgets sorted by order, enforcing module access
-  const visibleWidgets = widgets
+  const allVisibleWidgets = widgets
     .filter(w => {
       if (!w.visible) return false;
       const meta = AVAILABLE_MODULE_WIDGETS.find(m => m.type === w.type);
@@ -305,73 +322,72 @@ export function DashboardWidgetGrid({
     })
     .sort((a, b) => a.order - b.order);
 
+  // In clean view, limit to essential operational widgets (max 4 core widgets) to prevent information overload
+  const visibleWidgets = (viewDensityMode === 'clean' && !isEditMode)
+    ? allVisibleWidgets.filter(w => ['calendar', 'crm_pipeline', 'ai_agent_status', 'epk_status', 'repertorio_summary'].includes(w.type)).slice(0, 4)
+    : allVisibleWidgets;
+
   return (
     <div className="space-y-4 w-full">
-      {/* Top Customization Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#18181b]/95 border border-neutral-800 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
-            <LayoutGrid className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-neutral-100 uppercase tracking-wider">
-                Dashboard Configurable
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-                Arrastrar y Soltar
-              </span>
+      {/* Top Customization Bar - Only shown in edit mode */}
+      {isEditMode && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#18181b]/95 border border-amber-500/40 shadow-sm animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
+              <LayoutGrid className="w-5 h-5" />
             </div>
-            <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
-              {visibleWidgets.length} widgets activos • Se guardan automáticamente en tu perfil de Supabase
-            </p>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold text-neutral-100 uppercase tracking-wider">
+                  Edición del Dashboard
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
+                  Arrastrar y Reorganizar
+                </span>
+              </div>
+              <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
+                {visibleWidgets.length} de {allVisibleWidgets.length} módulos visibles
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {saveSuccessMsg && (
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 animate-fade-in">
+                <Check className="w-3.5 h-3.5" /> Guardado en BBDD
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setIsAddModalOpen(true)}
+              className="px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Añadir Widget</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleResetDefault}
+              className="px-2.5 py-2 rounded-xl bg-neutral-800 text-neutral-400 hover:text-neutral-200 border border-neutral-700 font-mono text-xs transition-all cursor-pointer flex items-center gap-1"
+              title="Restablecer disposición por defecto"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Por Defecto</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsEditMode(false)}
+              className="px-3.5 py-2 rounded-xl bg-amber-500 text-stone-950 font-mono text-xs font-bold shadow-md transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <Check className="w-4 h-4" />
+              <span>Finalizar Edición</span>
+            </button>
           </div>
         </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          {saveSuccessMsg && (
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 animate-fade-in">
-              <Check className="w-3.5 h-3.5" /> Guardado en BBDD
-            </span>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setIsEditMode(!isEditMode)}
-            className={`px-3.5 py-2 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              isEditMode
-                ? 'bg-amber-500 text-stone-950 shadow-md font-black ring-2 ring-amber-300'
-                : 'bg-neutral-800/90 text-neutral-200 hover:bg-neutral-700 hover:text-white border border-neutral-700/80'
-            }`}
-          >
-            <Settings className={`w-4 h-4 ${isEditMode ? 'animate-spin-slow text-stone-950' : 'text-amber-400'}`} />
-            <span>{isEditMode ? 'Finalizar Edición' : 'Personalizar Dashboard'}</span>
-          </button>
-
-          {isEditMode && (
-            <>
-              <button
-                type="button"
-                onClick={() => setIsAddModalOpen(true)}
-                className="px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Añadir Widget</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleResetDefault}
-                className="px-2.5 py-2 rounded-xl bg-neutral-800 text-neutral-400 hover:text-neutral-200 border border-neutral-700 font-mono text-xs transition-all cursor-pointer flex items-center gap-1"
-                title="Restablecer disposición por defecto"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Por Defecto</span>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Edit Mode Instructions Banner */}
       {isEditMode && (
