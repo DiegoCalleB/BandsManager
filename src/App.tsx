@@ -605,7 +605,16 @@ export default function App() {
  }, [openNavGroupIds]);
 
  const toggleNavGroup = (groupId: string) => {
- setOpenNavGroupIds(prev => ({ ...prev, [groupId]: !prev[groupId] }));
+ setOpenNavGroupIds(prev => {
+ // Si cierra un grupo abierto, solo toggle
+ if (prev[groupId]) {
+ const newState = { ...prev };
+ delete newState[groupId];
+ return newState;
+ }
+ // Si abre un grupo, cierra todos los demás (accordion)
+ return { [groupId]: true };
+ });
  };
 
  // Public Landing Routes
