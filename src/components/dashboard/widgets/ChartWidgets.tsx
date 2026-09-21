@@ -161,7 +161,6 @@ export function RepertorioEnergyChartWidget({
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
  {/* Album/Repertorio Selector - Above the chart */}
- {albums.length > 0 && (
  <div className="flex flex-col gap-2 pb-3 border-b border-[var(--hair)]">
  <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wide">
  Repertorio
@@ -173,13 +172,16 @@ export function RepertorioEnergyChartWidget({
  className="w-full bg-[var(--sunken)] text-[var(--ink)] text-xs font-medium rounded-[var(--r-s)] px-3 py-2 pr-8 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
  >
  <option value="all">Todos los álbumes</option>
- {albums.map(album => (
+ {albums.length > 0 ? (
+ albums.map(album => (
  <option key={album} value={album}>{album}</option>
- ))}
+ ))
+ ) : (
+ <option disabled>Sin álbumes asignados</option>
+ )}
  </select>
  </div>
  </div>
- )}
 
  {/* Header */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5">
