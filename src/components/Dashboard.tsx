@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from '../types';
+import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost, Setlist, Song } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { isSameBandId } from '../utils/bandUtils';
 import { api } from '../services/api';
@@ -49,6 +49,8 @@ interface DashboardProps {
  tours?: Tour[];
  fans?: Fan[];
  posts?: SocialPost[];
+ setlists?: Setlist[];
+ songs?: Song[];
  onNavigate?: (view: any, options?: NavigationOptions) => void;
  onOpenProfileModal?: () => void;
  isPromoPlan?: boolean;
@@ -133,21 +135,37 @@ export default function Dashboard({
  const [newNotas, setNewNotas] = useState('');
 
  const [songsCount, setSongsCount] = React.useState(0);
+ const [setlists, setSetlists] = React.useState<Setlist[]>([]);
+ const [songs, setSongs] = React.useState<Song[]>([]);
 
  React.useEffect(() => {
  let isMounted = true;
- const loadSongsCount = async () => {
+ const loadRepertorioData = async () => {
  try {
- const res = await api.getSongs();
- if (isMounted && res?.songs && Array.isArray(res.songs)) {
- setSongsCount(res.songs.length);
+ const [songsRes, setlistsRes] = await Promise.all([
+ api.getSongs(),
+ api.getSetlists()
+ ]);
+
+ if (isMounted) {
+ if (songsRes?.songs && Array.isArray(songsRes.songs)) {
+ setSongs(songsRes.songs);
+ setSongsCount(songsRes.songs.length);
+ }
+ if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
+ setSetlists(setlistsRes.setlists);
+ }
  }
  } catch (err) {
- console.error('Failed to load songs count:', err);
- if (isMounted) setSongsCount(0);
+ console.error('Failed to load repertorio data:', err);
+ if (isMounted) {
+ setSongsCount(0);
+ setSongs([]);
+ setSetlists([]);
+ }
  }
  };
- loadSongsCount();
+ loadRepertorioData();
  return () => { isMounted = false; };
  }, [currentBandId]);
 
@@ -765,6 +783,8 @@ export default function Dashboard({
  tours={tours}
  fans={fans}
  posts={posts}
+ setlists={setlists}
+ songs={songs}
  epkConfig={epkConfig}
  activeBandName={activeBandName}
  colors={colors}

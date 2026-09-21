@@ -4,19 +4,19 @@ import {
  Eye, Check, Calendar, Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, LayoutGrid, X,
  GripVertical, Zap, TrendingUp, Info, Smartphone, Monitor
 } from 'lucide-react';
-import { 
- DashboardWidgetConfig, DEFAULT_DASHBOARD_WIDGETS, AVAILABLE_MODULE_WIDGETS, 
- WidgetType 
+import {
+ DashboardWidgetConfig, DEFAULT_DASHBOARD_WIDGETS, AVAILABLE_MODULE_WIDGETS,
+ WidgetType
 } from '../../types/dashboardWidgets';
 import { CalendarWidget } from './widgets/CalendarWidget';
-import { 
- CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget, 
- EpkStatusWidget, AiAgentWidget, TourStatusWidget 
+import {
+ CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget,
+ EpkStatusWidget, AiAgentWidget, TourStatusWidget
 } from './widgets/ModuleWidgets';
-import { 
- RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget 
+import {
+ RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget
 } from './widgets/ChartWidgets';
-import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../types';
+import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors, Setlist, Song } from '../../types';
 import { api } from '../../services/api';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
@@ -29,6 +29,8 @@ export interface DashboardWidgetGridProps {
  tours?: Tour[];
  fans?: Fan[];
  posts?: SocialPost[];
+ setlists?: Setlist[];
+ songs?: Song[];
  epkConfig?: Partial<EPKConfig>;
  activeBandName?: string;
  colors: ThemeColors;
@@ -45,6 +47,8 @@ export function DashboardWidgetGrid({
  tours = [],
  fans = [],
  posts = [],
+ setlists = [],
+ songs = [],
  epkConfig,
  activeBandName,
  colors,
@@ -264,7 +268,7 @@ export function DashboardWidgetGrid({
  />
  );
  case'repertorio_energy':
- return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} />;
+ return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} setlists={setlists} songs={songs} />;
  case'crm_pipeline':
  return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} />;
  case'booking_funnel_chart':
