@@ -4300,6 +4300,7 @@ export default function RepertorioSetlists({
 
  {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
  <div className="rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden bg-[var(--surface)] text-[var(--ink-2)]">
+ <div className="p-4 border-b border-[var(--sunken)]">
  <div className="flex items-center gap-2.5 min-w-0">
  <input
  type="checkbox"
@@ -4322,12 +4323,13 @@ export default function RepertorioSetlists({
  </span>
  </div>
 
- <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-2)]">
+ <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-2)] mt-3">
  <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] font-medium">Acordes</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)]/50 font-medium">Studio</span>
  <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">Notas</span>
  <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] font-medium">Editar</span>
+ </div>
  </div>
  </div>
 
