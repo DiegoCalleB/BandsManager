@@ -53,17 +53,22 @@ router.put("/metrics/:id", requireAuth, async (req, res) => {
 
 // Delete metric record
 router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
-  const { id } = req.params;
-  await dbDeleteSocialMetric(id, userBandId);
+  try {
+    const userBandId = (req as any).user?.band_id ;
+    const { id } = req.params;
+    await dbDeleteSocialMetric(id, userBandId);
 
-  const state = loadState();
-  const idx = state.metrics.findIndex((m: SocialMetric) => m.id === id);
-  if (idx !== -1) {
-    state.metrics.splice(idx, 1);
-    saveState(state);
+    const state = loadState();
+    const idx = state.metrics.findIndex((m: SocialMetric) => m.id === id);
+    if (idx !== -1) {
+      state.metrics.splice(idx, 1);
+      saveState(state);
+    }
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error('[API ERROR] DELETE /api/metrics/:id:', error);
+    res.status(500).json({ error: error.message || 'Error al eliminar la métrica' });
   }
-  res.json({ success: true });
 });
 
 // Sync all metrics with Supabase
