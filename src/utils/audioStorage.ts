@@ -548,9 +548,9 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
  });
  const key = `band_songs_${clean || 'default'}`;
  localStorage.setItem(key, JSON.stringify(finalSongs));
- if (isBakandeya || !clean) {
- localStorage.setItem('bakandeya_songs_catalog', JSON.stringify(sanitizedSongs));
- }
+ // NOTE: Removed bakandeya_songs_catalog setItem() to ensure multi-tenant data isolation.
+ // Band data is persisted to Supabase API (band_id validated server-side), not localStorage.
+ // React state is the source of truth; band-scoped localStorage is an anti-pattern.
  } catch (e) {
  console.warn('Could not save songs catalog to localStorage:', e);
  }
@@ -600,9 +600,8 @@ export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?:
  });
  const key = `band_setlists_${clean || 'default'}`;
  localStorage.setItem(key, JSON.stringify(finalSetlists));
- if (isBakandeya || !clean) {
- localStorage.setItem('bakandeya_setlists', JSON.stringify(sanitizedSetlists));
- }
+ // NOTE: Removed bakandeya_setlists setItem() for multi-tenant safety.
+ // Setlist data is persisted to Supabase API (band_id validated), not localStorage.
  } catch (e) {
  console.warn('Could not save setlists to localStorage:', e);
  }

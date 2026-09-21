@@ -796,9 +796,8 @@ export default function CalendarView({
  const saveRoadbook = (dateKey: string, info: RoadbookInfo) => {
  const updated = { ...allRoadbooks, [dateKey]: info };
  setAllRoadbooks(updated);
- try {
- localStorage.setItem('bakandeya_roadbooks', JSON.stringify(updated));
- } catch {}
+ // NOTE: Removed localStorage persistence. Roadbooks are session-local state.
+ // For persistence: use API with band_id validation instead.
  };
 
  const getCurrentRoadbook = (dateKey: string, concert?: Concert | null): RoadbookInfo => {
@@ -1239,9 +1238,7 @@ export default function CalendarView({
  const list = Array.isArray(data) ? data : (data?.setlists || []);
  if (list && list.length > 0) {
  setAvailableSetlists(list);
- try {
- localStorage.setItem('bakandeya_setlists_data', JSON.stringify(list));
- } catch (e) {}
+ // NOTE: Removed localStorage setItem for band data (setlists). React state is source of truth.
  }
  })
  .catch(() => {});
@@ -1252,9 +1249,7 @@ export default function CalendarView({
  const songsList = Array.isArray(res) ? res : (res?.songs || []);
  if (songsList && songsList.length > 0) {
  setAvailableSongs(songsList);
- try {
- localStorage.setItem('bakandeya_songs_data', JSON.stringify(songsList));
- } catch (e) {}
+ // NOTE: Removed localStorage setItem for band data (songs). React state is source of truth.
  }
  })
  .catch(() => {});
@@ -1832,23 +1827,8 @@ export default function CalendarView({
  ]
  };
 
- const [allRunOfShow, setAllRunOfShow] = useState<Record<string, RunOfShowItem[]>>(() => {
- try {
- const saved = localStorage.getItem('bakandeya_run_of_show');
- return saved ? JSON.parse(saved) : defaultInitialRunOfShow;
- } catch {
- return defaultInitialRunOfShow;
- }
- });
-
- const [allGear, setAllGear] = useState<Record<string, GearItem[]>>(() => {
- try {
- const saved = localStorage.getItem('bakandeya_gear_checklists');
- return saved ? JSON.parse(saved) : defaultInitialGear;
- } catch {
- return defaultInitialGear;
- }
- });
+ const [allRunOfShow, setAllRunOfShow] = useState<Record<string, RunOfShowItem[]>>(defaultInitialRunOfShow);
+ const [allGear, setAllGear] = useState<Record<string, GearItem[]>>(defaultInitialGear);
 
  // Fetch server logistics state on mount
  useEffect(() => {
@@ -1894,21 +1874,10 @@ export default function CalendarView({
  const [newRunActivity, setNewRunActivity] = useState('');
  const [newGearLabel, setNewGearLabel] = useState('');
 
- useEffect(() => {
- try {
- localStorage.setItem('bakandeya_run_of_show', JSON.stringify(allRunOfShow));
- } catch (e) {
- console.error(e);
- }
- }, [allRunOfShow]);
-
- useEffect(() => {
- try {
- localStorage.setItem('bakandeya_gear_checklists', JSON.stringify(allGear));
- } catch (e) {
- console.error(e);
- }
- }, [allGear]);
+ // NOTE: Removed localStorage persistence of run_of_show and gear_checklists.
+ // These are now session-local state (reset on band change or page reload).
+ // For persistence: aggregate to Supabase with band_id validation via API.
+ // Storing band data in localStorage without band_id scope violates multi-tenancy.
 
  // Current items for the selected day
  const currentRunOfShow = allRunOfShow[selectedDateKey] || [
