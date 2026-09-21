@@ -40,7 +40,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
  onClose,
  leads,
  onUpdateLead,
- onDeleteLead= false
+ onDeleteLead
 }) => {
  const [selectedFilter, setSelectedFilter] = useState<string>('all');
  const [isProcessing, setIsProcessing] = useState(false);

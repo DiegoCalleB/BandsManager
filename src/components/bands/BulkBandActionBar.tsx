@@ -39,7 +39,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  onBulkGeneratePitch,
  onBulkToggleFavorite,
  onBulkExportCsv,
- onBulkDelete= false}) => {
+ onBulkDelete }) => {
  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
@@ -51,7 +51,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  <div 
  id="bulk-band-action-bar"
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-all animate-slide-up ${
-' bg-[var(--surface)]/95/50 text-[var(--ink)] shadow-black/80'
+'bg-[var(--surface)]/95/50 text-[var(--ink)] shadow-black/80'
  }`}
  >
  <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
@@ -63,7 +63,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAll}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer shrink-0 ${
-' hover:bg-[var(--surface)] text-[var(--acc)]'
+'hover:bg-[var(--surface)] text-[var(--acc)]'
  }`}
  title={isAllSelected ?'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} bandas`}
  >
@@ -173,7 +173,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={onBulkGeneratePitch}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-' bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800/50 text-[var(--acc)]/40'
+'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800/50 text-[var(--acc)]/40'
  }`}
  title="Redactar propuestas de intercambio (Date Swaps) con IA"
  >
@@ -187,7 +187,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
  type="button"
  onClick={() => onBulkToggleFavorite(true)}
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
-' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60700 text-[var(--acc)]/70'
+'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60700 text-[var(--acc)]/70'
  }`}
  title="Marcar bandas como favoritas"
  >

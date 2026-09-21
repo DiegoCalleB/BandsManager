@@ -27,7 +27,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  }`}>
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${
-' bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20'
+'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/20'
  }`}>
  <Type className="w-5 h-5" />
  </div>
@@ -73,7 +73,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  onClick={() => onSelectFont(preset.id)}
  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer relative group ${
  isSelected
- ?' bg-[var(--acc)]/10 ring-2 ring-amber-0/20'
+ ? 'bg-[var(--acc)]/10 ring-2 ring-amber-0/20'
  : 'bg-[var(--bg)] hover:-neutral-300 hover:bg-[var(--sunken)]/80'
  }`}
  >
@@ -101,7 +101,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <div className="flex items-center gap-2">
  {isSelected && (
  <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
-' bg-[var(--acc)] text-[var(--on-acc)]'
+'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}>
  <Check className="w-3.5 h-3.5 stroke-[3]" />
  </span>
@@ -142,7 +142,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  <button
  onClick={onClose}
  className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer ${
-' bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
+'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
  }`}
  >
  Aceptar & Cerrar

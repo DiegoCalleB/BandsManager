@@ -81,7 +81,7 @@ export function ExcelImportModal({
  isOpen,
  onClose,
  onSuccess,
- existingLeads= false
+ existingLeads
 }: ExcelImportModalProps) {
  // Step state: 1 = Upload, 2 = Map Columns, 3 = Preview & Validate, 4 = Result / Enriching
  const [step, setStep] = useState<1 | 2 | 3>(1);

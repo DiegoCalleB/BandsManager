@@ -18,8 +18,8 @@ describe('estrategiaDe', () => {
   });
 
   it('un concierto busca la reacción del público; un videoclip busca el estribillo', () => {
-    expect(estrategiaDe('concierto').queBuscar.join(' ')).toMatch(/público/i);
-    expect(estrategiaDe('videoclip').queBuscar.join(' ')).toMatch(/estribillo/i);
+    expect(estrategiaDe('concierto').queBuscar.join( '')).toMatch(/público/i);
+    expect(estrategiaDe('videoclip').queBuscar.join( '')).toMatch(/estribillo/i);
   });
 });
 

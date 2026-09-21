@@ -1,21 +1,21 @@
-import { useState, FormEvent } from' react';
-import { Lead, InteractionLog } from' ../types';
+import { useState, FormEvent } from 'react';
+import { Lead, InteractionLog } from '../types';
 
 export function useInteractionLog(
  selectedLead: Lead | null,
  setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,
  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void
 ) {
- const [interactionType, setInteractionType] = useState<'Llamada' |' WhatsApp' |' Email' |' Reunión' |' Otro'>('Llamada');
+ const [interactionType, setInteractionType] = useState<'Llamada' | 'WhatsApp' | 'Email' | 'Reunión' | 'Otro'>('Llamada');
  const [interactionNotes, setInteractionNotes] = useState<string>('');
- const [interactionResultado, setInteractionResultado] = useState<'Interesado' |' Enviar propuesta' |' Seguimiento pendiente' |' Rechazado' |' Info recibida' |' Acuerdo cerrado'>('Seguimiento pendiente');
+ const [interactionResultado, setInteractionResultado] = useState<'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado'>('Seguimiento pendiente');
  const [interactionAutor, setInteractionAutor] = useState<string>('Mánager / Booking');
 
  const handleAddInteractionLog = (e: FormEvent) => {
  e.preventDefault();
  if (!selectedLead || !interactionNotes.trim()) return;
 
- const nowStr = new Date().toISOString().replace('T',' ' ).slice(0, 16);
+ const nowStr = new Date().toISOString().replace('T', '' ).slice(0, 16);
  const newLog: InteractionLog = {
  id: `log-${Date.now()}`,
  fecha: nowStr,
@@ -29,12 +29,12 @@ export function useInteractionLog(
  const updatedLogs = [newLog, ...existingLogs];
 
  let newStatus = selectedLead.estado;
- if (interactionResultado ===' Interesado' && selectedLead.estado !==' interesado') {
- newStatus =' interesado';
- } else if (interactionResultado ===' Acuerdo cerrado' && selectedLead.estado !==' negociando') {
- newStatus =' negociando';
- } else if (interactionResultado ===' Rechazado' && selectedLead.estado !==' no_interesado') {
- newStatus =' no_interesado';
+ if (interactionResultado === 'Interesado' && selectedLead.estado !== 'interesado') {
+ newStatus = 'interesado';
+ } else if (interactionResultado === 'Acuerdo cerrado' && selectedLead.estado !== 'negociando') {
+ newStatus = 'negociando';
+ } else if (interactionResultado === 'Rechazado' && selectedLead.estado !== 'no_interesado') {
+ newStatus = 'no_interesado';
  }
 
  onUpdateLead(selectedLead.id, {

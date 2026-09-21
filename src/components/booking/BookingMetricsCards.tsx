@@ -19,7 +19,6 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  className="p-5 rounded-[var(--r-l)] transition-all"
  style={{
  backgroundColor: colors.card,
- borderColor: colors.border,
  }}
  >
  <div className="flex items-center justify-between mb-2">
@@ -41,7 +40,6 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  className="p-5 rounded-[var(--r-l)] transition-all"
  style={{
  backgroundColor: colors.card,
- borderColor: colors.border,
  }}
  >
  <div className="flex items-center justify-between mb-2">
@@ -65,7 +63,6 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  className="p-5 rounded-[var(--r-l)] transition-all"
  style={{
  backgroundColor: colors.card,
- borderColor: colors.border,
  }}
  >
  <div className="flex items-center justify-between mb-2">
@@ -87,7 +84,6 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
  className="p-5 rounded-[var(--r-l)] transition-all"
  style={{
  backgroundColor: colors.card,
- borderColor: colors.border,
  }}
  >
  <div className="flex items-center justify-between mb-2">

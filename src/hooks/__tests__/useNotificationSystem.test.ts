@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from' vitest';
-import { useNotificationSystem, ToastNotification } from' ../useNotificationSystem';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useNotificationSystem, ToastNotification } from '../useNotificationSystem';
 
 describe('useNotificationSystem logic', () => {
  it('creates notification objects correctly with required fields', () => {
- const notifyType: ToastNotification['type'] =' success';
- const title =' Test Title';
- const message =' Test Message';
+ const notifyType: ToastNotification['type'] = 'success';
+ const title = 'Test Title';
+ const message = 'Test Message';
 
  const toast: ToastNotification = {
  id: `toast-123`,

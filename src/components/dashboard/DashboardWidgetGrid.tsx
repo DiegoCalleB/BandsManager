@@ -47,7 +47,7 @@ export function DashboardWidgetGrid({
  posts = [],
  epkConfig,
  activeBandName,
- colors= false,
+ colors,
  agendaFilterMode,
  onSetAgendaFilterMode,
  onNavigate

@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo, FormEvent, MouseEvent } from' react';
-import { Lead, EPKConfig } from' ../types';
-import { normalizeType } from' ../utils/bookingUtils';
+import { useState, useEffect, useMemo, FormEvent, MouseEvent } from 'react';
+import { Lead, EPKConfig } from '../types';
+import { normalizeType } from '../utils/bookingUtils';
 
 export function useCityChips(
  leads: Lead[],
- sectionTab:' salas' |' medios' |' grupos',
+ sectionTab: 'salas' | 'medios' | 'grupos',
  epkConfig: Partial<EPKConfig> | undefined,
  onUpdateEpkConfig: ((newConfig: Partial<EPKConfig>) => void) | undefined,
  selectedCityFilter: string,
@@ -16,9 +16,9 @@ export function useCityChips(
  }
  try {
  const saved = localStorage.getItem('bakandeya_custom_cities');
- return saved ? JSON.parse(saved) : ['Madrid',' Sevilla',' Barcelona',' Málaga',' Valencia',' Granada',' Cádiz'];
+ return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
  } catch {
- return ['Madrid',' Sevilla',' Barcelona',' Málaga',' Valencia',' Granada',' Cádiz'];
+ return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
  }
  });
 
@@ -33,13 +33,13 @@ export function useCityChips(
 
  // Dynamically extract top cities present in active leads
  const activeLeadsForSection = useMemo(() => {
- return leads.filter(l => sectionTab ===' medios' ? normalizeType(l.tipo) ===' medio' : normalizeType(l.tipo) !==' medio');
+ return leads.filter(l => sectionTab === 'medios' ? normalizeType(l.tipo) === 'medio' : normalizeType(l.tipo) !== 'medio');
  }, [leads, sectionTab]);
 
  const cityCounts = useMemo(() => {
  const counts: Record<string, number> = {};
  activeLeadsForSection.forEach(l => {
- const cityRaw = (l.ciudad ||' ').trim();
+ const cityRaw = (l.ciudad || '').trim();
  if (cityRaw) {
  const mainCity = cityRaw.split(/[\(\-\/]/)[0].trim();
  if (mainCity) {

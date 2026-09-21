@@ -788,7 +788,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  </div>
 
  <div className="col-span-2 text-center">
- <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-sans font-bold ${typeConfig.text} ${typeConfig.border}`}>
+ <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-sans font-bold ${typeConfig.text}`}>
  {typeConfig.label}
  </span>
  </div>

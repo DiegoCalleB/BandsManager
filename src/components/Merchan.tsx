@@ -575,7 +575,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  ?'opacity-70 cursor-not-allowed'
  :'hover:scale-[1.01]'
  } ${
-' bg-gradient-to-br from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)]/10'
+'bg-gradient-to-br from-[var(--acc)] to-[var(--acc-soft)] text-[var(--ink)]/10'
  }`}
  >
  {isGenerating ? (
@@ -607,7 +607,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  {generatedDesigns.length === 0 && !isGenerating ? (
  <div className="h-full flex flex-col items-center justify-center gap-4 text-center p-10">
  <div className={`w-20 h-20 rounded-full flex items-center justify-center ${
- ' bg-[var(--bg)] text-[var(--ink-2)]'
+ 'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}>
  <ImageIcon className="w-8 h-8" />
  </div>
@@ -692,7 +692,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
  link.click();
  }}
  className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-2 transition ${
-' bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--surface)]'
+'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--surface)]'
  }`}
  >
  <Download className="w-4 h-4" />

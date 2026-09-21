@@ -15,7 +15,7 @@ import path from 'path';
  * En vez de fijar ese comportamiento con un test por función (que no protege ningún fichero
  * nuevo ni ya existente que no se haya tocado todavía), este test escanea el código fuente:
  * ninguna llamada a cleanBandId() puede tener como argumento un campo de un objeto seguido de
- * '||' — la única entrada válida es la variable de sesión sola. Server/db/users.ts queda fuera
+ * '|| '— la única entrada válida es la variable de sesión sola. Server/db/users.ts queda fuera
  * a propósito: dbUpsertUser/dbUpsertUserBand no reciben un segundo 'bandId' de sesión con el que
  * comparar (el band_id ES el dato que gestionan), así que no es el mismo patrón y necesita su
  * propia revisión de autorización en server/routes/users.ts, no este barrido mecánico.

@@ -1,6 +1,6 @@
-import { useState, useMemo } from' react';
-import { Lead } from' ../types';
-import { calculateBookingMetrics, filterLeads, calculateLeadScore } from' ../utils/bookingUtils';
+import { useState, useMemo } from 'react';
+import { Lead } from '../types';
+import { calculateBookingMetrics, filterLeads, calculateLeadScore } from '../utils/bookingUtils';
 
 export function useBookingPipeline(leads: Lead[]) {
  const [searchQuery, setSearchQuery] = useState('');

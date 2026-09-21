@@ -387,7 +387,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${
- ' bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  {onCreateAlbum && (
  <button
@@ -601,7 +601,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <div
  key={album}
  className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${
- ' bg-[var(--bg)]'
+ 'bg-[var(--bg)]'
  }`}
  >
  {/* Compact Album Header Bar */}
@@ -696,7 +696,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  setExportModalData({ isOpen: true, albumName: album });
  }}
  className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
-' bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
+'bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'
  }`}
  title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
  >
@@ -830,7 +830,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto" />
  <div className="space-y-2">
  <p className="text-sm font-semibold text-[var(--ink)]">
- {cleanSearchQuery ?' No encontramos coincidencias' :' La discografía está vacía'}
+ {cleanSearchQuery ? 'No encontramos coincidencias' : 'La discografía está vacía'}
  </p>
  <p className="text-xs text-[var(--ink-2)] max-w-sm mx-auto">
  {cleanSearchQuery

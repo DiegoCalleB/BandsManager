@@ -206,9 +206,9 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  <YAxis domain={[0, 20]} hide />
  <XAxis dataKey="num" hide />
  <Tooltip
- contentStyle={{ background:'var(--surface)', borderRadius:' var(--r-m)', fontSize: 11 }}
+ contentStyle={{ background:'var(--surface)', borderRadius: 'var(--r-m)', fontSize: 11 }}
  labelFormatter={(num) => chartData.find(d => d.num === num)?.title || `Tema ${num}`}
- formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ??' '} BPM`,' Energía']}
+ formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ?? ''} BPM`, 'Energía']}
  />
  <Area
  type="monotone"
@@ -221,9 +221,9 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  dot={(dotProps: any) => {
  const { cx, cy, payload } = dotProps;
  if (cx == null || cy == null) return <React.Fragment key={`d-${payload?.num}`} />;
- return <circle key={`d-${payload?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={payload?.hexColor ||' var(--acc)'} />;
+ return <circle key={`d-${payload?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={payload?.hexColor || 'var(--acc)'} />;
  }}
- activeDot={{ r: 6, strokeWidth: 2, stroke:' var(--surface)' }}
+ activeDot={{ r: 6, strokeWidth: 2, stroke: 'var(--surface)' }}
  />
  </AreaChart>
  </ResponsiveContainer>
@@ -296,9 +296,9 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  value: d.count,
  color: d.color
  }))}
- height={heightMode ===' compact' ? 140 : heightMode ===' tall' ? 300 : 200}
- barWidth={heightMode ===' compact' ? 12 : heightMode ===' tall' ? 18 : 14}
- gap={heightMode ===' compact' ? 6 : heightMode ===' tall' ? 10 : 8}
+ height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
+ barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
+ gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
  showLabels={true}
  animated={true}
  tooltipFormatter={(val) => {
@@ -451,11 +451,11 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  data={growthData.map((d) => ({
  label: d.mes,
  value: d.fans,
- color:' var(--acc)'
+ color: 'var(--acc)'
  }))}
- height={heightMode ===' compact' ? 140 : heightMode ===' tall' ? 300 : 200}
- barWidth={heightMode ===' compact' ? 12 : heightMode ===' tall' ? 18 : 14}
- gap={heightMode ===' compact' ? 6 : heightMode ===' tall' ? 10 : 8}
+ height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
+ barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
+ gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
  showLabels={true}
  animated={true}
  tooltipFormatter={(val) => `${val} fans acumulados`}

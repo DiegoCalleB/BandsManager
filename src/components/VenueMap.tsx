@@ -164,7 +164,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  leads,
  selectedLead,
  onSelectLead,
- onUpdateLead= false,
+ onUpdateLead,
  activeCityFilter ='',
  activeRegionFilter =''
 }) => {
@@ -213,18 +213,18 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  iconCreateFunction: (cluster: any) => {
  const count = cluster.getChildCount();
  let size = 38;
- let bgColor =' var(--acc)';
+ let bgColor = 'var(--acc)';
  let textColor = '#ffffff';
  let ringColor = 'rgba(79, 70, 229, 0.25)';
 
  if (count >= 20) {
  size = 48;
- bgColor =' var(--acc)';
+ bgColor = 'var(--acc)';
  textColor ='#ffffff';
  ringColor ='rgba(67, 56, 202, 0.35)';
  } else if (count >= 8) {
  size = 42;
- bgColor =' var(--acc)';
+ bgColor = 'var(--acc)';
  textColor ='#ffffff';
  ringColor ='rgba(59, 130, 246, 0.3)';
  }
@@ -700,7 +700,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  <div className="pointer-events-auto flex items-center gap-2 relative">
  {isGeocoding && (
  <div className={`px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center gap-1.5 ${
-' bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'
+'bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'
  }`}>
  <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
  <span>Geolocalizando salas...</span>

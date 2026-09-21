@@ -1,16 +1,16 @@
-import { Lead } from' ../types';
+import { Lead } from '../types';
 
 /**
  * Normaliza un texto para comparaciones insensibles a mayúsculas, diacríticos y puntuación.
  */
 export function normalizeText(str?: string | null): string {
- if (!str) return' ';
+ if (!str) return '';
  return str
  .toLowerCase()
  .normalize('NFD')
- .replace(/[\u0300-\u036f]/g,' ') // Elimina tildes
- .replace(/[^a-z0-9\s]/g,' ' ) // Convierte puntuación a espacios
- .replace(/\s+/g,' ' )
+ .replace(/[\u0300-\u036f]/g, '') // Elimina tildes
+ .replace(/[^a-z0-9\s]/g, '' ) // Convierte puntuación a espacios
+ .replace(/\s+/g, '' )
  .trim();
 }
 
@@ -19,22 +19,22 @@ export function normalizeText(str?: string | null): string {
  * (ej: "Sala El Sol" vs "El Sol", "Teatro Eslava" vs "Eslava").
  */
 const VENUE_PREFIXES = [
-' sala',
-' teatro',
-' club',
-' disco',
-' discoteca',
-' pub',
-' cafe',
-' bar',
-' espacio cultural',
-' espacio',
-' centro cultural',
-' asociacion cultural',
-' asociacion',
-' festival',
-' auditorio',
-' auditorio municipal'
+'sala',
+'teatro',
+'club',
+'disco',
+'discoteca',
+'pub',
+'cafe',
+'bar',
+'espacio cultural',
+'espacio',
+'centro cultural',
+'asociacion cultural',
+'asociacion',
+'festival',
+'auditorio',
+'auditorio municipal'
 ];
 
 /**
@@ -42,10 +42,10 @@ const VENUE_PREFIXES = [
  */
 export function normalizeVenueName(name?: string | null): string {
  let normalized = normalizeText(name);
- if (!normalized) return' ';
+ if (!normalized) return '';
 
  for (const prefix of VENUE_PREFIXES) {
- if (normalized.startsWith(prefix +' ' )) {
+ if (normalized.startsWith(prefix +'' )) {
  normalized = normalized.slice(prefix.length).trim();
  break;
  }
@@ -57,7 +57,7 @@ export function normalizeVenueName(name?: string | null): string {
  * Normaliza un email para comparación exacta.
  */
 export function normalizeEmail(email?: string | null): string {
- if (!email) return' ';
+ if (!email) return '';
  return email.toLowerCase().trim();
 }
 
@@ -65,14 +65,14 @@ export function normalizeEmail(email?: string | null): string {
  * Normaliza una URL web o perfil de Instagram (elimina protocolo, subdominios comunes y slashes finales).
  */
 export function normalizeWebOrHandle(val?: string | null): string {
- if (!val) return' ';
+ if (!val) return '';
  return val
  .toLowerCase()
- .replace(/^https?:\/\//i,' ')
- .replace(/^www\./i,' ')
- .replace(/instagram\.com\//i,' ')
- .replace(/^@/,' ')
- .replace(/\/+$/,' ')
+ .replace(/^https?:\/\//i, '')
+ .replace(/^www\./i, '')
+ .replace(/instagram\.com\//i, '')
+ .replace(/^@/, '')
+ .replace(/\/+$/, '')
  .trim();
 }
 
@@ -121,12 +121,12 @@ export function stringSimilarity(a: string, b: string): number {
 }
 
 export type DuplicateMatchReason = 
- |' same_email'
- |' same_name_and_city'
- |' exact_name'
- |' similar_name_same_city'
- |' same_website'
- |' same_instagram';
+ | 'same_email'
+ | 'same_name_and_city'
+ | 'exact_name'
+ | 'similar_name_same_city'
+ | 'same_website'
+ | 'same_instagram';
 
 export interface DuplicateGroup {
  id: string;
@@ -162,7 +162,7 @@ export function calculateLeadCompletenessScore(lead: Lead): number {
  let score = 0;
 
  // Peso por estado CRM
- score += CRM_STATUS_WEIGHT[lead.estado ||' nuevo'] || 10;
+ score += CRM_STATUS_WEIGHT[lead.estado || 'nuevo'] || 10;
 
  // Campos de contacto esenciales
  if (lead.email_contacto && lead.email_contacto.trim().length > 3) score += 20;
@@ -208,7 +208,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
  );
  groups.push({
  id: `dup-email-${email}`,
- matchReason:' same_email',
+ matchReason: 'same_email',
  matchReasonLabel: `Mismo correo electrónico (${email})`,
  confidence: 100,
  leads: matchedLeads,
@@ -252,8 +252,8 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
  );
  groups.push({
  id: `dup-namecity-${key}`,
- matchReason:' same_name_and_city',
- matchReasonLabel: `Mismo nombre y ciudad ("${cleanName}" en ${cleanCity ||' España'})`,
+ matchReason: 'same_name_and_city',
+ matchReasonLabel: `Mismo nombre y ciudad ("${cleanName}" en ${cleanCity || 'España'})`,
  confidence: 95,
  leads: matchedLeads,
  suggestedKeepId: sortedByScore[0].id
@@ -280,7 +280,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
  }
 
  cityGroups.forEach((cityLeads, city) => {
- if (cityLeads.length < 2 || cityLeads.length > 300) return; // evitar coste excesivo si ciudad es genérica como' espana'
+ if (cityLeads.length < 2 || cityLeads.length > 300) return; // evitar coste excesivo si ciudad es genérica como'espana'
  for (let i = 0; i < cityLeads.length; i++) {
  const a = cityLeads[i];
  const normA = normalizeVenueName(a.nombre_sala);
@@ -301,7 +301,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
  const sorted = [a, b].sort((x, y) => calculateLeadCompletenessScore(y) - calculateLeadCompletenessScore(x));
  groups.push({
  id: `dup-sim-${a.id}-${b.id}`,
- matchReason:' similar_name_same_city',
+ matchReason: 'similar_name_same_city',
  matchReasonLabel: `Nombres muy similares en ${city} (${Math.round(sim * 100)}% de coincidencia)`,
  confidence: Math.round(sim * 100),
  leads: [a, b],
@@ -314,11 +314,11 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
 
  // 4. Mismo Website o Instagram (si no es vacío ni dominio genérico)
  const webMap = new Map<string, Lead[]>();
- const IGNORED_DOMAINS = ['facebook.com',' instagram.com',' linktr.ee',' google.com',' youtube.com',' twitter.com',' x.com'];
+ const IGNORED_DOMAINS = ['facebook.com', 'instagram.com', 'linktr.ee', 'google.com', 'youtube.com', 'twitter.com', 'x.com'];
 
  for (const lead of leads) {
  const normWeb = normalizeWebOrHandle(lead.website);
- if (normWeb && normWeb.length > 5 && !IGNORED_DOMAINS.some(d => normWeb === d || normWeb === d +' /')) {
+ if (normWeb && normWeb.length > 5 && !IGNORED_DOMAINS.some(d => normWeb === d || normWeb === d +'/')) {
  if (!webMap.has(normWeb)) webMap.set(normWeb, []);
  webMap.get(normWeb)!.push(lead);
  }
@@ -334,7 +334,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
  const sorted = [...matchedLeads].sort((x, y) => calculateLeadCompletenessScore(y) - calculateLeadCompletenessScore(x));
  groups.push({
  id: `dup-web-${normWeb}`,
- matchReason:' same_website',
+ matchReason: 'same_website',
  matchReasonLabel: `Mismo sitio web (${normWeb})`,
  confidence: 90,
  leads: matchedLeads,
@@ -401,15 +401,15 @@ export function mergeTwoLeads(primary: Lead, secondary: Lead): Lead {
  }
 
  // Conservar estado CRM más avanzado si el secundario está más adelante
- const primaryScore = CRM_STATUS_WEIGHT[primary.estado ||' nuevo'] || 10;
- const secondaryScore = CRM_STATUS_WEIGHT[secondary.estado ||' nuevo'] || 10;
+ const primaryScore = CRM_STATUS_WEIGHT[primary.estado || 'nuevo'] || 10;
+ const secondaryScore = CRM_STATUS_WEIGHT[secondary.estado || 'nuevo'] || 10;
  if (secondaryScore > primaryScore) {
  merged.estado = secondary.estado;
  }
 
  // Combinar notas si ambas existen y difieren
- const primaryNotes = (primary.notas ||' ').trim();
- const secondaryNotes = (secondary.notas ||' ').trim();
+ const primaryNotes = (primary.notas || '').trim();
+ const secondaryNotes = (secondary.notas || '').trim();
  if (secondaryNotes && !primaryNotes.includes(secondaryNotes)) {
  merged.notas = primaryNotes ? `${primaryNotes}\n\n[Fusionado de ${secondary.nombre_sala}]: ${secondaryNotes}` : secondaryNotes;
  }
@@ -449,11 +449,11 @@ export function checkSingleLeadDuplicate(
  const exName = normalizeVenueName(existing.nombre_sala);
  const exCity = normalizeText(existing.ciudad);
  if (normName.length >= 3 && exName === normName) {
- if (!normCity || !exCity || normCity === exCity || normCity ===' espana' || exCity ===' espana') {
+ if (!normCity || !exCity || normCity === exCity || normCity === 'espana' || exCity === 'espana') {
  return {
  isDuplicate: true,
  matchedLead: existing,
- reason: `Misma sala en ${existing.ciudad ||' España'}`
+ reason: `Misma sala en ${existing.ciudad || 'España'}`
  };
  }
  }

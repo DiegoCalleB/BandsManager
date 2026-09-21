@@ -76,7 +76,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
  isOpen,
  onClose,
  lead,
- onSelectProposal= false,
+ onSelectProposal,
  activeCampaign
 }) => {
  const [providers, setProviders] = useState<AIProviderInfo[]>([]);

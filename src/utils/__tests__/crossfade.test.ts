@@ -1,5 +1,5 @@
-import { describe, it, expect } from' vitest';
-import { CROSSFADE_SECONDS, computeCrossfadeGains, getCrossfadeStartTime, shouldCrossfade } from' ../crossfade';
+import { describe, it, expect } from 'vitest';
+import { CROSSFADE_SECONDS, computeCrossfadeGains, getCrossfadeStartTime, shouldCrossfade } from '../crossfade';
 
 describe('crossfade', () => {
  it('computeCrossfadeGains empieza en la pista de origen a máximo volumen y la de destino en silencio', () => {

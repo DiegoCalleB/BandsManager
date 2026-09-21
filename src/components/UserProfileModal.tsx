@@ -601,7 +601,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  {/* Creation Form Accordion */}
  {showCreateBandSection && (
  <div className={`p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 ${
-' bg-[var(--ok-soft)]/50'
+'bg-[var(--ok-soft)]/50'
  }`}>
  <div className="flex items-center justify-between">
  <p className="text-xs font-bold text-[var(--ok)] flex items-center gap-1.5">
@@ -1109,7 +1109,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="submit"
  disabled={loading}
  className={`w-full py-2.5 px-4 rounded-[var(--r-m)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98 ${
-' bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
+'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
  }`}
  >
  {loading ? (
@@ -1231,7 +1231,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  alert(res.error ||'No se pudo abrir el portal de Stripe');
  }
  } catch (err: any) {
- alert('Error al conectar con Stripe:' + err.message);
+ alert('Error al conectar con Stripe: '+ err.message);
  }
  }}
  className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer"

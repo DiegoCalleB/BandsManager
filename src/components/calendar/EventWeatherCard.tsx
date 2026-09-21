@@ -19,7 +19,7 @@ interface EventWeatherCardProps {
 export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  city,
  dateStr,
- timeStr= false,
+ timeStr,
  onAlertsDetected,
  collapsible = false,
  defaultExpanded = false
@@ -378,8 +378,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
  animate={{ opacity: 1, y: 0 }}
  className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
  isDanger
- ?' bg-[var(--alert-soft)]/50 text-[var(--alert)]/40'
- :' bg-[var(--acc-soft)] /40 text-[var(--acc)]'
+ ? 'bg-[var(--alert-soft)]/50 text-[var(--alert)]/40'
+ : 'bg-[var(--acc-soft)] /40 text-[var(--acc)]'
  }`}
  >
  <div className="flex items-start justify-between gap-2">

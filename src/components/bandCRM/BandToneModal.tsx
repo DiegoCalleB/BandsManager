@@ -120,7 +120,7 @@ interface BandToneModalProps {
 export const BandToneModal: React.FC<BandToneModalProps> = ({
  isOpen,
  onClose,
- band= false,
+ band,
  toneData,
  isLoading,
  isSaved,
@@ -613,7 +613,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
  className="px-2 py-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-sans text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
  >
  {copied ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
- {copied ?'¡Copiado!' :'Copiar Texto'}
+ {copied ?'¡Copiado! ':'Copiar Texto'}
  </button>
  </div>
 

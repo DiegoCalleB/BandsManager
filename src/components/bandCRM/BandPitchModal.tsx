@@ -21,7 +21,7 @@ interface BandPitchModalProps {
 export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  isOpen,
  onClose,
- band= false,
+ band,
  activeCampaign,
  proposedBakandeyaCity,
  setProposedBakandeyaCity,
@@ -126,7 +126,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
  className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-m)] font-sans text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
  >
  {copiedPitch ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
- <span>{copiedPitch ?'¡Copiado!' :'Copiar Texto'}</span>
+ <span>{copiedPitch ?'¡Copiado! ':'Copiar Texto'}</span>
  </button>
 
  {/* WhatsApp Link if phone is present */}

@@ -1,48 +1,48 @@
-import { useState, useEffect, FormEvent, MouseEvent } from' react';
-import { LeadStatus, LeadType, SavedFilter } from' ../types';
+import { useState, useEffect, FormEvent, MouseEvent } from 'react';
+import { LeadStatus, LeadType, SavedFilter } from '../types';
 
 const DEFAULT_PRESET_FILTERS: SavedFilter[] = [
  {
- id:' preset-bcn-300',
- nombre:' Salas Cataluña / BCN (Aforo > 300) pendientes',
- sectionTab:' salas',
- selectedCityFilter:' Barcelona',
- statusFilter:' nuevo',
+ id: 'preset-bcn-300',
+ nombre: 'Salas Cataluña / BCN (Aforo > 300) pendientes',
+ sectionTab: 'salas',
+ selectedCityFilter: 'Barcelona',
+ statusFilter: 'nuevo',
  minCapacityFilter: 300
  },
  {
- id:' preset-festivales-pendientes',
- nombre:' Festivales pendientes de respuesta',
- sectionTab:' salas',
- typeFilter:' festival',
- statusFilter:' esperando_respuesta'
+ id: 'preset-festivales-pendientes',
+ nombre: 'Festivales pendientes de respuesta',
+ sectionTab: 'salas',
+ typeFilter: 'festival',
+ statusFilter: 'esperando_respuesta'
  },
  {
- id:' preset-prensa-madrid',
- nombre:' Medios y prensa en Madrid',
- sectionTab:' medios',
- selectedCityFilter:' Madrid',
- typeFilter:' medio'
+ id: 'preset-prensa-madrid',
+ nombre: 'Medios y prensa en Madrid',
+ sectionTab: 'medios',
+ selectedCityFilter: 'Madrid',
+ typeFilter: 'medio'
  },
  {
- id:' preset-interesados-negociando',
- nombre:' Salas interesadas / Negociando',
- sectionTab:' salas',
- statusFilter:' interesado'
+ id: 'preset-interesados-negociando',
+ nombre: 'Salas interesadas / Negociando',
+ sectionTab: 'salas',
+ statusFilter: 'interesado'
  }
 ];
 
 export function useSavedFilters(
- sectionTab:' salas' |' medios' |' grupos',
- setSectionTab: (tab:' salas' |' medios' |' grupos') => void,
- initialStatusFilter: LeadStatus |' todos'
+ sectionTab: 'salas' | 'medios' | 'grupos',
+ setSectionTab: (tab: 'salas' | 'medios' | 'grupos') => void,
+ initialStatusFilter: LeadStatus | 'todos'
 ) {
  const [searchTerm, setSearchTerm] = useState('');
- const [statusFilter, setStatusFilter] = useState<LeadStatus |' todos'>(initialStatusFilter);
- // Para sectionTab ===' medios', typeFilter también acepta las sub-categorías heurísticas de
- // matchesMedioType en BookingCRM ('radio',' tv',' prensa',' redes',' podcast'), que no son
+ const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
+ // Para sectionTab === 'medios', typeFilter también acepta las sub-categorías heurísticas de
+ // matchesMedioType en BookingCRM ('radio', 'tv', 'prensa', 'redes', 'podcast'), que no son
  // LeadType reales sino un filtro por palabras clave sobre el lead.
- const [typeFilter, setTypeFilter] = useState<LeadType |' todos' |' radio' |' tv' |' prensa' |' redes' |' podcast'>('todos');
+ const [typeFilter, setTypeFilter] = useState<LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast'>('todos');
  const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
  const [minCapacityFilter, setMinCapacityFilter] = useState<number>(0);
  const [onlyFavoritesFilter, setOnlyFavoritesFilter] = useState<boolean>(false);
@@ -70,10 +70,10 @@ export function useSavedFilters(
  const handleApplySavedFilter = (sf: SavedFilter) => {
  setActiveSavedFilterId(sf.id);
  if (sf.sectionTab) setSectionTab(sf.sectionTab);
- setSearchTerm(sf.searchTerm ||' ');
- setSelectedCityFilter(sf.selectedCityFilter ||' ');
- setStatusFilter(sf.statusFilter ||' todos');
- setTypeFilter(sf.typeFilter ||' todos');
+ setSearchTerm(sf.searchTerm || '');
+ setSelectedCityFilter(sf.selectedCityFilter || '');
+ setStatusFilter(sf.statusFilter || 'todos');
+ setTypeFilter(sf.typeFilter || 'todos');
  setMinCapacityFilter(sf.minCapacityFilter || 0);
  };
 

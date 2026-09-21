@@ -1,7 +1,7 @@
 // WEBAUDIO SYNTHESIZER FOR AI DRUMS AND BASS REFERENCE ACCOMPANIMENT
 
-import { DrumPatternStyle } from' ../types';
-import { bufferToWavBlob } from' ./audioBufferToWav';
+import { DrumPatternStyle } from '../types';
+import { bufferToWavBlob } from './audioBufferToWav';
 
 export async function generateAccompanimentAudioBlob(opts: {
  bpm: number;
@@ -25,16 +25,16 @@ export async function generateAccompanimentAudioBlob(opts: {
 
  // Key frequencies (root notes for bass synthesis based on song key)
  const keyFrequencies: Record<string, number[]> = {
-' Do': [65.41, 58.27, 43.65, 49.00], // C2, A1#, F1, G1
-' Re': [73.42, 65.41, 49.00, 55.00], // D2, C2, G1, A1
-' Mi': [82.41, 73.42, 55.00, 61.74], // E2, D2, A1, B1
-' Fa': [87.31, 77.78, 58.27, 65.41], // F2, D#2, A#1, C2
-' Sol': [98.00, 87.31, 65.41, 73.42], // G2, F2, C2, D2
-' La': [55.00, 49.00, 36.71, 41.20], // A1, G1, D1, E1
-' Si': [61.74, 55.00, 41.20, 46.25], // B1, A1, E1, F#1
+'Do': [65.41, 58.27, 43.65, 49.00], // C2, A1#, F1, G1
+'Re': [73.42, 65.41, 49.00, 55.00], // D2, C2, G1, A1
+'Mi': [82.41, 73.42, 55.00, 61.74], // E2, D2, A1, B1
+'Fa': [87.31, 77.78, 58.27, 65.41], // F2, D#2, A#1, C2
+'Sol': [98.00, 87.31, 65.41, 73.42], // G2, F2, C2, D2
+'La': [55.00, 49.00, 36.71, 41.20], // A1, G1, D1, E1
+'Si': [61.74, 55.00, 41.20, 46.25], // B1, A1, E1, F#1
  };
 
- const cleanKey = opts.keyName ? opts.keyName.replace(/m|min|Maj|may|#/g,' ').trim() :' La';
+ const cleanKey = opts.keyName ? opts.keyName.replace(/m|min|Maj|may|#/g, '').trim() : 'La';
  const roots = keyFrequencies[cleanKey] || [55.00, 43.65, 36.71, 41.20];
 
  // Drums synthesis triggers
@@ -62,7 +62,7 @@ export async function generateAccompanimentAudioBlob(opts: {
  noise.buffer = noiseBuffer;
 
  const noiseFilter = offlineCtx.createBiquadFilter();
- noiseFilter.type =' highpass';
+ noiseFilter.type = 'highpass';
  noiseFilter.frequency.value = 800;
 
  const noiseGain = offlineCtx.createGain();
@@ -99,7 +99,7 @@ export async function generateAccompanimentAudioBlob(opts: {
  noise.buffer = noiseBuffer;
 
  const filter = offlineCtx.createBiquadFilter();
- filter.type =' highpass';
+ filter.type = 'highpass';
  filter.frequency.value = 7000;
 
  const gain = offlineCtx.createGain();
@@ -116,11 +116,11 @@ export async function generateAccompanimentAudioBlob(opts: {
 
  const triggerBassNote = (time: number, freq: number, duration: number) => {
  const osc = offlineCtx.createOscillator();
- osc.type =' sawtooth';
+ osc.type = 'sawtooth';
  osc.frequency.setValueAtTime(freq, time);
 
  const filter = offlineCtx.createBiquadFilter();
- filter.type =' lowpass';
+ filter.type = 'lowpass';
  filter.frequency.setValueAtTime(320, time);
  filter.frequency.exponentialRampToValueAtTime(120, time + duration);
 
@@ -147,18 +147,18 @@ export async function generateAccompanimentAudioBlob(opts: {
  const beatTime = currentTime + beat * beatDuration;
 
  if (opts.includeDrums) {
- if (opts.drumPattern ===' reggae') {
+ if (opts.drumPattern === 'reggae') {
  if (beat === 2) {
  triggerKick(beatTime);
  triggerSnare(beatTime);
  }
  triggerHiHat(beatTime + eighthDuration);
- } else if (opts.drumPattern ===' ska') {
+ } else if (opts.drumPattern === 'ska') {
  // Ska: bombo en 1 y 3, caja marcada en 2 y 4, acento abierto de charles en cada contratiempo (skank)
  if (beat === 0 || beat === 2) triggerKick(beatTime);
  if (beat === 1 || beat === 3) triggerSnare(beatTime);
  triggerHiHat(beatTime + eighthDuration, true);
- } else if (opts.drumPattern ===' cumbia') {
+ } else if (opts.drumPattern === 'cumbia') {
  // Cumbia: tresillo 3+3+2 en el bombo y charles corrido tipo güiro
  if (beat === 0) triggerKick(beatTime);
  if (beat === 1) triggerKick(beatTime + eighthDuration);
@@ -166,14 +166,14 @@ export async function generateAccompanimentAudioBlob(opts: {
  if (beat === 2) triggerSnare(beatTime);
  triggerHiHat(beatTime);
  triggerHiHat(beatTime + eighthDuration);
- } else if (opts.drumPattern ===' punk') {
+ } else if (opts.drumPattern === 'punk') {
  // Punk: bombo corrido en corcheas, caja seca en 2 y 4, charles cerrado sin descanso
  triggerKick(beatTime);
  triggerKick(beatTime + eighthDuration);
  if (beat === 1 || beat === 3) triggerSnare(beatTime);
  triggerHiHat(beatTime);
  triggerHiHat(beatTime + eighthDuration);
- } else if (opts.drumPattern ===' funk') {
+ } else if (opts.drumPattern === 'funk') {
  if (beat === 0) triggerKick(beatTime);
  if (beat === 0) triggerKick(beatTime + eighthDuration);
  if (beat === 2) triggerKick(beatTime + eighthDuration);

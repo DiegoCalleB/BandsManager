@@ -571,7 +571,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-metrics"
  onClick={() => setActiveTab('metrics')}
- className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='metrics' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='metrics' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento & Métricas de Redes
  </button>
@@ -579,21 +579,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  <button
  id="tab-btn-fans-qr"
  onClick={() => setActiveTab('qr')}
- className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='qr' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='qr' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'1' :'2'}. Captura en Vivo & QR
  </button>
  <button
  id="tab-btn-fans-dashboard"
  onClick={() => setActiveTab('dashboard')}
- className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='dashboard' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='dashboard' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'2' :'3'}. Dashboard & Analítica
  </button>
  <button
  id="tab-btn-fans-directory"
  onClick={() => setActiveTab('fans')}
- className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='fans' ?' text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
+ className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab ==='fans' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
  >
  <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ?'3' :'4'}. Comunidad & Red Social ({fans.length})
  </button>
@@ -668,9 +668,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  {evolutionaryGrowthData.length > 0 ? (
  <Onda
  data={evolutionaryGrowthData.map((d) => ({
- label: d.date ||' Sin fecha',
+ label: d.date || 'Sin fecha',
  value: d.total || 0,
- color:' var(--acc)'
+ color: 'var(--acc)'
  }))}
  height={240}
  barWidth={16}
@@ -1213,7 +1213,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
  onClick={handleCopyQrUrl}
  className="shrink-0 text-[11px] text-[var(--acc)] hover:underline font-sans cursor-pointer"
  >
- {copiedQrUrl ?'¡Copiado!' :'Copiar'}
+ {copiedQrUrl ?'¡Copiado! ':'Copiar'}
  </button>
  </div>
 

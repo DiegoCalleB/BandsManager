@@ -80,7 +80,7 @@ export function TemplateConfigSection({
  <div>
  <h3
  className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${
-' text-[var(--acc)]'
+'text-[var(--acc)]'
  }`}
  >
  <Settings className={`w-4 h-4 ${'text-[var(--acc)]'}`} />{''}
@@ -116,7 +116,7 @@ export function TemplateConfigSection({
  onClick={() => onSelectTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ?' bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -134,7 +134,7 @@ export function TemplateConfigSection({
  templateTab ==='medios'
  ?'bg-[var(--alert)]/15 text-[var(--alert)]'
  : templateTab ==='grupos'
- ?' bg-[var(--surface)]/15 text-[var(--ok)]'
+ ? 'bg-[var(--surface)]/15 text-[var(--ok)]'
  : templateTab ==='discotecas'
  ? 'bg-[var(--acc)]/10 text-[var(--acc)]'
  : 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
@@ -193,7 +193,7 @@ export function TemplateConfigSection({
  <div className="space-y-1.5">
  <label
  className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${
-' text-[var(--acc)]'
+'text-[var(--acc)]'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
@@ -331,7 +331,7 @@ export function TemplateConfigSection({
  id="template-btn-save"
  onClick={onSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
-' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
+'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -353,7 +353,7 @@ export function TemplateConfigSection({
  >
  <span
  className={`w-1.5 h-1.5 rounded-full ${
-' bg-[var(--acc)]'
+'bg-[var(--acc)]'
  }`}
  />
  <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>
@@ -459,7 +459,7 @@ export function TemplateConfigSection({
  ) : (
  <div
  className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
- ' text-[var(--ink-2)]'
+ 'text-[var(--ink-2)]'
  }`}
  >
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación

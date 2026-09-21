@@ -1,4 +1,4 @@
-import { Lead, BandContact } from' ../types';
+import { Lead, BandContact } from '../types';
 
 /**
  * Calculates a 0-100% reliability score based on the lead/contact info quality.
@@ -7,13 +7,13 @@ export function calculateLeadReliability(item: Lead | BandContact): { score: num
  let score = 0;
  const details: string[] = [];
 
- const name =' nombre_sala' in item ? item.nombre_sala : item.nombre_banda;
- const email =' email_contacto' in item ? item.email_contacto : item.email;
+ const name = 'nombre_sala' in item ? item.nombre_sala : item.nombre_banda;
+ const email = 'email_contacto' in item ? item.email_contacto : item.email;
  const phone = item.telefono;
- const website =' website' in item ? item.website : undefined;
+ const website = 'website' in item ? item.website : undefined;
  const instagram = item.instagram;
- const contactName =' contacto_nombre' in item ? item.contacto_nombre : item.contacto_nombre;
- const city =' ciudad' in item ? item.ciudad : item.localizacion;
+ const contactName = 'contacto_nombre' in item ? item.contacto_nombre : item.contacto_nombre;
+ const city = 'ciudad' in item ? item.ciudad : item.localizacion;
 
  // Basic Identity (+20%)
  if (name && name.trim().length > 2) {
@@ -41,7 +41,7 @@ export function calculateLeadReliability(item: Lead | BandContact): { score: num
 
  // Phone (+20%)
  if (phone) {
- const digits = phone.replace(/\D/g,' ');
+ const digits = phone.replace(/\D/g, '');
  if (digits.length >= 9) {
  score += 20;
  details.push('Teléfono de contacto directo');
@@ -66,7 +66,7 @@ export function calculateLeadReliability(item: Lead | BandContact): { score: num
 
  // Verification status boost (+15% if active lead conversation is detected)
  if ('estado' in item) {
- if (item.estado ===' interesado' || item.estado ===' negociando' || (item.hilo_emails && item.hilo_emails.length > 0)) {
+ if (item.estado === 'interesado' || item.estado === 'negociando' || (item.hilo_emails && item.hilo_emails.length > 0)) {
  score = Math.min(100, score + 15);
  details.push('Conversación/Interacción directa verificada');
  }
@@ -87,14 +87,14 @@ export function isLeadVerificado(item: Lead | BandContact): boolean {
  
  // For Lead
  if ('estado' in item) {
- if (item.estado ===' interesado' || item.estado ===' negociando') return true;
+ if (item.estado === 'interesado' || item.estado === 'negociando') return true;
  if (item.hilo_emails && item.hilo_emails.length > 0) return true;
  if (item.fecha_ultima_respuesta && item.fecha_ultima_respuesta.length > 0) return true;
  }
 
  // For BandContact
  if ('estado_relacion' in item) {
- if (item.estado_relacion ===' concierto_agendado' || item.estado_relacion ===' intercambio_propuesto' || item.estado_relacion ===' colegas_aliados') {
+ if (item.estado_relacion === 'concierto_agendado' || item.estado_relacion === 'intercambio_propuesto' || item.estado_relacion === 'colegas_aliados') {
  return true;
  }
  }

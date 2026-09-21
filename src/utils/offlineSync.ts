@@ -4,10 +4,10 @@
 // la app vuelve a montarse con conexión, un fetch normal traería la versión VIEJA del servidor
 // y pisaría el cambio que solo vivía en local. Esta cola se vacía antes de confiar en ese fetch.
 
-const PENDING_KEY_PREFIX =' pending_setlist_sync_';
+const PENDING_KEY_PREFIX = 'pending_setlist_sync_';
 
 function keyFor(bandId?: string): string {
- return PENDING_KEY_PREFIX + (bandId ||' default');
+ return PENDING_KEY_PREFIX + (bandId || 'default');
 }
 
 export function queuePendingSetlistSync(bandId: string | undefined, setlist: { id: string }): void {

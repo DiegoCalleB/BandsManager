@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from' vitest';
-import { MODULE_TUTORIALS } from' ../../config/moduleTutorials';
-import { ModuleTutorialId } from' ../../types/tutorial';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { MODULE_TUTORIALS } from '../../config/moduleTutorials';
+import { ModuleTutorialId } from '../../types/tutorial';
 
 describe('Module Tutorials Configuration', () => {
- const targetModules: ModuleTutorialId[] = ['epk',' fans',' calendario',' repertorio',' song_studio',' booking'];
+ const targetModules: ModuleTutorialId[] = ['epk', 'fans', 'calendario', 'repertorio', 'song_studio', 'booking'];
 
  it('contains configurations for all 6 required modules', () => {
  targetModules.forEach(id => {

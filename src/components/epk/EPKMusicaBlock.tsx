@@ -204,7 +204,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  className={`p-3 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--surface)] ${
  config.audioPreview?.habilitado !== false
  ?'/40'
- :' opacity-50'
+ : 'opacity-50'
  } flex items-center justify-between gap-3 text-left`}
  >
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 text-[var(--ink)] flex items-center justify-center shrink-0">
@@ -266,7 +266,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  <div
  key={v.id}
  className={`rounded-[var(--r-m)] p-3 space-y-2 ${
- v.destacado ?'/60 bg-[var(--acc)]/5' :' bg-[var(--surface)]'
+ v.destacado ?'/60 bg-[var(--acc)]/5' : 'bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
  className={`shrink-0 w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center text-sm transition cursor-pointer ${
  v.destacado
  ?'bg-[var(--acc)] text-[var(--ink)] font-bold'
- :' text-[var(--ink-2)] hover:text-[var(--acc)]/70'
+ : 'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
  }`}
  >
  ★

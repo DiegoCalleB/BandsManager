@@ -1366,7 +1366,7 @@ export default function BookingCRM({
  title={filterByCampaign ?"Quitar filtro de campaña" :"Filtrar por campaña"}
  >
  <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
- <span>{filterByCampaign ?' Campaña' :'Campaña'}</span>
+ <span>{filterByCampaign ? 'Campaña' :'Campaña'}</span>
  {filterByCampaign && (
  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-[10px] font-semibold tabular-nums">
  {filteredLeads.length}
@@ -2119,7 +2119,7 @@ export default function BookingCRM({
  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
  className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
  isActive
- ?' bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -2144,7 +2144,7 @@ export default function BookingCRM({
  : templateTab ==='discotecas'
  ? 'bg-[var(--acc)]/10 text-[var(--acc)]'
  : templateTab ==='ayuntamientos'
- ?' bg-[var(--acc)]/10 text-[var(--acc)]/70'
+ ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70'
  : 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
  }`}>
  <div>
@@ -2173,7 +2173,7 @@ export default function BookingCRM({
  value={activeTemplate.subject}
  onChange={(e) => activeTemplate.setSubject(e.target.value)}
  className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${
-' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  />
  </div>
@@ -2186,7 +2186,7 @@ export default function BookingCRM({
  value={activeTemplate.body}
  onChange={(e) => activeTemplate.setBody(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
-' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
+'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'
  }`}
  placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
  />
@@ -2202,7 +2202,7 @@ export default function BookingCRM({
  value={activeTemplate.guidelines}
  onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
  className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${
-' bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
+'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'
  }`}
  placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
  />
@@ -2370,7 +2370,7 @@ export default function BookingCRM({
  id="template-btn-save"
  onClick={handleSaveTemplates}
  className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${
-' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
+'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'
  }`}
  >
  Guardar Plantillas y Directrices
@@ -2478,7 +2478,7 @@ export default function BookingCRM({
  </div>
  ) : (
  <div className={`border-2 rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${
- ' text-[var(--ink-2)]'
+ 'text-[var(--ink-2)]'
  }`}>
  Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices actuales.
  </div>

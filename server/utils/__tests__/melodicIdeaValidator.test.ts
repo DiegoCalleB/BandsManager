@@ -66,7 +66,7 @@ describe('validarYRepararEventos', () => {
 
     expect(res.eventos).toHaveLength(1);
     expect(res.eventos[0].nota).toBe('C4');
-    expect(res.reparaciones.join(' ')).toContain('3 nota(s) inválida(s)');
+    expect(res.reparaciones.join( '')).toContain('3 nota(s) inválida(s)');
   });
 
   it('transporta por octavas al registro del instrumento en vez de perder la nota', () => {
@@ -78,7 +78,7 @@ describe('validarYRepararEventos', () => {
     expect(notaAMidi(res.eventos[0].nota)!).toBeLessThanOrEqual(76);
     // Conserva la clase de altura: sigue siendo un Do.
     expect(notaAMidi(res.eventos[0].nota)! % 12).toBe(0);
-    expect(res.reparaciones.join(' ')).toContain('transportada');
+    expect(res.reparaciones.join( '')).toContain('transportada');
   });
 
   it('encaja en la escala las notas que el modelo saca de tono', () => {
@@ -87,7 +87,7 @@ describe('validarYRepararEventos', () => {
 
     const grados = [0, 2, 4, 5, 7, 9, 11];
     expect(grados).toContain(notaAMidi(res.eventos[0].nota)! % 12);
-    expect(res.reparaciones.join(' ')).toContain('tonalidad');
+    expect(res.reparaciones.join( '')).toContain('tonalidad');
   });
 
   it('respeta las notas que ya vienen bien y no reporta reparaciones', () => {
@@ -115,7 +115,7 @@ describe('validarYRepararEventos', () => {
 
     expect(res.eventos).toHaveLength(1);
     expect(res.eventos[0].tiempo + res.eventos[0].duracionBeats).toBeLessThanOrEqual(40);
-    expect(res.reparaciones.join(' ')).toContain('recortada');
+    expect(res.reparaciones.join( '')).toContain('recortada');
   });
 
   it('afina el handpan a una pentatónica, como los instrumentos reales', () => {
@@ -222,7 +222,7 @@ describe('validarYRepararEventos', () => {
     const res = validarYRepararEventos(muchas, { ...base, durationSecs: 60 });
 
     expect(res.eventos.length).toBeLessThanOrEqual(64);
-    expect(res.reparaciones.join(' ')).toContain('recortó la idea');
+    expect(res.reparaciones.join( '')).toContain('recortó la idea');
   });
 
   it('deduce que la tonalidad es menor por su propio nombre si no se declara la escala', () => {
@@ -233,7 +233,7 @@ describe('validarYRepararEventos', () => {
 
     // La menor natural: A B C D E F G. Do pertenece, así que no debe moverse.
     expect(res.eventos[0].nota).toBe('C4');
-    expect(res.reparaciones.join(' ')).not.toContain('tonalidad');
+    expect(res.reparaciones.join( '')).not.toContain('tonalidad');
   });
 });
 

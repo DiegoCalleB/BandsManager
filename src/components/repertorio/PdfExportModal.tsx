@@ -1353,7 +1353,7 @@ export function PdfExportModal({
  de verdad hace falta ver de un vistazo. */}
  <div
  className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${
- ' bg-[var(--surface)]'
+ 'bg-[var(--surface)]'
  }`}
  >
  <div className="flex items-center gap-2 sm:gap-3 min-w-0">

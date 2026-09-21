@@ -1,3 +1,3 @@
-export { OnboardingWizardModal } from' ./OnboardingWizardModal';
-export { MusicianOnboardingModal } from' ./MusicianOnboardingModal';
+export { OnboardingWizardModal } from './OnboardingWizardModal';
+export { MusicianOnboardingModal } from './MusicianOnboardingModal';
 

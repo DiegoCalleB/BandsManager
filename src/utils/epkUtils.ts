@@ -1,4 +1,4 @@
-import { EPKConfig, Song } from' ../types';
+import { EPKConfig, Song } from '../types';
 
 export interface EPKCompletenessResult {
  score: number; // 0-100
@@ -34,7 +34,7 @@ export function isRiderComplete(epk?: Partial<EPKConfig>): boolean {
  const text = epk.riderTecnico.trim();
  if (text.length < 80) return false;
  const lower = text.toLowerCase();
- if (lower.includes('por definir') || lower ===' rider técnico' || lower ===' rider técnico por definir.') return false;
+ if (lower.includes('por definir') || lower === 'rider técnico' || lower === 'rider técnico por definir.') return false;
  return true;
 }
 
@@ -117,15 +117,15 @@ export function generateEPKPressKitSummary(epk: EPKConfig, featuredSongs: Song[]
 
  return `
 === PRESS KIT COMPACTO ===
-${epk.biografia ? epk.biografia.slice(0, 300) +' ...' :' '}
+${epk.biografia ? epk.biografia.slice(0, 300) +'...' : ''}
 
 🎵 TEMAS DESTACADOS:
-${songList ||' Sin canciones asignadas'}
+${songList || 'Sin canciones asignadas'}
 
 🔗 ENLACES OFICIALES:
-${socialList ||' Sin redes configuradas'}
+${socialList || 'Sin redes configuradas'}
 
 📞 CONTACTO BOOKING:
-${epk.contactoBooking?.nombre ||' Mánager'} (${epk.contactoBooking?.email ||' '} / ${epk.contactoBooking?.telefono ||' '})
+${epk.contactoBooking?.nombre || 'Mánager'} (${epk.contactoBooking?.email || ''} / ${epk.contactoBooking?.telefono || ''})
 `.trim();
 }

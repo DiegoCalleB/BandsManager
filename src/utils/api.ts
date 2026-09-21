@@ -14,7 +14,7 @@ export class ApiRequestError extends Error {
 
  constructor(message: string, status: number, data?: any) {
  super(message);
- this.name =' ApiRequestError';
+ this.name = 'ApiRequestError';
  this.status = status;
  this.data = data;
  }
@@ -31,7 +31,7 @@ export function getActiveBandId(): string {
  } catch (e) {
  /* localStorage con JSON corrupto: seguimos sin banda explícita */
  }
- return' ';
+ return '';
 }
 
 function buildHeaders(options: RequestInit): Record<string, string> {
@@ -40,8 +40,8 @@ function buildHeaders(options: RequestInit): Record<string, string> {
  ...(options.headers as Record<string, string> || {}),
  };
 
- if (options.body && typeof options.body ===' string' && !headers['Content-Type'] && !headers['content-type']) {
- headers['Content-Type'] =' application/json';
+ if (options.body && typeof options.body === 'string' && !headers['Content-Type'] && !headers['content-type']) {
+ headers['Content-Type'] = 'application/json';
  }
 
  if (token) {
@@ -71,16 +71,16 @@ export async function apiFetch<T = any>(url: string, options: RequestInit = {}):
  if (contentType && contentType.includes('application/json')) {
  const data = await res.json().catch(() => ({}));
  if (!res.ok) {
- const detailedMessage = data.message || data.error || data.detail || (typeof data ===' string' ? data : `Error ${res.status}: ${res.statusText}`);
+ const detailedMessage = data.message || data.error || data.detail || (typeof data === 'string' ? data : `Error ${res.status}: ${res.statusText}`);
  throw new ApiRequestError(
- typeof detailedMessage ===' string' ? detailedMessage : JSON.stringify(detailedMessage),
+ typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage),
  res.status,
  data
  );
  }
  return data;
  } else {
- const text = await res.text().catch(() =>' ');
+ const text = await res.text().catch(() => '');
  if (!res.ok) {
  throw new ApiRequestError(
  `Error ${res.status}: ${text.slice(0, 100) || res.statusText}`,
@@ -95,7 +95,7 @@ export async function apiFetch<T = any>(url: string, options: RequestInit = {}):
 export async function safeJsonFetch<T = any>(res: Response, fallbackValue: T = {} as T): Promise<T> {
  const contentType = res.headers.get('content-type');
  if (!contentType || !contentType.includes('application/json')) {
- const text = await res.text().catch(() =>' ');
+ const text = await res.text().catch(() => '');
  if (!res.ok) {
  throw new Error(`Error ${res.status}: ${text.slice(0, 100) || res.statusText}`);
  }

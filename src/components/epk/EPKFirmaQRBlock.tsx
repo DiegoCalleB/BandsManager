@@ -506,7 +506,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  title="Copiar el código fuente HTML puro de la firma"
  >
  {copiadoFirma ==='html' ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Code className="w-3.5 h-3.5 text-[var(--acc)]" />}
- <span>{copiadoFirma ==='html' ?'¡HTML Copiado!' :'HTML'}</span>
+ <span>{copiadoFirma ==='html' ?'¡HTML Copiado! ':'HTML'}</span>
  </button>
 
  <button
@@ -521,7 +521,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  title="Copiar versión en texto plano"
  >
  {copiadoFirma ==='text' ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <FileText className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
- <span>{copiadoFirma ==='text' ?'¡Texto Copiado!' :'Texto'}</span>
+ <span>{copiadoFirma ==='text' ?'¡Texto Copiado! ':'Texto'}</span>
  </button>
  </div>
  </div>
@@ -659,7 +659,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
  className="flex-1 px-3 py-2 bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 hover:bg-[var(--acc)]/60 transition cursor-pointer"
  >
  {copiado ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
- {copiado ?'¡Copiado!' :'Copiar Enlace'}
+ {copiado ?'¡Copiado! ':'Copiar Enlace'}
  </button>
  <a
  href={publicEpkUrl}

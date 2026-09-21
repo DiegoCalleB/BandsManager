@@ -61,7 +61,6 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
  className="w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto"
  style={{
  backgroundColor: colors.card,
- borderColor: colors.border,
  color: colors.text,
  }}
  >

@@ -109,7 +109,7 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   // dice que no encuentra, y se reintenta; así un campo con columna real nunca paga por otro que
   // aún no la tiene.
   while (error && error.message && error.message.includes("Could not find the '") && error.message.includes("' column of 'concerts'")) {
-    const match = error.message.match(/Could not find the '([^']+)' column of 'concerts'/);
+    const match = error.message.match(/Could not find the '([^']+)'column of 'concerts'/);
     if (match && match[1] && currentPayload[match[1]] !== undefined) {
       const missingCol = match[1];
       console.warn(`[Concerts] Columna '${missingCol}' no encontrada en Supabase concerts. Reintentando sin ella. Ejecuta la migración SQL.`);

@@ -1,4 +1,4 @@
-import firebaseConfig from' ../../firebase-applet-config.json';
+import firebaseConfig from '../../firebase-applet-config.json';
 
 export interface GoogleUserInfo {
  email: string;
@@ -11,7 +11,7 @@ export interface GoogleUserInfo {
 const GOOGLE_CLIENT_ID =
  (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID ||
  firebaseConfig.oAuthClientId ||
-' 36068629683-o8nr6e9vleqqv9bvs3qaemp9m4b2hrnm.apps.googleusercontent.com';
+'36068629683-o8nr6e9vleqqv9bvs3qaemp9m4b2hrnm.apps.googleusercontent.com';
 
 let gisScriptLoaded = false;
 let gisScriptPromise: Promise<void> | null = null;
@@ -25,7 +25,7 @@ function loadGisScript(): Promise<void> {
 
  gisScriptPromise = new Promise((resolve, reject) => {
  const script = document.createElement('script');
- script.src =' https://accounts.google.com/gsi/client';
+ script.src = 'https://accounts.google.com/gsi/client';
  script.async = true;
  script.defer = true;
  script.onload = () => {
@@ -59,14 +59,14 @@ export async function signInWithGoogleIdentity(): Promise<GoogleUserInfo | null>
 
  const tokenClient = google.accounts.oauth2.initTokenClient({
  client_id: GOOGLE_CLIENT_ID,
- scope:' openid email profile',
- prompt:' select_account',
+ scope: 'openid email profile',
+ prompt: 'select_account',
  callback: async (tokenResponse: any) => {
  if (tokenResponse.error) {
  if (
- tokenResponse.error ===' popup_closed' ||
- tokenResponse.error ===' access_denied' ||
- tokenResponse.error ===' user_logged_out'
+ tokenResponse.error === 'popup_closed' ||
+ tokenResponse.error === 'access_denied' ||
+ tokenResponse.error === 'user_logged_out'
  ) {
  resolve(null);
  return;
@@ -103,10 +103,10 @@ export async function signInWithGoogleIdentity(): Promise<GoogleUserInfo | null>
  },
  error_callback: (err: any) => {
  if (!resolved) {
- if (err?.type ===' popup_closed') {
+ if (err?.type === 'popup_closed') {
  resolve(null);
  } else {
- reject(new Error(err?.message ||' Error al abrir la ventana de inicio de sesión con Google.'));
+ reject(new Error(err?.message || 'Error al abrir la ventana de inicio de sesión con Google.'));
  }
  }
  }

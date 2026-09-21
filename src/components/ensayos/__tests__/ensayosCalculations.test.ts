@@ -1,6 +1,6 @@
-import { describe, it, expect } from' vitest';
-import { formatTime } from' ../EnsayoCronometro';
-import { processChordText, extractUniqueChords } from' ../../../utils/chordUtils';
+import { describe, it, expect } from 'vitest';
+import { formatTime } from '../EnsayoCronometro';
+import { processChordText, extractUniqueChords } from '../../../utils/chordUtils';
 
 describe('Ensayos & Local en Vivo utilities', () => {
  it('correctly formats stopwatch seconds into MM:SS and HH:MM:SS', () => {
@@ -27,8 +27,8 @@ Fa Sol Lam
  });
 
  it('correctly processes and transposes chord lines', () => {
- const chordLine =' Lam Fa Sol';
- const transposed = processChordText(chordLine, 2,' ES');
+ const chordLine = 'Lam Fa Sol';
+ const transposed = processChordText(chordLine, 2, 'ES');
  expect(transposed).toContain('Sim');
  expect(transposed).toContain('Sol');
  expect(transposed).toContain('La');

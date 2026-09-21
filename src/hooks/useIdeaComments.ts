@@ -1,5 +1,5 @@
-import { useState } from' react';
-import { Song, SongAudioIdea, AudioComment } from' ../types';
+import { useState } from 'react';
+import { Song, SongAudioIdea, AudioComment } from '../types';
 
 export function useIdeaComments(
  song: Song,
@@ -26,7 +26,7 @@ export function useIdeaComments(
  instrumento: trackTag,
  timestampSegundos: timeTag ?? Math.floor(currentTimeMap[idea.id] || 0),
  texto: text.trim(),
- fecha:' Ahora'
+ fecha: 'Ahora'
  };
 
  const updatedIdeas = (song.audioIdeas || []).map(i => {
@@ -41,7 +41,7 @@ export function useIdeaComments(
 
  onUpdateSong({ ...song, audioIdeas: updatedIdeas });
 
- setCommentTextMap(prev => ({ ...prev, [idea.id]:' ' }));
+ setCommentTextMap(prev => ({ ...prev, [idea.id]: '' }));
  setCommentTimeTagMap(prev => ({ ...prev, [idea.id]: null }));
  setCommentTrackTagMap(prev => ({ ...prev, [idea.id]: null }));
  };

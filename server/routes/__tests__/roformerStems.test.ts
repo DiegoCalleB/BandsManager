@@ -101,7 +101,7 @@ describe('Neural Stems Separation & Anti-Duplicate Architecture', () => {
 
     const headers = { id: webhookId, timestamp, signature: validSignature };
     expect(verifyReplicateWebhook(payload, headers, secret).valid).toBe(true);
-    expect(verifyReplicateWebhook(payload, { ...headers, signature: 'v1,invalid_sig_base64==' }, secret).valid).toBe(false);
+    expect(verifyReplicateWebhook(payload, { ...headers, signature: 'v1,invalid_sig_base64== '}, secret).valid).toBe(false);
     expect(verifyReplicateWebhook(payload, headers, undefined).valid).toBe(false);
   });
 

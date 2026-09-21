@@ -1,4 +1,4 @@
-import { Song, SongAudioIdea, AudioTrack } from' ../types';
+import { Song, SongAudioIdea, AudioTrack } from '../types';
 
 /**
  * Retorna la idea de audio de la canción que cuenta con pistas separadas (stems) por Iris
@@ -31,7 +31,7 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
  return [
  {
  id: `${idea.id}-track-1`,
- nombre: idea.titulo ||' Pista Principal',
+ nombre: idea.titulo || 'Pista Principal',
  audioUrl: idea.audioUrl,
  autor: idea.subidoPor,
  instrumento: idea.instrumento

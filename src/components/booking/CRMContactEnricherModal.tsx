@@ -15,7 +15,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
  isOpen,
  onClose,
  leads,
- onUpdateLead= false
+ onUpdateLead
 }) => {
  const [isProcessing, setIsProcessing] = useState(false);
  const [processedCount, setProcessedCount] = useState(0);

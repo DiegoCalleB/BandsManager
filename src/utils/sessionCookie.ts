@@ -6,12 +6,12 @@
  * conexión. Se marca Secure siempre que la página vaya por https, para no romper el desarrollo
  * en local, que va por http.
  */
-const NOMBRE_COOKIE =' bakandeya_token';
+const NOMBRE_COOKIE = 'bakandeya_token';
 const DURACION_SEGUNDOS = 30 * 24 * 60 * 60;
 
 export function guardarCookieDeSesion(token: string): void {
  try {
- const seguro = typeof window !==' undefined' && window.location.protocol ===' https:' ?' ; Secure' :' ';
+ const seguro = typeof window !== 'undefined' && window.location.protocol === 'https: '? '; Secure' : '';
  document.cookie = `${NOMBRE_COOKIE}=${token}; path=/; max-age=${DURACION_SEGUNDOS}; SameSite=Lax${seguro}`;
  } catch (e) {}
 }

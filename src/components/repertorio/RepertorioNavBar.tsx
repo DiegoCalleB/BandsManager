@@ -51,7 +51,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  {/* Module Title */}
  <div className="flex items-center gap-2.5 min-w-0">
  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${
-' bg-[var(--acc)]/15 text-[var(--acc)]'
+'bg-[var(--acc)]/15 text-[var(--acc)]'
  }`}>
  <Music className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
  </div>
@@ -86,14 +86,14 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('setlists')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='setlists'
- ?' bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
  <Layers className="w-3.5 h-3.5" />
  <span>Setlists</span>
  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
- activeTab ==='setlists' && !'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]'
+ activeTab ==='setlists' && 'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]'
  }`}>
  {setlists.length}
  </span>
@@ -105,14 +105,14 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  onClick={() => setActiveTab('catalogo')}
  className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
  activeTab ==='catalogo'
- ?' bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+ ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
  :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
  }`}
  >
  <Disc3 className="w-3.5 h-3.5" />
  <span>Discografía</span>
  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
- activeTab ==='catalogo' && !'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]'
+ activeTab ==='catalogo' && 'bg-[var(--acc-ink)]/20 text-[var(--acc-ink)]'
  }`}>
  {songCount}
  </span>

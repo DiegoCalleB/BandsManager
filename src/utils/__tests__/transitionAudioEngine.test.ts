@@ -1,17 +1,17 @@
-import { describe, it, expect } from' vitest';
+import { describe, it, expect } from 'vitest';
 import {
  computeTransitionTimeline,
  getTransitionGains,
  diagnoseTransition,
  DEFAULT_TRANSITION_CONFIG,
  resolveSongAudioUrl
-} from' ../transitionAudioEngine';
-import { Song } from' ../../types';
+} from '../transitionAudioEngine';
+import { Song } from '../../types';
 
 describe('transitionAudioEngine', () => {
  it('computeTransitionTimeline calcula correctamente los tiempos de crossfade', () => {
  const timeline = computeTransitionTimeline({
- style:' crossfade',
+ style: 'crossfade',
  fadeDurationSec: 5,
  tailDurationSec: 8,
  headDurationSec: 8,
@@ -29,7 +29,7 @@ describe('transitionAudioEngine', () => {
 
  it('computeTransitionTimeline calcula correctamente los tiempos de segue (corte seco)', () => {
  const timeline = computeTransitionTimeline({
- style:' segue',
+ style: 'segue',
  fadeDurationSec: 5,
  tailDurationSec: 8,
  headDurationSec: 8,
@@ -47,7 +47,7 @@ describe('transitionAudioEngine', () => {
 
  it('computeTransitionTimeline calcula correctamente los tiempos con pausa/interludio', () => {
  const timeline = computeTransitionTimeline({
- style:' pause',
+ style: 'pause',
  fadeDurationSec: 5,
  tailDurationSec: 6,
  headDurationSec: 6,
@@ -63,7 +63,7 @@ describe('transitionAudioEngine', () => {
 
  it('getTransitionGains calcula las ganancias en crossfade', () => {
  const config = {
- style:' crossfade' as const,
+ style: 'crossfade' as const,
  fadeDurationSec: 4,
  tailDurationSec: 8,
  headDurationSec: 8,
@@ -94,20 +94,20 @@ describe('transitionAudioEngine', () => {
 
  it('diagnoseTransition detecta compatibilidad armónica y salto de BPM', () => {
  const songA: Song = {
- id:' song-1',
- bandId:' band-1',
- titulo:' Canción A',
- tonalidad:' Lam',
+ id: 'song-1',
+ bandId: 'band-1',
+ titulo: 'Canción A',
+ tonalidad: 'Lam',
  bpm: 120,
  energia: 10,
  duracionMinutos: 3
  };
 
  const songB: Song = {
- id:' song-2',
- bandId:' band-1',
- titulo:' Canción B',
- tonalidad:' Lam',
+ id: 'song-2',
+ bandId: 'band-1',
+ titulo: 'Canción B',
+ tonalidad: 'Lam',
  bpm: 122,
  energia: 12,
  duracionMinutos: 4
@@ -120,26 +120,26 @@ describe('transitionAudioEngine', () => {
  expect(diag.scorePercent).toBeGreaterThanOrEqual(90);
  expect(diag.verdict.status).toBe('excelente');
  expect(diag.porQueSi.length).toBeGreaterThan(0);
- expect(diag.porQueSi.some(p => p.category ===' armonia')).toBe(true);
+ expect(diag.porQueSi.some(p => p.category === 'armonia')).toBe(true);
  expect(diag.stageRecommendations.length).toBeGreaterThan(0);
  });
 
  it('diagnoseTransition detecta choque armónico y genera críticas en porQueNo', () => {
  const songA: Song = {
- id:' song-1',
- bandId:' band-1',
- titulo:' Canción A',
- tonalidad:' Do',
+ id: 'song-1',
+ bandId: 'band-1',
+ titulo: 'Canción A',
+ tonalidad: 'Do',
  bpm: 90,
  energia: 8,
  duracionMinutos: 3
  };
 
  const songB: Song = {
- id:' song-2',
- bandId:' band-1',
- titulo:' Canción B',
- tonalidad:' Fa#', // Tritono en círculo de quintas (distancia 6 -> choque)
+ id: 'song-2',
+ bandId: 'band-1',
+ titulo: 'Canción B',
+ tonalidad: 'Fa#', // Tritono en círculo de quintas (distancia 6 -> choque)
  bpm: 140, // Gran salto de tempo (+50 BPM)
  energia: 18,
  duracionMinutos: 4
@@ -150,7 +150,7 @@ describe('transitionAudioEngine', () => {
  expect(diag.bpmDelta).toBe(50);
  expect(diag.recommendedStyle).toBe('pause');
  expect(diag.porQueNo.length).toBeGreaterThan(0);
- expect(diag.porQueNo.some(c => c.severity ===' critico')).toBe(true);
+ expect(diag.porQueNo.some(c => c.severity === 'critico')).toBe(true);
  expect(diag.verdict.status).toBe('desaconsejada');
  expect(diag.stageRecommendations.length).toBeGreaterThan(0);
  expect(diag.tips.length).toBeGreaterThan(0);
@@ -158,19 +158,19 @@ describe('transitionAudioEngine', () => {
 
  it('resolveSongAudioUrl obtiene url de demo o ideas', () => {
  const songWithUrl: Song = {
- id:' song-1',
- bandId:' band-1',
- titulo:' Tema 1',
- audioPrincipalUrl:' https://example.com/audio.mp3',
+ id: 'song-1',
+ bandId: 'band-1',
+ titulo: 'Tema 1',
+ audioPrincipalUrl: 'https://example.com/audio.mp3',
  duracionMinutos: 3
  };
  expect(resolveSongAudioUrl(songWithUrl)).toBe('https://example.com/audio.mp3');
 
  const songWithIdeas: Song = {
- id:' song-2',
- bandId:' band-1',
- titulo:' Tema 2',
- audioIdeas: [{ id:' idea-1', titulo:' Solo', audioUrl:' https://example.com/idea.mp3', tipo:' guitarra' }],
+ id: 'song-2',
+ bandId: 'band-1',
+ titulo: 'Tema 2',
+ audioIdeas: [{ id: 'idea-1', titulo: 'Solo', audioUrl: 'https://example.com/idea.mp3', tipo: 'guitarra' }],
  duracionMinutos: 3
  };
  expect(resolveSongAudioUrl(songWithIdeas)).toBe('https://example.com/idea.mp3');

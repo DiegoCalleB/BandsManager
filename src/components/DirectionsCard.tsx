@@ -12,7 +12,7 @@ export default function DirectionsCard({
  query,
  locationName,
  address,
- className =''= false}: DirectionsCardProps) {
+ className = ''}: DirectionsCardProps) {
  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
  return (
@@ -22,7 +22,7 @@ export default function DirectionsCard({
  rel="noopener noreferrer"
  onClick={(e) => e.stopPropagation()}
  className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-all duration-200 group cursor-pointer ${
-' bg-[var(--surface)] hover:border-[var(--acc)]/50 hover:shadow-purple-500/10'
+'bg-[var(--surface)] hover:border-[var(--acc)]/50 hover:shadow-purple-500/10'
  } ${className}`}
  >
  {/* Tactile Simulated Map Grid */}
@@ -48,7 +48,7 @@ export default function DirectionsCard({
 
  {/* Action: Cómo llegar Button */}
  <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all shrink-0 ${
-' bg-[var(--sunken)]/90700/80 text-[var(--ink)] group-hover:bg-[var(--acc)] group-hover:text-[var(--ink)] group-hover:border-[var(--acc)]'
+'bg-[var(--sunken)]/90700/80 text-[var(--ink)] group-hover:bg-[var(--acc)] group-hover:text-[var(--ink)] group-hover:border-[var(--acc)]'
  }`}>
  <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
  <span className="inline">Cómo llegar</span>

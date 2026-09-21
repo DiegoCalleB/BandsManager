@@ -1,4 +1,4 @@
-import { EPKConfig, BandMember, EPKVideo, Song, Concert, Rehearsal, User } from' ../../types';
+import { EPKConfig, BandMember, EPKVideo, Song, Concert, Rehearsal, User } from '../../types';
 
 export interface SpotifyTrack {
  id: string;
@@ -12,7 +12,7 @@ export interface SpotifyTrack {
 export interface SpotifyAlbum {
  id: string;
  name: string;
- albumType:' album' |' single' |' compilation';
+ albumType: 'album' | 'single' | 'compilation';
  releaseYear: string;
  totalTracks: number;
  coverUrl: string;
@@ -32,7 +32,7 @@ export interface SpotifyArtist {
 
 export interface QuickEventItem {
  id: string;
- tipo:' concierto' |' festival' |' ensayo' |' privado';
+ tipo: 'concierto' | 'festival' | 'ensayo' | 'privado';
  titulo: string;
  fecha: string;
  hora: string;

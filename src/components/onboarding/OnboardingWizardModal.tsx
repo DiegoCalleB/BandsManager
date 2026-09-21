@@ -1017,7 +1017,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
  )}
  </div>
  <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] mt-1">
- {isCelebrationStep ?'¡Todo Listo!' : currentStepDef?.title}
+ {isCelebrationStep ?'¡Todo Listo! ': currentStepDef?.title}
  </h2>
  </div>
 

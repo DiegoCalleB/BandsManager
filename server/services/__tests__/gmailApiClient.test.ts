@@ -118,9 +118,9 @@ describe('gmailApiClient', () => {
           payload: {
             mimeType: 'text/plain',
             headers: [
-              { name: 'From', value: 'Sala de Conciertos <sala@example.com>' },
+              { name: 'From', value: 'Sala de Conciertos <sala@example.com> '},
               { name: 'Subject', value: 'Re: Propuesta' },
-              { name: 'Message-ID', value: '<abc123@mail.gmail.com>' },
+              { name: 'Message-ID', value: '<abc123@mail.gmail.com> '},
               { name: 'Date', value: 'Mon, 01 Sep 2026 10:00:00 +0200' }
             ],
             body: { data: cuerpoBase64 }

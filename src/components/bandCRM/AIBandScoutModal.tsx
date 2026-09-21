@@ -15,7 +15,7 @@ export function AIBandScoutModal({
  isOpen,
  onClose,
  activeCampaign,
- onAddBands= false
+ onAddBands
 }: AIBandScoutModalProps) {
  const [city, setCity] = useState('');
  const [genre, setGenre] = useState('');
@@ -225,7 +225,7 @@ export function AIBandScoutModal({
  onClick={() => toggleSelection(idx)}
  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between
  ${selectedBands.has(idx) 
- ?' bg-[var(--acc)]/5' 
+ ? 'bg-[var(--acc)]/5' 
  : `${borderColor} ${inputBg} opacity-70 hover:opacity-100`}`}
  >
  <div className="flex items-center gap-4">

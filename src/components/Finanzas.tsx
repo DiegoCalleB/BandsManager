@@ -157,7 +157,7 @@ export default function Finanzas({
  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
  isSyncing
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)]'
- :' bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
+ : 'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30'
  }`}
  title="Sincronizar todas las transacciones financieras"
  >
@@ -166,7 +166,7 @@ export default function Finanzas({
  </button>
  
  <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${
-' bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
+'bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]'
  }`}>
  <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" /> Auto-sync
  </span>
@@ -631,7 +631,7 @@ export default function Finanzas({
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  className={`w-full rounded-[var(--r-s)] pl-9 ${searchTerm ?'pr-8' :'pr-3'} py-1.5 text-xs focus:outline-none font-sans transition-all ${
-' bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
+'bg-[var(--surface)] -[#99907c]/25 text-[var(--ink)] focus:-[var(--acc)]/50 placeholder:text-[var(--ink-2)]'
  }`}
  />
  {searchTerm && (
@@ -745,7 +745,7 @@ export default function Finanzas({
  className={`px-2.5 py-1 text-[9px] font-sans rounded font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ${
  p.estado ==='pagado'
  ? 'bg-[var(--ok)]/10 text-[var(--ok)]'
- :' bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
+ : 'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)] hover:bg-[var(--acc)]/15'
  }`}
  title="Hacer clic para cambiar el estado de pago"
  >

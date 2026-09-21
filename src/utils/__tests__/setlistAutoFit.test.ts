@@ -1,5 +1,5 @@
-import { describe, it, expect } from' vitest';
-import { computeAutoFitPlan, computeExpandedPlan, tryFitInPageCount, MeasureRangeFn } from' ../setlistAutoFit';
+import { describe, it, expect } from 'vitest';
+import { computeAutoFitPlan, computeExpandedPlan, tryFitInPageCount, MeasureRangeFn } from '../setlistAutoFit';
 
 const CANDIDATES = [28, 25, 22, 19, 17];
 

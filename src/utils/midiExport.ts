@@ -8,8 +8,8 @@
  * Escrito a mano y sin dependencias: el formato son unas pocas decenas de bytes de cabecera más
  * una lista de eventos, y añadir una librería entera para esto no compensa.
  */
-import { MelodicInstrument, MelodicNoteEvent } from' ../types';
-import { notaAMidi } from' ./musicTheory';
+import { MelodicInstrument, MelodicNoteEvent } from '../types';
+import { notaAMidi } from './musicTheory';
 
 /** Pulsos por negra. 480 es el estándar de facto en los DAW y da resolución de sobra. */
 const PPQ = 480;
@@ -75,7 +75,7 @@ export function eventosAMidiBlob(opts: {
  nombrePista?: string;
 }): Blob {
  const bpm = Math.max(20, Math.min(300, Number(opts.bpm) || 120));
- const esPercusion = opts.instrument ===' percusion';
+ const esPercusion = opts.instrument === 'percusion';
  const canal = esPercusion ? CANAL_PERCUSION : CANAL_MELODICO;
 
  const eventos: EventoMidi[] = [];
@@ -123,5 +123,5 @@ export function eventosAMidiBlob(opts: {
  ]);
 
  const bytes = new Uint8Array([...cabecera, ...chunk('MTrk', pista)]);
- return new Blob([bytes], { type:' audio/midi' });
+ return new Blob([bytes], { type: 'audio/midi' });
 }

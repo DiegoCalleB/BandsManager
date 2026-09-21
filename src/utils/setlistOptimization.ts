@@ -1,4 +1,4 @@
-import { Setlist, Song, SetlistItem } from' ../types';
+import { Setlist, Song, SetlistItem } from '../types';
 
 /**
  * Calcula la duración total en segundos de un setlist sumando
@@ -10,7 +10,7 @@ export function calculateSetlistDurationSec(setlist: Setlist, songs: Song[]): nu
 
  let totalSec = 0;
  for (const item of setlist.items) {
- if (item.tipoItem ===' cancion' && item.songId) {
+ if (item.tipoItem === 'cancion' && item.songId) {
  const s = songMap.get(item.songId);
  if (s) {
  if (s.duracionSegundos && s.duracionSegundos > 0) {
@@ -25,7 +25,7 @@ export function calculateSetlistDurationSec(setlist: Setlist, songs: Song[]): nu
  }
  }
  }
- } else if (item.tipoItem ===' bloque') {
+ } else if (item.tipoItem === 'bloque') {
  if (item.duracionEstimadaSegundos && item.duracionEstimadaSegundos > 0) {
  totalSec += item.duracionEstimadaSegundos;
  } else if (item.duracionEstimadaMinutos && item.duracionEstimadaMinutos > 0) {
@@ -33,13 +33,13 @@ export function calculateSetlistDurationSec(setlist: Setlist, songs: Song[]): nu
  } else {
  // Duración estándar por defecto de bloque (2 min presentación/chapa, 1 min cambio, 3 min bis)
  switch (item.bloqueSubtipo) {
- case' bis':
+ case 'bis':
  totalSec += 180;
  break;
- case' cambio_instrumento':
+ case 'cambio_instrumento':
  totalSec += 60;
  break;
- case' descanso':
+ case 'descanso':
  totalSec += 300;
  break;
  default:
@@ -75,7 +75,7 @@ export function findBestSetlistMatch(
  let bestMatch: SetlistMatchResult | null = null;
  let lowestScore = Infinity;
 
- const normalizedFormat = (targetFormat ||' ').toLowerCase();
+ const normalizedFormat = (targetFormat || '').toLowerCase();
  const isFestival = normalizedFormat.includes('fest') || normalizedFormat.includes('aire');
  const isAcustico = normalizedFormat.includes('acust') || normalizedFormat.includes('bar');
 
@@ -86,14 +86,14 @@ export function findBestSetlistMatch(
 
  // Bonus por coincidencia de formato
  let formatPenalty = 0;
- if (isFestival && st.tipoFormato !==' festival') formatPenalty += 8;
- if (isAcustico && st.tipoFormato !==' acustico') formatPenalty += 8;
+ if (isFestival && st.tipoFormato !== 'festival') formatPenalty += 8;
+ if (isAcustico && st.tipoFormato !== 'acustico') formatPenalty += 8;
 
  const score = diff * 2 + formatPenalty;
 
  if (score < lowestScore) {
  lowestScore = score;
- let reason =' ';
+ let reason = '';
  if (diff === 0) {
  reason = `Duración exacta (${durationMin} min)`;
  } else if (diff <= 5) {
@@ -102,8 +102,8 @@ export function findBestSetlistMatch(
  reason = `Setlist más cercano (${durationMin} min)`;
  }
 
- if (isFestival && st.tipoFormato ===' festival') {
- reason +=' · Formato festival';
+ if (isFestival && st.tipoFormato === 'festival') {
+ reason += '· Formato festival';
  }
 
  bestMatch = {
@@ -129,7 +129,7 @@ export function generateAutoSetlistForConcert(
  isFestival: boolean = false
 ): { nombre: string; items: SetlistItem[]; estimatedDurationMin: number } {
  const targetSec = targetMinutes * 60;
- const nombre = `Bolo ${venueName ||' Directo'} (${targetMinutes} min)`;
+ const nombre = `Bolo ${venueName || 'Directo'} (${targetMinutes} min)`;
 
  // Ordenar canciones por energía descendente si es festival, o balanceada para sala
  const availableSongs = [...songs].filter(s => s.id);
@@ -163,9 +163,9 @@ export function generateAutoSetlistForConcert(
  if (items.length === 2 && targetMinutes >= 45) {
  items.push({
  id: `block-saludo-${Date.now()}`,
- tipoItem:' bloque',
- bloqueSubtipo:' presentacion',
- tituloCustom:' Saludo al público',
+ tipoItem: 'bloque',
+ bloqueSubtipo: 'presentacion',
+ tituloCustom: 'Saludo al público',
  duracionEstimadaMinutos: 2
  });
  accumulatedSec += 120;
@@ -175,9 +175,9 @@ export function generateAutoSetlistForConcert(
  if (items.length > 5 && accumulatedSec + duration > targetSec - 300 && targetMinutes >= 60) {
  items.push({
  id: `block-bis-${Date.now()}`,
- tipoItem:' bloque',
- bloqueSubtipo:' bis',
- tituloCustom:' Petición de Bises / Parón',
+ tipoItem: 'bloque',
+ bloqueSubtipo: 'bis',
+ tituloCustom: 'Petición de Bises / Parón',
  duracionEstimadaMinutos: 2
  });
  accumulatedSec += 120;
@@ -185,7 +185,7 @@ export function generateAutoSetlistForConcert(
 
  items.push({
  id: `item-auto-${s.id}-${Date.now()}-${songIndex}`,
- tipoItem:' cancion',
+ tipoItem: 'cancion',
  songId: s.id
  });
  accumulatedSec += duration;

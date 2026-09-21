@@ -1,6 +1,6 @@
-import { describe, it, expect } from' vitest';
-import { parseTonalidad, tonalidadesSonFiables, evaluarTransicionArmonica } from' ../harmonicAnalysis';
-import { Song } from' ../../types';
+import { describe, it, expect } from 'vitest';
+import { parseTonalidad, tonalidadesSonFiables, evaluarTransicionArmonica } from '../harmonicAnalysis';
+import { Song } from '../../types';
 
 describe('harmonicAnalysis', () => {
  describe('parseTonalidad', () => {
@@ -37,27 +37,27 @@ describe('harmonicAnalysis', () => {
  describe('tonalidadesSonFiables', () => {
  it('false cuando la mayoría está en el fallback (Mim)', () => {
  const songs: Song[] = [
- { id:' 1', titulo:' A', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Mim', bpm: 120 },
- { id:' 2', titulo:' B', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Mim', bpm: 120 },
- { id:' 3', titulo:' C', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Sol', bpm: 120 }
+ { id: '1', titulo: 'A', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Mim', bpm: 120 },
+ { id: '2', titulo: 'B', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Mim', bpm: 120 },
+ { id: '3', titulo: 'C', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Sol', bpm: 120 }
  ];
  expect(tonalidadesSonFiables(songs)).toBe(false);
  });
 
  it('true cuando hay variedad real de tonalidades', () => {
  const songs: Song[] = [
- { id:' 1', titulo:' A', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Do', bpm: 120 },
- { id:' 2', titulo:' B', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Sol', bpm: 120 },
- { id:' 3', titulo:' C', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Mim', bpm: 120 },
- { id:' 4', titulo:' D', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Re', bpm: 120 }
+ { id: '1', titulo: 'A', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Do', bpm: 120 },
+ { id: '2', titulo: 'B', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Sol', bpm: 120 },
+ { id: '3', titulo: 'C', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Mim', bpm: 120 },
+ { id: '4', titulo: 'D', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Re', bpm: 120 }
  ];
  expect(tonalidadesSonFiables(songs)).toBe(true);
  });
 
  it('false con muy pocas canciones con tonalidad, aunque no coincidan', () => {
  const songs: Song[] = [
- { id:' 1', titulo:' A', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Do', bpm: 120 },
- { id:' 2', titulo:' B', duracion:' 3:00', duracionSegundos: 180, tonalidad:' Sol', bpm: 120 }
+ { id: '1', titulo: 'A', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Do', bpm: 120 },
+ { id: '2', titulo: 'B', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Sol', bpm: 120 }
  ];
  expect(tonalidadesSonFiables(songs)).toBe(false);
  });

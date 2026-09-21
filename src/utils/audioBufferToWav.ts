@@ -54,5 +54,5 @@ export function bufferToWavBlob(buffer: AudioBuffer): Blob {
  offset++;
  }
 
- return new Blob([out.buffer], { type:' audio/wav' });
+ return new Blob([out.buffer], { type: 'audio/wav' });
 }

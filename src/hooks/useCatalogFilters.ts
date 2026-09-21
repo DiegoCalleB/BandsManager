@@ -1,5 +1,5 @@
-import { useState, useMemo } from' react';
-import { Song } from' ../types';
+import { useState, useMemo } from 'react';
+import { Song } from '../types';
 
 export function useCatalogFilters(songs: Song[]) {
  const [groupByAlbum, setGroupByAlbum] = useState(false);
@@ -8,10 +8,10 @@ export function useCatalogFilters(songs: Song[]) {
  const [catalogStatusFilter, setCatalogStatusFilter] = useState<string>('todos');
 
  const albumsList = useMemo(() => {
- if (!Array.isArray(songs)) return ['todos',' Singles / Sin Disco'];
- const safe = songs.filter((s): s is Song => Boolean(s && typeof s ===' object' && s.id));
+ if (!Array.isArray(songs)) return ['todos', 'Singles / Sin Disco'];
+ const safe = songs.filter((s): s is Song => Boolean(s && typeof s === 'object' && s.id));
  const list = safe
- .map((s) => (s.albumDisco || s.album ||' ').trim())
+ .map((s) => (s.albumDisco || s.album || '').trim())
  .filter((a): a is string => Boolean(a));
  const albumSet = new Set(list);
  if (safe.some((s) => !s.albumDisco && !s.album) || albumSet.size === 0) {
@@ -24,15 +24,15 @@ export function useCatalogFilters(songs: Song[]) {
  const filteredSongs = useMemo(() => {
  const filtered = songs.filter(s => {
  const query = catalogSearch.toLowerCase();
- const matchSearch = catalogSearch ===' ' ||
+ const matchSearch = catalogSearch === '' ||
  s.titulo.toLowerCase().includes(query) ||
  (s.tonalidad && s.tonalidad.toLowerCase().includes(query)) ||
  (s.cantantePrincipal && s.cantantePrincipal.toLowerCase().includes(query)) ||
  (s.notasInternas && s.notasInternas.toLowerCase().includes(query));
 
- const matchAlbum = catalogAlbumFilter ===' todos' || (s.albumDisco || s.album ||' Singles / Sin Disco') === catalogAlbumFilter;
- const matchStatus = catalogStatusFilter ===' todos'
- || (catalogStatusFilter ===' favoritos' ? Boolean(s.favoritoGeneral) : s.estadoTema === catalogStatusFilter);
+ const matchAlbum = catalogAlbumFilter === 'todos' || (s.albumDisco || s.album || 'Singles / Sin Disco') === catalogAlbumFilter;
+ const matchStatus = catalogStatusFilter === 'todos'
+ || (catalogStatusFilter === 'favoritos' ? Boolean(s.favoritoGeneral) : s.estadoTema === catalogStatusFilter);
 
  return matchSearch && matchAlbum && matchStatus;
  });
@@ -41,8 +41,8 @@ export function useCatalogFilters(songs: Song[]) {
 
  // Group visually by album: sort by album name (Singles last), then by track order within it
  return [...filtered].sort((a, b) => {
- const albumA = a.albumDisco || a.album ||' ';
- const albumB = b.albumDisco || b.album ||' ';
+ const albumA = a.albumDisco || a.album || '';
+ const albumB = b.albumDisco || b.album || '';
  if (albumA !== albumB) {
  if (!albumA) return 1;
  if (!albumB) return -1;

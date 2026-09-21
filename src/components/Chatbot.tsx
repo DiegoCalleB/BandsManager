@@ -1733,7 +1733,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  type="button"
  onClick={() => setIsAutonomyModalOpen(true)}
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
-' bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/40/40'
+'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/40/40'
  }`}
  title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
  >
@@ -1748,7 +1748,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  ) : (
  <div 
  className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold opacity-80 ${
-' bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30'
+'bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30'
  }`}
  title="Límites de autonomía configurados (Configuración restringida a Administradores)"
  >

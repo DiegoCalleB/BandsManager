@@ -805,7 +805,7 @@ async function processNeuralStemsReplicate(
     const resolvedUrl = await ensureCompressedAudioForReplicate(publicUrl, effectiveBandId, effectiveHash);
     const tPreloadEnd = Date.now();
 
-    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL de entrada: ${resolvedUrl.startsWith('data:') ? 'Data URI (' + resolvedUrl.substring(0, 30) + '...)' : resolvedUrl}`);
+    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL de entrada: ${resolvedUrl.startsWith('data:') ? 'Data URI ( '+ resolvedUrl.substring(0, 30) + '...)' : resolvedUrl}`);
     const DEMUCS_VERSION = "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953";
 
     // shifts debe ser >= 1 en el schema de cjwbw/demucs (1 = procesamiento rápido sin shifts adicionales; 0 genera error 422)
@@ -871,7 +871,7 @@ async function processNeuralStemsReplicate(
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
       if (Date.now() - startTime > 180000) {
         console.warn("Demucs separation timeout en Replicate (>180s)...");
-        const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-4).join(' | ');
+        const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-4).join( '| ');
         return {
           stemsMap: null,
           provider: 'replicate',

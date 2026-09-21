@@ -430,7 +430,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
  title="Copiar formato listo para WhatsApp"
  >
  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
- <span>{copied ?'¡Copiado!' :'Copiar para WhatsApp'}</span>
+ <span>{copied ?'¡Copiado! ':'Copiar para WhatsApp'}</span>
  </button>
  )}
  </div>

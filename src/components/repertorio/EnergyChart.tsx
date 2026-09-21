@@ -586,7 +586,7 @@ export function EnergyChart({
  </div>
  {d.transitionFromPrev.motivos.length > 0 && (
  <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
- {d.transitionFromPrev.motivos.join(' ·')}
+ {d.transitionFromPrev.motivos.join( '·')}
  </p>
  )}
  </div>

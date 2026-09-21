@@ -32,7 +32,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
  normalizeStatus,
  normalizeType,
  autoDetectVenueAddress,
- sectionTab= false,
+ sectionTab,
  activeCampaign,
  onLeadLogoUpload,
  isUploadingLeadLogo = false

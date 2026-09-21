@@ -1,6 +1,6 @@
-import React, { createContext, useContext, ReactNode } from' react';
-import { useAuth } from' ../hooks/useAuth';
-import { User } from' ../types';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { User } from '../types';
 
 export interface AuthContextType {
  currentUser: User | null;

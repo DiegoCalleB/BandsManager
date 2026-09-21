@@ -1,5 +1,5 @@
-import { Song, SetlistItem } from' ../types';
-import { parseTonalidad, evaluarTransicionArmonica, CompatibilidadArmonica } from' ./harmonicAnalysis';
+import { Song, SetlistItem } from '../types';
+import { parseTonalidad, evaluarTransicionArmonica, CompatibilidadArmonica } from './harmonicAnalysis';
 
 /**
  * Coste de una transición entre dos canciones consecutivas del setlist, combinando las tres
@@ -27,17 +27,17 @@ export interface CosteTransicion {
  harmonyCost: number;
  bpmCost: number;
  energyCost: number;
- harmonyRelation: CompatibilidadArmonica |' desconocida';
+ harmonyRelation: CompatibilidadArmonica | 'desconocida';
  bpmDiff: number | null;
  energyDiff: number | null;
 }
 
 function costeArmonia(relation: CompatibilidadArmonica | null): number {
  switch (relation) {
- case' identica': return 0;
- case' compatible': return 0.15;
- case' neutra': return 0.5;
- case' choque': return 1;
+ case 'identica': return 0;
+ case 'compatible': return 0.15;
+ case 'neutra': return 0.5;
+ case 'choque': return 1;
  default: return 0.35; // sin tonalidad fiable en alguna de las dos: coste neutro, ni premia ni castiga
  }
 }
@@ -49,13 +49,13 @@ export function calcularCosteTransicion(a: Song, b: Song): CosteTransicion {
  const harmonyRelation = keyA && keyB ? evaluarTransicionArmonica(keyA, keyB) : null;
  const harmonyCost = costeArmonia(harmonyRelation);
 
- const bpmA = typeof a.bpm ===' number' && a.bpm > 0 ? a.bpm : null;
- const bpmB = typeof b.bpm ===' number' && b.bpm > 0 ? b.bpm : null;
+ const bpmA = typeof a.bpm === 'number' && a.bpm > 0 ? a.bpm : null;
+ const bpmB = typeof b.bpm === 'number' && b.bpm > 0 ? b.bpm : null;
  const bpmDiff = bpmA !== null && bpmB !== null ? Math.abs(bpmA - bpmB) : null;
  const bpmCost = bpmDiff !== null ? Math.max(0, Math.min(1, bpmDiff / BPM_DIFF_MAXIMA)) : 0.3;
 
- const energyA = typeof a.energia ===' number' ? a.energia : null;
- const energyB = typeof b.energia ===' number' ? b.energia : null;
+ const energyA = typeof a.energia === 'number' ? a.energia : null;
+ const energyB = typeof b.energia === 'number' ? b.energia : null;
  const energyDiff = energyA !== null && energyB !== null ? Math.abs(energyA - energyB) : null;
  const energyCost = energyDiff !== null ? Math.max(0, Math.min(1, energyDiff / ENERGIA_DIFF_MAXIMA)) : 0.3;
 
@@ -66,15 +66,15 @@ export function calcularCosteTransicion(a: Song, b: Song): CosteTransicion {
  harmonyCost,
  bpmCost,
  energyCost,
- harmonyRelation: harmonyRelation ??' desconocida',
+ harmonyRelation: harmonyRelation ?? 'desconocida',
  bpmDiff,
  energyDiff
  };
 }
 
 export interface EvaluacionUnion {
- status:' ok' |' review';
- icon:' ✓' |' ✕';
+ status: 'ok' | 'review';
+ icon: '✓' | '✕';
  scorePercent: number;
  title: string;
  shortBadge: string;
@@ -96,12 +96,12 @@ export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
  const avisosCriticos: string[] = [];
 
  // 1. Armonía
- if (coste.harmonyRelation ===' choque') {
- avisosCriticos.push(`Choque tonal (${songA.tonalidad ||' ?'} ➔ ${songB.tonalidad ||' ?'})`);
- } else if (coste.harmonyRelation ===' identica') {
- motivos.push(`Misma tonalidad (${songA.tonalidad ||' ?'})`);
- } else if (coste.harmonyRelation ===' compatible') {
- motivos.push(`Tonalidades afines (${songA.tonalidad ||' ?'} ➔ ${songB.tonalidad ||' ?'})`);
+ if (coste.harmonyRelation === 'choque') {
+ avisosCriticos.push(`Choque tonal (${songA.tonalidad || '?'} ➔ ${songB.tonalidad || '?'})`);
+ } else if (coste.harmonyRelation === 'identica') {
+ motivos.push(`Misma tonalidad (${songA.tonalidad || '?'})`);
+ } else if (coste.harmonyRelation === 'compatible') {
+ motivos.push(`Tonalidades afines (${songA.tonalidad || '?'} ➔ ${songB.tonalidad || '?'})`);
  }
 
  // 2. Tempo (BPM)
@@ -124,21 +124,21 @@ export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
  }
  }
 
- const isOk = avisosCriticos.length === 0 && scorePercent >= 60 && coste.harmonyRelation !==' choque';
- const status:' ok' |' review' = isOk ?' ok' :' review';
- const icon = isOk ?' ✓' :' ✕';
+ const isOk = avisosCriticos.length === 0 && scorePercent >= 60 && coste.harmonyRelation !== 'choque';
+ const status: 'ok' | 'review' = isOk ? 'ok' : 'review';
+ const icon = isOk ? '✓' : '✕';
 
  const title = isOk
  ? `Unión fluida y armónica (${scorePercent}%)`
- : `Revisar unión (${scorePercent}%${avisosCriticos.length > 0 ? ` · ${avisosCriticos[0]}` :' '})`;
+ : `Revisar unión (${scorePercent}%${avisosCriticos.length > 0 ? ` · ${avisosCriticos[0]}` : ''})`;
 
  const shortBadge = isOk
  ? `✓ OK (${scorePercent}%)`
  : `✕ Revisar (${scorePercent}%)`;
 
- const badgeBg = isOk ?' bg-[var(--ok)]/15' :' bg-[var(--alert)]/15';
- const badgeText = isOk ?' text-[var(--ok)]/60' :' text-[var(--alert)]/60';
- const badgeBorder = isOk ?' border-[var(--ok)]/35' :' border-[var(--hair)]';
+ const badgeBg = isOk ? 'bg-[var(--ok)]/15' : 'bg-[var(--alert)]/15';
+ const badgeText = isOk ? 'text-[var(--ok)]/60' : 'text-[var(--alert)]/60';
+ const badgeBorder = isOk ? 'border-[var(--ok)]/35' : 'border-[var(--hair)]';
 
  return {
  status,
@@ -187,7 +187,7 @@ export function sugerirMejorPuntoParaChapa(items: SetlistItem[], songs: Song[]):
  for (let i = 0; i < items.length - 1; i++) {
  const actual = items[i];
  const siguiente = items[i + 1];
- if (actual.tipoItem !==' cancion' || siguiente.tipoItem !==' cancion') continue;
+ if (actual.tipoItem !== 'cancion' || siguiente.tipoItem !== 'cancion') continue;
 
  const songA = songs.find((s) => s.id === actual.songId);
  const songB = songs.find((s) => s.id === siguiente.songId);

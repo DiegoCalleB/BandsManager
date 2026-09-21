@@ -207,7 +207,7 @@ export function MemberNotesModal({
 
  {/* Informational Tip */}
  <div className={`p-3 rounded-[var(--r-m)] my-3 text-xs flex items-start gap-2.5 ${
-' bg-[var(--ok-soft)] text-[var(--ink-2)]'
+'bg-[var(--ok-soft)] text-[var(--ink-2)]'
  }`}>
  <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
  <div>
@@ -307,7 +307,7 @@ export function MemberNotesModal({
  key={member.id || member.name}
  className={`p-3.5 rounded-[var(--r-m)] transition-all ${
  hasNote
- ?' bg-[var(--surface)]/90/30'
+ ? 'bg-[var(--surface)]/90/30'
  : 'bg-[var(--bg)]/70'
  }`}
  >
@@ -387,7 +387,7 @@ export function MemberNotesModal({
  }`}
  >
  {savedSuccess ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
- {savedSuccess ?'¡Guardado!' :'Guardar Notas'}
+ {savedSuccess ?'¡Guardado! ':'Guardar Notas'}
  </button>
  </div>
  </div>

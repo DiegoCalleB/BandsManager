@@ -1,4 +1,4 @@
-import { describe, it, expect } from' vitest';
+import { describe, it, expect } from 'vitest';
 import {
  NAV_ITEMS,
  NAV_GROUPS,
@@ -10,8 +10,8 @@ import {
  shouldGroupNavForPlan,
  findNavGroupIdForItem,
  NavItemId,
-} from' ../navGroups';
-import { PLANS } from' ../../utils/planPermissions';
+} from '../navGroups';
+import { PLANS } from '../../utils/planPermissions';
 
 describe('navGroups config', () => {
  it('every id referenced by groups/pinned/flat lists exists in NAV_ITEMS', () => {
@@ -36,10 +36,10 @@ describe('navGroups config', () => {
 
  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools', () => {
  // Cuando hay agrupación (planes >7 módulos), mostramos:
- // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye' repertorio' y' discografia')
+ // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye'repertorio' y'discografia')
  // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
  const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
- const toolIds: NavItemId[] = ['metronome',' tuner'];
+ const toolIds: NavItemId[] = ['metronome', 'tuner'];
  const groupedWithoutExtraItems = grouped.filter(id => !toolIds.includes(id));
  expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
  expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
@@ -61,7 +61,7 @@ describe('navGroups config', () => {
  });
 
  it('pins exactly resumen and calendario at top, chat at bottom outside any group', () => {
- expect(new Set(NAV_PINNED_TOP_IDS)).toEqual(new Set(['resumen',' calendario']));
+ expect(new Set(NAV_PINNED_TOP_IDS)).toEqual(new Set(['resumen', 'calendario']));
  expect(new Set(NAV_PINNED_BOTTOM_IDS)).toEqual(new Set(['chat']));
  });
 

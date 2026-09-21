@@ -57,6 +57,8 @@ interface PracticeModePanelProps {
  idea: SongAudioIdea;
  tracks: AudioTrack[];
  currentUser?: User;
+ /** Modo de alto contraste para leer en escenario (ver SetlistPerformanceView) */
+ glareMode?: boolean;
  onClose: () => void;
  /** Permite abrir el Modo Studio multipista completo de este tema */
  onOpenStudio?: () => void;
@@ -76,7 +78,7 @@ function formatTime(totalSeconds: number): string {
  return `${m}:${String(s).padStart(2,'0')}`;
 }
 
-export default function PracticeModePanel({ song, idea, tracks, currentUser, onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
+export default function PracticeModePanel({ song, idea, tracks, currentUser, glareMode, onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
  const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
  const [overrides, setOverrides] = useState<Record<string, TrackOverride>>({});
@@ -517,7 +519,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, onC
  <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
  {/* Header */}
- <div className={`px-5 py-4 flex items-center justify-between ${' bg-[var(--bg)]'}`}>
+ <div className={`px-5 py-4 flex items-center justify-between ${ 'bg-[var(--bg)]'}`}>
  <div className="flex items-center gap-2.5 min-w-0">
  <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
  <Headphones className="w-5 h-5" />
@@ -800,7 +802,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, onC
  <>
  <p className={`text-[10px] font-sans ${chordsSourceLabel(chords.chordsSource).tone}`}>
  {chordsSourceLabel(chords.chordsSource).text}
- {chords.esAproximado &&' · ⚠️ aproximado, verifica de oído'}
+ {chords.esAproximado && '· ⚠️ aproximado, verifica de oído'}
  </p>
  <pre className="text-[11px] font-sans whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
  {chords.cifradoTexto}

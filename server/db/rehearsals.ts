@@ -118,7 +118,7 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
   let error = res.error;
 
   while (error && error.message && error.message.includes("Could not find the '") && error.message.includes("' column of 'rehearsals'")) {
-    const match = error.message.match(/Could not find the '([^']+)' column of 'rehearsals'/);
+    const match = error.message.match(/Could not find the '([^']+)'column of 'rehearsals'/);
     if (match && match[1] && currentPayload[match[1]] !== undefined) {
       const missingCol = match[1];
       console.warn(`[Rehearsals] Columna '${missingCol}' no encontrada en Supabase rehearsals. Reintentando sin ella. Ejecuta la migración SQL.`);

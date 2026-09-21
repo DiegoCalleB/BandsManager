@@ -93,7 +93,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  onDragEnd,
  isDragging = false,
  isDragOver = false,
- colors= false}) => {
+ colors }) => {
  const [showMenu, setShowMenu] = useState(false);
  const menuRef = useRef<HTMLDivElement>(null);
 
@@ -242,7 +242,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  title={(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? 'Detectado automáticamente por Iris desde el audio' : undefined}
  className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--surface)] text-[var(--ink-2)]"
  >
- {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? ' 🤖' : ''}
+ {song.tonalidad ||'—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? '🤖' : ''}
  </span>
 
  {/* Duration */}
@@ -303,7 +303,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  type="button"
  onClick={onOpenChords}
  className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
-' bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)]/25'
+'bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)]/25'
  }`}
  title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
  >
@@ -346,7 +346,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
  className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
  hasIrisStems(song)
  ? 'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500text-[var(--acc)]/70 /40'
- : ' bg-[var(--surface)] hover:bg-[var(--surface)]text-[var(--acc)]/70 /30'
+ : 'bg-[var(--surface)] hover:bg-[var(--surface)]text-[var(--acc)]/70 /30'
  }`}
  title={hasIrisStems(song) ? 'Ver pistas e instrumentos separados con Iris' : 'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
  >

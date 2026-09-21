@@ -5,17 +5,17 @@
  */
 
 export interface WeatherAlert {
- id:' rain' |' storm' |' cold' |' wind';
- severity:' warning' |' danger';
+ id: 'rain' | 'storm' | 'cold' | 'wind';
+ severity: 'warning' | 'danger';
  title: string;
  badge: string; // e.g. "🌧️ Lluvia 75%", "❄️ Frío Extremo 2°C", "💨 Viento 54 km/h", "⚡ Tormenta"
  shortAdvice: string;
  fullAdvice: string[];
- icon:' rain' |' lightning' |' snow' |' wind' |' thermometer';
+ icon: 'rain' | 'lightning' | 'snow' | 'wind' | 'thermometer';
 }
 
 export interface EventWeatherData {
- status:' loading' |' success' |' future' |' past' |' error';
+ status: 'loading' | 'success' | 'future' | 'past' | 'error';
  temperature?: number;
  apparentTemperature?: number;
  rainProbability?: number;
@@ -24,7 +24,7 @@ export interface EventWeatherData {
  windGusts?: number;
  weatherCode?: number;
  conditionText?: string;
- iconType?:' sun' |' cloud-sun' |' cloud' |' rain' |' lightning' |' snow' |' fog';
+ iconType?: 'sun' | 'cloud-sun' | 'cloud' | 'rain' | 'lightning' | 'snow' | 'fog';
  alerts: WeatherAlert[];
  isOutdoorAlert?: boolean;
  outdoorAlertMessage?: string;
@@ -56,41 +56,41 @@ function interpretWeatherCode(code: number): {
 } {
  switch (code) {
  case 0:
- return { conditionText:' Cielo despejado', iconType:' sun' };
+ return { conditionText: 'Cielo despejado', iconType: 'sun' };
  case 1:
- return { conditionText:' Mayormente despejado', iconType:' cloud-sun' };
+ return { conditionText: 'Mayormente despejado', iconType: 'cloud-sun' };
  case 2:
- return { conditionText:' Intervalos nubosos', iconType:' cloud-sun' };
+ return { conditionText: 'Intervalos nubosos', iconType: 'cloud-sun' };
  case 3:
- return { conditionText:' Nublado', iconType:' cloud' };
+ return { conditionText: 'Nublado', iconType: 'cloud' };
  case 45:
  case 48:
- return { conditionText:' Niebla / Neblina', iconType:' fog' };
+ return { conditionText: 'Niebla / Neblina', iconType: 'fog' };
  case 51:
  case 53:
  case 55:
- return { conditionText:' Llovizna fina', iconType:' rain' };
+ return { conditionText: 'Llovizna fina', iconType: 'rain' };
  case 61:
- return { conditionText:' Lluvia débil', iconType:' rain' };
+ return { conditionText: 'Lluvia débil', iconType: 'rain' };
  case 63:
- return { conditionText:' Lluvia moderada', iconType:' rain' };
+ return { conditionText: 'Lluvia moderada', iconType: 'rain' };
  case 65:
- return { conditionText:' Lluvia fuerte', iconType:' rain' };
+ return { conditionText: 'Lluvia fuerte', iconType: 'rain' };
  case 71:
  case 73:
  case 75:
- return { conditionText:' Nieve', iconType:' snow' };
+ return { conditionText: 'Nieve', iconType: 'snow' };
  case 80:
  case 81:
  case 82:
- return { conditionText:' Chubascos', iconType:' rain' };
+ return { conditionText: 'Chubascos', iconType: 'rain' };
  case 95:
- return { conditionText:' Tormenta eléctrica', iconType:' lightning' };
+ return { conditionText: 'Tormenta eléctrica', iconType: 'lightning' };
  case 96:
  case 99:
- return { conditionText:' Tormenta con granizo', iconType:' lightning' };
+ return { conditionText: 'Tormenta con granizo', iconType: 'lightning' };
  default:
- return { conditionText:' Tiempo variable', iconType:' cloud-sun' };
+ return { conditionText: 'Tiempo variable', iconType: 'cloud-sun' };
  }
 }
 
@@ -158,34 +158,34 @@ export function detectWeatherAlerts(params: DetectAlertsParams): WeatherAlert[] 
 
  if (isThunderstorm) {
  alerts.push({
- id:' storm',
- severity:' danger',
- title:' Alerta de Tormenta Eléctrica',
- badge:' ⚡ Tormenta Eléctrica',
- shortAdvice:' Riesgo eléctrico en escenario. Verificar diferenciales y tomas de tierra antes del show.',
+ id: 'storm',
+ severity: 'danger',
+ title: 'Alerta de Tormenta Eléctrica',
+ badge: '⚡ Tormenta Eléctrica',
+ shortAdvice: 'Riesgo eléctrico en escenario. Verificar diferenciales y tomas de tierra antes del show.',
  fullAdvice: [
-' Comprobar toma de tierra con el técnico de sonido de la sala antes de encender amplificadores a válvulas.',
-' En escenario al aire libre, suspender pruebas de sonido si hay aparato eléctrico cercano sin carpa homologada.',
-' Disponer de fundas de plástico y lonas impermeables preparadas junto a pedaleras y mesa FOH.'
+'Comprobar toma de tierra con el técnico de sonido de la sala antes de encender amplificadores a válvulas.',
+'En escenario al aire libre, suspender pruebas de sonido si hay aparato eléctrico cercano sin carpa homologada.',
+'Disponer de fundas de plástico y lonas impermeables preparadas junto a pedaleras y mesa FOH.'
  ],
- icon:' lightning'
+ icon: 'lightning'
  });
  } else if (isRainy) {
  const isHeavy = rainProb >= 70 || rainMm >= 3 || [65, 82].includes(wCode);
  alerts.push({
- id:' rain',
- severity: isHeavy ?' danger' :' warning',
+ id: 'rain',
+ severity: isHeavy ? 'danger' : 'warning',
  title: isHeavy ? `Alerta de Lluvia Intensa (${rainProb}%)` : `Aviso de Lluvia Prevista (${rainProb}%)`,
  badge: `🌧️ Lluvia ${rainProb}%`,
  shortAdvice: isHeavy 
- ? `Lluvia intensa (${rainProb}%${rainMm > 0 ? ` · ~${rainMm} mm` :' '}). Proteger amplificadores, pedaleras y baterías en exterior.`
- : `Probabilidad de lluvia del ${rainProb}%${rainMm > 0 ? ` (~${rainMm} mm)` :' '}. Proteger amplificadores, pedaleras y baterías en exterior.`,
+ ? `Lluvia intensa (${rainProb}%${rainMm > 0 ? ` · ~${rainMm} mm` : ''}). Proteger amplificadores, pedaleras y baterías en exterior.`
+ : `Probabilidad de lluvia del ${rainProb}%${rainMm > 0 ? ` (~${rainMm} mm)` : ''}. Proteger amplificadores, pedaleras y baterías en exterior.`,
  fullAdvice: [
-' Exteriores: Exigir a la organización carpa estanca sobre la tarima y sobre la zona de control de sonido.',
-' Coordinar con la banda lonas impermeables de despliegue rápido para cubrir el backline en caso de chubasco repentino.',
-' Cuidado con la humedad en parches de percusión y componentes electrónicos de teclados y sintetizadores.'
+'Exteriores: Exigir a la organización carpa estanca sobre la tarima y sobre la zona de control de sonido.',
+'Coordinar con la banda lonas impermeables de despliegue rápido para cubrir el backline en caso de chubasco repentino.',
+'Cuidado con la humedad en parches de percusión y componentes electrónicos de teclados y sintetizadores.'
  ],
- icon:' rain'
+ icon: 'rain'
  });
  }
 
@@ -193,22 +193,22 @@ export function detectWeatherAlerts(params: DetectAlertsParams): WeatherAlert[] 
  if (temp <= 8 || apparentTemp <= 6) {
  const isExtremeCold = temp <= 3 || apparentTemp <= 1;
  alerts.push({
- id:' cold',
- severity: isExtremeCold ?' danger' :' warning',
+ id: 'cold',
+ severity: isExtremeCold ? 'danger' : 'warning',
  title: isExtremeCold 
  ? `Alerta por Frío Extremo (${temp}°C · Sensación ${apparentTemp}°C)` 
  : `Aviso por Bajas Temperaturas (${temp}°C)`,
  badge: isExtremeCold ? `❄️ Frío Extremo ${temp}°C` : `❄️ Frío ${temp}°C`,
  shortAdvice: isExtremeCold
- ?' Frío extremo: desajuste rápido en afinación de guitarras/bajos, pérdida de tacto en dedos y fatiga vocal.'
- :' Temperatura fresca: mantener instrumentos atemperados y calentar voz con antelación.',
+ ? 'Frío extremo: desajuste rápido en afinación de guitarras/bajos, pérdida de tacto en dedos y fatiga vocal.'
+ : 'Temperatura fresca: mantener instrumentos atemperados y calentar voz con antelación.',
  fullAdvice: [
-' Instrumentos: Los mástiles de madera sufren contracción rápida. Aclimatar dentro de sus fundas en la sala 45 minutos antes de desenfundar.',
-' Cuerdas: Las cuerdas frías se vuelven rígidas y desafinan con brusquedad bajo los focos calientes del escenario.',
-' Cantantes: El aire frío deshidrata e inflama cuerdas vocales. Tomar infusiones tibias y calentar voz 30 minutos antes del bolo.',
-' Escenario: Solicitar cañones de calor o estufas en tarima y camerinos para no perder movilidad en las manos.'
+'Instrumentos: Los mástiles de madera sufren contracción rápida. Aclimatar dentro de sus fundas en la sala 45 minutos antes de desenfundar.',
+'Cuerdas: Las cuerdas frías se vuelven rígidas y desafinan con brusquedad bajo los focos calientes del escenario.',
+'Cantantes: El aire frío deshidrata e inflama cuerdas vocales. Tomar infusiones tibias y calentar voz 30 minutos antes del bolo.',
+'Escenario: Solicitar cañones de calor o estufas en tarima y camerinos para no perder movilidad en las manos.'
  ],
- icon:' snow'
+ icon: 'snow'
  });
  }
 
@@ -216,21 +216,21 @@ export function detectWeatherAlerts(params: DetectAlertsParams): WeatherAlert[] 
  if (windGusts >= 40 || windSpeed >= 30) {
  const isExtremeWind = windGusts >= 55 || windSpeed >= 40;
  alerts.push({
- id:' wind',
- severity: isExtremeWind ?' danger' :' warning',
+ id: 'wind',
+ severity: isExtremeWind ? 'danger' : 'warning',
  title: isExtremeWind 
  ? `Alerta por Viento Extremo (Rachas ${windGusts} km/h)` 
  : `Aviso por Viento Fuerte (Rachas ${windGusts} km/h)`,
  badge: `💨 Viento ${windGusts} km/h`,
  shortAdvice: isExtremeWind
- ? `Viento extremo con rachas de ${windGusts} km/h. Peligro de' efecto vela' en telones y desestabilización de trusses.`
- : `Rachas de viento de ${windGusts} km/h. Peligro de' efecto vela' en telones y desestabilización de trusses.`,
+ ? `Viento extremo con rachas de ${windGusts} km/h. Peligro de'efecto vela' en telones y desestabilización de trusses.`
+ : `Rachas de viento de ${windGusts} km/h. Peligro de'efecto vela' en telones y desestabilización de trusses.`,
  fullAdvice: [
-' Seguridad estructural: Normativa técnica de escenario obliga a retirar o perforar telones traseros (backdrops) opacos con vientos fuertes, bajar tiros y vigilar torres de PA.',
-' Asegurar y lastrar con sacos de arena o pesas los pies de micro, torres de focos y monitores de cuña en el borde de tarima.',
-' Sonido: El viento desvía los agudos del equipo de sonido exterior (PA); avisar al técnico para compensar ecualización.'
+'Seguridad estructural: Normativa técnica de escenario obliga a retirar o perforar telones traseros (backdrops) opacos con vientos fuertes, bajar tiros y vigilar torres de PA.',
+'Asegurar y lastrar con sacos de arena o pesas los pies de micro, torres de focos y monitores de cuña en el borde de tarima.',
+'Sonido: El viento desvía los agudos del equipo de sonido exterior (PA); avisar al técnico para compensar ecualización.'
  ],
- icon:' wind'
+ icon: 'wind'
  });
  }
 
@@ -249,9 +249,9 @@ export async function fetchEventWeather(params: {
 
  if (!city || !city.trim()) {
  return {
- status:' error',
+ status: 'error',
  alerts: [],
- error:' No se ha indicado ciudad para la previsión meteorológica'
+ error: 'No se ha indicado ciudad para la previsión meteorológica'
  };
  }
 
@@ -259,9 +259,9 @@ export async function fetchEventWeather(params: {
  const targetDate = new Date(`${dateStr}T12:00:00`);
  if (isNaN(targetDate.getTime())) {
  return {
- status:' error',
+ status: 'error',
  alerts: [],
- error:' Fecha del evento no válida'
+ error: 'Fecha del evento no válida'
  };
  }
 
@@ -272,21 +272,21 @@ export async function fetchEventWeather(params: {
  // Si el evento ocurrió hace más de 1 día:
  if (diffDays < -1) {
  return {
- status:' past',
+ status: 'past',
  alerts: [],
  cityName: city,
- conditionText:' Concierto ya celebrado'
+ conditionText: 'Concierto ya celebrado'
  };
  }
 
  // Si el evento es en más de 15 días: Open-Meteo cubre hasta 16 días
  if (diffDays > 15) {
  return {
- status:' future',
+ status: 'future',
  alerts: [],
  cityName: city,
  forecastDate: dateStr,
- conditionText: `Previsión meteorológica disponible a partir del ${new Date(targetDate.getTime() - 14 * 86400000).toLocaleDateString('es-ES', { day:' numeric', month:' short' })} (14 días antes del evento)`
+ conditionText: `Previsión meteorológica disponible a partir del ${new Date(targetDate.getTime() - 14 * 86400000).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} (14 días antes del evento)`
  };
  }
 
@@ -302,7 +302,7 @@ export async function fetchEventWeather(params: {
  }
  }
 
- const hourFormatted = `${String(targetHour).padStart(2,' 0')}:00`;
+ const hourFormatted = `${String(targetHour).padStart(2, '0')}:00`;
  const cacheKey = `${city.trim().toLowerCase()}_${dateStr}_${hourFormatted}`;
 
  const cached = weatherCache.get(cacheKey);
@@ -314,7 +314,7 @@ export async function fetchEventWeather(params: {
  const geo = await geocodeCity(city);
  if (!geo) {
  const fallback: EventWeatherData = {
- status:' error',
+ status: 'error',
  alerts: [],
  cityName: city,
  error: `No se pudo localizar geográficamente "${city}"`
@@ -348,11 +348,11 @@ export async function fetchEventWeather(params: {
  if (matchIdx === -1) {
  // Fuera de rango
  const data: EventWeatherData = {
- status:' future',
+ status: 'future',
  alerts: [],
  cityName: geo.name,
  forecastDate: dateStr,
- conditionText:' Previsión aún no disponible para esta fecha'
+ conditionText: 'Previsión aún no disponible para esta fecha'
  };
  weatherCache.set(cacheKey, { timestamp: Date.now(), data });
  return data;
@@ -379,10 +379,10 @@ export async function fetchEventWeather(params: {
  });
 
  const isOutdoorAlert = alerts.length > 0;
- const outdoorAlertMessage = alerts.map(a => a.shortAdvice).join(' |' );
+ const outdoorAlertMessage = alerts.map(a => a.shortAdvice).join( '| ');
 
  const resultData: EventWeatherData = {
- status:' success',
+ status: 'success',
  temperature: temp,
  apparentTemperature: apparentTemp,
  rainProbability: rainProb,
@@ -405,10 +405,10 @@ export async function fetchEventWeather(params: {
  } catch (err: any) {
  console.warn('[Weather] Error fetching forecast:', err);
  return {
- status:' error',
+ status: 'error',
  alerts: [],
  cityName: geo.name,
- error:' No se pudo conectar con el servicio meteorológico'
+ error: 'No se pudo conectar con el servicio meteorológico'
  };
  }
 }

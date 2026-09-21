@@ -254,7 +254,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
         }
 
         const notaPlantilla = pitchEsPlantilla
-          ? `${lead.notas ? lead.notas + ' | ' : ''}[${new Date().toISOString().slice(0, 10)}] Pitch de PLANTILLA: la IA no respondió, revísalo y reescríbelo antes de aprobar.`
+          ? `${lead.notas ? lead.notas + '| ' : ''}[${new Date().toISOString().slice(0, 10)}] Pitch de PLANTILLA: la IA no respondió, revísalo y reescríbelo antes de aprobar.`
           : undefined;
 
         await sb.from("leads").update({

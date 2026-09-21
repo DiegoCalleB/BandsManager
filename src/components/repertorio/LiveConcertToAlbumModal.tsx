@@ -900,7 +900,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  const minStart = Math.min(...targetTracks.map((t) => t.start));
  const maxEnd = Math.max(...targetTracks.map((t) => t.end));
- const mergedTitle = targetTracks.map((t) => t.title).join(' +');
+ const mergedTitle = targetTracks.map((t) => t.title).join( '+');
  const mergedSpeech = targetTracks.map((t) => t.speechTranscription).filter(Boolean).join('\n');
  const hasMusic = targetTracks.some((t) => t.type ==='musica');
 
@@ -1194,7 +1194,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  {/* Modal Header */}
  <div
  className={`p-6 flex items-start justify-between ${
-' bg-[var(--acc)]/10'
+'bg-[var(--acc)]/10'
  }`}
  >
  <div className="flex items-center gap-3">
@@ -1696,8 +1696,8 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  isSelected
  ?'bg-[var(--acc)]/15 ring-1 ring-amber-0/50'
  : track.type ==='musica'
- ?' bg-[var(--acc-soft)] /20 hover:/40'
- :' bg-[var(--tentative)]/5/20/20 hover:border-[var(--acc)]/40'
+ ? 'bg-[var(--acc-soft)] /20 hover:/40'
+ : 'bg-[var(--tentative)]/5/20/20 hover:border-[var(--acc)]/40'
  }`}
  >
  {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
@@ -1884,7 +1884,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <span className="text-base">🗣️</span>
  )}
  <label className="text-xs font-black tracking-wide text-[var(--ink-2)]">
- {track.type ==='musica' ?'Nombre del Tema:' :'Nombre del Speech:'}
+ {track.type ==='musica' ?'Nombre del Tema: ':'Nombre del Speech:'}
  </label>
  </div>
 
@@ -2030,7 +2030,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  <div className="truncate italic flex items-center gap-2">
  <Music2 className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
  <span className="font-bold text-[var(--acc)]/70 not-italic">Cifrado:</span>
- <span className="truncate">"{track.lyricsWithChords.split('\n').filter(Boolean).slice(0, 2).join(' /')}"</span>
+ <span className="truncate">"{track.lyricsWithChords.split('\n').filter(Boolean).slice(0, 2).join( '/')}"</span>
  </div>
  <span className="text-[10px] bg-[var(--acc)]/20 text-[var(--acc)]/70 px-2 py-0.5 rounded-md font-sans font-bold shrink-0 flex items-center gap-1">
  Ver completo ➔

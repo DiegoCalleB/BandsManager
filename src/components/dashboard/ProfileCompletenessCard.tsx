@@ -29,7 +29,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  rehearsals = [],
  metrics = [],
  fans = [],
- tours = []= false,
+ tours = [],
  bandName ='Tu Banda',
  currentUser,
  onNavigate,

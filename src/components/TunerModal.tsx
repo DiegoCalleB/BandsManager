@@ -535,7 +535,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
  <div className="flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
  <span className="text-[var(--acc)] font-bold">-50 Cents (Grave)</span>
  <span className={`font-bold ${isTunedIn ?'text-[var(--ok)] text-xs font-black animate-bounce' :'text-[var(--ink-2)]'}`}>
- {isTunedIn ?'¡AFINADO PERFECTO!' :'0 Cents'}
+ {isTunedIn ?'¡AFINADO PERFECTO! ':'0 Cents'}
  </span>
  <span className="text-[var(--alert)] font-bold">+50 Cents (Agudo)</span>
  </div>

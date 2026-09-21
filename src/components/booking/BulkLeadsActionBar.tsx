@@ -47,7 +47,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  onBulkToggleFavorite,
  onBulkExportCsv,
  onBulkDelete,
- sectionTab ='salas'= false}) => {
+ sectionTab = 'salas' }) => {
  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
@@ -61,7 +61,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  <div 
  id="bulk-leads-action-bar"
  className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-all animate-slide-up ${
-' bg-[var(--surface)]/95/50 text-[var(--ink)] shadow-black/80'
+'bg-[var(--surface)]/95/50 text-[var(--ink)] shadow-black/80'
  }`}
  >
  <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
@@ -73,7 +73,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={isAllSelected ? onDeselectAll : onSelectAll}
  className={`p-1.5 rounded-[var(--r-s)] transition-colors cursor-pointer shrink-0 ${
-' hover:bg-[var(--surface)] text-[var(--acc)]'
+'hover:bg-[var(--surface)] text-[var(--acc)]'
  }`}
  title={isAllSelected ?'Deseleccionar todo' : `Seleccionar las ${totalFilteredCount} ${itemLabel}`}
  >
@@ -183,7 +183,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onBulkGeneratePitches}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-' bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800/50 text-[var(--acc)]/40'
+'bg-gradient-to-r from-purple-950/80 to-purple-900/80 hover:from-purple-900 hover:to-purple-800/50 text-[var(--acc)]/40'
  }`}
  title="Generar propuestas de pitch con IA para todos los seleccionados"
  >
@@ -197,7 +197,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={onBulkEnrich}
  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-' bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800/50 text-[var(--tentative)]/40'
+'bg-gradient-to-r from-sky-950/80 to-sky-900/80 hover:from-sky-900 hover:to-sky-800/50 text-[var(--tentative)]/40'
  }`}
  title="Buscar y enriquecer teléfonos, emails y redes con Scout IA"
  >
@@ -211,7 +211,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
  type="button"
  onClick={() => onBulkToggleFavorite(true)}
  className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
-' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60700 text-[var(--acc)]/70'
+'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60700 text-[var(--acc)]/70'
  }`}
  title="Marcar como favoritos"
  >

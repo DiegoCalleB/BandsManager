@@ -736,7 +736,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  <span className="opacity-80 ml-2 font-sans text-[11px]">
  {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` :''}
  {currentSong.bpm ? ` · ${currentSong.bpm} BPM` :''}
- {irisStemIdea ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris` :' · Sin pistas separadas'}
+ {irisStemIdea ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris` : '· Sin pistas separadas'}
  </span>
  </div>
  </div>

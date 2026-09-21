@@ -107,7 +107,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClose,
  bandName ='Tu Banda',
  bandId ='band-bakandeya',
- currentUser= false,
+ currentUser,
  initialConfig,
  onSaveConfig,
  onOpenTemplatesSection,
@@ -149,7 +149,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  l.conteo_afectados || 0,
  l.duracion_ms || 0
  ]);
- const csvContent ='data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+ const csvContent ='data:text/csv;charset=utf-8, '+ [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
  const encodedUri = encodeURI(csvContent);
  const link = document.createElement('a');
  link.setAttribute('href', encodedUri);
@@ -596,7 +596,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('autonomy')}
  className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='autonomy'
- ?' text-[var(--acc)]'
+ ? 'text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -609,7 +609,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('response_strategies')}
  className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='response_strategies'
- ?' text-[var(--acc)]'
+ ? 'text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -622,7 +622,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('email_dispatch')}
  className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='email_dispatch'
- ?' text-[var(--acc)]'
+ ? 'text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -638,7 +638,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('schedules')}
  className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='schedules'
- ?' text-[var(--acc)]'
+ ? 'text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -651,7 +651,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
  onClick={() => setActiveTab('tone')}
  className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
  activeTab ==='tone'
- ?' text-[var(--acc)]'
+ ? 'text-[var(--acc)]'
  :'border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >

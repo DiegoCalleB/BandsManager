@@ -1,4 +1,4 @@
-import { Fan } from' ../types';
+import { Fan } from '../types';
 
 export interface FanMetrics {
  totalFans: number;
@@ -28,10 +28,10 @@ export function calculateFanEngagementMetrics(fans: Fan[]): FanMetrics {
  for (const fan of fans) {
  if (fan.consentimientoRGPD) rgpdCount++;
 
- const ciudad = fan.ciudad && fan.ciudad.trim() ? fan.ciudad.trim() :' Desconocida';
+ const ciudad = fan.ciudad && fan.ciudad.trim() ? fan.ciudad.trim() : 'Desconocida';
  ciudadMap.set(ciudad, (ciudadMap.get(ciudad) || 0) + 1);
 
- const origen = fan.conciertoOrigenNombre || fan.comoConocio ||' Directo / QR';
+ const origen = fan.conciertoOrigenNombre || fan.comoConocio || 'Directo / QR';
  origenMap.set(origen, (origenMap.get(origen) || 0) + 1);
  }
 
@@ -54,7 +54,7 @@ export function calculateFanEngagementMetrics(fans: Fan[]): FanMetrics {
 /**
  * Filters fans list by query and city
  */
-export function filterFans(fans: Fan[], search: string =' ', city: string =' todas'): Fan[] {
+export function filterFans(fans: Fan[], search: string = '', city: string = 'todas'): Fan[] {
  const query = search.toLowerCase().trim();
 
  return fans.filter((fan) => {
@@ -64,7 +64,7 @@ export function filterFans(fans: Fan[], search: string =' ', city: string =' tod
  fan.email.toLowerCase().includes(query) ||
  (fan.ciudad && fan.ciudad.toLowerCase().includes(query));
 
- const matchesCity = city ===' todas' || (fan.ciudad && fan.ciudad.toLowerCase() === city.toLowerCase());
+ const matchesCity = city === 'todas' || (fan.ciudad && fan.ciudad.toLowerCase() === city.toLowerCase());
 
  return matchesSearch && matchesCity;
  });
@@ -76,7 +76,7 @@ export function filterFans(fans: Fan[], search: string =' ', city: string =' tod
  * sin romper los enlaces de códigos QR impresos o compartidos que lleven el parámetro original en la URL.
  */
 export function sanitizeConcertDisplayName(rawName?: string | null): string {
- if (!rawName) return' ';
+ if (!rawName) return '';
  let clean = rawName.trim();
 
  const lower = clean.toLowerCase();
@@ -87,13 +87,13 @@ export function sanitizeConcertDisplayName(rawName?: string | null): string {
  lower.includes('ferrara-busking') ||
  lower.includes('busking-festival')
  ) {
- return' Ferrara Buskers Fest';
+ return 'Ferrara Buskers Fest';
  }
 
  // Corrección general de erratas de ciudades/conciertos conocidas:
- clean = clean.replace(/Ferrera/g,' Ferrara');
- clean = clean.replace(/ferrera/g,' ferrara');
- clean = clean.replace(/FERRERA/g,' FERRARA');
+ clean = clean.replace(/Ferrera/g, 'Ferrara');
+ clean = clean.replace(/ferrera/g, 'ferrara');
+ clean = clean.replace(/FERRERA/g, 'FERRARA');
 
  return clean;
 }

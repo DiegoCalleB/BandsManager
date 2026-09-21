@@ -23,7 +23,7 @@ export function sanitizeWebsiteUrl(val: unknown): string {
     return '';
   }
 
-  if (str.includes('\n') || str.includes('\r') || (str.includes(' ') && !str.includes('http'))) {
+  if (str.includes('\n') || str.includes('\r') || (str.includes( '') && !str.includes('http'))) {
     return '';
   }
 
@@ -53,7 +53,7 @@ export function sanitizeInstagramHandle(val: unknown): string {
     return '';
   }
 
-  if (str.includes('\n') || str.includes('\r') || str.includes(' ')) {
+  if (str.includes('\n') || str.includes('\r') || str.includes( '')) {
     return '';
   }
 

@@ -3,13 +3,13 @@
  */
 
 export function sanitizeAIResponse(rawText: string): string {
- if (!rawText) return' ';
+ if (!rawText) return '';
  return rawText
- .replace(/^```json\s*/i,' ')
- .replace(/^```html\s*/i,' ')
- .replace(/^```markdown\s*/i,' ')
- .replace(/^```\s*/i,' ')
- .replace(/\s*```$/i,' ')
+ .replace(/^```json\s*/i, '')
+ .replace(/^```html\s*/i, '')
+ .replace(/^```markdown\s*/i, '')
+ .replace(/^```\s*/i, '')
+ .replace(/\s*```$/i, '')
  .trim();
 }
 
@@ -75,7 +75,7 @@ ESTRUCTURA REQUERIDA:
 export function buildReelScriptPrompt(
  songTitle: string,
  conceptAngle: string,
- targetPlatform:' TikTok' |' Instagram' |' YouTube Shorts' =' Instagram'
+ targetPlatform: 'TikTok' | 'Instagram' | 'YouTube Shorts' = 'Instagram'
 ): string {
  return `
 Eres un Director Creativo especialista en contenido viral para artistas en ${targetPlatform}.

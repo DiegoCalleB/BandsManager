@@ -68,7 +68,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  normalizeStatus,
  normalizeType,
  autoDetectVenueAddress,
- sectionTab= false,
+ sectionTab,
  activeCampaign,
  onLeadLogoUpload,
  isUploadingLeadLogo = false
@@ -1403,7 +1403,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
  className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 rounded text-[11px] text-[var(--ink)] font-sans flex items-center gap-1 cursor-pointer"
  >
  <Copy className="w-3 h-3" />
- <span>{copiedPitch ?'¡Copiado!' :'Copiar'}</span>
+ <span>{copiedPitch ?'¡Copiado! ':'Copiar'}</span>
  </button>
 
  {selectedLead.estado ==='pendiente_aprobacion' || selectedLead.estado ==='nuevo' ? (

@@ -31,7 +31,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  metrics = [],
  fans = [],
  epkConfig,
- colors= false,
+ colors,
  bandName ='Bakandeya',
  bandId,
  onNavigate
@@ -369,7 +369,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 /60">
  <div className="flex items-center gap-3">
  <div className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${
-' bg-[var(--acc)]/20 text-[var(--acc)]'
+'bg-[var(--acc)]/20 text-[var(--acc)]'
  }`}>
  <TrendingUp className="w-5 h-5" />
  </div>
@@ -395,7 +395,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="button"
  onClick={() => onNavigate('fans')}
  className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
-' bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'
+'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70'
  }`}
  title="Ir al gestor de comunidad, muro y capturas de fans"
  >
@@ -407,7 +407,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  type="button"
  onClick={() => onNavigate('reels')}
  className={`px-3 py-1.5 font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
-' bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
+'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
  }`}
  title="Abrir el panel completo de métricas y sincronización"
  >
@@ -425,7 +425,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Card 1: Instagram */}
  {hasInstagram && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
-' bg-[var(--surface)]/60/40'
+'bg-[var(--surface)]/60/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
@@ -449,7 +449,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Card 2: TikTok */}
  {hasTikTok && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
-' bg-[var(--surface)]/60/40'
+'bg-[var(--surface)]/60/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
@@ -473,7 +473,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Card 3: YouTube */}
  {hasYouTube && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
-' bg-[var(--surface)]/60/40'
+'bg-[var(--surface)]/60/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
@@ -497,7 +497,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Card 4: Spotify */}
  {hasSpotify && (
  <div className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${
-' bg-[var(--surface)]/60/40'
+'bg-[var(--surface)]/60/40'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--ok)] flex items-center gap-1">
@@ -566,7 +566,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  onClick={() => setSelectedPeriod(opt.id)}
  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold transition-all cursor-pointer ${
  isSelected
- ?' bg-gradient-to-r from-[var(--acc)] to-amber-600 text-[var(--ink)]'
+ ? 'bg-gradient-to-r from-[var(--acc)] to-amber-600 text-[var(--ink)]'
  : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
  }`}
  title={opt.label}
@@ -580,7 +580,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Period Summary Indicator */}
  {periodGrowthSummary && (
  <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--r-s)] text-[9px] font-sans ${
-' bg-[var(--ok-soft)] text-[var(--ink-2)]/20'
+'bg-[var(--ok-soft)] text-[var(--ink-2)]/20'
  }`}>
  <TrendingUp className="w-3 h-3 text-[var(--ok)]" />
  <span>
@@ -616,7 +616,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasInstagram && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
- ?' bg-[var(--alert)]/15/40 text-[var(--alert)]/60'
+ ? 'bg-[var(--alert)]/15/40 text-[var(--alert)]/60'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -647,7 +647,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasTikTok && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
- ?' bg-[var(--tentative)]/15/40 text-[var(--acc)]/80'
+ ? 'bg-[var(--tentative)]/15/40 text-[var(--acc)]/80'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -678,7 +678,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasYouTube && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
- ?' bg-[var(--alert)]/90/30/40 text-[var(--alert)]/60'
+ ? 'bg-[var(--alert)]/90/30/40 text-[var(--alert)]/60'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -709,7 +709,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {hasSpotify && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.spotify
- ?' bg-[var(--ok-soft)]/40 text-[var(--ink-2)]'
+ ? 'bg-[var(--ok-soft)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button
@@ -739,7 +739,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
  {/* Fans Registrados (BD / Únete) Chip */}
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.fans
- ?' bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold'
+ ? 'bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60'
  }`}>
  <button

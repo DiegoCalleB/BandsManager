@@ -1,4 +1,4 @@
-import { describe, it, expect } from' vitest';
+import { describe, it, expect } from 'vitest';
 import {
  PLANS,
  normalizePlan,
@@ -6,22 +6,22 @@ import {
  PLAN_LIMITS,
  getPlanDefinition,
  getPlanTierLevel
-} from' ../planPermissions';
+} from '../planPermissions';
 
 describe('planPermissions - PROMO y PROMO+', () => {
  it('define correctamente el plan promo básico', () => {
  const promo = PLANS.promo;
  expect(promo.id).toBe('promo');
- expect(promo.allowedModules).toEqual(['resumen',' calendario',' epk',' fans',' repertorio',' ensayos',' catalogo',' discografia']);
- expect(hasModuleAccess('promo',' resumen')).toBe(true);
- expect(hasModuleAccess('promo',' calendario')).toBe(true);
- expect(hasModuleAccess('promo',' epk')).toBe(true);
- expect(hasModuleAccess('promo',' fans')).toBe(true);
- expect(hasModuleAccess('promo',' repertorio')).toBe(true);
- expect(hasModuleAccess('promo',' ensayos')).toBe(true);
- expect(hasModuleAccess('promo',' discografia')).toBe(true);
- expect(hasModuleAccess('promo',' catalogo')).toBe(true);
- expect(hasModuleAccess('promo',' booking')).toBe(false);
+ expect(promo.allowedModules).toEqual(['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'ensayos', 'catalogo', 'discografia']);
+ expect(hasModuleAccess('promo', 'resumen')).toBe(true);
+ expect(hasModuleAccess('promo', 'calendario')).toBe(true);
+ expect(hasModuleAccess('promo', 'epk')).toBe(true);
+ expect(hasModuleAccess('promo', 'fans')).toBe(true);
+ expect(hasModuleAccess('promo', 'repertorio')).toBe(true);
+ expect(hasModuleAccess('promo', 'ensayos')).toBe(true);
+ expect(hasModuleAccess('promo', 'discografia')).toBe(true);
+ expect(hasModuleAccess('promo', 'catalogo')).toBe(true);
+ expect(hasModuleAccess('promo', 'booking')).toBe(false);
  });
 
  it('define el nuevo plan PROMO+ idéntico a PROMO con repertorio y discografía añadidos', () => {
@@ -30,21 +30,21 @@ describe('planPermissions - PROMO y PROMO+', () => {
  expect(promoPlus.name).toBe('Promo+');
 
  // Módulos base de PROMO
- expect(hasModuleAccess('promo_plus',' resumen')).toBe(true);
- expect(hasModuleAccess('promo_plus',' calendario')).toBe(true);
- expect(hasModuleAccess('promo_plus',' epk')).toBe(true);
- expect(hasModuleAccess('promo_plus',' fans')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'resumen')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'calendario')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'epk')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'fans')).toBe(true);
 
  // Módulos añadidos solicitados
- expect(hasModuleAccess('promo_plus',' repertorio')).toBe(true);
- expect(hasModuleAccess('promo_plus',' discografia')).toBe(true);
- expect(hasModuleAccess('promo_plus',' catalogo')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'repertorio')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'discografia')).toBe(true);
+ expect(hasModuleAccess('promo_plus', 'catalogo')).toBe(true);
 
  // Módulos excluidos (CRM de booking, agentes IA, finanzas, etc.)
- expect(hasModuleAccess('promo_plus',' booking')).toBe(false);
- expect(hasModuleAccess('promo_plus',' medios')).toBe(false);
- expect(hasModuleAccess('promo_plus',' reels')).toBe(false);
- expect(hasModuleAccess('promo_plus',' finanzas')).toBe(false);
+ expect(hasModuleAccess('promo_plus', 'booking')).toBe(false);
+ expect(hasModuleAccess('promo_plus', 'medios')).toBe(false);
+ expect(hasModuleAccess('promo_plus', 'reels')).toBe(false);
+ expect(hasModuleAccess('promo_plus', 'finanzas')).toBe(false);
  });
 
  it('normaliza las variantes de PROMO+', () => {

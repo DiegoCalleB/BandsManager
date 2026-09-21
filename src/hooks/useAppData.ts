@@ -1,31 +1,31 @@
-import { useState, useEffect, useCallback } from' react';
-import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, User, Fan, Tour, EPKConfig, BookingCampaign } from' ../types';
-import { api, ApiError } from' ../services/api';
+import { useState, useEffect, useCallback } from 'react';
+import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, User, Fan, Tour, EPKConfig, BookingCampaign } from '../types';
+import { api, ApiError } from '../services/api';
 
 const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
  {
- id:' camp-dic-2026',
- name:' Campaña Diciembre 2026 (Madrid & Centro)',
- targetCities: ['Madrid',' Toledo',' Guadalajara'],
+ id: 'camp-dic-2026',
+ name: 'Campaña Diciembre 2026 (Madrid & Centro)',
+ targetCities: ['Madrid', 'Toledo', 'Guadalajara'],
  minCapacity: 300,
  maxCapacity: 500,
- targetDates: ['2026-12-04',' 2026-12-05',' 2026-12-11',' 2026-12-12'],
- targetDatesText:' 4 y 5 de diciembre, 11 y 12 de diciembre',
- notes:' Presentación del nuevo single y co-booking en salas de aforo medio.',
+ targetDates: ['2026-12-04', '2026-12-05', '2026-12-11', '2026-12-12'],
+ targetDatesText: '4 y 5 de diciembre, 11 y 12 de diciembre',
+ notes: 'Presentación del nuevo single y co-booking en salas de aforo medio.',
  isActive: true,
- color:' var(--acc)'
+ color: 'var(--acc)'
  },
  {
- id:' camp-primavera-2027',
- name:' Gira Primavera 2027 (Levante & Norte)',
- targetCities: ['Barcelona',' Valencia',' Bilbao',' Zaragoza'],
+ id: 'camp-primavera-2027',
+ name: 'Gira Primavera 2027 (Levante & Norte)',
+ targetCities: ['Barcelona', 'Valencia', 'Bilbao', 'Zaragoza'],
  minCapacity: 200,
  maxCapacity: 450,
- targetDates: ['2027-04-09',' 2027-04-10',' 2027-04-23',' 2027-04-24'],
- targetDatesText:' 9 y 10 de abril, 23 y 24 de abril',
- notes:' Gira de salas con intercambio de público con bandas aliadas de la zona.',
+ targetDates: ['2027-04-09', '2027-04-10', '2027-04-23', '2027-04-24'],
+ targetDatesText: '9 y 10 de abril, 23 y 24 de abril',
+ notes: 'Gira de salas con intercambio de público con bandas aliadas de la zona.',
  isActive: false,
- color:' var(--acc)'
+ color: 'var(--acc)'
  }
 ];
 
@@ -57,7 +57,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
  });
 
  const [isLoading, setIsLoading] = useState(false);
- const [syncStatus, setSyncStatus] = useState<'synced' |' syncing' |' error'>('syncing');
+ const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error'>('syncing');
 
  const dedupeById = <T extends { id?: string }>(arr: T[] = []): T[] => {
  const seen = new Set<string>();
@@ -73,13 +73,13 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
  const parseSafeList = (val: any): string[] => {
  if (!val) return [];
- if (Array.isArray(val)) return val.map(x => typeof x ===' string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
- if (typeof val ===' string' && val.trim()) {
+ if (Array.isArray(val)) return val.map(x => typeof x === 'string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
+ if (typeof val === 'string' && val.trim()) {
  const trimmed = val.trim();
  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
  try {
  const parsed = JSON.parse(trimmed);
- if (Array.isArray(parsed)) return parsed.map(x => typeof x ===' string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
+ if (Array.isArray(parsed)) return parsed.map(x => typeof x === 'string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
  } catch {}
  }
  return trimmed.split(',').map(s => s.trim()).filter(Boolean);
@@ -146,7 +146,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
  fetchState(retryCount + 1);
  }, 1500);
  } else {
- // Antes se marcaba como' synced' tras agotar los reintentos, así que el usuario veía el
+ // Antes se marcaba como'synced' tras agotar los reintentos, así que el usuario veía el
  // indicador de "sincronizado" mientras en realidad no había datos reales cargados (solo
  // los arrays vacíos del useState inicial, no hay caché real que reutilizar). Mejor
  // mostrar el estado de error real.
@@ -204,7 +204,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
  // fallar, se avisa Y se recarga el estado real del servidor para no dejar la UI
  // enseñando un cambio que nunca llegó a guardarse.
  console.error('Error updating EPK config:', e);
- alert(`No se pudo guardar el cambio en el EPK (logo, biografía, etc.): ${e?.message ||' error desconocido'}. Se ha revertido a lo último guardado.`);
+ alert(`No se pudo guardar el cambio en el EPK (logo, biografía, etc.): ${e?.message || 'error desconocido'}. Se ha revertido a lo último guardado.`);
  fetchState();
  }
  };
@@ -476,25 +476,25 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
  const parts = d.split('-');
  if (parts.length === 3) {
  const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
- return date.toLocaleDateString('es-ES', { day:' numeric', month:' short' });
+ return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
  }
  return d;
- }).join(',' ) :' Sin fechas');
+ }).join(', ') : 'Sin fechas');
 
  const campaignId = campaignData.id || `camp-${Date.now()}`;
  const fullCampaign: BookingCampaign = {
  id: campaignId,
- band_id: campaignData.band_id || bandId ||' bakandeya',
- name: campaignData.name ||' Nueva Campaña',
+ band_id: campaignData.band_id || bandId || 'bakandeya',
+ name: campaignData.name || 'Nueva Campaña',
  targetCities: campaignData.targetCities || [],
  minCapacity: Number(campaignData.minCapacity || 0),
  maxCapacity: Number(campaignData.maxCapacity || 0),
  targetDates: dates,
  targetDatesText: formattedDatesText,
- notes: campaignData.notes ||' ',
+ notes: campaignData.notes || '',
  customPitchTemplates: campaignData.customPitchTemplates || {},
  isActive: Boolean(campaignData.isActive),
- color: campaignData.color ||' var(--acc)',
+ color: campaignData.color || 'var(--acc)',
  created_at: campaignData.created_at || new Date().toISOString()
  };
 
@@ -542,7 +542,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
  const handleSetActiveCampaign = async (idOrCampaign: string | BookingCampaign | null) => {
  let targetCampaign: BookingCampaign | null = null;
- if (typeof idOrCampaign ===' string') {
+ if (typeof idOrCampaign === 'string') {
  targetCampaign = campaigns.find(c => c.id === idOrCampaign) || null;
  } else {
  targetCampaign = idOrCampaign;

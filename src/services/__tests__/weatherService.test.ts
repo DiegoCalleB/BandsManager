@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from' vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { 
  fetchEventWeather, 
  detectWeatherAlerts, 
  getCachedEventWeatherAlerts,
  WeatherAlert 
-} from' ../weatherService';
+} from '../weatherService';
 
 describe('weatherService', () => {
  beforeEach(() => {
@@ -21,7 +21,7 @@ describe('weatherService', () => {
  windGusts: 45
  });
 
- const stormAlert = alerts.find(a => a.id ===' storm');
+ const stormAlert = alerts.find(a => a.id === 'storm');
  expect(stormAlert).toBeDefined();
  expect(stormAlert?.severity).toBe('danger');
  expect(stormAlert?.icon).toBe('lightning');
@@ -37,7 +37,7 @@ describe('weatherService', () => {
  windGusts: 25
  });
 
- const rainAlert = alerts.find(a => a.id ===' rain');
+ const rainAlert = alerts.find(a => a.id === 'rain');
  expect(rainAlert).toBeDefined();
  expect(rainAlert?.severity).toBe('danger');
  expect(rainAlert?.icon).toBe('rain');
@@ -55,7 +55,7 @@ describe('weatherService', () => {
  windGusts: 15
  });
 
- const coldAlert = alerts.find(a => a.id ===' cold');
+ const coldAlert = alerts.find(a => a.id === 'cold');
  expect(coldAlert).toBeDefined();
  expect(coldAlert?.severity).toBe('danger');
  expect(coldAlert?.icon).toBe('snow');
@@ -72,7 +72,7 @@ describe('weatherService', () => {
  windGusts: 65
  });
 
- const windAlert = alerts.find(a => a.id ===' wind');
+ const windAlert = alerts.find(a => a.id === 'wind');
  expect(windAlert).toBeDefined();
  expect(windAlert?.severity).toBe('danger');
  expect(windAlert?.icon).toBe('wind');
@@ -96,13 +96,13 @@ describe('weatherService', () => {
 
  describe('fetchEventWeather & getCachedEventWeatherAlerts', () => {
  it('devuelve estructura consistente si la fecha es inválida o vacía', async () => {
- const result = await fetchEventWeather({ city:' ', dateStr:' ' });
+ const result = await fetchEventWeather({ city: '', dateStr: '' });
  expect(result.status).toBe('error');
  expect(result.alerts).toEqual([]);
  });
 
  it('permite consultar alertas sincronizadas en caché de forma síncrona', () => {
- const cached = getCachedEventWeatherAlerts('Madrid',' 2026-06-15');
+ const cached = getCachedEventWeatherAlerts('Madrid', '2026-06-15');
  expect(Array.isArray(cached)).toBe(true);
  });
  });

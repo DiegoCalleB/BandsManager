@@ -59,8 +59,8 @@ export function AssignSetlistModal({
  key={c.id}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === c.id
- ?' bg-[var(--acc)]/15'
- :' bg-[var(--surface)]/60'
+ ? 'bg-[var(--acc)]/15'
+ : 'bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -93,8 +93,8 @@ export function AssignSetlistModal({
  key={r.id}
  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
  selectedConcertToAssign === r.id
- ?' bg-[var(--ok)]/15'
- :' bg-[var(--surface)]/60'
+ ? 'bg-[var(--ok)]/15'
+ : 'bg-[var(--surface)]/60'
  }`}
  >
  <div className="flex items-center gap-2">
@@ -126,7 +126,7 @@ export function AssignSetlistModal({
  onClick={onSave}
  disabled={!selectedConcertToAssign}
  className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold disabled:opacity-40 ${
-' bg-[var(--acc)] text-[var(--on-acc)]'
+'bg-[var(--acc)] text-[var(--on-acc)]'
  }`}
  >
  Guardar Asignación

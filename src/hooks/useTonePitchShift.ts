@@ -1,5 +1,5 @@
-import { useEffect, useRef } from' react';
-import * as Tone from' tone';
+import { useEffect, useRef } from 'react';
+import * as Tone from 'tone';
 
 interface UseTonePitchShiftProps {
  audioElement: HTMLAudioElement | null;
@@ -38,10 +38,10 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
  // sin pasar por PitchShift — se pierde la trasposición de esa pista, pero nunca el sonido.
  let rawAudioContext: AudioContext | null = null;
  try {
- if (Tone.getContext().state !==' running') {
+ if (Tone.getContext().state !== 'running') {
  await Tone.start();
  }
- if (Tone.getContext().state !==' running') {
+ if (Tone.getContext().state !== 'running') {
  throw new Error(`AudioContext sigue en estado "${Tone.getContext().state}" tras Tone.start() — el navegador puede estar bloqueando el audio hasta un gesto más directo del usuario.`);
  }
 
@@ -61,7 +61,7 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
 
  if (!mediaSourceRef.current && audioElement) {
  if (!audioElement.crossOrigin) {
- audioElement.crossOrigin =' anonymous';
+ audioElement.crossOrigin = 'anonymous';
  }
  const createSource = rawAudioContext.createMediaElementSource || (rawAudioContext as any).createMediaElementAudioSource;
  mediaSourceRef.current = createSource.call(rawAudioContext, audioElement);

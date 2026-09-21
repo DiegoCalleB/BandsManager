@@ -26,7 +26,7 @@ const PROVIDER_PRESETS: Record<Exclude<Provider,'other'>, { smtp_host: string; s
  }
 };
 
-export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId= false }) => {
+export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId }) => {
  const [loading, setLoading] = useState<boolean>(true);
  const [saving, setSaving] = useState<boolean>(false);
  const [feedback, setFeedback] = useState<{ type:'success' |'error'; message: string } | null>(null);
@@ -245,7 +245,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId= 
  Solo para Gmail; Outlook y otros proveedores siguen usando el formulario SMTP/IMAP de
  abajo. */}
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${
-' bg-[var(--acc)]/5/20'
+'bg-[var(--acc)]/5/20'
  }`}>
  <div className="flex items-center gap-2">
  <Sparkles className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
@@ -263,7 +263,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId= 
  </div>
  ) : gmailOAuthStatus.connected ? (
  <div className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${
-' bg-[var(--ok)]/10/20 text-[var(--ink)]'
+'bg-[var(--ok)]/10/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
@@ -318,7 +318,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId= 
  {status.connected && !editing ? (
  <div className="space-y-3">
  <div className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${
-' bg-[var(--ok)]/10/20 text-[var(--ink)]'
+'bg-[var(--ok)]/10/20 text-[var(--ink)]'
  }`}>
  <div className="flex items-center gap-2 min-w-0">
  <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />

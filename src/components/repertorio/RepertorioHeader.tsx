@@ -51,7 +51,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
  {/* Navigation Tabs */}
  <div
  className="flex items-center p-1 rounded-[var(--r-m)]"
- style={{ backgroundColor: colors.card, borderColor: colors.border }}
+ style={{ backgroundColor: colors.card }}
  >
  <button
  id="tab-btn-canciones"

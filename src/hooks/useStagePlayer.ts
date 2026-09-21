@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from' react';
-import { Setlist, Song } from' ../types';
-import { resolveAudioUrl } from' ../utils/audioStorage';
-import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from' ../utils/crossfade';
+import { useState, useEffect, useRef } from 'react';
+import { Setlist, Song } from '../types';
+import { resolveAudioUrl } from '../utils/audioStorage';
+import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 
 export function useStagePlayer(
  activeSetlist: Setlist | null,
@@ -26,7 +26,7 @@ export function useStagePlayer(
  // pista temporal de solape mientras dura el fundido.
  const stageAudioRef = useRef<HTMLAudioElement | null>(null);
  const stageAudioRefB = useRef<HTMLAudioElement | null>(null);
- const activeSlotRef = useRef<'A' |' B'>('A');
+ const activeSlotRef = useRef<'A' | 'B'>('A');
  const [, forceActiveSlotRender] = useState(0);
 
  const stageSynthIntervalRef = useRef<any>(null);
@@ -39,8 +39,8 @@ export function useStagePlayer(
  // fundido) y que NO debe recargar/relanzar la reproducción desde cero.
  const pendingCrossfadePromotionRef = useRef(false);
 
- const getActiveAudioEl = () => (activeSlotRef.current ===' A' ? stageAudioRef.current : stageAudioRefB.current);
- const getInactiveAudioEl = () => (activeSlotRef.current ===' A' ? stageAudioRefB.current : stageAudioRef.current);
+ const getActiveAudioEl = () => (activeSlotRef.current === 'A' ? stageAudioRef.current : stageAudioRefB.current);
+ const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? stageAudioRefB.current : stageAudioRef.current);
 
  const cancelCrossfade = () => {
  if (crossfadeRafRef.current !== null) {
@@ -79,17 +79,17 @@ export function useStagePlayer(
 
  const item = activeSetlist.items[stagePlayingIndex];
 
- let rawUrl =' ';
+ let rawUrl = '';
  let durationSec = 180;
 
- if (item.tipoItem ===' cancion' && item.songId) {
+ if (item.tipoItem === 'cancion' && item.songId) {
  const song = songs.find(s => s.id === item.songId);
  if (song) {
- rawUrl = song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || (song as any).audioUrl ||' ';
+ rawUrl = song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || (song as any).audioUrl || '';
  durationSec = song.duracionSegundos || parseMmSsToSeconds(song.duracion) || 210;
  }
  } else {
- rawUrl = item.audioUrl ||' ';
+ rawUrl = item.audioUrl || '';
  durationSec = item.duracionEstimadaSegundos ?? ((item.duracionEstimadaMinutos || 2) * 60);
  }
 
@@ -152,12 +152,12 @@ export function useStagePlayer(
  if (!stageAudioCtxRef.current) {
  stageAudioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
  }
- if (stageAudioCtxRef.current.state ===' suspended') {
+ if (stageAudioCtxRef.current.state === 'suspended') {
  stageAudioCtxRef.current.resume();
  }
  const osc = stageAudioCtxRef.current.createOscillator();
  const gain = stageAudioCtxRef.current.createGain();
- osc.type =' triangle';
+ osc.type = 'triangle';
  osc.frequency.setValueAtTime(520, stageAudioCtxRef.current.currentTime);
  gain.gain.setValueAtTime(0.02, stageAudioCtxRef.current.currentTime);
  gain.gain.exponentialRampToValueAtTime(0.001, stageAudioCtxRef.current.currentTime + 0.06);
@@ -263,9 +263,9 @@ export function useStagePlayer(
  const nextItem = activeSetlist.items[stagePlayingIndex + 1];
  // Solo se funde entre dos canciones reales — un interludio/presentación después no tiene un
  // "principio de canción" que enganchar, así que cae al corte duro normal de handleStageAudioEnded.
- if (!nextItem || nextItem.tipoItem !==' cancion' || !nextItem.songId) return;
+ if (!nextItem || nextItem.tipoItem !== 'cancion' || !nextItem.songId) return;
  const nextSong = songs.find(s => s.id === nextItem.songId);
- const nextRawUrl = nextSong?.audioPrincipalUrl || nextSong?.audioIdeas?.[0]?.audioUrl ||' ';
+ const nextRawUrl = nextSong?.audioPrincipalUrl || nextSong?.audioIdeas?.[0]?.audioUrl || '';
  if (!nextRawUrl) return;
 
  const fromEl = getActiveAudioEl();
@@ -309,7 +309,7 @@ export function useStagePlayer(
  fromEl.pause();
  fromEl.volume = 1;
  toEl.volume = 1;
- activeSlotRef.current = activeSlotRef.current ===' A' ?' B' :' A';
+ activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';
  forceActiveSlotRender(v => v + 1);
  pendingCrossfadePromotionRef.current = true;
  isCrossfadingRef.current = false;

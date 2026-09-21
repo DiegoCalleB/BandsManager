@@ -5,14 +5,14 @@
  react-hooks/exhaustive-deps,
  no-empty
 */
-import React, { useState, useEffect, useCallback, Suspense, lazy } from' react';
-import { Lead, LeadStatus, ThemeName, ThemeColors } from' ./types';
-import { THEMES, getEspectroColors } from' ./utils/theme';
-import { useAuth } from' ./hooks/useAuth';
-import { useAppData } from' ./hooks/useAppData';
-import { api } from' ./services/api';
-import Dashboard from' ./components/Dashboard';
-import ErrorBoundary from' ./components/ErrorBoundary';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import { Lead, LeadStatus, ThemeName, ThemeColors } from './types';
+import { THEMES, getEspectroColors } from './utils/theme';
+import { useAuth } from './hooks/useAuth';
+import { useAppData } from './hooks/useAppData';
+import { api } from './services/api';
+import Dashboard from './components/Dashboard';
+import ErrorBoundary from './components/ErrorBoundary';
 // Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
 // metía en el mismo bundle inicial el CRM, calendario, reels, repertorio, etc. — un fan que
 // solo quiere donar por Revolut/PayPal pagaba el peso entero de todo el panel interno.
@@ -30,9 +30,9 @@ function safeLazy<T extends React.ComponentType<any>>(
  const modRetry = await factory();
  return modRetry.default ? modRetry : { default: modRetry };
  } catch (retryErr: unknown) {
- const key =' last_dynamic_import_reload';
+ const key = 'last_dynamic_import_reload';
  const last = Number(sessionStorage.getItem(key) || 0);
- if (Date.now() - last > 10000 && typeof window !==' undefined') {
+ if (Date.now() - last > 10000 && typeof window !== 'undefined') {
  sessionStorage.setItem(key, String(Date.now()));
  window.location.reload();
  return new Promise(() => {}) as any;
@@ -59,32 +59,32 @@ const FansLanding = safeLazy(() => import('./components/FansLanding'));
 const PublicMusiciansLanding = safeLazy(() => import('./components/PublicMusiciansLanding').then(m => ({ default: m.PublicMusiciansLanding })));
 const PublicEPK = safeLazy(() => import('./components/PublicEPK').then(m => ({ default: m.PublicEPK })));
 const Planes = safeLazy(() => import('./components/Planes'));
-import { LoginModal } from' ./components/LoginModal';
-import { SimplePromoLoginModal } from' ./components/SimplePromoLoginModal';
-import { UserManagementModal } from' ./components/UserManagementModal';
-import { UserProfileModal } from' ./components/UserProfileModal';
-import { AiSupportWidget } from' ./components/dashboard/AiUsageSupportWidget';
-import { FontSelectorModal } from' ./components/FontSelectorModal';
-import { ThemeToggle } from' ./components/common/ThemeToggle';
-import { MetronomeModal } from' ./components/MetronomeModal';
-import { TunerModal } from' ./components/TunerModal';
-import { BandSwitcherModal } from' ./components/BandSwitcherModal';
-import { PlanLimitModal } from' ./components/PlanLimitModal';
-import { GlobalCampaignBar } from' ./components/campaign/GlobalCampaignBar';
-import { CampaignManagerModal } from' ./components/campaign/CampaignManagerModal';
-import { FontPresetKey, applyFontPreset, getStoredFontPreset } from' ./utils/typography';
-import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from' ./utils/planPermissions';
-import { NAV_ITEMS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from' ./config/navGroups';
-import { NavGroupSection } from' ./components/common/NavGroupSection';
-import { NavItemButton } from' ./components/common/NavItemButton';
-import { MusicianOnboardingModal } from' ./components/onboarding/MusicianOnboardingModal';
-import { OnboardingWizardModal } from' ./components/onboarding/OnboardingWizardModal';
-import { isOnboardingCompleted } from' ./utils/userPreferences';
-import { useLanguage } from' ./context/LanguageContext';
+import { LoginModal } from './components/LoginModal';
+import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
+import { UserManagementModal } from './components/UserManagementModal';
+import { UserProfileModal } from './components/UserProfileModal';
+import { AiSupportWidget } from './components/dashboard/AiUsageSupportWidget';
+import { FontSelectorModal } from './components/FontSelectorModal';
+import { ThemeToggle } from './components/common/ThemeToggle';
+import { MetronomeModal } from './components/MetronomeModal';
+import { TunerModal } from './components/TunerModal';
+import { BandSwitcherModal } from './components/BandSwitcherModal';
+import { PlanLimitModal } from './components/PlanLimitModal';
+import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
+import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
+import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
+import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from './utils/planPermissions';
+import { NAV_ITEMS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { NavGroupSection } from './components/common/NavGroupSection';
+import { NavItemButton } from './components/common/NavItemButton';
+import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
+import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
+import { isOnboardingCompleted } from './utils/userPreferences';
+import { useLanguage } from './context/LanguageContext';
 import {
  Menu, Sparkles, LogOut, ShieldAlert, UserCheck,
  RefreshCw, X, ChevronDown, Lock, Zap, Target, Guitar
-} from' lucide-react';
+} from 'lucide-react';
 
 export default function App() {
  const { t, language, isTranslating, refreshTranslation } = useLanguage();
@@ -159,20 +159,20 @@ export default function App() {
  const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
 
  // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
- // se caía en' band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
+ // se caía en'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
  // datos reales de esa banda. Sin id de banda, cleanActiveBandId queda vacío (no coincide con
- //' bakandeya') y el resto de componentes deben tratarlo como "sin banda seleccionada".
- const currentActiveBandId = currentUser?.band_id ||' ';
- const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/,' ');
+ //'bakandeya') y el resto de componentes deben tratarlo como "sin banda seleccionada".
+ const currentActiveBandId = currentUser?.band_id || '';
+ const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
  const activeBandFromList = (availableBands || []).find((b: any) =>
- (b.band_id && (b.band_id === currentActiveBandId || b.band_id.replace(/^(band|reg)-/,' ') === cleanActiveBandId)) ||
- (b.id && (b.id === currentActiveBandId || b.id.replace(/^(band|reg)-/,' ') === cleanActiveBandId))
+ (b.band_id && (b.band_id === currentActiveBandId || b.band_id.replace(/^(band|reg)-/, '') === cleanActiveBandId)) ||
+ (b.id && (b.id === currentActiveBandId || b.id.replace(/^(band|reg)-/, '') === cleanActiveBandId))
  );
- const currentActiveBandName = activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name ||' Mi Banda';
+ const currentActiveBandName = activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name || 'Mi Banda';
  const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
  ? epkConfig.logoUrl
  : (activeBandFromList?.logo_url || activeBandFromList?.imagen_url || (currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
- (cleanActiveBandId ===' bakandeya' ?' /logo_bakandeya_bueno_sin_fondo.png' :' '));
+ (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : ''));
 
  const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
  if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
@@ -197,13 +197,13 @@ export default function App() {
  return normalizePlan(match.plan);
  }
  }
- return normalizePlan(currentUser?.plan ||' ensayo');
+ return normalizePlan(currentUser?.plan || 'ensayo');
  }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
 
  // Plan Promo y Promo+ (fase beta, festivales): a diferencia del resto de planes, que enseñan los
  // módulos no incluidos con un candado "Plan" (invitando a mejorar), Promo no debe ni
  // enseñar que esos módulos existen — así que el nav los oculta del todo en vez de bloquearlos.
- const isPromoPlan = currentActiveBandPlan ===' promo' || currentActiveBandPlan ===' promo_plus';
+ const isPromoPlan = currentActiveBandPlan === 'promo' || currentActiveBandPlan === 'promo_plus';
 
  // Disparar reactivamente el asistente de perfil o bienvenida si la banda activa actual aún no lo ha completado
  useEffect(() => {
@@ -227,26 +227,26 @@ export default function App() {
  // Soft Limit Modal State
  const [planLimitModal, setPlanLimitModal] = useState<{
  isOpen: boolean;
- resourceType:' leads' |' medios' |' fans' |' songs' |' bands';
+ resourceType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands';
  currentCount: number;
  }>({
  isOpen: false,
- resourceType:' leads',
+ resourceType: 'leads',
  currentCount: 0
  });
 
  // Guarded Handlers respecting Band Contracted Plan Limits
  const handleAddLeadWithLimitCheck = async (newLead: Lead) => {
- const isMedio = newLead.tipo ===' medio' || String(newLead.tipo ||' ').toLowerCase().includes('prensa') || String(newLead.tipo ||' ').toLowerCase().includes('radio');
+ const isMedio = newLead.tipo === 'medio' || String(newLead.tipo || '').toLowerCase().includes('prensa') || String(newLead.tipo || '').toLowerCase().includes('radio');
  const currentCount = isMedio
- ? leads.filter(l => String(l.tipo ||' ').toLowerCase().includes('medio') || String(l.tipo ||' ').toLowerCase().includes('radio') || String(l.tipo ||' ').toLowerCase().includes('prensa')).length
- : leads.filter(l => !String(l.tipo ||' ').toLowerCase().includes('medio') && !String(l.tipo ||' ').toLowerCase().includes('radio') && !String(l.tipo ||' ').toLowerCase().includes('prensa')).length;
+ ? leads.filter(l => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
+ : leads.filter(l => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
 
- const limitCheck = checkRecordLimit(currentActiveBandPlan, isMedio ?' medios' :' leads', currentCount);
+ const limitCheck = checkRecordLimit(currentActiveBandPlan, isMedio ? 'medios' : 'leads', currentCount);
  if (!limitCheck.allowed) {
  setPlanLimitModal({
  isOpen: true,
- resourceType: isMedio ?' medios' :' leads',
+ resourceType: isMedio ? 'medios' : 'leads',
  currentCount
  });
  return;
@@ -256,11 +256,11 @@ export default function App() {
 
  const handleAddFanWithLimitCheck = async (fanData: any) => {
  const currentCount = fans.length;
- const limitCheck = checkRecordLimit(currentActiveBandPlan,' fans', currentCount);
+ const limitCheck = checkRecordLimit(currentActiveBandPlan, 'fans', currentCount);
  if (!limitCheck.allowed) {
  setPlanLimitModal({
  isOpen: true,
- resourceType:' fans',
+ resourceType: 'fans',
  currentCount
  });
  return;
@@ -269,23 +269,23 @@ export default function App() {
  };
 
  // Active View State mapping directly to the Stitch Design doc
- type MainView =' resumen' |' booking' |' medios' |' management' |' bandas' |' calendario' |' ensayos' |' reels' |' repertorio' |' catalogo' |' discografia' |' finanzas' |' chat' |' giras' |' merchan' |' epk' |' fans' |' planes';
- const VALID_VIEWS: MainView[] = ['resumen',' booking',' medios',' management',' bandas',' calendario',' ensayos',' reels',' repertorio',' catalogo',' discografia',' finanzas',' chat',' giras',' merchan',' epk',' fans',' planes'];
- const CURRENT_VIEW_STORAGE_KEY =' bandmanager_current_view';
+ type MainView = 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'ensayos' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
+ const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'ensayos', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
+ const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
  const [currentView, setCurrentView] = useState<MainView>(() => {
  // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
  // que hace un deploy nuevo, o simplemente el usuario comprobando algo) manda siempre de
  // vuelta a "Resumen" perdiendo dónde estaba trabajando.
  try {
- //' directo' era el módulo "Directo", eliminado y fusionado dentro de Repertorio — un
+ //'directo' era el módulo "Directo", eliminado y fusionado dentro de Repertorio — un
  // usuario que lo tuviera como última pantalla aterriza en Repertorio, no en Resumen.
  const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
- const migrated = saved ===' directo' ?' repertorio' : saved;
+ const migrated = saved === 'directo' ? 'repertorio' : saved;
  if (migrated && (VALID_VIEWS as string[]).includes(migrated)) return migrated as MainView;
  } catch {
  // localStorage puede no estar disponible (modo privado estricto, etc.) — no es crítico.
  }
- return' resumen';
+ return 'resumen';
  });
 
  useEffect(() => {
@@ -294,20 +294,20 @@ export default function App() {
  } catch {
  // Ignorado a propósito: perder la persistencia de la vista no debe romper la navegación.
  }
- if (language !==' es') {
+ if (language !== 'es') {
  refreshTranslation();
  }
  }, [currentView, language]);
 
- // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a' resumen'
+ // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a'resumen'
  useEffect(() => {
  if (!hasModuleAccess(currentActiveBandPlan, currentView)) {
  setCurrentView('resumen');
  }
  }, [currentActiveBandPlan, currentView]);
  const [bookingOptions, setBookingOptions] = useState<{
- sectionTab?:' salas' |' medios' |' grupos';
- statusFilter?: LeadStatus |' todos' | string;
+ sectionTab?: 'salas' | 'medios' | 'grupos';
+ statusFilter?: LeadStatus | 'todos' | string;
  selectedLeadId?: string;
  selectedEventId?: string;
  selectedDate?: string;
@@ -315,10 +315,10 @@ export default function App() {
  }>({});
 
  const handleNavigate = (
- view:' resumen' |' booking' |' medios' |' management' |' bandas' |' calendario' |' ensayos' |' reels' |' repertorio' |' catalogo' |' discografia' |' finanzas' |' chat' |' giras' |' merchan' |' epk' |' fans' |' planes' |' metronome' |' tuner',
+ view: 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'ensayos' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
  options?: {
- sectionTab?:' salas' |' medios' |' grupos';
- statusFilter?: LeadStatus |' todos' | string;
+ sectionTab?: 'salas' | 'medios' | 'grupos';
+ statusFilter?: LeadStatus | 'todos' | string;
  selectedLeadId?: string;
  selectedEventId?: string;
  selectedDate?: string;
@@ -326,22 +326,22 @@ export default function App() {
  }
  ) => {
  // Herramientas (metronome/tuner): abren modal sin cambiar vista
- if (view ===' metronome') {
+ if (view === 'metronome') {
  setShowMetronomeModal(true);
  setIsMobileMenuOpen(false);
  return;
  }
- if (view ===' tuner') {
+ if (view === 'tuner') {
  setShowTunerModal(true);
  setIsMobileMenuOpen(false);
  return;
  }
 
  // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
- //' finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
+ //'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
  // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
  // contratado, así que un admin con un plan que no incluye finanzas entra igualmente.
- if (view ===' finanzas' && !isAdmin) {
+ if (view === 'finanzas' && !isAdmin) {
  setShowUserProfileModal(true);
  return;
  }
@@ -359,15 +359,15 @@ export default function App() {
  }
  if (options) {
  setBookingOptions({
- sectionTab: view ===' medios' ?' medios' : view ===' management' ?' grupos' : view ===' booking' ?' salas' : undefined,
+ sectionTab: view === 'medios' ? 'medios' : view === 'management' ? 'grupos' : view === 'booking' ? 'salas' : undefined,
  ...options
  });
- } else if (view ===' medios') {
- setBookingOptions({ sectionTab:' medios', statusFilter:' todos' });
- } else if (view ===' management') {
- setBookingOptions({ sectionTab:' grupos', statusFilter:' todos' });
- } else if (view ===' booking') {
- setBookingOptions({ sectionTab:' salas', statusFilter:' todos' });
+ } else if (view === 'medios') {
+ setBookingOptions({ sectionTab: 'medios', statusFilter: 'todos' });
+ } else if (view === 'management') {
+ setBookingOptions({ sectionTab: 'grupos', statusFilter: 'todos' });
+ } else if (view === 'booking') {
+ setBookingOptions({ sectionTab: 'salas', statusFilter: 'todos' });
  } else {
  setBookingOptions({});
  }
@@ -383,23 +383,23 @@ export default function App() {
  }).catch(() => {});
  }, [currentActiveBandId]);
 
- const handleCrmSectionChange = useCallback((section:' salas' |' medios' |' grupos' |' bandas') => {
- if (section ===' bandas') {
+ const handleCrmSectionChange = useCallback((section: 'salas' | 'medios' | 'grupos' | 'bandas') => {
+ if (section === 'bandas') {
  setCurrentView(prev => {
- if (prev !==' bandas') {
+ if (prev !== 'bandas') {
  const targetGroupId = findNavGroupIdForItem('bandas');
  if (targetGroupId) {
  setOpenNavGroupIds(openPrev => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
  }
- return' bandas';
+ return 'bandas';
  }
  return prev;
  });
  return;
  }
 
- const targetView:' booking' |' medios' |' management' = 
- section ===' medios' ?' medios' : section ===' grupos' ?' management' :' booking';
+ const targetView: 'booking' | 'medios' | 'management' = 
+ section === 'medios' ? 'medios' : section === 'grupos' ? 'management' : 'booking';
  
  setCurrentView(prev => {
  if (prev !== targetView) {
@@ -415,7 +415,7 @@ export default function App() {
  setBookingOptions(prev => ({
  ...prev,
  sectionTab: section,
- statusFilter:' todos'
+ statusFilter: 'todos'
  }));
  }, []);
 
@@ -434,7 +434,7 @@ export default function App() {
 
  // Redirect non-admins away from finanzas if they end up there
  useEffect(() => {
- if (!isAdmin && (currentView as string) ===' finanzas') {
+ if (!isAdmin && (currentView as string) === 'finanzas') {
  setCurrentView('resumen');
  }
  }, [isAdmin, currentView]);
@@ -443,7 +443,7 @@ export default function App() {
  const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
  const saved = localStorage.getItem('bakandeya_theme') as ThemeName;
  if (!saved || saved === ('stitch_light' as any) || !(saved in THEMES)) {
- return' indie_velvet';
+ return 'indie_velvet';
  }
  return saved;
  });
@@ -469,8 +469,8 @@ export default function App() {
  const bandParam = urlParams.get('band');
  const sessionParam = urlParams.get('session_id');
 
- if (paymentStatus ===' success') {
- const planName = planParam ? planParam.toUpperCase().replace('_',' ' ) :' PRO';
+ if (paymentStatus === 'success') {
+ const planName = planParam ? planParam.toUpperCase().replace('_', '' ) : 'PRO';
 
  // Clean URL params immediately
  window.history.replaceState({}, document.title, window.location.pathname);
@@ -502,21 +502,21 @@ export default function App() {
  }
 
  alert(`🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`);
- } else if (paymentStatus ===' cancelled') {
+ } else if (paymentStatus === 'cancelled') {
  window.history.replaceState({}, document.title, window.location.pathname);
  }
  }, []);
 
  // Detecta cambios en data-theme para sincronizar colores Espectro
  const [dataTheme, setDataTheme] = React.useState<string>(() => {
- if (typeof document ===' undefined') return' classic';
- return document.documentElement.getAttribute('data-theme') ||' classic';
+ if (typeof document === 'undefined') return 'classic';
+ return document.documentElement.getAttribute('data-theme') || 'classic';
  });
 
  useEffect(() => {
  // Observa cambios en el atributo data-theme
  const observer = new MutationObserver(() => {
- const newTheme = document.documentElement.getAttribute('data-theme') ||' classic';
+ const newTheme = document.documentElement.getAttribute('data-theme') || 'classic';
  setDataTheme(newTheme);
  });
 
@@ -528,7 +528,7 @@ export default function App() {
  return () => observer.disconnect();
  }, []);
 
- const isEspectroActive = dataTheme ===' light' || dataTheme ===' dark';
+ const isEspectroActive = dataTheme === 'light' || dataTheme === 'dark';
 
  // Proporciona colores del sistema Espectro o fallback al sistema antiguo
  const colors: ThemeColors = isEspectroActive ? getEspectroColors() : (THEMES[currentTheme] || THEMES.indie_velvet);
@@ -538,7 +538,7 @@ export default function App() {
  setCurrentTheme(theme);
  localStorage.setItem('bakandeya_theme', theme);
  // Actualiza data-theme para que Espectro sepa qué tema usar
- const resolvedTheme = theme ===' classic' ?' classic' :' light';
+ const resolvedTheme = theme === 'classic' ? 'classic' : 'light';
  document.documentElement.setAttribute('data-theme', resolvedTheme);
  };
 
@@ -568,12 +568,12 @@ export default function App() {
  const isManagement = (l: Lead) => {
  if (!l.tipo) return false;
  const s = String(l.tipo).trim().toLowerCase();
- return ['agencia',' manager',' productora',' sello',' promotora',' management'].some(t => s.includes(t));
+ return ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => s.includes(t));
  };
  const isBanda = (l: Lead) => {
  if (!l.tipo) return false;
  const s = String(l.tipo).trim().toLowerCase();
- return s ===' grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
+ return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
  };
  const totalEvents = concerts.length + rehearsals.length;
  const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
@@ -693,7 +693,7 @@ export default function App() {
  />
  ) : (
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center font-bold text-xs shrink-0">
- {currentActiveBandName[0]?.toUpperCase() ||' B'}
+ {currentActiveBandName[0]?.toUpperCase() || 'B'}
  </div>
  )}
 
@@ -701,11 +701,11 @@ export default function App() {
 
  <div className="flex flex-col">
  <div className="flex items-center gap-1.5">
- <h1 className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ?' text-xs' :' text-xs sm:text-sm'}`} translate="no">
+ <h1 className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`} translate="no">
  {currentActiveBandName}
  </h1>
  <ChevronDown className="w-3.5 h-3.5 text-[var(--acc-ink)] group-hover:translate-y-0.5 transition-transform" />
- <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus ===' synced' ?' bg-[var(--ok)]/30' : syncStatus ===' error' ?' bg-[var(--alert)]' :' bg-[var(--ink-3)]'}`} />
+ <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`} />
  </div>
  <button
  type="button"
@@ -733,13 +733,13 @@ export default function App() {
  onClick={() => setShowCampaignModal(true)}
  className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
  activeCampaign
- ?' bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- :' bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  title="Gestionar Campañas de Booking"
  >
  <Target className="w-3.5 h-3.5" />
- <span className="text-[10px] hidden xs:inline">{activeCampaign ?' Campaña' :' Campañas'}</span>
+ <span className="text-[10px] hidden xs:inline">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
  </button>
  )}
  </div>
@@ -755,23 +755,23 @@ export default function App() {
  {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
  let isActive = false;
  if (openGroupSheetId) {
- isActive = slot.kind ===' group' && openGroupSheetId === slot.groupId;
+ isActive = slot.kind === 'group' && openGroupSheetId === slot.groupId;
  } else if (isMobileMenuOpen) {
- isActive = slot.kind ===' more';
+ isActive = slot.kind === 'more';
  } else {
- if (slot.kind ===' view') {
+ if (slot.kind === 'view') {
  isActive = currentView === slot.itemId;
- } else if (slot.kind ===' group') {
+ } else if (slot.kind === 'group') {
  isActive = (slot.itemId ? currentView === slot.itemId : false) || findNavGroupIdForItem(currentView) === slot.groupId;
- } else if (slot.kind ===' more') {
+ } else if (slot.kind === 'more') {
  const groupOfView = findNavGroupIdForItem(currentView);
- const isDirectBottomSlot = currentView ===' resumen' || currentView ===' calendario' || groupOfView ===' musica' || groupOfView ===' promocion';
+ const isDirectBottomSlot = currentView === 'resumen' || currentView === 'calendario' || groupOfView === 'musica' || groupOfView === 'promocion';
  isActive = !isDirectBottomSlot;
  }
  }
  const IconComp = slot.itemId
  ? NAV_ITEMS[slot.itemId as NavItemId].icon
- : slot.kind ===' group' && slot.groupId
+ : slot.kind === 'group' && slot.groupId
  ? NAV_ITEMS[NAV_GROUPS_MOBILE.find(g => g.id === slot.groupId)!.itemIds[0]].icon
  : Menu;
  const slotLabel = t(slot.labelKey, slot.labelDefault);
@@ -780,18 +780,18 @@ export default function App() {
  key={slot.id}
  type="button"
  onClick={() => {
- if (slot.kind ===' view') {
+ if (slot.kind === 'view') {
  setOpenGroupSheetId(null);
  setIsMobileMenuOpen(false);
  handleNavigate(slot.itemId as any);
- } else if (slot.kind ===' group') {
+ } else if (slot.kind === 'group') {
  setIsMobileMenuOpen(false);
  const isAlreadyInGroup = (slot.itemId && currentView === slot.itemId) || findNavGroupIdForItem(currentView) === slot.groupId;
  if (isAlreadyInGroup) {
  setOpenGroupSheetId(prev => (prev === slot.groupId ? null : (slot.groupId as string)));
  } else {
  setOpenGroupSheetId(null);
- const defaultTarget = slot.itemId || (slot.groupId ===' musica' ?' repertorio' :' epk');
+ const defaultTarget = slot.itemId || (slot.groupId === 'musica' ? 'repertorio' : 'epk');
  handleNavigate(defaultTarget as any);
  }
  } else {
@@ -804,7 +804,7 @@ export default function App() {
  title={slotLabel}
  >
  <span className={`flex items-center justify-center w-10 h-10 rounded-[var(--r-pill)] transition-colors ${
- isActive ?' bg-[var(--acc-soft)] text-[var(--acc-ink)]' :' text-[var(--ink-2)]'
+ isActive ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'
  }`}>
  <IconComp className="w-5 h-5" />
  </span>
@@ -873,15 +873,15 @@ export default function App() {
  />
  ) : (
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center font-bold text-sm shrink-0">
- {currentActiveBandName[0]?.toUpperCase() ||' B'}
+ {currentActiveBandName[0]?.toUpperCase() || 'B'}
  </div>
  )}
  <div className="flex flex-col">
- <h1 className={`font-bold font-display tracking-wide text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ?' text-xs' : currentActiveBandName.length > 12 ?' text-sm' :' text-base'}`} translate="no">
+ <h1 className={`font-bold font-display tracking-wide text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : currentActiveBandName.length > 12 ? 'text-sm' : 'text-base'}`} translate="no">
  {currentActiveBandName}
  </h1>
  <div className="flex items-center gap-1.5 mt-1">
- <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus ===' synced' ?' bg-[var(--ok)]/30' : syncStatus ===' error' ?' bg-[var(--alert)]' :' bg-[var(--ink-3)]'}`} />
+ <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`} />
  <span className="text-[10px] font-sans text-[var(--ink-2)]">Banda activa</span>
  </div>
  </div>
@@ -969,7 +969,7 @@ export default function App() {
  {!isPromoPlan && (() => {
  const userPlan = currentActiveBandPlan;
  const pDef = getPlanDefinition(userPlan);
- const totalCredits = userPlan ===' cabeza_de_cartel' ? 2500 : userPlan ===' de_gira' ? 800 : userPlan ===' local' ? 300 : 100;
+ const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
  const estimatedUsed = Math.min(totalCredits, Math.max(12, (leads.length * 2) + posts.length));
  const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
 
@@ -989,7 +989,7 @@ export default function App() {
  <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
  <div
  className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
- pct > 85 ?' bg-[var(--alert)]' :' bg-[var(--acc)]'
+ pct > 85 ? 'bg-[var(--alert)]' : 'bg-[var(--acc)]'
  }`}
  style={{ width: `${pct}%` }}
  />
@@ -1018,9 +1018,9 @@ export default function App() {
  >
  <div 
  className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
- style={{ backgroundColor: currentUser.avatarColor ||' var(--acc)' }}
+ style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
  >
- {currentUser.name ? currentUser.name.slice(0, 2) :' US'}
+ {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
  </div>
  <div className="flex flex-col min-w-0 flex-1">
  <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
@@ -1092,12 +1092,12 @@ export default function App() {
  <div className="flex items-center justify-center gap-1 w-full">
  <h1 className={`font-black font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
  currentActiveBandName.length > 22 
- ?' text-xs' 
+ ? 'text-xs' 
  : currentActiveBandName.length > 14 
- ?' text-sm' 
+ ? 'text-sm' 
  : currentActiveBandName.length > 9 
- ?' text-base' 
- :' text-lg'
+ ? 'text-base' 
+ : 'text-lg'
  }`} translate="no">
  {currentActiveBandName}
  </h1>
@@ -1210,26 +1210,26 @@ export default function App() {
  onClick={() => setShowCampaignModal(true)}
  className={`w-full flex items-center justify-between p-2 rounded-[var(--r-m)] text-left transition-colors cursor-pointer group ${
  activeCampaign
- ?' bg-[var(--acc-soft)] text-[var(--acc-ink)]'
- :' bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+ ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+ : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
  }`}
  title="Configurar y activar campañas de booking con fechas objetivo"
  >
  <div className="flex items-center gap-2 min-w-0">
- <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ?' bg-[var(--acc)]/25 text-[var(--on-acc)]' :' bg-[var(--surface)] text-[var(--ink-2)]'}`}>
+ <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'}`}>
  <Target className="w-3.5 h-3.5" />
  </div>
  <div className="flex flex-col min-w-0">
  <span className="text-[11px] font-bold truncate leading-tight">
- {activeCampaign ? activeCampaign.name :' Modo Campaña'}
+ {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
  </span>
  <span className="text-[10px] text-[var(--ink-2)] truncate">
- {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` :' Sin campaña activa'}
+ {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
  </span>
  </div>
  </div>
  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] shrink-0">
- {activeCampaign ?' Activa' :' Elegir'}
+ {activeCampaign ? 'Activa' : 'Elegir'}
  </span>
  </button>
  </div>
@@ -1239,7 +1239,7 @@ export default function App() {
  {!isPromoPlan && (() => {
  const userPlan = currentActiveBandPlan;
  const pDef = getPlanDefinition(userPlan);
- const totalCredits = userPlan ===' cabeza_de_cartel' ? 2500 : userPlan ===' de_gira' ? 800 : userPlan ===' local' ? 300 : 100;
+ const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
  const estimatedUsed = Math.min(totalCredits, Math.max(12, (leads.length * 2) + posts.length));
  const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
 
@@ -1259,7 +1259,7 @@ export default function App() {
  <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
  <div 
  className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
- pct > 85 ?' bg-[var(--alert)]' :' bg-[var(--acc)]'
+ pct > 85 ? 'bg-[var(--alert)]' : 'bg-[var(--acc)]'
  }`} 
  style={{ width: `${pct}%` }} 
  />
@@ -1284,9 +1284,9 @@ export default function App() {
  >
  <div 
  className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
- style={{ backgroundColor: currentUser.avatarColor ||' var(--acc)' }}
+ style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
  >
- {currentUser.name ? currentUser.name.slice(0, 2) :' US'}
+ {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
  </div>
  <div className="flex flex-col min-w-0 flex-1">
  <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
@@ -1333,7 +1333,7 @@ export default function App() {
  {/* Main Content Area */}
  <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
  {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
- {activeCampaign && ['booking',' medios',' management',' bandas'].includes(currentView) && (
+ {activeCampaign && ['booking', 'medios', 'management', 'bandas'].includes(currentView) && (
  <GlobalCampaignBar
  campaign={activeCampaign}
  allLeads={leads}
@@ -1345,7 +1345,7 @@ export default function App() {
  )}
 
  {/* Sync warning if backend fails */}
- {syncStatus ===' error' && (
+ {syncStatus === 'error' && (
  <div className="mb-4 p-3 bg-[var(--alert)]/10/20 rounded-lg text-[var(--alert)]/60 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
  <div className="flex gap-2 items-center">
  <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
@@ -1375,7 +1375,7 @@ export default function App() {
  <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
  </div>
  }>
- {currentView ===' resumen' && (
+ {currentView === 'resumen' && (
  <Dashboard
  leads={leads}
  colors={colors}
@@ -1397,7 +1397,7 @@ export default function App() {
  isPromoPlan={isPromoPlan}
  />
  )}
- {(currentView ===' booking' || currentView ===' medios' || currentView ===' management') && (
+ {(currentView === 'booking' || currentView === 'medios' || currentView === 'management') && (
  <BookingCRM 
  key="contacts-crm"
  activeCampaign={activeCampaign} 
@@ -1410,18 +1410,18 @@ export default function App() {
  onBulkDeleteLeads={handleBulkDeleteLeads}
  epkConfig={epkConfig}
  onUpdateEpkConfig={handleUpdateEpkConfig}
- initialSection={currentView ===' medios' ?' medios' : currentView ===' management' ?' grupos' : (bookingOptions.sectionTab ||' salas')}
+ initialSection={currentView === 'medios' ? 'medios' : currentView === 'management' ? 'grupos' : (bookingOptions.sectionTab || 'salas')}
  onSectionChange={handleCrmSectionChange}
  onNavigate={handleNavigate}
  bandsCount={bandsCount}
- initialStatusFilter={(bookingOptions.statusFilter as (LeadStatus |' todos')) ||' todos'}
+ initialStatusFilter={(bookingOptions.statusFilter as (LeadStatus | 'todos')) || 'todos'}
  initialSelectedLeadId={bookingOptions.selectedLeadId}
  currentUser={currentUser}
  bandName={currentActiveBandName}
  currentBandId={currentActiveBandId}
  />
  )}
- {currentView ===' bandas' && (
+ {currentView === 'bandas' && (
  <BandCRM 
  colors={colors}
  leads={leads}
@@ -1432,7 +1432,7 @@ export default function App() {
  onNavigate={handleNavigate}
  />
  )}
- {currentView ===' calendario' && (
+ {currentView === 'calendario' && (
  <CalendarView 
  colors={colors}
  rehearsals={rehearsals}
@@ -1457,7 +1457,7 @@ export default function App() {
  isPromoPlan={isPromoPlan}
  />
  )}
- {currentView ===' ensayos' && (
+ {currentView === 'ensayos' && (
  <ErrorBoundary fallbackTitle="Ensayos & Local en Vivo">
  <EnsayosManager
  rehearsals={activeBandRehearsals}
@@ -1476,7 +1476,7 @@ export default function App() {
  />
  </ErrorBoundary>
  )}
- {currentView ===' reels' && (
+ {currentView === 'reels' && (
  <ReelsCenter
  colors={colors}
  posts={posts}
@@ -1487,7 +1487,7 @@ export default function App() {
  onUpdateMetric={handleUpdateMetric}
  onDeleteMetric={handleDeleteMetric}
  bandName={currentActiveBandName}
- instagramHandle={(epkConfig?.enlacesRedes?.instagram ||' ').replace(/^https?:\/\/(www\.)?instagram\.com\//i,' ').replace(/^@/,' ').replace(/\/$/,' ') || undefined}
+ instagramHandle={(epkConfig?.enlacesRedes?.instagram || '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/\/$/, '') || undefined}
  hasAnySocialLink={Boolean(
  epkConfig?.enlacesRedes?.instagram ||
  epkConfig?.enlacesRedes?.tiktok ||
@@ -1496,7 +1496,7 @@ export default function App() {
  )}
  />
  )}
- {(currentView ===' repertorio' || currentView ===' catalogo' || currentView ===' discografia') && (
+ {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia') && (
  <ErrorBoundary fallbackTitle="Repertorio y Setlists">
  <RepertorioSetlists
  key={currentActiveBandId}
@@ -1515,7 +1515,7 @@ export default function App() {
  />
  </ErrorBoundary>
  )}
-{currentView ===' merchan' && (
+{currentView === 'merchan' && (
  <Merchan
  colors={colors}
  currentTheme={currentTheme}
@@ -1524,7 +1524,7 @@ export default function App() {
  bandLogoUrl={currentActiveBandLogo}
  />
  )}
- {currentView ===' epk' && (
+ {currentView === 'epk' && (
  <ErrorBoundary fallbackTitle="EPK / Dossier Promocional">
  <EPKManager
  key={currentActiveBandId}
@@ -1537,7 +1537,7 @@ export default function App() {
  />
  </ErrorBoundary>
  )}
- {currentView ===' fans' && (
+ {currentView === 'fans' && (
  <FansPanel
  fans={fans}
  concerts={activeBandConcerts}
@@ -1585,7 +1585,7 @@ export default function App() {
  />
  </ErrorBoundary>
  )}
- {currentView ===' finanzas' && (
+ {currentView === 'finanzas' && (
  isAdmin ? (
  <Finanzas 
  colors={colors}
@@ -1608,10 +1608,10 @@ export default function App() {
  )
  )}
  {/* Full View Chatbot Instance */}
- {currentView ===' chat' && (
+ {currentView === 'chat' && (
  <div className="w-full h-[calc(100vh-140px)] min-h-[600px] block">
  <Chatbot
- key={`main_${currentUser?.id ||' guest'}_${currentUser?.band_id ||' default'}`}
+ key={`main_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
  colors={colors}
  leads={leads}
  rehearsals={rehearsals}
@@ -1631,7 +1631,7 @@ export default function App() {
  </div>
  )}
 
- {currentView ===' planes' && (
+ {currentView === 'planes' && (
  <Planes
  colors={colors}
  currentUser={currentUser}
@@ -1646,7 +1646,7 @@ export default function App() {
  </main>
 
  {/* User Management Modal for Band Leader */}
- {showUserManagementModal && (isAdmin || currentUser?.role ===' leader' || currentUser?.role ===' admin') && (
+ {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
  <UserManagementModal
  currentUser={currentUser}
  users={bandUsers}
@@ -1695,15 +1695,15 @@ export default function App() {
  )}
 
  {/* Floating Chatbot Overlay */}
- {currentView !==' chat' && !isPromoPlan && (
+ {currentView !== 'chat' && !isPromoPlan && (
  <div
  className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-all duration-200 ${
- isFloatingChatOpen ?' block animate-in slide-in-from-bottom-5' :' hidden'
+ isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
  }`}
  >
  <Suspense fallback={null}>
  <Chatbot
- key={`floating_${currentUser?.id ||' guest'}_${currentUser?.band_id ||' default'}`}
+ key={`floating_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
  colors={colors}
  leads={leads}
  rehearsals={rehearsals}
@@ -1726,16 +1726,16 @@ export default function App() {
  )}
 
  {/* Floating Chatbot Trigger Button */}
- {currentView !==' chat' && !isPromoPlan && (
+ {currentView !== 'chat' && !isPromoPlan && (
  <button
  id="floating-chat-trigger-btn"
  onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
  className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
  isFloatingChatOpen
- ?' bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
+ ? 'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
  : isChatLoading
- ?' bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50'
- :' bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105'
+ ? 'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50'
+ : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105'
  }`}
  title={isChatLoading ? "Agente AI ejecutando en segundo plano..." : "Abrir Agente Mánager AI"}
  >
@@ -1749,11 +1749,11 @@ export default function App() {
  ) : (
  <Guitar className="w-5 h-5" />
  )}
- <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ?' bg-[var(--acc)]/80 animate-ping' :' bg-[var(--ok)]/60 animate-ping'}`} />
- <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ?' bg-[var(--tentative)]/50' :' bg-[var(--ok)]'}`} />
+ <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`} />
+ <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--tentative)]/50' : 'bg-[var(--ok)]'}`} />
  </div>
  <span className="text-xs font-sans font-bold tracking-wider hidden sm:inline-block pr-1">
- {isChatLoading ?' Ejecutando...' :' Agente AI'}
+ {isChatLoading ? 'Ejecutando...' : 'Agente AI'}
  </span>
  </>
  )}
@@ -1826,9 +1826,9 @@ export default function App() {
  setShowOnboardingModal(false);
  try {
  if (cleanActiveBandId) {
- localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`,' true');
+ localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`, 'true');
  }
- localStorage.setItem('bandmanager_onboarding_completed',' true');
+ localStorage.setItem('bandmanager_onboarding_completed', 'true');
  } catch {}
  }}
  onSelectMission={(targetView) => handleNavigate(targetView)}
@@ -1842,9 +1842,9 @@ export default function App() {
  setShowProfileWizardModal(false);
  try {
  if (cleanActiveBandId) {
- localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`,' true');
+ localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
  }
- localStorage.setItem('bandmanager_profile_wizard_completed',' true');
+ localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
  window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
  } catch {}
  }}

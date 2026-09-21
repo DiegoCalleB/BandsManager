@@ -5,18 +5,18 @@
  * and audio file helpers.
  */
 
-import { getAuthHeaders } from' ../services/api';
+import { getAuthHeaders } from '../services/api';
 
-const DB_NAME =' BakandeyaAudioDB';
-const STORE_NAME =' audio_files';
+const DB_NAME = 'BakandeyaAudioDB';
+const STORE_NAME = 'audio_files';
 const DB_VERSION = 1;
 
 let cachedDb: IDBDatabase | null = null;
 
 // Reset cachedDb when the page becomes hidden or is unloaded, to avoid holding closing connections
-if (typeof window !==' undefined' && typeof document !==' undefined') {
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
  document.addEventListener('visibilitychange', () => {
- if (document.visibilityState ===' hidden' && cachedDb) {
+ if (document.visibilityState === 'hidden' && cachedDb) {
  try {
  cachedDb.close();
  } catch {
@@ -42,7 +42,7 @@ function openAudioDB(): Promise<IDBDatabase> {
  if (cachedDb) {
  try {
  // Check if connection is still usable
- const tx = cachedDb.transaction(STORE_NAME,' readonly');
+ const tx = cachedDb.transaction(STORE_NAME, 'readonly');
  tx.abort();
  return Promise.resolve(cachedDb);
  } catch {
@@ -57,7 +57,7 @@ function openAudioDB(): Promise<IDBDatabase> {
 
  return new Promise((resolve, reject) => {
  try {
- if (typeof indexedDB ===' undefined') {
+ if (typeof indexedDB === 'undefined') {
  reject(new Error('IndexedDB is not supported'));
  return;
  }
@@ -146,7 +146,7 @@ async function executeIDBOperation<T>(
 
  op(store).then(
  (result) => {
- if (mode ===' readonly') {
+ if (mode === 'readonly') {
  if (!finished) {
  finished = true;
  resolve(result);
@@ -183,12 +183,12 @@ async function executeIDBOperation<T>(
  }
 
  const isClosingOrHidden = err && (
- err.name ===' InvalidStateError' || 
- err.name ===' AbortError' ||
- String(err.message ||' ').toLowerCase().includes('closing') ||
- String(err.message ||' ').toLowerCase().includes('closed') ||
- String(err.message ||' ').toLowerCase().includes('hidden') ||
- String(err.message ||' ').toLowerCase().includes('database')
+ err.name === 'InvalidStateError' || 
+ err.name === 'AbortError' ||
+ String(err.message || '').toLowerCase().includes('closing') ||
+ String(err.message || '').toLowerCase().includes('closed') ||
+ String(err.message || '').toLowerCase().includes('hidden') ||
+ String(err.message || '').toLowerCase().includes('database')
  );
 
  if (isClosingOrHidden && attempts < 3) {
@@ -235,7 +235,7 @@ export async function getAudioFromStorage(id: string): Promise<string | null> {
  resolve(null);
  return;
  }
- if (typeof val ===' string') {
+ if (typeof val === 'string') {
  resolve(val);
  } else if (val instanceof Blob) {
  const objectUrl = URL.createObjectURL(val);
@@ -257,7 +257,7 @@ export async function getAudioFromStorage(id: string): Promise<string | null> {
  * Convert Google Drive share link to direct stream URL
  */
 export function parseGoogleDriveAudioUrl(url: string): string {
- if (!url || typeof url !==' string') return' ';
+ if (!url || typeof url !== 'string') return '';
  const trimmed = url.trim();
  
  // If it's already a direct download link or raw data/blob URL, return as is
@@ -297,7 +297,7 @@ export async function uploadFileToServer(
  file: File, 
  options?: { bandId?: string; category?: string; folder?: string } | string
 ): Promise<string> {
- const opts = typeof options ===' string' ? { bandId: options } : (options || {});
+ const opts = typeof options === 'string' ? { bandId: options } : (options || {});
 
  try {
  const authHeaders = getAuthHeaders() as Record<string, string>;
@@ -313,7 +313,7 @@ export async function uploadFileToServer(
  if (opts.bandId) headers['x-band-id'] = opts.bandId;
 
  const response = await fetch('/api/upload', {
- method:' POST',
+ method: 'POST',
  headers,
  body: formData
  });
@@ -333,12 +333,12 @@ export async function uploadFileToServer(
  const authHeaders = getAuthHeaders() as Record<string, string>;
  const headers: Record<string, string> = {
  ...authHeaders,
-' Content-Type':' application/json'
+'Content-Type': 'application/json'
  };
  if (opts.bandId) headers['x-band-id'] = opts.bandId;
 
  const response = await fetch('/api/upload', {
- method:' POST',
+ method: 'POST',
  headers,
  body: JSON.stringify({ 
  filename: file.name, 
@@ -357,10 +357,10 @@ export async function uploadFileToServer(
  }
 
  // Fallback: ONLY use IndexedDB for audio tracks (not for images/documents like logo/dossier/rider)
- const isDocOrImage = opts.category ===' logo' || 
- opts.category ===' dossier' || 
- opts.category ===' rider' || 
- opts.category ===' epk' || 
+ const isDocOrImage = opts.category === 'logo' || 
+ opts.category === 'dossier' || 
+ opts.category === 'rider' || 
+ opts.category === 'epk' || 
  file.type.startsWith('image/') || 
  file.type.includes('pdf');
 
@@ -391,7 +391,7 @@ export function fileToBase64(file: File | Blob): Promise<string> {
  * Blob URLs, and external HTTP/HTTPS streams safely without scheme errors.
  */
 export async function getAudioBlobFromUrl(url: string): Promise<Blob> {
- if (!url || typeof url !==' string' || !url.trim()) {
+ if (!url || typeof url !== 'string' || !url.trim()) {
  throw new Error('Invalid or empty audio URL provided');
  }
  const resolved = await resolveAudioUrl(url.trim());
@@ -408,7 +408,7 @@ export async function getAudioBlobFromUrl(url: string): Promise<Blob> {
  throw new Error('Invalid data URL format');
  }
  const mimeMatch = parts[0].match(/:(.*?);/);
- const mime = mimeMatch ? mimeMatch[1] :' audio/mpeg';
+ const mime = mimeMatch ? mimeMatch[1] : 'audio/mpeg';
  const bstr = atob(parts[1]);
  let n = bstr.length;
  const u8arr = new Uint8Array(n);
@@ -440,13 +440,13 @@ export async function getAudioArrayBufferFromUrl(url: string): Promise<ArrayBuff
  * and Google Drive stream URLs.
  */
 export async function resolveAudioUrl(url: string): Promise<string> {
- if (!url || typeof url !==' string') return' ';
+ if (!url || typeof url !== 'string') return '';
  const trimmed = url.trim();
 
  if (trimmed.startsWith('indexeddb:')) {
- const idbKey = trimmed.replace('indexeddb:',' ');
+ const idbKey = trimmed.replace('indexeddb:', '');
  const idbAudio = await getAudioFromStorage(idbKey);
- return idbAudio ||' ';
+ return idbAudio || '';
  }
 
  return parseGoogleDriveAudioUrl(trimmed);
@@ -455,7 +455,7 @@ export async function resolveAudioUrl(url: string): Promise<string> {
 /**
  * Safely saves the songs catalog to localStorage by persisting large data URLs
  * to IndexedDB first and keeping lightweight references in localStorage,
- * preventing' Setting the value exceeded the quota' errors.
+ * preventing'Setting the value exceeded the quota' errors.
  */
 export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: string): Promise<void> {
  if (!songs || !Array.isArray(songs)) return;
@@ -463,7 +463,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
  try {
  const sanitizedSongs = await Promise.all(
  songs.map(async (song) => {
- let principalUrl = song.audioPrincipalUrl ||' ';
+ let principalUrl = song.audioPrincipalUrl || '';
 
  // If principal audio is a large base64 data URL, store in IndexedDB
  if (principalUrl.startsWith('data:audio') && principalUrl.length > 10000) {
@@ -476,7 +476,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
  }
  }
 
- let coverUrl = song.portadaUrl ||' ';
+ let coverUrl = song.portadaUrl || '';
  // If cover image is a large base64 data URL, store in IndexedDB
  if (coverUrl.startsWith('data:image') && coverUrl.length > 10000) {
  const key = `image_cover_${song.id}`;
@@ -491,7 +491,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
  // Process audio ideas and multitrack pistas
  const sanitizedIdeas = await Promise.all(
  (song.audioIdeas || []).map(async (idea: any) => {
- let ideaUrl = idea.audioUrl ||' ';
+ let ideaUrl = idea.audioUrl || '';
  if (ideaUrl.startsWith('data:audio') || ideaUrl.startsWith('blob:')) {
  const key = `audio_idea_${idea.id || Date.now()}`;
  try {
@@ -505,7 +505,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
 
  const sanitizedPistas = await Promise.all(
  (idea.pistas || []).map(async (pista: any) => {
- let trackUrl = pista.audioUrl ||' ';
+ let trackUrl = pista.audioUrl || '';
  if (trackUrl.startsWith('data:audio') || trackUrl.startsWith('blob:')) {
  const key = `audio_track_${pista.id || Date.now()}`;
  try {
@@ -540,13 +540,13 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
  })
  );
 
- const clean = (bandId ||' ').replace(/^(band|reg)-/,' ').toLowerCase();
- const isBakandeya = clean ===' bakandeya';
+ const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+ const isBakandeya = clean === 'bakandeya';
  const finalSongs = isBakandeya ? sanitizedSongs : sanitizedSongs.filter((s: any) => {
- const sId = (s?.id ||' ').toLowerCase();
+ const sId = (s?.id || '').toLowerCase();
  return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
  });
- const key = `band_songs_${clean ||' default'}`;
+ const key = `band_songs_${clean || 'default'}`;
  localStorage.setItem(key, JSON.stringify(finalSongs));
  if (isBakandeya || !clean) {
  localStorage.setItem('bakandeya_songs_catalog', JSON.stringify(sanitizedSongs));
@@ -568,7 +568,7 @@ export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?:
  setlists.map(async (setlist) => {
  const sanitizedItems = await Promise.all(
  (setlist.items || []).map(async (item: any) => {
- let itemAudioUrl = item.audioUrl ||' ';
+ let itemAudioUrl = item.audioUrl || '';
  if (itemAudioUrl.startsWith('data:audio') && itemAudioUrl.length > 10000) {
  const key = `audio_setlist_item_${item.id}`;
  try {
@@ -592,13 +592,13 @@ export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?:
  })
  );
 
- const clean = (bandId ||' ').replace(/^(band|reg)-/,' ').toLowerCase();
- const isBakandeya = clean ===' bakandeya';
+ const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+ const isBakandeya = clean === 'bakandeya';
  const finalSetlists = isBakandeya ? sanitizedSetlists : sanitizedSetlists.filter((sl: any) => {
- const slId = (sl?.id ||' ').toLowerCase();
- return slId !==' setlist-1' && slId !==' setlist-2';
+ const slId = (sl?.id || '').toLowerCase();
+ return slId !== 'setlist-1' && slId !== 'setlist-2';
  });
- const key = `band_setlists_${clean ||' default'}`;
+ const key = `band_setlists_${clean || 'default'}`;
  localStorage.setItem(key, JSON.stringify(finalSetlists));
  if (isBakandeya || !clean) {
  localStorage.setItem('bakandeya_setlists', JSON.stringify(sanitizedSetlists));

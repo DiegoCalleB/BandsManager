@@ -315,7 +315,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   // Si la base de datos de Supabase aún no tiene alguna columna nueva (p. ej. 'donacion_revolut', 'traducciones' o 'miembros'),
   // reintentamos quitando las columnas no existentes en bucle para evitar que falle el guardado general.
   while (error && error.message && error.message.includes("Could not find the '") && error.message.includes("' column of 'epk_configs'")) {
-    const match = error.message.match(/Could not find the '([^']+)' column of 'epk_configs'/);
+    const match = error.message.match(/Could not find the '([^']+)'column of 'epk_configs'/);
     if (match && match[1] && currentPayload[match[1]] !== undefined) {
       const missingCol = match[1];
       console.warn(`[EPK] Columna '${missingCol}' no encontrada en Supabase epk_configs. Reintentando sin ella. Ejecuta la migración SQL.`);

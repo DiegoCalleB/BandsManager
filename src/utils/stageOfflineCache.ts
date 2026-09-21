@@ -1,4 +1,4 @@
-import { Setlist, Song } from' ../types';
+import { Setlist, Song } from '../types';
 
 export interface StageOfflineCachePayload {
  setlist: Setlist;
@@ -7,7 +7,7 @@ export interface StageOfflineCachePayload {
  totalSongsCount: number;
 }
 
-const STAGE_CACHE_PREFIX =' bandmanager_stage_offline_';
+const STAGE_CACHE_PREFIX = 'bandmanager_stage_offline_';
 
 /**
  * Guarda en almacenamiento local persistente el setlist activo y las canciones completas
@@ -19,17 +19,17 @@ export function cacheActiveStageSetlist(
  songs: Song[],
  bandId?: string
 ): boolean {
- if (typeof localStorage ===' undefined' || !setlist || !setlist.items || setlist.items.length === 0) {
+ if (typeof localStorage === 'undefined' || !setlist || !setlist.items || setlist.items.length === 0) {
  return false;
  }
 
  try {
- const key = `${STAGE_CACHE_PREFIX}${bandId ||' default'}`;
+ const key = `${STAGE_CACHE_PREFIX}${bandId || 'default'}`;
  
  // Filtramos solo las canciones que pertenecen al setlist para no saturar la cuota
  const relevantSongIds = new Set(
  setlist.items
- .filter(it => it.tipoItem ===' cancion' && it.songId)
+ .filter(it => it.tipoItem === 'cancion' && it.songId)
  .map(it => it.songId as string)
  );
 
@@ -54,9 +54,9 @@ export function cacheActiveStageSetlist(
  * Recupera el último setlist y catálogo cacheados para el modo escenario sin conexión.
  */
 export function getStageOfflineCache(bandId?: string): StageOfflineCachePayload | null {
- if (typeof localStorage ===' undefined') return null;
+ if (typeof localStorage === 'undefined') return null;
  try {
- const key = `${STAGE_CACHE_PREFIX}${bandId ||' default'}`;
+ const key = `${STAGE_CACHE_PREFIX}${bandId || 'default'}`;
  const raw = localStorage.getItem(key);
  if (!raw) return null;
  const parsed = JSON.parse(raw) as StageOfflineCachePayload;
@@ -74,9 +74,9 @@ export function getStageOfflineCache(bandId?: string): StageOfflineCachePayload 
  * Limpia el caché offline de escenario si el usuario lo desea.
  */
 export function clearStageOfflineCache(bandId?: string): void {
- if (typeof localStorage ===' undefined') return;
+ if (typeof localStorage === 'undefined') return;
  try {
- const key = `${STAGE_CACHE_PREFIX}${bandId ||' default'}`;
+ const key = `${STAGE_CACHE_PREFIX}${bandId || 'default'}`;
  localStorage.removeItem(key);
  } catch {
  // Ignorado

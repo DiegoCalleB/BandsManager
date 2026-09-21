@@ -1293,7 +1293,7 @@ export default function RepertorioSetlists({
  }, 1000);
  } catch (err: any) {
  console.warn('Microphone access warning:', err?.message || err);
- alert('No se pudo acceder al micrófono (' + (err?.message ||'permisos denegados') +'). Por favor, comprueba los permisos de audio en tu navegador.');
+ alert('No se pudo acceder al micrófono ( '+ (err?.message ||'permisos denegados') +'). Por favor, comprueba los permisos de audio en tu navegador.');
  }
  };
 
@@ -2640,8 +2640,12 @@ export default function RepertorioSetlists({
  <input
  className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 text-[var(--ink)]`}
  placeholder="Nombre del repertorio"
- value={activeSetlistTitle || ''}
- onChange={(e) => setActiveSetlistTitle(e.target.value)}
+ value={activeSetlist?.nombre || ''}
+ onChange={(e) => {
+ if (!activeSetlist) return;
+ const updatedSetlist = { ...activeSetlist, nombre: e.target.value };
+ setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
+ }}
  />
 
  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap">
@@ -2689,7 +2693,7 @@ export default function RepertorioSetlists({
  setShowPerfectSetlistModal(true);
  }}
  className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 ${
-' bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)]'
+'bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--ink)] hover:text-[var(--ink)]'
  }`}
  title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
  >
@@ -2751,7 +2755,7 @@ export default function RepertorioSetlists({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${
- ' bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
  type="button"
@@ -2802,7 +2806,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
  className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--alert)] transition cursor-pointer flex items-center gap-2 ${
-' hover:bg-[var(--alert-soft)]'
+'hover:bg-[var(--alert-soft)]'
  }`}
  >
  <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
@@ -2848,7 +2852,7 @@ export default function RepertorioSetlists({
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${
- ' bg-[var(--surface)] text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <button
  type="button"
@@ -3680,7 +3684,7 @@ export default function RepertorioSetlists({
  setEditingEnergyItemId(it.id);
  }}
  className={`text-[8px] font-sans px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass}`}
- title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ?' — fijada a mano' :''}. Clic para cambiarla.`}
+ title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? '— fijada a mano' :''}. Clic para cambiarla.`}
  >
  <span>{energy.icon}</span>
  {song.energiaManual && <span className="ml-0.5" title="Energía fijada a mano">✋</span>}
@@ -3917,7 +3921,7 @@ export default function RepertorioSetlists({
  className={`border rounded-[var(--r-s)] transition-all cursor-pointer ${
  isDragging ?'opacity-40 scale-[0.98]' :''
  } ${
- isDragOver ?' scale-[1.01] bg-[var(--acc)]/10' :''
+ isDragOver ? 'scale-[1.01] bg-[var(--acc)]/10' :''
  } ${
  isSelected
  ?'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10'
@@ -4193,7 +4197,6 @@ export default function RepertorioSetlists({
  <X className="w-3.5 h-3.5" />
  </button>
  )}
- </div>
 
  <div className="flex gap-2 flex-wrap sm:flex-nowrap">
  {/* Album dropdown */}
@@ -4229,7 +4232,7 @@ export default function RepertorioSetlists({
  onClick={() => setGroupByAlbum(!groupByAlbum)}
  className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
  groupByAlbum
- ?' bg-[var(--ok)]/15 text-[var(--ok)]/50/30'
+ ? 'bg-[var(--ok)]/15 text-[var(--ok)]/50/30'
  : 'bg-[var(--bg)] text-[var(--ink-2)]'
  }`}
  >
@@ -4242,7 +4245,7 @@ export default function RepertorioSetlists({
  onClick={handleNormalizeCatalogTitles}
  title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
  className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
-' bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
+'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
  }`}
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -4258,12 +4261,11 @@ export default function RepertorioSetlists({
  <span>Añadir Tema</span>
  </button>
  </div>
- </div>
 
  {/* BULK ACTIONS BAR */}
  {selectedCatalogIds.size > 0 && (
  <div className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${
-' bg-[var(--ok)]/20 text-[var(--ok)]/40'
+'bg-[var(--ok)]/20 text-[var(--ok)]/40'
  }`}>
  <span className="text-xs font-medium">
  {selectedCatalogIds.size} canciones seleccionadas
@@ -4422,7 +4424,6 @@ export default function RepertorioSetlists({
  );
  })
  )}
- </div>
  </div>
  </div>
  )}

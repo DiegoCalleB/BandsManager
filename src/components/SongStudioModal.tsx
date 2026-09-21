@@ -258,7 +258,7 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
 
 export default function SongStudioModal({
  song,
- colors= false,
+ colors,
  onClose,
  onUpdateSong,
  currentUsername ='Tu Nombre',
@@ -2785,12 +2785,12 @@ export default function SongStudioModal({
  const parts = [];
  if (newIdeaIncludeDrums) parts.push('Batería');
  if (newIdeaIncludeBass) parts.push('Bajo');
- const aiTrackLabel = `Ref AI: ${parts.join(' +') ||'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
+ const aiTrackLabel = `Ref AI: ${parts.join( '+') ||'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
 
  const aiTrackInfo = {
  url: aiServerUrl,
  label: aiTrackLabel,
- instrument: parts.join(' +') ||'IA Synth'
+ instrument: parts.join( '+') ||'IA Synth'
  };
 
  if (useSongBaseTrack && selectedSongBaseUrl) {
@@ -3347,7 +3347,7 @@ export default function SongStudioModal({
  }}
  className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-all text-left ${
  useSongBaseTrack 
- ?' bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-amber-0/60' 
+ ? 'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-amber-0/60' 
  :'/30 hover: bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:bg-[var(--acc-soft)]'
  }`}
  >
@@ -6406,7 +6406,7 @@ export default function SongStudioModal({
  className="flex items-center gap-1 text-[10px] text-[var(--acc)]/70 hover:text-[var(--ink)] transition-colors cursor-pointer"
  >
  <Copy className="w-3 h-3" />
- <span>{copiedStemError ?'¡Copiado!' :'Copiar'}</span>
+ <span>{copiedStemError ?'¡Copiado! ':'Copiar'}</span>
  </button>
  </div>
  <div className="max-h-40 overflow-y-auto whitespace-pre-wrap break-all text-[10px] text-[var(--ink-2)] font-sans leading-relaxed select-all">
@@ -6454,7 +6454,7 @@ export default function SongStudioModal({
  )}
  <div className="min-w-0 flex-1">
  <p className={`text-[11px] font-sans font-bold truncate ${!terminado ?'text-[var(--ink)]' : esError ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'}`}>
- {!terminado ?'Iris separando pistas…' : esError ?'¡Iris ha tenido un error!' :'¡Pistas listas!'}
+ {!terminado ?'Iris separando pistas…' : esError ?'¡Iris ha tenido un error! ':'¡Pistas listas!'}
  </p>
  <p className="text-[10px] font-sans text-[var(--ink-2)] truncate">{stemProgressModal.ideaTitle}</p>
  </div>

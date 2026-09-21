@@ -221,7 +221,7 @@ export function NegotiationSimulationModal({
  <div className="flex justify-between items-center">
  <label
  className={`block text-[10px] font-sans tracking-wider ${
-' text-[var(--acc)]'
+'text-[var(--acc)]'
  }`}
  >
  ✨ Vista Previa del Correo Generado (Editable)

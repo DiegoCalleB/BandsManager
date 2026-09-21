@@ -659,7 +659,7 @@ export function ReelsMetricsView({
  onClick={() => setActiveMainSection('growth_plan')}
  className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
  activeMainSection ==='growth_plan'
- ?' bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)]/10/20 font-black'
+ ? 'bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)]/10/20 font-black'
  :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
@@ -796,7 +796,7 @@ export function ReelsMetricsView({
  {/* Instagram Card */}
  {hasInstagram && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
-' bg-[var(--surface)]/40/30'
+'bg-[var(--surface)]/40/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider text-[var(--alert)] font-bold flex items-center gap-1.5">
@@ -854,7 +854,7 @@ export function ReelsMetricsView({
  {/* TikTok Card */}
  {hasTikTok && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
-' bg-[var(--surface)]/40/30'
+'bg-[var(--surface)]/40/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
@@ -895,7 +895,7 @@ export function ReelsMetricsView({
  {/* YouTube Card */}
  {hasYouTube && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
-' bg-[var(--surface)]/40/30'
+'bg-[var(--surface)]/40/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider text-[var(--alert)] font-bold flex items-center gap-1.5">
@@ -922,7 +922,7 @@ export function ReelsMetricsView({
  {/* Spotify Card */}
  {hasSpotify && (
  <div className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${
-' bg-[var(--surface)]/40/30'
+'bg-[var(--surface)]/40/30'
  }`}>
  <div className="flex items-center justify-between">
  <span className="text-[10px] font-sans tracking-wider text-[var(--ok)] font-bold flex items-center gap-1.5">
@@ -1041,7 +1041,7 @@ export function ReelsMetricsView({
  {/* Period Summary Stats Badge if available */}
  {periodSummaryStats && (
  <div className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-[9px] font-sans flex items-center justify-between flex-wrap gap-2 ${
-' bg-[var(--tentative)]/20 text-[var(--tentative)]/80/20'
+'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/20'
  }`}>
  <div className="flex items-center gap-1.5">
  <TrendingUp className="w-3 h-3 text-[var(--tentative)]" />
@@ -1071,7 +1071,7 @@ export function ReelsMetricsView({
  {hasInstagram && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.instagram
- ?' bg-[var(--alert)]/15/40 text-[var(--alert)]/80'
+ ? 'bg-[var(--alert)]/15/40 text-[var(--alert)]/80'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1105,7 +1105,7 @@ export function ReelsMetricsView({
  {hasTikTok && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.tiktok
- ?' bg-[var(--tentative)]/15/40 text-[var(--acc)]/80'
+ ? 'bg-[var(--tentative)]/15/40 text-[var(--acc)]/80'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1139,7 +1139,7 @@ export function ReelsMetricsView({
  {hasYouTube && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.youtube
- ?' bg-[var(--alert)]/90/30/40 text-[var(--alert)]/60'
+ ? 'bg-[var(--alert)]/90/30/40 text-[var(--alert)]/60'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1173,7 +1173,7 @@ export function ReelsMetricsView({
  {hasSpotify && (
  <div className={`flex items-center rounded-[var(--r-s)] transition-all ${
  selectedChannels.spotify
- ?' bg-[var(--ok-soft)]/40 text-[var(--ink-2)]'
+ ? 'bg-[var(--ok-soft)]/40 text-[var(--ink-2)]'
  :'bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100'
  }`}>
  <button
@@ -1554,7 +1554,7 @@ export function ReelsMetricsView({
  className={`flex-1 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-widest cursor-pointer flex items-center justify-center gap-1.5 transition-all ${
  isSavingMetric
  ?'bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed'
- :' bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/15'
+ : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/15'
  }`}
  >
  {isSavingMetric ?'Guardando...' : editingMetricId ?'Actualizar Snapshot' :'Añadir Snapshot'}
@@ -1635,7 +1635,7 @@ export function ReelsMetricsView({
  return (
  <tr key={`${m.id ||'metric'}-${index}`} className={`hover:bg-[var(--surface)]0/5 transition-colors ${
  editingMetricId === m.id 
- ?' bg-[var(--acc)]/5' 
+ ? 'bg-[var(--acc)]/5' 
  :''
  }`}>
  <td className="py-3 font-bold whitespace-nowrap">{formattedDate}</td>
@@ -2002,7 +2002,7 @@ export function ReelsMetricsView({
 
  {!scanImageBase64 ? (
  <label className={`border-2 rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
-' bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
+'bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50'
  }`}>
  <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center justify-center mb-3">
  <UploadCloud className="w-6 h-6" />
@@ -2077,7 +2077,7 @@ export function ReelsMetricsView({
  {/* Result Preview Card */}
  {scanResult && (
  <div className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-300 ${
-' bg-[var(--tentative)]/20/30'
+'bg-[var(--tentative)]/20/30'
  }`}>
  <div className="flex items-center justify-between/20 pb-2">
  <div className="text-xs font-bold font-sans tracking-wider text-[var(--tentative)]/80 flex items-center gap-2">

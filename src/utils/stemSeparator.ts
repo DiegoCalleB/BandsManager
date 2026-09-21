@@ -8,7 +8,7 @@
  * la voz por interferencia destructiva en todas las pistas instrumentales.
  */
 
-import { getAudioArrayBufferFromUrl } from' ./audioStorage';
+import { getAudioArrayBufferFromUrl } from './audioStorage';
 
 export interface IsolatedStemResult {
  instrument: string;
@@ -47,11 +47,11 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
  const sideChannelBuffer = createSideChannelBuffer(tempCtx, audioBuffer);
 
  const stemTypes = [
- { instrument:' Voz', trackName:' 🎤 Pista IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
- { instrument:' Batería', trackName:' 🥁 Pista IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
- { instrument:' Bajo', trackName:' 🎸 Pista IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
- { instrument:' Guitarras', trackName:' 🎹 Pista IA: Guitarras & Teclados', volume: 0.85, sourceBuf: sideChannelBuffer },
- { instrument:' Arreglos', trackName:' 🎺 Pista IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: sideChannelBuffer }
+ { instrument: 'Voz', trackName: '🎤 Pista IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
+ { instrument: 'Batería', trackName: '🥁 Pista IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
+ { instrument: 'Bajo', trackName: '🎸 Pista IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
+ { instrument: 'Guitarras', trackName: '🎹 Pista IA: Guitarras & Teclados', volume: 0.85, sourceBuf: sideChannelBuffer },
+ { instrument: 'Arreglos', trackName: '🎺 Pista IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: sideChannelBuffer }
  ];
 
  const results: IsolatedStemResult[] = [];
@@ -68,22 +68,22 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
 
  let lastNode: AudioNode = source;
 
- if (stem.instrument ===' Voz') {
+ if (stem.instrument === 'Voz') {
  // Vocal refinement node
  const formantBoost = offlineCtx.createBiquadFilter();
- formantBoost.type =' peaking';
+ formantBoost.type = 'peaking';
  formantBoost.frequency.value = 1500;
  formantBoost.gain.value = 2.0;
 
  source.connect(formantBoost);
  lastNode = formantBoost;
 
- } else if (stem.instrument ===' Bajo') {
+ } else if (stem.instrument === 'Bajo') {
  // Steep 4-stage lowpass filter (180 Hz) on vocal-cancelled buffer
  let current = source as AudioNode;
  for (let i = 0; i < 4; i++) {
  const lp = offlineCtx.createBiquadFilter();
- lp.type =' lowpass';
+ lp.type = 'lowpass';
  lp.frequency.value = 180;
  lp.Q.value = 1.4;
  current.connect(lp);
@@ -91,28 +91,28 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
  }
  lastNode = current;
 
- } else if (stem.instrument ===' Guitarras') {
+ } else if (stem.instrument === 'Guitarras') {
  // Bandpass for mid guitars/keys on vocal-cancelled buffer
  const hp = offlineCtx.createBiquadFilter();
- hp.type =' highpass';
+ hp.type = 'highpass';
  hp.frequency.value = 160;
 
  const lp = offlineCtx.createBiquadFilter();
- lp.type =' lowpass';
+ lp.type = 'lowpass';
  lp.frequency.value = 4500;
 
  source.connect(hp);
  hp.connect(lp);
  lastNode = lp;
 
- } else if (stem.instrument ===' Batería') {
+ } else if (stem.instrument === 'Batería') {
  // High transients + Kick lowpass on vocal-cancelled buffer
  const hp = offlineCtx.createBiquadFilter();
- hp.type =' highpass';
+ hp.type = 'highpass';
  hp.frequency.value = 2000;
 
  const kickLp = offlineCtx.createBiquadFilter();
- kickLp.type =' lowpass';
+ kickLp.type = 'lowpass';
  kickLp.frequency.value = 120;
 
  source.connect(hp);
@@ -126,10 +126,10 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
  kickGain.connect(offlineCtx.destination);
  lastNode = hp;
 
- } else if (stem.instrument ===' Arreglos') {
+ } else if (stem.instrument === 'Arreglos') {
  // High-mid bandpass for solos/strings on vocal-cancelled buffer
  const hp = offlineCtx.createBiquadFilter();
- hp.type =' highpass';
+ hp.type = 'highpass';
  hp.frequency.value = 2400;
 
  source.connect(hp);
@@ -138,7 +138,7 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
 
  const masterGain = offlineCtx.createGain();
  masterGain.gain.value = stem.volume;
- if (stem.instrument !==' Batería') {
+ if (stem.instrument !== 'Batería') {
  lastNode.connect(masterGain);
  masterGain.connect(offlineCtx.destination);
  } else {
@@ -165,7 +165,7 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
  audioBlob: wavBlob,
  audioUrl: blobUrl,
  recommendedVolume: stem.volume,
- formato:' WAV',
+ formato: 'WAV',
  tamano: sizeFormatted
  });
  }
@@ -197,21 +197,21 @@ async function renderIsolatedVocalBuffer(
  source.buffer = audioBuffer;
 
  const hp = offlineCtx.createBiquadFilter();
- hp.type =' highpass';
+ hp.type = 'highpass';
  hp.frequency.value = 260;
 
  const lp = offlineCtx.createBiquadFilter();
- lp.type =' lowpass';
+ lp.type = 'lowpass';
  lp.frequency.value = 3400;
 
  const formantBoost = offlineCtx.createBiquadFilter();
- formantBoost.type =' peaking';
+ formantBoost.type = 'peaking';
  formantBoost.frequency.value = 1450;
  formantBoost.Q.value = 1.5;
  formantBoost.gain.value = 4.5;
 
  const bassCut = offlineCtx.createBiquadFilter();
- bassCut.type =' notch';
+ bassCut.type = 'notch';
  bassCut.frequency.value = 100;
  bassCut.Q.value = 4.0;
 
@@ -302,7 +302,7 @@ function applyNoiseThreshold(buffer: AudioBuffer, instrument: string): AudioBuff
 
  for (let c = 0; c < numChannels; c++) {
  const data = buffer.getChannelData(c);
- const threshold = instrument ===' Bajo' ? 0.001 : 0.003;
+ const threshold = instrument === 'Bajo' ? 0.001 : 0.003;
 
  for (let i = 0; i < length; i++) {
  if (Math.abs(data[i]) < threshold) {
@@ -371,5 +371,5 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
  offset++;
  }
 
- return new Blob([out.buffer], { type:' audio/wav' });
+ return new Blob([out.buffer], { type: 'audio/wav' });
 }

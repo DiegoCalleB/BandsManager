@@ -569,7 +569,7 @@ export function OrdenDelDiaTab({
  isDragging
  ?'opacity-30 scale-[0.98]'
  : isDragOver
- ?' scale-[1.01] bg-[var(--acc)]/10'
+ ? 'scale-[1.01] bg-[var(--acc)]/10'
  : item.evaluacion ==='bordada'
  ?'bg-[var(--surface)]/30 hover:border-[var(--ok)]/50'
  : item.evaluacion ==='repetir'
@@ -817,7 +817,7 @@ export function OrdenDelDiaTab({
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
  isSelected
  ?'bg-[var(--acc)]/60 text-[var(--ink)] scale-105'
- :' text-[var(--ink-2)]'
+ : 'text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>

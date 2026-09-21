@@ -1,7 +1,7 @@
-import { initializeApp } from' firebase/app';
-import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, User } from' firebase/auth';
-import firebaseConfig from' ../../firebase-applet-config.json';
-import { EmailMessage } from' ../types';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, User } from 'firebase/auth';
+import firebaseConfig from '../../firebase-applet-config.json';
+import { EmailMessage } from '../types';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -13,13 +13,13 @@ provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
 provider.addScope('https://www.googleapis.com/auth/gmail.compose');
 provider.addScope('https://www.googleapis.com/auth/gmail.send');
 // Force prompt select account so the user can pick the right Google account easily
-provider.setCustomParameters({ prompt:' select_account' });
+provider.setCustomParameters({ prompt: 'select_account' });
 
 let isSigningIn = false;
 let cachedAccessToken: string | null = null;
 
-const STORAGE_TOKEN_KEY =' bakandeya_gmail_token';
-const STORAGE_TOKEN_EXP_KEY =' bakandeya_gmail_token_exp';
+const STORAGE_TOKEN_KEY = 'bakandeya_gmail_token';
+const STORAGE_TOKEN_EXP_KEY = 'bakandeya_gmail_token_exp';
 
 // Save token to localStorage for persistence across reloads/sessions
 const saveTokenToStorage = (token: string) => {
@@ -102,13 +102,13 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
  saveTokenToStorage(credential.accessToken);
  return { user: result.user, accessToken: credential.accessToken };
  } catch (error: any) {
- const errCode = error?.code ||' ';
- const errMsg = String(error?.message ||' ').toLowerCase();
+ const errCode = error?.code || '';
+ const errMsg = String(error?.message || '').toLowerCase();
 
  if (
- errCode ===' auth/popup-closed-by-user' ||
- errCode ===' auth/cancelled-popup-request' ||
- errCode ===' auth/user-cancelled' ||
+ errCode === 'auth/popup-closed-by-user' ||
+ errCode === 'auth/cancelled-popup-request' ||
+ errCode === 'auth/user-cancelled' ||
  errMsg.includes('popup-closed-by-user') ||
  errMsg.includes('cancelled-popup-request') ||
  errMsg.includes('closed-by-user')
@@ -118,7 +118,7 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
  }
 
  // If popup is blocked or running in restrictive iframe, try redirect method automatically
- if (errCode ===' auth/popup-blocked' || errMsg.includes('popup-blocked') || window.self !== window.top) {
+ if (errCode === 'auth/popup-blocked' || errMsg.includes('popup-blocked') || window.self !== window.top) {
  console.log('[Google Auth] Popup blocked or in iframe, initiating redirect sign-in...');
  try {
  await signInWithRedirect(auth, provider);
@@ -129,11 +129,11 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
  }
  }
 
- if (errCode ===' auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
+ if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
  throw new Error('El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.');
  }
 
- if (errCode ===' auth/operation-not-allowed' || errMsg.includes('operation-not-allowed')) {
+ if (errCode === 'auth/operation-not-allowed' || errMsg.includes('operation-not-allowed')) {
  throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.');
  }
 
@@ -159,31 +159,31 @@ export const logout = async () => {
 
 // Base64URL decoder
 function decodeBase64Url(str: string): string {
- let base64 = str.replace(/-/g,' +').replace(/_/g,' /');
+ let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
  while (base64.length % 4) {
- base64 +=' =';
+ base64 += '=';
  }
  try {
  return decodeURIComponent(
  atob(base64)
  .split('')
- .map((c) =>' %' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+ .map((c) => '% '+ ('00' + c.charCodeAt(0).toString(16)).slice(-2))
  .join('')
  );
  } catch (e) {
  try {
  return atob(base64);
  } catch (err) {
- return' ';
+ return '';
  }
  }
 }
 
 // Extract headers from message
 function getHeader(headers: any[], name: string): string {
- if (!headers) return' ';
+ if (!headers) return '';
  const header = headers.find((h) => h.name.toLowerCase() === name.toLowerCase());
- return header ? header.value :' ';
+ return header ? header.value : '';
 }
 
 // Extract message body
@@ -193,13 +193,13 @@ function getMessageBody(payload: any): string {
  }
  if (payload.parts) {
  for (const part of payload.parts) {
- if (part.mimeType ===' text/plain' && part.body && part.body.data) {
+ if (part.mimeType === 'text/plain' && part.body && part.body.data) {
  return decodeBase64Url(part.body.data);
  }
- if (part.mimeType ===' text/html' && part.body && part.body.data) {
+ if (part.mimeType === 'text/html' && part.body && part.body.data) {
  // Strip basic HTML tags to keep text clean, or return parsed
  const html = decodeBase64Url(part.body.data);
- const doc = new DOMParser().parseFromString(html,' text/html');
+ const doc = new DOMParser().parseFromString(html, 'text/html');
  return doc.body.textContent || doc.body.innerText || html;
  }
  if (part.parts) {
@@ -208,7 +208,7 @@ function getMessageBody(payload: any): string {
  }
  }
  }
- return' ';
+ return '';
 }
 
 // Fetch messages from Gmail for a specific contact email
@@ -253,23 +253,23 @@ export const fetchGmailThreadsForEmail = async (
  // Map to EmailMessage format
  const emailMessages: EmailMessage[] = validMessages.map((m) => {
  const headers = m.payload?.headers || [];
- const fromHeader = getHeader(headers,' from');
- const subject = getHeader(headers,' subject') ||' (Sin Asunto)';
+ const fromHeader = getHeader(headers, 'from');
+ const subject = getHeader(headers, 'subject') || '(Sin Asunto)';
  
  // Determine if sender is the lead (sala) or the band (banda)
  const isFromLead = fromHeader.toLowerCase().includes(email.toLowerCase());
  const remitente = isFromLead ? ('sala' as const) : ('banda' as const);
  
  // Clean up sender name
- const cleanSender = fromHeader.replace(/<.*?>/,' ').trim();
+ const cleanSender = fromHeader.replace(/<.*?>/, '').trim();
  
  // Parse Date
- const dateHeader = getHeader(headers,' date');
- let fechaFormatted =' ';
+ const dateHeader = getHeader(headers, 'date');
+ let fechaFormatted = '';
  if (dateHeader) {
  try {
  const parsedDate = new Date(dateHeader);
- fechaFormatted = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2,' 0')}-${String(parsedDate.getDate()).padStart(2,' 0')} ${String(parsedDate.getHours()).padStart(2,' 0')}:${String(parsedDate.getMinutes()).padStart(2,' 0')}`;
+ fechaFormatted = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')} ${String(parsedDate.getHours()).padStart(2, '0')}:${String(parsedDate.getMinutes()).padStart(2, '0')}`;
  } catch (e) {
  fechaFormatted = dateHeader;
  }
@@ -277,14 +277,14 @@ export const fetchGmailThreadsForEmail = async (
  const internalDate = Number(m.internalDate);
  if (internalDate) {
  const parsedDate = new Date(internalDate);
- fechaFormatted = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2,' 0')}-${String(parsedDate.getDate()).padStart(2,' 0')} ${String(parsedDate.getHours()).padStart(2,' 0')}:${String(parsedDate.getMinutes()).padStart(2,' 0')}`;
+ fechaFormatted = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')} ${String(parsedDate.getHours()).padStart(2, '0')}:${String(parsedDate.getMinutes()).padStart(2, '0')}`;
  }
  }
 
  // Get body text
  let bodyText = getMessageBody(m.payload);
  if (!bodyText) {
- bodyText = m.snippet ||' ';
+ bodyText = m.snippet || '';
  }
 
  return {
@@ -308,14 +308,14 @@ export const fetchGmailThreadsForEmail = async (
 // Helper to safely encode UTF-8 strings to Base64URL
 function base64UrlEncode(str: string): string {
  const bytes = new TextEncoder().encode(str);
- let binary =' ';
+ let binary = '';
  for (let i = 0; i < bytes.byteLength; i++) {
  binary += String.fromCharCode(bytes[i]);
  }
  return btoa(binary)
- .replace(/\+/g,' -')
- .replace(/\//g,' _')
- .replace(/=+$/,' ');
+ .replace(/\+/g, '-')
+ .replace(/\//g, '_')
+ .replace(/=+$/, '');
 }
 
 export interface EmailAttachment {
@@ -334,7 +334,7 @@ export function buildRawMimeMessage(
  attachments: EmailAttachment[] = []
 ): string {
  const bytes = new TextEncoder().encode(subject);
- let binarySubject =' ';
+ let binarySubject = '';
  for (let i = 0; i < bytes.byteLength; i++) {
  binarySubject += String.fromCharCode(bytes[i]);
  }
@@ -342,35 +342,35 @@ export function buildRawMimeMessage(
 
  const boundary = `====_Bakandeya_Boundary_${Date.now()}_====`;
 
- let rawMime =' ';
+ let rawMime = '';
 
  if (attachments && attachments.length > 0) {
  // Multipart MIME Message with Attachments
  const headers = [
  `To: ${to}`,
- from ? `From: ${from}` :' ',
+ from ? `From: ${from}` : '',
  `Subject: =?UTF-8?B?${subjectB64}?=`,
-' MIME-Version: 1.0',
+'MIME-Version: 1.0',
  `Content-Type: multipart/mixed; boundary="${boundary}"`,
  ].filter(Boolean);
 
- let mimeParts = headers.join('\r\n') +' \r\n\r\n';
+ let mimeParts = headers.join('\r\n') +'\r\n\r\n';
 
  // Body Part
  mimeParts += `--${boundary}\r\n`;
  mimeParts += isHtml
- ?' Content-Type: text/html; charset=UTF-8\r\n'
- :' Content-Type: text/plain; charset=UTF-8\r\n';
- mimeParts +=' Content-Transfer-Encoding: 8bit\r\n\r\n';
- mimeParts += bodyContent +' \r\n\r\n';
+ ? 'Content-Type: text/html; charset=UTF-8\r\n'
+ : 'Content-Type: text/plain; charset=UTF-8\r\n';
+ mimeParts += 'Content-Transfer-Encoding: 8bit\r\n\r\n';
+ mimeParts += bodyContent +'\r\n\r\n';
 
  // Attachment Parts
  for (const att of attachments) {
  mimeParts += `--${boundary}\r\n`;
  mimeParts += `Content-Type: ${att.contentType}; name="${att.filename}"\r\n`;
  mimeParts += `Content-Disposition: attachment; filename="${att.filename}"\r\n`;
- mimeParts +=' Content-Transfer-Encoding: base64\r\n\r\n';
- mimeParts += att.dataBase64 +' \r\n\r\n';
+ mimeParts += 'Content-Transfer-Encoding: base64\r\n\r\n';
+ mimeParts += att.dataBase64 +'\r\n\r\n';
  }
 
  mimeParts += `--${boundary}--\r\n`;
@@ -385,11 +385,11 @@ export function buildRawMimeMessage(
  headers.push('MIME-Version: 1.0');
  headers.push(
  isHtml
- ?' Content-Type: text/html; charset=UTF-8'
- :' Content-Type: text/plain; charset=UTF-8'
+ ? 'Content-Type: text/html; charset=UTF-8'
+ : 'Content-Type: text/plain; charset=UTF-8'
  );
 
- rawMime = headers.join('\r\n') +' \r\n\r\n' + bodyContent;
+ rawMime = headers.join('\r\n') +'\r\n\r\n' + bodyContent;
  }
 
  return base64UrlEncode(rawMime);
@@ -413,10 +413,10 @@ export const createGmailDraft = async (
 
  const raw = buildRawMimeMessage(to, subject, bodyContent, undefined, isHtml, attachments);
  let response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/drafts', {
- method:' POST',
+ method: 'POST',
  headers: {
  Authorization: `Bearer ${activeToken}`,
-' Content-Type':' application/json'
+'Content-Type': 'application/json'
  },
  body: JSON.stringify({
  message: { raw }
@@ -429,10 +429,10 @@ export const createGmailDraft = async (
  if (authRes?.accessToken) {
  activeToken = authRes.accessToken;
  response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/drafts', {
- method:' POST',
+ method: 'POST',
  headers: {
  Authorization: `Bearer ${activeToken}`,
-' Content-Type':' application/json'
+'Content-Type': 'application/json'
  },
  body: JSON.stringify({
  message: { raw }
@@ -467,10 +467,10 @@ export const sendGmailMessage = async (
 
  const raw = buildRawMimeMessage(to, subject, bodyContent, undefined, isHtml, attachments);
  let response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
- method:' POST',
+ method: 'POST',
  headers: {
  Authorization: `Bearer ${activeToken}`,
-' Content-Type':' application/json'
+'Content-Type': 'application/json'
  },
  body: JSON.stringify({ raw })
  });
@@ -481,10 +481,10 @@ export const sendGmailMessage = async (
  if (authRes?.accessToken) {
  activeToken = authRes.accessToken;
  response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
- method:' POST',
+ method: 'POST',
  headers: {
  Authorization: `Bearer ${activeToken}`,
-' Content-Type':' application/json'
+'Content-Type': 'application/json'
  },
  body: JSON.stringify({ raw })
  });

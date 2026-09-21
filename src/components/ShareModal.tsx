@@ -148,7 +148,7 @@ export function ShareModal({
  }`}
  >
  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
- <span>{copied ?'¡Copiado!' :'Copiar'}</span>
+ <span>{copied ?'¡Copiado! ':'Copiar'}</span>
  </button>
 
  <button

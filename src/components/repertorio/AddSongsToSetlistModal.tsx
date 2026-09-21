@@ -121,7 +121,7 @@ export function AddSongsToSetlistModal({
  value={albumFilter}
  onChange={(e) => setAlbumFilter(e.target.value)}
  className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${
-' bg-[var(--surface)] text-[var(--acc)]'
+'bg-[var(--surface)] text-[var(--acc)]'
  }`}
  >
  {albumsList.map(alb => (
@@ -188,7 +188,7 @@ export function AddSongsToSetlistModal({
  }`}
  >
  <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
- isSelected ?'bg-[var(--surface)] text-[var(--ink)] scale-105' :' text-[var(--ink-2)]'
+ isSelected ?'bg-[var(--surface)] text-[var(--ink)] scale-105' : 'text-[var(--ink-2)]'
  }`}>
  {isSelected ? (selectedIndex + 1) : null}
  </div>
