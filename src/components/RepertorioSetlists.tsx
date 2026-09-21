@@ -801,6 +801,8 @@ export default function RepertorioSetlists({
  // Acciones secundarias del setlist (compartir, asignar a bolo, imprimir, editar detalles) en un
  // único menú"⋯" en vez de tres botones de texto permanentes: no se usan en la mayoría de visitas.
  const [showSetlistActionsMenu, setShowSetlistActionsMenu] = useState(false);
+ // Acciones secundarias del catálogo (agrupar por álbum, nombres propios) en menú "⋯"
+ const [showCatalogActionsMenu, setShowCatalogActionsMenu] = useState(false);
  // Reproducir el concierto dentro de la pestaña Repertorio con la consola del reproductor
  // (antes vivía en la pestaña Directo, ahora está embebida en Repertorio con toggle)
  const [showConcertPlayer, setShowConcertPlayer] = useState(false);
@@ -4149,17 +4151,15 @@ export default function RepertorioSetlists({
  />
  ) : (
  <div className="space-y-4">
- {/* CATALOG PLAYLIST HERO BANNER */}
- <div className={`relative overflow-hidden rounded-[var(--r-l)] sm:rounded-3xl p-4 sm:p-5 ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}>
- <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
- <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] overflow-hidden flex items-center justify-center group">
+ {/* CATALOG HERO BANNER — Estilo Spotify: limpio y minimalista */}
+ <div className="flex items-end gap-4 sm:gap-6 pb-6">
+ {/* Album cover */}
+ <div className="relative shrink-0 w-20 h-20 sm:w-28 sm:h-28 rounded-[var(--r-m)] overflow-hidden flex items-center justify-center group">
  <AlbumCover
  title={`Repertorio ${bName}`}
  artist={bName}
  coverUrl={filteredSongs[0]?.portadaUrl}
- size={64}
+ size={112}
  onPlay={() => {
  const first = filteredSongs[0];
  if (first) {
@@ -4168,29 +4168,29 @@ export default function RepertorioSetlists({
  }}
  isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
  />
- <div className="absolute inset-0 bg-[var(--scrim)]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
- <Sparkles className="w-5 h-5 text-[var(--ok)]" />
+ <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+ <Play className="w-6 h-6 text-white fill-white" />
  </div>
  </div>
 
- <div className="flex-1 min-w-[180px]">
- <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-[var(--ok)]">
- <Disc3 className="w-3.5 h-3.5 animate-spin-slow" />
- <span>Discografía & Canciones</span>
+ {/* Content */}
+ <div className="flex-1 pb-1">
+ <div className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider mb-2">
+ Repertorio
  </div>
- <h1 className="text-base sm:text-lg font-bold tracking-tight leading-tight truncate mt-0.5">
- Discografía de {bName}
+ <h1 className="text-2xl sm:text-4xl font-bold leading-tight truncate">
+ {bName}
  </h1>
- <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-2)] mt-1">
- <span className="text-[var(--ok)] font-medium">{songs.length} temas</span>
- <span>•</span>
+ <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--ink-2)] mt-3">
+ <span className="font-medium text-[var(--ink)]">{songs.length} temas</span>
+ <span className="text-[var(--ink-3)]">•</span>
  <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
- <span>•</span>
- <span className="text-[var(--acc)] font-medium">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
+ <span className="text-[var(--ink-3)]">•</span>
+ <span className="font-medium">{songs.filter(s => s.favoritoGeneral).length} favoritos</span>
  </div>
  </div>
 
- <div className="flex items-center gap-2 shrink-0">
+ {/* Play button */}
  <button
  onClick={() => {
  if (filteredSongs.length > 0) {
@@ -4198,113 +4198,89 @@ export default function RepertorioSetlists({
  selectPlayerSongWithQueue(first, true, null);
  }
  }}
- className="w-10 h-10 rounded-full bg-[var(--ok)] hover:bg-[var(--ok)] hover:scale-105 text-[var(--ink)] font-medium flex items-center justify-center transition-all cursor-pointer active:scale-95"
- title="Reproducir Catálogo"
+ className="shrink-0 w-12 h-12 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-white font-bold flex items-center justify-center transition-all cursor-pointer active:scale-95 shadow-lg hover:shadow-xl"
+ title="Reproducir catálogo"
  >
- {activePlayerSong && isPlayerPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
- </button>
-
- <button
- onClick={() => setCatalogStatusFilter(catalogStatusFilter ==='favoritos' ?'todos' :'favoritos')}
- className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
- catalogStatusFilter ==='favoritos'
- ?'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40'
- :'bg-[var(--surface)]/80 text-[var(--ink-2)] /80 hover:bg-[var(--surface)] hover:text-[var(--ink)]'
- }`}
- >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
- <span>{catalogStatusFilter ==='favoritos' ?'Solo Favoritos' :'Filtrar Favoritos'}</span>
- </button>
-
- <button
- id="btn-add-song"
- onClick={() => { setEditingSong(null); setShowSongModal(true); }}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
- >
- <Plus className="w-3.5 h-3.5" />
- <span>Añadir Tema</span>
+ {activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id) ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
  </button>
  </div>
- </div>
- </div>
 
- {/* CATALOG FILTERS BAR */}
- {catalogSearch && (
- <button
- id="search-songs-clear"
- type="button"
- onClick={() => setCatalogSearch('')}
- className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
- }`}
- title="Borrar búsqueda"
- >
- <X className="w-3.5 h-3.5" />
- </button>
- )}
-
- <div className="flex gap-2 flex-wrap sm:flex-nowrap">
- {/* Album dropdown */}
+ {/* CATALOG FILTERS BAR — Limpio y minimalista */}
+ <div className="flex items-center gap-3 py-4 border-b border-[var(--hair)]">
+ {/* Album filter */}
  <select
  value={catalogAlbumFilter}
  onChange={(e) => setCatalogAlbumFilter(e.target.value)}
- className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}
+ className="text-sm py-2 px-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-medium focus:outline-none cursor-pointer hover:bg-[var(--sunken)] transition-colors"
  >
- <option value="todos">Todos los Discos / EPs</option>
+ <option value="todos">Todos los discos</option>
  {albumsList.filter(a => a !=='todos').map(alb => (
  <option key={alb} value={alb}>{alb}</option>
  ))}
  </select>
 
- {/* Status dropdown */}
- <select
- value={catalogStatusFilter}
- onChange={(e) => setCatalogStatusFilter(e.target.value)}
- className={`text-xs py-2 px-3 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}
- >
- <option value="todos">Todos los estados</option>
- <option value="listo">Listo para Directo</option>
- <option value="ensayando">Ensayando</option>
- <option value="componiendo">Componiendo</option>
- <option value="descartado">Descartado</option>
- </select>
-
+ {/* Status filter toggle */}
  <button
- onClick={() => setGroupByAlbum(!groupByAlbum)}
- className={`px-3.5 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all ${
- groupByAlbum
- ? 'bg-[var(--ok)]/15 text-[var(--ok)]/50/30'
- : 'bg-[var(--bg)] text-[var(--ink-2)]'
+ onClick={() => setCatalogStatusFilter(catalogStatusFilter ==='todos' ?'listo' :'todos')}
+ className={`px-3.5 py-2 rounded-[var(--r-m)] text-sm font-medium transition-colors flex items-center gap-2 ${
+ catalogStatusFilter ==='listo'
+ ?'bg-[var(--acc)] text-white'
+ :'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
- Agrupar por Álbum
+ <CheckCircle2 className="w-4 h-4" />
+ <span>Listos</span>
  </button>
 
- <button
- id="btn-normalize-titles"
- type="button"
- onClick={handleNormalizeCatalogTitles}
- title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
- className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-medium transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
-'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 /30'
- }`}
- >
- <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
- <span>Nombres Propios</span>
- </button>
+ {/* Spacer */}
+ <div className="flex-1" />
 
+ {/* Add song button */}
  <button
  id="btn-add-song-filter"
  onClick={() => { setEditingSong(null); setShowSongModal(true); }}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+ className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-white font-medium text-sm flex items-center gap-2 transition-all active:scale-95"
  >
- <Plus className="w-3.5 h-3.5" />
- <span>Añadir Tema</span>
+ <Plus className="w-4 h-4" />
+ <span className="hidden sm:inline">Tema</span>
  </button>
+
+ {/* More actions menu */}
+ <button
+ type="button"
+ title="Más opciones"
+ onClick={() => setShowCatalogActionsMenu(!showCatalogActionsMenu)}
+ className="relative p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
+ >
+ <MoreHorizontal className="w-5 h-5" />
+ </button>
+
+ {showCatalogActionsMenu && (
+ <div className="absolute right-0 top-full mt-2 bg-[var(--surface)] rounded-[var(--r-m)] shadow-xl py-2 z-50 min-w-[200px]">
+ <button
+ onClick={() => {
+ setGroupByAlbum(!groupByAlbum);
+ setShowCatalogActionsMenu(false);
+ }}
+ className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--sunken)] transition-colors flex items-center gap-2"
+ >
+ <Layers className="w-4 h-4 text-[var(--ink-2)]" />
+ <span>Agrupar por álbum</span>
+ </button>
+ <button
+ id="btn-normalize-titles"
+ type="button"
+ onClick={() => {
+ handleNormalizeCatalogTitles();
+ setShowCatalogActionsMenu(false);
+ }}
+ className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--sunken)] transition-colors flex items-center gap-2"
+ >
+ <Sparkles className="w-4 h-4 text-[var(--acc)]" />
+ <span>Nombres propios</span>
+ </button>
+ </div>
+ )}
  </div>
 
  {/* BULK ACTIONS BAR */}
