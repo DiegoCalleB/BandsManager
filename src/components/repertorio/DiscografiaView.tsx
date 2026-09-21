@@ -449,9 +449,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
 
  {/* Filter Pills, Search Bar, Expand All, & Mobile Create Album */}
- <div className="w-full flex items-center gap-2 flex-col sm:flex-row">
+ <div className="w-full flex flex-col gap-2 sm:flex-row sm:items-center">
  {/* Search Input Bar */}
- <div className="relative flex-1 min-w-[140px]">
+ <div className="relative flex-1 min-w-[140px] w-full">
  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] pointer-events-none" />
  <input
  type="text"
@@ -612,7 +612,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  }`}
  >
  {/* Left: Cover & Information */}
- <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1 w-full sm:w-auto">
+ <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1 w-full">
  <div className="shrink-0 relative group" onClick={(e) => e.stopPropagation()}>
  <AlbumCover
  url={coverUrl}
