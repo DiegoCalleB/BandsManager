@@ -66,7 +66,7 @@ export default function SpotifyPlayerBar({
  const [isMuted, setIsMuted] = useState(false);
  const [isLooping, setIsLooping] = useState(false);
  const [playbackRate, setPlaybackRate] = useState<number>(1);
- const [isMinimized, setIsMinimized] = useState(false);
+ const [isMinimized, setIsMinimized] = useState(true);
 
  // Historial de reproducción: rastrear canciones reproducidas para que atrás vuelva a la anterior
  const playbackHistoryRef = useRef<string[]>(song?.id ? [song.id] : []);
