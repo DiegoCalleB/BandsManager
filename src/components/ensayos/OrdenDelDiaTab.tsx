@@ -310,7 +310,7 @@ export function OrdenDelDiaTab({
  return (
  <div className="space-y-6 animate-fade-in">
  {/* Top Banner with Run-of-Show Stats & Direct Live Launch */}
- <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[#141413] to-[#1a1917] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+ <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">

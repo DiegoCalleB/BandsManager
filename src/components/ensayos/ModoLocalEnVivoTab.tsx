@@ -445,7 +445,7 @@ export function ModoLocalEnVivoTab({
 
  {/* VIEW MODE 1: FICHA DE ESCENARIO & DINÁMICA */}
  {viewMode ==='escenario' && (
- <div className="p-4 sm:p-7 rounded-3xl bg-gradient-to-b from-[var(--surface)] via-[var(--bg)] to-[#0d0d0c] /30 relative overflow-hidden space-y-6">
+ <div className="p-4 sm:p-7 rounded-3xl bg-[var(--surface)] relative overflow-hidden space-y-6">
  {/* Subtle stage spotlight effect */}
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-[var(--acc)]/10 blur-3xl pointer-events-none" />
 

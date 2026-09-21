@@ -4106,7 +4106,7 @@ export default function RepertorioSetlists({
  <div className="space-y-4">
  {/* CATALOG PLAYLIST HERO BANNER */}
  <div className={`relative overflow-hidden rounded-[var(--r-l)] sm:rounded-3xl p-4 sm:p-5 ${
- 'bg-gradient-to-r from-neutral-50 via-indigo-50/30 to-neutral-50 text-[var(--ink)]'
+ 'bg-[var(--surface)] text-[var(--ink)]'
  }`}>
  <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
  <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] bg-[var(--surface)] overflow-hidden flex items-center justify-center group">
