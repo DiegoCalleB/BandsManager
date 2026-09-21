@@ -1067,24 +1067,43 @@ export default function CalendarView({
  const [concIsPosible, setConcIsPosible] = useState(false);
 
  // Setlists disponibles para ensayos y conciertos
- const [availableSetlists, setAvailableSetlists] = useState<any[]>(() => {
- try {
- const saved = localStorage.getItem('bakandeya_setlists_data');
- return saved ? JSON.parse(saved) : [];
- } catch {
- return [];
- }
- });
+ const [availableSetlists, setAvailableSetlists] = useState<any[]>([]);
+ const [availableSongs, setAvailableSongs] = useState<any[]>([]);
 
- // Canciones para la vista de escenario / teleprompter
- const [availableSongs, setAvailableSongs] = useState<any[]>(() => {
+ // Load setlists & songs from API (validated by band_id server-side)
+ useEffect(() => {
+ let isMounted = true;
+ const loadData = async () => {
  try {
- const saved = localStorage.getItem('bakandeya_songs_data');
- return saved ? JSON.parse(saved) : [];
- } catch {
- return [];
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers = {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ };
+
+ const [setlistsRes, songsRes] = await Promise.all([
+ fetch('/api/repertorio/setlists', { headers }).then(r => r.json()).catch(() => null),
+ fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null)
+ ]);
+
+ if (isMounted) {
+ if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
+ setAvailableSetlists(setlistsRes.setlists);
  }
- });
+ if (songsRes?.songs && Array.isArray(songsRes.songs)) {
+ setAvailableSongs(songsRes.songs);
+ }
+ }
+ } catch {
+ if (isMounted) {
+ setAvailableSetlists([]);
+ setAvailableSongs([]);
+ }
+ }
+ };
+ loadData();
+ return () => { isMounted = false; };
+ }, []);
 
  // Estado para la vista de directo / modo escenario desde el calendario
  const [activeStageSetlist, setActiveStageSetlist] = useState<any | null>(null);

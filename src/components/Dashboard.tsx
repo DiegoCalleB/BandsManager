@@ -131,18 +131,30 @@ export default function Dashboard({
  const [newInstagram, setNewInstagram] = useState('');
  const [newNotas, setNewNotas] = useState('');
 
- const storedSongsCount = React.useMemo(() => {
+ const [songsCount, setSongsCount] = React.useState(0);
+
+ React.useEffect(() => {
+ let isMounted = true;
+ const loadSongsCount = async () => {
  try {
- const raw = localStorage.getItem('bakandeya_songs_catalog') || localStorage.getItem('bakandeya_songs');
- if (raw) {
- const parsed = JSON.parse(raw);
- if (Array.isArray(parsed) && parsed.length > 0) return parsed.length;
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers = {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ };
+ const res = await fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null);
+ if (isMounted && res?.songs && Array.isArray(res.songs)) {
+ setSongsCount(res.songs.length);
  }
- return 0;
  } catch {
- return 0;
+ if (isMounted) setSongsCount(0);
  }
+ };
+ loadSongsCount();
+ return () => { isMounted = false; };
  }, []);
+
+ const storedSongsCount = songsCount;
 
  // Handle Sync simulation
  const handleForceSync = () => {

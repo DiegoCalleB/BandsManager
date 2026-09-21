@@ -1123,7 +1123,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  };
 
  // Create Setlist from Concert
- const handleCreateSetlistFromConcert = () => {
+ const handleCreateSetlistFromConcert = async () => {
  const trackListToUse = generatedResult ? generatedResult.tracks : tracks;
  if (!trackListToUse || trackListToUse.length === 0) return;
 
@@ -1149,25 +1149,19 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  items: setlistItems};
 
  try {
- if (onSaveSetlist) {
- onSaveSetlist(newSetlist);
- } else {
- const stored = localStorage.getItem('bakandeya_setlists_data') || localStorage.getItem('bakandeya_setlists');
- const setlists = stored ? JSON.parse(stored) : [];
- const updated = [newSetlist, ...(Array.isArray(setlists) ? setlists : [])];
- localStorage.setItem('bakandeya_setlists_data', JSON.stringify(updated));
- localStorage.setItem('bakandeya_setlists', JSON.stringify(updated));
- }
-
- // Persist to Supabase Backend
- const token = localStorage.getItem('bakandeya_token');
- fetch('/api/setlists', {
+ // Persist to Supabase Backend via API (band_id validated server-side)
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const res = await fetch('/api/setlists', {
  method:'POST',
  headers: {'Content-Type':'application/json',
  ...(token ? {'Authorization': `Bearer ${token}` } : {})
  },
  body: JSON.stringify(newSetlist)
- }).catch(err => console.warn('Could not persist direct setlist to Supabase API:', err));
+ });
+
+ if (res.ok && onSaveSetlist) {
+ onSaveSetlist(newSetlist);
+ }
 
  alert(`¡Setlist"${setlistTitle}" creado con éxito en tu Gestor de Repertorio/Setlists!`);
  } catch (err) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
  Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, 
  CheckCircle2, Clock, AlertCircle, Sparkles, QrCode, Disc3, ShieldCheck
@@ -76,14 +76,28 @@ export function CrmPipelineWidget({ leads = [], onNavigate}: ModuleWidgetProps) 
 
 /* 2. REPERTORIO WIDGET */
 export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
- let songCount = 0;
+ const [songCount, setSongCount] = React.useState(0);
+
+ React.useEffect(() => {
+ let isMounted = true;
+ const loadSongCount = async () => {
  try {
- const raw = localStorage.getItem('bakandeya_songs_catalog') || localStorage.getItem('bakandeya_songs');
- if (raw) {
- const parsed = JSON.parse(raw);
- if (Array.isArray(parsed)) songCount = parsed.length;
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers = {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ };
+ const res = await fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null);
+ if (isMounted && res?.songs && Array.isArray(res.songs)) {
+ setSongCount(res.songs.length);
  }
- } catch {}
+ } catch {
+ if (isMounted) setSongCount(0);
+ }
+ };
+ loadSongCount();
+ return () => { isMounted = false; };
+ }, []);
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
