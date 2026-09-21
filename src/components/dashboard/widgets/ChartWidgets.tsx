@@ -155,7 +155,6 @@ export function RepertorioEnergyChartWidget({
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
  {/* Repertorio/Setlist Selector - Above the chart */}
- {setlistsList.length > 1 && (
  <div className="flex flex-col gap-2 pb-3 border-b border-[var(--hair)]">
  <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wide">
  Repertorio
@@ -167,13 +166,16 @@ export function RepertorioEnergyChartWidget({
  className="w-full bg-[var(--sunken)] text-[var(--ink)] text-xs font-medium rounded-[var(--r-s)] px-3 py-2 pr-8 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
  >
  <option value="all">Todos los setlists</option>
- {setlistsList.map(s => (
+ {setlistsList.length > 0 ? (
+ setlistsList.map(s => (
  <option key={s.id} value={s.id}>{s.nombre || 'Setlist sin nombre'}</option>
- ))}
+ ))
+ ) : (
+ <option disabled>Sin setlists disponibles</option>
+ )}
  </select>
  </div>
  </div>
- )}
 
  {/* Header */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5">
