@@ -1,4 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import { encryptCredential, decryptCredential } from "../utils/encryption.js";
 
 export type EmailProvider = "gmail" | "outlook" | "other";
 
@@ -34,7 +35,16 @@ export async function dbGetBandEmailAccount(bandId: string): Promise<BandEmailAc
       return null;
     }
 
-    return data || null;
+    if (!data) return null;
+
+    // Descifrar app_password si está cifrado
+    const decrypted = decryptCredential(data.app_password);
+    if (decrypted === null) {
+      console.error(`No se pudo descifrar app_password para banda '${cleanId}'`);
+      return null;
+    }
+
+    return { ...data, app_password: decrypted };
   } catch (e) {
     console.warn(`Fallo leyendo cuenta de email para '${cleanId}':`, e);
     return null;
@@ -53,11 +63,15 @@ export async function dbUpsertBandEmailAccount(account: {
   imap_port?: number;
 }): Promise<BandEmailAccount> {
   const cleanId = cleanBandId(account.band_id);
+
+  // Cifrar app_password antes de guardar en BD
+  const encryptedPassword = encryptCredential(account.app_password);
+
   const payload = {
     band_id: cleanId,
     provider: account.provider,
     email: account.email,
-    app_password: account.app_password,
+    app_password: encryptedPassword,
     smtp_host: account.smtp_host,
     smtp_port: account.smtp_port,
     smtp_secure: account.smtp_secure ?? true,
@@ -77,7 +91,15 @@ export async function dbUpsertBandEmailAccount(account: {
     throw error;
   }
 
-  return data || payload;
+  // Descifrar para devolver el resultado completo
+  if (data) {
+    const decrypted = decryptCredential(data.app_password);
+    if (decrypted !== null) {
+      return { ...data, app_password: decrypted };
+    }
+  }
+
+  return { ...payload, app_password: account.app_password };
 }
 
 // app_password es una credencial de escritura, no de lectura: ninguna ruta HTTP debe
