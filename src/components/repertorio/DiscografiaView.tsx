@@ -355,14 +355,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
  return (
  <div className="w-full flex flex-col gap-4">
+ {/* Header: Stats */}
  <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all bg-[var(--surface)]">
  <p className="text-[var(--ink-2)] text-xs">
  {safeSongs.length > 1 ? 'lanzamientos' : 'lanzamiento'} • {safeSongs.length} temas
  </p>
  </div>
 
- {/* Desktop"+ Nuevo Disco" and"Exportar Canciones" Buttons */}
- <div className="flex items-center gap-2 relative">
+ {/* Action Buttons: Exportar + Nuevo Disco */}
+ <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
  <button
  type="button"
  onClick={() => setExportModalData({ isOpen: true, albumName:'all' })}
@@ -375,6 +376,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  <span>Exportar</span>
  </button>
 
+ <div className="relative">
  <button
  type="button"
  onClick={() => setShowCreateAlbumMenu((v) => !v)}
@@ -447,11 +449,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </>
  )}
  </div>
+ </div>
 
- {/* Filter Pills, Search Bar, Expand All, & Mobile Create Album */}
- <div className="w-full flex flex-col gap-2 sm:flex-row sm:items-center">
+ {/* Search + Filters Section */}
+ <div className="w-full flex flex-col gap-3">
  {/* Search Input Bar */}
- <div className="relative flex-1 min-w-[140px] w-full">
+ <div className="relative w-full">
  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-2)] pointer-events-none" />
  <input
  type="text"
@@ -474,7 +477,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  )}
  </div>
 
- {/* Quick Filter Tabs */}
+ {/* Quick Filter Tabs + Action Icons */}
+ <div className="w-full flex flex-col sm:flex-row items-start sm:items-center gap-2">
  <div className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}>
  <button
  type="button"
@@ -512,7 +516,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </div>
 
  {/* Action Icons: Fold/Unfold & Dynamics */}
- <div className="flex items-center gap-1.5 shrink-0">
+ <div className="flex items-center gap-1.5 shrink-0 ml-auto">
  {filteredAlbums.length > 0 && (
  <button
  type="button"
@@ -551,6 +555,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
  </button>
  </div>
  )}
+ </div>
  </div>
 
  {/* Albums Stack */}
