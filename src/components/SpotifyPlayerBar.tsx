@@ -852,7 +852,7 @@ export default function SpotifyPlayerBar({
  {/* Studio / Arreglos Button */}
  <button
  onClick={() => onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-[var(--surface)]/15 hover:bg-[var(--surface)]/25 text-[var(--ok)]/30 font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+ className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/15 text-[var(--ok)] font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Abrir Estudio de Arreglos e Ideas"
  >
  <Sliders className="w-3.5 h-3.5" />
@@ -862,7 +862,7 @@ export default function SpotifyPlayerBar({
  {/* Iris Stem Separator Button */}
  <button
  onClick={() => onOpenIris ? onOpenIris(song) : onOpenStudio(song)}
- className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500/30 text-[var(--acc)]/70 font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+ className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/20 text-[var(--acc)] font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
  title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
  >
  <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
