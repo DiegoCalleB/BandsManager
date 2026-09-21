@@ -645,7 +645,18 @@ export default function RepertorioSetlists({
  handleSelectPlayerSong} = useAudioPlayer();
 
  // Global player context for persistent playback across modules
- const { setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying } = usePlayer();
+ const { currentSong: playerCurrentSong, setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying } = usePlayer();
+
+ // Inicializar reproductor global con canción aleatoria que tenga audio (solo si está vacío)
+ useEffect(() => {
+ if (!playerCurrentSong) {
+ const songsWithAudio = songs.filter(s => s.audioUrl || s.audioPrincipalUrl);
+ if (songsWithAudio.length > 0) {
+ const randomSong = songsWithAudio[Math.floor(Math.random() * songsWithAudio.length)];
+ setCurrentSong(randomSong);
+ }
+ }
+ }, [songs, playerCurrentSong, setCurrentSong]);
 
  // Concert Player (Reproductor de Concierto / Modo Escenario)
  const {

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { 
- Music, Layers, Disc3, Plus, ImagePlus, ChevronDown, 
- Check, HelpCircle
+import {
+ Music, Layers, Disc3, Plus, ImagePlus, ChevronDown,
+ Check
 } from 'lucide-react';
-import { ThemeColors, Setlist } from '../../types';
+import { Setlist } from '../../types';
 import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
 
 interface RepertorioNavBarProps {
- colors: ThemeColors
  activeTab:'catalogo' |'setlists';
  setActiveTab: (tab:'catalogo' |'setlists') => void;
  catalogoViewMode:'albumes' |'canciones';
@@ -25,7 +24,6 @@ interface RepertorioNavBarProps {
 }
 
 export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
- colors,
  activeTab,
  setActiveTab,
  catalogoViewMode,
@@ -103,10 +101,10 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="tab-btn-catalogo"
  type="button"
  onClick={() => setActiveTab('catalogo')}
- className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
+ className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs flex items-center gap-1.5 transition-all cursor-pointer font-medium ${
  activeTab ==='catalogo'
- ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
- :'text-[var(--ink-2)] hover:text-[var(--ink)] font-medium'
+ ? 'bg-[var(--acc)]/12 text-[var(--acc)]'
+ :'text-[var(--ink-2)] hover:text-[var(--ink)]'
  }`}
  >
  <Disc3 className="w-3.5 h-3.5" />
@@ -275,7 +273,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
  id="btn-add-song"
  type="button"
  onClick={onOpenNewSongModal}
- className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shrink-0 active:scale-95"
+ className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-white text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer shrink-0 active:scale-95"
  >
  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
  <span>Nueva Canción</span>
