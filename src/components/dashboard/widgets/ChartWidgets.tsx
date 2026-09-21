@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
- ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell
+ ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid
 } from 'recharts';
-import { Disc3, Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp, Sparkles, Filter } from 'lucide-react';
-import { Lead, Concert, Fan, ThemeColors } from '../../../types';
+import { Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp } from 'lucide-react';
+import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from '../../../types';
 import { getEnergyInfo } from '../../../utils/energyPacingUtils';
 import { Onda } from '../../ui/Onda';
 
@@ -11,31 +11,52 @@ export interface ChartWidgetProps {
  leads?: Lead[];
  concerts?: Concert[];
  fans?: Fan[];
- currentUser?: any;
+ setlists?: Setlist[];
+ songs?: Song[];
+ currentUser?: Record<string, unknown>;
  activeBandName?: string;
  colors?: ThemeColors;
- onNavigate?: (view: string, options?: any) => void;
+ onNavigate?: (view: string, options?: Record<string, unknown>) => void;
  heightMode?:'compact' |'normal' |'tall';
 }
 
 /* 1. GRÁFICO DE ENERGÍA DE REPERTORIO & SETLIST */
-export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }: ChartWidgetProps) {
- // Try to load setlists and songs from localStorage
- let setlistsList: any[] = [];
- let songsList: any[] = [];
+export function RepertorioEnergyChartWidget({
+ onNavigate,
+ heightMode ='normal',
+ setlists: providedSetlists,
+ songs: providedSongs
+}: ChartWidgetProps) {
+ const [setlistsList, setSetlistsList] = useState<Setlist[]>(providedSetlists || []);
+ const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
+ useEffect(() => {
+ const hasProvidedData = providedSetlists && providedSetlists.length > 0 && providedSongs && providedSongs.length > 0;
+ if (hasProvidedData) {
+ return;
+ }
 
+ const loadData = async () => {
  try {
- const rawSetlists = localStorage.getItem('bakandeya_setlists') || localStorage.getItem('bandmanager_setlists');
- if (rawSetlists) {
- const parsed = JSON.parse(rawSetlists);
- if (Array.isArray(parsed) && parsed.length > 0) setlistsList = parsed;
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers = {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ };
+
+ const [setlistsRes, songsRes] = await Promise.all([
+ fetch('/api/repertorio/setlists', { headers }).then(r => r.json()),
+ fetch('/api/repertorio/songs', { headers }).then(r => r.json())
+ ]);
+
+ setSetlistsList(setlistsRes?.setlists || []);
+ setSongsList(songsRes?.songs || []);
+ } catch (err) {
+ console.error('[Dashboard] Error fetching setlists/songs:', err);
  }
- const rawSongs = localStorage.getItem('bakandeya_songs_catalog') || localStorage.getItem('bakandeya_songs');
- if (rawSongs) {
- const parsed = JSON.parse(rawSongs);
- if (Array.isArray(parsed) && parsed.length > 0) songsList = parsed;
- }
- } catch {}
+ };
+
+ loadData();
+ }, [providedSetlists, providedSongs]);
 
  const [selectedSetlistId, setSelectedSetlistId] = useState<string>(() => {
  return setlistsList[0]?.id ||'default_demo_setlist';
@@ -56,7 +77,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  const activeSetlist = setlistsList.find(s => s.id === selectedSetlistId) || setlistsList[0];
 
  if (activeSetlist && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
- chartData = activeSetlist.items.map((item: any, idx: number) => {
+ chartData = activeSetlist.items.map((item: Record<string, unknown>, idx: number) => {
  const matchedSong = songsList.find(s => s.id === item.song_id || s.titulo === item.title || s.id === item.songId) || item.song;
  const energyVal = item.energia || matchedSong?.energia || 12;
  const energyInfo = getEnergyInfo(energyVal);
@@ -72,7 +93,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  };
  });
  } else if (songsList.length > 0) {
- chartData = songsList.slice(0, 10).map((song: any, idx: number) => {
+ chartData = songsList.slice(0, 10).map((song: Record<string, unknown>, idx: number) => {
  const energyVal = song.energia || (song.bpm >= 140 ? 18 : song.bpm <= 95 ? 6 : 12);
  const energyInfo = getEnergyInfo(energyVal);
  return {
@@ -208,7 +229,10 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  <Tooltip
  contentStyle={{ background:'var(--surface)', borderRadius: 'var(--r-m)', fontSize: 11 }}
  labelFormatter={(num) => chartData.find(d => d.num === num)?.title || `Tema ${num}`}
- formatter={(val: number, _name, item) => [`${val}/20 · ${(item?.payload as any)?.bpm ?? ''} BPM`, 'Energía']}
+ formatter={(val: number, _name, item) => {
+  const payload = (item?.payload as Record<string, number>) || {};
+  return [`${val}/20 · ${payload.bpm ?? ''} BPM`, 'Energía'];
+ }}
  />
  <Area
  type="monotone"
@@ -218,10 +242,11 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode ='normal' }
  fill="url(#dashEnergyFill)"
  fillOpacity={1}
  isAnimationActive={true}
- dot={(dotProps: any) => {
+ dot={(dotProps: { cx?: number; cy?: number; payload?: Record<string, unknown> }) => {
  const { cx, cy, payload } = dotProps;
- if (cx == null || cy == null) return <React.Fragment key={`d-${payload?.num}`} />;
- return <circle key={`d-${payload?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={payload?.hexColor || 'var(--acc)'} />;
+ if (cx == null || cy == null) return <React.Fragment key={`d-${(payload as Record<string, unknown>)?.num}`} />;
+ const hexColor = (payload as Record<string, unknown>)?.hexColor || 'var(--acc)';
+ return <circle key={`d-${(payload as Record<string, unknown>)?.num}`} cx={cx} cy={cy} r={4} strokeWidth={1.5} stroke="var(--surface)" fill={String(hexColor)} />;
  }}
  activeDot={{ r: 6, strokeWidth: 2, stroke: 'var(--surface)' }}
  />
@@ -312,8 +337,8 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  );
 }
 
-/* 3. GRÁFICO DE FINANZAS Y CACHÉ POR CONCIERTO */
-export function FinancesChartWidget({ concerts = [], onNavigate, heightMode ='normal' }: ChartWidgetProps) {
+/* 3. GRÁFICO DE FINANZAS & CACHÉ POR CONCIERTO */
+export function FinancesChartWidget({ onNavigate, heightMode ='normal' }: ChartWidgetProps) {
  // Aggregate revenue and average cache
  const defaultMonths = [
  { month:'Ene', ingresos: 1200, gastos: 450, cacheMedio: 1200 },

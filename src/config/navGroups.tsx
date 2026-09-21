@@ -67,9 +67,9 @@ export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
  {
- id: 'contactos',
- titleKey: 'navGroup.contactos',
- titleDefault: 'Contactos',
+ id: 'directorio',
+ titleKey: 'navGroup.directorio',
+ titleDefault: 'Directorio',
  itemIds: ['booking', 'medios', 'management', 'bandas'],
  },
  {
@@ -104,9 +104,9 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
  */
 export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
  {
- id: 'contactos',
- titleKey: 'navGroup.contactos',
- titleDefault: 'Contactos',
+ id: 'directorio',
+ titleKey: 'navGroup.directorio',
+ titleDefault: 'Directorio',
  itemIds: ['booking', 'medios', 'management', 'bandas'],
  },
  {
