@@ -78,7 +78,10 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  };
 
  useEffect(() => {
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ if (token) {
  fetchBands();
+ }
  }, [currentBandId]);
 
  // Save changes to localStorage whenever bands state updates
