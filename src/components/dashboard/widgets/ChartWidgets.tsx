@@ -29,7 +29,7 @@ export function RepertorioEnergyChartWidget({
 }: ChartWidgetProps) {
  const [setlistsList, setSetlistsList] = useState<Setlist[]>(providedSetlists || []);
  const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
- const [selectedAlbum, setSelectedAlbum] = useState<string>('all');
+ const [selectedRepertorioId, setSelectedRepertorioId] = useState<string>('all');
  useEffect(() => {
  const hasProvidedData = providedSetlists && providedSetlists.length > 0 && providedSongs && providedSongs.length > 0;
  if (hasProvidedData) {
@@ -63,13 +63,6 @@ export function RepertorioEnergyChartWidget({
  return setlistsList[0]?.id ||'default_demo_setlist';
  });
 
- // Extract unique albums from songs
- const albums = Array.from(
- new Set(songsList
- .map(s => s.albumDisco || s.album)
- .filter(Boolean) as string[])
- );
-
  // Prepare chart data for active setlist or fallback demo setlist
  let chartData: Array<{
  num: number;
@@ -82,7 +75,13 @@ export function RepertorioEnergyChartWidget({
  durationMin: number;
  }> = [];
 
- const activeSetlist = setlistsList.find(s => s.id === selectedSetlistId) || setlistsList[0];
+ // Use selected repertorio/setlist or active setlist
+ let activeSetlist = null;
+ if (selectedRepertorioId === 'all') {
+ activeSetlist = setlistsList[0]; // Default to first setlist when "all" selected
+ } else {
+ activeSetlist = setlistsList.find(s => s.id === selectedRepertorioId);
+ }
 
  if (activeSetlist && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
  chartData = activeSetlist.items.map((item, idx: number) => {
@@ -102,12 +101,7 @@ export function RepertorioEnergyChartWidget({
  };
  });
  } else if (songsList.length > 0) {
- // Filter songs by selected album
- const filteredSongs = selectedAlbum === 'all'
- ? songsList
- : songsList.filter(s => (s.albumDisco || s.album) === selectedAlbum);
-
- chartData = filteredSongs.slice(0, 20).map((song, idx: number) => {
+ chartData = songsList.slice(0, 20).map((song, idx: number) => {
  const songAny = song as unknown as Record<string, unknown>;
  const energyVal = (songAny.energia as number) || ((songAny.bpm as number) >= 140 ? 18 : (songAny.bpm as number) <= 95 ? 6 : 12);
  const energyInfo = getEnergyInfo(energyVal);
@@ -160,28 +154,26 @@ export function RepertorioEnergyChartWidget({
 
  return (
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
- {/* Album/Repertorio Selector - Above the chart */}
+ {/* Repertorio/Setlist Selector - Above the chart */}
+ {setlistsList.length > 1 && (
  <div className="flex flex-col gap-2 pb-3 border-b border-[var(--hair)]">
  <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wide">
  Repertorio
  </label>
  <div className="relative">
  <select
- value={selectedAlbum}
- onChange={(e) => setSelectedAlbum(e.target.value)}
+ value={selectedRepertorioId}
+ onChange={(e) => setSelectedRepertorioId(e.target.value)}
  className="w-full bg-[var(--sunken)] text-[var(--ink)] text-xs font-medium rounded-[var(--r-s)] px-3 py-2 pr-8 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
  >
- <option value="all">Todos los álbumes</option>
- {albums.length > 0 ? (
- albums.map(album => (
- <option key={album} value={album}>{album}</option>
- ))
- ) : (
- <option disabled>Sin álbumes asignados</option>
- )}
+ <option value="all">Todos los setlists</option>
+ {setlistsList.map(s => (
+ <option key={s.id} value={s.id}>{s.nombre || 'Setlist sin nombre'}</option>
+ ))}
  </select>
  </div>
  </div>
+ )}
 
  {/* Header */}
  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5">
