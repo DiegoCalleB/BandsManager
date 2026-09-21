@@ -6,6 +6,7 @@ import { Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp } from 'lucid
 import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from '../../../types';
 import { getEnergyInfo } from '../../../utils/energyPacingUtils';
 import { Onda } from '../../ui/Onda';
+import { api } from '../../../services/api';
 
 export interface ChartWidgetProps {
  leads?: Lead[];
@@ -27,28 +28,19 @@ export function RepertorioEnergyChartWidget({
  setlists: providedSetlists,
  songs: providedSongs
 }: ChartWidgetProps) {
- const [setlistsList, setSetlistsList] = useState<Setlist[]>(providedSetlists || []);
- const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
+ const [setlistsList, setSetlistsList] = useState<Setlist[]>(() => providedSetlists?.length ? providedSetlists : []);
+ const [songsList, setSongsList] = useState<Song[]>(() => providedSongs?.length ? providedSongs : []);
  const [selectedRepertorioId, setSelectedRepertorioId] = useState<string>('all');
+
  useEffect(() => {
- const hasProvidedData = providedSetlists && providedSetlists.length > 0 && providedSongs && providedSongs.length > 0;
- if (hasProvidedData) {
- return;
- }
+ if (providedSetlists?.length && providedSongs?.length) return;
 
  const loadData = async () => {
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- const headers = {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
- };
-
  const [setlistsRes, songsRes] = await Promise.all([
- fetch('/api/repertorio/setlists', { headers }).then(r => r.json()),
- fetch('/api/repertorio/songs', { headers }).then(r => r.json())
+ api.getSetlists(),
+ api.getSongs()
  ]);
-
  setSetlistsList(setlistsRes?.setlists || []);
  setSongsList(songsRes?.songs || []);
  } catch (err) {
@@ -59,9 +51,6 @@ export function RepertorioEnergyChartWidget({
  loadData();
  }, [providedSetlists, providedSongs]);
 
- const [selectedSetlistId, setSelectedSetlistId] = useState<string>(() => {
- return setlistsList[0]?.id ||'default_demo_setlist';
- });
 
  // Prepare chart data for active setlist or fallback demo setlist
  let chartData: Array<{
@@ -76,14 +65,11 @@ export function RepertorioEnergyChartWidget({
  }> = [];
 
  // Use selected repertorio/setlist or active setlist
- let activeSetlist = null;
- if (selectedRepertorioId === 'all') {
- activeSetlist = setlistsList[0]; // Default to first setlist when "all" selected
- } else {
- activeSetlist = setlistsList.find(s => s.id === selectedRepertorioId);
- }
+ const activeSetlist = selectedRepertorioId === 'all'
+ ? setlistsList[0]
+ : setlistsList.find(s => s.id === selectedRepertorioId);
 
- if (activeSetlist && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
+ if (activeSetlist?.items && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
  chartData = activeSetlist.items.map((item, idx: number) => {
  const itemAny = item as unknown as Record<string, unknown>;
  const matchedSong = songsList.find(s => s.id === itemAny.song_id || s.titulo === itemAny.title || s.id === itemAny.songId) || (itemAny.song as Song | undefined);
@@ -194,19 +180,6 @@ export function RepertorioEnergyChartWidget({
  </div>
 
  <div className="flex items-center gap-2">
- {setlistsList.length > 1 && (
- <div className="relative">
- <select
- value={selectedSetlistId}
- onChange={(e) => setSelectedSetlistId(e.target.value)}
- className="bg-[var(--sunken)] text-[var(--acc-ink)] text-[11px] font-semibold rounded-[var(--r-s)] px-2.5 py-1 pr-6 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
- >
- {setlistsList.map(s => (
- <option key={s.id} value={s.id}>{s.nombre ||'Setlist sin nombre'}</option>
- ))}
- </select>
- </div>
- )}
 
  {onNavigate && (
  <button
