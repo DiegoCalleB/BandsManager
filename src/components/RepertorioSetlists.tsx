@@ -1747,12 +1747,18 @@ export default function RepertorioSetlists({
  });
  };
 
- const handleSaveAlbumSongs = (albumName: string, selectedSongIds: string[]) => {
+ const handleSaveAlbumSongs = (albumName: string, selectedSongIds: string[], albumExtraInfo?: { año?: string; portadaUrl?: string; tipoTrabajo?: string; descripcion?: string; }) => {
  const selectedSet = new Set(selectedSongIds);
+ let isFirst = true;
  const updatedSongs = songs.map(s => {
  const isCurrentlyInAlbum = (s.albumDisco ||'Singles / Sin Disco') === albumName || s.albumDisco === albumName;
  if (selectedSet.has(s.id)) {
- return { ...s, albumDisco: albumName };
+ const updated = { ...s, albumDisco: albumName };
+ if (albumExtraInfo?.portadaUrl && isFirst) {
+ updated.portadaUrl = albumExtraInfo.portadaUrl;
+ isFirst = false;
+ }
+ return updated;
  } else if (isCurrentlyInAlbum) {
  return { ...s, albumDisco:'' };
  }
