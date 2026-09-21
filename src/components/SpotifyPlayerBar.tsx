@@ -68,6 +68,10 @@ export default function SpotifyPlayerBar({
  const [playbackRate, setPlaybackRate] = useState<number>(1);
  const [isMinimized, setIsMinimized] = useState(false);
 
+ // Historial de reproducción: rastrear canciones reproducidas para que atrás vuelva a la anterior
+ const [playbackHistory, setPlaybackHistory] = useState<string[]>(song?.id ? [song.id] : []);
+ const [historyIndex, setHistoryIndex] = useState<number>(song?.id ? 0 : -1);
+
  // Cálculo automático de semitonos (prop explícita o diferencia entre tonalidad y tonalidadDeseada)
  const calculatedSemitones = React.useMemo(() => {
  if (typeof propTransposeSemitones ==='number' && propTransposeSemitones !== 0) {
@@ -185,6 +189,24 @@ export default function SpotifyPlayerBar({
  if (promotedSongIdRef.current === song?.id) return;
  cancelCrossfade();
  // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [song?.id]);
+
+ // Actualizar historial de reproducción cuando cambia la canción
+ useEffect(() => {
+ if (!song?.id) return;
+
+ setPlaybackHistory(prev => {
+ const newHistory = [...prev];
+ const existingIdx = newHistory.indexOf(song.id);
+
+ if (existingIdx >= 0) {
+ newHistory.splice(existingIdx, 1);
+ }
+ newHistory.push(song.id);
+ setHistoryIndex(newHistory.length - 1);
+
+ return newHistory;
+ });
  }, [song?.id]);
 
  // When song, activeAudioUrl, autoPlay, or playSignal changes
@@ -361,15 +383,29 @@ export default function SpotifyPlayerBar({
 
  const handlePrev = () => {
  cancelCrossfade();
- if (currentIdx > 0) {
- onSelectSong(songs[currentIdx - 1]);
- } else {
- onSelectSong(songs[songs.length - 1]);
+ if (historyIndex > 0) {
+ const prevSongId = playbackHistory[historyIndex - 1];
+ const prevSong = songs.find(s => s.id === prevSongId);
+ if (prevSong) {
+ setHistoryIndex(historyIndex - 1);
+ onSelectSong(prevSong);
+ }
  }
  };
 
  const handleNext = (autoPlayNext: boolean = false) => {
  cancelCrossfade();
+
+ if (historyIndex < playbackHistory.length - 1) {
+ const nextSongId = playbackHistory[historyIndex + 1];
+ const nextSong = songs.find(s => s.id === nextSongId);
+ if (nextSong) {
+ setHistoryIndex(historyIndex + 1);
+ onSelectSong(nextSong, autoPlayNext);
+ return;
+ }
+ }
+
  if (currentIdx >= 0 && currentIdx < songs.length - 1) {
  onSelectSong(songs[currentIdx + 1], autoPlayNext);
  } else {
