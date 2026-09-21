@@ -4096,7 +4096,7 @@ export default function RepertorioSetlists({
 
  {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO) */}
  {activeTab ==='catalogo' && (
- <div className="space-y-4">
+ <div className="space-y-4" data-modulo="discografia">
  {catalogoViewMode ==='albumes' ? (
  <DiscografiaView
  songs={songs}
