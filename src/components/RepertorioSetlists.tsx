@@ -537,7 +537,8 @@ export default function RepertorioSetlists({
  const loadSongs = async () => {
  try {
  const res = await api.getSongs();
- if (isMounted && res?.songs && Array.isArray(res.songs)) {
+ // Solo actualizar si la API devuelve canciones (array no-vacío)
+ if (isMounted && res?.songs && Array.isArray(res.songs) && res.songs.length > 0) {
  setSongs(res.songs);
  }
  } catch (err) {
