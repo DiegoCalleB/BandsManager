@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Lead, Setlist, Song, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { 
- findBestSetlistMatch, 
- generateAutoSetlistForConcert, 
- calculateSetlistDurationSec 
+import {
+ findBestSetlistMatch,
+ generateAutoSetlistForConcert,
+ calculateSetlistDurationSec
 } from '../../utils/setlistOptimization';
-import { apiFetch } from '../../utils/api';
-import { 
- X, Calendar, Clock, Music, Sparkles, Check, ChevronRight, Zap, CheckCircle2 
+import {
+ X, Calendar, Clock, Music, Sparkles, Check, Zap, CheckCircle2
 } from 'lucide-react';
 
 interface BoloConfirmadoSetlistModalProps {
@@ -30,8 +29,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  lead,
  onClose,
  onConfirmWithSetlist,
- onConfirmWithoutSetlist,
- colors
+ onConfirmWithoutSetlist
 }) => {
  const [setlists, setSetlists] = useState<Setlist[]>([]);
  const [songs, setSongs] = useState<Song[]>([]);
@@ -56,37 +54,31 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  if (!isOpen) return;
 
  let isMounted = true;
+ // eslint-disable-next-line react-hooks/set-state-in-effect
  setIsLoadingData(true);
 
  async function loadData() {
  try {
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+ const headers = {
+ 'Content-Type': 'application/json',
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ };
+
  const [setlistsRes, songsRes] = await Promise.all([
- apiFetch('/api/setlists').catch(() => null),
- apiFetch('/api/songs').catch(() => null)
+ fetch('/api/repertorio/setlists', { headers }).then(r => r.json()).catch(() => null),
+ fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null)
  ]);
 
  let loadedSetlists: Setlist[] = [];
  let loadedSongs: Song[] = [];
 
- if (setlistsRes && setlistsRes.ok) {
- const data = await setlistsRes.json();
- loadedSetlists = Array.isArray(data) ? data : (data.setlists || []);
- } else {
- // Fallback a localStorage
- const local = localStorage.getItem('bakandeya_setlists_data') || localStorage.getItem('bakandeya_setlists');
- if (local) {
- try { loadedSetlists = JSON.parse(local); } catch {}
- }
+ if (setlistsRes && setlistsRes.setlists) {
+ loadedSetlists = setlistsRes.setlists;
  }
 
- if (songsRes && songsRes.ok) {
- const data = await songsRes.json();
- loadedSongs = Array.isArray(data) ? data : (data.songs || []);
- } else {
- const local = localStorage.getItem('bakandeya_songs');
- if (local) {
- try { loadedSongs = JSON.parse(local); } catch {}
- }
+ if (songsRes && songsRes.songs) {
+ loadedSongs = songsRes.songs;
  }
 
  if (isMounted) {
@@ -115,6 +107,7 @@ export const BoloConfirmadoSetlistModal: React.FC<BoloConfirmadoSetlistModalProp
  // Pre-select best match
  useEffect(() => {
  if (bestMatch && !selectedSetlistId && !generateNewSetlist) {
+ // eslint-disable-next-line react-hooks/set-state-in-effect
  setSelectedSetlistId(bestMatch.setlist.id);
  }
  }, [bestMatch, selectedSetlistId, generateNewSetlist]);

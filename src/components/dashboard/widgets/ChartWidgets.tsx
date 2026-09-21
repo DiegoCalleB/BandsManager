@@ -77,31 +77,33 @@ export function RepertorioEnergyChartWidget({
  const activeSetlist = setlistsList.find(s => s.id === selectedSetlistId) || setlistsList[0];
 
  if (activeSetlist && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
- chartData = activeSetlist.items.map((item: Record<string, unknown>, idx: number) => {
- const matchedSong = songsList.find(s => s.id === item.song_id || s.titulo === item.title || s.id === item.songId) || item.song;
- const energyVal = item.energia || matchedSong?.energia || 12;
+ chartData = activeSetlist.items.map((item, idx: number) => {
+ const itemAny = item as unknown as Record<string, unknown>;
+ const matchedSong = songsList.find(s => s.id === itemAny.song_id || s.titulo === itemAny.title || s.id === itemAny.songId) || (itemAny.song as Song | undefined);
+ const energyVal = (itemAny.energia as number) || matchedSong?.energia || 12;
  const energyInfo = getEnergyInfo(energyVal);
  return {
  num: idx + 1,
- title: item.title || matchedSong?.titulo || `Tema ${idx + 1}`,
+ title: (itemAny.title as string) || matchedSong?.titulo || `Tema ${idx + 1}`,
  energy: energyVal,
- bpm: item.bpm || matchedSong?.bpm || 120,
- keyStr: item.tonalidad || matchedSong?.tonalidad ||'Am',
+ bpm: (itemAny.bpm as number) || matchedSong?.bpm || 120,
+ keyStr: (itemAny.tonalidad as string) || matchedSong?.tonalidad ||'Am',
  label: energyInfo.label,
  hexColor: energyInfo.hexColor,
- durationMin: item.duracion_segundos ? Math.round(item.duracion_segundos / 60) : 4
+ durationMin: (itemAny.duracion_segundos as number) ? Math.round((itemAny.duracion_segundos as number) / 60) : 4
  };
  });
  } else if (songsList.length > 0) {
- chartData = songsList.slice(0, 10).map((song: Record<string, unknown>, idx: number) => {
- const energyVal = song.energia || (song.bpm >= 140 ? 18 : song.bpm <= 95 ? 6 : 12);
+ chartData = songsList.slice(0, 10).map((song, idx: number) => {
+ const songAny = song as unknown as Record<string, unknown>;
+ const energyVal = (songAny.energia as number) || ((songAny.bpm as number) >= 140 ? 18 : (songAny.bpm as number) <= 95 ? 6 : 12);
  const energyInfo = getEnergyInfo(energyVal);
  return {
  num: idx + 1,
- title: song.titulo || `Canción ${idx + 1}`,
+ title: (songAny.titulo as string) || `Canción ${idx + 1}`,
  energy: energyVal,
- bpm: song.bpm || 120,
- keyStr: song.tonalidad ||'C',
+ bpm: (songAny.bpm as number) || 120,
+ keyStr: (songAny.tonalidad as string) ||'C',
  label: energyInfo.label,
  hexColor: energyInfo.hexColor,
  durationMin: 4
