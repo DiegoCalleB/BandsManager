@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
- Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, 
+import {
+ Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight,
  CheckCircle2, Clock, AlertCircle, Sparkles, QrCode, Disc3, ShieldCheck
 } from 'lucide-react';
 import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
+import { api } from '../../../services/api';
 
 export interface ModuleWidgetProps {
  leads?: Lead[];
@@ -82,16 +83,12 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
  let isMounted = true;
  const loadSongCount = async () => {
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- const headers = {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
- };
- const res = await fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null);
+ const res = await api.getSongs();
  if (isMounted && res?.songs && Array.isArray(res.songs)) {
  setSongCount(res.songs.length);
  }
- } catch {
+ } catch (err) {
+ console.error('Failed to load song count:', err);
  if (isMounted) setSongCount(0);
  }
  };

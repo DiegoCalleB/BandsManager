@@ -99,16 +99,12 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
  let isMounted = true;
  const loadSongsCount = async () => {
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- const headers = {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
- };
- const res = await fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null);
+ const res = await api.getSongs();
  if (isMounted && res?.songs && Array.isArray(res.songs)) {
  setStoredSongsCount(res.songs.length);
  }
- } catch {
+ } catch (err) {
+ console.error('Failed to load songs count:', err);
  if (isMounted) setStoredSongsCount(0);
  }
  };

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { isSameBandId } from '../utils/bandUtils';
+import { api } from '../services/api';
 import DirectionsCard from './DirectionsCard';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
 import { AddLeadModal } from './dashboard/AddLeadModal';
@@ -137,22 +138,18 @@ export default function Dashboard({
  let isMounted = true;
  const loadSongsCount = async () => {
  try {
- const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
- const headers = {
- 'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
- };
- const res = await fetch('/api/repertorio/songs', { headers }).then(r => r.json()).catch(() => null);
+ const res = await api.getSongs();
  if (isMounted && res?.songs && Array.isArray(res.songs)) {
  setSongsCount(res.songs.length);
  }
- } catch {
+ } catch (err) {
+ console.error('Failed to load songs count:', err);
  if (isMounted) setSongsCount(0);
  }
  };
  loadSongsCount();
  return () => { isMounted = false; };
- }, []);
+ }, [currentBandId]);
 
  const storedSongsCount = songsCount;
 
