@@ -86,6 +86,38 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * **Prevención de Inyecciones (SQLi, NoSQLi, XSS):** Todas las consultas a Supabase se canalizan parametrizadas mediante el cliente tipado oficial o funciones de sanitización.
    * **Sanitización de Archivos y Path Traversal:** Validadores dedicados (`subcarpetaSegura`, `rutaFuenteSegura`) impiden la manipulación de rutas en el sistema de archivos del servidor.
 
+### 2.5 Persistencia de Datos en Cliente (localStorage, sessionStorage)
+**Regla fundamental: localStorage NUNCA debe persistir datos específicos de banda sin `band_id` explícito en la clave.**
+
+1. **Qué SÍ va en localStorage (seguro, multi-tenant):**
+   * Tokens de autenticación (`bakandeya_token`, con expiración)
+   * Usuario autenticado (`bakandeya_user`, con banda_id adentro del objeto)
+   * Preferencias de UI (`bakandeya_theme`, `bakandeya_language`, `bakandeya_font`)
+   * Filtros y vistas guardadas por el usuario (scoped a sessionStorage si es genérico; `bakandeya_saved_crm_filters` si lleva band_id implícito)
+
+2. **Qué NO va en localStorage (prohibido sin banda_id explícito):**
+   * Canciones, setlists, álbumes de banda → **React state + API** (band_id validado server-side via `getTargetBandId`)
+   * Agendas, riders, hojas de ruta → React state local (reset al cambiar banda o recargarp)
+   * Datos de configuración de banda (autonomy, agentes) → API con band_id en payload
+   
+3. **Patrón Seguro (Implementado):**
+   ```
+   // ✗ PROHIBIDO (datos de banda sin band_id en clave)
+   localStorage.setItem('bakandeya_songs', JSON.stringify(songs));
+   
+   // ✓ PERMITIDO (datos de banda obtenidos via API con band_id validado)
+   const [songs, setSongs] = useState([]);
+   useEffect(() => {
+     fetch('/api/repertorio/songs', { headers: { 'Authorization': `Bearer ${token}` } })
+       .then(r => r.json())
+       .then(data => setSongs(data.songs || []))
+   }, [currentBandId]);
+   ```
+   
+4. **Vida útil de React State:** cuando la banda activa cambia (`currentBandId` en dependencias), todos los useEffect() que montan datos se re-ejecutan. El estado local se resetea automáticamente, evitando que datos de Banda A contaminen la sesión de Banda B.
+
+5. **No hay "caché local persistente" para datos de banda:** si se necesita persistencia real (no perder cambios entre recargas), eso vive en Supabase vía API. localStorage es transporte prohibido.
+
 ---
 
 ## 🤖 3. Reglas de Negocio de Agentes IA (Human-in-the-Loop)
