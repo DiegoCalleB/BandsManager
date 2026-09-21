@@ -590,7 +590,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
  };
 
  return (
- <div data-modulo="epk" className="space-y-3.5 sm:space-y-6">
+ <div data-modulo="dossier" className="space-y-3.5 sm:space-y-6">
  {/* HEADER MODULARIZADO */}
  <EPKHeader
  activeBlock={activeBlock}

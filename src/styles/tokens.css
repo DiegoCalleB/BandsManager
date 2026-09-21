@@ -214,7 +214,8 @@
 [data-modulo="finanzas"]   { --acc:#3C7EA8; --acc-soft:#E2EDF4; --acc-ink:#24587A; --on-acc:#FFFFFF; }
 [data-modulo="fans"],
 [data-modulo="reels"]      { --acc:#9B5FB5; --acc-soft:#F0E7F5; --acc-ink:#6F3D87; --on-acc:#FFFFFF; }
-[data-modulo="epk"]        { --acc:#6B4CE0; --acc-soft:#F0E7F9; --acc-ink:#4A2F8D; --on-acc:#FFFFFF; }
+[data-modulo="epk"],
+[data-modulo="dossier"]    { --acc:#C13584; --acc-soft:#F8E7F4; --acc-ink:#8B2055; --on-acc:#FFFFFF; }
 
 [data-theme="dark"] [data-modulo="booking"],
 [data-theme="dark"] [data-modulo="panel"]      { --acc:#60A5FA; --acc-soft:#1E3A5F; --acc-ink:#60A5FA; --on-acc:#0A1F3D; }
@@ -224,7 +225,8 @@
 [data-theme="dark"] [data-modulo="finanzas"]   { --acc:#6FB0D9; --acc-soft:#14232E; --acc-ink:#6FB0D9; --on-acc:#0B1A24; }
 [data-theme="dark"] [data-modulo="fans"],
 [data-theme="dark"] [data-modulo="reels"]      { --acc:#C08FD6; --acc-soft:#241A2B; --acc-ink:#C08FD6; --on-acc:#1C1023; }
-[data-theme="dark"] [data-modulo="epk"]        { --acc:#A794D5; --acc-soft:#2A1F3F; --acc-ink:#A794D5; --on-acc:#1C1028; }
+[data-theme="dark"] [data-modulo="epk"],
+[data-theme="dark"] [data-modulo="dossier"]    { --acc:#F472B6; --acc-soft:#1F3B3D; --acc-ink:#F472B6; --on-acc:#1C1023; }
 
 /* Clásico ignora el color por módulo a propósito: es el diseño de antes,
    y antes no había color por módulo. Cambiarlo sería no conservarlo. */
