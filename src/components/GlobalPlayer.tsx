@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { usePlayer } from '../context/PlayerContext';
 import { ThemeColors, Song } from '../types';
@@ -10,7 +11,15 @@ interface GlobalPlayerProps {
 }
 
 export function GlobalPlayer({ colors, onOpenStudio, onOpenIris }: GlobalPlayerProps) {
- const { currentSong, songs, setCurrentSong, setSongs, setIsPlaying } = usePlayer();
+ const { currentSong, songs, setCurrentSong, setSongs, setIsPlaying, isPlaying } = usePlayer();
+ const [playSignal, setPlaySignal] = useState(0);
+
+ // Cuando la canción cambia y debe reproducirse, incrementa playSignal
+ useEffect(() => {
+ if (currentSong && isPlaying) {
+ setPlaySignal(prev => prev + 1);
+ }
+ }, [currentSong?.id, isPlaying]);
 
  const handleSelectSong = (song: Song, autoPlay = true) => {
  setCurrentSong(song);
@@ -38,6 +47,11 @@ export function GlobalPlayer({ colors, onOpenStudio, onOpenIris }: GlobalPlayerP
  onClosePlayer={() => {
  setCurrentSong(null);
  setIsPlaying(false);
+ }}
+ autoPlay={isPlaying}
+ playSignal={playSignal}
+ onIsPlayingChange={(playing) => {
+ setIsPlaying(playing);
  }}
  />
  );
