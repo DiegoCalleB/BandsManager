@@ -1,4 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import crypto from "crypto";
 
 // lead_messages es la tabla real de historial de conversación por lead - el Agente Enviador ya
 // escribe aquí cada pitch enviado de verdad (server/services/agentEngine.ts). El Lector y el
@@ -15,6 +16,8 @@ export interface DbLeadMessage {
   remitente_nombre: string;
   asunto: string;
   mensaje: string;
+  unsubscribe_token?: string | null;
+  unsubscribe_timestamp?: string | null;
 }
 
 export async function dbGetLeadMessages(leadId: string, bandId: string): Promise<DbLeadMessage[]> {
@@ -38,6 +41,14 @@ export async function dbGetLeadMessages(leadId: string, bandId: string): Promise
   }
 }
 
+/**
+ * Genera un token seguro para unsubscribe (32 bytes en hex = 64 caracteres).
+ * Usado en el footer de emails para permitir a las salas darse de baja (LSSICE).
+ */
+function generateUnsubscribeToken(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
+
 export async function dbLeadMessageExists(id: string): Promise<boolean> {
   try {
     const sb = getSupabase();
@@ -57,8 +68,14 @@ export async function dbCreateLeadMessage(msg: {
   asunto?: string;
   mensaje: string;
   fecha?: string;
+  unsubscribe_token?: string; // Token explícito si lo quieres pasar (normalmente generado aquí)
 }): Promise<DbLeadMessage> {
   const sb = getSupabase();
+
+  // Generar token de baja solo para emails que enviamos (remitente = "banda")
+  // Los mensajes de salas que recibimos no necesitan token (ellos ya pueden responder en el hilo)
+  const unsubscribeToken = msg.remitente === "banda" ? (msg.unsubscribe_token || generateUnsubscribeToken()) : null;
+
   const payload = {
     id: msg.id || `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     lead_id: msg.lead_id,
@@ -67,7 +84,9 @@ export async function dbCreateLeadMessage(msg: {
     remitente_nombre: msg.remitente_nombre || "",
     asunto: msg.asunto || "",
     mensaje: msg.mensaje,
-    fecha: msg.fecha || new Date().toISOString()
+    fecha: msg.fecha || new Date().toISOString(),
+    unsubscribe_token: unsubscribeToken,
+    unsubscribe_timestamp: null
   };
 
   const { data, error } = await sb.from("lead_messages").insert(payload).select().single();

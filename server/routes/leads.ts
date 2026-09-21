@@ -9,6 +9,7 @@ import importRouter from "./leads/import.js";
 import exampleThreadsRouter from "./leads/exampleThreads.js";
 import replyRouter from "./leads/reply.js";
 import emailValidationRouter from "./leads/emailValidation.js";
+import unsubscribeRouter from "./leads/unsubscribe.js";
 
 export * from "./leads/feedback.js";
 
@@ -24,5 +25,6 @@ router.use(importRouter);
 router.use(exampleThreadsRouter);
 router.use(replyRouter);
 router.use(emailValidationRouter);
+router.use(unsubscribeRouter);
 
 export default router;
