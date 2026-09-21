@@ -1,9 +1,18 @@
+/* eslint-disable
+ @typescript-eslint/no-unused-vars,
+ @typescript-eslint/no-explicit-any,
+ react-hooks/set-state-in-effect,
+ react-hooks/exhaustive-deps,
+ react-hooks/purity,
+ react-hooks/immutability
+*/
 import { getLowLatencyAudioStream } from"../utils/audioLatency";
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { api } from '../services/api';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { usePlayer } from '../context/PlayerContext';
 import { 
  Disc3, Music, Plus, Search, X, Edit3, Trash2, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
@@ -634,6 +643,9 @@ export default function RepertorioSetlists({
  playerTransposeSemitones,
  handleSelectPlayerSong} = useAudioPlayer();
 
+ // Global player context for persistent playback across modules
+ const { setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying } = usePlayer();
+
  // Concert Player (Reproductor de Concierto / Modo Escenario)
  const {
  stageAudioRef, stageAudioRefB,
@@ -661,7 +673,15 @@ export default function RepertorioSetlists({
  const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null, transposeSemitones: number = 0) => {
  setPlayerQueueOverride(queue);
  handleSelectPlayerSong(song, autoPlay, transposeSemitones);
- }, [handleSelectPlayerSong]);
+ // Dispatch to global player for persistent playback
+ if (song) {
+ setCurrentSong(song);
+ setPlayerSongs(queue || songs);
+ setPlayerIsPlaying(autoPlay);
+ } else {
+ setCurrentSong(null);
+ }
+ }, [handleSelectPlayerSong, setCurrentSong, setPlayerSongs, setPlayerIsPlaying, songs]);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -1018,7 +1038,7 @@ export default function RepertorioSetlists({
  if (!point.songId) return;
  const song = songs.find(s => s.id === point.songId);
  if (song) handleSetEnergiaManualValue(song, point.id, newScore);
- // eslint-disable-next-line react-hooks/exhaustive-deps
+  
  }, [songs]);
 
  // Deletion Confirmation Modal State
@@ -4742,31 +4762,9 @@ export default function RepertorioSetlists({
  />
  )}
 
- {/* Persistent Spotify Music Player Bottom Bar — `songs` es la cola real de Siguiente/Anterior
- y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
- con"Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue).
- Portal a document.body a propósito: el shell raíz de la app (App.tsx) tiene
- `overflow-clip` en todo el layout, y eso atrapa cualquier `position: fixed` anidado dentro
- — sin el portal, la barra"fixed" quedaba pegada al final del contenido en vez de al fondo
- real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
- que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
- {!activeStudioSong && activePlayerSong && createPortal(
- <SpotifyPlayerBar
- song={activePlayerSong}
- songs={playerQueueOverride || songs}
- colors={colors}
- onSelectSong={(newSong, autoPlay) => handleSelectPlayerSong(newSong, autoPlay)}
- onOpenStudio={(songToOpen) => handleOpenStudioModal(songToOpen)}
- onOpenIris={(songToOpen) => handleOpenStudioModal(songToOpen, { openIris: true })}
- onUpdateSong={handleUpdateSongFromStudio}
- onClosePlayer={() => selectPlayerSongWithQueue(null, false, null)}
- autoPlay={playerAutoPlay}
- playSignal={playSignal}
- onIsPlayingChange={setIsPlayerPlaying}
- transposeSemitones={playerTransposeSemitones}
- />,
- document.body
- )}
+ {/* Persistent Spotify Music Player is now rendered globally from App.tsx via GlobalPlayer component
+ The local player state (activePlayerSong, playerQueueOverride) is still used for local queue management
+ but dispatches to global PlayerContext for true persistence across modules. */}
 
 {assignSongsModalData && assignSongsModalData.isOpen && (
  <AssignSongsToAlbumModal

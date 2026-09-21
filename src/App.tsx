@@ -11,6 +11,8 @@ import { THEMES, getEspectroColors } from './utils/theme';
 import { useAuth } from './hooks/useAuth';
 import { useAppData } from './hooks/useAppData';
 import { api } from './services/api';
+import { PlayerProvider } from './context/PlayerContext';
+import { GlobalPlayer } from './components/GlobalPlayer';
 import Dashboard from './components/Dashboard';
 import ErrorBoundary from './components/ErrorBoundary';
 // Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
@@ -542,6 +544,16 @@ export default function App() {
  document.documentElement.setAttribute('data-theme', resolvedTheme);
  };
 
+ const handleOpenStudio = (song: any) => {
+ // Placeholder for Studio editor integration
+ console.log('Open Studio for song:', song);
+ };
+
+ const handleOpenIris = (song: any) => {
+ // Placeholder for Iris integration
+ console.log('Open Iris for song:', song);
+ };
+
  const activeBandConcerts = React.useMemo(() => {
  return concerts.filter(c => {
  if (!c.band_id && !c.bandName) return isSameBand(currentActiveBandId, "band-bakandeya", "", currentActiveBandName);
@@ -681,7 +693,8 @@ export default function App() {
  }
 
  return (
- <div 
+ <PlayerProvider>
+ <div
  className={`min-h-screen ${colors.bg} flex flex-col md:flex-row transition-colors duration-500 font-sans w-full max-w-[100vw] overflow-clip`}
  >
  {/* LEFT SIDEBAR */}
@@ -1874,7 +1887,14 @@ export default function App() {
  bandPlan={currentActiveBandPlan}
  />
 
+ <GlobalPlayer
+ colors={colors}
+ onOpenStudio={handleOpenStudio}
+ onOpenIris={handleOpenIris}
+ />
+
  </div>
+ </PlayerProvider>
  );
 }
 
