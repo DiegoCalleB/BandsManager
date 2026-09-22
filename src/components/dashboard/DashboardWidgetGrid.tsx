@@ -9,6 +9,7 @@ import {
  WidgetType
 } from '../../types/dashboardWidgets';
 import { CalendarWidget } from './widgets/CalendarWidget';
+import { ExecutiveSummaryHero } from './ExecutiveSummaryHero';
 import {
  CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget,
  EpkStatusWidget, AiAgentWidget, TourStatusWidget
@@ -302,6 +303,8 @@ export function DashboardWidgetGrid({
  isEditMode={isEditMode}
  />
  );
+ case'executive_summary':
+ return <ExecutiveSummaryHero concerts={concerts} leads={leads} rehearsals={rehearsals} onNavigate={onNavigate} />;
  case'repertorio_energy':
  return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} setlists={setlists} songs={songs} />;
  case'crm_pipeline':

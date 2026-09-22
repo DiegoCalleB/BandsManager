@@ -1,5 +1,6 @@
-export type WidgetType = 
+export type WidgetType =
  | 'calendar'
+ | 'executive_summary'
  | 'repertorio_energy'
  | 'crm_pipeline'
  | 'booking_funnel_chart'
@@ -48,13 +49,22 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
  }
  },
  {
+ id: 'executive-summary-widget',
+ type: 'executive_summary',
+ title: 'Resumen Ejecutivo',
+ wSpan: 12,
+ hSpan: 'compact',
+ visible: true,
+ order: 1
+ },
+ {
  id: 'repertorio-energy-widget',
  type: 'repertorio_energy',
  title: 'Flujo de Energía del Repertorio',
  wSpan: 6,
  hSpan: 'normal',
  visible: true,
- order: 1
+ order: 2
  },
  {
  id: 'crm-pipeline-widget',
@@ -63,7 +73,7 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
  wSpan: 6,
  hSpan: 'normal',
  visible: true,
- order: 2
+ order: 3
  },
  {
  id: 'booking-funnel-chart-widget',
@@ -72,7 +82,7 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
  wSpan: 6,
  hSpan: 'normal',
  visible: true,
- order: 3
+ order: 4
  },
  {
  id: 'finances-chart-widget',
@@ -81,7 +91,7 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
  wSpan: 6,
  hSpan: 'normal',
  visible: true,
- order: 4
+ order: 5
  }
 ];
 
@@ -106,6 +116,16 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
  defaultHSpan: 'normal',
  iconName: 'Calendar',
  requiredModule: 'calendario'
+ },
+ {
+ type: 'executive_summary',
+ title: 'Resumen Ejecutivo',
+ category: 'Calendario & Agenda',
+ description: 'Los 4 números que se miran antes que nada: próximo show, caché por cobrar, leads esperando respuesta y próximo ensayo.',
+ defaultWSpan: 12,
+ defaultHSpan: 'compact',
+ iconName: 'Sparkles',
+ requiredModule: 'resumen'
  },
  {
  type: 'repertorio_energy',

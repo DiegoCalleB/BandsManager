@@ -13,7 +13,6 @@ import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
-import { ExecutiveSummaryHero } from './dashboard/ExecutiveSummaryHero';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
@@ -782,15 +781,7 @@ export default function Dashboard({
  </div>
  </div>
 
- {/* RESUMEN EJECUTIVO: los 4 números que se miran antes que nada, fijo, no removible */}
- <ExecutiveSummaryHero
- concerts={concerts}
- leads={leads}
- rehearsals={rehearsals}
- onNavigate={onNavigate}
- />
-
- {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD */}
+ {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD (incluye Resumen Ejecutivo como widget más) */}
  <DashboardWidgetGrid
  currentUser={currentUser}
  concerts={concerts}

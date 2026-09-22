@@ -66,9 +66,9 @@ const CardKpi: React.FC<CardKpiProps> = ({ icon, accentVar, label, valor, contex
 
 /**
  * Los 4 números que un mánager mira antes que nada al abrir la app: cuándo es el próximo show,
- * cuánto le deben, quién espera respuesta suya y cuándo es el próximo ensayo. Fijo, siempre
- * visible, no forma parte del catálogo de widgets removibles — es el "de un vistazo" antes de
- * bajar al panel personalizable.
+ * cuánto le deben, quién espera respuesta suya y cuándo es el próximo ensayo. Widget del
+ * catálogo personalizable (tipo 'executive_summary' en DashboardWidgetGrid) — el usuario decide
+ * si lo tiene, dónde y con qué tamaño, como cualquier otro widget.
  */
 export const ExecutiveSummaryHero: React.FC<ExecutiveSummaryHeroProps> = ({
  concerts = [],
