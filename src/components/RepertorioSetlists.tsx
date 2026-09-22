@@ -792,7 +792,11 @@ export default function RepertorioSetlists({
  // contenedor con scroll propio, para poder leer BPM/tonalidad por tramos sin que se amontonen.
  const [chartZoom, setChartZoom] = useState<boolean>(false);
  // Mostrar u ocultar los indicadores de unión (ticks ✓ o aspas ✕) en el mapa de energía
- const [showTransitionBadges, setShowTransitionBadges] = useState<boolean>(true);
+ // Apagado por defecto: con el fix del yAxisId (ver EnergyChart) estas insignias ✓/✕ pasaron
+ // de estar rotas en silencio a pintarse SIEMPRE, una por cada transición entre canciones
+ // consecutivas — en un setlist normal eso es ruido constante encima de la curva. El toggle
+ // de abajo ("✓ / ✕ Calidad de uniones") sigue ahí para quien las quiera activar.
+ const [showTransitionBadges, setShowTransitionBadges] = useState<boolean>(false);
  // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
  //"⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
  // justo la queja:"estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
