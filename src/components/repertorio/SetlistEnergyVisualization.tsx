@@ -34,16 +34,41 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
    };
   });
 
- // Calcular progreso de reproducción
- const progress = duration > 0 ? Math.min(1, (currentTime || 0) / duration) : 0;
- const progressPercentage = progress * 100;
+ // Encontrar la portada del álbum actual (primera canción reproduciendo o primera del setlist)
+ const playingIndex = chartData.findIndex(d => d.songId === currentPlayingSongId);
+
+ // Calcular progreso a través de TODO el setlist, no solo la canción actual
+ let timeBeforeCurrent = 0;
+ if (playingIndex > 0) {
+  for (let i = 0; i < playingIndex; i++) {
+   const point = chartData[i];
+   if (point.isSong) {
+    const song = songs.find(s => s.id === point.songId);
+    if (song && (song as any).duration) {
+     timeBeforeCurrent += (song as any).duration;
+    }
+   }
+  }
+ }
+
+ // Calcular duración total de todas las canciones en el setlist
+ let totalDuration = 0;
+ for (const point of chartData) {
+  if (point.isSong) {
+   const song = songs.find(s => s.id === point.songId);
+   if (song && (song as any).duration) {
+    totalDuration += (song as any).duration;
+   }
+  }
+ }
+
+ // Calcular progreso total: (tiempo antes + tiempo actual) / duración total
+ const totalTimeElapsed = timeBeforeCurrent + (currentTime || 0);
+ const overallProgress = totalDuration > 0 ? Math.min(1, totalTimeElapsed / totalDuration) : 0;
 
  // Posición del indicador como porcentaje del ancho del contenedor
  // Rango: 2% a 98% para mantenerlo dentro del área visible con margen pequeño
- const indicatorPercent = 2 + progress * 96;
-
- // Encontrar la portada del álbum actual (primera canción reproduciendo o primera del setlist)
- const playingIndex = chartData.findIndex(d => d.songId === currentPlayingSongId);
+ const indicatorPercent = 2 + overallProgress * 96;
  const activeIndex = playingIndex >= 0 ? playingIndex : 0;
  const activeSong = chartData[activeIndex];
  const activeImage = songs.find(s => s.id === activeSong?.songId)?.portadaUrl;
