@@ -565,64 +565,48 @@ export default function SpotifyPlayerBar({
 
  <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 rounded-[var(--r-m)]">
  {isMinimized ? (
- /* Minimized Compact Strip: single-row bar sitting strictly above mobile bottom navbar */
- <div className="flex items-center justify-between gap-2 md:gap-3">
- {/* Left: Thumbnail & Song Info (click to expand) */}
+ /* Minimized Compact Strip: centered controls with song info secondary */
+ <div className="flex flex-col items-center justify-center gap-2 md:gap-3">
+ {/* Top: Song Info (compact on mobile) */}
  <div
  onClick={() => setIsMinimized(false)}
- className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
+ className="flex items-center gap-2 w-full md:flex-row cursor-pointer group"
  title="Haz clic para expandir el reproductor"
  >
- <div className="relative shrink-0 w-10 h-10 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden">
+ <div className="relative shrink-0 w-8 h-8 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden md:w-10 md:h-10">
  {song.portadaUrl ? (
  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
  ) : (
  <div className="w-full h-full bg-[var(--sunken)] flex items-center justify-center">
- <Disc className={`w-5 h-5 ${isPlaying ?'animate-spin text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
+ <Disc className={`w-4 h-4 md:w-5 md:h-5 ${isPlaying ?'animate-spin text-[var(--ok)]' :'text-[var(--ink-2)]'}`} />
  </div>
  )}
  {isPlaying && (
  <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
- <span className="w-0.5 h-3 bg-[var(--surface)] rounded-full" />
- <span className="w-0.5 h-4 bg-[var(--surface)] rounded-full delay-75" />
+ <span className="w-0.5 h-2 md:h-3 bg-[var(--surface)] rounded-full" />
+ <span className="w-0.5 h-3 md:h-4 bg-[var(--surface)] rounded-full delay-75" />
  <span className="w-0.5 h-2 bg-[var(--surface)] rounded-full delay-150" />
  </div>
  )}
  </div>
 
- <div className="min-w-0 flex-1">
- <div className="flex items-center gap-2">
- <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition">{song.titulo}</h4>
- {isDrive && (
- <span className="text-[9px] font-sans px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--hair)] text-[var(--ink-2)] shrink-0">
- Drive
- </span>
- )}
- </div>
- <div className="flex items-center gap-1.5 text-[10px] text-[var(--ink-2)] font-sans mt-0.5 truncate">
- <span className="text-[var(--ink)] font-medium">{song.artista ||'Banda'}</span>
- <span>•</span>
- <span className="text-[var(--ok)] font-semibold">
- {song.tonalidad ||'Am'}
+ <div className="min-w-0 flex-1 text-center md:text-left">
+ <h4 className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition md:text-sm">{song.titulo}</h4>
+ <div className="text-[9px] text-[var(--ink-2)] font-sans truncate md:text-[10px]">
+ <span>{song.artista ||'Banda'}</span>
+ <span className="mx-1">•</span>
+ <span className="text-[var(--ok)] font-semibold">{song.tonalidad ||'Am'}</span>
  {transposeSemitones !== 0 && (
  <span className="text-[var(--alert)] ml-1 font-bold">
- ➔ {transposeChordToken(song.tonalidad ||'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad ||'Am').trim()) ?'ES' :'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
- </span>
- )}
- </span>
- <span>•</span>
- <span>{song.bpm} BPM</span>
- {isCrossfading && nextQueueSong && (
- <span className="text-[var(--ink-2)] font-semibold hidden xs:inline">
- • 🔀 → {nextQueueSong.titulo}
+ {transposeChordToken(song.tonalidad ||'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad ||'Am').trim()) ?'ES' :'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones}st)
  </span>
  )}
  </div>
  </div>
  </div>
 
- {/* Right: Quick Controls */}
- <div className="flex items-center gap-2 sm:gap-2 shrink-0">
+ {/* Center: Centered Controls (focal point) */}
+ <div className="flex items-center gap-2 justify-center shrink-0 md:gap-3">
  <button
  type="button"
  onClick={() => handlePrev()}
@@ -635,10 +619,10 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={togglePlayPause}
- className="w-8 h-8 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center cursor-pointer transition hover:scale-105 active:scale-95"
+ className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition hover:scale-105 active:scale-95"
  title={isPlaying ?"Pausar" :"Reproducir"}
  >
- {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+ {isPlaying ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-0.5" />}
  </button>
 
  <button
@@ -653,7 +637,7 @@ export default function SpotifyPlayerBar({
  <button
  type="button"
  onClick={() => setIsMinimized(false)}
- className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer ml-1"
+ className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer ml-2"
  title="Expandir Reproductor"
  >
  <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
