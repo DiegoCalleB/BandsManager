@@ -465,23 +465,6 @@ export function EnergyChart({
  <ReferenceLine y={liveEnergyScore} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
  )}
 
- {/* Eventos de"speech" (chapa, presentación, interludio...): no cuentan como un bajón de
- energía (score null + connectNulls en la curva de abajo), pero se marcan con su
- propia línea vertical + el icono de su subtipo (💬 chapa, 🎤 presentación, 💣 bis...)
- para que se lea de un vistazo qué es cada marcador, sin confundirlo con la curva. */}
- {chartData.filter((d) => d.isSpeechEvent).map((d) => (
- <ReferenceLine
- key={`speech-${d.id}`}
- x={d.xPos}
- stroke={d.color}
- strokeWidth={2}
- strokeDasharray="4 3"
- strokeOpacity={0.85}
- ifOverflow="extendDomain"
- label={{ value: d.icon, position:'insideTop', fontSize: compact ? 13 : 20, fill:'var(--ink)' }}
- />
- ))}
-
  {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
  camino entre ambos puntos, mismo patrón que los eventos de"speech" de arriba. */}
  {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
@@ -807,6 +790,24 @@ export function EnergyChart({
  connectNulls
  />
  )}
+
+ {/* Eventos de"speech" (chapa, presentación, interludio...): no cuentan como un bajón de
+ energía (score null + connectNulls en la curva de arriba), pero se marcan con su propia
+ línea vertical + el icono de su subtipo (💬 chapa, 🎤 presentación, 💣 bis...) para que se
+ lea de un vistazo qué es cada marcador, sin confundirlo con la curva. Se pintan los
+ ÚLTIMOS a propósito (después del área/curva) para quedar SIEMPRE por encima del relleno
+ semitransparente — si no, el propio relleno de la curva las tapaba casi por completo. */}
+ {chartData.filter((d) => d.isSpeechEvent).map((d) => (
+ <ReferenceLine
+ key={`speech-${d.id}`}
+ x={d.xPos}
+ stroke={d.color}
+ strokeWidth={2}
+ strokeDasharray="4 3"
+ ifOverflow="extendDomain"
+ label={{ value: d.icon, position:'insideTop', fontSize: compact ? 13 : 20, fill:'var(--ink)' }}
+ />
+ ))}
  </ComposedChart>
  </ResponsiveContainer>
  </div>
