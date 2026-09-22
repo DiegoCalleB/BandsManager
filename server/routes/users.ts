@@ -1312,10 +1312,15 @@ router.post("/auth/switch-band", async (req, res) => {
       ((u.email && u.email.toLowerCase() === userEmail) || u.username.toLowerCase() === userEmail)
   );
 
-  const isBakandeyaBand = cleanTargetBand === 'bakandeya';
   const isGlobalAdmin = currentUser.role === 'admin';
 
-  if (!hasAccessInUserBands && !hasAccessInRegisteredBands && !legacyTargetUser && !isBakandeyaBand && !isGlobalAdmin) {
+  // 'bakandeya' NUNCA fue una excepción legítima aquí: cualquier cuenta autenticada podía
+  // cambiarse a la banda insignia (band-bakandeya) sin tener vínculo real vía userBands,
+  // registeredBands ni legacyTargetUser, con acceso de lectura/escritura completo a partir de
+  // ahí — y el band_id que quedaba asignado era el crudo del body, sin normalizar al prefijo
+  // canónico (ver bandInfo más abajo). Solo el admin global salta el chequeo de pertenencia,
+  // igual que con cualquier otra banda.
+  if (!hasAccessInUserBands && !hasAccessInRegisteredBands && !legacyTargetUser && !isGlobalAdmin) {
     return res.status(404).json({ error: "No tienes acceso a esta banda" });
   }
 
@@ -1339,8 +1344,13 @@ router.post("/auth/switch-band", async (req, res) => {
 
   const resolvedName = bandInfo ? (bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name) : (cleanTargetBand === 'bakandeya' ? 'BAKANDEYA' : targetUser.bandName || 'Banda');
   const resolvedPlan = normalizePlan(bandInfo?.plan || targetUser.plan || 'ensayo');
+  // El id CANÓNICO del registro encontrado (bandInfo.band_id), no el crudo del body: si alguien
+  // manda "bakandeya" sin prefijo pero el registro real es "band-bakandeya", guardar el crudo
+  // creaba un band_id gemelo sin datos la próxima vez que algo hiciera ensureRegisteredBandExists
+  // con ese id suelto. Solo cae al crudo si no hay bandInfo (caso legacy sin registro).
+  const canonicalBandId = bandInfo?.band_id || band_id;
 
-  targetUser.band_id = band_id;
+  targetUser.band_id = canonicalBandId;
   targetUser.bandName = resolvedName;
   targetUser.plan = isGlobalAdmin ? 'cabeza_de_cartel' : resolvedPlan;
   if (isGlobalAdmin) {
@@ -1351,7 +1361,7 @@ router.post("/auth/switch-band", async (req, res) => {
   if (state.users) {
     state.users.forEach((u: any) => {
       if (u.id === targetUser.id || (userEmail && (u.email?.toLowerCase() === userEmail || u.username?.toLowerCase() === userEmail))) {
-        u.band_id = band_id;
+        u.band_id = canonicalBandId;
         u.bandName = resolvedName;
         u.plan = isGlobalAdmin ? 'cabeza_de_cartel' : resolvedPlan;
         if (isGlobalAdmin) u.role = 'admin';
