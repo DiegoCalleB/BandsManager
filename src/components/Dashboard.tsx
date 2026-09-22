@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost, Setlist, Song } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { usePlayer } from '../context/PlayerContext';
 import { isSameBandId } from '../utils/bandUtils';
 import { api } from '../services/api';
 import DirectionsCard from './DirectionsCard';
@@ -68,14 +69,14 @@ const isManagement = (l?: Lead | null) => {
  return ['agencia','manager','productora','sello','promotora','management'].some(t => s.includes(t));
 };
 
-export default function Dashboard({ 
- leads, 
- colors, 
- onUpdateLead, 
- onAddLead, 
- metrics = [], 
- concerts = [], 
- rehearsals = [], 
+export default function Dashboard({
+ leads,
+ colors,
+ onUpdateLead,
+ onAddLead,
+ metrics = [],
+ concerts = [],
+ rehearsals = [],
  currentUser,
  bandName,
  currentBandId,
@@ -88,6 +89,7 @@ export default function Dashboard({
  onOpenProfileModal,
  isPromoPlan: isPromoPlanProp
 }: DashboardProps) {
+ const { setSongs: setPlayerSongs, setCurrentSong, currentSong } = usePlayer();
  const [searchTerm, setSearchTerm] = useState('');
  const [cityFilter, setCityFilter] = useState('todos');
  const [genreFilter, setGenreFilter] = useState('todos');
@@ -151,6 +153,10 @@ export default function Dashboard({
  if (songsRes?.songs && Array.isArray(songsRes.songs)) {
  setSongs(songsRes.songs);
  setSongsCount(songsRes.songs.length);
+ setPlayerSongs(songsRes.songs);
+ if (!currentSong && songsRes.songs.length > 0) {
+ setCurrentSong(songsRes.songs[0]);
+ }
  }
  if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
  setSetlists(setlistsRes.setlists);
@@ -162,12 +168,13 @@ export default function Dashboard({
  setSongsCount(0);
  setSongs([]);
  setSetlists([]);
+ setPlayerSongs([]);
  }
  }
  };
  loadRepertorioData();
  return () => { isMounted = false; };
- }, [currentBandId]);
+ }, [currentBandId, currentSong, setPlayerSongs, setCurrentSong]);
 
  const storedSongsCount = songsCount;
 
