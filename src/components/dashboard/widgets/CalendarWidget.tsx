@@ -366,7 +366,7 @@ export function CalendarWidget({
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
- <span className="text-sm font-sans font-bold capitalize text-[var(--acc)]/70">
+ <span className="text-sm font-bold capitalize text-[var(--ink-2)]">
  {fullMonthName}
  </span>
  <button
@@ -379,9 +379,9 @@ export function CalendarWidget({
  </div>
 
  {/* Grid of days */}
- <div className="grid grid-cols-7 gap-1 text-center font-sans text-xs">
+ <div className="grid grid-cols-7 gap-1 text-center text-xs">
  {['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d => (
- <div key={d} className="text-[10px] text-[var(--ink-2)] font-bold py-1">{d}</div>
+ <div key={d} className="text-[10px] text-[var(--ink-3)] font-bold py-1">{d}</div>
  ))}
 
  {/* Empty slots for start padding */}
@@ -411,10 +411,10 @@ export function CalendarWidget({
  isSelected
  ?'bg-[var(--acc)]/20 text-[var(--ink)] font-bold'
  : isToday
- ?'bg-[var(--surface)]/60 /40 text-[var(--acc)] font-black'
+ ?'bg-[var(--acc)]/10 text-[var(--acc)] font-bold'
  : dayEvents.length > 0
- ?'bg-[var(--surface)] /80 text-[var(--ink-2)] hover:/30'
- :'bg-[var(--surface)]/50 /40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
+ ?'bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]'
+ :'bg-[var(--sunken)]/50 text-[var(--ink-2)] hover:bg-[var(--sunken)]'
  }`}
  >
  <span className="leading-none">{dayNum}</span>
@@ -441,7 +441,7 @@ export function CalendarWidget({
  <div
  key={evt.id}
  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: evt.id, selectedDate: evt.dateStr })}
- className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:/40 flex items-center justify-between cursor-pointer"
+ className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--surface)] flex items-center justify-between cursor-pointer transition-colors"
  >
  <div>
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
@@ -479,10 +479,10 @@ export function CalendarWidget({
  return (
  <div
  key={dateStr}
- className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans flex flex-col justify-between min-h-[90px] transition-all ${
+ className={`p-2.5 rounded-[var(--r-m)] text-xs flex flex-col justify-between min-h-[90px] transition-all ${
  dayEvts.length > 0
- ?'bg-[var(--surface)] /40'
- :'bg-[var(--surface)]/60'
+ ?'bg-[var(--surface)]'
+ :'bg-[var(--sunken)]/50'
  }`}
  >
  <div className="flex items-center justify-between pb-1">
