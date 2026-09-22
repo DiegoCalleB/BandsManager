@@ -112,7 +112,19 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
     notify_on_every_proposal: Boolean(config.notifyOnEveryProposal ?? config.notify_on_every_proposal ?? true),
     require_human_for_final_sign_off: Boolean(config.requireHumanForFinalSignOff ?? config.require_human_for_final_sign_off ?? true),
     dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail",
-    response_strategies: config.responseStrategies || config.response_strategies || {},
+    // Como min_cache_by_type/negotiation_start_cache_by_type abajo: si el caller no manda este
+ // campo, se deja `undefined` (Supabase omite la columna del UPDATE, preservando lo que
+ // hubiera) en vez de {}. Antes caía a {} — el botón general "Guardar" del panel de
+ // Autonomía nunca incluye responseStrategies en su payload (vive en su propio estado y se
+ // guarda por un botón aparte, "Guardar estrategias"), así que pulsar "Guardar" borraba en
+ // silencio TODAS las estrategias de respuesta condicionales configuradas en la otra
+ // pestaña. Mismo mecanismo que el bug ya arreglado de `miembros` en epk.ts, pero disparado
+ // por el flujo normal de guardado, no por un caso especial como el onboarding.
+ response_strategies: (config.responseStrategies && typeof config.responseStrategies ==="object")
+ ? config.responseStrategies
+ : (config.response_strategies && typeof config.response_strategies ==="object")
+ ? config.response_strategies
+ : undefined,
     min_cache_by_type: (config.minCacheByType && typeof config.minCacheByType === "object")
       ? config.minCacheByType
       : undefined,

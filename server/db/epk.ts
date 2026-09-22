@@ -263,6 +263,19 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   const providedRevolut = config.donacionRevolut || config.donacion_revolut || {};
   const mergedRevolut = { ...existingRevolut, ...providedRevolut };
 
+  // Mismo motivo que enlacesRedes/contactoBooking arriba, y no solo el fallback-si-undefined que
+  // tenían antes: el wizard de onboarding SÍ manda cifrasClave/resenasPrensa (aunque sea un
+  // objeto vacío, no hace spread de lo existente como sí hace con datosContratacion), así que
+  // caían al valor entrante entero en vez de a `existing` — completar el onboarding podía
+  // borrar sub-claves que el editor completo del EPK sí conocía.
+  const existingCifras = existing?.cifrasClave || {};
+  const providedCifras = config.cifrasClave || config.cifras_clave || {};
+  const mergedCifras = { ...existingCifras, ...providedCifras };
+
+  const existingResenas = existing?.resenasPrensa || {};
+  const providedResenas = config.resenasPrensa || config.resenas_prensa || {};
+  const mergedResenas = { ...existingResenas, ...providedResenas };
+
   // Las traducciones se mezclan POR IDIOMA: guardar la versión inglesa no puede borrar de un
   // plumazo la francesa el día que existan. Dentro de cada idioma sí se reemplaza entero, que
   // es lo que manda el gestor del EPK cuando la banda guarda su repaso.
@@ -312,8 +325,8 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     firma_email: mergedFirma,
     traducciones: mergedTraducciones,
     audio_preview: (config.audioPreview !== undefined ? config.audioPreview : (config.audio_preview !== undefined ? config.audio_preview : existing?.audioPreview)) || {},
-    cifras_clave: (config.cifrasClave !== undefined ? config.cifrasClave : (config.cifras_clave !== undefined ? config.cifras_clave : existing?.cifrasClave)) || {},
-    resenas_prensa: (config.resenasPrensa !== undefined ? config.resenasPrensa : (config.resenas_prensa !== undefined ? config.resenas_prensa : existing?.resenasPrensa)) || {},
+    cifras_clave: mergedCifras,
+    resenas_prensa: mergedResenas,
     plantilla: (config.plantilla !== undefined ? config.plantilla : existing?.plantilla) || 'stage',
     orden_secciones: (config.ordenSecciones !== undefined ? config.ordenSecciones : (config.orden_secciones !== undefined ? config.orden_secciones : existing?.ordenSecciones)) || null,
     secciones_ocultas: (config.seccionesOcultas !== undefined ? config.seccionesOcultas : (config.secciones_ocultas !== undefined ? config.secciones_ocultas : existing?.seccionesOcultas)) || null

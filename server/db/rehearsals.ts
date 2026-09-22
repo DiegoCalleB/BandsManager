@@ -75,11 +75,18 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
 
   // Ver nota equivalente en dbUpsertConcert: un id que no pertenece a la banda del usuario no se
   // reutiliza nunca (evita sobrescribir/robar el ensayo de otra banda por coincidencia de id).
+  // El SELECT trae también los campos JSONB/array que un caller parcial podría no mandar
+  // (agenda, objetivos, grabaciones, cronómetro, acta) — sin esto no hay forma de preservarlos
+  // si el payload entrante no los incluye; antes se reseteaban a []/{} en silencio en cualquier
+  // guardado que no los trajera, igual que le pasó a `miembros` en epk.ts.
   let finalRehearsalId = rehearsal.id;
+  let existing: any = null;
   if (finalRehearsalId) {
-    const { data: existing } = await sb.from("rehearsals").select("id, band_id").eq("id", finalRehearsalId).maybeSingle();
+    const { data } = await sb.from("rehearsals").select("id, band_id, agenda, objetivos, grabaciones, cronometro_estado, acta").eq("id", finalRehearsalId).maybeSingle();
+    existing = data;
     if (existing && existing.band_id !== targetBandId) {
       finalRehearsalId = `reh-${Date.now()}`;
+      existing = null;
     }
   }
 
@@ -101,13 +108,15 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
     convocatoria_tipo: rehearsal.convocatoria_tipo || rehearsal.convocatoriaTipo || "completa",
     convocados_ids: parseSafeArray(rehearsal.convocados_ids || rehearsal.convocadosIds),
     convocados_nombres: parseSafeArray(rehearsal.convocados_nombres || rehearsal.convocadosNombres),
-    agenda: rehearsal.agenda || [],
-    objetivos: rehearsal.objetivos || [],
+    agenda: rehearsal.agenda !== undefined ? rehearsal.agenda : (existing?.agenda ?? []),
+    objetivos: rehearsal.objetivos !== undefined ? rehearsal.objetivos : (existing?.objetivos ?? []),
     duracion_estimada_min: rehearsal.duracion_estimada_min ?? rehearsal.duracionEstimadaMin ?? 0,
     duracion_real_seg: rehearsal.duracion_real_seg ?? rehearsal.duracionRealSeg ?? 0,
-    cronometro_estado: rehearsal.cronometro_estado || rehearsal.cronometroEstado || {},
-    acta: rehearsal.acta || {},
-    grabaciones: rehearsal.grabaciones || [],
+    cronometro_estado: (rehearsal.cronometro_estado ?? rehearsal.cronometroEstado) !== undefined
+      ? (rehearsal.cronometro_estado || rehearsal.cronometroEstado)
+      : (existing?.cronometro_estado ?? {}),
+    acta: rehearsal.acta !== undefined ? rehearsal.acta : (existing?.acta ?? {}),
+    grabaciones: rehearsal.grabaciones !== undefined ? rehearsal.grabaciones : (existing?.grabaciones ?? []),
     rating_general: rehearsal.rating_general ?? rehearsal.ratingGeneral ?? null,
     temperatura_local: rehearsal.temperatura_local || rehearsal.temperaturaLocal || null
   };

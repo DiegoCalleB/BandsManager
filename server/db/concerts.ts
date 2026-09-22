@@ -56,11 +56,16 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   // OTRA banda, este upsert lo sobrescribiría y se lo reasignaría a la banda del llamador. Un id
   // que no pertenece a la banda del usuario no se reutiliza nunca.
   let finalConcertId = concert.id;
+  let existingConcert: any = null;
   if (finalConcertId) {
-    const existing = await sb.from("concerts").select("band_id").eq("id", finalConcertId).maybeSingle();
+    // gastos_detalle también viene en este SELECT: sin fetch previo no hay forma de preservarlo
+    // si un guardado parcial no lo incluye — antes se reseteaba a {} en silencio.
+    const existing = await sb.from("concerts").select("band_id, gastos_detalle").eq("id", finalConcertId).maybeSingle();
     if (existing.data && existing.data.band_id && cleanBandId(existing.data.band_id) !== targetBandId) {
       console.warn(`[dbUpsertConcert] Conflicto de band_id en id ${finalConcertId}. Se generará un id nuevo.`);
       finalConcertId = `cnc-${Date.now()}`;
+    } else {
+      existingConcert = existing.data;
     }
   }
 
@@ -80,7 +85,9 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     notas: concert.notas || "",
     tipo: concert.tipo || "sala",
     setlist_id: concert.setlist_id || concert.setlistId || null,
-    gastos_detalle: concert.gastos_detalle || concert.gastosDetalle || {},
+    gastos_detalle: (concert.gastos_detalle ?? concert.gastosDetalle) !== undefined
+      ? (concert.gastos_detalle || concert.gastosDetalle)
+      : (existingConcert?.gastos_detalle ?? {}),
     gastos_estimados_tipicos: Number(concert.gastos_estimados_tipicos || concert.gastosEstimadosTipicos || 0),
     convocatoria_tipo: concert.convocatoria_tipo || concert.convocatoriaTipo || "completa",
     convocados_ids: concert.convocados_ids || concert.convocadosIds || [],
