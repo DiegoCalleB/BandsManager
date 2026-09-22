@@ -179,6 +179,11 @@ export function EnergyChart({
  const containerRef = useRef<HTMLDivElement>(null);
  const [draggingFromIndex, setDraggingFromIndex] = useState<number | null>(null);
  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+ // Índice (en songsOnlyData) del punto"activo" para mostrar su detalle — el detalle vive en un
+ // panel FUERA del SVG, nunca como tooltip flotante encima de la curva (en móvil, sin"salir con
+ // el ratón" para cerrarlo, se quedaba pegado tapando el gráfico entero). Se cierra al soltar el
+ // dedo/ratón fuera del gráfico, al tocar el mismo punto otra vez, o con la ✕ del panel.
+ const [activePointIndex, setActivePointIndex] = useState<number | null>(null);
  const draggingFromIndexRef = useRef<number | null>(null);
  const activePointerIdRef = useRef<number | null>(null);
  const dragStartClientXRef = useRef<number | null>(null);
@@ -363,14 +368,20 @@ export function EnergyChart({
  }, [draggingFromIndex, pxPerEnergyUnit]);
 
  return (
+ <div>
  <div
  ref={containerRef}
+ onClick={(e) => {
+ if (draggingFromIndex !== null) return;
+ const idx = getIndexFromClientX(e.clientX);
+ setActivePointIndex((prev) => (prev === idx ? null : idx));
+ }}
  className={`relative w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden`}
  style={{
  height,
  width: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
  minWidth: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
- cursor: draggingFromIndex !== null ? (dragAxis ==='y' ?'ns-resize' :'ew-resize') : undefined
+ cursor: draggingFromIndex !== null ? (dragAxis ==='y' ?'ns-resize' :'ew-resize') : (onSelectItem || onReorder || onEnergyChange) ?'pointer' : undefined
  }}
  >
  {!compact && (
@@ -424,7 +435,11 @@ export function EnergyChart({
  </div>
  )}
  <ResponsiveContainer width="100%" height="100%">
- <ComposedChart key={setlistKey} data={songsOnlyData} margin={compact ? { top: 8, right: 8, left: -22, bottom: 0 } : { top: 14, right: 14, left: -18, bottom: 0 }}>
+ <ComposedChart
+ key={setlistKey}
+ data={songsOnlyData}
+ margin={compact ? { top: 8, right: 8, left: -22, bottom: 0 } : { top: 14, right: 14, left: -18, bottom: 0 }}
+ >
  <defs>
  <linearGradient id={`energyStrokeGradient${gradientSuffix}`} x1="0" y1="0" x2="1" y2="0">
  {songsOnlyData.map((d, i) => (
@@ -550,71 +565,10 @@ export function EnergyChart({
  />
  )}
 
- <RechartsTooltip
- cursor={{ stroke:'var(--ink-2)', strokeDasharray:'3 3' }}
- content={({ active, payload }: any) => {
- if (!active || !payload?.length) return null;
- const d = payload[0].payload;
- return (
- <div className="bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] max-w-[200px]">
- <p className="font-bold text-[var(--acc)] text-[10px]">#{d.idx + 1} {d.name}</p>
- {d.isSpeechEvent ? (
- <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{d.icon}</span> Interludio / Pausa — meseta de energía
- </p>
- ) : (
- <>
- <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{d.icon}</span> {d.label} ({d.score}/20)
- </p>
- {typeof d.bpm ==='number' && (
- <p className="text-[var(--ink-3)] mt-0.5">🥁 {d.bpm} BPM</p>
- )}
- {d.tonalidad && (
- <p className="text-[var(--acc)]/70 mt-0.5">🎼 {d.tonalidad}</p>
- )}
- {d.variance > 0 && (
- <p className="text-[var(--ink-3)] mt-0.5">
- 🎧 Dinámica interna: {d.variance >= 6 ?'alta (sube y baja mucho)' : d.variance >= 3 ?'media' :'suave'}
- </p>
- )}
- {showIdealCurve && typeof d.idealScore ==='number' && Math.abs(d.idealScore - d.score) >= 2 && (
- <p className="text-[var(--ink-2)] mt-0.5">
- 〰️ Ideal aquí: ~{d.idealScore}/20
- </p>
- )}
- {d.transitionFromPrev && (
- <div className={`mt-1.5 pt-1 ${
- d.transitionFromPrev.status ==='ok' ?'text-[var(--ink-2)]' :'text-[var(--ink-2)]'
- }`}>
- <div className="flex items-center gap-1 font-bold">
- <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
- d.transitionFromPrev.status ==='ok'
- ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
- :'bg-[var(--alert)]/20 text-[var(--ink-2)]'
- }`}>
- {d.transitionFromPrev.icon}
- </span>
- <span>Unión con #{d.idx}: {d.transitionFromPrev.status ==='ok' ?'Fluida' :'Revisar'} ({d.transitionFromPrev.scorePercent}%)</span>
- </div>
- {d.transitionFromPrev.motivos.length > 0 && (
- <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
- {d.transitionFromPrev.motivos.join( '·')}
- </p>
- )}
- </div>
- )}
- {d.idx > 0 && onPreviewTransition && (
- <p className="text-[var(--acc)] font-semibold mt-1 pt-1 flex items-center gap-1 cursor-pointer hover:underline">
- 🎧 Probar unión con #{d.idx}
- </p>
- )}
- </>
- )}
- </div>
- );
- }}
- />
+ {/* Solo la línea guía vertical del cursor — el detalle del punto YA NO se pinta aquí como
+ tooltip flotante (ver panel fijo debajo del ResponsiveContainer): en móvil, sin"salir con
+ el ratón" para cerrarlo, se quedaba pegado encima de la curva tapando el gráfico entero. */}
+ <RechartsTooltip cursor={{ stroke:'var(--ink-2)', strokeDasharray:'3 3' }} content={() => null} />
 
  {/* Curva"ideal" de referencia — dibujada ANTES (por debajo, en capas) que la curva real
  para poder comparar de un vistazo dónde se aleja más, sin depender del texto del
@@ -815,6 +769,81 @@ export function EnergyChart({
  ))}
  </ComposedChart>
  </ResponsiveContainer>
+ </div>
+ {/* Panel de detalle del punto activo — FUERA del contenedor del gráfico (que tiene
+ overflow-hidden y alto fijo), debajo de él, nunca flotando encima de la curva. Ver
+ comentario en RechartsTooltip más arriba sobre por qué se sacó de ahí. */}
+ {activePointIndex !== null && chartData[activePointIndex] && (() => {
+ const d = chartData[activePointIndex];
+ return (
+ <div className="mt-2 bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] relative">
+ <button
+ type="button"
+ onClick={() => setActivePointIndex(null)}
+ className="absolute top-1.5 right-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+ title="Cerrar"
+ >
+ ✕
+ </button>
+ <p className="font-bold text-[var(--acc)] text-[10px] pr-4">#{d.idx + 1} {d.name}</p>
+ {d.isSpeechEvent ? (
+ <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <span>{d.icon}</span> Interludio / Pausa — meseta de energía
+ </p>
+ ) : (
+ <>
+ <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
+ <span>{d.icon}</span> {d.label} ({d.score}/20)
+ </p>
+ {typeof d.bpm ==='number' && (
+ <p className="text-[var(--ink-3)] mt-0.5">🥁 {d.bpm} BPM</p>
+ )}
+ {d.tonalidad && (
+ <p className="text-[var(--acc)]/70 mt-0.5">🎼 {d.tonalidad}</p>
+ )}
+ {d.variance > 0 && (
+ <p className="text-[var(--ink-3)] mt-0.5">
+ 🎧 Dinámica interna: {d.variance >= 6 ?'alta (sube y baja mucho)' : d.variance >= 3 ?'media' :'suave'}
+ </p>
+ )}
+ {showIdealCurve && typeof d.idealScore ==='number' && Math.abs(d.idealScore - d.score) >= 2 && (
+ <p className="text-[var(--ink-2)] mt-0.5">
+ 〰️ Ideal aquí: ~{d.idealScore}/20
+ </p>
+ )}
+ {d.transitionFromPrev && (
+ <div className="mt-1.5 pt-1">
+ <div className="flex items-center gap-1 font-bold">
+ <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
+ d.transitionFromPrev.status ==='ok'
+ ?'bg-[var(--ok)]/20 text-[var(--ink-2)]'
+ :'bg-[var(--alert)]/20 text-[var(--ink-2)]'
+ }`}>
+ {d.transitionFromPrev.icon}
+ </span>
+ <span>Unión con #{d.idx}: {d.transitionFromPrev.status ==='ok' ?'Fluida' :'Revisar'} ({d.transitionFromPrev.scorePercent}%)</span>
+ </div>
+ {d.transitionFromPrev.motivos.length > 0 && (
+ <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
+ {d.transitionFromPrev.motivos.join( '·')}
+ </p>
+ )}
+ </div>
+ )}
+ {d.idx > 0 && onPreviewTransition && (
+ <button
+ type="button"
+ onClick={() => onPreviewTransition(d.idx)}
+ className="text-[var(--acc)] font-semibold mt-1 pt-1 flex items-center gap-1 cursor-pointer hover:underline"
+ >
+ 🎧 Probar unión con #{d.idx}
+ </button>
+ )}
+ </>
+ )}
+ </div>
+ );
+ })()}
  </div>
  );
 }
