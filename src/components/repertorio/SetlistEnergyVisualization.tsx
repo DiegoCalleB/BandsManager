@@ -20,10 +20,6 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
  currentTime = 0,
  duration = 0
 }) => {
- // DEBUG
- React.useEffect(() => {
-  console.log('SetlistEnergyVisualization:', { currentTime, duration, currentPlayingSongId });
- }, [currentTime, duration, currentPlayingSongId]);
  // Mapear datos del gráfico a Onda (barras)
  const ondaData = chartData
   .filter(d => d.isSong && d.score !== null)
@@ -122,21 +118,23 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
          tooltipFormatter={(v) => `${Math.round(v * 100)}%`}
        />
 
-       {/* Indicador de progreso animado - VISIBLE SIEMPRE PARA DEBUG */}
-       <div
-         className="absolute transition-all duration-100 ease-linear pointer-events-none"
-         style={{
-           left: `${indicatorPercent}%`,
-           top: '50%',
-           transform: 'translate(-50%, -50%)',
-           width: '6px',
-           height: '140px',
-           backgroundColor: 'var(--ok)',
-           opacity: 0.7,
-           borderRadius: '3px',
-           zIndex: 10
-         }}
-       />
+       {/* Indicador de progreso animado - Puntito verde que avanza a través del setlist */}
+       {currentPlayingSongId && totalDuration > 0 && (
+         <div
+           className="absolute transition-all duration-100 ease-linear pointer-events-none"
+           style={{
+             left: `${indicatorPercent}%`,
+             top: '50%',
+             transform: 'translate(-50%, -50%)',
+             width: '8px',
+             height: '8px',
+             backgroundColor: 'var(--ok)',
+             borderRadius: '50%',
+             boxShadow: '0 0 8px var(--ok), 0 0 16px rgba(var(--ok), 0.3)',
+             zIndex: 10
+           }}
+         />
+       )}
      </div>
 
      {/* Leyenda */}
