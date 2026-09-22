@@ -61,15 +61,33 @@ export function DashboardWidgetGrid({
  // Load saved widgets from user preferences or use default, filtering by module access
  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as DashboardWidgetConfig[] | undefined;
  
+ // true si la carga inicial tuvo que quitar algún widget duplicado — dispara un guardado
+ // silencioso una vez montado, para que la limpieza no se pierda en la próxima carga (ver
+ // debajo del todo de este componente).
+ const hadDuplicatesOnLoadRef = React.useRef(false);
+
  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
  const initial = (Array.isArray(savedWidgets) && savedWidgets.length > 0) ? savedWidgets : DEFAULT_DASHBOARD_WIDGETS;
- return initial.filter(w => {
+ const withModuleAccess = initial.filter(w => {
  const meta = AVAILABLE_MODULE_WIDGETS.find(m => m.type === w.type);
  if (meta && meta.requiredModule) {
  return hasModuleAccess(userPlan, meta.requiredModule);
  }
  return true;
  });
+ // Un tipo de widget solo puede estar una vez en el panel — de guardados anteriores a este
+ // cambio pueden quedar duplicados ("Añadir Otro" lo permitía a propósito). Se mantiene solo
+ // la primera aparición de cada tipo, en el orden guardado.
+ const seenTypes = new Set<string>();
+ const deduped = withModuleAccess.filter(w => {
+ if (seenTypes.has(w.type)) return false;
+ seenTypes.add(w.type);
+ return true;
+ });
+ if (deduped.length !== withModuleAccess.length) {
+ hadDuplicatesOnLoadRef.current = true;
+ }
+ return deduped;
  });
 
  const [isEditMode, setIsEditMode] = useState(false);
@@ -101,6 +119,17 @@ export function DashboardWidgetGrid({
  setWidgets(ordered);
  saveLayoutToDb(ordered);
  };
+
+ // Si la carga inicial tuvo que quitar duplicados (guardados antes de este cambio), persiste
+ // la limpieza una sola vez — si no, el duplicado seguiría reapareciendo en cada recarga hasta
+ // que el usuario tocara algo manualmente.
+ React.useEffect(() => {
+ if (hadDuplicatesOnLoadRef.current) {
+ hadDuplicatesOnLoadRef.current = false;
+ saveLayoutToDb(widgets);
+ }
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, []);
 
  // Drag and drop handlers
  const handleDragStart = (e: React.DragEvent, id: string) => {
@@ -216,6 +245,12 @@ export function DashboardWidgetGrid({
  if (meta.requiredModule && !hasModuleAccess(userPlan, meta.requiredModule)) {
  return;
  }
+
+ // Cada tipo de widget solo puede estar una vez en el panel — antes se permitía "Añadir Otro"
+ // a propósito, pero dos copias del mismo widget (mismos datos, mismo gráfico) no aportan nada
+ // y solo confunden el panel. Defensa aparte del botón deshabilitado más abajo, por si algo
+ // más llega a llamar a esta función directamente.
+ if (widgets.some(w => w.type === type && w.visible)) return;
 
  const newWidget: DashboardWidgetConfig = {
  id: `${type}-${Date.now()}`,
@@ -615,10 +650,15 @@ export function DashboardWidgetGrid({
  <button
  type="button"
  onClick={() => handleAddWidget(item.type)}
- className="px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1 active:scale-95"
+ disabled={isAlreadyAdded}
+ className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-all shrink-0 flex items-center gap-1 ${
+ isAlreadyAdded
+ ?'bg-[var(--sunken)] text-[var(--ink-3)] cursor-default'
+ :'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-95'
+ }`}
  >
- <Plus className="w-4 h-4" />
- <span>{isAlreadyAdded ?'Añadir Otro' :'Añadir'}</span>
+ {isAlreadyAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+ <span>{isAlreadyAdded ?'Ya en tu panel' :'Añadir'}</span>
  </button>
  </div>
  );
