@@ -666,7 +666,7 @@ export function SongTransitionPreviewModal({
  color: energyInfoA.hexColor
  }}
  >
- {energyInfoA.icon} {songA.energia ?? 10}/20
+ {energyInfoA.icon} {Math.round((songA.energia ?? 10) / 2)}/10
  </span>
  </div>
  </div>
@@ -809,7 +809,7 @@ export function SongTransitionPreviewModal({
  color: energyInfoB.hexColor
  }}
  >
- {energyInfoB.icon} {songB.energia ?? 10}/20
+ {energyInfoB.icon} {Math.round((songB.energia ?? 10) / 2)}/10
  </span>
  </div>
  </div>

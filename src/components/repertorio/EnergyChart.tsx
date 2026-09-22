@@ -416,8 +416,8 @@ export function EnergyChart({
  })
  }}
  >
- <span className="font-bold text-base" style={{ color: info.hexColor }}>{info.icon} {liveEnergyScore}</span>
- <span className="text-[var(--ink-2)]">/20 · {info.label}</span>
+ <span className="font-bold text-base" style={{ color: info.hexColor }}>{info.icon} {Math.round(liveEnergyScore / 2)}</span>
+ <span className="text-[var(--ink-2)]">/10 · {info.label}</span>
  </div>
  );
  })()}
@@ -793,7 +793,7 @@ export function EnergyChart({
  ) : (
  <>
  <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
- <span>{d.icon}</span> {d.label} ({d.score}/20)
+ <span>{d.icon}</span> {d.label} ({Math.round(d.score / 2)}/10)
  </p>
  {typeof d.bpm ==='number' && (
  <p className="text-[var(--ink-3)] mt-0.5">🥁 {d.bpm} BPM</p>
@@ -808,7 +808,7 @@ export function EnergyChart({
  )}
  {showIdealCurve && typeof d.idealScore ==='number' && Math.abs(d.idealScore - d.score) >= 2 && (
  <p className="text-[var(--ink-2)] mt-0.5">
- 〰️ Ideal aquí: ~{d.idealScore}/20
+ 〰️ Ideal aquí: ~{Math.round(d.idealScore / 2)}/10
  </p>
  )}
  {d.transitionFromPrev && (

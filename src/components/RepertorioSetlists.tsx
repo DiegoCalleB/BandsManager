@@ -3287,9 +3287,9 @@ export default function RepertorioSetlists({
  background:'var(--sunken)',
  color:'var(--ink-3)'
  }}
- title={info ? `${info.label} · ${point.score}/20` : point.name}
+ title={info ? `${info.label} · ${Math.round((point.score as number) / 2)}/10` : point.name}
  >
- {info ? point.score :'•'}
+ {info ? Math.round((point.score as number) / 2) :'•'}
  </div>
  <button
  type="button"
