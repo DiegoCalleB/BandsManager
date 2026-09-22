@@ -38,10 +38,9 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
  const progress = duration > 0 ? Math.min(1, (currentTime || 0) / duration) : 0;
  const progressPercentage = progress * 100;
 
- // Posición del indicador: comienza en 1rem (p-4) y se extiende hasta el 100% menos el padding
- // Usando un cálculo simple de JS en lugar de CSS calc para mejor compatibilidad
- const paddingRem = 1; // p-4 = 1rem = 16px
- const indicatorPercent = paddingRem * 100 + progress * (100 - paddingRem * 2 * 100);
+ // Posición del indicador como porcentaje del ancho del contenedor
+ // Rango: 2% a 98% para mantenerlo dentro del área visible con margen pequeño
+ const indicatorPercent = 2 + progress * 96;
 
  // Encontrar la portada del álbum actual (primera canción reproduciendo o primera del setlist)
  const playingIndex = chartData.findIndex(d => d.songId === currentPlayingSongId);
