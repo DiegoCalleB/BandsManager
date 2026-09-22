@@ -473,11 +473,12 @@ export function EnergyChart({
  <ReferenceLine
  key={`speech-${d.id}`}
  x={d.xPos}
- stroke="var(--ink-2)"
- strokeWidth={1.5}
- strokeDasharray="2 3"
+ stroke={d.color}
+ strokeWidth={2}
+ strokeDasharray="4 3"
+ strokeOpacity={0.85}
  ifOverflow="extendDomain"
- label={{ value: d.icon, position:'insideTop', fontSize: compact ? 13 : 20, fill:'var(--surface)' }}
+ label={{ value: d.icon, position:'insideTop', fontSize: compact ? 13 : 20, fill:'var(--ink)' }}
  />
  ))}
 
