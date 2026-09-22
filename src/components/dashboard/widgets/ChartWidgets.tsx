@@ -273,9 +273,9 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  };
 
  const funnelData = [
- { name:'Nuevos', count: counts.nuevo, color:'#38bdf8' },
- { name:'Contactados', count: counts.contactado, color:'#818cf8' },
- { name:'Por Aprobar', count: counts.aprobacion, color:'#c084fc' },
+ { name:'Nuevos', count: counts.nuevo, color:'var(--hair)' },
+ { name:'Contactados', count: counts.contactado, color:'var(--ink-3)' },
+ { name:'Por Aprobar', count: counts.aprobacion, color:'var(--ink-2)' },
  { name:'Negociando', count: counts.negociando, color:'var(--acc)' },
  { name:'Confirmados', count: counts.confirmado, color:'var(--ok)' }
  ];
@@ -293,7 +293,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode ='
  <Building2 className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-sm font-bold font-display text-[var(--ink)]">
  Embudo de Contrataciones
  </h3>
  <p className="text-[11px] font-sans text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
@@ -368,7 +368,7 @@ export function FinancesChartWidget({ onNavigate, heightMode ='normal' }: ChartW
  <DollarSign className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-sm font-bold font-display text-[var(--ink)]">
  Evolución Financiera & Caché
  </h3>
  <p className="text-[11px] font-sans text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
@@ -401,9 +401,9 @@ export function FinancesChartWidget({ onNavigate, heightMode ='normal' }: ChartW
  <div className={`w-full ${minHeightClass} pt-2`}>
  <ResponsiveContainer width="100%" height="100%">
  <BarChart data={defaultMonths} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
- <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
- <XAxis dataKey="month" stroke="#71717a" fontSize={10} fontFamily="monospace" />
- <YAxis stroke="#71717a" fontSize={10} />
+ <CartesianGrid strokeDasharray="3 3" stroke="var(--hair)" vertical={false} />
+ <XAxis dataKey="month" stroke="var(--ink-3)" fontSize={10} />
+ <YAxis stroke="var(--ink-3)" fontSize={10} />
  <Tooltip
  content={({ active, payload }) => {
  if (active && payload && payload.length) {
@@ -423,7 +423,7 @@ export function FinancesChartWidget({ onNavigate, heightMode ='normal' }: ChartW
  }}
  />
  <Bar dataKey="ingresos" fill="var(--ok)" radius={[4, 4, 0, 0]} name="Ingresos" />
- <Bar dataKey="gastos" fill="#f43f5e" radius={[4, 4, 0, 0]} name="Gastos" />
+ <Bar dataKey="gastos" fill="var(--alert)" radius={[4, 4, 0, 0]} name="Gastos" />
  </BarChart>
  </ResponsiveContainer>
  </div>
@@ -448,11 +448,11 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode ='nor
  <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
  <div className="flex items-center justify-between pb-2.5">
  <div className="flex items-center gap-2.5">
- <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/15 text-[var(--acc)] shrink-0">
+ <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] shrink-0">
  <Users className="w-5 h-5" />
  </div>
  <div>
- <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
+ <h3 className="text-sm font-bold font-display text-[var(--ink)]">
  Captación de Fans & QR
  </h3>
  <p className="text-[11px] font-sans text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
