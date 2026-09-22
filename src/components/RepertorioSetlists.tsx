@@ -646,7 +646,7 @@ export default function RepertorioSetlists({
  handleSelectPlayerSong} = useAudioPlayer();
 
  // Global player context for persistent playback across modules
- const { currentSong: playerCurrentSong, setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying } = usePlayer();
+ const { currentSong: playerCurrentSong, setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying, currentTime: playerCurrentTime, duration: playerDuration } = usePlayer();
 
  // Inicializar reproductor global con canción aleatoria que tenga audio (solo si está vacío)
  useEffect(() => {
@@ -3166,6 +3166,8 @@ export default function RepertorioSetlists({
  currentPlayingSongId={playerCurrentSong?.id}
  currentSetlist={activeSetlist}
  songs={filteredSongs}
+ currentTime={playerCurrentTime}
+ duration={playerDuration}
  />
 
  {/* Advanced Energy Chart (hidden by default, can be toggled) */}

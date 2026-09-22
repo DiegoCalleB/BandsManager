@@ -8,20 +8,23 @@ interface SetlistEnergyVisualizationProps {
  currentPlayingSongId?: string | null;
  currentSetlist?: { id: string; nombre?: string; };
  songs: Array<{ id: string; titulo: string; portadaUrl?: string; }>;
+ currentTime?: number;
+ duration?: number;
 }
 
 export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProps> = ({
  chartData,
  currentPlayingSongId,
  currentSetlist,
- songs
+ songs,
+ currentTime = 0,
+ duration = 0
 }) => {
  // Mapear datos del gráfico a Onda (barras)
  const ondaData = chartData
   .filter(d => d.isSong && d.score !== null)
-  .map((d, idx) => {
+  .map((d) => {
    const isPlaying = d.songId === currentPlayingSongId;
-   const song = songs.find(s => s.id === d.songId);
 
    return {
      label: d.name,
@@ -30,6 +33,10 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
      isPlaying
    };
   });
+
+ // Calcular progreso de reproducción
+ const progress = duration > 0 ? Math.min(1, (currentTime || 0) / duration) : 0;
+ const progressPercentage = progress * 100;
 
  // Encontrar la portada del álbum actual (primera canción reproduciendo o primera del setlist)
  const playingIndex = chartData.findIndex(d => d.songId === currentPlayingSongId);
@@ -71,7 +78,7 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
      </div>
 
      {/* Barras de Energía (La Onda) */}
-     <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4">
+     <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 relative">
        <Onda
          data={ondaData}
          height={140}
@@ -81,6 +88,21 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
          animated={true}
          tooltipFormatter={(v) => `${Math.round(v * 100)}%`}
        />
+
+       {/* Indicador de progreso animado */}
+       {currentPlayingSongId && duration > 0 && (
+         <div
+           className="absolute top-4 transition-all duration-100 ease-linear"
+           style={{
+             left: `calc(${progressPercentage}% + ${Math.max(8, Math.min(24, 320 / Math.max(1, ondaData.length))) / 2}px)`,
+             transform: 'translateX(-50%)',
+             height: '140px',
+             pointerEvents: 'none'
+           }}
+         >
+           <div className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] shadow-sm" style={{ marginTop: '4px' }} />
+         </div>
+       )}
      </div>
 
      {/* Leyenda */}

@@ -11,6 +11,7 @@ import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../ut
 import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
 import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
+import { usePlayer } from '../context/PlayerContext';
 
 interface SpotifyPlayerBarProps {
  song: Song | null;
@@ -59,6 +60,7 @@ export default function SpotifyPlayerBar({
  onIsPlayingChange,
  transposeSemitones: propTransposeSemitones = 0
 }: SpotifyPlayerBarProps) {
+ const { setCurrentTime: setContextCurrentTime, setDuration: setContextDuration } = usePlayer();
  const [isPlaying, setIsPlaying] = useState(false);
  const [currentTime, setCurrentTime] = useState(0);
  const [duration, setDuration] = useState(0);
@@ -455,6 +457,7 @@ export default function SpotifyPlayerBar({
  // compitiendo por decidir"cuánto queda".
  const handleActiveTimeUpdate = (currentTimeSec: number) => {
  setCurrentTime(currentTimeSec);
+ setContextCurrentTime(currentTimeSec);
 
  if (!crossfadeEnabled || isLooping || isCrossfadingRef.current) return;
  if (!nextQueueSong || nextQueueSong.id === song.id) return; // cola de un solo tema: nada que fundir
@@ -547,7 +550,7 @@ export default function SpotifyPlayerBar({
  preload="metadata"
  onError={(e) => { e.preventDefault(); }}
  onTimeUpdate={() => { if (activeSlotRef.current ==='A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime); }}
- onLoadedMetadata={() => { if (activeSlotRef.current ==='A' && audioRefA.current?.duration) setDuration(audioRefA.current.duration); }}
+ onLoadedMetadata={() => { if (activeSlotRef.current ==='A' && audioRefA.current?.duration) { setDuration(audioRefA.current.duration); setContextDuration(audioRefA.current.duration); } }}
  onEnded={() => { if (activeSlotRef.current ==='A') handleEnded(); }}
  />
  <audio
@@ -556,7 +559,7 @@ export default function SpotifyPlayerBar({
  preload="metadata"
  onError={(e) => { e.preventDefault(); }}
  onTimeUpdate={() => { if (activeSlotRef.current ==='B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime); }}
- onLoadedMetadata={() => { if (activeSlotRef.current ==='B' && audioRefB.current?.duration) setDuration(audioRefB.current.duration); }}
+ onLoadedMetadata={() => { if (activeSlotRef.current ==='B' && audioRefB.current?.duration) { setDuration(audioRefB.current.duration); setContextDuration(audioRefB.current.duration); } }}
  onEnded={() => { if (activeSlotRef.current ==='B') handleEnded(); }}
  />
 

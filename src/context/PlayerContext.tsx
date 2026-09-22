@@ -5,9 +5,13 @@ interface PlayerContextType {
  currentSong: Song | null;
  songs: Song[];
  isPlaying: boolean;
+ currentTime: number;
+ duration: number;
  setCurrentSong: (song: Song | null) => void;
  setSongs: (songs: Song[]) => void;
  setIsPlaying: (playing: boolean) => void;
+ setCurrentTime: (time: number) => void;
+ setDuration: (duration: number) => void;
  selectSong: (song: Song, songs: Song[], autoPlay?: boolean) => void;
 }
 
@@ -17,6 +21,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
  const [currentSong, setCurrentSong] = useState<Song | null>(null);
  const [songs, setSongs] = useState<Song[]>([]);
  const [isPlaying, setIsPlaying] = useState(false);
+ const [currentTime, setCurrentTime] = useState(0);
+ const [duration, setDuration] = useState(0);
 
  const selectSong = useCallback((song: Song, songsList: Song[], autoPlay = true) => {
  setCurrentSong(song);
@@ -30,9 +36,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
  currentSong,
  songs,
  isPlaying,
+ currentTime,
+ duration,
  setCurrentSong,
  setSongs,
  setIsPlaying,
+ setCurrentTime,
+ setDuration,
  selectSong,
  }}
  >
