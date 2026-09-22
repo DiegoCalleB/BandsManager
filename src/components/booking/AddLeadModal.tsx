@@ -16,6 +16,8 @@ export interface NewLeadDataState {
   email_contacto: string;
   email_secundario?: string;
   telefono: string;
+  telefono_movil?: string;
+  telefono_fijo?: string;
   website?: string;
   instagram: string;
   fuente: string;
@@ -366,6 +368,56 @@ export function AddLeadModal({
                   isStitchLight
                     ? 'bg-slate-50 text-[#e5e2e1] focus:ring-indigo-500'
                     : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                }`}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub} flex items-center gap-1 font-semibold`}>
+                <span>📱 Teléfono Móvil (WhatsApp)</span>
+              </label>
+              <input
+                type="tel"
+                placeholder="Ej. +34 612 345 678"
+                value={newLeadData.telefono_movil || ''}
+                onChange={e => {
+                  const val = e.target.value;
+                  setNewLeadData(prev => ({
+                    ...prev,
+                    telefono_movil: val,
+                    telefono: val || prev.telefono_fijo || prev.telefono || ''
+                  }));
+                }}
+                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                  isStitchLight
+                    ? 'bg-slate-50 text-slate-800 focus:ring-emerald-500'
+                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-emerald-400'
+                }`}
+              />
+            </div>
+
+            <div>
+              <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub} flex items-center gap-1 font-semibold`}>
+                <span>☎️ Teléfono Fijo (Sala / Oficina)</span>
+              </label>
+              <input
+                type="tel"
+                placeholder="Ej. +34 912 345 678"
+                value={newLeadData.telefono_fijo || ''}
+                onChange={e => {
+                  const val = e.target.value;
+                  setNewLeadData(prev => ({
+                    ...prev,
+                    telefono_fijo: val,
+                    telefono: prev.telefono_movil || val || prev.telefono || ''
+                  }));
+                }}
+                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                  isStitchLight
+                    ? 'bg-slate-50 text-slate-800 focus:ring-sky-500'
+                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-sky-400'
                 }`}
               />
             </div>

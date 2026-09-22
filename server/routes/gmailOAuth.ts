@@ -17,6 +17,7 @@ import express from "express";
 import crypto from "crypto";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
 
 const router = express.Router();
@@ -153,6 +154,15 @@ router.get("/callback", async (req, res) => {
       refresh_token: refreshToken,
       scope: String(tokenData.scope || GMAIL_OAUTH_SCOPE)
     });
+
+    if (gmailEmail && gmailEmail.trim()) {
+      try {
+        const sb = getSupabase();
+        await sb.from("registered_bands").update({ email: gmailEmail.trim().toLowerCase() }).eq("band_id", bandId);
+      } catch (syncErr) {
+        console.warn("[gmailOAuth] No se pudo sincronizar registered_bands.email:", syncErr);
+      }
+    }
 
     res.redirect("/?gmail_oauth=conectado");
   } catch (err: any) {

@@ -14,6 +14,7 @@ import { EmailAgentError } from "../services/emailAgentClient.js";
 import { autoEnrichLead } from "../auto_enrichment.js";
 import { searchFestivalByName, formatFestivalDates } from "../utils/spanishFestivalsDB.js";
 import { normalizeVenueName } from "./leads/places.js";
+import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../services/venueIntelligenceService.js";
 import { dbGetRegisteredBands, dbGetLeads, dbGetBandEmailAccount, dbGetBandGmailOAuth } from "../db.js";
 import { computeAgentFunnel, type FunnelBandInput } from "../utils/agentFunnel.js";
 
@@ -339,8 +340,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       if (isPhysicalPlace && placesApiKey && placesApiKey.trim() !== "") {
         try {
           const placesQuery = tipo === 'ayuntamiento' 
-            ? `Ayuntamiento de ${targetLoc}, España`
-            : `${tipo} recintos salas de conciertos festejos en ${targetLoc}, España`;
+            ? `Ayuntamiento de ${targetLoc}`
+            : `${tipo} recintos salas de conciertos música en vivo en ${targetLoc}`;
 
           console.log(`[Agente Scout] Motor 1 (Google Places API): Consultando "${placesQuery}"...`);
           const placesRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
@@ -353,7 +354,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
             body: JSON.stringify({
               textQuery: placesQuery,
               languageCode: "es",
-              pageSize: Math.min(20, limit * 2)
+              pageSize: Math.min(20, Math.max(15, limit * 2))
             })
           });
 
@@ -397,17 +398,59 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
         }
       }
 
+      // MOTOR SERPER PLACES + ENRIQUECIMIENTO QUIRÚRGICO DE CONTACTO
+      if (isPhysicalPlace && process.env.SERPER_API_KEY && rawCandidates.length < limit) {
+        try {
+          console.log(`[Agente Scout] Motor Serper Live Places: Descubriendo recintos en "${targetLoc}" (Tipo: ${tipo})...`);
+          const serperResults = await searchVenuesWithSerper({
+            city: targetLoc,
+            type: tipo,
+            limit: limit * 2
+          });
+
+          for (const sp of serperResults) {
+            rawCandidates.push({
+              place_id: sp.place_id,
+              nombre_sala: sp.nombre_sala,
+              ciudad: sp.ciudad || targetLoc,
+              region: sp.region || targetLoc,
+              direccion: sp.direccion || "",
+              telefono: sp.telefono || "",
+              website: sp.website || "",
+              rating: sp.rating || null,
+              aforo: sp.aforo || 0,
+              tipo: sp.tipo || tipo,
+              genero: sp.genero || generoBanda,
+              imagen_url: sp.imagen_url || "",
+              icono: sp.icono || (tipo === 'festival' ? '🎪' : tipo === 'discoteca' ? '🪩' : '🏛️'),
+              email_contacto: sp.email_contacto || "",
+              notas: `Descubierto por Agente Scout vía Serper Places en ${targetLoc}.`
+            });
+          }
+        } catch (sErr: any) {
+          console.warn("[Agente Scout] Advertencia en Motor Serper Places:", sErr?.message || sErr);
+        }
+      }
+
       // 3. MOTOR 2: GEMINI SEARCH GROUNDING (búsqueda web en vivo con googleSearch: {})
       if (ai) {
         try {
           console.log(`[Agente Scout] Motor 2 (Gemini Live Search Grounding): Buscando en web en vivo para "${targetLoc}" (Tipo: ${tipo})...`);
-          const prompt = `Actúa como el Agente Scout Descubridor de recintos y entidades musicales en España.
-Busca y extrae entre ${limit} y 6 entidades REALES, ACTIVAS Y OPERATIVAS en la ciudad/región: "${targetLoc}". Tipo objetivo: "${tipo}".
+          const prompt = `Actúa como el Agente Scout Descubridor de recintos y entidades musicales.
+Busca y extrae entre ${Math.max(10, limit * 2)} entidades REALES, ACTIVAS Y OPERATIVAS en la ciudad/región: "${targetLoc}". Tipo objetivo: "${tipo}".
 
-REGLAS INNEGOCIABLES DE CALIDAD:
-1. Solo recintos, agencias, salas, festivales, ayuntamientos o bandas REALES que existan en ${targetLoc}. NUNCA inventes nombres ni datos.
-2. NUNCA inventes emails, teléfonos o webs. Si no sabes el dato exacto, devuelve cadena vacía "".
-3. Si el tipo es 'grupo' o 'banda', devuelve grupos de música reales en activo de ${targetLoc}. NUNCA devuelvas empresas hosteleras o discotecas.
+INFORMACIÓN DE LA BANDA OBJETIVO:
+- Nombre: "${bandDna.bandName}"
+- Estilo: "${generoBanda}"
+- Formato: "${bandDna.formato || 'Banda de música en directo'}"
+
+REGLAS DE REALISMO Y CALIDAD PARA LA BANDA:
+1. RESULTADOS REALISTAS PARA EL NIVEL DE LA BANDA: Busca salas de conciertos, clubes de música en directo, teatros y recintos culturales acordes al circuito independiente / profesional (aforos típicos entre 50 y 1.200 personas).
+2. EXCLUIR MASAS / ARENAS: NUNCA propongas grandes arenas, estadios ni palacios de deportes de miles/decenas de miles de localidades (ej: Movistar Arena, WiZink Center, Palau Sant Jordi, Estadios) salvo que la petición pida explícitamente "estadios" o "grandes arenas".
+3. Solo recintos, agencias, salas, festivales, ayuntamientos o bandas REALES que existan en ${targetLoc}. NUNCA inventes nombres ni datos.
+4. BÚSQUEDA DE CONTACTO ACTIVA: Haz un esfuerzo activo por extraer el EMAIL OFICIAL DE CONTACTO O BOOKING (info@..., booking@..., geral@..., contacto@...) y la cuenta oficial de Instagram (@...).
+5. NUNCA inventes emails o teléfonos ficticios. Si tras buscar activamente no lo encuentras, devuelve cadena vacía "".
+6. Si el tipo es 'grupo' o 'banda', devuelve grupos de música reales en activo de ${targetLoc}. NUNCA devuelvas empresas hosteleras o discotecas.
 
 Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
 {
@@ -420,7 +463,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       "genero": "Estilo musical o línea de programación",
       "tipo": "${tipo}",
       "email_contacto": "",
-      "telefono": "+34 900 000 000",
+      "telefono": "+34 000 000 000",
       "instagram": "@usuario_oficial",
       "website": "https://sitio-oficial.com",
       "notas": "Descripción breve del recinto o entidad."
@@ -529,7 +572,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         });
       }
 
-      // 5. INSERCIÓN EN SUPABASE Y ENRIQUECIMIENTO EN SEGUNDO PLANO
+      // 5. ENRIQUECIMIENTO INTEGRAL PREVIO Y ALMACENAMIENTO EN SUPABASE
       const results: any[] = [];
       for (const raw of deduplicatedLeads) {
         let startD: string | undefined = raw.festival_start_date;
@@ -544,37 +587,41 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           }
         }
 
-        const newLead = {
+        const initialLead = {
           id: `lead-scout-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           band_id: targetBandId,
           nombre_sala: raw.nombre_sala,
           ciudad: raw.ciudad,
           region: raw.region,
-          aforo: raw.aforo,
-          genero: raw.genero,
-          tipo: raw.tipo,
-          email_contacto: raw.email_contacto,
-          telefono: raw.telefono,
-          instagram: raw.instagram,
-          website: raw.website,
+          aforo: raw.aforo || 0,
+          genero: raw.genero || generoBanda,
+          tipo: raw.tipo || tipo,
+          email_contacto: raw.email_contacto || "",
+          telefono: raw.telefono || "",
+          instagram: raw.instagram || "",
+          website: raw.website || "",
           festival_start_date: startD,
           festival_end_date: endD,
           fuente: `Agente Scout: ${targetLoc}`,
           estado: "nuevo",
           pitch_generado: "",
-          notas: raw.notas || `Descubierto por Agente Scout (Google Places + Gemini Grounding) para ${targetLoc}.`
+          notas: raw.notas || `Descubierto por Agente Scout para ${targetLoc}.`
         };
 
-        const saved = await dbUpsertLead(newLead, targetBandId);
-        results.push(saved);
+        // Enriquecer automáticamente con todas las herramientas disponibles (Google Places, Serper, Web Scraper, Gemini AI Fallback, Pitch) antes de guardar
+        console.log(`[Agente Scout] Ejecutando enriquecimiento completo pre-inserción para: '${initialLead.nombre_sala}'...`);
+        let fullyEnriched = initialLead;
+        try {
+          fullyEnriched = await autoEnrichLead(initialLead, targetBandId);
+        } catch (enrichErr) {
+          console.error(`[Agente Scout] Error en autoEnrichLead pre-inserción para ${initialLead.nombre_sala}:`, enrichErr);
+        }
 
-        // Disparar autoEnrichLead en segundo plano (scrapea emails mailto, favicons, fechas de festivales, pitch inteligente)
-        autoEnrichLead(saved, targetBandId).catch(err =>
-          console.error(`Error autoEnrichLead tras Scout ${saved.id}:`, err)
-        );
+        const saved = await dbUpsertLead(fullyEnriched, targetBandId);
+        results.push(saved);
       }
 
-      const successMsg = `¡Agente Scout ejecutado con éxito! Se han descubierto y guardado ${results.length} nuevo(s) recinto(s) verificado(s) en ${targetLoc} (${tipo}) en estado 'nuevo' y enviado a enriquecimiento automático.`;
+      const successMsg = `¡Agente Scout ejecutado con éxito! Se han descubierto y enriquecido automáticamente ${results.length} recinto(s) verificado(s) en ${targetLoc} (${tipo}) con datos de contacto, aforo y propuesta inicial.`;
 
       await logExecution({
         band_id: targetBandId,

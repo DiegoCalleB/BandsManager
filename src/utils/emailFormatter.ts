@@ -70,9 +70,9 @@ export const SOCIAL_ICONS_BADGES_MAP: Record<string, { badgeUrl: string; label: 
  */
 export function buildEmailSignatureData(params: SignatureDataParams) {
   const resolvedBandName = params.bandName || params.epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya = params.isBakandeya ?? resolvedBandName.toLowerCase().includes('bakandeya');
-  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
-  const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
+  const isBakandeya = params.isBakandeya ?? false;
+  const defaultEmail = `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'contacto'}@booking.com`;
+  const defaultPhone = '+34 600 000 000';
 
   const firma = params.epkConfig?.firmaEmail;
   const booking = params.epkConfig?.contactoBooking;
@@ -81,10 +81,10 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
     (params.senderName && params.senderName.toLowerCase() !== 'equipo' ? params.senderName : null) ||
     firma?.nombreRemitente ||
     booking?.nombre ||
-    (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
+    'Equipo de Booking';
 
   const cargo = firma?.cargo || `Booking & Management | ${resolvedBandName}`;
-  const textoPie = firma?.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
+  const textoPie = firma?.textoPie || '';
   const telefono = firma?.telefono || booking?.telefono || defaultPhone;
   const email = firma?.email || booking?.email || defaultEmail;
 
@@ -93,23 +93,17 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
   const fallbackOnlineEpk = params.bandId ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}` : `${origin}/epk`;
   const dossierPdfUrl = params.epkConfig?.dossierPdfUrl || params.epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';
-  const effectiveEpkLink = params.publicEpkUrl || dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : fallbackOnlineEpk);
+  const effectiveEpkLink = params.publicEpkUrl || dossierPdfUrl || fallbackOnlineEpk;
   const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
   const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 
   // Absolute logo URL for external email clients
-  let logoUrl = (firma?.incluirLogo ?? true) ? (params.epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')) : '';
+  let logoUrl = (firma?.incluirLogo ?? true) ? (params.epkConfig?.logoUrl || '') : '';
   if (logoUrl && !logoUrl.startsWith('http') && !logoUrl.startsWith('data:')) {
     logoUrl = `${origin}${logoUrl.startsWith('/') ? '' : '/'}${logoUrl}`;
   }
 
   const rawRedesCombined: Record<string, string> = {
-    ...(isBakandeya ? {
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      spotify: 'https://open.spotify.com/artist/bakandeya'
-    } : {}),
     ...(params.epkConfig?.enlacesRedes || {}),
     ...(params.epkConfig?.firmaEmail?.redesSociales || {})
   };
@@ -441,9 +435,8 @@ export function formatEmailWithSignatureAndDossier(params: {
   // banda. Los llamantes actuales ya evitan pasar undefined (ver bandDisplayName en
   // Chatbot.tsx), pero la función no debe depender de eso para no filtrar datos reales.
   const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya = resolvedBandName.toLowerCase().includes('bakandeya');
-  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
-  const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
+  const defaultEmail = `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'contacto'}@booking.com`;
+  const defaultPhone = '+34 600 000 000';
   const salaName = lead?.nombre_sala || 'vuestra sala';
   const salaCiudad = lead?.ciudad ? ` (${lead.ciudad})` : '';
 
@@ -481,23 +474,17 @@ export function formatEmailWithSignatureAndDossier(params: {
     (senderName && senderName.toLowerCase() !== 'equipo' ? senderName : null) ||
     firma?.nombreRemitente ||
     booking?.nombre ||
-    (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
+    'Equipo de Booking';
   
   const cargo = firma?.cargo || `Booking & Management | ${resolvedBandName}`;
-  const textoPie = firma?.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
+  const textoPie = firma?.textoPie || '';
   const telefono = firma?.telefono || booking?.telefono || defaultPhone;
   const email = firma?.email || booking?.email || defaultEmail;
 
   const dossierPdfUrl = epkConfig?.dossierPdfUrl || epkConfig?.dossierDocumentUrl || '';
-  const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier Bakandeya.pdf';
+  const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier Oficial.pdf';
 
   const rawRedesCombined: Record<string, string> = {
-    ...(isBakandeya ? {
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      spotify: 'https://open.spotify.com/artist/bakandeya'
-    } : {}),
     ...(epkConfig?.enlacesRedes || {}),
     ...(epkConfig?.firmaEmail?.redesSociales || {})
   };
@@ -580,9 +567,9 @@ export function formatEmailWithSignatureAndDossier(params: {
     `
     : '';
 
-  const logoUrl = (firma?.incluirLogo ?? true) ? (epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')) : '';
+  const logoUrl = (firma?.incluirLogo ?? true) ? (epkConfig?.logoUrl || '') : '';
   const defaultOnlineEpk = bandId ? `${origin}/epk?band=${encodeURIComponent(bandId)}` : `${origin}/epk`;
-  const effectiveEpkLink = dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : defaultOnlineEpk);
+  const effectiveEpkLink = dossierPdfUrl || defaultOnlineEpk;
   const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
   const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 

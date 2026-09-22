@@ -6,6 +6,7 @@ import { titlesMatch } from '../../utils/songTitleMatch';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { PacingWarning } from '../../utils/energyPacingUtils';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
+import { openWhatsAppChat } from '../../utils/whatsapp';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -456,11 +457,11 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
       // Fallback de escritorio: descarga la imagen y abre WhatsApp Web con el texto — wa.me no
       // admite adjuntar archivos por URL, así que la imagen hay que arrastrarla a mano al chat.
       if (imageBlob) downloadBlob(imageBlob, `analisis-ia-${setlistId}.png`);
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+      openWhatsAppChat(undefined, text);
     } catch (err: any) {
       // AbortError = el usuario cerró el selector de compartir sin elegir nada: no es un fallo.
       if (err?.name !== 'AbortError') {
-        window.open(`https://wa.me/?text=${encodeURIComponent(buildShareText(analysis))}`, '_blank');
+        openWhatsAppChat(undefined, buildShareText(analysis));
       }
     } finally {
       setSharing(false);

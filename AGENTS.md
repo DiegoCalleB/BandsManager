@@ -116,10 +116,29 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * **Scout:** Descubre y enriquece salas en Supabase, las marca como estado `nuevo`.
    * **Redactor:** Genera propuesta personalizada por IA, marca sub-estado como `pendiente_aprobacion` (lead listo para revisión humana).
      * **Directrices de redacción del pitch (`server/utils/bandDna.ts`, `server/promptsManager.ts`):**
-       - Estructura breve (<140 palabras), cercana y humana sin clichés ni jerga corporativa.
+       - Estructura breve (<120 palabras), 2 párrafos concisos, cercana y humana sin clichés ni jerga corporativa.
+       - **Mentalidad de Socio de Negocio (Creator-Artist Partnership):** Posicionarse como activo de bajo riesgo y rentabilidad/convocatoria para el comprador de talento (ROI y mitigación de riesgo), nunca como fan o amateur pidiendo favores.
+       - **Regla del 20% de Personalización:** 80% estructura eficiente probada, 20% personalización genuina sobre la trayectoria o programación del espacio.
+       - **Regla Anti-Truncamiento de Gmail & Mandato Link-Only:** Mantener el cuerpo ultra-compacto (<120 palabras) con enlace interactivo único al EPK/Dossier. Cero adjuntos PDF pesados o fotos spam que disparen filtros de spam o botones de "ver mensaje completo".
+       - **Five Things to Kill in Email:** (1) Bio fluff / nombres de músicos, (2) Vídeos de conciertos enteros de 30 min (reemplazar por teaser de 30-60s en EPK), (3) Spam de fotos, (4) Adjuntos pesados de EPK, (5) Unearned hype / superlativos no verificables.
        - **Halago sincero y conocimiento del espacio:** Iniciar reconociendo la trayectoria del espacio, el mimo en su cartelera y su labor cultural en la ciudad.
        - **Adaptación por tipo de espacio:** En fundaciones/teatros/auditorios enfocar en calidad acústica, riqueza tímbrica/instrumental y respeto al espacio (jamás hablar de copas o dinamizar barras); en salas y discotecas enfocar en energía y ambiente.
-       - **Cero obsesión operativa en primer contacto:** Prohibido meter muletillas de tiempos ("montamos en 30 min", "recogemos en 5 min", "rider ágil", "taquilla o caché") en el correo inicial. Los programadores ya juzgan el montaje viendo los vídeos del dossier/EPK.
+       - **Cero obsesión operativa en primer contacto:** Prohibido meter muletillas de tiempos ("montamos en 30 min", "recogemos en 5 min", "rider ágil", "taquilla o caché") en el correo inicial.
+       - **Zero Personnel Bio:** Prohibido listar nombres o instrumentos de los músicos ("Juan al bajo..."), salvo colaboración con figura de renombre internacional.
+       - **Slot Mirroring en Festivales:** Citar la franja horaria o el artista del año anterior que ocupó el slot que se quiere replicar.
+       - **Impact Metrics vs. Vanity Metrics:** Citar a lo sumo UN dato verificable de tracción local (ej: "180 entradas en Sala X" o oyentes en la zona), nunca listas exhaustivas ni cifras infladas de streaming sin conversión.
+       - **Anti-Tells de IA Avanzados & The Read Aloud Test:**
+         * Prohibición absoluta de guiones largos (`—`) y dobles guiones (`--`).
+         * Prohibición de gerundios encadenados ("...ofreciendo show, haciendo que...").
+         * Prohibición de tríadas de adjetivos / Rule of Three ("rápido, directo y potente").
+         * Prohibición de IA-ismos corporativos: *delve, tapestry, multifaceted, furthermore, moreover, leverage, harness the power of*.
+         * Burstiness y sintaxis asimétrica (oraciones cortas de 3-5 palabras con medianas; conectores "Y", "Pero").
+         * Minúsculas estilísticas B2B en saludos de salas independientes ("hola [nombre],") para cercanía.
+         * Prohibición del postureo amateur clónico ("Tras meter más de X personas en nuestra última fecha...").
+         * Contextualización geográfica natural ("en el centro de Madrid", "en la zona de Malasaña") en lugar de nombres de calles forzados ("en pleno Valverde").
+         * Zero Blind Asking: Si se conocen fechas ocupadas/libres por la agenda real, referenciarlo de forma constructiva ("vimos que el 4 tenéis evento X, pero nos cuadraría el 5 u 11").
+         * Mandato Dossier Web en Firma & Cero Enlaces en Cuerpo: Prohibido pegar enlaces URL en el cuerpo del correo. Mencionar de forma natural el **dossier web** en la firma del correo. En la firma automática y QRs se usa el enlace seguro cifrado/hasheado (`https://bandmanager.io/epk?b={{token}}`).
+         * Protocolo Phone-to-Email / Conversión de redes: traslación inmediata de chats a correo ("¿Te parece bien si te lo dejo por mail para fijar la ventana de fechas?").
    * **Usuario (Human-in-the-Loop):** Lee/edita el borrador y aprueba explícitamente, transicionando a `aprobado_propuesta` (pitch inicial) o `aprobado_respuesta` (réplica a sala).
    * **Enviador** (`server/services/agentEngine.ts`): Lee leads en estado aprobado, despacha respetando ventana comercial de la banda y rate-limits. Registra el envío en `lead_messages`.
    * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.

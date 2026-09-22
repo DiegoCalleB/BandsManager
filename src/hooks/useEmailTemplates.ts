@@ -5,12 +5,12 @@ export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' 
 
 export function useEmailTemplates() {
  // Template states for Salas
- const [subjectTemplateSala, setSubjectTemplateSala] = useState('Propuesta de concierto: {bandName} (Fusión)');
+ const [subjectTemplateSala, setSubjectTemplateSala] = useState('Propuesta de concierto: {bandName} ({estilo})');
  const [bodyTemplateSala, setBodyTemplateSala] = useState(`Hola equipo de {{nombre_sala}},
 
 Os escribo desde {bandName} ({estilo}). Seguimos vuestra programación en {{ciudad}} y nos encantaría valorar fecha en vuestra sala para los próximos meses.
 
-Traemos un directo muy enérgico y bailable, con violín solista, sintetizadores analógicos, percusión y bajo. Nos adaptamos a taquilla, co-booking o caché, y montamos rápido con un rider técnico muy ágil.
+Traemos un directo muy cuidado y enérgico, concebido para conectar con el público y dinamizar la sala. Nos adaptamos a taquilla, co-booking o caché, y disponemos de rider técnico claro y ágil.
 
 Podéis consultar nuestro directo y dossier en el enlace adjunto: {enlace_videos}
 
@@ -18,7 +18,7 @@ Podéis consultar nuestro directo y dossier en el enlace adjunto: {enlace_videos
 
 Un saludo,
 Booking & Management — {bandName}`);
- const [aiGuidelinesSala, setAiGuidelinesSala] = useState('Escribe siempre en un tono cercano, natural y respetuoso. Enfatiza que disponemos de un potente show con violín enérgico, loops en directo y percusión, y que el directo es bailable e ideal para mover barra y público local.');
+ const [aiGuidelinesSala, setAiGuidelinesSala] = useState('Escribe siempre en un tono cercano, natural y respetuoso. Enfatiza la calidad del directo y la solvencia escénica de la banda, destacando que es una propuesta idónea para dinamizar la sala y convocar a público.');
 
  // Template states for Festivales
  const [subjectTemplateFestival, setSubjectTemplateFestival] = useState('Propuesta de cartel / Festival: {bandName} (Live Show)');
@@ -40,17 +40,17 @@ Booking & Management — {bandName}`);
  const [subjectTemplateDiscoteca, setSubjectTemplateDiscoteca] = useState('Propuesta Live Show / Session Nocturna: {bandName} (Live Set)');
  const [bodyTemplateDiscoteca, setBodyTemplateDiscoteca] = useState(`Hola equipo de {{nombre_sala}},
 
-Os escribo desde {bandName} para proponer un Live Set de alta intensidad pensado para la sesión de madrugada en clubes y discotecas.
+Os escribo desde {bandName} para proponer un Live Set de alta intensidad pensado para la sesión de noche y clubbing.
 
-Combina ritmos bailables, percusión en vivo y violín enérgico, manteniendo la pista encendida entre sesiones de DJs.
+Nuestra propuesta combina ritmos bailables y directo enérgico, manteniendo la pista activa con gran conexión con el público.
 
-Vídeo promocional y sesión en directo: {enlace_videos}
+Vídeo promocional y directo: {enlace_videos}
 
 ¿Tenéis fechas libres para incorporar un set en vivo en vuestra programación nocturna?
 
 Un saludo,
 Booking & Management — {bandName}`);
- const [aiGuidelinesDiscoteca, setAiGuidelinesDiscoteca] = useState('Tono moderno, enfocado a clubes y discotecas de noche. Resalta que es un Live Set electrónico bailable ideal para horario de clubbing o sesiones de madrugada.');
+ const [aiGuidelinesDiscoteca, setAiGuidelinesDiscoteca] = useState('Tono moderno, enfocado a clubes y discotecas de noche. Resalta que es una propuesta enérgica y bailable ideal para horario de clubbing o sesiones de noche.');
 
  // Template states for Medios de Comunicación & Prensa
  const [subjectTemplateMedio, setSubjectTemplateMedio] = useState('[Nota de Prensa / Dossier] {bandName} presenta nuevo material y gira');

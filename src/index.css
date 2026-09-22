@@ -20,6 +20,11 @@ html, body {
   font-family: var(--font-sans-current);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 .font-display {
@@ -43,12 +48,12 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(160, 160, 175, 0.2);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(160, 160, 175, 0.4);
 }
 
 /* Hide scrollbar utility */
@@ -70,86 +75,87 @@ html, body {
 
 /* --- MICRO-ANIMATIONS & HIGH PERFORMANCE TACTILE UI --- */
 
-/* Targeted interactive press effect */
+/* Targeted interactive press effect with Apple spring physics */
 .btn-interactive,
 .btn-primary,
 .btn-secondary {
-  will-change: transform, background-color, border-color;
-  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.15s ease,
-              border-color 0.15s ease,
-              box-shadow 0.15s ease,
-              color 0.15s ease;
+  will-change: transform, background-color, border-color, box-shadow;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-interactive:active:not(:disabled),
 .btn-primary:active:not(:disabled),
 .btn-secondary:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
-/* Primary Modern Softened Action Button */
+/* Primary Modern Action Button - Studio Calm */
 .btn-primary {
   background-color: #6366f1;
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 0.75rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.55rem 1.15rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(99, 102, 241, 0.15);
 }
 
 .btn-primary:hover:not(:disabled) {
   background-color: #4f46e5;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
-/* Secondary Sleek Modern Surface Button */
+/* Secondary Sleek Surface Button */
 .btn-secondary {
-  background-color: rgba(30, 41, 59, 0.7);
-  color: #f1f5f9;
+  background-color: rgba(39, 39, 42, 0.6);
+  color: #f4f4f5;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0.75rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.55rem 1.15rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: rgba(51, 65, 85, 0.8);
-  border-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(63, 63, 70, 0.7);
+  border-color: rgba(255, 255, 255, 0.15);
   color: #ffffff;
 }
 
-/* Minimalist Card Container */
+/* Minimalist Card Container - Studio Surface */
 .card-minimal {
-  background-color: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 0.875rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-minimal:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card-interactive {
-  background-color: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 0.875rem;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-interactive:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
 }
 
 /* Lightweight Hardware-Accelerated Entrance Animations */

@@ -14,6 +14,7 @@ import { runLectorAgent } from "./lectorAgent.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
 import { captureError } from "../utils/errorTracking.js";
 import { reconcileStaleStemPredictions } from "./stemPredictionReconciler.js";
+import { syncActiveCampaignsRadar } from "./campaignRadarScheduler.js";
 
 const TICK_MS = 60 * 1000;
 let schedulerHandle: NodeJS.Timeout | null = null;
@@ -119,6 +120,13 @@ async function tick() {
       await reconcileStaleStemPredictions(5);
     } catch (stemRecErr) {
       console.warn("[AgentScheduler] Error en reconciliación de predicciones de stems:", stemRecErr);
+    }
+
+    // Sincronización continua de disponibilidad de carteleras para campañas activas
+    try {
+      await syncActiveCampaignsRadar();
+    } catch (radarErr) {
+      console.warn("[AgentScheduler] Error en sincronización continua de radar de campañas:", radarErr);
     }
 
     // Señal de vida mínima: hoy costó más de dos horas darse cuenta de que el scheduler estaba

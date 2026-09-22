@@ -49,8 +49,25 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   isStitchLight = false,
   bandName = 'Bakandeya'
 }) => {
-  // Estado de expansión del briefing (por defecto expandido si hay acciones)
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  // Estado de expansión del briefing (por defecto plegado para no ocupar espacio, persistido en localStorage)
+  const [isExpanded, setIsExpanded] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('bm_morning_briefing_expanded');
+      return saved !== null ? saved === 'true' : false;
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleExpanded = (val?: boolean) => {
+    const nextVal = val !== undefined ? val : !isExpanded;
+    setIsExpanded(nextVal);
+    try {
+      localStorage.setItem('bm_morning_briefing_expanded', String(nextVal));
+    } catch {
+      // localStorage error fallback
+    }
+  };
   const [activeTab, setActiveTab] = useState<'priorities' | 'routing'>('priorities');
 
   // Ciudad ancla para el simulador de ruta (si no hay bolos confirmados)
@@ -74,34 +91,52 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
       return status === 'esperando_respuesta' || status === 'contactado';
     });
 
-    // Priorizar los más calientes primero
+    // Priorizar los más calientes primero basándonos en el análisis de sentimiento e intención
     const hotLeads = repliedOrNegotiating.map(lead => {
       const text = (lead.ultimo_mensaje_recibido || '').toLowerCase();
       let priorityType: 'hot' | 'budget' | 'schedule' | 'general' = 'general';
       let tagLabel = '💬 Conversación Activa';
       let tagColor = 'text-purple-400 bg-purple-500/15 border-purple-500/30';
 
-      if (text.includes('interes') || text.includes('disponib') || text.includes('fecha') || text.includes('rider')) {
+      // Usar sentimiento/intención IA si está disponible
+      if (lead.temperatura_lead === 'muy_caliente' || lead.ultimo_sentimiento === 'muy_positivo' || lead.ultima_intencion === 'confirmar_fecha' || lead.ultima_intencion === 'proponer_fechas') {
         priorityType = 'hot';
-        tagLabel = '🔥 Interés Alto / Pide Fecha';
+        tagLabel = '🔥 Cierre / Fechas Receptivas';
         tagColor = 'text-emerald-400 bg-emerald-500/15 border-emerald-500/30';
-      } else if (text.includes('presupuesto') || text.includes('cache') || text.includes('caché') || text.includes('caro')) {
+      } else if (lead.ultima_intencion === 'pedir_cache' || lead.condiciones_economicas_detectadas || text.includes('presupuesto') || text.includes('cache') || text.includes('caché') || text.includes('caro')) {
         priorityType = 'budget';
-        tagLabel = '💰 Objeción de Caché';
+        tagLabel = '💰 Negociación Económica';
         tagColor = 'text-sky-400 bg-sky-500/15 border-sky-500/30';
-      } else if (text.includes('cerrada') || text.includes('llena') || text.includes('temporada')) {
+      } else if (lead.ultima_intencion === 'rechazo_programacion_llena' || text.includes('cerrada') || text.includes('llena') || text.includes('temporada')) {
         priorityType = 'schedule';
         tagLabel = '⏳ Temporada Completa';
         tagColor = 'text-amber-400 bg-amber-500/15 border-amber-500/30';
+      } else if (text.includes('interes') || text.includes('disponib') || text.includes('fecha') || text.includes('rider')) {
+        priorityType = 'hot';
+        tagLabel = '🔥 Interés Alto';
+        tagColor = 'text-emerald-400 bg-emerald-500/15 border-emerald-500/30';
       }
+
+      // Chequeo de conflicto de fechas propuestas con conciertos existentes
+      const hasDateConflict = Boolean(
+        lead.fechas_propuestas_sala &&
+        lead.fechas_propuestas_sala.length > 0 &&
+        concerts.some(c => lead.fechas_propuestas_sala?.some(f => f.toLowerCase().includes(c.ciudad?.toLowerCase() || '---')))
+      );
 
       return {
         lead,
         priorityType,
         tagLabel,
         tagColor,
-        isDraft: false
+        isDraft: false,
+        hasDateConflict
       };
+    }).sort((a, b) => {
+      // Ordenar por score de sentimiento descendente
+      const scoreA = a.lead.ultimo_sentimiento_score ?? (a.priorityType === 'hot' ? 0.8 : 0);
+      const scoreB = b.lead.ultimo_sentimiento_score ?? (b.priorityType === 'hot' ? 0.8 : 0);
+      return scoreB - scoreA;
     });
 
     // Añadir borradores pendientes de aprobación
@@ -110,7 +145,8 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
       priorityType: 'draft' as const,
       tagLabel: '📝 Borrador IA por Revisar',
       tagColor: 'text-amber-300 bg-amber-500/20 border-amber-500/40',
-      isDraft: true
+      isDraft: true,
+      hasDateConflict: false
     }));
 
     return {
@@ -208,7 +244,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
               type="button"
               onClick={() => {
                 setActiveTab('priorities');
-                setIsExpanded(true);
+                toggleExpanded(true);
               }}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'priorities'
@@ -224,7 +260,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
               type="button"
               onClick={() => {
                 setActiveTab('routing');
-                setIsExpanded(true);
+                toggleExpanded(true);
               }}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'routing'
@@ -239,7 +275,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
           <button
             type="button"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => toggleExpanded()}
             className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
             title={isExpanded ? 'Plegar radar' : 'Desplegar radar'}
           >
@@ -266,7 +302,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {priorityItems.all.map(({ lead, priorityType, tagLabel, tagColor, isDraft }) => (
+                  {priorityItems.all.map(({ lead, priorityType, tagLabel, tagColor, isDraft, hasDateConflict }) => (
                     <div
                       key={lead.id}
                       className="bg-[#1C1B1A] p-3.5 rounded-xl border border-zinc-800 hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-3 shadow-md group"
@@ -275,10 +311,23 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         {/* Cabecera del Lead */}
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tagColor}`}>
-                              {tagLabel}
-                            </span>
-                            <h4 className="text-sm font-bold text-zinc-100 mt-1.5 group-hover:text-amber-400 transition-colors">
+                            <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tagColor}`}>
+                                {tagLabel}
+                              </span>
+                              {lead.ultimo_sentimiento_score !== undefined && (
+                                <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
+                                  lead.ultimo_sentimiento_score >= 0.4
+                                    ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+                                    : lead.ultimo_sentimiento_score <= -0.3
+                                    ? 'text-rose-400 bg-rose-500/10 border-rose-500/30'
+                                    : 'text-zinc-400 bg-zinc-800 border-zinc-700'
+                                }`}>
+                                  {lead.ultimo_sentimiento_score > 0 ? `+${(lead.ultimo_sentimiento_score * 100).toFixed(0)}%` : `${(lead.ultimo_sentimiento_score * 100).toFixed(0)}%`}
+                                </span>
+                              )}
+                            </div>
+                            <h4 className="text-sm font-bold text-zinc-100 mt-0.5 group-hover:text-amber-400 transition-colors">
                               {lead.nombre_sala}
                             </h4>
                             <span className="text-[11px] text-zinc-400 flex items-center gap-1">
@@ -288,10 +337,49 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           </div>
                         </div>
 
+                        {/* Entidades Detectadas (Fechas / Economía / Objeciones) */}
+                        {((lead.fechas_propuestas_sala && lead.fechas_propuestas_sala.length > 0) || lead.condiciones_economicas_detectadas) && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {lead.fechas_propuestas_sala && lead.fechas_propuestas_sala.length > 0 && (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 flex items-center gap-1">
+                                <Clock className="w-2.5 h-2.5" />
+                                {lead.fechas_propuestas_sala.slice(0, 2).join(', ')}
+                              </span>
+                            )}
+                            {lead.condiciones_economicas_detectadas?.cifra && (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                                <DollarSign className="w-2.5 h-2.5" />
+                                {lead.condiciones_economicas_detectadas.cifra}
+                              </span>
+                            )}
+                            {hasDateConflict && (
+                              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1" title="Posible coincidencia de ruta con bolo confirmado">
+                                <AlertCircle className="w-2.5 h-2.5 text-amber-400" />
+                                Enlace Ruta
+                              </span>
+                            )}
+                          </div>
+                        )}
+
                         {/* Mensaje / Extracto */}
-                        <div className="bg-black/50 p-2.5 rounded-lg border border-zinc-800/80 text-[11px] text-zinc-300 line-clamp-3 leading-relaxed">
-                          {lead.ultimo_mensaje_recibido || lead.pitch_generado || lead.notas || 'Sin historial reciente.'}
+                        <div className="bg-black/50 p-2.5 rounded-lg border border-zinc-800/80 text-[11px] text-zinc-300 line-clamp-2 leading-relaxed">
+                          {lead.ultimo_analisis_resumen || lead.ultimo_mensaje_recibido || lead.pitch_generado || lead.notas || 'Sin historial reciente.'}
                         </div>
+
+                        {/* Playbook Táctico Sugerido */}
+                        {lead.estrategia_playbook && (
+                          <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-300/90 flex items-center justify-between gap-1">
+                            <span className="truncate font-medium">⚡ {lead.estrategia_playbook.titulo}</span>
+                            <button
+                              type="button"
+                              onClick={() => onSelectLead(lead, { tab: 'emails', pitchDraft: lead.estrategia_playbook?.propuesta_rapida })}
+                              className="text-[9px] font-bold bg-amber-500 text-black px-1.5 py-0.5 rounded shrink-0 hover:bg-amber-400 cursor-pointer"
+                              title="Aplicar propuesta rápida"
+                            >
+                              Aplicar
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Botones de acción rápida */}
@@ -302,7 +390,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           className="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
                         >
                           <TrendingUp className="w-3 h-3" />
-                          <span>Copiloto de Cierre</span>
+                          <span>Copiloto</span>
                         </button>
 
                         <div className="flex items-center gap-1.5">

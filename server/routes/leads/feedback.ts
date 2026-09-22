@@ -40,7 +40,7 @@ export function getGlobalPitchFeedbackSummary(leads: any[]) {
 export function formatGlobalPitchFeedbackForPrompt(leads: any[]): string {
   const summary = getGlobalPitchFeedbackSummary(leads);
   if (summary.length === 0) {
-    return "Sin historial previo de feedback. Usar tono bailable, directo y fresco sin instrumentos de viento.";
+    return "Sin historial previo de feedback. Usar tono conciso, directo, respetuoso y adecuado a la identidad y propuesta musical de la banda.";
   }
 
   return summary.map((log, idx) => {

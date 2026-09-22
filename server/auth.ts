@@ -172,8 +172,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (bandObj) {
     activeBandName = bandObj.nombre_banda || bandObj.bandName || bandObj.name || activeBandName;
-  } else if (cleanActive === 'bakandeya') {
-    activeBandName = 'BAKANDEYA';
   }
 
   return {

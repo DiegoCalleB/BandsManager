@@ -11,21 +11,47 @@
 import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
-import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword } from "./replyDrafting.js";
+import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword, detectResponseType } from "./replyDrafting.js";
+import { analyzeIncomingMessageSentiment } from "./sentimentAnalysis.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
 
-// Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
-// entrar aquí no bloquea el hilo, y una clasificación de más no hace daño (el mánager siempre
-// puede corregir el estado a mano). Las palabras se comparten con replyDrafting.ts
-// (getNegotiationKeywords) para que ambos clasificadores no diverjan con el tiempo, y ahora
-// están indexadas por idioma - antes eran 100% en español, así que una sala francesa/italiana/
-// etc. preguntando por precio o fecha nunca hacía que el lead pasara a "negociando".
+// Clasificador de precisión para respuestas entrantes de salas/festivales/medios:
+// Evalúa el contenido del mensaje entrante en el idioma del lead y determina la transición de estado óptima:
+// 1. 'rejection' -> 'no_interesado'
+// 2. 'confirmation' -> 'confirmado'
+// 3. 'price_negotiation' o palabras clave de negociación -> 'negociando'
+// 4. 'follow_up' / 'neutral' -> 'respondido'
 export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string, languageCode?: string): string {
   const t = (textoRespuesta || "").toLowerCase();
-  if (getNegotiationKeywords(languageCode).some((k) => matchesKeyword(t, k))) return "negociando";
-  if (estadoActual === "contactado" || estadoActual === "esperando_respuesta") return "respondido";
+  
+  let lang = languageCode;
+  if (!lang) {
+    if (/\b(what|price|rates|budget|how much|confirm|sorry|unfortunately|thanks)\b/i.test(t)) lang = 'en';
+    else if (/\b(prezzo|quanto|confermiamo|purtroppo)\b/i.test(t)) lang = 'it';
+    else if (/\b(prix|cachet|combien|confirmons|désolé|malheureusement)\b/i.test(t)) lang = 'fr';
+    else lang = 'es';
+  }
+
+  if (estadoActual === "descartado" || estadoActual === "confirmado") {
+    return estadoActual;
+  }
+
+  const resType = detectResponseType(textoRespuesta, lang);
+
+  if (resType === "rejection") {
+    return "no_interesado";
+  }
+  if (resType === "confirmation") {
+    return "confirmado";
+  }
+  if (resType === "price_negotiation" || getNegotiationKeywords(lang).some((k) => matchesKeyword(t, k))) {
+    return "negociando";
+  }
+  if (estadoActual === "contactado" || estadoActual === "esperando_respuesta" || estadoActual === "nuevo") {
+    return "respondido";
+  }
   return estadoActual;
 }
 
@@ -203,6 +229,16 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       const hiloPrevio = await dbGetLeadMessages(String(lead.id), bandId);
       const threadSoFar = hiloPrevio.map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
 
+      // Análisis de sentimiento, intención y temperatura comercial por el Agente Lector
+      const leadLang = detectPitchLanguage(lead);
+      const sentimentAnalysis = await analyzeIncomingMessageSentiment(msg.text, leadLang.code, {
+        name: lead.nombre_sala,
+        city: lead.ciudad,
+        tipo: lead.tipo
+      });
+
+      console.log(`[Lector] Sentimiento detectado para lead ${lead.id}: ${sentimentAnalysis.sentimiento} (Score: ${sentimentAnalysis.sentimiento_score}), Intención: ${sentimentAnalysis.intencion}, Temp: ${sentimentAnalysis.temperatura}`);
+
       await dbCreateLeadMessage({
         id: messageRowId,
         lead_id: lead.id,
@@ -211,7 +247,23 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         remitente_nombre: lead.nombre_sala || "Sala",
         asunto: msg.subject || "",
         mensaje: msg.text,
-        fecha: (msg.date || new Date()).toISOString()
+        fecha: (msg.date || new Date()).toISOString(),
+        sentimiento: sentimentAnalysis.sentimiento,
+        sentimiento_score: sentimentAnalysis.sentimiento_score,
+        sentimiento_label: sentimentAnalysis.sentimiento_label,
+        intencion: sentimentAnalysis.intencion,
+        intencion_etiqueta: sentimentAnalysis.intencion_etiqueta,
+        temperatura: sentimentAnalysis.temperatura,
+        objeciones: sentimentAnalysis.objeciones_detectadas,
+        puntos_clave: sentimentAnalysis.puntos_clave,
+        fechas_propuestas: sentimentAnalysis.fechas_propuestas,
+        condiciones_economicas: sentimentAnalysis.condiciones_economicas,
+        requisitos_tecnicos: sentimentAnalysis.requisitos_tecnicos,
+        accion_sugerida: sentimentAnalysis.accion_sugerida,
+        estrategia_playbook: sentimentAnalysis.estrategia_playbook,
+        resumen_ejecutivo: sentimentAnalysis.resumen_ejecutivo,
+        sugerencia_estrategia: sentimentAnalysis.sugerencia_estrategia,
+        analisis_ia: sentimentAnalysis
       });
 
       // Auto-Contestador: en vez de dejar el lead solo clasificado (negociando/respondido) sin
@@ -221,11 +273,19 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       // sola: sigue haciendo falta la aprobación humana (aprobado_respuesta) antes del Enviador.
       // Si la IA falla, se cae al comportamiento de antes (solo clasificar) para no dejar el
       // lead sin estado por un fallo de la IA.
-      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text, detectPitchLanguage(lead).code);
+      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text, leadLang.code);
       let borradorGenerado: string | null = null;
       if (puedeGenerarBorradorIA(bandId)) {
         try {
-          const { draftReply } = await generarBorradorRespuesta(bandId, lead, msg.text, threadSoFar);
+          const { draftReply } = await generarBorradorRespuesta(
+            bandId,
+            lead,
+            msg.text,
+            threadSoFar,
+            undefined,
+            undefined,
+            sentimentAnalysis
+          );
           borradorGenerado = draftReply;
           nuevoEstado = "pendiente_aprobacion";
           borradorIaGenerados++;
@@ -242,7 +302,20 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         ...lead,
         estado: nuevoEstado,
         ...(borradorGenerado ? { pitch_generado: borradorGenerado } : {}),
-        fecha_ultima_respuesta: (msg.date || new Date()).toISOString()
+        fecha_ultima_respuesta: (msg.date || new Date()).toISOString(),
+        ultimo_sentimiento: sentimentAnalysis.sentimiento,
+        ultimo_sentimiento_score: sentimentAnalysis.sentimiento_score,
+        ultimo_sentimiento_label: sentimentAnalysis.sentimiento_label,
+        ultima_intencion: sentimentAnalysis.intencion,
+        ultima_intencion_etiqueta: sentimentAnalysis.intencion_etiqueta,
+        ultimas_objeciones: sentimentAnalysis.objeciones_detectadas,
+        ultimo_analisis_resumen: sentimentAnalysis.resumen_ejecutivo,
+        temperatura_lead: sentimentAnalysis.temperatura,
+        fechas_propuestas_sala: sentimentAnalysis.fechas_propuestas,
+        condiciones_economicas_detectadas: sentimentAnalysis.condiciones_economicas,
+        requisitos_tecnicos_detectados: sentimentAnalysis.requisitos_tecnicos,
+        accion_sugerida_ia: sentimentAnalysis.accion_sugerida,
+        estrategia_playbook: sentimentAnalysis.estrategia_playbook
       }, bandId);
 
       // RFC 5322: la próxima respuesta nuestra debe citar el Message-ID de ESTE mensaje entrante

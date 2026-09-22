@@ -29,6 +29,7 @@ import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
 import { HolidayDateWarning } from './common/HolidayDateWarning';
+import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../utils/whatsapp';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -908,8 +909,7 @@ export default function CalendarView({
  const cleanPhone = contact.telefono.replace(/[^0-9]/g, '');
  const bandName = getBandIdentity(selectedConcert?.band_id).name || 'la banda';
  const msg = `¡Hola ${contact.nombre}! Te escribo de parte de ${bandName} con respecto al concierto en ${venueName} el día ${eventDateStr}. ¿Cómo estás? Quería consultar unos detalles de producción.`;
- const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
- window.open(url, '_blank', 'noopener,noreferrer');
+ openWhatsAppChat(cleanPhone, msg);
  };
 
  const handleUpdateMerchItem = (dateKey: string, itemId: string, updates: Partial<MerchBoloItem>) => {
@@ -2205,8 +2205,7 @@ export default function CalendarView({
 
  const handleShareEventWhatsApp = React.useCallback((event: Concert | Rehearsal, isConcert: boolean) => {
    const msg = getEventShareText(event, isConcert);
-   const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
-   window.open(waUrl, '_blank', 'noopener,noreferrer');
+   openWhatsAppChat(undefined, msg);
  }, [getEventShareText]);
 
  const handleCopyEventFicha = React.useCallback((event: Concert | Rehearsal, isConcert: boolean) => {
@@ -4981,9 +4980,12 @@ export default function CalendarView({
  {c.telefono && (
  <>
  <a
- href={`https://wa.me/${c.telefono.replace(/[^0-9]/g, '')}`}
- target="_blank"
- rel="noopener noreferrer"
+ href={getWhatsAppUrl(c.telefono)}
+ target={WHATSAPP_WINDOW_NAME}
+ onClick={(e) => {
+ e.preventDefault();
+ openWhatsAppChat(c.telefono);
+ }}
  className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
  title="WhatsApp"
  >

@@ -86,6 +86,8 @@ CREATE TABLE IF NOT EXISTS leads (
     email_contacto TEXT,
     email_secundario TEXT DEFAULT '',
     telefono TEXT,
+    telefono_movil TEXT DEFAULT '',
+    telefono_fijo TEXT DEFAULT '',
     website TEXT,
     instagram TEXT,
     contacto_nombre TEXT,
@@ -111,6 +113,23 @@ CREATE TABLE IF NOT EXISTS leads (
     -- donde escribe el Enviador/Lector); server/db/leads.ts la persiste para que ese lado del
     -- frontend deje de perderse en cada guardado, pero conceptualmente son dos cosas distintas.
     hilo_emails JSONB DEFAULT '[]'::jsonb,
+    roster TEXT,
+    festival_start_date TEXT,
+    festival_end_date TEXT,
+    fechas_ocupadas JSONB DEFAULT '[]'::jsonb,
+    fechas_libres_detectadas JSONB DEFAULT '[]'::jsonb,
+    temperatura_lead TEXT,
+    ultimo_sentimiento TEXT,
+    ultimo_sentimiento_score NUMERIC,
+    ultimo_sentimiento_label TEXT,
+    ultima_intencion TEXT,
+    ultima_intencion_etiqueta TEXT,
+    ultimas_objeciones JSONB DEFAULT '[]'::jsonb,
+    ultimo_analisis_resumen TEXT,
+    fechas_propuestas_sala JSONB DEFAULT '[]'::jsonb,
+    condiciones_economicas_detectadas JSONB DEFAULT '{}'::jsonb,
+    estrategia_playbook JSONB DEFAULT '{}'::jsonb,
+    ultimo_mensaje_recibido TEXT,
     -- ID del borrador creado por el Agente Enviador vía la API de Gmail (server/services/
     -- gmailApiClient.ts) cuando la banda usa OAuth sin contraseña. Permite comprobar en el
     -- siguiente tick del scheduler si el borrador sigue existiendo o si ya se envió a mano
@@ -1005,5 +1024,34 @@ CREATE POLICY "rehearsals_select_policy" ON public.rehearsals
     band_id = public.get_active_band_id() OR
     band_id IN (SELECT public.get_user_authorized_band_ids())
   );
+
+-- Migraciones idempotentes para asegurar que la tabla leads tiene las últimas columnas
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS roster TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS festival_start_date TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS festival_end_date TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS fechas_ocupadas JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS fechas_libres_detectadas JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_sentimiento TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_sentimiento_score NUMERIC;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_sentimiento_label TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultima_intencion TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultima_intencion_etiqueta TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimas_objeciones JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ultimo_analisis_resumen TEXT;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS temperatura_lead TEXT;
+
+-- Migraciones idempotentes para columnas de sentimiento en lead_messages
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sentimiento TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sentimiento_score NUMERIC;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sentimiento_label TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS intencion TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS intencion_etiqueta TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS temperatura TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS objeciones JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS puntos_clave JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS resumen_ejecutivo TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS sugerencia_estrategia TEXT;
+ALTER TABLE lead_messages ADD COLUMN IF NOT EXISTS analisis_ia JSONB;
+
 
 

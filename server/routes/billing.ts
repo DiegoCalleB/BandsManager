@@ -69,7 +69,7 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
     }
     if (bandId) {
       const cleanBandId = bandId.replace(/^(band|reg)-/, '').toLowerCase();
-      const bandConfig = state.epkConfigsByBand?.[cleanBandId] || (cleanBandId === 'bakandeya' ? state.epkConfig : null);
+      const bandConfig = state.epkConfigsByBand?.[cleanBandId] || state.epkConfig;
       if (bandConfig?.contactoBooking?.email && isValidEmail(bandConfig.contactoBooking.email)) {
         return bandConfig.contactoBooking.email.trim().toLowerCase();
       }

@@ -50,6 +50,19 @@ vi.mock('../replyDrafting.js', async (importOriginal) => {
   };
 });
 
+vi.mock('../sentimentAnalysis.js', () => ({
+  analyzeIncomingMessageSentiment: vi.fn().mockResolvedValue({
+    sentimiento: 'positivo',
+    sentimiento_score: 0.8,
+    sentimiento_label: 'Interesado',
+    intencion: 'proponer_fechas',
+    intencion_etiqueta: 'Pide fechas disponibles',
+    temperatura: 'caliente',
+    fechas_mencionadas: [],
+    resumen_ejecutivo: 'Interesado en propuesta'
+  })
+}));
+
 import { runLectorAgent, puedeGenerarBorradorIA } from '../lectorAgent';
 
 describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que leerRespuestasGmailApi funcione', () => {

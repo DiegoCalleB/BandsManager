@@ -10,6 +10,7 @@ import { dbGetReplyFewShotThreads } from "../db/pitchLearning.js";
 import { dbGetAutonomyConfig } from "../db/autonomy.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
+import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
 
 // Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
 // (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
@@ -164,6 +165,7 @@ export { matchesKeyword };
 export interface DraftReplyResult {
   draftReply: string;
   isSimulated: boolean;
+  sentimentAnalysis?: MessageSentimentAnalysis;
 }
 
 export async function generarBorradorRespuesta(
@@ -172,7 +174,8 @@ export async function generarBorradorRespuesta(
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
   provider?: string,
-  feedbackDetails?: string[]
+  feedbackDetails?: string[],
+  sentimentAnalysisInput?: MessageSentimentAnalysis
 ): Promise<DraftReplyResult> {
   const state = loadState();
   // Modo 'reply': lee reglas de estilo aprendidas del cubo de RESPUESTAS, no del de pitches
@@ -189,12 +192,27 @@ export async function generarBorradorRespuesta(
   const responseType = detectResponseType(incomingMessage, leadLanguage.code);
   console.log(`[Contestador] Tipo de respuesta detectado: ${responseType} (idioma: ${leadLanguage.code})`);
 
+  // Analizar o reutilizar análisis de sentimiento
+  let sentimentAnalysis = sentimentAnalysisInput;
+  if (!sentimentAnalysis) {
+    try {
+      sentimentAnalysis = await analyzeIncomingMessageSentiment(incomingMessage, leadLanguage.code, {
+        name: lead?.nombre_sala,
+        city: lead?.ciudad,
+        tipo: lead?.tipo
+      });
+    } catch (err) {
+      console.warn("[Contestador] Fallo menor calculando análisis de sentimiento:", err);
+    }
+  }
+
   // Guía condicional configurada a mano por la banda para este tipo de respuesta (opcional -
   // ver AgentAutonomySettingsModal.tsx > "Estrategias de Respuesta"). Si no hay ninguna, cae a
   // la guía automática fija de código dentro de buildReplySystemPrompt.
   let responseStrategy = null;
+  let autonomyConfig: any = null;
   try {
-    const autonomyConfig = await dbGetAutonomyConfig(bandId);
+    autonomyConfig = await dbGetAutonomyConfig(bandId);
     if (autonomyConfig?.responseStrategies?.[responseType]) {
       responseStrategy = autonomyConfig.responseStrategies[responseType];
       console.log(`[Contestador] Usando estrategia configurada para: ${responseType}`);
@@ -211,7 +229,19 @@ export async function generarBorradorRespuesta(
     console.warn("Notice cargando ejemplos de respuesta para el Contestador:", err);
   }
 
-  const systemPrompt = buildReplySystemPrompt(bandDna, lead, incomingMessage, threadSoFar, replyFewShotSection, responseType, responseStrategy, feedbackDetails);
+  const systemPrompt = buildReplySystemPrompt(
+    bandDna,
+    lead,
+    incomingMessage,
+    threadSoFar,
+    replyFewShotSection,
+    responseType,
+    responseStrategy,
+    feedbackDetails,
+    autonomyConfig?.minCacheByType,
+    autonomyConfig?.negotiationStartCacheByType,
+    sentimentAnalysis
+  );
   const prompt = `Redacta la respuesta al mensaje entrante indicado en las instrucciones del sistema. Devuelve ÚNICAMENTE el cuerpo del email, sin asunto.`;
 
   const pitchLinks = { spotify: bandDna.spotifyUrl, youtube: bandDna.youtubeUrl, epk: bandDna.epkUrl };
@@ -237,7 +267,7 @@ export async function generarBorradorRespuesta(
     draftReply = generateFallbackReply(lead, incomingMessage, responseType);
   }
 
-  return { draftReply, isSimulated };
+  return { draftReply, isSimulated, sentimentAnalysis };
 }
 
 function generateFallbackReply(lead: any, incomingMessage: string, responseType: ResponseType): string {

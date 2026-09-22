@@ -60,7 +60,6 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     });
     if (bandInfo?.logo_url && bandInfo.logo_url.trim().length > 0) return bandInfo.logo_url;
     if (bandInfo?.imagen_url && bandInfo.imagen_url.trim().length > 0) return bandInfo.imagen_url;
-    if (cleanId === 'bakandeya') return '/logo_bakandeya_bueno_sin_fondo.png';
     return '';
   };
 

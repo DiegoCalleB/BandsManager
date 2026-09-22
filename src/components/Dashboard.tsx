@@ -300,11 +300,11 @@ export default function Dashboard({
  return matchesSearch && matchesCity && matchesGenre;
  });
 
- const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
- const subCardBg = isStitchLight ? 'bg-slate-50/80 text-slate-800' : 'bg-[#1A1918] text-zinc-100';
- const textTitle = isStitchLight ? 'text-slate-900' : 'text-neutral-100';
- const textSub = isStitchLight ? 'text-slate-500' : 'text-neutral-400';
- const textMuted = isStitchLight ? 'text-slate-400' : 'text-neutral-500';
+ const isStitchLight = colors.mode === 'light' || colors.name?.toLowerCase().includes('light') || colors.name?.toLowerCase().includes('claro') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || colors.bg.includes('fbfbfa') || false;
+ const subCardBg = isStitchLight ? 'bg-white border border-zinc-200 text-zinc-900 shadow-xs' : 'bg-[#18181b] border border-white/[0.08] text-zinc-100 shadow-xs';
+ const textTitle = isStitchLight ? 'text-zinc-900' : 'text-neutral-100';
+ const textSub = isStitchLight ? 'text-zinc-600' : 'text-neutral-400';
+ const textMuted = isStitchLight ? 'text-zinc-400' : 'text-neutral-500';
 
  // Calculate real metrics from leads
  const isMedio = (l: Lead) => {
@@ -780,8 +780,8 @@ export default function Dashboard({
       <div className="flex items-center justify-between gap-3 pb-1">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
-            <span className="text-xs font-mono text-zinc-400 hidden sm:inline">
+            <h1 className={`text-xl sm:text-2xl font-display font-bold tracking-tight ${isStitchLight ? 'text-zinc-900' : 'text-zinc-100'}`}>Dashboard</h1>
+            <span className={`text-xs font-mono ${isStitchLight ? 'text-zinc-500' : 'text-zinc-400'} hidden sm:inline`}>
               · {activeBandName} ({leads.length} CRM · {upcomingEvents.length} Fechas)
             </span>
           </div>
@@ -792,10 +792,14 @@ export default function Dashboard({
             type="button"
             id="quick-toggle-density-btn"
             onClick={() => setViewDensityMode(prev => prev === 'clean' ? 'full' : 'clean')}
-            className="px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-amber-300 border border-zinc-800 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            className={`px-2.5 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs ${
+              isStitchLight
+                ? 'bg-white hover:bg-zinc-50 text-zinc-800 border-zinc-200'
+                : 'bg-zinc-900 hover:bg-zinc-800 text-amber-300 border-zinc-800'
+            }`}
             title="Alternar entre Vista Esencial y Vista Completa"
           >
-            <Eye className="w-3.5 h-3.5 text-amber-400" />
+            <Eye className={`w-3.5 h-3.5 ${isStitchLight ? 'text-indigo-600' : 'text-amber-400'}`} />
             <span>{viewDensityMode === 'clean' ? 'Vista Esencial' : 'Vista Completa'}</span>
           </button>
 
@@ -805,10 +809,12 @@ export default function Dashboard({
               type="button"
               id="dashboard-settings-gear-btn"
               onClick={() => setIsDashboardSettingsOpen(!isDashboardSettingsOpen)}
-              className={`p-2 rounded-xl transition-all border shadow-sm cursor-pointer ${
+              className={`p-2 rounded-xl transition-all border shadow-xs cursor-pointer ${
                 isDashboardSettingsOpen || isEditDashboardMode
-                  ? 'bg-amber-500 text-stone-950 border-amber-400 font-black'
-                  : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
+                  ? 'bg-indigo-600 text-white border-indigo-500 font-bold'
+                  : isStitchLight
+                    ? 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200'
+                    : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
               }`}
               title="Ajustes del Dashboard"
             >
@@ -816,14 +822,16 @@ export default function Dashboard({
             </button>
 
             {isDashboardSettingsOpen && (
-              <div className="absolute right-0 mt-2 w-64 p-2 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-2xl z-50 animate-fade-in space-y-1">
-                <div className="px-3 py-1.5 border-b border-zinc-800/80 mb-1 flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block">
+              <div className={`absolute right-0 mt-2 w-64 p-2 rounded-2xl border shadow-xl z-50 animate-fade-in space-y-1 ${
+                isStitchLight ? 'bg-white border-zinc-200 text-zinc-900' : 'bg-zinc-950 border-zinc-800 text-zinc-100'
+              }`}>
+                <div className={`px-3 py-1.5 border-b ${isStitchLight ? 'border-zinc-200' : 'border-zinc-800/80'} mb-1 flex items-center justify-between`}>
+                  <span className={`text-[10px] font-mono font-bold ${isStitchLight ? 'text-zinc-500' : 'text-zinc-400'} uppercase tracking-wider block`}>
                     Ajustes del Dashboard
                   </span>
                   <button 
                     onClick={() => setIsDashboardSettingsOpen(false)}
-                    className="p-0.5 text-zinc-500 hover:text-zinc-300"
+                    className="p-0.5 text-zinc-400 hover:text-zinc-600"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -836,13 +844,13 @@ export default function Dashboard({
                     setViewDensityMode(prev => prev === 'clean' ? 'full' : 'clean');
                     setIsDashboardSettingsOpen(false);
                   }}
-                  className="w-full px-3 py-2 rounded-xl hover:bg-zinc-900 text-left text-xs text-zinc-200 flex items-center justify-between font-medium transition-colors cursor-pointer"
+                  className={`w-full px-3 py-2 rounded-xl ${isStitchLight ? 'hover:bg-zinc-100 text-zinc-800' : 'hover:bg-zinc-900 text-zinc-200'} text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
                 >
                   <div className="flex items-center gap-2">
-                    <Eye className="w-3.5 h-3.5 text-amber-400" />
+                    <Eye className="w-3.5 h-3.5 text-indigo-500" />
                     <span>Modo Vista</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-zinc-800 text-amber-300">
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${isStitchLight ? 'bg-zinc-100 text-zinc-700' : 'bg-zinc-800 text-amber-300'}`}>
                     {viewDensityMode === 'clean' ? 'Esencial' : 'Completa'}
                   </span>
                 </button>
@@ -854,14 +862,14 @@ export default function Dashboard({
                     setIsEditDashboardMode(!isEditDashboardMode);
                     setIsDashboardSettingsOpen(false);
                   }}
-                  className="w-full px-3 py-2 rounded-xl hover:bg-zinc-900 text-left text-xs text-zinc-200 flex items-center justify-between font-medium transition-colors cursor-pointer"
+                  className={`w-full px-3 py-2 rounded-xl ${isStitchLight ? 'hover:bg-zinc-100 text-zinc-800' : 'hover:bg-zinc-900 text-zinc-200'} text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
                 >
                   <div className="flex items-center gap-2">
-                    <Sliders className="w-3.5 h-3.5 text-amber-400" />
+                    <Sliders className="w-3.5 h-3.5 text-indigo-500" />
                     <span>Personalizar / Reordenar</span>
                   </div>
                   {isEditDashboardMode && (
-                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
                   )}
                 </button>
 
@@ -872,9 +880,9 @@ export default function Dashboard({
                     setIsAlertSettingsOpen(true);
                     setIsDashboardSettingsOpen(false);
                   }}
-                  className="w-full px-3 py-2 rounded-xl hover:bg-zinc-900 text-left text-xs text-zinc-200 flex items-center gap-2 font-medium transition-colors cursor-pointer"
+                  className={`w-full px-3 py-2 rounded-xl ${isStitchLight ? 'hover:bg-zinc-100 text-zinc-800' : 'hover:bg-zinc-900 text-zinc-200'} text-left text-xs flex items-center gap-2 font-medium transition-colors cursor-pointer`}
                 >
-                  <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+                  <Sliders className="w-3.5 h-3.5 text-indigo-500" />
                   <span>Alertas del Mánager</span>
                 </button>
               </div>

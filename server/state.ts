@@ -672,24 +672,7 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
     .find(cfg => cfg && (cfg.logoUrl || cfg.biografia || cfg.nombre_banda));
 
   if (!existing) {
-    if (cleanId === 'bakandeya') {
-      existing = state.epkConfig || DEFAULT_EPK_CONFIG;
-      // Ensure complete default networks, signature and contact if missing in existing object
-      existing.enlacesRedes = { ...DEFAULT_EPK_CONFIG.enlacesRedes, ...(existing.enlacesRedes || {}) };
-      existing.contactoBooking = { ...DEFAULT_EPK_CONFIG.contactoBooking, ...(existing.contactoBooking || {}) };
-      existing.firmaEmail = { ...DEFAULT_EPK_CONFIG.firmaEmail, ...(existing.firmaEmail || {}) };
-      if (!existing.firmaEmail.telefono) existing.firmaEmail.telefono = DEFAULT_EPK_CONFIG.contactoBooking.telefono;
-      if (!existing.firmaEmail.email) existing.firmaEmail.email = DEFAULT_EPK_CONFIG.contactoBooking.email;
-    } else {
-      existing = getDefaultEpkConfig(bandName, email);
-    }
-  } else if (cleanId === 'bakandeya') {
-    // Fill in any empty fields in existing bakandeya config
-    existing.enlacesRedes = { ...DEFAULT_EPK_CONFIG.enlacesRedes, ...(existing.enlacesRedes || {}) };
-    existing.contactoBooking = { ...DEFAULT_EPK_CONFIG.contactoBooking, ...(existing.contactoBooking || {}) };
-    existing.firmaEmail = { ...DEFAULT_EPK_CONFIG.firmaEmail, ...(existing.firmaEmail || {}) };
-    if (!existing.firmaEmail.telefono) existing.firmaEmail.telefono = DEFAULT_EPK_CONFIG.contactoBooking.telefono;
-    if (!existing.firmaEmail.email) existing.firmaEmail.email = DEFAULT_EPK_CONFIG.contactoBooking.email;
+    existing = getDefaultEpkConfig(bandName, email);
   }
 
   // Ensure logoUrl fallback if missing or empty
@@ -707,8 +690,6 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
       existing.logoUrl = regBand.logo_url;
     } else if (regBand?.imagen_url && regBand.imagen_url.trim().length > 0) {
       existing.logoUrl = regBand.imagen_url;
-    } else if (cleanIdLower === 'bakandeya') {
-      existing.logoUrl = '/logo_bakandeya.jpg';
     }
   }
 

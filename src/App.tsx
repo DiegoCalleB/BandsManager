@@ -71,6 +71,9 @@ import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
 import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
 import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
+import { useBrowserPushNotifications } from './hooks/useBrowserPushNotifications';
+import { NotificationCenterBell } from './components/notifications/NotificationCenterBell';
+import { NotificationSettingsModal } from './components/notifications/NotificationSettingsModal';
 import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
 import {
@@ -150,6 +153,7 @@ export default function App() {
   const [showCampaignModal, setShowCampaignModal] = useState(false);
   const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
+  const [showNotificationSettingsModal, setShowNotificationSettingsModal] = useState<boolean>(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en 'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
@@ -164,8 +168,7 @@ export default function App() {
   const currentActiveBandName = activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name || 'Mi Banda';
   const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
     ? epkConfig.logoUrl
-    : (activeBandFromList?.logo_url || activeBandFromList?.imagen_url || (currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
-       (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : ''));
+    : (activeBandFromList?.logo_url || activeBandFromList?.imagen_url || (currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url || '');
 
   const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
     if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
@@ -366,6 +369,28 @@ export default function App() {
     }
   };
 
+  // Browser Push Notifications Engine & State
+  const {
+    permission: notificationPermission,
+    config: notificationConfig,
+    history: notificationHistory,
+    unreadCount: notificationUnreadCount,
+    requestPermission: requestNotificationPermission,
+    updateConfig: updateNotificationConfig,
+    markAllAsRead: markAllNotificationsAsRead,
+    markAsRead: markNotificationAsRead,
+    clearHistory: clearNotificationHistory,
+    triggerTest: triggerTestNotification,
+    triggerTestSound: triggerTestNotificationSound,
+  } = useBrowserPushNotifications({
+    leads,
+    messages,
+    isLoggedIn,
+    onSelectLead: (leadId) => {
+      handleNavigate('booking', { selectedLeadId: leadId });
+    },
+  });
+
   const [bandsCount, setBandsCount] = useState<number>(0);
 
   useEffect(() => {
@@ -435,7 +460,8 @@ export default function App() {
   // Active Theme State
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
     const saved = localStorage.getItem('bakandeya_theme') as ThemeName;
-    if (!saved || saved === ('stitch_light' as any) || !(saved in THEMES)) {
+    if (!saved || !(saved in THEMES) || saved.includes('light') || saved === 'brutalist_fuzz') {
+      localStorage.setItem('bakandeya_theme', 'analog_dark');
       return 'analog_dark';
     }
     return saved;
@@ -495,6 +521,7 @@ export default function App() {
   }, []);
 
   const colors: ThemeColors = THEMES[currentTheme] || THEMES.analog_dark;
+  const isStitchLight = colors.mode === 'light' || currentTheme.includes('light') || currentTheme.includes('claro') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || colors.bg.includes('fbfbfa') || false;
 
   // Persist Theme Selection
   const handleThemeChange = (theme: ThemeName) => {
@@ -502,18 +529,6 @@ export default function App() {
     localStorage.setItem('bakandeya_theme', theme);
   };
 
-  const handleToggleMode = () => {
-    const isDark = (THEMES[currentTheme]?.mode || 'light') === 'dark';
-    if (isDark) {
-      if (currentTheme.includes('legato')) handleThemeChange('legato_light');
-      else if (currentTheme.includes('spectrum')) handleThemeChange('spectrum_light');
-      else handleThemeChange('analog_light');
-    } else {
-      if (currentTheme.includes('legato')) handleThemeChange('legato_dark');
-      else if (currentTheme.includes('spectrum')) handleThemeChange('spectrum_dark');
-      else handleThemeChange('analog_dark');
-    }
-  };
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter(c => {
@@ -639,7 +654,7 @@ export default function App() {
  ) : (
  <LoginModal
  onLoginSuccess={handleLoginSuccess}
- isStitchLight={false}
+ isStitchLight={isStitchLight}
  />
  );
  }
@@ -650,7 +665,7 @@ export default function App() {
  >
  {/* LEFT SIDEBAR */}
  {/* MOBILE TOP BAR */}
- <header className="md:hidden flex flex-col bg-[#121110] border-b border-[#22211F] sticky top-0 z-30 shrink-0 shadow-md">
+ <header className={`md:hidden flex flex-col ${colors.mode === 'dark' ? 'bg-[#121215] border-b border-white/[0.08]' : 'bg-white border-b border-zinc-200'} sticky top-0 z-30 shrink-0 shadow-xs`}>
  {/* Top Brand & Menu Row */}
  <div className="flex items-center justify-between px-4 pt-3 pb-2">
  <div 
@@ -676,7 +691,7 @@ export default function App() {
 
   <div className="flex flex-col">
    <div className="flex items-center gap-1.5">
-    <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`} translate="no">
+    <h1 className={`font-bold font-display tracking-wider uppercase ${colors.mode === 'dark' ? 'text-zinc-100 group-hover:text-amber-400' : 'text-zinc-900 group-hover:text-amber-600'} transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`} translate="no">
      {currentActiveBandName}
     </h1>
     <ChevronDown className="w-3.5 h-3.5 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
@@ -693,7 +708,20 @@ export default function App() {
    </button>
   </div>
  </div>
- <div className="flex items-center gap-2">
+ <div className="flex items-center gap-1.5 sm:gap-2">
+  <NotificationCenterBell
+   permission={notificationPermission}
+   config={notificationConfig}
+   history={notificationHistory}
+   unreadCount={notificationUnreadCount}
+   onOpenSettings={() => setShowNotificationSettingsModal(true)}
+   onRequestPermission={requestNotificationPermission}
+   onMarkAllAsRead={markAllNotificationsAsRead}
+   onMarkAsRead={markNotificationAsRead}
+   onClearHistory={clearNotificationHistory}
+   onSelectLead={(leadId) => handleNavigate('booking', { selectedLeadId: leadId })}
+   variant="mobile"
+  />
   <button
    type="button"
    onClick={() => setShowOnboardingModal(true)}
@@ -709,7 +737,7 @@ export default function App() {
    className={`px-2 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
      activeCampaign
        ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-xs'
-       : 'bg-[#1A1918] text-neutral-400 border-[#22211F] hover:text-white'
+       : colors.mode === 'dark' ? 'bg-[#1A1918] text-neutral-400 border-white/[0.08] hover:text-white' : 'bg-zinc-100 text-neutral-600 border-zinc-200 hover:text-neutral-900'
    }`}
    title="Gestionar Campañas de Booking"
   >
@@ -726,7 +754,7 @@ export default function App() {
      Resumen/Calendario navegan directo; Música/Promoción abren un sheet con sus
      sub-módulos; Más abre el drawer completo (Contactos, Negocio, Herramientas,
      Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
- <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[#121110] border-t border-[#22211F] shadow-[0_-6px_20px_rgba(0,0,0,0.35)]">
+ <nav className={`md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex ${colors.mode === 'dark' ? 'bg-[#121215] border-t border-white/[0.08] shadow-[0_-6px_20px_rgba(0,0,0,0.4)]' : 'bg-white border-t border-zinc-200 shadow-[0_-6px_20px_rgba(0,0,0,0.06)]'}`}>
  {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
    let isActive = false;
    if (openGroupSheetId) {
@@ -1024,20 +1052,26 @@ export default function App() {
  </span>
  </div>
  </div>
- <button
- onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
- className="p-1.5 text-neutral-500 hover:text-rose-300 rounded-lg hover:bg-[#22211F] transition-colors cursor-pointer"
- title="Cerrar Sesión"
- >
- <LogOut className="w-4 h-4" />
- </button>
+ <div className="flex items-center gap-1.5">
+  <button
+   onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+     colors.mode === 'dark'
+       ? 'text-neutral-500 hover:text-rose-300 hover:bg-white/[0.06]'
+       : 'text-neutral-400 hover:text-rose-600 hover:bg-zinc-100'
+   }`}
+   title="Cerrar Sesión"
+  >
+   <LogOut className="w-4 h-4" />
+  </button>
+ </div>
  </div>
  </div>
  </div>
  </div>
  )}
 
- <aside className="hidden md:flex w-[240px] shrink-0 bg-[#121110] border-[#22211F] flex-col h-screen sticky top-0 overflow-y-auto">
+ <aside className={`hidden md:flex w-[240px] shrink-0 ${colors.mode === 'dark' ? 'bg-[#121215] border-r border-white/[0.08]' : 'bg-white border-r border-zinc-200'} flex-col h-screen sticky top-0 overflow-y-auto`}>
  
  {/* Brand Header (Clickable Netflix Style Switcher) */}
  <div 
@@ -1292,9 +1326,26 @@ export default function App() {
  </div>
  </div>
  <div className="flex items-center gap-1.5">
+  <NotificationCenterBell
+   permission={notificationPermission}
+   config={notificationConfig}
+   history={notificationHistory}
+   unreadCount={notificationUnreadCount}
+   onOpenSettings={() => setShowNotificationSettingsModal(true)}
+   onRequestPermission={requestNotificationPermission}
+   onMarkAllAsRead={markAllNotificationsAsRead}
+   onMarkAsRead={markNotificationAsRead}
+   onClearHistory={clearNotificationHistory}
+   onSelectLead={(leadId) => handleNavigate('booking', { selectedLeadId: leadId })}
+   variant="desktop"
+  />
   <button
   onClick={handleLogout}
-  className="p-1.5 text-neutral-500 hover:text-rose-300 rounded-lg hover:bg-[#22211F] transition-colors cursor-pointer"
+  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+    colors.mode === 'dark'
+      ? 'text-neutral-500 hover:text-rose-300 hover:bg-white/[0.06]'
+      : 'text-neutral-400 hover:text-rose-600 hover:bg-zinc-100'
+  }`}
   title="Cerrar Sesión"
   >
   <LogOut className="w-4 h-4" />
@@ -1305,7 +1356,7 @@ export default function App() {
  </aside>
 
  {/* Main Content Area */}
- <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
+ <main className="flex-1 flex flex-col min-w-0 bg-[#09090b] text-[#f4f4f5] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
  {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
  {activeCampaign && ['booking', 'medios', 'management', 'bandas'].includes(currentView) && (
    <GlobalCampaignBar
@@ -1531,7 +1582,7 @@ export default function App() {
             onUpdateMetric={handleUpdateMetric}
             onDeleteMetric={handleDeleteMetric}
             colors={colors}
-            isStitchLight={false}
+            isStitchLight={isStitchLight}
             onNavigate={handleNavigate}
             isPromo={isPromoPlan}
             onUpdateConcert={handleUpdateConcert}
@@ -1629,7 +1680,7 @@ export default function App() {
  users={bandUsers}
  onClose={() => setShowUserManagementModal(false)}
  onRefreshUsers={fetchState}
- isStitchLight={false}
+ isStitchLight={isStitchLight}
  />
  )}
 
@@ -1643,7 +1694,7 @@ export default function App() {
  localStorage.setItem('bakandeya_user', JSON.stringify(updated));
  fetchState();
  }}
- isStitchLight={false}
+ isStitchLight={isStitchLight}
  isAdmin={isAdmin}
  onOpenBandManagement={() => setShowUserManagementModal(true)}
  currentTheme={currentTheme}
@@ -1659,14 +1710,27 @@ export default function App() {
  onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
  onNavigateToPlanes={() => handleNavigate('planes')}
  onOpenProfileWizard={() => setShowProfileWizardModal(true)}
+ onOpenNotificationSettings={() => setShowNotificationSettingsModal(true)}
  />
  )}
+
+ {/* Browser Push Notifications Settings Modal */}
+ <NotificationSettingsModal
+  isOpen={showNotificationSettingsModal}
+  onClose={() => setShowNotificationSettingsModal(false)}
+  permission={notificationPermission}
+  config={notificationConfig}
+  onUpdateConfig={updateNotificationConfig}
+  onRequestPermission={requestNotificationPermission}
+  onTriggerTest={triggerTestNotification}
+  onTriggerTestSound={triggerTestNotificationSound}
+ />
 
  {/* Font Selector Modal */}
  {showFontModal && (
  <FontSelectorModal
  onClose={() => setShowFontModal(false)}
- isStitchLight={false}
+ isStitchLight={isStitchLight}
  currentFont={currentFont}
  onSelectFont={(f) => {
  handleFontChange(f);

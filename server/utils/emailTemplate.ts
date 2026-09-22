@@ -4,6 +4,9 @@
  * rich visual HTML signature matching the EPK Manager design.
  */
 
+import { generateTrackingToken } from '../routes/tracking.js';
+import { getHashedPublicEpkUrl } from './bandHash.js';
+
 export function cleanTrailingPitchSignature(text: string): string {
   if (!text) return '';
   let cleaned = text.trim();
@@ -80,8 +83,23 @@ export function buildServerEmailHtml(params: {
   const dossierPdfName = epkConfig?.dossierPdfName || epkConfig?.dossier_pdf_name || 'Dossier Bakandeya.pdf';
   const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || (isBakandeya ? 'https://bandmanager.io/logo_bakandeya_bueno_sin_fondo.png' : '');
 
-  const cleanBandIdStr = bandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const webEpkUrl = `https://bandmanager.io/epk?band=${encodeURIComponent(bandId.startsWith('band-') ? bandId : `band-${cleanBandIdStr}`)}`;
+  const appBaseUrl = process.env.APP_URL || 'https://bandmanager.io';
+  const rawWebEpkUrl = getHashedPublicEpkUrl(bandId, appBaseUrl);
+  let trackingPixelHtml = '';
+  let webEpkUrl = rawWebEpkUrl;
+
+  if (lead?.id) {
+    try {
+      const trackingToken = generateTrackingToken({ leadId: lead.id, bandId });
+      const pixelUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/open?t=${encodeURIComponent(trackingToken)}`;
+      trackingPixelHtml = `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;border:0;outline:none;" alt="" />`;
+      
+      const clickRedirectUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&url=${encodeURIComponent(rawWebEpkUrl)}`;
+      webEpkUrl = clickRedirectUrl;
+    } catch {
+      // Fallback seguro si falla la firma del token
+    }
+  }
 
   const enlaces = epkConfig?.enlacesRedes || epkConfig?.enlaces_redes || {};
 
@@ -207,6 +225,7 @@ export function buildServerEmailHtml(params: {
       ${activeSocialLinksHtml}
     </div>
 
+    ${trackingPixelHtml}
   </div>
 </body>
 </html>`.trim();

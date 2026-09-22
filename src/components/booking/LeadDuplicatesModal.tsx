@@ -459,7 +459,21 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                 <div className="text-[11px] text-zinc-500 italic">Sin correo electrónico</div>
                               )}
 
-                              {lead.telefono && (
+                              {lead.telefono_movil && (
+                                <div className="flex items-center gap-1.5 truncate text-emerald-400 font-medium">
+                                  <span>📱</span>
+                                  <span>{lead.telefono_movil}</span>
+                                </div>
+                              )}
+
+                              {lead.telefono_fijo && (
+                                <div className="flex items-center gap-1.5 truncate text-sky-400 font-medium">
+                                  <span>☎️</span>
+                                  <span>{lead.telefono_fijo}</span>
+                                </div>
+                              )}
+
+                              {!lead.telefono_movil && !lead.telefono_fijo && lead.telefono && (
                                 <div className="flex items-center gap-1.5 truncate">
                                   <Phone className="w-3 h-3 text-zinc-400 shrink-0" />
                                   <span>{lead.telefono}</span>

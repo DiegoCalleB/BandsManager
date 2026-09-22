@@ -425,32 +425,7 @@ export async function dbGetSongs(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
 
-  let songsData = data || [];
-
-  // Auto-poblado si no hay canciones o si falta el catálogo inicial de Bakandeya
-  if (songsData.length === 0 && (noPrefix === 'bakandeya' || noPrefix === '' || candidateIds.includes('band-bakandeya'))) {
-    console.log(`[Repertorio] Auto-poblando catálogo de canciones iniciales de Bakandeya en Supabase...`);
-    const seedTargetBandId = rawClean || 'band-bakandeya';
-    try {
-      for (const song of INITIAL_SONGS) {
-        await dbUpsertSong(song, seedTargetBandId);
-      }
-      const { data: reFetched } = await sb
-        .from("songs")
-        .select("*")
-        .in("band_id", candidateIds)
-        .order("titulo", { ascending: true });
-      if (reFetched && reFetched.length > 0) {
-        songsData = reFetched;
-      } else {
-        return INITIAL_SONGS.map(mapSongRecord);
-      }
-    } catch (seedErr) {
-      console.error("[Repertorio] Error auto-poblando canciones iniciales:", seedErr);
-      return INITIAL_SONGS.map(mapSongRecord);
-    }
-  }
-
+  const songsData = data || [];
   return songsData.map(mapSongRecord);
 }
 
@@ -636,30 +611,7 @@ export async function dbGetSetlists(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
 
-  let setlistData = data || [];
-
-  if (setlistData.length === 0 && (noPrefix === 'bakandeya' || noPrefix === '' || candidateIds.includes('band-bakandeya'))) {
-    console.log(`[Repertorio] Auto-poblando setlists iniciales de Bakandeya en Supabase...`);
-    const seedTargetBandId = rawClean || 'band-bakandeya';
-    try {
-      for (const setlist of INITIAL_SETLISTS) {
-        await dbUpsertSetlist(setlist, seedTargetBandId);
-      }
-      const { data: reFetched } = await sb
-        .from("setlists")
-        .select("*")
-        .in("band_id", candidateIds)
-        .order("fecha_ultima_edicion", { ascending: false });
-      if (reFetched && reFetched.length > 0) {
-        setlistData = reFetched;
-      } else {
-        return INITIAL_SETLISTS.map(sl => ({ ...sl, items: sl.items || [] }));
-      }
-    } catch (seedErr) {
-      console.error("[Repertorio] Error auto-poblando setlists iniciales:", seedErr);
-      return INITIAL_SETLISTS.map(sl => ({ ...sl, items: sl.items || [] }));
-    }
-  }
+  const setlistData = data || [];
 
   return setlistData.map(sl => ({
     ...sl,

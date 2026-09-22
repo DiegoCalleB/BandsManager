@@ -18,6 +18,7 @@ import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
 import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
 import { EPKPlantillasBlock } from './epk/EPKPlantillasBlock';
 import { normalizePlan } from '../utils/planPermissions';
+import { getPublicEpkUrl } from '../utils/bandHash';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 
@@ -276,18 +277,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [errorTraduccion, setErrorTraduccion] = useState<string | null>(null);
   const [avisoTraduccion, setAvisoTraduccion] = useState<string | null>(null);
 
-  // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
-  // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
-  // defecto del servidor para resolver de qué banda es el dossier. Sin banda activa, no hay
-  // banda de la que generar un enlace (antes esto generaba, sin querer, un enlace válido al EPK
-  // público real de Bakandeya).
-  const bandQueryParam = activeBandId ? `?band=${encodeURIComponent(activeBandId)}` : '';
-  const rawEpkBase = typeof window !== 'undefined' 
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
-        ? `${window.location.origin}/epk` 
-        : 'https://bandmanager.io/epk') 
-    : 'https://bandmanager.io/epk';
-  const publicEpkUrl = `${rawEpkBase}${bandQueryParam}`;
+  // Genera el enlace público seguro con ID cifrado/hasheado
+  const publicEpkUrl = getPublicEpkUrl(activeBandId);
 
   const handleSave = async () => {
     setSaveError(null);

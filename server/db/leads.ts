@@ -15,7 +15,6 @@ export function sanitizeWebsiteUrl(val: unknown): string {
     lower.startsWith('¡buenas') ||
     lower.startsWith('hola') ||
     lower.startsWith('estimado') ||
-    lower.includes('bakandeya') ||
     lower === '0' ||
     lower === 'null' ||
     lower === 'undefined'
@@ -45,7 +44,6 @@ export function sanitizeInstagramHandle(val: unknown): string {
     lower.startsWith('¡buenas') ||
     lower.startsWith('hola') ||
     lower.startsWith('estimado') ||
-    lower.includes('bakandeya') ||
     lower === '0' ||
     lower === 'null' ||
     lower === 'undefined'
@@ -58,6 +56,39 @@ export function sanitizeInstagramHandle(val: unknown): string {
   }
 
   return str;
+}
+
+export function cleanVenueNameAndTipo(rawName: string, existingTipo?: string): { name: string; tipo: string } {
+  if (!rawName) return { name: "", tipo: existingTipo || "sala" };
+
+  let name = rawName.trim();
+  let tipo = existingTipo && existingTipo !== "otro" ? existingTipo.toLowerCase() : "sala";
+
+  // Strip Festival prefix
+  if (/^festival\s+/i.test(name)) {
+    name = name.replace(/^festival\s+/i, "").trim();
+    tipo = "festival";
+  } else if (name.toLowerCase().includes("festival") || name.toLowerCase().includes("fest")) {
+    tipo = "festival";
+  }
+
+  // Strip Ayuntamiento prefix
+  if (/^(ayuntamiento\s+de|ayuntamiento|ayto\.?\s+de|ayto\.?)\s+/i.test(name)) {
+    name = name.replace(/^(ayuntamiento\s+de|ayuntamiento|ayto\.?\s+de|ayto\.?)\s+/i, "").trim();
+    tipo = "ayuntamiento";
+  }
+
+  // Strip Sala prefix
+  if (/^sala\s+/i.test(name) && name.length > 5) {
+    name = name.replace(/^sala\s+/i, "").trim();
+    if (!existingTipo || existingTipo === "otro") tipo = "sala";
+  }
+
+  if (name.length > 0) {
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  return { name, tipo };
 }
 
 export async function dbCleanCorruptedLeadFields(): Promise<number> {
@@ -126,9 +157,16 @@ export async function dbGetLeads(bandId: string): Promise<any[]> {
   const validated = (data || []).filter(l => cleanBandId(l.band_id) === cleanId);
   return validated.map(l => ({
     ...l,
+    fechas_libres_detectadas: Array.isArray(l.fechas_libres_detectadas) ? l.fechas_libres_detectadas : [],
+    fechas_ocupadas: Array.isArray(l.fechas_ocupadas) ? l.fechas_ocupadas : [],
+    roster: l.roster || '',
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || [],
-    hilo_emails: l.hilo_emails || []
+    hilo_emails: l.hilo_emails || [],
+    fechas_propuestas_sala: Array.isArray(l.fechas_propuestas_sala) ? l.fechas_propuestas_sala : [],
+    condiciones_economicas_detectadas: l.condiciones_economicas_detectadas || null,
+    estrategia_playbook: l.estrategia_playbook || null,
+    ultimo_mensaje_recibido: l.ultimo_mensaje_recibido || ''
   }));
 }
 
@@ -173,9 +211,16 @@ export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptio
 
   const leads = validated.map(l => ({
     ...l,
+    fechas_libres_detectadas: Array.isArray(l.fechas_libres_detectadas) ? l.fechas_libres_detectadas : [],
+    fechas_ocupadas: Array.isArray(l.fechas_ocupadas) ? l.fechas_ocupadas : [],
+    roster: l.roster || '',
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || [],
-    hilo_emails: l.hilo_emails || []
+    hilo_emails: l.hilo_emails || [],
+    fechas_propuestas_sala: Array.isArray(l.fechas_propuestas_sala) ? l.fechas_propuestas_sala : [],
+    condiciones_economicas_detectadas: l.condiciones_economicas_detectadas || null,
+    estrategia_playbook: l.estrategia_playbook || null,
+    ultimo_mensaje_recibido: l.ultimo_mensaje_recibido || ''
   }));
 
   const total = count ?? leads.length;
@@ -206,9 +251,16 @@ export async function dbGetLeadById(id: string, bandId?: string) {
   }
   return {
     ...data,
+    fechas_libres_detectadas: Array.isArray(data.fechas_libres_detectadas) ? data.fechas_libres_detectadas : [],
+    fechas_ocupadas: Array.isArray(data.fechas_ocupadas) ? data.fechas_ocupadas : [],
+    roster: data.roster || '',
     historial_feedback_pitch: data.historial_feedback_pitch || [],
     historial_contacto: data.historial_contacto || [],
-    hilo_emails: data.hilo_emails || []
+    hilo_emails: data.hilo_emails || [],
+    fechas_propuestas_sala: Array.isArray(data.fechas_propuestas_sala) ? data.fechas_propuestas_sala : [],
+    condiciones_economicas_detectadas: data.condiciones_economicas_detectadas || null,
+    estrategia_playbook: data.estrategia_playbook || null,
+    ultimo_mensaje_recibido: data.ultimo_mensaje_recibido || ''
   };
 }
 
@@ -254,19 +306,25 @@ export async function dbUpsertLead(lead: any, bandId: string) {
 
   const finalId = existingRecord?.id || (idBelongsToOtherBand ? `lead-${Date.now()}` : lead.id) || `lead-${Date.now()}`;
 
+  const rawName = name || existingRecord?.nombre_sala || "Sala";
+  const rawTipo = lead.tipo || existingRecord?.tipo || "sala";
+  const { name: finalCleanName, tipo: finalCleanTipo } = cleanVenueNameAndTipo(rawName, rawTipo);
+
   const payload = {
     id: finalId,
     band_id: targetBandId,
-    nombre_sala: name || existingRecord?.nombre_sala || "Sala",
+    nombre_sala: finalCleanName || "Espacio",
     ciudad: lead.ciudad || existingRecord?.ciudad || "",
     region: lead.region || existingRecord?.region || "",
     direccion: lead.direccion || existingRecord?.direccion || "",
     aforo: Number(lead.aforo || existingRecord?.aforo || 0),
     genero: lead.genero || existingRecord?.genero || "",
-    tipo: lead.tipo || existingRecord?.tipo || "sala",
+    tipo: finalCleanTipo,
     email_contacto: lead.email_contacto || lead.emailContacto || existingRecord?.email_contacto || "",
     email_secundario: lead.email_secundario || lead.emailSecundario || existingRecord?.email_secundario || "",
-    telefono: lead.telefono || existingRecord?.telefono || "",
+    telefono: lead.telefono || lead.telefono_movil || lead.telefono_fijo || existingRecord?.telefono || "",
+    telefono_movil: lead.telefono_movil || lead.telefonoMovil || existingRecord?.telefono_movil || "",
+    telefono_fijo: lead.telefono_fijo || lead.telefonoFijo || existingRecord?.telefono_fijo || "",
     website: sanitizeWebsiteUrl(lead.website || existingRecord?.website || ""),
     instagram: sanitizeInstagramHandle(lead.instagram || existingRecord?.instagram || ""),
     contacto_nombre: lead.contacto_nombre || lead.contactoNombre || existingRecord?.contacto_nombre || "",
@@ -288,13 +346,53 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     historial_feedback_pitch: lead.historial_feedback_pitch || lead.historialFeedbackPitch || existingRecord?.historial_feedback_pitch || [],
     historial_contacto: lead.historial_contacto || lead.historialContacto || existingRecord?.historial_contacto || [],
     hilo_emails: lead.hilo_emails || existingRecord?.hilo_emails || [],
+    roster: lead.roster || existingRecord?.roster || "",
     festival_start_date: lead.festival_start_date || lead.festivalStartDate || existingRecord?.festival_start_date || null,
-    festival_end_date: lead.festival_end_date || lead.festivalEndDate || existingRecord?.festival_end_date || null
+    festival_end_date: lead.festival_end_date || lead.festivalEndDate || existingRecord?.festival_end_date || null,
+    fechas_ocupadas: lead.fechas_ocupadas || lead.fechasOcupadas || existingRecord?.fechas_ocupadas || [],
+    fechas_libres_detectadas: lead.fechas_libres_detectadas || lead.fechasLibresDetectadas || existingRecord?.fechas_libres_detectadas || [],
+    ultimo_sentimiento: lead.ultimo_sentimiento || existingRecord?.ultimo_sentimiento || null,
+    ultimo_sentimiento_score: lead.ultimo_sentimiento_score ?? existingRecord?.ultimo_sentimiento_score ?? null,
+    ultimo_sentimiento_label: lead.ultimo_sentimiento_label || existingRecord?.ultimo_sentimiento_label || null,
+    ultima_intencion: lead.ultima_intencion || existingRecord?.ultima_intencion || null,
+    ultima_intencion_etiqueta: lead.ultima_intencion_etiqueta || existingRecord?.ultima_intencion_etiqueta || null,
+    ultimas_objeciones: lead.ultimas_objeciones || existingRecord?.ultimas_objeciones || [],
+    ultimo_analisis_resumen: lead.ultimo_analisis_resumen || existingRecord?.ultimo_analisis_resumen || "",
+    temperatura_lead: lead.temperatura_lead || lead.temperatura || existingRecord?.temperatura_lead || null,
+    fechas_propuestas_sala: lead.fechas_propuestas_sala || existingRecord?.fechas_propuestas_sala || [],
+    condiciones_economicas_detectadas: lead.condiciones_economicas_detectadas || existingRecord?.condiciones_economicas_detectadas || null,
+    estrategia_playbook: lead.estrategia_playbook || existingRecord?.estrategia_playbook || null,
+    ultimo_mensaje_recibido: lead.ultimo_mensaje_recibido || existingRecord?.ultimo_mensaje_recibido || ""
   };
 
   const { data, error } = await sb.from("leads").upsert(payload).select().maybeSingle();
   if (error) {
-    console.warn("Primary Supabase upsert failed, retrying with core columns:", error.message);
+    console.warn("Primary Supabase upsert failed, retrying with smart column fallback:", error.message);
+    
+    // Dynamic column fallback: if error mentions a missing column, strip it and retry preserving all other fields
+    let fallbackPayload: any = { ...payload };
+    const missingColMatches = [
+      ...error.message.matchAll(/column "([^"]+)"/gi),
+      ...error.message.matchAll(/column '([^']+)'/gi),
+      ...error.message.matchAll(/could not find column '([^']+)'/gi),
+      ...error.message.matchAll(/find the '([^']+)' column/gi),
+      ...error.message.matchAll(/'([^']+)' column/gi),
+      ...error.message.matchAll(/column ([a-zA-Z0-0_]+)/gi)
+    ];
+
+    if (missingColMatches.length > 0) {
+      for (const match of missingColMatches) {
+        const missingCol = match[1];
+        if (missingCol && missingCol in fallbackPayload) {
+          console.warn(`Stripping missing column '${missingCol}' and retrying...`);
+          delete fallbackPayload[missingCol];
+        }
+      }
+      const { data: retryData, error: retryError } = await sb.from("leads").upsert(fallbackPayload).select().maybeSingle();
+      if (!retryError && retryData) return retryData;
+    }
+
+    // Core fallback if dynamic stripping fails
     const corePayload = {
       id: finalId,
       band_id: targetBandId,
@@ -309,6 +407,8 @@ export async function dbUpsertLead(lead: any, bandId: string) {
       email_secundario: payload.email_secundario,
       contacto_nombre: payload.contacto_nombre,
       telefono: payload.telefono,
+      telefono_movil: payload.telefono_movil,
+      telefono_fijo: payload.telefono_fijo,
       website: payload.website,
       instagram: payload.instagram,
       fuente: payload.fuente,
@@ -320,9 +420,12 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     };
     const { data: retryData, error: retryError } = await sb.from("leads").upsert(corePayload).select().single();
     if (retryError) {
-      if (retryError.message.includes("email_secundario")) {
-        const { email_secundario, ...withoutSec } = corePayload;
-        const { data: legacyData, error: legacyError } = await sb.from("leads").upsert(withoutSec).select().single();
+      if (retryError.message.includes("email_secundario") || retryError.message.includes("telefono_movil") || retryError.message.includes("telefono_fijo")) {
+        const legacyPayload: any = { ...corePayload };
+        if (retryError.message.includes("email_secundario")) delete legacyPayload.email_secundario;
+        if (retryError.message.includes("telefono_movil")) delete legacyPayload.telefono_movil;
+        if (retryError.message.includes("telefono_fijo")) delete legacyPayload.telefono_fijo;
+        const { data: legacyData, error: legacyError } = await sb.from("leads").upsert(legacyPayload).select().single();
         if (legacyError) throw new Error(`Supabase Error (upsert lead): ${legacyError.message}`);
         return legacyData;
       }

@@ -346,7 +346,7 @@ export function generateSmartGeneralFallback(promptText: string): string {
     });
   }
   if (lower.includes("reels") || lower.includes("tiktok") || lower.includes("instagram") || lower.includes("copy")) {
-    return "🔥 ¡Noche épica en el local de ensayo! 🎻💥 Preparando los nuevos directos de la gira Bakandeya 2026. ¡No os lo perdáis!\n\n#Bakandeya #BalkanSka #Directo #MusicaEnVivo";
+    return "🔥 ¡Noche épica en el local de ensayo! 🎸💥 Preparando los nuevos directos de la gira 2026. ¡No os lo perdáis!\n\n#Gira2026 #Directo #MusicaEnVivo #Conciertos";
   }
   if (lower.includes("acorde") || lower.includes("letra") || lower.includes("canción") || lower.includes("song")) {
     return "🎸 Análisis armónico y sugerencia de acordes completados por BandManager.io Studio Core: Progresión recomendada en Am - F - C - G (Tonalidad de La menor).";
@@ -442,13 +442,17 @@ export function generateSmartLocalPitchFallback(params: {
     }
   }
 
-  const isBakandeya = bandName.toLowerCase().includes("bakandeya");
-  const estilo = isBakandeya
-    ? "Balkan-Ska / Mestizaje / Electrónica Analógica"
-    : "Música en directo";
-  const formato = isBakandeya
-    ? "Cuarteto compacto (violín solista acústico y eléctrico, sintetizadores analógicos, percusión en vivo y batería, bajo y voz)"
-    : "Banda en directo";
+  let estilo = "Música en directo";
+  const estiloMatch = text.match(/(?:Estilo|Género|Estilo musical)\s*[:=]\s*([^\n,\.]+)/i);
+  if (estiloMatch && estiloMatch[1]) {
+    estilo = estiloMatch[1].trim();
+  }
+
+  let formato = "Banda en directo";
+  const formatoMatch = text.match(/(?:Formato|Formación)\s*[:=]\s*([^\n,\.]+)/i);
+  if (formatoMatch && formatoMatch[1]) {
+    formato = formatoMatch[1].trim();
+  }
 
   const dossierNote = "Disponéis de nuestro Dossier Oficial, EPK interactivo y Rider Técnico referenciado al pie de la firma de este mensaje.";
 
@@ -483,10 +487,10 @@ Un cordial saludo,`;
 
 Escribimos en representación de ${bandName} para presentar nuestra propuesta artística (${estilo}) de cara a la próxima edición de vuestro festival.
 
-${bandName} ofrece un directo arrollador de 75 a 90 minutos concebido especialmente para grandes escenarios y festivales:
+${bandName} ofrece un directo de 75 a 90 minutos concebido especialmente para escenarios de festival:
 • Formato: ${formato}.
-• Logística ágil: Montaje y cambio de set ultra-rápido (30-45 min) con rider técnico limpio y eficiente.
-• Directo bailable, sudoroso y participativo que garantiza fiesta continua en la pista.
+• Logística ágil: Montaje y cambio de set ágil con rider técnico limpio y eficiente.
+• Directo participativo y dinámico que conecta con el público en el recinto.
 
 ${dossierNote}
 
@@ -499,13 +503,13 @@ Atentamente,`;
   if (isDiscoteca) {
     return `Hola equipo de programación de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
 
-Os escribimos desde ${bandName} para presentar nuestro formato especial de **Live Set nocturno** (${estilo}), diseñado para la sesión de madrugada en clubes y discotecas.
+Os escribimos desde ${bandName} para presentar nuestro formato de directo (${estilo}), diseñado para sesiones en clubes y salas de noche.
 
-Nuestra propuesta combina secuencias electrónicas analógicas, percusión en vivo y violín enérgico, creando una experiencia bailable ideal entre sesiones de DJs o como show central de la noche${aforo ? ` (aforo aprox. ${aforo} personas)` : ""}.
+Nuestra propuesta ofrece un show de alta intensidad y ritmo bailable continuo, ideal para dinamizar la pista${aforo ? ` (aforo aprox. ${aforo} personas)` : ""}.
 
 ${dossierNote}
 
-¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha de sesión?
+¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha?
 
 Un saludo cordial,`;
   }

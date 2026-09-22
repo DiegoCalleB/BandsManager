@@ -1,6 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
+import { getSupabase } from "../db/core.js";
 import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { enviarEmail } from "../services/emailAgentClient.js";
 import { tieneGmailOAuthConectado, enviarEmailGmailApi } from "../services/gmailApiClient.js";
@@ -335,7 +336,7 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
     return res.status(500).json({ error: "Servicio de IA no disponible o API key no configurada." });
   }
 
-  const isBakandeyaOrSender = is_sender || nombre_entidad.toLowerCase().includes("bakandeya");
+  const isSenderBand = !!is_sender;
 
   // Para la banda EMISORA (la propia) hay algo mejor que lo que mande el body: su EPK real,
   // que ya guarda los 4 enlaces de verdad. Antes solo se rastreaba Instagram porque era el
@@ -380,7 +381,7 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
 
 OBJETIVO: Analizar en profundidad la FORMA DE HABLAR, EL ADN DE EXPRESIÓN Y EL TONO DE COMUNICACIÓN de la siguiente entidad musical:
 - Nombre de la Entidad: "${nombre_entidad}"
-- Rol: ${isBakandeyaOrSender ? "Banda EMISORA de la propuesta (nuestro perfil)" : "Entidad RECEPTORA / Objetivo"}
+- Rol: ${isSenderBand ? "Banda EMISORA de la propuesta (nuestro perfil)" : "Entidad RECEPTORA / Objetivo"}
 - Tipo: ${tipo || "Banda / Artista / Sala / Festival"}
 ${redesConHandle.length ? redesConHandle.join("\n") : `- Instagram / Handle: ${instagram || "No especificado"}`}
 - Estilo Musical: ${estilo_musical || "No especificado"}
@@ -393,14 +394,14 @@ INSTRUCCIONES DE BÚSQUEDA Y EXTRACCIÓN (SEARCH GROUNDING):
 3. Determinar su tono general (¿informal/fiestero, provocador/gótico, elegante/institucional, enérgico, académico, callejero?), su nivel de energía, tratamiento habitual (Tú/Vosotros vs Usted) y vocabulario icónico.
 4. IMPORTANTE: el tono no es idéntico en todas las redes. Compara cómo hablan en cada una de las que tengan handle arriba: Facebook suele ser más institucional/informativo que TikTok; TikTok suele ser más gamberro, rápido y con jerga que Instagram; YouTube suele explicar más. Anota en qué se diferencia REALMENTE cada red (no lo des por hecho sin comprobarlo) en "matices_por_red". Si una red no tiene handle o no encuentras diferencia real respecto al tono general, deja esa clave vacía o igual al tono general; no inventes una diferencia que no hayas comprobado.
 5. Redactar una propuesta de contacto o correo electrónico en la que:
-   - Si es la banda emisora (Bakandeya): El correo transmite fielmente la energía festiva y directa de Bakandeya (balkan-ska, violín enérgico, sustitución de metales por sintetizador).
-   - Si es un grupo destino (ej: Marilyn Manson, Ska-P, etc.): La propuesta se adapta para utilizar referencias, vocabulario y tono que conecten con la personalidad del grupo destino sin perder la esencia de Bakandeya.
+   - Si es la banda emisora: El correo transmite fielmente la personalidad sonora, energía y propuesta escénica de la banda.
+   - Si es una entidad receptora: La propuesta se adapta para utilizar referencias, vocabulario y tono que conecten con la personalidad del receptor manteniendo la identidad de la banda.
 
 Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exacta:
 
 {
   "nombre_entidad": "${nombre_entidad}",
-  "es_emisor": ${isBakandeyaOrSender ? "true" : "false"},
+  "es_emisor": ${isSenderBand ? "true" : "false"},
   "redes_rastreadas": ["Instagram Reels @...", "TikTok", "YouTube", "Facebook", "Prensa / Web oficial"],
   "tono_comunicacion": "Resumen conciso de 1-2 frases del ADN y estilo de voz general",
   "tratamiento_habitual": "Tú / Colegueo",
@@ -700,14 +701,16 @@ router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
 
 router.post("/bands/email-account", requireAuth, async (req, res) => {
   try {
-    const { band_id, provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
-    if (!band_id || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
+    const targetBandId = getTargetBandId(req) || req.body.band_id;
+    const { provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
+    if (!targetBandId || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
       return res.status(400).json({ error: "band_id, email, app_password, smtp_host, smtp_port e imap_host son requeridos" });
     }
+    const cleanEmail = email.trim().toLowerCase();
     const saved = await dbUpsertBandEmailAccount({
-      band_id,
+      band_id: targetBandId,
       provider: provider || "other",
-      email,
+      email: cleanEmail,
       app_password,
       smtp_host,
       smtp_port: Number(smtp_port),
@@ -715,6 +718,15 @@ router.post("/bands/email-account", requireAuth, async (req, res) => {
       imap_host,
       imap_port: imap_port ? Number(imap_port) : 993
     });
+
+    // Sincronizar el email oficial de registered_bands con el buzón que la banda ha configurado
+    try {
+      const sb = getSupabase();
+      await sb.from("registered_bands").update({ email: cleanEmail }).eq("band_id", targetBandId);
+    } catch (syncErr) {
+      console.warn("[bands] No se pudo sincronizar registered_bands.email:", syncErr);
+    }
+
     res.json({ success: true, data: toSafeEmailAccountResponse(saved) });
   } catch (err: any) {
     console.error("Error saving band email account:", err);

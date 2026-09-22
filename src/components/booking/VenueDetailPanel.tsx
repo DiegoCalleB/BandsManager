@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog, Setlist } from '../../types';
+import { Lead, LeadStatus, LeadType, InteractionLog, Setlist, EmailMessage } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { LeadAvatar } from './LeadAvatar';
@@ -20,7 +20,10 @@ import {
   Sparkles,
   MessageCircle,
   PhoneCall,
+  Phone,
+  Smartphone,
   Mail,
+  Instagram,
   CheckCircle2,
   History,
   Save,
@@ -42,8 +45,38 @@ import {
   Clock,
   Sliders,
   DollarSign,
-  CalendarCheck
+  CalendarCheck,
+  Eye,
+  CheckCheck,
+  MousePointerClick,
+  Globe,
+  Compass,
+  Calendar,
+  Headphones,
+  ShieldCheck,
+  TrendingUp,
+  Radio,
+  Disc,
+  MapPin,
+  Image as ImageIcon,
+  Truck,
+  Fuel,
+  Calculator,
+  Coins,
+  Users,
+  Percent,
+  Wallet,
+  Navigation,
+  CalendarDays,
+  Megaphone,
+  Newspaper,
+  PartyPopper,
+  Flame,
+  Handshake
 } from 'lucide-react';
+import { EmailDeliveryTicks } from './EmailDeliveryTicks';
+import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
+import { WhatsAppPreviewModal } from './WhatsAppPreviewModal';
 
 interface VenueDetailPanelProps {
   selectedLead: Lead | null;
@@ -85,7 +118,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   onOpenRoadbookModal
 }) => {
   // Active Tab inside panel
-  const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'copilot' | 'bitacora'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'intelligence' | 'copilot' | 'bitacora'>(initialTab as any);
 
   useEffect(() => {
     if (initialTab) {
@@ -104,6 +137,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   // Pitch Editing & Feedback State
   const [isEditingPitch, setIsEditingPitch] = useState(false);
   const [editedPitch, setEditedPitch] = useState(selectedLead?.pitch_generado || '');
+  const [isEnrichingApis, setIsEnrichingApis] = useState(false);
   const [toneRating, setToneRating] = useState<number>(0);
   const [contentRating, setContentRating] = useState<number>(0);
   const [feedbackComment, setFeedbackComment] = useState<string>('');
@@ -134,6 +168,99 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [draftError, setDraftError] = useState<string | null>(null);
   const [isExtractingDates, setIsExtractingDates] = useState(false);
 
+  // WhatsApp Modal & External Intelligence Tools (Jina, Wegow Radar, Instagram)
+  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [isScanningJina, setIsScanningJina] = useState(false);
+  const [isDetectingDates, setIsDetectingDates] = useState(false);
+  const [isEnrichingInstagram, setIsEnrichingInstagram] = useState(false);
+  const [scoutActionFeedback, setScoutActionFeedback] = useState<string | null>(null);
+
+  const handleScanWithJina = async () => {
+    if (!selectedLead) return;
+    const targetUrl = selectedLead.website || editedLeadInfo.website;
+    if (!targetUrl) {
+      setScoutActionFeedback('Añade un sitio web o enlace a la sala para escanear con Jina Reader');
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+      return;
+    }
+    try {
+      setIsScanningJina(true);
+      setScoutActionFeedback('Escaneando sitio web con Jina Reader (r.jina.ai)...');
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-jina`, {
+        method: 'POST',
+        body: JSON.stringify({ website: targetUrl })
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Jina Reader: Extraído móvil, fijo, email y rider correctamente.');
+      } else {
+        setScoutActionFeedback(`Aviso: ${res?.error || 'No se encontraron datos adicionales.'}`);
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error Jina Reader: ${err?.message || 'Error de conexión'}`);
+    } finally {
+      setIsScanningJina(false);
+      setTimeout(() => setScoutActionFeedback(null), 5000);
+    }
+  };
+
+  const handleDetectVenueDates = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsDetectingDates(true);
+      setScoutActionFeedback('Consultando radar de conciertos y cartelera en Wegow...');
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/detect-dates`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        const numLibres = res.radar?.fechas_libres_detectadas?.length || 0;
+        const numOcupadas = res.radar?.fechas_ocupadas?.length || 0;
+        setScoutActionFeedback(`✓ Radar Wegow: ${numOcupadas} conciertos ocupados detectados. ${numLibres} fines de semana libres disponibles.`);
+      } else {
+        setScoutActionFeedback(`Aviso: ${res?.error || 'No se pudieron calcular las fechas.'}`);
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error Radar: ${err?.message || 'Error de conexión'}`);
+    } finally {
+      setIsDetectingDates(false);
+      setTimeout(() => setScoutActionFeedback(null), 5000);
+    }
+  };
+
+  const handleEnrichInstagram = async () => {
+    if (!selectedLead) return;
+    const igHandle = selectedLead.instagram || editedLeadInfo.instagram;
+    if (!igHandle) {
+      setScoutActionFeedback('Añade un perfil de Instagram a la sala para analizarlo');
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+      return;
+    }
+    try {
+      setIsEnrichingInstagram(true);
+      setScoutActionFeedback('Consultando perfil comercial de Instagram...');
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-instagram`, {
+        method: 'POST',
+        body: JSON.stringify({ instagram: igHandle })
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Instagram: Datos comerciales y WhatsApp sincronizados.');
+      } else {
+        const info = res?.data?.apify_free_tier_info || res?.error || 'No se extrajeron datos adicionales';
+        setScoutActionFeedback(`Aviso: ${info}`);
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error Instagram: ${err?.message || 'Error de conexión'}`);
+    } finally {
+      setIsEnrichingInstagram(false);
+      setTimeout(() => setScoutActionFeedback(null), 6000);
+    }
+  };
+
   const handleAutoExtractFestivalDates = async () => {
     if (!selectedLead) return;
     try {
@@ -161,10 +288,220 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     }
   };
 
+  const [isCalculatingRoute, setIsCalculatingRoute] = useState(false);
+  const [routeOrigin, setRouteOrigin] = useState('Madrid');
+  const [isEnrichingSocial, setIsEnrichingSocial] = useState(false);
+  const [isEnrichingBookingWindow, setIsEnrichingBookingWindow] = useState(false);
+  const [isEnrichingLocalEvents, setIsEnrichingLocalEvents] = useState(false);
+  const [isEnrichingPressMedia, setIsEnrichingPressMedia] = useState(false);
+  const [isEnrichingCoBooking, setIsEnrichingCoBooking] = useState(false);
+
+  // Financial simulation state
+  const [simAnticipada, setSimAnticipada] = useState<number>(selectedLead?.financial_break_even?.precio_entrada_anticipada ?? 12);
+  const [simTaquilla, setSimTaquilla] = useState<number>(selectedLead?.financial_break_even?.precio_entrada_taquilla ?? 15);
+  const [simAlquiler, setSimAlquiler] = useState<number>(selectedLead?.financial_break_even?.alquiler_sala_fijo ?? 250);
+  const [simPctSala, setSimPctSala] = useState<number>(selectedLead?.financial_break_even?.porcentaje_sala ?? 15);
+  const [simGastosProd, setSimGastosProd] = useState<number>(selectedLead?.financial_break_even?.gastos_produccion_fijos ?? 150);
+  const [simNumMusicos, setSimNumMusicos] = useState<number>(selectedLead?.financial_break_even?.num_musicos ?? 5);
+  const [isRecalculatingFinancial, setIsRecalculatingFinancial] = useState(false);
+
+  useEffect(() => {
+    if (selectedLead?.financial_break_even) {
+      setSimAnticipada(selectedLead.financial_break_even.precio_entrada_anticipada ?? 12);
+      setSimTaquilla(selectedLead.financial_break_even.precio_entrada_taquilla ?? 15);
+      setSimAlquiler(selectedLead.financial_break_even.alquiler_sala_fijo ?? 250);
+      setSimPctSala(selectedLead.financial_break_even.porcentaje_sala ?? 15);
+      setSimGastosProd(selectedLead.financial_break_even.gastos_produccion_fijos ?? 150);
+      setSimNumMusicos(selectedLead.financial_break_even.num_musicos ?? 5);
+    }
+    if (selectedLead?.tour_logistics?.origen) {
+      setRouteOrigin(selectedLead.tour_logistics.origen);
+    }
+  }, [selectedLead]);
+
+  const handleEnrichAllApis = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsEnrichingApis(true);
+      setScoutActionFeedback('Analizando Spotify, Google Places, Setlist, Ruta, Redes, Ventana Booking, Eventos, Prensa y Co-Booking...');
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-all-apis`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Inteligencia Multi-API completa: 11 fuentes de datos conectadas y actualizadas.');
+      } else {
+        setScoutActionFeedback(`Aviso: ${res?.error || 'No se pudieron completar todas las consultas'}`);
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error Inteligencia: ${err?.message || 'Error de conexión'}`);
+    } finally {
+      setIsEnrichingApis(false);
+      setTimeout(() => setScoutActionFeedback(null), 5000);
+    }
+  };
+
+  const handleCalculateRoute = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsCalculatingRoute(true);
+      setScoutActionFeedback(`Calculando ruta y gasolina desde ${routeOrigin}...`);
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-logistics`, {
+        method: 'POST',
+        body: JSON.stringify({ origen: routeOrigin })
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Hoja de ruta y costes de furgoneta calculados.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error al calcular ruta: ${err?.message}`);
+    } finally {
+      setIsCalculatingRoute(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
+  const handleFetchSocial = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsEnrichingSocial(true);
+      setScoutActionFeedback('Analizando Instagram & TikTok de la sala...');
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-social`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Radar de redes sociales y co-promoción actualizado.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error al analizar redes: ${err?.message}`);
+    } finally {
+      setIsEnrichingSocial(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
+  const handleRecalculateFinancial = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsRecalculatingFinancial(true);
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/calculate-break-even`, {
+        method: 'POST',
+        body: JSON.stringify({
+          precioAnticipada: simAnticipada,
+          precioTaquilla: simTaquilla,
+          alquilerSalaFijo: simAlquiler,
+          porcentajeSala: simPctSala,
+          gastosProduccionFijos: simGastosProd,
+          numMusicos: simNumMusicos
+        })
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ P&L Financiero y Break-Even actualizados.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error en simulación: ${err?.message}`);
+    } finally {
+      setIsRecalculatingFinancial(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
+  const handleFetchBookingWindow = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsEnrichingBookingWindow(true);
+      setScoutActionFeedback('Analizando ventana de programación y antelación ideal...');
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-booking-window`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Ventana de programación y lead time calculados.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error ventana booking: ${err?.message}`);
+    } finally {
+      setIsEnrichingBookingWindow(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
+  const handleFetchLocalEvents = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsEnrichingLocalEvents(true);
+      setScoutActionFeedback(`Escaneando festivales y eventos locales en ${selectedLead.ciudad || 'la zona'}...`);
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-local-events`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Radar de eventos locales y alertas de clash actualizadas.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error radar eventos: ${err?.message}`);
+    } finally {
+      setIsEnrichingLocalEvents(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
+  const handleFetchPressMedia = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsEnrichingPressMedia(true);
+      setScoutActionFeedback(`Buscando radios, fanzines y prensa cultural en ${selectedLead.ciudad || 'la provincia'}...`);
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-press-media`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Medios locales y gancho para nota de prensa listos.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error medios locales: ${err?.message}`);
+    } finally {
+      setIsEnrichingPressMedia(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
+  const handleFetchCoBooking = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsEnrichingCoBooking(true);
+      setScoutActionFeedback(`Buscando bandas locales afines para co-booking en ${selectedLead.ciudad || 'la ciudad'}...`);
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-co-booking`, {
+        method: 'POST'
+      });
+      if (res?.success && res.lead) {
+        if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setScoutActionFeedback('✓ Bandas locales para co-booking encontradas.');
+      }
+    } catch (err: any) {
+      setScoutActionFeedback(`Error bandas locales: ${err?.message}`);
+    } finally {
+      setIsEnrichingCoBooking(false);
+      setTimeout(() => setScoutActionFeedback(null), 4000);
+    }
+  };
+
   // Historial real de conversación (lead_messages, escrito por el Enviador/Lector) - independiente
   // de selectedLead.hilo_emails, que solo lo rellena el sync manual de Gmail del cliente. Sin esto,
   // los pitches enviados de verdad y las respuestas detectadas automáticamente nunca aparecían aquí.
-  const [leadMessages, setLeadMessages] = useState<Array<{ id: string; remitente: 'banda' | 'sala'; remitente_nombre: string; asunto: string; mensaje: string; fecha: string }>>([]);
+  const [leadMessages, setLeadMessages] = useState<EmailMessage[]>([]);
+  const [isAnalyzingMessageSentiment, setIsAnalyzingMessageSentiment] = useState<string | null>(null);
 
   useEffect(() => {
     if (!selectedLead?.id) { setLeadMessages([]); return; }
@@ -174,6 +511,56 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       .catch(() => { if (isMounted) setLeadMessages([]); });
     return () => { isMounted = false; };
   }, [selectedLead?.id]);
+
+  const handleAnalyzeMessageSentiment = async (messageId: string, messageText: string) => {
+    if (!selectedLead || !messageText) return;
+    try {
+      setIsAnalyzingMessageSentiment(messageId);
+      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/analyze-sentiment`, {
+        method: 'POST',
+        body: JSON.stringify({ messageText })
+      });
+      if (res?.success && res.sentimentAnalysis) {
+        const sa = res.sentimentAnalysis;
+        setLeadMessages((prev) =>
+          prev.map((m) =>
+            m.id === messageId
+              ? {
+                  ...m,
+                  sentimiento: sa.sentimiento,
+                  sentimiento_score: sa.sentimiento_score,
+                  sentimiento_label: sa.sentimiento_label,
+                  intencion: sa.intencion,
+                  intencion_etiqueta: sa.intencion_etiqueta,
+                  temperatura: sa.temperatura,
+                  objeciones: sa.objeciones_detectadas,
+                  puntos_clave: sa.puntos_clave,
+                  resumen_ejecutivo: sa.resumen_ejecutivo,
+                  sugerencia_estrategia: sa.sugerencia_estrategia,
+                  analisis_ia: sa
+                }
+              : m
+          )
+        );
+        if (onUpdateLead) {
+          onUpdateLead(selectedLead.id, {
+            ultimo_sentimiento: sa.sentimiento,
+            ultimo_sentimiento_score: sa.sentimiento_score,
+            ultimo_sentimiento_label: sa.sentimiento_label,
+            ultima_intencion: sa.intencion,
+            ultima_intencion_etiqueta: sa.intencion_etiqueta,
+            ultimas_objeciones: sa.objeciones_detectadas,
+            ultimo_analisis_resumen: sa.resumen_ejecutivo,
+            temperatura_lead: sa.temperatura
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error analizando sentimiento:', err);
+    } finally {
+      setIsAnalyzingMessageSentiment(null);
+    }
+  };
 
   // Une el hilo manual (hilo_emails) con el real (lead_messages), sin duplicar por asunto+fecha
   // aproximada, y ordenado cronológicamente - una banda puede tener las dos fuentes a la vez si
@@ -200,6 +587,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     setEditedLeadInfo({
       ...selectedLead,
       telefono: cleanVal(selectedLead.telefono),
+      telefono_movil: cleanVal(selectedLead.telefono_movil),
+      telefono_fijo: cleanVal(selectedLead.telefono_fijo),
       contacto_nombre: cleanVal(selectedLead.contacto_nombre),
       email_contacto: cleanVal(selectedLead.email_contacto),
       direccion: cleanVal(selectedLead.direccion),
@@ -399,13 +788,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Sync edits when lead changes
   const handleStartEdit = () => {
-    setEditedLeadInfo({ ...selectedLead });
+    setEditedLeadInfo({
+      ...selectedLead,
+      telefono: cleanVal(selectedLead.telefono),
+      telefono_movil: cleanVal(selectedLead.telefono_movil),
+      telefono_fijo: cleanVal(selectedLead.telefono_fijo),
+    });
     setIsEditingLeadInfo(true);
   };
 
   const handleSaveLeadInfo = () => {
     if (!editedLeadInfo.nombre_sala) return;
-    onUpdateLead(selectedLead.id, editedLeadInfo);
+    const finalInfo = {
+      ...editedLeadInfo,
+      telefono: editedLeadInfo.telefono || editedLeadInfo.telefono_movil || editedLeadInfo.telefono_fijo || '',
+    };
+    onUpdateLead(selectedLead.id, finalInfo);
     setIsEditingLeadInfo(false);
   };
 
@@ -597,7 +995,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     }
   };
 
-  const phoneClean = selectedLead.telefono ? selectedLead.telefono.replace(/\D/g, '') : '';
+  const phoneCleanMobile = selectedLead.telefono_movil ? selectedLead.telefono_movil.replace(/\D/g, '') : '';
+  const phoneCleanFijo = selectedLead.telefono_fijo ? selectedLead.telefono_fijo.replace(/\D/g, '') : '';
+  const phoneCleanLegacy = selectedLead.telefono ? selectedLead.telefono.replace(/\D/g, '') : '';
+  // WhatsApp sólo está habilitado cuando existe teléfono móvil
+  const phoneCleanForWhatsApp = phoneCleanMobile;
+  const phoneClean = phoneCleanMobile || phoneCleanFijo || phoneCleanLegacy;
 
   return (
     <div className="w-full space-y-5 relative">
@@ -692,6 +1095,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <LeadHealthBadge lead={selectedLead} showDescription={true} size="md" />
             <ReliabilityBadge item={selectedLead} size="md" />
+            {selectedLead.ultimo_sentimiento && (
+              <div
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-950/40 border border-amber-500/40 text-[11px] font-sans text-amber-200"
+                title={selectedLead.ultimo_analisis_resumen || `Sentimiento: ${selectedLead.ultimo_sentimiento_label || selectedLead.ultimo_sentimiento}`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="font-bold">{selectedLead.ultimo_sentimiento_label || selectedLead.ultimo_sentimiento}</span>
+                {selectedLead.ultima_intencion_etiqueta && (
+                  <span className="text-zinc-400 font-mono text-[10px]">({selectedLead.ultima_intencion_etiqueta})</span>
+                )}
+                {selectedLead.temperatura_lead && (
+                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono">
+                    {selectedLead.temperatura_lead === 'muy_caliente' ? '🔥 Muy Caliente' : selectedLead.temperatura_lead === 'caliente' ? '☀️ Caliente' : selectedLead.temperatura_lead === 'tibio' ? '🌤️ Tibio' : '❄️ Frío'}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -755,28 +1175,134 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         </div>
 
         {/* Quick Action Bar for Booking Manager */}
-        <div className="grid grid-cols-2 gap-2 pt-1">
-          {phoneClean ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
+          {/* Botón WhatsApp — Abre el visual preview drawer con mensaje adaptado y wa.me */}
+          <button
+            type="button"
+            onClick={() => setShowWhatsAppModal(true)}
+            className="py-2.5 px-3 bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-600/80 text-emerald-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm group"
+            title={selectedLead.telefono_movil ? `Abrir propuesta para WhatsApp (${selectedLead.telefono_movil})` : 'Escribir propuesta por WhatsApp'}
+          >
+            <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0 group-hover:scale-110 transition-transform" />
+            <span>WhatsApp {selectedLead.telefono_movil ? 'Móvil' : 'Directo'}</span>
+          </button>
+
+          {selectedLead.telefono_movil ? (
             <a
-              href={`https://wa.me/${phoneClean}`}
-              target="_blank"
-              rel="noreferrer"
-              className="py-2.5 px-3 bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-700/80 text-emerald-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+              href={`tel:${selectedLead.telefono_movil}`}
+              className="py-2.5 px-3 bg-sky-950/90 hover:bg-sky-900 border border-sky-700/80 text-sky-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+              title={`Llamar al teléfono móvil: ${selectedLead.telefono_movil}`}
             >
-              <MessageCircle className="w-4 h-4 text-emerald-400" />
-              <span>WhatsApp Directo</span>
+              <Smartphone className="w-4 h-4 text-sky-400 shrink-0" />
+              <span>Llamar Móvil</span>
             </a>
           ) : null}
 
-          {selectedLead.telefono ? (
+          {selectedLead.telefono_fijo ? (
+            <a
+              href={`tel:${selectedLead.telefono_fijo}`}
+              className="py-2.5 px-3 bg-indigo-950/90 hover:bg-indigo-900 border border-indigo-700/80 text-indigo-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+              title={`Llamar al teléfono fijo: ${selectedLead.telefono_fijo}`}
+            >
+              <Phone className="w-4 h-4 text-indigo-400 shrink-0" />
+              <span>Llamar Fijo</span>
+            </a>
+          ) : !selectedLead.telefono_movil && selectedLead.telefono ? (
             <a
               href={`tel:${selectedLead.telefono}`}
               className="py-2.5 px-3 bg-sky-950/90 hover:bg-sky-900 border border-sky-700/80 text-sky-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+              title={`Llamar por teléfono: ${selectedLead.telefono}`}
             >
-              <PhoneCall className="w-4 h-4 text-sky-400" />
+              <PhoneCall className="w-4 h-4 text-sky-400 shrink-0" />
               <span>Llamar por Tel</span>
             </a>
           ) : null}
+        </div>
+
+        {/* Intelligence Scout Tools Toolbar (Jina Reader, Radar Wegow, Instagram Apify) */}
+        <div className="bg-[#121110] p-2.5 rounded-xl border border-zinc-800 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5 text-amber-400" />
+              Herramientas Agente Scout & Inteligencia Externa:
+            </span>
+            <span className="text-[9px] text-zinc-500 font-sans">
+              Datos verificados sin inventar
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={handleScanWithJina}
+              disabled={isScanningJina}
+              className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white rounded-lg text-[11px] font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+              title="Escanea el sitio web con Jina Reader para extraer móviles, fijos, emails de booking y especificaciones técnicas"
+            >
+              {isScanningJina ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" /> : <Globe className="w-3.5 h-3.5 text-amber-400" />}
+              <span>{isScanningJina ? 'Leyendo web...' : '🔍 Jina Reader (Web & Teléfonos)'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDetectVenueDates}
+              disabled={isDetectingDates}
+              className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white rounded-lg text-[11px] font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+              title="Analiza la cartelera de Wegow y ticketing para deducir qué fines de semana tienen libres"
+            >
+              {isDetectingDates ? <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" /> : <Calendar className="w-3.5 h-3.5 text-sky-400" />}
+              <span>{isDetectingDates ? 'Detectando fechas...' : '📡 Radar Wegow (Fechas Libres)'}</span>
+            </button>
+
+            {(selectedLead.instagram || editedLeadInfo.instagram) && (
+              <button
+                type="button"
+                onClick={handleEnrichInstagram}
+                disabled={isEnrichingInstagram}
+                className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white rounded-lg text-[11px] font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
+                title="Extrae WhatsApp comercial y datos de contacto de su perfil de Instagram"
+              >
+                {isEnrichingInstagram ? <Loader2 className="w-3.5 h-3.5 animate-spin text-pink-400" /> : <Instagram className="w-3.5 h-3.5 text-pink-400" />}
+                <span>{isEnrichingInstagram ? 'Extrayendo...' : 'Instagram (WhatsApp Business)'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* Feedback Banner for Scout Tools */}
+          {scoutActionFeedback && (
+            <div className="p-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs font-sans flex items-center gap-2 animate-fadeIn">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>{scoutActionFeedback}</span>
+            </div>
+          )}
+
+          {/* Display Fechas Libres Detectadas Pills if available */}
+          {(() => {
+            const fechasLibres = (editedLeadInfo?.fechas_libres_detectadas && editedLeadInfo.fechas_libres_detectadas.length > 0)
+              ? editedLeadInfo.fechas_libres_detectadas
+              : (selectedLead?.fechas_libres_detectadas || []);
+            if (!fechasLibres || fechasLibres.length === 0) return null;
+            return (
+              <div className="pt-1 border-t border-zinc-800/80 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] text-sky-400 font-mono font-bold flex items-center gap-1">
+                  <CalendarCheck className="w-3 h-3 text-sky-400" />
+                  Fines de semana libres detectados:
+                </span>
+                {fechasLibres.map((fecha, idx) => (
+                  <button
+                    key={`free-date-${idx}`}
+                    type="button"
+                    onClick={() => setShowWhatsAppModal(true)}
+                    className="px-2 py-0.5 rounded-md bg-sky-950/80 border border-sky-600/60 text-sky-300 text-[10px] font-sans font-medium hover:bg-sky-900 transition-colors cursor-pointer flex items-center gap-1"
+                    title="Clic para proponer esta fecha por WhatsApp o Pitch"
+                  >
+                    <span>{fecha}</span>
+                    <span className="text-[9px] opacity-70">💬</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Agent Workflow & Sub-status Banner (Option A 2-Dimensional Model) */}
@@ -885,12 +1411,29 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           }
 
           if (isSent) {
+            const wasOpened = Boolean(selectedLead.email_abierto || (selectedLead.veces_abierto && selectedLead.veces_abierto > 0));
+            const openCount = selectedLead.veces_abierto || 1;
+            const clickCount = selectedLead.clics_epk || 0;
+
             return (
-              <div className="p-2 bg-sky-500/10 border border-sky-500/25 rounded-xl flex items-center gap-2 text-xs text-sky-300">
-                <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0 ml-1" />
-                <span className="text-[11px] font-medium">
-                  📬 Email enviado el {selectedLead.fecha_envio || 'recientemente'} • Agente a la espera de respuesta de la sala
-                </span>
+              <div className="space-y-1.5">
+                <div className="p-2.5 bg-[#141d24] border border-sky-500/30 rounded-xl flex items-center justify-between gap-2 text-xs text-sky-200">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-medium">
+                      📬 Email enviado {selectedLead.fecha_envio ? `el ${selectedLead.fecha_envio}` : ''}
+                    </span>
+                  </div>
+                  <EmailDeliveryTicks lead={selectedLead} size="md" showLabel={true} />
+                </div>
+
+                {clickCount > 0 && (
+                  <div className="p-2 bg-purple-500/10 border border-purple-500/25 rounded-xl flex items-center gap-2 text-xs text-purple-300">
+                    <MousePointerClick className="w-3.5 h-3.5 text-purple-400 shrink-0 ml-1" />
+                    <span className="text-[11px] font-semibold">
+                      🔥 ¡Han pulsado en tu EPK / Dossier! ({clickCount} {clickCount === 1 ? 'clic' : 'clics'})
+                    </span>
+                  </div>
+                )}
               </div>
             );
           }
@@ -914,6 +1457,37 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {selectedLead.email_secundario && (
               <span className="text-xs text-amber-400/80 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}>
                 ✉️2 {selectedLead.email_secundario}
+              </span>
+            )}
+            {selectedLead.telefono_movil && (
+              <a
+                href={getWhatsAppUrl(selectedLead.telefono_movil)}
+                target={WHATSAPP_WINDOW_NAME}
+                onClick={(e) => {
+                  e.preventDefault();
+                  openWhatsAppChat(selectedLead.telefono_movil);
+                }}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-700/70 text-emerald-300 text-xs font-mono font-bold hover:bg-emerald-900 transition-colors shadow-2xs"
+                title={`WhatsApp móvil: ${selectedLead.telefono_movil}`}
+              >
+                <Smartphone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>{selectedLead.telefono_movil}</span>
+              </a>
+            )}
+            {selectedLead.telefono_fijo && (
+              <a
+                href={`tel:${selectedLead.telefono_fijo}`}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-950/80 border border-sky-700/70 text-sky-300 text-xs font-mono font-bold hover:bg-sky-900 transition-colors shadow-2xs"
+                title={`Teléfono fijo: ${selectedLead.telefono_fijo}`}
+              >
+                <Phone className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                <span>{selectedLead.telefono_fijo}</span>
+              </a>
+            )}
+            {!selectedLead.telefono_movil && !selectedLead.telefono_fijo && selectedLead.telefono && (
+              <span className="text-xs text-zinc-300 font-mono font-medium inline-flex items-center gap-1" title={`Teléfono: ${selectedLead.telefono}`}>
+                <PhoneCall className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                <span>{selectedLead.telefono}</span>
               </span>
             )}
             <button
@@ -1009,6 +1583,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#f2ca50] text-[#3c2f00]">
               {hiloCompleto.length}
             </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('intelligence')}
+          className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
+            activeTab === 'intelligence'
+              ? 'border-b-2 border-sky-400 text-sky-400'
+              : 'text-zinc-400 hover:text-zinc-200'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+          <span>Inteligencia & APIs</span>
+          {(selectedLead.spotify_city_demand || selectedLead.google_places_info) && (
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
           )}
         </button>
 
@@ -1288,21 +1878,48 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
-                      Teléfono
+                    <label className="block text-[10px] uppercase font-mono text-emerald-400 font-bold mb-1 flex items-center gap-1">
+                      <span>📱 Teléfono Móvil (WhatsApp)</span>
                     </label>
                     <input
-                      type="text"
+                      type="tel"
                       placeholder="Ej. +34 612 345 678"
-                      value={editedLeadInfo.telefono || ''}
-                      onChange={(e) =>
-                        setEditedLeadInfo({ ...editedLeadInfo, telefono: e.target.value })
-                      }
-                      className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none"
+                      value={editedLeadInfo.telefono_movil || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEditedLeadInfo({
+                          ...editedLeadInfo,
+                          telefono_movil: val,
+                          telefono: val || editedLeadInfo.telefono_fijo || editedLeadInfo.telefono || ''
+                        });
+                      }}
+                      className="w-full p-2 rounded bg-zinc-900 border border-emerald-500/50 text-emerald-100 focus:outline-none text-xs"
                     />
                   </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-mono text-sky-400 font-bold mb-1 flex items-center gap-1">
+                      <span>☎️ Teléfono Fijo (Sala / Oficina)</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Ej. +34 912 345 678"
+                      value={editedLeadInfo.telefono_fijo || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEditedLeadInfo({
+                          ...editedLeadInfo,
+                          telefono_fijo: val,
+                          telefono: editedLeadInfo.telefono_movil || val || editedLeadInfo.telefono || ''
+                        });
+                      }}
+                      className="w-full p-2 rounded bg-zinc-900 border border-sky-500/50 text-sky-100 focus:outline-none text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
                       Aforo (personas)
@@ -1315,6 +1932,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         setEditedLeadInfo({ ...editedLeadInfo, aforo: Number(e.target.value) })
                       }
                       className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+                      Contacto / Programador
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ej. Laura González (Directora Artística)"
+                      value={editedLeadInfo.contacto_nombre || ''}
+                      onChange={(e) =>
+                        setEditedLeadInfo({ ...editedLeadInfo, contacto_nombre: e.target.value })
+                      }
+                      className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none text-xs"
                     />
                   </div>
                 </div>
@@ -1416,6 +2047,108 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* Pitch Generator Section */}
           <div className="bg-[#1A1918] rounded-xl p-4 space-y-3 border border-zinc-800">
+            {/* Tactical Playbook & Entity Extraction Banner if Available */}
+            {(selectedLead.estrategia_playbook || (selectedLead.fechas_propuestas_sala && selectedLead.fechas_propuestas_sala.length > 0) || selectedLead.condiciones_economicas_detectadas) && (
+              <div className="p-3.5 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/30 border border-amber-500/40 rounded-xl space-y-2.5 shadow-md">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">⚡</span>
+                    <div>
+                      <h4 className="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono">
+                        Playbook Táctico & Extracción de Condiciones
+                      </h4>
+                      <p className="text-[11px] text-zinc-300 font-medium">
+                        {selectedLead.estrategia_playbook?.titulo || 'Análisis de Respuesta y Condiciones Extraídas'}
+                      </p>
+                    </div>
+                  </div>
+                  {selectedLead.estrategia_playbook?.propuesta_rapida && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const quick = selectedLead.estrategia_playbook?.propuesta_rapida;
+                        if (quick) {
+                          setEditedPitch(quick);
+                          setIsEditingPitch(true);
+                        }
+                      }}
+                      className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] rounded-lg flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                      title="Cargar la propuesta de respuesta sugerida por el playbook táctico"
+                    >
+                      <Sparkles className="w-3 h-3" />
+                      <span>Cargar Propuesta Rápida</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Detected Entities: Dates / Economics / Tech */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-amber-500/20 text-xs">
+                  {selectedLead.fechas_propuestas_sala && selectedLead.fechas_propuestas_sala.length > 0 && (
+                    <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
+                      <span className="text-[10px] font-mono text-sky-400 font-bold block flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-sky-400" />
+                        Fechas Propuestas:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedLead.fechas_propuestas_sala.map((f, i) => (
+                          <span key={i} className="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-200 text-[10px] font-mono">
+                            {f}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedLead.condiciones_economicas_detectadas && (
+                    <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
+                      <span className="text-[10px] font-mono text-emerald-400 font-bold block flex items-center gap-1">
+                        <Coins className="w-3 h-3 text-emerald-400" />
+                        Economía Detectada:
+                      </span>
+                      <span className="text-[11px] text-zinc-200 font-mono block">
+                        {selectedLead.condiciones_economicas_detectadas.tipo || 'Modelo'}: {selectedLead.condiciones_economicas_detectadas.cifra || 'n/d'}
+                      </span>
+                      {selectedLead.condiciones_economicas_detectadas.detalles && (
+                        <span className="text-[9px] text-zinc-400 block leading-tight">
+                          {selectedLead.condiciones_economicas_detectadas.detalles}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {selectedLead.requisitos_tecnicos_detectados && selectedLead.requisitos_tecnicos_detectados.length > 0 && (
+                    <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
+                      <span className="text-[10px] font-mono text-purple-400 font-bold block flex items-center gap-1">
+                        <Sliders className="w-3 h-3 text-purple-400" />
+                        Requisitos Técnicos:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedLead.requisitos_tecnicos_detectados.map((r, i) => (
+                          <span key={i} className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-200 text-[10px]">
+                            {r}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {selectedLead.estrategia_playbook?.pasos && selectedLead.estrategia_playbook.pasos.length > 0 && (
+                  <div className="space-y-1 pt-1 border-t border-amber-500/20">
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase font-bold block">Pasos Recomendados para Cerrar:</span>
+                    <ul className="space-y-0.5">
+                      {selectedLead.estrategia_playbook.pasos.map((paso, idx) => (
+                        <li key={idx} className="text-[11px] text-zinc-300 flex items-start gap-1.5">
+                          <span className="text-amber-400 font-bold">{idx + 1}.</span>
+                          <span>{paso}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-bold font-sans uppercase text-amber-400 tracking-wider">
                 {isReplyStage ? '💬 Respuesta Redactada por IA' : '✉️ Propuesta de Pitch Redactada'}
@@ -1438,6 +2171,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 >
                   <Copy className="w-3 h-3" />
                   <span>{copiedPitch ? '¡Copiado!' : 'Copiar'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowWhatsAppModal(true)}
+                  className="px-2 py-1 bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-600/70 text-emerald-300 rounded text-[11px] font-sans flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
+                  title="Abrir propuesta optimizada en WhatsApp"
+                >
+                  <MessageCircle className="w-3 h-3 text-emerald-400" />
+                  <span>WhatsApp</span>
                 </button>
 
                 {selectedLead.estado === 'pendiente_aprobacion' || selectedLead.estado === 'nuevo' ? (
@@ -1491,6 +2234,48 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 )}
               </div>
             )}
+
+            {/* Quick Available Dates Insertion Pills */}
+            {(() => {
+              const fechasLibres = (editedLeadInfo?.fechas_libres_detectadas && editedLeadInfo.fechas_libres_detectadas.length > 0)
+                ? editedLeadInfo.fechas_libres_detectadas
+                : (selectedLead?.fechas_libres_detectadas || []);
+              if (!fechasLibres || fechasLibres.length === 0) return null;
+              return (
+                <div className="bg-sky-950/40 p-2.5 rounded-xl border border-sky-600/40 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1">
+                      <CalendarCheck className="w-3.5 h-3.5 text-sky-400" />
+                      Fechas Libres Detectadas por Radar (Insertar en 1 clic):
+                    </span>
+                    <span className="text-[9px] text-sky-300/80 font-sans">
+                      Basado en agenda pública del recinto
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {fechasLibres.map((fecha, idx) => (
+                      <button
+                        key={`quick-pitch-date-${idx}`}
+                        type="button"
+                        onClick={() => {
+                          const dateText = `\n\nHemos visto que tenéis disponible en vuestra programación el ${fecha}, así que esa fecha nos encajaría ideal para celebrar el concierto.`;
+                          const current = editedPitch || selectedLead?.pitch_generado || '';
+                          if (!current.includes(fecha)) {
+                            const updated = (current + dateText).trim();
+                            setEditedPitch(updated);
+                            setIsEditingPitch(true);
+                          }
+                        }}
+                        className="px-2 py-1 rounded-lg border border-sky-600/60 bg-sky-900/60 hover:bg-sky-800 text-sky-200 text-[10px] font-sans font-medium flex items-center gap-1 transition-all cursor-pointer shadow-xs"
+                        title={`Inserta la propuesta para la fecha libre ${fecha} en el borrador`}
+                      >
+                        <span>📅 Proponer {fecha}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Quick Manager Safeguard Pills */}
             <div className="bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800 space-y-1.5">
@@ -1892,23 +2677,1008 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             hiloCompleto.map((msg) => (
               <div
                 key={msg.id}
-                className={`p-3.5 rounded-xl border space-y-1.5 text-xs font-sans ${
+                className={`p-3.5 rounded-xl border space-y-2 text-xs font-sans transition-all ${
                   msg.remitente === 'sala'
                     ? 'bg-amber-950/20 border-amber-500/40 text-amber-100'
                     : 'bg-[#121110] border-zinc-800 text-zinc-200'
                 }`}
               >
                 <div className="flex items-center justify-between font-bold text-[11px]">
-                  <span className={msg.remitente === 'sala' ? 'text-amber-400' : 'text-sky-400'}>
-                    {msg.remitente_nombre} ({msg.remitente === 'sala' ? 'Programador' : 'Bakandeya'})
-                  </span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={msg.remitente === 'sala' ? 'text-amber-400' : 'text-sky-400'}>
+                      {msg.remitente_nombre} ({msg.remitente === 'sala' ? 'Programador' : 'Bakandeya'})
+                    </span>
+                    {msg.remitente === 'sala' && msg.sentimiento && (
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 ${
+                        msg.sentimiento.includes('positivo')
+                          ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'
+                          : msg.sentimiento.includes('negativo')
+                          ? 'bg-rose-950/60 border-rose-500/50 text-rose-300'
+                          : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+                      }`}>
+                        <Sparkles className="w-2.5 h-2.5" />
+                        {msg.sentimiento_label || msg.sentimiento}
+                        {msg.sentimiento_score !== undefined && (
+                          <span className="font-mono text-[9px] opacity-80">
+                            ({msg.sentimiento_score > 0 ? `+${msg.sentimiento_score}` : msg.sentimiento_score})
+                          </span>
+                        )}
+                      </span>
+                    )}
+                    {msg.remitente === 'sala' && msg.intencion_etiqueta && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/20 border border-amber-500/30 text-amber-300">
+                        {msg.intencion_etiqueta}
+                      </span>
+                    )}
+                    {msg.remitente === 'sala' && msg.temperatura && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] bg-black/40 border border-zinc-800 text-zinc-300 font-mono">
+                        {msg.temperatura === 'muy_caliente' ? '🔥 Muy Caliente' : msg.temperatura === 'caliente' ? '☀️ Caliente' : msg.temperatura === 'tibio' ? '🌤️ Tibio' : '❄️ Frío'}
+                      </span>
+                    )}
+                  </div>
                   <span className="text-zinc-500 text-[10px] font-mono">{msg.fecha}</span>
                 </div>
+
                 <div className="font-bold text-zinc-100">{msg.asunto}</div>
                 <p className="whitespace-pre-wrap text-zinc-300 leading-snug">{msg.mensaje}</p>
+
+                {/* Sentiment & Intent Deep Dive for Sala Messages */}
+                {msg.remitente === 'sala' && (
+                  <div className="pt-2 border-t border-amber-500/20 space-y-2">
+                    {msg.resumen_ejecutivo && (
+                      <div className="p-2 rounded-lg bg-black/40 border border-amber-500/20 text-[11px] space-y-1">
+                        <div className="flex items-center justify-between text-[10px] font-mono text-amber-400 font-bold">
+                          <span>Resumen & Estrategia Lector IA</span>
+                        </div>
+                        <p className="text-zinc-300 italic">{msg.resumen_ejecutivo}</p>
+                        {msg.sugerencia_estrategia && (
+                          <p className="text-amber-300/90 font-medium">💡 {msg.sugerencia_estrategia}</p>
+                        )}
+                      </div>
+                    )}
+
+                    {msg.objeciones && msg.objeciones.length > 0 && (
+                      <div className="p-2 rounded-lg bg-rose-950/30 border border-rose-500/30 text-[11px] text-rose-200 space-y-1">
+                        <span className="font-bold text-rose-400 text-[10px] uppercase font-mono block">
+                          Objeciones / Reticencias Detectadas:
+                        </span>
+                        <ul className="list-disc list-inside space-y-0.5 text-zinc-300">
+                          {msg.objeciones.map((obj, i) => (
+                            <li key={i}>{obj}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {!msg.sentimiento && (
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          onClick={() => handleAnalyzeMessageSentiment(msg.id, msg.mensaje)}
+                          disabled={isAnalyzingMessageSentiment === msg.id}
+                          className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                        >
+                          {isAnalyzingMessageSentiment === msg.id ? (
+                            <>
+                              <Loader2 className="w-3 h-3 animate-spin text-amber-400" />
+                              <span>Analizando sentimiento...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-3 h-3 text-amber-400" />
+                              <span>Analizar Sentimiento e Intención</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {/* TAB 2.5: INTELIGENCIA DE DATOS & APIS EXTERNAS */}
+      {activeTab === 'intelligence' && (
+        <div className="space-y-4 font-sans animate-fadeIn">
+          {/* Top Bar with Refresh All APIs button */}
+          <div className="p-3 bg-[#1A1918] border border-sky-500/30 rounded-xl flex items-center justify-between flex-wrap gap-2.5">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wide flex items-center gap-2">
+                  <span>Inteligencia Multi-Fuente Conectada</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-mono font-bold border border-sky-500/30">
+                    11 Herramientas Activas
+                  </span>
+                </h4>
+                <p className="text-[10px] text-zinc-400">
+                  Spotify • Google Places • Setlist.fm • DNS/MX • Rutas • Redes • Break-Even • Booking Window • Clash/Eventos • Medios • Co-Booking
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleEnrichAllApis}
+              disabled={isEnrichingApis}
+              className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+              title="Volver a consultar todas las APIs en tiempo real"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isEnrichingApis ? 'animate-spin' : ''}`} />
+              <span>{isEnrichingApis ? 'Consultando APIs...' : 'Actualizar Todas las APIs'}</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {/* 1. SPOTIFY AUDIENCE & CITY DEMAND */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-emerald-500/30 space-y-3 relative overflow-hidden">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                  <Headphones className="w-4 h-4" />
+                  <span>Spotify City Demand</span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30 text-emerald-300">
+                  {selectedLead.ciudad || 'Madrid'}
+                </span>
+              </div>
+
+              {selectedLead.spotify_city_demand ? (
+                <div className="space-y-2.5 text-xs">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block font-medium">Oyentes en la Ciudad</span>
+                      <span className="text-base font-bold text-emerald-300 font-mono">
+                        {selectedLead.spotify_city_demand.oyentes_ciudad.toLocaleString()}
+                      </span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        Top #{selectedLead.spotify_city_demand.top_ciudades_ranking} audiencia
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block font-medium">Afinidad de Género</span>
+                      <span className="text-base font-bold text-emerald-300 font-mono">
+                        {selectedLead.spotify_city_demand.afinidad_genero}%
+                      </span>
+                      <span className="text-[9px] text-zinc-500 block">Match con público local</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1.5">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-zinc-400">Demanda Estimada de Entradas:</span>
+                      <span className="font-bold text-zinc-100 font-mono">
+                        {selectedLead.spotify_city_demand.prediccion_entradas} pax / {selectedLead.aforo || 300} aforo
+                      </span>
+                    </div>
+                    <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-emerald-400 h-full rounded-full transition-all"
+                        style={{ width: `${Math.min(100, selectedLead.spotify_city_demand.porcentaje_ocupacion_estimado)}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-zinc-500">
+                      <span>Ocupación calculada:</span>
+                      <span className="font-bold text-emerald-400">
+                        {selectedLead.spotify_city_demand.porcentaje_ocupacion_estimado}% de aforo
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="py-4 text-center text-zinc-500 text-xs italic">
+                  Pulsa "Actualizar Todas las APIs" para calcular la demanda de Spotify en {selectedLead.ciudad || 'Madrid'}.
+                </div>
+              )}
+            </div>
+
+            {/* 2. GOOGLE PLACES & FICHA TÉCNICA */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-amber-500/30 space-y-3 relative">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-amber-400 font-bold text-xs">
+                  <MapPin className="w-4 h-4" />
+                  <span>Google Places & Escenario</span>
+                </div>
+                {selectedLead.google_places_info?.rating && (
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/30 text-amber-300 flex items-center gap-1 font-bold">
+                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    {selectedLead.google_places_info.rating} ({selectedLead.google_places_info.total_reviews})
+                  </span>
+                )}
+              </div>
+
+              {selectedLead.google_places_info ? (
+                <div className="space-y-2 text-xs">
+                  {selectedLead.google_places_info.fotos && selectedLead.google_places_info.fotos.length > 0 && (
+                    <div className="grid grid-cols-2 gap-1.5 rounded-lg overflow-hidden border border-zinc-800">
+                      {selectedLead.google_places_info.fotos.slice(0, 2).map((url, i) => (
+                        <div key={i} className="h-20 bg-zinc-900 relative group overflow-hidden">
+                          <img
+                            src={url}
+                            alt={`${selectedLead.nombre_sala} foto ${i + 1}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            referrerPolicy="no-referrer"
+                            onError={(e: any) => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="space-y-1.5 text-[11px] bg-black/40 p-2.5 rounded-lg border border-zinc-800">
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-zinc-500 font-bold shrink-0">🔊 Acústica:</span>
+                      <span className="text-zinc-300 leading-tight">
+                        {selectedLead.google_places_info.resumen_acustica || 'Sala con equipo de PA profesional instalado.'}
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-zinc-500 font-bold shrink-0">🚛 Carga / Backline:</span>
+                      <span className="text-zinc-300 leading-tight">
+                        {selectedLead.google_places_info.acceso_backline || 'Acceso por calle peatonal / vado autorizado.'}
+                      </span>
+                    </div>
+                    {selectedLead.google_places_info.horario_carga && (
+                      <div className="flex items-start gap-1.5">
+                        <span className="text-zinc-500 font-bold shrink-0">⏰ Horario prueba:</span>
+                        <span className="text-zinc-300 leading-tight">
+                          {selectedLead.google_places_info.horario_carga}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="py-4 text-center text-zinc-500 text-xs italic">
+                  Pulsa "Actualizar Todas las APIs" para cargar la ficha técnica de Google Places.
+                </div>
+              )}
+            </div>
+
+            {/* 3. SETLIST.FM & HISTORIAL DE CONCIERTOS */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-purple-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs">
+                  <Disc className="w-4 h-4" />
+                  <span>Setlist.fm & Cartelera Reciente</span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950/60 border border-purple-500/30 text-purple-300">
+                  Histórico Bolos
+                </span>
+              </div>
+
+              {selectedLead.setlist_history ? (
+                <div className="space-y-2 text-xs">
+                  <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1.5">
+                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                      Bandas Similares que han tocado:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedLead.setlist_history.bandas_similares_recientes.map((banda, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-0.5 rounded-md bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[11px] font-medium"
+                        >
+                          🎸 {banda}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {selectedLead.setlist_history.referencia_pitch_sugerida && (
+                    <div className="p-2.5 rounded-lg bg-purple-950/30 border border-purple-500/40 space-y-1.5">
+                      <span className="text-[10px] text-purple-300 font-bold uppercase flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-purple-400" />
+                        Gancho Recomendado para el Pitch:
+                      </span>
+                      <p className="text-[11px] text-zinc-200 italic leading-snug">
+                        "{selectedLead.setlist_history.referencia_pitch_sugerida}"
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const hook = selectedLead.setlist_history?.referencia_pitch_sugerida;
+                          if (hook && selectedLead.pitch_generado) {
+                            const newPitch = `${selectedLead.pitch_generado}\n\nPD: ${hook}`;
+                            onUpdateLead(selectedLead.id, { pitch_generado: newPitch });
+                            setEditedPitch(newPitch);
+                            setScoutActionFeedback('✓ Gancho de Setlist.fm insertado en el borrador del pitch.');
+                            setTimeout(() => setScoutActionFeedback(null), 4000);
+                          }
+                        }}
+                        className="text-[10px] font-bold text-purple-300 hover:text-purple-200 underline cursor-pointer"
+                      >
+                        + Añadir este gancho al final del Pitch
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="py-4 text-center text-zinc-500 text-xs italic">
+                  Sin histórico de Setlist.fm cargado aún.
+                </div>
+              )}
+            </div>
+
+            {/* 4. VERIFICACIÓN EMAIL & SERVIDORES MX */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-sky-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-sky-400 font-bold text-xs">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Verificación de Email & DNS MX</span>
+                </div>
+                {selectedLead.email_verification?.entregabilidad_score !== undefined && (
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                      selectedLead.email_verification.entregabilidad_score >= 80
+                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                        : selectedLead.email_verification.entregabilidad_score >= 50
+                        ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
+                        : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                    }`}
+                  >
+                    🛡️ {selectedLead.email_verification.entregabilidad_score}% Entregable
+                  </span>
+                )}
+              </div>
+
+              {selectedLead.email_verification ? (
+                <div className="space-y-2 text-xs">
+                  <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1 text-[11px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-zinc-400">Estado del Buzón:</span>
+                      <span className="font-bold text-zinc-200 capitalize">
+                        {selectedLead.email_verification.estado === 'valido' ? '✅ Buzón Válido' : selectedLead.email_verification.estado}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-zinc-400">Registros DNS MX:</span>
+                      <span className="font-bold text-emerald-400">
+                        {selectedLead.email_verification.mx_valido ? '✓ Servidores de correo activos' : '⚠️ Sin registros MX'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-zinc-400">Tipo de Dirección:</span>
+                      <span className="font-bold text-zinc-200">
+                        {selectedLead.email_verification.es_cuenta_rol ? 'Buzón de Booking / Programación' : 'Cuenta Personal Directa'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-zinc-400 bg-sky-950/20 p-2 rounded-lg border border-sky-500/20">
+                    💡 {selectedLead.email_verification.motivo}
+                  </p>
+                </div>
+              ) : (
+                <div className="py-4 text-center text-zinc-500 text-xs italic">
+                  Pulsa "Actualizar Todas las APIs" para validar los registros DNS y entregabilidad del email.
+                </div>
+              )}
+            </div>
+
+            {/* 5. HERRAMIENTA 1: RUTAS DE GIRA, GASOLINA & FURGONETA */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-blue-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-blue-400 font-bold text-xs">
+                  <Truck className="w-4 h-4" />
+                  <span>Ruta de Gira, Gasolina & Furgoneta</span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950/60 border border-blue-500/30 text-blue-300 font-bold">
+                  Van Logistics
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-1.5 bg-black/40 px-2.5 py-1.5 rounded-lg border border-zinc-800 text-xs">
+                  <Navigation className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                  <span className="text-zinc-400 text-[11px]">Origen:</span>
+                  <input
+                    type="text"
+                    value={routeOrigin}
+                    onChange={(e) => setRouteOrigin(e.target.value)}
+                    placeholder="Ciudad base (ej: Madrid)"
+                    className="bg-transparent border-none text-zinc-100 font-bold focus:outline-none w-full text-xs"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCalculateRoute}
+                  disabled={isCalculatingRoute}
+                  className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                  title="Recalcular ruta y gasolina"
+                >
+                  <RefreshCw className={`w-3 h-3 ${isCalculatingRoute ? 'animate-spin' : ''}`} />
+                  <span>Calcular</span>
+                </button>
+              </div>
+
+              {selectedLead.tour_logistics ? (
+                <div className="space-y-2.5 text-xs">
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Distancia</span>
+                      <span className="text-sm font-bold text-blue-300 font-mono">
+                        {selectedLead.tour_logistics.distancia_km} km
+                      </span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        {selectedLead.tour_logistics.tiempo_conduccion}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Gasolina (Ida)</span>
+                      <span className="text-sm font-bold text-amber-300 font-mono">
+                        {selectedLead.tour_logistics.coste_gasolina_estimado} €
+                      </span>
+                      <span className="text-[9px] text-zinc-500 block">9L/100km Diésel</span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Total Viaje I/V</span>
+                      <span className="text-sm font-bold text-emerald-300 font-mono">
+                        {selectedLead.tour_logistics.coste_total_viaje} €
+                      </span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        +{selectedLead.tour_logistics.peajes_estimados}€ peajes
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-zinc-300 bg-blue-950/20 p-2.5 rounded-lg border border-blue-500/20 leading-snug">
+                    🚐 <span className="font-semibold text-blue-200">Road Manager:</span> {selectedLead.tour_logistics.recomendacion_logistica}
+                  </p>
+                </div>
+              ) : (
+                <div className="py-3 text-center text-zinc-500 text-xs italic">
+                  Introduce tu ciudad base y pulsa "Calcular" para obtener kilometraje y combustible.
+                </div>
+              )}
+            </div>
+
+            {/* 6. HERRAMIENTA 2: RADAR DE REDES SOCIALES (INSTAGRAM & TIKTOK) */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-pink-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-pink-400 font-bold text-xs">
+                  <Instagram className="w-4 h-4" />
+                  <span>Radar Redes Sala (Instagram & TikTok)</span>
+                </div>
+                {selectedLead.social_engagement?.calidad_promo_sala && (
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                      selectedLead.social_engagement.calidad_promo_sala === 'alta'
+                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                        : selectedLead.social_engagement.calidad_promo_sala === 'media'
+                        ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
+                        : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                    }`}
+                  >
+                    Promo: {selectedLead.social_engagement.calidad_promo_sala.toUpperCase()}
+                  </span>
+                )}
+              </div>
+
+              {selectedLead.social_engagement ? (
+                <div className="space-y-2.5 text-xs">
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Seguidores</span>
+                      <span className="text-sm font-bold text-pink-300 font-mono">
+                        {selectedLead.social_engagement.instagram_followers.toLocaleString()}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Engagement</span>
+                      <span className="text-sm font-bold text-pink-300 font-mono">
+                        {selectedLead.social_engagement.engagement_rate}%
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Media Reels</span>
+                      <span className="text-sm font-bold text-pink-300 font-mono">
+                        {selectedLead.social_engagement.promedio_views_reels.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">¿Comparte a las bandas en Stories/Feed?</span>
+                    <span className="font-bold text-zinc-100 flex items-center gap-1">
+                      {selectedLead.social_engagement.promociona_bandas_activo ? (
+                        <span className="text-emerald-400 flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Sí, sala activa
+                        </span>
+                      ) : (
+                        <span className="text-zinc-400">Pasivo / Solo cartel mensual</span>
+                      )}
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-zinc-300 bg-pink-950/20 p-2.5 rounded-lg border border-pink-500/20 leading-snug">
+                    📢 {selectedLead.social_engagement.resumen_social}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4 space-y-2">
+                  <p className="text-zinc-500 text-xs italic">Sin datos de radar en redes aún.</p>
+                  <button
+                    type="button"
+                    onClick={handleFetchSocial}
+                    disabled={isEnrichingSocial}
+                    className="px-3 py-1 bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isEnrichingSocial ? 'animate-spin' : ''}`} />
+                    <span>{isEnrichingSocial ? 'Escaneando...' : 'Escanear Redes de la Sala'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 8. HERRAMIENTA 1: RADAR DE CALENDARIO & VENTANA DE PROGRAMACIÓN (BOOKING WINDOW) */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-amber-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-amber-400 font-bold text-xs">
+                  <CalendarDays className="w-4 h-4" />
+                  <span>Ventana de Programación & Lead Time</span>
+                </div>
+                {selectedLead.booking_window_info?.estado_calendario_estimado && (
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                      selectedLead.booking_window_info.estado_calendario_estimado === 'abierto'
+                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                        : selectedLead.booking_window_info.estado_calendario_estimado === 'llenandose'
+                        ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
+                        : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                    }`}
+                  >
+                    Estado: {selectedLead.booking_window_info.estado_calendario_estimado.replace('_', ' ').toUpperCase()}
+                  </span>
+                )}
+              </div>
+
+              {selectedLead.booking_window_info ? (
+                <div className="space-y-2.5 text-xs">
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Antelación Ideal</span>
+                      <span className="text-sm font-bold text-amber-300 font-mono">
+                        {selectedLead.booking_window_info.antelacion_meses_recomendada} meses
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Días Fuertes</span>
+                      <span className="text-xs font-bold text-zinc-200">
+                        {selectedLead.booking_window_info.dias_semana_ideales?.join(', ') || 'Viernes, Sábado'}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
+                      <span className="text-[10px] text-zinc-400 block">Cierre / Vacaciones</span>
+                      <span className="text-xs font-bold text-rose-300">
+                        {selectedLead.booking_window_info.meses_cierre_temporada?.join(', ') || 'Ninguno'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {selectedLead.booking_window_info.consejo_antelacion && (
+                    <div className="p-2.5 rounded-lg bg-amber-950/20 border border-amber-500/20 space-y-1.5">
+                      <p className="text-[11px] text-zinc-300 leading-snug">
+                        💡 <strong className="text-amber-300">Consejo Táctico:</strong> {selectedLead.booking_window_info.consejo_antelacion}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4 space-y-2">
+                  <p className="text-zinc-500 text-xs italic">Sin análisis de ventana de programación aún.</p>
+                  <button
+                    type="button"
+                    onClick={handleFetchBookingWindow}
+                    disabled={isEnrichingBookingWindow}
+                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isEnrichingBookingWindow ? 'animate-spin' : ''}`} />
+                    <span>{isEnrichingBookingWindow ? 'Calculando...' : 'Calcular Lead Time & Ventana'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 9. HERRAMIENTA 2: RADAR DE EVENTOS LOCALES & ALERTA DE CLASH */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-rose-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-rose-400 font-bold text-xs">
+                  <Flame className="w-4 h-4" />
+                  <span>Radar Eventos Locales & Alerta Clash</span>
+                </div>
+                {selectedLead.local_events_clash_info?.eventos_detectados && (
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
+                      selectedLead.local_events_clash_info.eventos_detectados.some(e => e.nivel_riesgo_solapamiento === 'alto')
+                        ? 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                        : selectedLead.local_events_clash_info.eventos_detectados.some(e => e.nivel_riesgo_solapamiento === 'medio')
+                        ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
+                        : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                    }`}
+                  >
+                    Riesgo Clash: {selectedLead.local_events_clash_info.eventos_detectados.some(e => e.nivel_riesgo_solapamiento === 'alto') ? 'ALTO' : selectedLead.local_events_clash_info.eventos_detectados.some(e => e.nivel_riesgo_solapamiento === 'medio') ? 'MEDIO' : 'BAJO'}
+                  </span>
+                )}
+              </div>
+
+              {selectedLead.local_events_clash_info ? (
+                <div className="space-y-2.5 text-xs">
+                  {selectedLead.local_events_clash_info.fechas_favorables_sugeridas?.length > 0 && (
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1.5">
+                      <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                        Ventanas Recomendadas en {selectedLead.ciudad || 'la ciudad'}:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedLead.local_events_clash_info.fechas_favorables_sugeridas.map((v, i) => (
+                          <span key={i} className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] font-medium">
+                            ✓ {v}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedLead.local_events_clash_info.eventos_detectados?.length > 0 && (
+                    <div className="space-y-1.5">
+                      <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                        Eventos masivos detectados en la zona:
+                      </span>
+                      <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
+                        {selectedLead.local_events_clash_info.eventos_detectados.map((ev, i) => (
+                          <div key={i} className="p-2 rounded-lg bg-black/50 border border-zinc-800/80 flex items-center justify-between text-[11px]">
+                            <div>
+                              <strong className="text-zinc-200 block">{ev.nombre}</strong>
+                              <span className="text-[10px] text-zinc-400 font-mono">📅 {ev.fecha_aproximada} • {ev.tipo}</span>
+                            </div>
+                            <span
+                              className={`text-[9px] px-1.5 py-0.5 rounded font-bold border shrink-0 ${
+                                ev.nivel_riesgo_solapamiento === 'alto'
+                                  ? 'bg-rose-950/80 text-rose-300 border-rose-500/40'
+                                  : ev.nivel_riesgo_solapamiento === 'medio'
+                                  ? 'bg-amber-950/80 text-amber-300 border-amber-500/40'
+                                  : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
+                              }`}
+                            >
+                              Solape {ev.nivel_riesgo_solapamiento}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedLead.local_events_clash_info.alerta_resumen && (
+                    <p className="text-[11px] text-zinc-300 bg-rose-950/20 p-2.5 rounded-lg border border-rose-500/20 leading-snug">
+                      ⚠️ {selectedLead.local_events_clash_info.alerta_resumen}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4 space-y-2">
+                  <p className="text-zinc-500 text-xs italic">Sin escaneo de eventos locales aún.</p>
+                  <button
+                    type="button"
+                    onClick={handleFetchLocalEvents}
+                    disabled={isEnrichingLocalEvents}
+                    className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isEnrichingLocalEvents ? 'animate-spin' : ''}`} />
+                    <span>{isEnrichingLocalEvents ? 'Escaneando...' : 'Escanear Eventos Locales'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 10. HERRAMIENTA 4: RADAR DE MEDIOS, RADIOS & PRENSA CULTURAL LOCAL */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-cyan-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs">
+                  <Megaphone className="w-4 h-4" />
+                  <span>Medios, Radios & Prensa Cultural Local</span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 font-bold">
+                  {selectedLead.ciudad || 'Provincial'}
+                </span>
+              </div>
+
+              {selectedLead.local_press_media_info ? (
+                <div className="space-y-2.5 text-xs">
+                  <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                    {selectedLead.local_press_media_info.medios?.map((m, i) => (
+                      <div key={i} className="p-2 rounded-lg bg-black/40 border border-zinc-800 flex items-center justify-between text-[11px]">
+                        <div>
+                          <strong className="text-cyan-200 block">{m.nombre}</strong>
+                          <span className="text-[10px] text-zinc-400">{m.tipo.replace('_', ' ')} • {m.alcance}</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-300 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-700">
+                          {m.contacto_sugerido || m.canal}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedLead.local_press_media_info.plantilla_nota_prensa_hook && (
+                    <div className="p-2.5 rounded-lg bg-cyan-950/30 border border-cyan-500/30 space-y-1.5">
+                      <span className="text-[10px] text-cyan-300 font-bold uppercase flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-cyan-400" />
+                        Gancho Titular para Medios / Radio:
+                      </span>
+                      <p className="text-[11px] text-zinc-200 italic leading-snug">
+                        "{selectedLead.local_press_media_info.plantilla_nota_prensa_hook}"
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const hook = selectedLead.local_press_media_info?.plantilla_nota_prensa_hook;
+                          if (hook) {
+                            navigator.clipboard.writeText(hook);
+                            setScoutActionFeedback('✓ Titular de nota de prensa copiado al portapapeles.');
+                            setTimeout(() => setScoutActionFeedback(null), 3500);
+                          }
+                        }}
+                        className="text-[10px] font-bold text-cyan-300 hover:text-cyan-200 underline cursor-pointer"
+                      >
+                        📋 Copiar titular de prensa
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedLead.local_press_media_info.resumen_cobertura && (
+                    <p className="text-[10px] text-zinc-400 bg-black/40 p-2 rounded-lg border border-zinc-800">
+                      📢 {selectedLead.local_press_media_info.resumen_cobertura}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4 space-y-2">
+                  <p className="text-zinc-500 text-xs italic">Sin medios locales detectados aún.</p>
+                  <button
+                    type="button"
+                    onClick={handleFetchPressMedia}
+                    disabled={isEnrichingPressMedia}
+                    className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isEnrichingPressMedia ? 'animate-spin' : ''}`} />
+                    <span>{isEnrichingPressMedia ? 'Buscando...' : 'Buscar Medios & Radios'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 11. HERRAMIENTA 5: RADAR DE BANDAS LOCALES AFINES (CO-BOOKING) */}
+            <div className="p-4 rounded-xl bg-[#1A1918] border border-indigo-500/30 space-y-3">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs">
+                  <Handshake className="w-4 h-4" />
+                  <span>Bandas Locales Hermanadas (Co-Booking)</span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 font-bold">
+                  Taquilla Compartida
+                </span>
+              </div>
+
+              {selectedLead.local_band_partners_info ? (
+                <div className="space-y-2.5 text-xs">
+                  <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                    {selectedLead.local_band_partners_info.bandas_compatibles?.map((b, i) => (
+                      <div key={i} className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1 text-[11px]">
+                        <div className="flex items-center justify-between">
+                          <strong className="text-indigo-200">🎸 {b.nombre}</strong>
+                          {b.oyentes_estimados !== undefined && (
+                            <span className="text-[10px] font-mono text-zinc-400">{b.oyentes_estimados.toLocaleString()} oyentes</span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                          <span>{b.genero} {b.instagram ? `• ${b.instagram}` : ''}</span>
+                          <span className="text-indigo-300 font-medium text-[10px]">{b.motivo_afinidad}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {selectedLead.local_band_partners_info.gancho_propuesta_sala && (
+                    <div className="p-2.5 rounded-lg bg-indigo-950/30 border border-indigo-500/30 space-y-1.5">
+                      <span className="text-[10px] text-indigo-300 font-bold uppercase flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-indigo-400" />
+                        Propuesta Co-Booking para el Programador:
+                      </span>
+                      <p className="text-[11px] text-zinc-200 italic leading-snug">
+                        "{selectedLead.local_band_partners_info.gancho_propuesta_sala}"
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const cobooking = selectedLead.local_band_partners_info?.gancho_propuesta_sala;
+                          if (cobooking && selectedLead.pitch_generado) {
+                            const newPitch = `${selectedLead.pitch_generado}\n\nPD: ${cobooking}`;
+                            onUpdateLead(selectedLead.id, { pitch_generado: newPitch });
+                            setEditedPitch(newPitch);
+                            setScoutActionFeedback('✓ Propuesta de co-booking añadida al pitch.');
+                            setTimeout(() => setScoutActionFeedback(null), 4000);
+                          }
+                        }}
+                        className="text-[10px] font-bold text-indigo-300 hover:text-indigo-200 underline cursor-pointer"
+                      >
+                        + Añadir propuesta de co-booking al Pitch
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4 space-y-2">
+                  <p className="text-zinc-500 text-xs italic">Sin bandas locales para co-booking cargadas.</p>
+                  <button
+                    type="button"
+                    onClick={handleFetchCoBooking}
+                    disabled={isEnrichingCoBooking}
+                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isEnrichingCoBooking ? 'animate-spin' : ''}`} />
+                    <span>{isEnrichingCoBooking ? 'Buscando...' : 'Buscar Bandas para Co-Booking'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 7. HERRAMIENTA 5: SIMULADOR INTERACTIVO DE TAQUILLA, CACHÉ & BREAK-EVEN (P&L FINANCIERO) */}
+          <div className="p-4 rounded-xl bg-[#1A1918] border border-emerald-500/40 space-y-3.5 shadow-lg">
+            <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2 flex-wrap gap-2">
+              <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                <Calculator className="w-4 h-4" />
+                <span className="text-sm">Simulador de Taquilla, Caché y Break-Even (P&L por Concierto)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleRecalculateFinancial}
+                  disabled={isRecalculatingFinancial}
+                  className="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? 'animate-spin' : ''}`} />
+                  <span>Recalcular & Guardar P&L</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Inputs de simulación */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs">
+              <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
+                <label className="text-[10px] text-zinc-400 block font-medium">🎟️ Anticipada (€)</label>
+                <input
+                  type="number"
+                  value={simAnticipada}
+                  onChange={(e) => setSimAnticipada(Number(e.target.value))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-zinc-100 font-bold text-xs"
+                />
+              </div>
+
+              <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
+                <label className="text-[10px] text-zinc-400 block font-medium">🚪 Puerta (€)</label>
+                <input
+                  type="number"
+                  value={simTaquilla}
+                  onChange={(e) => setSimTaquilla(Number(e.target.value))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-zinc-100 font-bold text-xs"
+                />
+              </div>
+
+              <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
+                <label className="text-[10px] text-zinc-400 block font-medium">🏢 Alquiler Sala (€)</label>
+                <input
+                  type="number"
+                  value={simAlquiler}
+                  onChange={(e) => setSimAlquiler(Number(e.target.value))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-zinc-100 font-bold text-xs"
+                />
+              </div>
+
+              <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
+                <label className="text-[10px] text-zinc-400 block font-medium">% Sala / Taquilla</label>
+                <input
+                  type="number"
+                  value={simPctSala}
+                  onChange={(e) => setSimPctSala(Number(e.target.value))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-zinc-100 font-bold text-xs"
+                />
+              </div>
+
+              <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
+                <label className="text-[10px] text-zinc-400 block font-medium">🚐 Gastos Viaje/Prod (€)</label>
+                <input
+                  type="number"
+                  value={simGastosProd}
+                  onChange={(e) => setSimGastosProd(Number(e.target.value))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-zinc-100 font-bold text-xs"
+                />
+              </div>
+
+              <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
+                <label className="text-[10px] text-zinc-400 block font-medium">🎸 Nº Músicos</label>
+                <input
+                  type="number"
+                  value={simNumMusicos}
+                  onChange={(e) => setSimNumMusicos(Number(e.target.value))}
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-zinc-100 font-bold text-xs"
+                />
+              </div>
+            </div>
+
+            {/* Resultados de rentabilidad */}
+            {selectedLead.financial_break_even ? (
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-center">
+                    <span className="text-[10px] text-emerald-300 font-bold uppercase block">Punto de Equilibrio</span>
+                    <span className="text-xl font-extrabold text-emerald-400 font-mono block">
+                      {selectedLead.financial_break_even.entradas_break_even}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 block">
+                      entradas para no perder (€0)
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/50 border border-zinc-800 text-center">
+                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">% Aforo Requerido</span>
+                    <span className="text-xl font-bold text-zinc-100 font-mono block">
+                      {Math.round(((selectedLead.financial_break_even.entradas_break_even || 1) / (selectedLead.aforo || 250)) * 100)}%
+                    </span>
+                    <span className="text-[10px] text-zinc-500 block">
+                      de {selectedLead.aforo || 250} aforo máx.
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/50 border border-zinc-800 text-center">
+                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">Beneficio Banda (80% lleno)</span>
+                    <span className="text-xl font-bold text-emerald-300 font-mono block">
+                      {selectedLead.financial_break_even.beneficio_estimado_lleno} €
+                    </span>
+                    <span className="text-[10px] text-zinc-500 block">
+                      margen neto total
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/50 text-center">
+                    <span className="text-[10px] text-emerald-300 font-bold uppercase block">Limpio por Músico</span>
+                    <span className="text-xl font-extrabold text-emerald-300 font-mono block">
+                      {selectedLead.financial_break_even.beneficio_por_musico_estimado} €
+                    </span>
+                    <span className="text-[10px] text-emerald-400/80 block">
+                      / cada uno ({selectedLead.financial_break_even.num_musicos} integrantes)
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-500/30 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-zinc-200 text-[11px]">
+                      Con <strong className="text-emerald-300">{selectedLead.financial_break_even.entradas_break_even} entradas</strong> cubrís íntegramente el alquiler de la sala ({simAlquiler}€) y los gastos de furgoneta/sonido ({simGastosProd}€).
+                    </span>
+                  </div>
+                  <span className="font-bold text-emerald-400 font-mono shrink-0 ml-2">
+                    ✓ Margen Positivo
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="py-3 text-center text-zinc-500 text-xs italic">
+                Ajusta los precios y pulsa "Recalcular & Guardar P&L" para simular la rentabilidad del concierto.
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -2129,6 +3899,36 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         onConfirmWithoutSetlist={handleConfirmWithoutSetlist}
         isStitchLight={isStitchLight}
       />
+
+      {/* Modal / Drawer WhatsApp Preview Interactivo */}
+      {selectedLead && (
+        <WhatsAppPreviewModal
+          isOpen={showWhatsAppModal}
+          onClose={() => setShowWhatsAppModal(false)}
+          lead={selectedLead}
+          isStitchLight={isStitchLight}
+          onLogInteraction={(leadId, logData) => {
+            const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
+            const newLog: InteractionLog = {
+              id: `log-${Date.now()}`,
+              fecha: nowStr,
+              tipo: 'WhatsApp',
+              autor: interactionAutor || 'Mánager / Booking',
+              notas: logData.notas,
+              resultado: (logData.resultado as any) || 'Interesado'
+            };
+            const existingLogs = selectedLead.historial_contacto || [];
+            onUpdateLead(leadId, {
+              historial_contacto: [newLog, ...existingLogs],
+              fecha_ultima_respuesta: new Date().toISOString().slice(0, 10)
+            });
+          }}
+          onUpdateLeadPhone={(leadId, updates) => {
+            onUpdateLead(leadId, updates);
+            setEditedLeadInfo(prev => ({ ...prev, ...updates }));
+          }}
+        />
+      )}
     </div>
   );
 };

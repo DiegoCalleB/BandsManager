@@ -20,6 +20,8 @@ import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { openWhatsAppChat } from '../utils/whatsapp';
+import { encodeBandIdClient } from '../utils/bandHash';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -390,8 +392,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
 
   const qrQueryParams: string[] = [];
-  if (currentBandId) qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
-  else if (cleanBandId) qrQueryParams.push(`band=${encodeURIComponent(cleanBandId)}`);
+  if (currentBandId) qrQueryParams.push(`b=${encodeURIComponent(encodeBandIdClient(currentBandId))}`);
+  else if (cleanBandId) qrQueryParams.push(`b=${encodeURIComponent(encodeBandIdClient(cleanBandId))}`);
   if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE) qrQueryParams.push(`lang=${qrLanguage}`);
   if (selectedConcert) {
     // Permite que /api/public/fans guarde el concierto de origen real (concierto_origen_id)
@@ -417,7 +419,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handleShareWhatsApp = () => {
     const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : effectiveBandName;
     const text = `¡Únete a ${effectiveBandName} en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    openWhatsAppChat(undefined, text);
   };
 
   const handleShareNative = async () => {

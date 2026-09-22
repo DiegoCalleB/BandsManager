@@ -36,7 +36,7 @@ export async function ensureRegisteredBandExists(bandId: string, nombreBanda?: s
     const { data } = await sb.from("registered_bands").select("*").eq("band_id", cleanId).maybeSingle();
     const resolvedName = (nombreBanda && nombreBanda.trim() && nombreBanda.trim() !== "Banda") 
       ? nombreBanda.trim() 
-      : (cleanId === "band-bakandeya" ? "Bakandeya" : (data?.nombre_banda && data.nombre_banda !== "Banda" ? data.nombre_banda : cleanId.replace(/^band-/, "").split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ")));
+      : (data?.nombre_banda && data.nombre_banda !== "Banda" ? data.nombre_banda : cleanId.replace(/^band-/, "").split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" "));
 
     if (!data) {
       const payload = {

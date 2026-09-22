@@ -44,18 +44,31 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     }
   }
 
-  // 1. 🔥 Lead Caliente: Sala que respondió o tuvo contacto en los últimos 3 días O en negociación / interesado activo
+  // 1. 🔥 Lead Caliente: Clic en EPK, múltiples aperturas, respuesta reciente o negociación activa
+  const hasClickedEpk = Boolean(lead.clics_epk && lead.clics_epk > 0);
+  const multipleOpens = Boolean(lead.veces_abierto && lead.veces_abierto >= 2);
+
   if (
+    hasClickedEpk ||
+    multipleOpens ||
     (daysSinceLastActivity !== null && daysSinceLastActivity <= 3) ||
     lead.estado === 'interesado' ||
     lead.estado === 'negociando'
   ) {
-    const desc = daysSinceLastActivity !== null 
-      ? (daysSinceLastActivity === 0 ? 'Actividad hoy' : `Actividad hace ${daysSinceLastActivity}d`)
-      : 'Negociación / Respuesta activa';
+    let desc = 'Interés activo';
+    if (hasClickedEpk) {
+      desc = `Dossier EPK revisado (${lead.clics_epk} ${lead.clics_epk === 1 ? 'clic' : 'clics'})`;
+    } else if (multipleOpens) {
+      desc = `Email abierto ${lead.veces_abierto} veces`;
+    } else if (daysSinceLastActivity !== null) {
+      desc = daysSinceLastActivity === 0 ? 'Actividad hoy' : `Actividad hace ${daysSinceLastActivity}d`;
+    } else {
+      desc = 'Negociación / Respuesta activa';
+    }
+
     return {
       type: 'caliente',
-      label: '🔥 Lead Caliente',
+      label: hasClickedEpk ? '🔥 EPK Visto' : (multipleOpens ? '🔥 Releyendo' : '🔥 Lead Caliente'),
       badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold',
       icon: '🔥',
       description: desc

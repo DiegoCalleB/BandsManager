@@ -348,7 +348,10 @@ export default function BookingCRM({
  aforo: 0,
  tipo: 'medio' as LeadType,
  email_contacto: '',
+ email_secundario: '',
  telefono: '',
+ telefono_movil: '',
+ telefono_fijo: '',
  website: '',
  instagram: '',
  fuente: '',
@@ -578,6 +581,8 @@ export default function BookingCRM({
  const getVal = (f: any) => typeof f === 'object' && f !== null ? f.valor : (f || '');
  const emailVal = getVal(resData.data.email_contacto);
  const telVal = getVal(resData.data.telefono);
+ const isMobile = telVal && /^(?:\+?34\s*)?[67]/.test(telVal.trim());
+ const isLandline = telVal && /^(?:\+?34\s*)?[89]/.test(telVal.trim());
  const webVal = getVal(resData.data.website);
  const instaVal = getVal(resData.data.instagram);
  const contactoVal = getVal(resData.data.contacto_nombre);
@@ -591,6 +596,8 @@ export default function BookingCRM({
  ...prev,
  email_contacto: emailVal || prev.email_contacto,
  telefono: telVal || prev.telefono,
+ telefono_movil: isMobile ? telVal : prev.telefono_movil,
+ telefono_fijo: isLandline ? telVal : prev.telefono_fijo,
  website: webVal || prev.website,
  region: regionVal || prev.region,
  aforo: (aforoVal && !isNaN(Number(aforoVal))) ? Number(aforoVal) : prev.aforo,
@@ -726,7 +733,10 @@ export default function BookingCRM({
  genero: newLeadData.genero || (sectionTab === 'medios' ? 'Radio' : 'Música en directo'),
  tipo: sectionTab === 'medios' ? 'medio' : newLeadData.tipo,
  email_contacto: newLeadData.email_contacto || '',
- telefono: newLeadData.telefono || '',
+ email_secundario: newLeadData.email_secundario || '',
+ telefono: newLeadData.telefono || newLeadData.telefono_movil || newLeadData.telefono_fijo || '',
+ telefono_movil: newLeadData.telefono_movil || '',
+ telefono_fijo: newLeadData.telefono_fijo || '',
  instagram: newLeadData.instagram || '',
  website: newLeadData.website || '',
  icono: newLeadData.icono || (sectionTab === 'medios' ? '📻' : '🏛️'),
@@ -781,6 +791,20 @@ export default function BookingCRM({
   interventionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
  };
+
+  const handleDeleteSingleLead = (id: string, name?: string) => {
+    const leadToDelete = leads.find(l => l.id === id);
+    const targetName = name || leadToDelete?.nombre_sala || "esta sala";
+    if (window.confirm(`¿Estás seguro de que deseas eliminar "${targetName}" de tu CRM?\nSe eliminará de tu agenda y se guardará en la lista negra para no volver a sugerirla.`)) {
+      if (selectedLead?.id === id) {
+        setSelectedLead(null);
+      }
+      setSelectedLeadIds(prev => prev.filter(item => item !== id));
+      if (onDeleteLead) {
+        onDeleteLead(id);
+      }
+    }
+  };
 
  const handleStartEditLeadInfo = () => {
  if (!selectedLead) return;
@@ -860,20 +884,70 @@ export default function BookingCRM({
  
  let simSender = 'Programación';
  let simBody = '';
+ let simFechas: string[] = [];
+ let simEcon: any = null;
+ let simIntencion = 'proponer_fechas';
+ let simScore = 0.8;
+ let simResumen = '';
+ let simPlaybook: any = null;
  
  const lowercaseName = selectedLead.nombre_sala.toLowerCase();
  if (selectedLead.id === 'lead-14' || lowercaseName.includes('hebe')) {
  simSender = 'Kike (Programación Sala Hebe)';
- simBody = '¡Buenas! He estado pensando lo de la fecha doble con la banda local que propusisteis. Me parece de lujo, los chavales de"Vallekas Ska" están buscando bolo para noviembre y seguro que entre los dos llenamos el Hebe. El viernes 13 de Noviembre sigue libre. ¿Cerramos ese día con un 75% de taquilla para vosotros si llegamos a las 100 entradas? Ya me decís y os paso el contrato.';
+ simBody = '¡Buenas! He estado pensando lo de la fecha doble con la banda local que propusisteis. Me parece de lujo, los chavales de "Vallekas Ska" están buscando bolo para noviembre y seguro que entre los dos llenamos el Hebe. El viernes 13 de Noviembre sigue libre. ¿Cerramos ese día con un 75% de taquilla para vosotros si llegamos a las 100 entradas? Ya me decís y os paso el contrato.';
+ simFechas = ['Viernes 13 de Noviembre'];
+ simEcon = { tipo: 'taquilla_porcentaje', cifra: '75%', detalles: 'Mínimo 100 entradas con Vallekas Ska' };
+ simIntencion = 'proponer_fechas';
+ simScore = 0.9;
+ simResumen = 'Kike propone fecha doble con Vallekas Ska el 13 de Noviembre con 75% de taquilla para la banda.';
+ simPlaybook = {
+   titulo: 'Aceptar fecha doble y cerrar contrato',
+   estrategia: 'La oferta es altamente favorable y asegura convocatoria local con Vallekas Ska.',
+   sugerencia_accion: 'responder_inmediato',
+   propuesta_rapida: '¡Aceptamos el viernes 13 de Noviembre con Vallekas Ska y el 75% de taquilla! Pásanos el contrato y el contacto de la banda local para coordinar la cartelería.'
+ };
  } else if (selectedLead.id === 'lead-4' || lowercaseName.includes('viña')) {
  simSender = 'Producción Artística (Viña Rock)';
  simBody = 'Hola, gracias por pasarnos los detalles. El caché de 4.500€ entra en vuestros rangos para el escenario de Mestizaje. El slot de las 18:30 del viernes está libre. Confirmadnos si vuestro rider técnico incluye los sintetizadores listos para línea balanceada o si necesitáis cajas DI adicionales del festival. ¡Cerremos trato!';
+ simFechas = ['Viernes 18:30 (Escenario Mestizaje)'];
+ simEcon = { tipo: 'cache_fijo', cifra: '4.500€', detalles: 'Caché fijo garantizado por festival' };
+ simIntencion = 'confirmar_fecha';
+ simScore = 0.95;
+ simResumen = 'Viña Rock confirma slot a las 18:30 con caché de 4.500€ y consulta rider para cajas DI.';
+ simPlaybook = {
+   titulo: 'Confirmar slot y enviar rider técnico',
+   estrategia: 'Oferta cerrada al caché solicitado. Responder adjuntando detalles técnicos para no perder el slot.',
+   sugerencia_accion: 'confirmar_directo',
+   propuesta_rapida: '¡Confirmamos el slot del viernes a las 18:30 por 4.500€! Llevamos sintetizadores con salidas balanceadas en jack TRS, pero agradeceríamos 2 cajas DI pasivas de cortesía.'
+ };
  } else if (selectedLead.id === 'lead-6' || lowercaseName.includes('razzmatazz')) {
  simSender = 'Xavi (Booking Razzmatazz)';
  simBody = `Buenas, nos parece perfecto el acuerdo de taquilla al 80/20 con un mínimo de 150 entradas garantizadas. La fecha del sábado 5 de Diciembre queda reservada para ${effectiveBandName}. Decidme a qué email enviamos el borrador del contrato de sala. ¡Un saludo!`;
+ simFechas = ['Sábado 5 de Diciembre'];
+ simEcon = { tipo: 'taquilla_porcentaje', cifra: '80/20', detalles: '80% para la banda (mín. 150 entradas)' };
+ simIntencion = 'confirmar_fecha';
+ simScore = 0.95;
+ simResumen = 'Razzmatazz reserva el 5 de Diciembre con 80% taquilla y solicita email para enviar contrato.';
+ simPlaybook = {
+   titulo: 'Enviar datos fiscales y solicitar contrato',
+   estrategia: 'La sala ha aceptado la fecha clave de sábado. Formalizar el acuerdo administrativo inmediatamente.',
+   sugerencia_accion: 'enviar_contrato',
+   propuesta_rapida: '¡Perfecto Xavi! Enviad el contrato a booking@labanda.com con atención a Administración. Nos ponemos ya con la promoción.'
+ };
  } else {
  simSender = `Programador (${selectedLead.nombre_sala})`;
  simBody = `Hola equipo de ${effectiveBandName}, gracias por la propuesta. Nos gusta mucho vuestra propuesta en directo. Para otoño tenemos el calendario casi cerrado, pero nos queda un hueco el sábado 28 de Noviembre. Iríamos a taquilla 70/30 a vuestro favor con entradas a 10€. ¿Os cuadra la fecha?`;
+ simFechas = ['Sábado 28 de Noviembre'];
+ simEcon = { tipo: 'taquilla_porcentaje', cifra: '70/30 (10€)', detalles: '70% a favor de la banda' };
+ simIntencion = 'proponer_fechas';
+ simScore = 0.75;
+ simResumen = 'El programador ofrece hueco el sábado 28 de Noviembre con 70% de taquilla a 10€ entrada.';
+ simPlaybook = {
+   titulo: 'Aceptar fecha de sábado 28 de Noviembre',
+   estrategia: 'Es sábado y el porcentaje es competitivo. Gran oportunidad de fecha de fin de semana.',
+   sugerencia_accion: 'responder_inmediato',
+   propuesta_rapida: '¡Nos encaja perfectamente el sábado 28 de Noviembre con taquilla al 70/30 a 10€! Reservamos esa fecha en nuestro calendario de gira.'
+ };
  }
 
  const now = new Date();
@@ -902,19 +976,27 @@ export default function BookingCRM({
  const today = new Date().toISOString().split('T')[0];
  const nuevaNota = `*** [${today}] Correo de simulación entrante recibido de ${simSender} ***\n` + (selectedLead.notas || '');
 
- onUpdateLead(selectedLead.id, {
+ const updatedLeadFields: Partial<Lead> = {
  hilo_emails: nuevoHilo,
  estado: nuevoEstado,
  notas: nuevaNota,
- fecha_ultima_respuesta: today
- });
+ fecha_ultima_respuesta: today,
+ ultimo_mensaje_recibido: simBody,
+ fechas_propuestas_sala: simFechas,
+ condiciones_economicas_detectadas: simEcon,
+ temperatura_lead: 'muy_caliente',
+ ultima_intencion: simIntencion as any,
+ ultimo_sentimiento: 'muy_positivo',
+ ultimo_sentimiento_score: simScore,
+ ultimo_analisis_resumen: simResumen,
+ estrategia_playbook: simPlaybook
+ };
+
+ onUpdateLead(selectedLead.id, updatedLeadFields);
 
  setSelectedLead(prev => prev ? {
  ...prev,
- hilo_emails: nuevoHilo,
- estado: nuevoEstado,
- notas: nuevaNota,
- fecha_ultima_respuesta: today
+ ...updatedLeadFields
  } : null);
 
  setManualEmailStatus(`¡Simulación completada! Se recibió un correo entrante de ${simSender} y se sincronizó en Excel.`);
@@ -1004,7 +1086,10 @@ export default function BookingCRM({
               aforo: 0,
               tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
               email_contacto: '',
+              email_secundario: '',
               telefono: '',
+              telefono_movil: '',
+              telefono_fijo: '',
               website: '',
               instagram: '',
               fuente: '',
@@ -2091,6 +2176,7 @@ export default function BookingCRM({
           const res = await apiFetch(`/api/leads/enrich-lead`, {
             method: 'POST',
             body: JSON.stringify({
+              leadId: targetLead.id,
               name: targetLead.nombre_sala,
               city: targetLead.ciudad || 'España'
             })
@@ -2152,7 +2238,7 @@ export default function BookingCRM({
  />
  ) : (
   <LeadsTable
-     onDeleteLead={onDeleteLead}
+     onDeleteLead={handleDeleteSingleLead}
     leads={filteredLeads}
     selectedLead={selectedLead}
     onSelectLead={handleOpenLead}
@@ -2194,7 +2280,7 @@ export default function BookingCRM({
         normalizeStatus={normalizeStatus}
         normalizeType={normalizeType}
         autoDetectVenueAddress={autoDetectVenueAddress}
-        onDeleteLead={onDeleteLead}
+        onDeleteLead={handleDeleteSingleLead}
         sectionTab={sectionTab}
         isStitchLight={isStitchLight}
         activeCampaign={activeCampaign}
@@ -2214,7 +2300,7 @@ export default function BookingCRM({
     selectedLead={selectedLead}
     onClose={() => setSelectedLead(null)}
     onUpdateLead={onUpdateLead}
-    onDeleteLead={onDeleteLead}
+    onDeleteLead={handleDeleteSingleLead}
     getStatusBadgeClass={getStatusBadgeClass}
     getStatusLabel={getStatusLabel}
     getStatusDotColor={getStatusDotColor}
@@ -2403,7 +2489,7 @@ export default function BookingCRM({
     onClose={() => setIsDuplicatesModalOpen(false)}
     leads={leads}
     onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
-    onDeleteLead={onDeleteLead}
+    onDeleteLead={handleDeleteSingleLead}
     isStitchLight={isStitchLight}
   />
 
@@ -2454,7 +2540,10 @@ export default function BookingCRM({
         aforo: 0,
         tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
         email_contacto: '',
+        email_secundario: '',
         telefono: '',
+        telefono_movil: '',
+        telefono_fijo: '',
         website: '',
         instagram: '',
         fuente: '',

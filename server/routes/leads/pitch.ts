@@ -8,35 +8,28 @@ import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitc
 import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, refineAllToneDnaCategoriesForBand, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { sanitizeExternalText } from "../../utils/promptSafety.js";
 import { findCorridorForCity } from "../../../src/utils/tourRouting.js";
+import { PitchEngine } from "../../services/pitchEngine.js";
 
 const router = express.Router();
 
-function findNearbyTourContextForLead(lead: any, stateConcerts: any[]): string | null {
-  if (!lead?.ciudad || !Array.isArray(stateConcerts) || stateConcerts.length === 0) return null;
-  const leadCorridor = findCorridorForCity(lead.ciudad);
-  if (!leadCorridor) return null;
-
-  const now = new Date();
-  const upcomingConfirmed = stateConcerts.filter((c: any) => {
-    if (!c.fecha) return false;
-    const cDate = new Date(c.fecha);
-    const isFuture = cDate >= now;
-    const isConfirmed = c.tipo !== 'posible' && !c.is_posible;
-    return isFuture && isConfirmed && c.ciudad;
-  });
-
-  const nearby = upcomingConfirmed.find((c: any) => {
-    const cCorridor = findCorridorForCity(c.ciudad);
-    return cCorridor && (cCorridor.key === leadCorridor.key || leadCorridor.info.neighboringCorridors.includes(cCorridor.key));
-  });
-
-  if (nearby) {
-    const cDate = new Date(nearby.fecha);
-    const formattedDate = cDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-    return `CONTEXTO DE GIRA / LOGÍSTICA EN RUTA: La banda tiene concierto confirmado en ${nearby.ciudad} (${nearby.sala || 'sala'}) para ${formattedDate}. Menciona que estamos en ruta por la zona para aprovechar el fin de semana.`;
+// Auditoría heurística de calidad y scoring anti-IA en tiempo real
+router.post("/leads/audit-pitch", requireAuth, (req, res) => {
+  try {
+    const { text, category } = req.body;
+    if (!text || typeof text !== "string") {
+      return res.status(400).json({ error: "El campo 'text' es obligatorio." });
+    }
+    const audit = PitchEngine.auditPitch(text, category);
+    const sanitized = PitchEngine.sanitizePitch(text);
+    return res.json({
+      success: true,
+      audit,
+      sanitized
+    });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error?.message || "Error al auditar el pitch." });
   }
-  return null;
-}
+});
 
 router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => {
   try {
@@ -47,76 +40,22 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
-    const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
-    if (!lead) {
-      try {
-        lead = await dbGetLeadById(id, userBandId);
-        if (lead) state.leads.push(lead);
-      } catch (dbErr) {
-        console.warn("Could not fetch lead by ID from Supabase:", dbErr);
-      }
-    }
-    if (!lead) {
-      return res.status(404).json({ success: false, error: "Sala no encontrada." });
-    }
 
-    // Cargar plantillas de categoría desde DB para que getBandDnaProfile tenga acceso
-    try {
-      const categoryTemplates = await dbGetCategoryTemplates(userBandId);
-      state.categoryTemplates = categoryTemplates;
-    } catch (err) {
-      console.warn("No se pudieron cargar las plantillas de categoría:", err);
-    }
-
-    const bandDna = getBandDnaProfile(state, userBandId, lead);
-    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const autonomyConfig = getAutonomyConfigForBand(state, userBandId);
-    const bandMinCache = autonomyConfig?.minCacheByType;
-    const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
-
-    // Dynamic Few-Shot In-Context Learning: recuperar ejemplos reales aprobados
-    try {
-      const fewShotExamples = await dbGetDynamicFewShotExamples(userBandId, lead, 3);
-      if (fewShotExamples.length > 0) {
-        bandDna.fewShotSection = formatFewShotExamplesForPrompt(fewShotExamples);
-      }
-    } catch (err) {
-      console.warn("Few-shot examples lookup notice:", err);
-    }
-
-    const feedbackDetails: string[] = [];
-    const tourContext = findNearbyTourContextForLead(lead, state.concerts);
-    if (tourContext) feedbackDetails.push(tourContext);
-    if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
-    if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
-    if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas del mánager: "${comentario.trim()}"`);
-
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache, negotiationStartCacheByType);
-
-    const prompt = `Redacta una propuesta comercial y artística de concierto para "${sanitizeExternalText(lead.nombre_sala)}" en ${sanitizeExternalText(lead.ciudad) || 'España'} (Tipo: ${sanitizeExternalText(lead.tipo) || 'sala'}, Aforo: ${lead.aforo || 'N/D'}).
-${feedbackDetails.length > 0 ? `\nINSTRUCCIONES ADICIONALES DEL MÁNAGER:\n${feedbackDetails.join('\n')}` : ''}
-${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalText(lead.pitch_generado.substring(0, 150))}...")` : ''}`;
-
-    const pitchLinks = {
-      spotify: bandDna.spotifyUrl,
-      youtube: bandDna.youtubeUrl,
-      epk: bandDna.epkUrl
-    };
-
-    const proposals = await generateMultiModelProposals({
-      prompt,
-      systemPrompt,
-      links: pitchLinks,
-      providers: providers || ["gemini", "deepseek"],
-      contactEmail: bandDna.contactoEmail
+    const result = await PitchEngine.generateMultiPitch({
+      leadId: id,
+      userBandId,
+      comentario,
+      tono_rating,
+      contenido_rating,
+      providers,
+      activeCampaign
     });
 
     res.json({
       success: true,
-      leadId: lead.id,
-      leadName: lead.nombre_sala,
-      proposals
+      leadId: result.leadId,
+      leadName: result.leadName,
+      proposals: result.proposals
     });
   } catch (error: any) {
     console.error("Error in POST /api/leads/:id/generate-multi-pitch:", error);
@@ -134,177 +73,26 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
-    const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
-    if (!lead) {
-      try {
-        lead = await dbGetLeadById(id, userBandId);
-        if (lead) {
-          state.leads.push(lead);
-        }
-      } catch (dbErr) {
-        console.warn("Could not fetch lead by ID from Supabase:", dbErr);
-      }
-    }
-    if (!lead) {
-      return res.status(404).json({ success: false, error: "Sala no encontrada." });
-    }
 
-    // Cargar plantillas de categoría desde DB para que getBandDnaProfile tenga acceso
-    try {
-      const categoryTemplates = await dbGetCategoryTemplates(userBandId);
-      state.categoryTemplates = categoryTemplates;
-    } catch (err) {
-      console.warn("No se pudieron cargar las plantillas de categoría:", err);
-    }
-
-    const bandDna = getBandDnaProfile(state, userBandId, lead);
-    const previousPitch = lead.pitch_generado || "";
-
-    let newPitchText = "";
-    let isSimulated = false;
-
-    const feedbackDetails: string[] = [];
-    const tourContext = findNearbyTourContextForLead(lead, state.concerts);
-    if (tourContext) feedbackDetails.push(tourContext);
-    if (isCampaignActive(activeCampaign)) {
-      feedbackDetails.push(`CONTEXTO DE CAMPAÑA IMPORTANTE: Menciona que buscamos fecha específicamente para el ${activeCampaign.targetDatesText || 'rango objetivo'}, enfocando a un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity}.`);
-    }
-    if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
-    if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
-    if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas de este pitch: "${comentario.trim()}"`);
-    if (alcance === 'este_pitch') {
-      feedbackDetails.push(`Nota de alcance: Aplicar este ajuste únicamente a esta sala en concreto.`);
-    } else {
-      feedbackDetails.push(`Nota de alcance: Ajuste de preferencia general aplicable también a futuros pitches.`);
-    }
-
-    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const autonomyConfig = getAutonomyConfigForBand(state, userBandId);
-    const bandMinCache = autonomyConfig?.minCacheByType;
-    const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
-
-    // Dynamic Few-Shot In-Context Learning: recuperar ejemplos reales aprobados
-    try {
-      const fewShotExamples = await dbGetDynamicFewShotExamples(userBandId, lead, 3);
-      if (fewShotExamples.length > 0) {
-        bandDna.fewShotSection = formatFewShotExamplesForPrompt(fewShotExamples);
-      }
-    } catch (err) {
-      console.warn("Few-shot examples lookup notice:", err);
-    }
-
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache, negotiationStartCacheByType);
-
-    const prompt = `Reescribe y perfecciona el correo de pitch para "${sanitizeExternalText(lead.nombre_sala)}" en ${sanitizeExternalText(lead.ciudad) || "España"} (Tipo: ${sanitizeExternalText(lead.tipo) || "sala"}, Aforo: ${lead.aforo || "N/D"}).
-
-PITCH ANTERIOR (texto generado por nuestra propia IA en una vuelta anterior, no del destinatario):
-"""
-${sanitizeExternalText(previousPitch || "Sin pitch anterior.", 3000)}
-"""
-
-FEEDBACK E INSTRUCCIONES ESPECÍFICAS DEL MÁNAGER:
-${feedbackDetails.length > 0 ? feedbackDetails.join("\n") : "Reescribir con mayor fuerza, autenticidad y claridad."}
-
-INSTRUCCIONES CLAVE:
-1. Aplica e integra las instrucciones del mánager y el ADN completo de la banda.
-2. Devuelve ÚNICAMENTE el texto final redactado del nuevo pitch, sin asuntos, encabezados ni metadatos extra.`;
-
-    const pitchLinks = {
-      spotify: bandDna.spotifyUrl,
-      youtube: bandDna.youtubeUrl,
-      epk: bandDna.epkUrl
-    };
-
-    try {
-      const unifiedRes = await generateUnifiedAI({
-        prompt,
-        systemPrompt,
-        provider: provider || "gemini",
-        modelName: modelName,
-        permitirPitchLocal: true,
-        links: pitchLinks,
-        contactEmail: bandDna.contactoEmail
-      });
-      if (unifiedRes && unifiedRes.text) {
-        newPitchText = unifiedRes.text.trim();
-      }
-    } catch (aiErr: any) {
-      console.warn(`Fallo ${provider || 'AI'} al regenerar pitch, utilizando motor local de ADN:`, aiErr.message);
-    }
-
-    if (!newPitchText) {
-      isSimulated = true;
-      newPitchText = generateSmartDnaPitchFallback({
-        bandDna,
-        lead,
-        provider,
-        customInstruction: comentario,
-        feedbackDetails,
-        activeCampaign
-      });
-    }
-
-    // Record learning log in lead
-    const finalAlcance = alcance === 'este_pitch' ? 'este_pitch' : 'global';
-    const logEntry = {
-      id: `fb-${Date.now()}`,
-      fecha: new Date().toISOString(),
-      pitch_previo: previousPitch,
-      tono_rating: tono_rating || undefined,
-      contenido_rating: contenido_rating || undefined,
-      comentario: comentario || "",
-      pitch_nuevo: newPitchText,
-      alcance: finalAlcance
-    };
-
-    if (!lead.historial_feedback_pitch) {
-      lead.historial_feedback_pitch = [];
-    }
-    lead.historial_feedback_pitch.unshift(logEntry);
-
-    // Dynamic Few-Shot: registrar en el repositorio global de aprendizaje
-    dbRecordPitchHumanEdit({
-      band_id: userBandId,
-      lead_id: lead.id,
-      nombre_sala: lead.nombre_sala,
-      tipo_entidad: lead.tipo,
-      ciudad: lead.ciudad,
-      borrador_ia: previousPitch,
-      texto_aprobado: newPitchText,
-      tipo_accion: "regenerado_con_feedback",
-      resultado_respuesta: "pendiente"
-    }).catch(err => console.warn("Notice dbRecordPitchHumanEdit on regenerate:", err));
-
-    // Campaign-specific training: if there's an active campaign and feedback for it, record campaign training
-    if (isCampaignActive(activeCampaign) && (tono_rating || contenido_rating || comentario)) {
-      dbRecordCampaignPitchTraining({
-        band_id: userBandId,
-        campaign_id: activeCampaign.id,
-        borrador_ia: previousPitch,
-        texto_aprobado: newPitchText
-      }).catch(err => console.warn("Notice dbRecordCampaignPitchTraining on regenerate:", err));
-    }
-
-    // Update lead's pitch
-    lead.pitch_generado = newPitchText;
-    lead.pitch_feedback_tono = undefined;
-    lead.pitch_feedback_contenido = undefined;
-    lead.pitch_feedback_comentario = "";
-
-    saveState(state);
-
-    const targetBandId = (req as any).user?.band_id || lead.band_id || userBandId;
-    dbUpsertLead(lead, targetBandId).catch(err => {
-      console.warn("Async Supabase update for regenerated pitch failed:", err);
+    const result = await PitchEngine.regeneratePitch({
+      leadId: id,
+      userBandId,
+      tono_rating,
+      contenido_rating,
+      comentario,
+      alcance,
+      provider,
+      modelName,
+      activeCampaign
     });
 
     res.json({
       success: true,
-      simulated: isSimulated,
-      lead,
-      newPitchText,
-      feedbackLog: logEntry
+      simulated: result.simulated,
+      lead: result.lead,
+      newPitchText: result.newPitchText,
+      audit: result.audit,
+      feedbackLog: result.feedbackLog
     });
   } catch (error: any) {
     console.error("Error in POST /api/leads/:id/regenerate-pitch:", error);

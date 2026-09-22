@@ -284,15 +284,15 @@ export function DashboardWidgetGrid({
           />
         );
       case 'repertorio_energy':
-        return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} />;
+        return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'crm_pipeline':
         return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} isStitchLight={isStitchLight} />;
       case 'booking_funnel_chart':
-        return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
+        return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'finances_chart':
-        return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} />;
+        return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'social_fans_chart':
-        return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} />;
+        return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'repertorio_summary':
         return <RepertorioWidget onNavigate={onNavigate} isStitchLight={isStitchLight} />;
       case 'finances_summary':
@@ -542,7 +542,7 @@ export function DashboardWidgetGrid({
             <span>Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)</span>
           </div>
         )}
-        <AiSupportWidget variant="card" />
+        <AiSupportWidget variant="card" isStitchLight={isStitchLight} />
         <AiUsageCard isStitchLight={isStitchLight} />
       </div>
 

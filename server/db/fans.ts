@@ -134,7 +134,7 @@ export async function dbUpsertMusicianWaitlist(item: any) {
   try {
     const leadPayload = {
       id: payload.id,
-      band_id: "band-bakandeya",
+      band_id: payload.banda_origen || "platform",
       nombre: payload.nombre_banda || payload.nombre_contacto,
       contacto: payload.nombre_contacto,
       email: payload.email,

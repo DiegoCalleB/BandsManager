@@ -19,7 +19,7 @@ export interface ChartWidgetProps {
 }
 
 /* 1. GRÁFICO DE ENERGÍA DE REPERTORIO & SETLIST */
-export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
   // Try to load setlists and songs from localStorage
   let setlistsList: any[] = [];
   let songsList: any[] = [];
@@ -57,46 +57,47 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
 
   if (activeSetlist && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
     chartData = activeSetlist.items.map((item: any, idx: number) => {
-      const matchedSong = songsList.find(s => s.id === item.song_id || s.titulo === item.title) || item.song;
-      const energyVal = item.energia || matchedSong?.energia || 12;
-      const energyInfo = getEnergyInfo(energyVal);
+      const song = songsList.find(s => s.id === item.songId || s.title === item.title) || {};
+      const energy = Number(item.energy || song.energy || 12);
+      const bpm = Number(item.bpm || song.bpm || 120);
+      const keyStr = item.key || song.musical_key || song.tonalidad || 'Am';
+      const energyInfo = getEnergyInfo(energy);
+      const durSec = Number(item.duration_seconds || song.duration_seconds || 210);
+
       return {
         num: idx + 1,
-        title: item.title || matchedSong?.titulo || `Tema ${idx + 1}`,
-        energy: energyVal,
-        bpm: item.bpm || matchedSong?.bpm || 120,
-        keyStr: item.tonalidad || matchedSong?.tonalidad || 'Am',
+        title: item.title || song.title || `Tema #${idx + 1}`,
+        energy,
+        bpm,
+        keyStr,
         label: energyInfo.label,
         hexColor: energyInfo.hexColor,
-        durationMin: item.duracion_segundos ? Math.round(item.duracion_segundos / 60) : 4
+        durationMin: Math.round(durSec / 60) || 3
       };
     });
   } else if (songsList.length > 0) {
     chartData = songsList.slice(0, 10).map((song: any, idx: number) => {
-      const energyVal = song.energia || (song.bpm >= 140 ? 18 : song.bpm <= 95 ? 6 : 12);
-      const energyInfo = getEnergyInfo(energyVal);
+      const energy = Number(song.energy || 10 + (idx % 8));
+      const energyInfo = getEnergyInfo(energy);
       return {
         num: idx + 1,
-        title: song.titulo || `Canción ${idx + 1}`,
-        energy: energyVal,
-        bpm: song.bpm || 120,
-        keyStr: song.tonalidad || 'C',
+        title: song.title || `Tema #${idx + 1}`,
+        energy,
+        bpm: Number(song.bpm || 120),
+        keyStr: song.musical_key || song.tonalidad || 'C',
         label: energyInfo.label,
         hexColor: energyInfo.hexColor,
-        durationMin: 4
+        durationMin: Math.round((Number(song.duration_seconds) || 200) / 60)
       };
     });
   } else {
-    // Standard default setlist for immediate demo
+    // Fallback demo data
     const demoItems = [
-      { title: 'Intro / Apertura', energy: 16, bpm: 135, keyStr: 'Em', dur: 3 },
-      { title: 'Fuego en la Noche', energy: 18, bpm: 142, keyStr: 'Am', dur: 4 },
-      { title: 'Camino Sagrado', energy: 14, bpm: 118, keyStr: 'Dm', dur: 4 },
-      { title: 'Mar de Dudas', energy: 8, bpm: 90, keyStr: 'G', dur: 5 },
-      { title: 'Viento del Sur (Acústico)', energy: 6, bpm: 85, keyStr: 'C', dur: 4 },
-      { title: 'Resurrección (In Crescendo)', energy: 15, bpm: 128, keyStr: 'Em', dur: 5 },
-      { title: 'Gritando al Viento', energy: 19, bpm: 150, keyStr: 'Bm', dur: 4 },
-      { title: 'Clímax Final', energy: 20, bpm: 155, keyStr: 'E', dur: 6 },
+      { title: 'Intro: Despegue', energy: 6, bpm: 90, keyStr: 'Em', dur: 2 },
+      { title: 'Ritmo en las Calles', energy: 12, bpm: 124, keyStr: 'G', dur: 4 },
+      { title: 'Furia Eléctrica', energy: 16, bpm: 132, keyStr: 'A', dur: 4 },
+      { title: 'Balada de Medianoche', energy: 8, bpm: 85, keyStr: 'C', dur: 5 },
+      { title: 'Clímax Festival', energy: 19, bpm: 140, keyStr: 'D', dur: 4 },
       { title: 'Bis: Himno de la Banda', energy: 17, bpm: 138, keyStr: 'A', dur: 5 }
     ];
     chartData = demoItems.map((item, idx) => {
@@ -123,18 +124,22 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
   const minHeightClass = heightMode === 'compact' ? 'h-[220px]' : heightMode === 'tall' ? 'h-[380px]' : 'h-[290px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
+    <div className={`p-5 rounded-2xl ${
+      isStitchLight ? 'bg-white border border-zinc-200 shadow-xs' : 'bg-[#18181b]/95 border border-neutral-800/90 shadow-sm'
+    } space-y-3 flex flex-col justify-between h-full transition-colors`}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5 border-b border-neutral-800">
+      <div className={`flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5 border-b ${
+        isStitchLight ? 'border-zinc-200' : 'border-neutral-800'
+      }`}>
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400 shrink-0">
+          <div className={`p-2 rounded-xl ${isStitchLight ? 'bg-amber-50 text-amber-600 border border-amber-200' : 'bg-amber-500/15 text-amber-400'} shrink-0`}>
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100 flex items-center gap-2">
+            <h3 className={`text-sm font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-zinc-900' : 'text-neutral-100'} flex items-center gap-2`}>
               Flujo de Energía del Repertorio
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">
+            <p className={`text-[11px] font-mono ${isStitchLight ? 'text-zinc-500' : 'text-neutral-400'}`}>
               {activeSetlist ? activeSetlist.nombre || 'Setlist Activo' : 'Perfil de Pacing & Ritmo'}
             </p>
           </div>
@@ -146,7 +151,11 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
               <select
                 value={selectedSetlistId}
                 onChange={(e) => setSelectedSetlistId(e.target.value)}
-                className="bg-stone-900 border border-stone-800 text-amber-300 font-mono text-[11px] font-bold rounded-lg px-2.5 py-1 pr-6 cursor-pointer focus:outline-none focus:border-amber-500"
+                className={`border font-mono text-[11px] font-bold rounded-lg px-2.5 py-1 pr-6 cursor-pointer focus:outline-none ${
+                  isStitchLight 
+                    ? 'bg-zinc-50 border-zinc-200 text-zinc-800 focus:border-amber-500' 
+                    : 'bg-stone-900 border-stone-800 text-amber-300 focus:border-amber-500'
+                }`}
               >
                 {setlistsList.map(s => (
                   <option key={s.id} value={s.id}>{s.nombre || 'Setlist sin nombre'}</option>
@@ -159,7 +168,9 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
             <button
               type="button"
               onClick={() => onNavigate('repertorio')}
-              className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer shrink-0"
+              className={`text-xs font-mono font-bold flex items-center gap-1 cursor-pointer shrink-0 ${
+                isStitchLight ? 'text-indigo-600 hover:text-indigo-700' : 'text-amber-400 hover:text-amber-300'
+              }`}
             >
               <span>Setlists</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -170,17 +181,23 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
 
       {/* Stats Summary Bar */}
       <div className="grid grid-cols-3 gap-2 font-mono text-center text-xs">
-        <div className="p-2 rounded-xl bg-[#121214] border border-amber-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Temas</span>
-          <span className="font-bold text-amber-400 text-sm">{chartData.length}</span>
+        <div className={`p-2 rounded-xl border ${
+          isStitchLight ? 'bg-amber-50/70 border-amber-200' : 'bg-[#121214] border-amber-500/20'
+        }`}>
+          <span className={`text-[10px] ${isStitchLight ? 'text-amber-700' : 'text-neutral-400'} block uppercase`}>Temas</span>
+          <span className={`font-bold ${isStitchLight ? 'text-amber-800' : 'text-amber-400'} text-sm`}>{chartData.length}</span>
         </div>
-        <div className="p-2 rounded-xl bg-[#121214] border border-purple-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Energía Media</span>
-          <span className="font-bold text-purple-400 text-sm">{avgEnergy} / 20</span>
+        <div className={`p-2 rounded-xl border ${
+          isStitchLight ? 'bg-purple-50/70 border-purple-200' : 'bg-[#121214] border-purple-500/20'
+        }`}>
+          <span className={`text-[10px] ${isStitchLight ? 'text-purple-700' : 'text-neutral-400'} block uppercase`}>Energía Media</span>
+          <span className={`font-bold ${isStitchLight ? 'text-purple-800' : 'text-purple-400'} text-sm`}>{avgEnergy} / 20</span>
         </div>
-        <div className="p-2 rounded-xl bg-[#121214] border border-emerald-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Duración</span>
-          <span className="font-bold text-emerald-400 text-sm">~{totalDuration} min</span>
+        <div className={`p-2 rounded-xl border ${
+          isStitchLight ? 'bg-emerald-50/70 border-emerald-200' : 'bg-[#121214] border-emerald-500/20'
+        }`}>
+          <span className={`text-[10px] ${isStitchLight ? 'text-emerald-700' : 'text-neutral-400'} block uppercase`}>Duración</span>
+          <span className={`font-bold ${isStitchLight ? 'text-emerald-800' : 'text-emerald-400'} text-sm`}>~{totalDuration} min</span>
         </div>
       </div>
 
@@ -194,10 +211,10 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
                 <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isStitchLight ? '#e4e4e7' : '#27272a'} vertical={false} />
             <XAxis 
               dataKey="num" 
-              stroke="#71717a" 
+              stroke={isStitchLight ? '#71717a' : '#71717a'} 
               fontSize={10} 
               fontFamily="monospace"
               tickFormatter={(val, idx) => {
@@ -205,18 +222,22 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
                 return title && title.length > 8 ? `${val}. ${title.substring(0, 6)}..` : `${val}. ${title || ''}`;
               }}
             />
-            <YAxis stroke="#71717a" fontSize={10} domain={[0, 20]} ticks={[5, 10, 15, 20]} />
+            <YAxis stroke={isStitchLight ? '#71717a' : '#71717a'} fontSize={10} domain={[0, 20]} ticks={[5, 10, 15, 20]} />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-stone-900 border border-amber-500/40 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50 max-w-[200px]">
-                      <div className="font-bold text-amber-400 text-sm truncate">#{data.num} {data.title}</div>
-                      <div className="text-[11px] text-zinc-300 mt-1 space-y-0.5">
+                    <div className={`p-2.5 rounded-xl font-mono text-xs z-50 max-w-[200px] border ${
+                      isStitchLight 
+                        ? 'bg-white border-zinc-200 shadow-lg text-zinc-900' 
+                        : 'bg-stone-900 border-amber-500/40 shadow-xl text-zinc-100'
+                    }`}>
+                      <div className={`font-bold text-sm truncate ${isStitchLight ? 'text-amber-700' : 'text-amber-400'}`}>#{data.num} {data.title}</div>
+                      <div className={`text-[11px] mt-1 space-y-0.5 ${isStitchLight ? 'text-zinc-600' : 'text-zinc-300'}`}>
                         <div>Energía: <span className="font-bold" style={{ color: data.hexColor }}>{data.energy}/20 ({data.label})</span></div>
-                        <div>Tempo: <span className="text-zinc-100">{data.bpm} BPM</span> | Tono: <span className="text-zinc-100">{data.keyStr}</span></div>
-                        <div>Duración: <span className="text-zinc-100">{data.durationMin} min</span></div>
+                        <div>Tempo: <span className={isStitchLight ? 'text-zinc-900' : 'text-zinc-100'}>{data.bpm} BPM</span> | Tono: <span className={isStitchLight ? 'text-zinc-900' : 'text-zinc-100'}>{data.keyStr}</span></div>
+                        <div>Duración: <span className={isStitchLight ? 'text-zinc-900' : 'text-zinc-100'}>{data.durationMin} min</span></div>
                       </div>
                     </div>
                   );
@@ -231,7 +252,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
               strokeWidth={3} 
               fillOpacity={1} 
               fill="url(#energyGradient)" 
-              dot={{ r: 4, fill: '#f59e0b', strokeWidth: 2, stroke: '#18181b' }}
+              dot={{ r: 4, fill: '#f59e0b', strokeWidth: 2, stroke: isStitchLight ? '#ffffff' : '#18181b' }}
               activeDot={{ r: 6, fill: '#8b5cf6', stroke: '#ffffff', strokeWidth: 2 }}
             />
           </AreaChart>
@@ -242,7 +263,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
 }
 
 /* 2. GRÁFICO DE EMBUDO Y CONVERSIÓN DE BOOKING */
-export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
   const counts = {
     nuevo: leads.filter(l => l.estado === 'nuevo').length,
     contactado: leads.filter(l => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length,
@@ -265,17 +286,19 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
   const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
+    <div className={`p-5 rounded-2xl ${
+      isStitchLight ? 'bg-white border border-zinc-200 shadow-xs' : 'bg-[#18181b]/95 border border-neutral-800/90 shadow-sm'
+    } space-y-3 flex flex-col justify-between h-full transition-colors`}>
+      <div className={`flex items-center justify-between pb-2.5 border-b ${isStitchLight ? 'border-zinc-200' : 'border-neutral-800'}`}>
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-sky-500/15 text-sky-400 shrink-0">
+          <div className={`p-2 rounded-xl ${isStitchLight ? 'bg-sky-50 text-sky-600 border border-sky-200' : 'bg-sky-500/15 text-sky-400'} shrink-0`}>
             <Building2 className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+            <h3 className={`text-sm font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-zinc-900' : 'text-neutral-100'}`}>
               Embudo de Contrataciones
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">Conversión de Salas & Festivales</p>
+            <p className={`text-[11px] font-mono ${isStitchLight ? 'text-zinc-500' : 'text-neutral-400'}`}>Conversión de Salas & Festivales</p>
           </div>
         </div>
 
@@ -283,7 +306,9 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
           <button
             type="button"
             onClick={() => onNavigate('booking')}
-            className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+            className={`text-xs font-mono font-bold flex items-center gap-1 cursor-pointer ${
+              isStitchLight ? 'text-indigo-600 hover:text-indigo-700' : 'text-amber-400 hover:text-amber-300'
+            }`}
           >
             <span>Ver CRM</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -291,9 +316,11 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
         )}
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#121214] border border-stone-800 text-xs font-mono">
-        <span className="text-neutral-400">Tasa de Conversión a Conciertos:</span>
-        <span className="font-bold text-emerald-400 flex items-center gap-1">
+      <div className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-mono ${
+        isStitchLight ? 'bg-zinc-50 border-zinc-200 text-zinc-700' : 'bg-[#121214] border-stone-800'
+      }`}>
+        <span className={isStitchLight ? 'text-zinc-500' : 'text-neutral-400'}>Tasa de Conversión a Conciertos:</span>
+        <span className="font-bold text-emerald-600 flex items-center gap-1">
           <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
         </span>
       </div>
@@ -301,7 +328,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
       <div className={`w-full ${minHeightClass} pt-2`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={funnelData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isStitchLight ? '#e4e4e7' : '#27272a'} vertical={false} />
             <XAxis dataKey="name" stroke="#71717a" fontSize={10} fontFamily="monospace" />
             <YAxis stroke="#71717a" fontSize={10} allowDecimals={false} />
             <Tooltip
@@ -310,12 +337,14 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
                   const data = payload[0].payload;
                   const pct = ((data.count / total) * 100).toFixed(1);
                   return (
-                    <div className="bg-stone-900 border border-stone-700 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50">
-                      <div className="font-bold text-amber-400">{data.name}</div>
-                      <div className="text-zinc-300 mt-1">
-                        Cantidad: <span className="font-bold text-white">{data.count} salas</span>
+                    <div className={`p-2.5 rounded-xl font-mono text-xs z-50 border ${
+                      isStitchLight ? 'bg-white border-zinc-200 text-zinc-900 shadow-lg' : 'bg-stone-900 border-stone-700 text-zinc-100 shadow-xl'
+                    }`}>
+                      <div className={`font-bold ${isStitchLight ? 'text-amber-700' : 'text-amber-400'}`}>{data.name}</div>
+                      <div className={`mt-1 ${isStitchLight ? 'text-zinc-600' : 'text-zinc-300'}`}>
+                        Cantidad: <span className={`font-bold ${isStitchLight ? 'text-zinc-900' : 'text-white'}`}>{data.count} salas</span>
                       </div>
-                      <div className="text-neutral-400 text-[10px]">
+                      <div className={`text-[10px] ${isStitchLight ? 'text-zinc-500' : 'text-neutral-400'}`}>
                         Representa el {pct}% del total
                       </div>
                     </div>
@@ -337,7 +366,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
 }
 
 /* 3. GRÁFICO DE FINANZAS Y CACHÉ POR CONCIERTO */
-export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
   // Aggregate revenue and average cache
   const defaultMonths = [
     { month: 'Ene', ingresos: 1200, gastos: 450, cacheMedio: 1200 },
@@ -355,17 +384,19 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
   const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
+    <div className={`p-5 rounded-2xl ${
+      isStitchLight ? 'bg-white border border-zinc-200 shadow-xs' : 'bg-[#18181b]/95 border border-neutral-800/90 shadow-sm'
+    } space-y-3 flex flex-col justify-between h-full transition-colors`}>
+      <div className={`flex items-center justify-between pb-2.5 border-b ${isStitchLight ? 'border-zinc-200' : 'border-neutral-800'}`}>
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 shrink-0">
+          <div className={`p-2 rounded-xl ${isStitchLight ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-emerald-500/15 text-emerald-400'} shrink-0`}>
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+            <h3 className={`text-sm font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-zinc-900' : 'text-neutral-100'}`}>
               Evolución Financiera & Caché
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">Ingresos vs Gastos de Directos</p>
+            <p className={`text-[11px] font-mono ${isStitchLight ? 'text-zinc-500' : 'text-neutral-400'}`}>Ingresos vs Gastos de Directos</p>
           </div>
         </div>
 
@@ -373,7 +404,9 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
           <button
             type="button"
             onClick={() => onNavigate('finanzas')}
-            className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+            className={`text-xs font-mono font-bold flex items-center gap-1 cursor-pointer ${
+              isStitchLight ? 'text-indigo-600 hover:text-indigo-700' : 'text-amber-400 hover:text-amber-300'
+            }`}
           >
             <span>Finanzas</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -382,20 +415,24 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
       </div>
 
       <div className="grid grid-cols-2 gap-2 font-mono text-xs text-center">
-        <div className="p-2 rounded-xl bg-[#121214] border border-emerald-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Ingresos Totales</span>
-          <span className="font-bold text-emerald-400 text-sm">+{totalIngresos}€</span>
+        <div className={`p-2 rounded-xl border ${
+          isStitchLight ? 'bg-emerald-50/70 border-emerald-200' : 'bg-[#121214] border-emerald-500/20'
+        }`}>
+          <span className={`text-[10px] ${isStitchLight ? 'text-emerald-700' : 'text-neutral-400'} block uppercase`}>Ingresos Totales</span>
+          <span className={`font-bold ${isStitchLight ? 'text-emerald-800' : 'text-emerald-400'} text-sm`}>+{totalIngresos}€</span>
         </div>
-        <div className="p-2 rounded-xl bg-[#121214] border border-amber-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Neto / Beneficio</span>
-          <span className="font-bold text-amber-400 text-sm">+{beneficio}€</span>
+        <div className={`p-2 rounded-xl border ${
+          isStitchLight ? 'bg-amber-50/70 border-amber-200' : 'bg-[#121214] border-amber-500/20'
+        }`}>
+          <span className={`text-[10px] ${isStitchLight ? 'text-amber-700' : 'text-neutral-400'} block uppercase`}>Neto / Beneficio</span>
+          <span className={`font-bold ${isStitchLight ? 'text-amber-800' : 'text-amber-400'} text-sm`}>+{beneficio}€</span>
         </div>
       </div>
 
       <div className={`w-full ${minHeightClass} pt-2`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={defaultMonths} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isStitchLight ? '#e4e4e7' : '#27272a'} vertical={false} />
             <XAxis dataKey="month" stroke="#71717a" fontSize={10} fontFamily="monospace" />
             <YAxis stroke="#71717a" fontSize={10} />
             <Tooltip
@@ -403,12 +440,14 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-stone-900 border border-emerald-500/40 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50">
-                      <div className="font-bold text-emerald-400">{data.month}</div>
-                      <div className="text-zinc-300 mt-1 space-y-0.5">
-                        <div>Ingresos: <span className="font-bold text-emerald-400">+{data.ingresos}€</span></div>
-                        <div>Gastos: <span className="font-bold text-rose-400">-{data.gastos}€</span></div>
-                        <div>Caché Medio: <span className="font-bold text-amber-400">{data.cacheMedio}€</span></div>
+                    <div className={`p-2.5 rounded-xl font-mono text-xs z-50 border ${
+                      isStitchLight ? 'bg-white border-zinc-200 text-zinc-900 shadow-lg' : 'bg-stone-900 border-emerald-500/40 text-zinc-100 shadow-xl'
+                    }`}>
+                      <div className={`font-bold ${isStitchLight ? 'text-emerald-700' : 'text-emerald-400'}`}>{data.month}</div>
+                      <div className={`mt-1 space-y-0.5 ${isStitchLight ? 'text-zinc-600' : 'text-zinc-300'}`}>
+                        <div>Ingresos: <span className="font-bold text-emerald-600">+{data.ingresos}€</span></div>
+                        <div>Gastos: <span className="font-bold text-rose-600">-{data.gastos}€</span></div>
+                        <div>Caché Medio: <span className={`font-bold ${isStitchLight ? 'text-amber-700' : 'text-amber-400'}`}>{data.cacheMedio}€</span></div>
                       </div>
                     </div>
                   );
@@ -426,7 +465,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
 }
 
 /* 4. GRÁFICO DE CRECIMIENTO DE FANS & SOCIAL */
-export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
   const fansCount = fans.length;
   const growthData = [
     { mes: 'Ene', fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },
@@ -439,17 +478,19 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
   const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
+    <div className={`p-5 rounded-2xl ${
+      isStitchLight ? 'bg-white border border-zinc-200 shadow-xs' : 'bg-[#18181b]/95 border border-neutral-800/90 shadow-sm'
+    } space-y-3 flex flex-col justify-between h-full transition-colors`}>
+      <div className={`flex items-center justify-between pb-2.5 border-b ${isStitchLight ? 'border-zinc-200' : 'border-neutral-800'}`}>
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400 shrink-0">
+          <div className={`p-2 rounded-xl ${isStitchLight ? 'bg-purple-50 text-purple-600 border border-purple-200' : 'bg-purple-500/15 text-purple-400'} shrink-0`}>
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+            <h3 className={`text-sm font-bold font-display uppercase tracking-wider ${isStitchLight ? 'text-zinc-900' : 'text-neutral-100'}`}>
               Captación de Fans & QR
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">Crecimiento en Registro de Seguidores</p>
+            <p className={`text-[11px] font-mono ${isStitchLight ? 'text-zinc-500' : 'text-neutral-400'}`}>Crecimiento en Registro de Seguidores</p>
           </div>
         </div>
 
@@ -457,7 +498,9 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
           <button
             type="button"
             onClick={() => onNavigate('fans')}
-            className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer"
+            className={`text-xs font-mono font-bold flex items-center gap-1 cursor-pointer ${
+              isStitchLight ? 'text-indigo-600 hover:text-indigo-700' : 'text-amber-400 hover:text-amber-300'
+            }`}
           >
             <span>Captura QR</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -465,9 +508,11 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
         )}
       </div>
 
-      <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#121214] border border-purple-500/20 text-xs font-mono">
-        <span className="text-neutral-400">Fans Registrados:</span>
-        <span className="font-bold text-purple-400 text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
+      <div className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-mono ${
+        isStitchLight ? 'bg-purple-50/70 border-purple-200' : 'bg-[#121214] border-purple-500/20'
+      }`}>
+        <span className={isStitchLight ? 'text-purple-700' : 'text-neutral-400'}>Fans Registrados:</span>
+        <span className={`font-bold text-sm ${isStitchLight ? 'text-purple-900' : 'text-purple-400'}`}>{fansCount > 0 ? fansCount : 85} seguidores</span>
       </div>
 
       <div className={`w-full ${minHeightClass} pt-2`}>
@@ -479,7 +524,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
                 <stop offset="95%" stopColor="#818cf8" stopOpacity={0.1}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isStitchLight ? '#e4e4e7' : '#27272a'} vertical={false} />
             <XAxis dataKey="mes" stroke="#71717a" fontSize={10} fontFamily="monospace" />
             <YAxis stroke="#71717a" fontSize={10} />
             <Tooltip
@@ -487,11 +532,13 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-stone-900 border border-purple-500/40 p-2.5 rounded-xl shadow-xl font-mono text-xs text-zinc-100 z-50">
-                      <div className="font-bold text-purple-400">{data.mes}</div>
-                      <div className="text-zinc-300 mt-1 space-y-0.5">
-                        <div>Fans acumulados: <span className="font-bold text-purple-300">{data.fans}</span></div>
-                        <div>Escaneos QR: <span className="font-bold text-amber-400">{data.qrScans}</span></div>
+                    <div className={`p-2.5 rounded-xl font-mono text-xs z-50 border ${
+                      isStitchLight ? 'bg-white border-zinc-200 text-zinc-900 shadow-lg' : 'bg-stone-900 border-purple-500/40 text-zinc-100 shadow-xl'
+                    }`}>
+                      <div className={`font-bold ${isStitchLight ? 'text-purple-700' : 'text-purple-400'}`}>{data.mes}</div>
+                      <div className={`mt-1 space-y-0.5 ${isStitchLight ? 'text-zinc-600' : 'text-zinc-300'}`}>
+                        <div>Fans acumulados: <span className={`font-bold ${isStitchLight ? 'text-purple-800' : 'text-purple-300'}`}>{data.fans}</span></div>
+                        <div>Escaneos QR: <span className={`font-bold ${isStitchLight ? 'text-amber-700' : 'text-amber-400'}`}>{data.qrScans}</span></div>
                       </div>
                     </div>
                   );

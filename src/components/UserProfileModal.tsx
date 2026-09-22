@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart } from 'lucide-react';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart, BellRing } from 'lucide-react';
 import { User, ThemeName } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
@@ -36,6 +36,7 @@ interface UserProfileModalProps {
  onOpenBandSwitcher?: () => void;
  onNavigateToPlanes?: () => void;
  onOpenProfileWizard?: () => void;
+ onOpenNotificationSettings?: () => void;
 }
 
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
@@ -57,7 +58,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  onSetMainBand,
  onOpenBandSwitcher,
  onNavigateToPlanes,
- onOpenProfileWizard
+ onOpenProfileWizard,
+ onOpenNotificationSettings
 }) => {
  const { language, setLanguage } = useLanguage();
  const [name, setName] = useState(currentUser.name || '');
@@ -995,6 +997,30 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  <span className="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1">
  <span>Abrir</span>
+ <ChevronDown className="w-3.5 h-3.5 -rotate-90" />
+ </span>
+ </button>
+ </div>
+ )}
+
+ {onOpenNotificationSettings && (
+ <div className="pt-3 border-t border-neutral-800/80">
+ <button
+ type="button"
+ onClick={() => {
+   onClose();
+   onOpenNotificationSettings();
+ }}
+ className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+ isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+ }`}
+ >
+ <div className="flex items-center gap-2">
+ <BellRing className="w-4 h-4 text-amber-400" />
+ <span className="text-xs font-mono font-semibold">Notificaciones Push del Navegador</span>
+ </div>
+ <span className="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1">
+ <span>Configurar</span>
  <ChevronDown className="w-3.5 h-3.5 -rotate-90" />
  </span>
  </button>

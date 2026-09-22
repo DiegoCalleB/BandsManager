@@ -40,6 +40,8 @@ interface ColumnMapping {
   tipo: string;
   email_contacto: string;
   telefono: string;
+  telefono_movil: string;
+  telefono_fijo: string;
   instagram: string;
   website: string;
   contacto_nombre: string;
@@ -57,6 +59,8 @@ interface ParsedRow {
   tipo: LeadType;
   email_contacto: string;
   telefono: string;
+  telefono_movil?: string;
+  telefono_fijo?: string;
   instagram: string;
   website: string;
   contacto_nombre: string;
@@ -104,6 +108,8 @@ export function ExcelImportModal({
     tipo: '',
     email_contacto: '',
     telefono: '',
+    telefono_movil: '',
+    telefono_fijo: '',
     instagram: '',
     website: '',
     contacto_nombre: '',
@@ -140,6 +146,8 @@ export function ExcelImportModal({
       tipo: '',
       email_contacto: '',
       telefono: '',
+      telefono_movil: '',
+      telefono_fijo: '',
       instagram: '',
       website: '',
       contacto_nombre: '',
@@ -157,7 +165,11 @@ export function ExcelImportModal({
         newMapping.region = h;
       } else if (!newMapping.email_contacto && (c.includes('email') || c.includes('mail') || c.includes('correo') || c.includes('e-mail'))) {
         newMapping.email_contacto = h;
-      } else if (!newMapping.telefono && (c.includes('telefono') || c.includes('tel') || c.includes('phone') || c.includes('movil') || c.includes('whatsapp') || c.includes('celular'))) {
+      } else if (!newMapping.telefono_movil && (c.includes('movil') || c.includes('móvil') || c.includes('whatsapp') || c.includes('celular') || c.includes('cell'))) {
+        newMapping.telefono_movil = h;
+      } else if (!newMapping.telefono_fijo && (c.includes('fijo') || c.includes('landline'))) {
+        newMapping.telefono_fijo = h;
+      } else if (!newMapping.telefono && (c.includes('telefono') || c.includes('tel') || c.includes('phone'))) {
         newMapping.telefono = h;
       } else if (!newMapping.instagram && (c.includes('instagram') || c.includes('ig') || c.includes('redes') || c.includes('social'))) {
         newMapping.instagram = h;
@@ -261,7 +273,25 @@ export function ExcelImportModal({
       const region = mapping.region ? String(row[mapping.region] || '').trim() : 'España';
       const address = mapping.direccion ? String(row[mapping.direccion] || '').trim() : '';
       const email = mapping.email_contacto ? String(row[mapping.email_contacto] || '').trim() : '';
-      const phone = mapping.telefono ? String(row[mapping.telefono] || '').trim() : '';
+      const rawMobile = mapping.telefono_movil ? String(row[mapping.telefono_movil] || '').trim() : '';
+      const rawFijo = mapping.telefono_fijo ? String(row[mapping.telefono_fijo] || '').trim() : '';
+      const rawPhone = mapping.telefono ? String(row[mapping.telefono] || '').trim() : '';
+
+      let telMovil = rawMobile;
+      let telFijo = rawFijo;
+      let phone = rawPhone;
+
+      if (!telMovil && !telFijo && phone) {
+        if (/^(?:\+?34\s*)?[67]/.test(phone)) {
+          telMovil = phone;
+        } else if (/^(?:\+?34\s*)?[89]/.test(phone)) {
+          telFijo = phone;
+        }
+      }
+      if (!phone) {
+        phone = telMovil || telFijo || '';
+      }
+
       const rawIg = mapping.instagram ? String(row[mapping.instagram] || '').trim() : '';
       const rawWeb = mapping.website ? String(row[mapping.website] || '').trim() : '';
       
@@ -312,6 +342,8 @@ export function ExcelImportModal({
         tipo: resolvedType,
         email_contacto: email,
         telefono: phone,
+        telefono_movil: telMovil,
+        telefono_fijo: telFijo,
         instagram: ig,
         website: web,
         contacto_nombre: contact,
@@ -430,6 +462,8 @@ export function ExcelImportModal({
         tipo: r.tipo,
         email_contacto: r.email_contacto,
         telefono: r.telefono,
+        telefono_movil: r.telefono_movil || '',
+        telefono_fijo: r.telefono_fijo || '',
         instagram: r.instagram,
         website: r.website,
         contacto_nombre: r.contacto_nombre,
@@ -733,9 +767,48 @@ export function ExcelImportModal({
                   </select>
                 </div>
 
-                {/* Teléfono */}
+                {/* Teléfono Móvil (WhatsApp) */}
+                <div className="p-3 rounded-xl bg-zinc-900/60 border border-emerald-900/40 space-y-1.5">
+                  <label className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                    <span>📱</span>
+                    <span>Teléfono Móvil (WhatsApp)</span>
+                  </label>
+                  <select
+                    value={mapping.telefono_movil}
+                    onChange={e => setMapping(prev => ({ ...prev, telefono_movil: e.target.value }))}
+                    className="w-full px-3 py-2 text-xs rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-100 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="">-- No asignar --</option>
+                    {rawHeaders.map(h => (
+                      <option key={h} value={h}>{h}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Teléfono Fijo */}
+                <div className="p-3 rounded-xl bg-zinc-900/60 border border-sky-900/40 space-y-1.5">
+                  <label className="text-xs font-bold text-sky-400 flex items-center gap-1.5">
+                    <span>☎️</span>
+                    <span>Teléfono Fijo</span>
+                  </label>
+                  <select
+                    value={mapping.telefono_fijo}
+                    onChange={e => setMapping(prev => ({ ...prev, telefono_fijo: e.target.value }))}
+                    className="w-full px-3 py-2 text-xs rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-100 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="">-- No asignar --</option>
+                    {rawHeaders.map(h => (
+                      <option key={h} value={h}>{h}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Teléfono General */}
                 <div className="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-1.5">
-                  <label className="text-xs font-bold text-zinc-300">Teléfono / WhatsApp</label>
+                  <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                    <span>📞</span>
+                    <span>Teléfono General / Otro</span>
+                  </label>
                   <select
                     value={mapping.telefono}
                     onChange={e => setMapping(prev => ({ ...prev, telefono: e.target.value }))}

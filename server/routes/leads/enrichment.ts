@@ -1,12 +1,27 @@
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeadById, dbUpsertLead } from "../../db.js";
+import { dbGetLeadById, dbUpsertLead, dbGetLeads } from "../../db.js";
 import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
 import { esUrlExternaSegura } from "../../utils/ssrfGuard.js";
+import { getTargetBandId } from "../../utils/bandAccess.js";
+import { scrapeVenueWithJina } from "../../services/jinaReaderService.js";
+import { detectVenueEventsAndFreeDates } from "../../services/venueEventsRadarService.js";
+import { scrapeInstagramVenueProfile } from "../../services/apifyInstagramService.js";
+import { calculateSpotifyCityDemand } from "../../services/spotifyAudienceService.js";
+import { fetchGooglePlacesVenueInfo } from "../../services/googlePlacesVenueService.js";
+import { fetchSetlistVenueHistory } from "../../services/setlistVenueService.js";
+import { verifyEmailDeliverability } from "../../services/emailDeliverabilityService.js";
+import { calculateTourLogistics } from "../../services/tourLogisticsService.js";
+import { fetchVenueSocialEngagement } from "../../services/socialEngagementService.js";
+import { calculateConcertFinancialBreakEven } from "../../services/financialBreakEvenService.js";
+import { calculateBookingWindow } from "../../services/bookingWindowService.js";
+import { detectLocalEventsAndClashes } from "../../services/localEventsClashService.js";
+import { findLocalPressAndMedia } from "../../services/localPressMediaService.js";
+import { findLocalBandPartners } from "../../services/localBandPartnersService.js";
 
 const router = express.Router();
 
@@ -371,14 +386,19 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 // Endpoint to trigger direct on-demand enrichment of a single lead (Scout Enriquecedor)
 router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
-    const { leadId, force } = req.body;
-    if (!leadId) {
-      return res.status(400).json({ success: false, error: "Falta el leadId a enriquecer." });
+    const userBandId = getTargetBandId(req);
+    const { leadId, name, city, force } = req.body;
+    
+    let lead: Lead | undefined;
+    const state = loadState();
+
+    if (leadId) {
+      lead = state.leads?.find((l: any) => l.id === leadId) || (await dbGetLeadById(leadId, userBandId));
+    } else if (name) {
+      const cleanName = name.toLowerCase().trim();
+      lead = state.leads?.find((l: any) => l.nombre_sala?.toLowerCase().trim() === cleanName);
     }
 
-    const state = loadState();
-    const lead = state.leads?.find((l: any) => l.id === leadId) || (await dbGetLeadById(leadId, userBandId));
     if (!lead) {
       return res.status(404).json({ success: false, error: "Lead no encontrado." });
     }
@@ -386,15 +406,23 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
     console.log(`[Scout Enriquecedor] Enriqueciendo datos para ${lead.nombre_sala} (${lead.ciudad || 'España'})...`);
     
     // Call autoEnrichLead
-    await autoEnrichLead(lead, userBandId);
+    const enrichedLead = await autoEnrichLead(lead, userBandId);
 
     // Reload the updated lead
     const updatedState = loadState();
-    const freshLead = updatedState.leads?.find((l: any) => l.id === leadId) || (await dbGetLeadById(leadId, userBandId));
+    const freshLead = updatedState.leads?.find((l: any) => l.id === lead.id) || enrichedLead || (await dbGetLeadById(lead.id, userBandId));
 
     return res.json({
       success: true,
       lead: freshLead,
+      data: {
+        email: freshLead?.email_contacto,
+        phone: freshLead?.telefono || freshLead?.telefono_movil || freshLead?.telefono_fijo,
+        website: freshLead?.website,
+        capacity: freshLead?.aforo,
+        address: freshLead?.direccion,
+        instagram: freshLead?.instagram
+      },
       message: `✨ Datos de "${lead.nombre_sala}" completados y verificados con éxito.`
     });
   } catch (error: any) {
@@ -403,6 +431,59 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
       success: false,
       error: error?.message || "Error al enriquecer datos de la sala."
     });
+  }
+});
+
+// Endpoint to enrich all leads belonging to the current band
+router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const state = loadState();
+    const leads = (state.leads || []).filter((l: Lead) => !l.band_id || l.band_id === targetBandId || l.band_id === "default");
+
+    let enrichedCount = 0;
+    const results: Array<{ id: string; name: string; updatedFields: string[] }> = [];
+
+    for (const lead of leads) {
+      const prevData = {
+        email: lead.email_contacto,
+        phone: lead.telefono || lead.telefono_movil || lead.telefono_fijo,
+        address: lead.direccion,
+        website: lead.website,
+        capacity: lead.aforo,
+        instagram: lead.instagram
+      };
+
+      try {
+        const enriched = await autoEnrichLead(lead, targetBandId);
+        const updatedFields: string[] = [];
+        if (enriched.email_contacto && !prevData.email) updatedFields.push("email");
+        if ((enriched.telefono || enriched.telefono_movil) && !prevData.phone) updatedFields.push("teléfono");
+        if (enriched.direccion && !prevData.address) updatedFields.push("dirección");
+        if (enriched.website && !prevData.website) updatedFields.push("website");
+        if (enriched.aforo && !prevData.capacity) updatedFields.push("aforo");
+        if (enriched.instagram && !prevData.instagram) updatedFields.push("instagram");
+
+        if (updatedFields.length > 0) {
+          enrichedCount++;
+          results.push({ id: lead.id, name: lead.nombre_sala, updatedFields });
+        }
+      } catch (err) {
+        console.warn(`[EnrichAll] Error en lead ${lead.nombre_sala}:`, err);
+      }
+    }
+
+    const freshState = loadState();
+    return res.json({
+      success: true,
+      enrichedCount,
+      totalLeads: leads.length,
+      results,
+      leads: freshState.leads
+    });
+  } catch (error: any) {
+    console.error("Error in /leads/enrich-all-band:", error);
+    return res.status(500).json({ success: false, error: error?.message || "Error al enriquecer todos los leads" });
   }
 });
 
@@ -549,7 +630,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
       'sala villanos': 'Calle Bernardino Obregón, 18, 28012 Madrid',
       'sala hebe': 'Calle Tomás Esteban, 28, 28018 Madrid',
       'sala caracol': 'Calle Bernardino Obregón, 18, 28012 Madrid',
-      'industrial copera': 'Calle Desmond Tutu, 18151 La Zulka, Granada',
+      'industrial copera': 'Calle Desmond Tutu, 18151 La Zubia, Granada',
       'garaje beat club': 'Avenida Miguel de Cervantes, 45, 30009 Murcia',
       'dabadaba': 'Mundaiz Kalea, 8, 20012 Donostia, Gipuzkoa',
       'sala moon': 'Carrer de San Vicente Mártir, 200, 46007 València',
@@ -558,6 +639,16 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
       'moby dick club': 'Avenida de Brasil, 5, 28020 Madrid',
       'viña rock': 'Recinto Ferial, 02600 Villarrobledo, Albacete',
       'cabo de plata': 'Playa de la Hierbabuena, 11160 Barbate, Cádiz',
+      'pirineos sur': 'Auditorio Natural de Lanuza, 22661 Sallent de Gállego, Huesca',
+      'ayuntamiento de burgos': 'Plaza Mayor, 1, 09001 Burgos',
+      'ayuntamiento de logroño': 'Avenida de la Paz, 11, 26071 Logroño, La Rioja',
+      'mondosonoro': 'Carrer de Floridablanca, 53, 08015 Barcelona',
+      'radio 3': 'Avenida Radio Televisión, 4, 28223 Pozuelo de Alarcón, Madrid',
+      'propaganda pel fet': 'Carrer de Roger de Flor, 222, 08013 Barcelona',
+      'sala siroco': 'Calle de San Dimas, 3, Centro, 28015 Madrid',
+      'siroco': 'Calle de San Dimas, 3, Centro, 28015 Madrid',
+      'vallekas ska': 'Calle Monte Igueldo, 28018 Madrid',
+      'balkan boom': 'Carrer de Pujades, 08018 Barcelona',
       'wizink center': 'Av. de Felipe II, s/n, 28009 Madrid',
       'palacio vistalegre': 'Calle Utebo, 1, 28025 Madrid',
       'sant jordi club': 'Passeig Olímpic, 5-7, 08038 Barcelona',
@@ -644,6 +735,771 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
   } catch (error: any) {
     console.error("Error in POST /api/leads/enrich-addresses:", error);
     res.status(500).json({ error: error?.message || "Error al autocompletar las direcciones." });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-jina
+ * Utiliza Jina Reader (r.jina.ai) para parsear el sitio web de la sala sin gastar tokens.
+ * Extrae móviles (WhatsApp), fijos, emails de programación, aforo y rider.
+ */
+router.post(["/leads/:id/enrich-jina", "/:id/enrich-jina"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const website = lead.website || (req.body?.website as string);
+    if (!website) {
+      return res.status(400).json({ success: false, error: "La sala no tiene sitio web registrado para escanear" });
+    }
+
+    const jinaData = await scrapeVenueWithJina(website);
+    if (!jinaData.success) {
+      return res.status(422).json({ success: false, error: jinaData.error || "No se pudo leer la web con Jina Reader" });
+    }
+
+    const updates: Partial<Lead> = {};
+    if (jinaData.telefono_movil && !lead.telefono_movil) {
+      updates.telefono_movil = jinaData.telefono_movil;
+      if (!lead.telefono) updates.telefono = jinaData.telefono_movil;
+    }
+    if (jinaData.telefono_fijo && !lead.telefono_fijo) {
+      updates.telefono_fijo = jinaData.telefono_fijo;
+      if (!lead.telefono && !updates.telefono) updates.telefono = jinaData.telefono_fijo;
+    }
+    if (jinaData.email_contacto && (!lead.email_contacto || lead.email_contacto.includes("sentry"))) {
+      updates.email_contacto = jinaData.email_contacto;
+    }
+    if (jinaData.email_secundario && !lead.email_secundario) {
+      updates.email_secundario = jinaData.email_secundario;
+    }
+    if (jinaData.aforo && (!lead.aforo || lead.aforo === 0)) {
+      updates.aforo = jinaData.aforo;
+    }
+    if (jinaData.contacto_nombre && !lead.contacto_nombre) {
+      updates.contacto_nombre = jinaData.contacto_nombre;
+    }
+    if (jinaData.rider_specs) {
+      const notaRider = `[Rider Web]: ${jinaData.rider_specs}`;
+      updates.notas = lead.notas ? `${lead.notas}\n${notaRider}` : notaRider;
+    }
+
+    const updatedLead = { ...lead, ...updates };
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+
+    res.json({
+      success: true,
+      lead: saved || updatedLead,
+      extracted: jinaData
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/enrich-jina:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al procesar con Jina Reader" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/detect-dates
+ * Radar de Wegow y ticketing: detecta conciertos ocupados y calcula fines de semana libres detectados.
+ */
+router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "");
+    
+    const updates: Partial<Lead> = {
+      fechas_ocupadas: radar.fechas_ocupadas,
+      fechas_libres_detectadas: radar.fechas_libres_detectadas
+    };
+
+    const updatedLead = { ...lead, ...updates };
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+
+    res.json({
+      success: true,
+      lead: saved || updatedLead,
+      radar
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/detect-dates:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error detectando disponibilidad de fechas" });
+  }
+});
+
+/**
+ * POST /api/leads/detect-all-dates
+ * Escanea la disponibilidad y cartelera de Wegow de forma masiva para todos los leads o un lote de la campaña.
+ */
+router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const { leadIds } = req.body || {};
+
+    const allLeads = await dbGetLeads(targetBandId);
+    let targetLeads = allLeads;
+
+    if (Array.isArray(leadIds) && leadIds.length > 0) {
+      const idSet = new Set(leadIds);
+      targetLeads = allLeads.filter(l => idSet.has(l.id));
+    }
+
+    // Filtrar preferentemente salas o espacios con nombre de sala
+    targetLeads = targetLeads.filter(l => l.nombre_sala && l.nombre_sala.trim());
+
+    if (targetLeads.length === 0) {
+      return res.status(400).json({ success: false, error: "No hay recintos válidos para escanear" });
+    }
+
+    const updatedLeads: Lead[] = [];
+    let totalFreeDates = 0;
+    let totalOccupiedDates = 0;
+
+    for (const lead of targetLeads.slice(0, 15)) { // Escaneo en lote de hasta 15 recintos
+      try {
+        const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "");
+        const updates: Partial<Lead> = {
+          fechas_ocupadas: radar.fechas_ocupadas || [],
+          fechas_libres_detectadas: radar.fechas_libres_detectadas || []
+        };
+        const updatedLead = { ...lead, ...updates };
+        const saved = await dbUpsertLead(updatedLead, targetBandId);
+        updatedLeads.push(saved || updatedLead);
+        totalFreeDates += (radar.fechas_libres_detectadas?.length || 0);
+        totalOccupiedDates += (radar.fechas_ocupadas?.length || 0);
+      } catch (err) {
+        console.warn(`Error escaneando fechas para ${lead.nombre_sala}:`, err);
+      }
+    }
+
+    res.json({
+      success: true,
+      processedCount: updatedLeads.length,
+      totalFreeDates,
+      totalOccupiedDates,
+      updatedLeads
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/detect-all-dates:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error en el escaneo masivo de fechas" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-instagram
+ * Extrae WhatsApp y datos comerciales de Instagram mediante Apify (con fallback gratuito).
+ */
+router.post(["/leads/:id/enrich-instagram", "/:id/enrich-instagram"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const igHandle = lead.instagram || (req.body?.instagram as string);
+    if (!igHandle) {
+      return res.status(400).json({ success: false, error: "El lead no tiene Instagram registrado" });
+    }
+
+    const igData = await scrapeInstagramVenueProfile(igHandle);
+    
+    const updates: Partial<Lead> = {};
+    if (igData.telefono_movil && !lead.telefono_movil) {
+      updates.telefono_movil = igData.telefono_movil;
+      if (!lead.telefono) updates.telefono = igData.telefono_movil;
+    }
+    if (igData.telefono_fijo && !lead.telefono_fijo) {
+      updates.telefono_fijo = igData.telefono_fijo;
+    }
+    if (igData.email_contacto && !lead.email_contacto) {
+      updates.email_contacto = igData.email_contacto;
+    }
+    if (igData.website && !lead.website) {
+      updates.website = igData.website;
+    }
+
+    let saved = lead;
+    if (Object.keys(updates).length > 0) {
+      const updatedLead = { ...lead, ...updates };
+      saved = await dbUpsertLead(updatedLead, targetBandId);
+    }
+
+    res.json({
+      success: true,
+      lead: saved,
+      data: igData
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/enrich-instagram:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al procesar perfil de Instagram" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-spotify
+ * Analiza audiencia de Spotify for Artists / Soundcharts para la ciudad del recinto.
+ */
+router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const state = loadState();
+    const band = state.bands?.find((b: any) => b.id === targetBandId);
+    const bandName = band?.nombre || "Bakandeya";
+    const bandGenre = band?.genero || lead.genero || "Mestizaje / World Music";
+
+    const spotifyDemand = await calculateSpotifyCityDemand(
+      bandName,
+      bandGenre,
+      lead.ciudad || "Madrid",
+      lead.aforo || 300
+    );
+
+    const updatedLead: Lead = {
+      ...lead,
+      spotify_city_demand: {
+        oyentes_ciudad: spotifyDemand.oyentes_ciudad,
+        afinidad_genero: spotifyDemand.afinidad_genero,
+        prediccion_entradas: spotifyDemand.prediccion_entradas,
+        porcentaje_ocupacion_estimado: spotifyDemand.porcentaje_ocupacion_estimado,
+        top_ciudades_ranking: spotifyDemand.top_ciudades_ranking
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, data: spotifyDemand });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/enrich-spotify:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al analizar audiencia de Spotify" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-google-places
+ * Extrae fotos del escenario, valoración en Google Maps y detalles de acceso/carga.
+ */
+router.post(["/leads/:id/enrich-google-places", "/:id/enrich-google-places"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const placesInfo = await fetchGooglePlacesVenueInfo(
+      lead.nombre_sala,
+      lead.ciudad || "Madrid",
+      lead.direccion
+    );
+
+    const updatedLead: Lead = {
+      ...lead,
+      google_places_info: {
+        rating: placesInfo.rating,
+        total_reviews: placesInfo.total_reviews,
+        fotos: placesInfo.fotos,
+        horario_carga: placesInfo.horario_carga,
+        resumen_acustica: placesInfo.resumen_acustica,
+        acceso_backline: placesInfo.acceso_backline,
+        place_id: placesInfo.place_id
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, data: placesInfo });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/enrich-google-places:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al obtener datos de Google Places" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-setlist
+ * Extrae historial de conciertos, bandas similares y referencias de booking de Setlist.fm.
+ */
+router.post(["/leads/:id/enrich-setlist", "/:id/enrich-setlist"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const setlistInfo = await fetchSetlistVenueHistory(
+      lead.nombre_sala,
+      lead.ciudad || "Madrid",
+      lead.genero || "Mestizaje / Rock / Fusión"
+    );
+
+    const updatedLead: Lead = {
+      ...lead,
+      setlist_history: {
+        bandas_similares_recientes: setlistInfo.bandas_similares_recientes,
+        fecha_ultimo_concierto: setlistInfo.fecha_ultimo_concierto,
+        generos_habituales: setlistInfo.generos_habituales,
+        promotores_frecuentes: setlistInfo.promotores_frecuentes,
+        referencia_pitch_sugerida: setlistInfo.referencia_pitch_sugerida
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, data: setlistInfo });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/enrich-setlist:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al obtener historial de Setlist.fm" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/verify-email
+ * Valida entregabilidad DNS/MX y reputación anti-spam del correo de contacto.
+ */
+router.post(["/leads/:id/verify-email", "/:id/verify-email"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const emailToVerify = lead.email_contacto || (req.body?.email as string);
+    if (!emailToVerify) {
+      return res.status(400).json({ success: false, error: "El lead no tiene correo de contacto registrado" });
+    }
+
+    const verification = await verifyEmailDeliverability(emailToVerify);
+    const updatedLead: Lead = {
+      ...lead,
+      email_verification: {
+        estado: verification.estado,
+        mx_valido: verification.mx_valido,
+        entregabilidad_score: verification.entregabilidad_score,
+        es_cuenta_rol: verification.es_cuenta_rol,
+        motivo: verification.motivo,
+        verificado_at: verification.verificado_at
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, data: verification });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/verify-email:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al verificar entregabilidad del correo" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-all-apis
+ * Dispara todas las herramientas API en paralelo para una sala (Spotify + Google Places + Setlist.fm + Verificación MX).
+ */
+router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
+    }
+
+    const state = loadState();
+    const band = state.bands?.find((b: any) => b.id === targetBandId);
+    const bandName = band?.nombre || "Bakandeya";
+    const bandGenre = band?.genero || lead.genero || "Mestizaje / World Music";
+
+    const [
+      spotifyRes,
+      placesRes,
+      setlistRes,
+      emailRes,
+      logisticsRes,
+      socialRes,
+      bookingWindowRes,
+      localEventsRes,
+      pressMediaRes,
+      bandPartnersRes
+    ] = await Promise.allSettled([
+      calculateSpotifyCityDemand(bandName, bandGenre, lead.ciudad || "Madrid", lead.aforo || 300),
+      fetchGooglePlacesVenueInfo(lead.nombre_sala, lead.ciudad || "Madrid", lead.direccion),
+      fetchSetlistVenueHistory(lead.nombre_sala, lead.ciudad || "Madrid", lead.genero || bandGenre),
+      lead.email_contacto ? verifyEmailDeliverability(lead.email_contacto) : Promise.resolve(null),
+      calculateTourLogistics(band?.ciudad || "Madrid", lead.ciudad || "Madrid", lead.direccion),
+      fetchVenueSocialEngagement(lead.nombre_sala, lead.ciudad || "Madrid", lead.instagram_handle),
+      calculateBookingWindow(lead.nombre_sala, lead.tipo || "sala", lead.aforo || 200, lead.ciudad || "Madrid"),
+      detectLocalEventsAndClashes(lead.ciudad || "Madrid", bandGenre),
+      findLocalPressAndMedia(lead.ciudad || "Madrid", lead.nombre_sala, bandName),
+      findLocalBandPartners(lead.ciudad || "Madrid", bandGenre, lead.nombre_sala)
+    ]);
+
+    const updates: Partial<Lead> = {};
+
+    if (spotifyRes.status === "fulfilled" && spotifyRes.value) {
+      const s = spotifyRes.value;
+      updates.spotify_city_demand = {
+        oyentes_ciudad: s.oyentes_ciudad,
+        afinidad_genero: s.afinidad_genero,
+        prediccion_entradas: s.prediccion_entradas,
+        porcentaje_ocupacion_estimado: s.porcentaje_ocupacion_estimado,
+        top_ciudades_ranking: s.top_ciudades_ranking
+      };
+    }
+
+    if (placesRes.status === "fulfilled" && placesRes.value) {
+      const p = placesRes.value;
+      updates.google_places_info = {
+        rating: p.rating,
+        total_reviews: p.total_reviews,
+        fotos: p.fotos,
+        horario_carga: p.horario_carga,
+        resumen_acustica: p.resumen_acustica,
+        acceso_backline: p.acceso_backline,
+        place_id: p.place_id
+      };
+    }
+
+    if (setlistRes.status === "fulfilled" && setlistRes.value) {
+      const sl = setlistRes.value;
+      updates.setlist_history = {
+        bandas_similares_recientes: sl.bandas_similares_recientes,
+        fecha_ultimo_concierto: sl.fecha_ultimo_concierto,
+        generos_habituales: sl.generos_habituales,
+        promotores_frecuentes: sl.promotores_frecuentes,
+        referencia_pitch_sugerida: sl.referencia_pitch_sugerida
+      };
+    }
+
+    if (emailRes.status === "fulfilled" && emailRes.value) {
+      const em = emailRes.value;
+      updates.email_verification = {
+        estado: em.estado,
+        mx_valido: em.mx_valido,
+        entregabilidad_score: em.entregabilidad_score,
+        es_cuenta_rol: em.es_cuenta_rol,
+        motivo: em.motivo,
+        verificado_at: em.verificado_at
+      };
+    }
+
+    if (logisticsRes.status === "fulfilled" && logisticsRes.value) {
+      const lg = logisticsRes.value;
+      updates.tour_logistics = {
+        origen: lg.origen,
+        distancia_km: lg.distancia_km,
+        tiempo_conduccion: lg.tiempo_conduccion,
+        coste_gasolina_estimado: lg.coste_gasolina_estimado,
+        peajes_estimados: lg.peajes_estimados,
+        coste_total_viaje: lg.coste_total_viaje,
+        recomendacion_logistica: lg.recomendacion_logistica
+      };
+    }
+
+    if (socialRes.status === "fulfilled" && socialRes.value) {
+      const sc = socialRes.value;
+      updates.social_engagement = {
+        instagram_followers: sc.instagram_followers,
+        engagement_rate: sc.engagement_rate,
+        promedio_views_reels: sc.promedio_views_reels,
+        promociona_bandas_activo: sc.promociona_bandas_activo,
+        calidad_promo_sala: sc.calidad_promo_sala,
+        resumen_social: sc.resumen_social
+      };
+    }
+
+    if (bookingWindowRes.status === "fulfilled" && bookingWindowRes.value) {
+      updates.booking_window_info = bookingWindowRes.value;
+    }
+
+    if (localEventsRes.status === "fulfilled" && localEventsRes.value) {
+      updates.local_events_clash_info = localEventsRes.value;
+    }
+
+    if (pressMediaRes.status === "fulfilled" && pressMediaRes.value) {
+      updates.local_press_media_info = pressMediaRes.value;
+    }
+
+    if (bandPartnersRes.status === "fulfilled" && bandPartnersRes.value) {
+      updates.local_band_partners_info = bandPartnersRes.value;
+    }
+
+    // Default auto financial calculation if missing
+    const breakEven = calculateConcertFinancialBreakEven({
+      aforo: lead.aforo || 250,
+      precioAnticipada: 12,
+      precioTaquilla: 15,
+      alquilerSalaFijo: lead.alquiler_sala_estimado || 250,
+      porcentajeSala: lead.porcentaje_taquilla || 15,
+      gastosProduccionFijos: (updates.tour_logistics?.coste_total_viaje || 100) + 150, // viaje + técnico
+      numMusicos: band?.num_integrantes || 5,
+      asistenciaEstimada: updates.spotify_city_demand?.prediccion_entradas || Math.round((lead.aforo || 250) * 0.75)
+    });
+
+    updates.financial_break_even = {
+      precio_entrada_anticipada: breakEven.precio_entrada_anticipada,
+      precio_entrada_taquilla: breakEven.precio_entrada_taquilla,
+      alquiler_sala_fijo: breakEven.alquiler_sala_fijo,
+      porcentaje_sala: breakEven.porcentaje_sala,
+      gastos_produccion_fijos: breakEven.gastos_produccion_fijos,
+      entradas_break_even: breakEven.entradas_break_even,
+      beneficio_estimado_lleno: breakEven.beneficio_estimado_lleno,
+      beneficio_por_musico_estimado: breakEven.beneficio_por_musico_estimado,
+      num_musicos: breakEven.num_musicos
+    };
+
+    const updatedLead: Lead = { ...lead, ...updates };
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+
+    res.json({
+      success: true,
+      lead: saved,
+      intelligence: {
+        spotify: updates.spotify_city_demand,
+        places: updates.google_places_info,
+        setlist: updates.setlist_history,
+        email_verification: updates.email_verification,
+        logistics: updates.tour_logistics,
+        social: updates.social_engagement,
+        financial: updates.financial_break_even,
+        booking_window: updates.booking_window_info,
+        local_events: updates.local_events_clash_info,
+        press_media: updates.local_press_media_info,
+        band_partners: updates.local_band_partners_info
+      }
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/enrich-all-apis:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al procesar enriquecimiento multi-API" });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-logistics
+ * Calcula rutas, kilometraje, combustible y peajes para la furgoneta.
+ */
+router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const state = loadState();
+    const band = state.bands?.find((b: any) => b.id === targetBandId);
+    const origin = req.body.origen || band?.ciudad || "Madrid";
+
+    const result = await calculateTourLogistics(origin, lead.ciudad || "Madrid", lead.direccion);
+    const updatedLead: Lead = {
+      ...lead,
+      tour_logistics: {
+        origen: result.origen,
+        distancia_km: result.distancia_km,
+        tiempo_conduccion: result.tiempo_conduccion,
+        coste_gasolina_estimado: result.coste_gasolina_estimado,
+        peajes_estimados: result.peajes_estimados,
+        coste_total_viaje: result.coste_total_viaje,
+        recomendacion_logistica: result.recomendacion_logistica
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, logistics: updatedLead.tour_logistics });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-social
+ * Radar de interacción en Instagram / TikTok y calidad de co-promoción.
+ */
+router.post(["/leads/:id/enrich-social", "/:id/enrich-social"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const result = await fetchVenueSocialEngagement(lead.nombre_sala, lead.ciudad || "Madrid", lead.instagram_handle);
+    const updatedLead: Lead = {
+      ...lead,
+      social_engagement: {
+        instagram_followers: result.instagram_followers,
+        engagement_rate: result.engagement_rate,
+        promedio_views_reels: result.promedio_views_reels,
+        promociona_bandas_activo: result.promociona_bandas_activo,
+        calidad_promo_sala: result.calidad_promo_sala,
+        resumen_social: result.resumen_social
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, social: updatedLead.social_engagement });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
+/**
+ * POST /api/leads/:id/calculate-break-even
+ * Simulador financiero P&L y punto de equilibrio de entradas.
+ */
+router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const {
+      precioAnticipada,
+      precioTaquilla,
+      alquilerSalaFijo,
+      porcentajeSala,
+      gastosProduccionFijos,
+      numMusicos,
+      asistenciaEstimada
+    } = req.body;
+
+    const result = calculateConcertFinancialBreakEven({
+      aforo: lead.aforo || 250,
+      precioAnticipada: Number(precioAnticipada) || 12,
+      precioTaquilla: Number(precioTaquilla) || 15,
+      alquilerSalaFijo: Number(alquilerSalaFijo) ?? 250,
+      porcentajeSala: Number(porcentajeSala) ?? 15,
+      gastosProduccionFijos: Number(gastosProduccionFijos) ?? 150,
+      numMusicos: Number(numMusicos) || 5,
+      asistenciaEstimada: Number(asistenciaEstimada) || Math.round((lead.aforo || 250) * 0.8)
+    });
+
+    const updatedLead: Lead = {
+      ...lead,
+      financial_break_even: {
+        precio_entrada_anticipada: result.precio_entrada_anticipada,
+        precio_entrada_taquilla: result.precio_entrada_taquilla,
+        alquiler_sala_fijo: result.alquiler_sala_fijo,
+        porcentaje_sala: result.porcentaje_sala,
+        gastos_produccion_fijos: result.gastos_produccion_fijos,
+        entradas_break_even: result.entradas_break_even,
+        beneficio_estimado_lleno: result.beneficio_estimado_lleno,
+        beneficio_por_musico_estimado: result.beneficio_por_musico_estimado,
+        num_musicos: result.num_musicos
+      }
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, financial: result });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-booking-window
+ * Ventana de programación óptima y antelación recomendada para cerrar fechas.
+ */
+router.post(["/leads/:id/enrich-booking-window", "/:id/enrich-booking-window"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const result = await calculateBookingWindow(lead.nombre_sala, lead.tipo || "sala", lead.aforo || 200, lead.ciudad || "Madrid");
+    const updatedLead: Lead = {
+      ...lead,
+      booking_window_info: result
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, booking_window: result });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-local-events
+ * Radar de eventos locales, macrofestivales y riesgos de solapamiento.
+ */
+router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const state = loadState();
+    const band = state.bands?.find((b: any) => b.id === targetBandId);
+    const genero = band?.genero || lead.genero || "Indie Rock";
+
+    const result = await detectLocalEventsAndClashes(lead.ciudad || "Madrid", genero);
+    const updatedLead: Lead = {
+      ...lead,
+      local_events_clash_info: result
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, local_events: result });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-press-media
+ * Radar de medios locales, radios y fanzines culturales en la provincia.
+ */
+router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const state = loadState();
+    const band = state.bands?.find((b: any) => b.id === targetBandId);
+    const bandName = band?.nombre || "Bakandeya";
+
+    const result = await findLocalPressAndMedia(lead.ciudad || "Madrid", lead.nombre_sala, bandName);
+    const updatedLead: Lead = {
+      ...lead,
+      local_press_media_info: result
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, press_media: result });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
+  }
+});
+
+/**
+ * POST /api/leads/:id/enrich-co-booking
+ * Bandas locales afines para co-booking y taquilla compartida.
+ */
+router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(req.params.id, targetBandId);
+    if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
+
+    const state = loadState();
+    const band = state.bands?.find((b: any) => b.id === targetBandId);
+    const genero = band?.genero || lead.genero || "Indie Rock";
+
+    const result = await findLocalBandPartners(lead.ciudad || "Madrid", genero, lead.nombre_sala);
+    const updatedLead: Lead = {
+      ...lead,
+      local_band_partners_info: result
+    };
+
+    const saved = await dbUpsertLead(updatedLead, targetBandId);
+    res.json({ success: true, lead: saved, band_partners: result });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error?.message });
   }
 });
 
