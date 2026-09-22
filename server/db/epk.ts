@@ -270,6 +270,21 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   const providedTraducciones = config.traducciones || {};
   const mergedTraducciones = { ...existingTraducciones, ...providedTraducciones };
 
+  // Miembros se mezcla POR MIEMBRO (id), no se reemplaza el array entero: antes, si quien
+  // llamaba a este endpoint mandaba un miembro sin `foto`/`bio` (un formulario que solo
+  // gestiona nombre/rol/instagram, por ejemplo), esos campos desaparecían en silencio aunque
+  // ya existieran — pasó de verdad con los 4 integrantes de Bakandeya, foto y bio borrados
+  // sin que nadie los tocara. Quién SIGUE en la lista lo decide `config.miembros` (si alguien
+  // se quita del formulario, desaparece); lo que se preserva es lo que el objeto nuevo no
+  // incluye para un id que ya existía.
+  const existingMiembros: any[] = Array.isArray(existing?.miembros) ? existing.miembros : [];
+  const mergedMiembros = Array.isArray(config.miembros)
+    ? config.miembros.map((m: any) => {
+        const prev = m?.id ? existingMiembros.find((e: any) => e?.id === m.id) : null;
+        return prev ? { ...prev, ...m } : m;
+      })
+    : existingMiembros;
+
   const newLogoUrl = (config.logoUrl !== undefined ? config.logoUrl : (config.logo_url !== undefined ? config.logo_url : existing?.logoUrl)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.logo_url : "");
 
   const payload = {
@@ -282,7 +297,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     dossier_document_name: (config.dossierDocumentName !== undefined ? config.dossierDocumentName : (config.dossier_document_name !== undefined ? config.dossier_document_name : existing?.dossierDocumentName)) || "",
     dossier_texto_extra: (config.dossierTextoExtra !== undefined ? config.dossierTextoExtra : (config.dossier_texto_extra !== undefined ? config.dossier_texto_extra : existing?.dossierTextoExtra)) || "",
     band_photos: (config.bandPhotos !== undefined ? config.bandPhotos : (config.band_photos !== undefined ? config.band_photos : existing?.bandPhotos)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.band_photos : []),
-    miembros: (config.miembros !== undefined ? config.miembros : existing?.miembros) || [],
+    miembros: mergedMiembros,
     videos: (config.videos !== undefined ? config.videos : existing?.videos) || [],
     datos_contratacion: (config.datosContratacion !== undefined ? config.datosContratacion : (config.datos_contratacion !== undefined ? config.datos_contratacion : existing?.datosContratacion)) || {},
     rider_tecnico: (config.riderTecnico !== undefined ? config.riderTecnico : (config.rider_tecnico !== undefined ? config.rider_tecnico : existing?.riderTecnico)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.rider_tecnico : ""),
