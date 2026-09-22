@@ -6,6 +6,11 @@ import { EvaluacionUnion } from '../../utils/setlistCompatibility';
 
 export interface EnergyChartPoint {
  idx: number;
+ /** Posición horizontal en el gráfico — distinta de `idx` (posición real en el setlist, usada
+ * para identificar/reordenar). Las canciones son enteros consecutivos (0,1,2...) sin contar
+ * bloques; un bloque se intercala entre sus dos canciones vecinas sin consumir su propio
+ * hueco, así nunca separa visualmente dos canciones más de lo normal. */
+ xPos: number;
  id: string;
  name: string;
  /** id de la canción real detrás de este punto — solo presente en canciones (no en eventos de
@@ -203,11 +208,26 @@ export function EnergyChart({
  // índice de canción distinto al de partida y reordenar solo sin querer, con"ningún control".
  const MIN_DRAG_PX = 10;
 
+ // La curva solo se dibuja con las canciones — los bloques (chapa, pausa, bis...) no tienen
+ // energía real y, si ocupasen su propio hueco en el eje X, separarían visualmente las
+ // canciones de antes y de después más de lo normal. Se marcan aparte con su propia línea
+ // vertical (ver más abajo), intercalados en `xPos` sin consumir espacio propio.
+ const songsOnlyData = useMemo(() => chartData.filter((d) => d.isSong), [chartData]);
+
  const getIndexFromClientX = (clientX: number): number => {
  const rect = containerRef.current?.getBoundingClientRect();
- if (!rect || chartData.length === 0) return 0;
+ if (!rect || chartData.length === 0 || songsOnlyData.length === 0) return 0;
  const ratio = (clientX - rect.left) / rect.width;
- return Math.max(0, Math.min(chartData.length - 1, Math.round(ratio * (chartData.length - 1))));
+ const targetXPos = Math.max(0, Math.min(songsOnlyData.length - 1, ratio * (songsOnlyData.length - 1)));
+ // Busca en el array COMPLETO (con bloques) el punto más cercano a esa posición visual, para
+ // que soltar cerca de un bloque también sea un objetivo válido al reordenar.
+ let closest = 0;
+ let closestDist = Infinity;
+ chartData.forEach((d, i) => {
+ const dist = Math.abs(d.xPos - targetXPos);
+ if (dist < closestDist) { closestDist = dist; closest = i; }
+ });
+ return closest;
  };
 
  // Conversión aproximada de píxeles verticales a unidades de energía, a partir del alto real del
@@ -404,13 +424,13 @@ export function EnergyChart({
  </div>
  )}
  <ResponsiveContainer width="100%" height="100%">
- <ComposedChart key={setlistKey} data={chartData} margin={compact ? { top: 8, right: 8, left: -22, bottom: 0 } : { top: 14, right: 14, left: -18, bottom: 0 }}>
+ <ComposedChart key={setlistKey} data={songsOnlyData} margin={compact ? { top: 8, right: 8, left: -22, bottom: 0 } : { top: 14, right: 14, left: -18, bottom: 0 }}>
  <defs>
  <linearGradient id={`energyStrokeGradient${gradientSuffix}`} x1="0" y1="0" x2="1" y2="0">
- {chartData.map((d, i) => (
+ {songsOnlyData.map((d, i) => (
  <stop
  key={d.id}
- offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
+ offset={`${songsOnlyData.length > 1 ? (i / (songsOnlyData.length - 1)) * 100 : 0}%`}
  stopColor={d.color}
  />
  ))}
@@ -419,10 +439,10 @@ export function EnergyChart({
  baja) en vez de un dorado plano fijo — así el"aura" bajo la curva también cambia
  de color según la categoría de energía. */}
  <linearGradient id={`energyFillGradient${gradientSuffix}`} x1="0" y1="0" x2="1" y2="0">
- {chartData.map((d, i) => (
+ {songsOnlyData.map((d, i) => (
  <stop
  key={d.id}
- offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
+ offset={`${songsOnlyData.length > 1 ? (i / (songsOnlyData.length - 1)) * 100 : 0}%`}
  stopColor={d.color}
  stopOpacity={0.22}
  />
@@ -452,7 +472,7 @@ export function EnergyChart({
  {chartData.filter((d) => d.isSpeechEvent).map((d) => (
  <ReferenceLine
  key={`speech-${d.id}`}
- x={d.idx}
+ x={d.xPos}
  stroke="var(--ink-2)"
  strokeWidth={1.5}
  strokeDasharray="2 3"
@@ -466,7 +486,7 @@ export function EnergyChart({
  {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
  <ReferenceLine
  key={`clash-${d.id}`}
- x={d.idx + 0.5}
+ x={d.xPos + 0.5}
  stroke="var(--alert)"
  strokeDasharray="3 3"
  strokeOpacity={0.8}
@@ -482,7 +502,7 @@ export function EnergyChart({
  return (
  <ReferenceLine
  key={`trans-${d.id}`}
- x={d.idx + 0.5}
+ x={d.xPos + 0.5}
  stroke={isOk ?'var(--ok)' :'var(--alert)'}
  strokeWidth={isOk ? 1 : 1.5}
  strokeDasharray={isOk ?'2 3' :'3 2'}
@@ -500,7 +520,10 @@ export function EnergyChart({
  })}
 
  <XAxis
- dataKey="idx"
+ dataKey="xPos"
+ type="number"
+ domain={['dataMin','dataMax']}
+ ticks={songsOnlyData.map((d) => d.xPos)}
  tickFormatter={(v: number) => `#${v + 1}`}
  stroke="var(--ink-2)"
  fontSize={fontSize}

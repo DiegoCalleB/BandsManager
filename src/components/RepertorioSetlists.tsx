@@ -866,6 +866,32 @@ export default function RepertorioSetlists({
  // este repertorio) — se pinta como segunda línea en el gráfico para ver de un vistazo dónde se
  // aleja más la curva real, sin depender de leer el texto del análisis.
  const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
+ // Posición horizontal de cada punto en el gráfico, DISTINTA de `idx` (que sigue siendo la
+ // posición real en el setlist, usada para arrastrar/reordenar). Las canciones ocupan
+ // posiciones enteras consecutivas (0, 1, 2...) sin contar los bloques que haya entre medias;
+ // los bloques se intercalan entre la canción anterior y la siguiente sin consumir su propio
+ // hueco — así un bloque nunca separa visualmente dos canciones más de lo normal.
+ const xPositions: number[] = new Array(analysis.points.length);
+ {
+ let songCounter = 0;
+ let pendingBlocks: number[] = [];
+ const flushBlocks = (leftPos: number, rightPos: number) => {
+ pendingBlocks.forEach((ptIdx, i) => {
+ xPositions[ptIdx] = leftPos + ((i + 1) / (pendingBlocks.length + 1)) * (rightPos - leftPos);
+ });
+ pendingBlocks = [];
+ };
+ analysis.points.forEach((pt, i) => {
+ if (pt.isSong) {
+ if (pendingBlocks.length > 0) flushBlocks(songCounter - 1, songCounter);
+ xPositions[i] = songCounter;
+ songCounter += 1;
+ } else {
+ pendingBlocks.push(i);
+ }
+ });
+ if (pendingBlocks.length > 0) flushBlocks(songCounter - 1, songCounter);
+ }
  const data = analysis.points.map((pt, idx) => {
  // Chapa/presentación/interludio/pausa/bis/etc. — cualquier evento que no sea canción — no
  // representa energía real del show: el"bis" en concreto es solo la marca de"aquí empieza",
@@ -899,6 +925,7 @@ export default function RepertorioSetlists({
 
  return {
  idx,
+ xPos: xPositions[idx],
  id: pt.item.id,
  songId: isSpeechEvent ? undefined : pt.song?.id,
  name: pt.title,
