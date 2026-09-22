@@ -66,7 +66,6 @@ import { parseTonalidad, evaluarTransicionArmonica } from '../utils/harmonicAnal
 import { optimizarOrdenPorTransiciones, costeTotalTransiciones, sugerirMejorPuntoParaChapa, SugerenciaChapa, HuecoCancion, evaluarCalidadUnion, EvaluacionUnion } from '../utils/setlistCompatibility';
 import { getSemitoneDifference } from '../utils/chordUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
-import { SetlistEnergyVisualization } from './repertorio/SetlistEnergyVisualization';
 import { SongTransitionPreviewModal } from './repertorio/SongTransitionPreviewModal';
 import { titlesMatch } from '../utils/songTitleMatch';
 import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../config/sampleRepertoire';
@@ -646,7 +645,7 @@ export default function RepertorioSetlists({
  handleSelectPlayerSong} = useAudioPlayer();
 
  // Global player context for persistent playback across modules
- const { currentSong: playerCurrentSong, setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying, currentTime: playerCurrentTime, duration: playerDuration } = usePlayer();
+ const { currentSong: playerCurrentSong, setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying } = usePlayer();
 
  // Inicializar reproductor global con canción aleatoria que tenga audio (solo si está vacío)
  useEffect(() => {
@@ -3160,17 +3159,7 @@ export default function RepertorioSetlists({
  );
  })()}
 
- {/* Visual Energy Visualization with Onda */}
- <SetlistEnergyVisualization
- chartData={chartData}
- currentPlayingSongId={playerCurrentSong?.id}
- currentSetlist={activeSetlist}
- songs={filteredSongs}
- currentTime={playerCurrentTime}
- duration={playerDuration}
- />
-
- {/* Advanced Energy Chart (hidden by default, can be toggled) */}
+ {/* Advanced Energy Chart */}
  <div className={chartZoom ?'overflow-x-auto -mx-1 px-1' : undefined}>
  <EnergyChart
  setlistKey={activeSetlist.id}
