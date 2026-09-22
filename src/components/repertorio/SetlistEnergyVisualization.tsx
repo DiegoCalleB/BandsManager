@@ -38,6 +38,11 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
  const progress = duration > 0 ? Math.min(1, (currentTime || 0) / duration) : 0;
  const progressPercentage = progress * 100;
 
+ // Posición del indicador: comienza en 1rem (p-4) y se extiende hasta el 100% menos el padding
+ // Usando un cálculo simple de JS en lugar de CSS calc para mejor compatibilidad
+ const paddingRem = 1; // p-4 = 1rem = 16px
+ const indicatorPercent = paddingRem * 100 + progress * (100 - paddingRem * 2 * 100);
+
  // Encontrar la portada del álbum actual (primera canción reproduciendo o primera del setlist)
  const playingIndex = chartData.findIndex(d => d.songId === currentPlayingSongId);
  const activeIndex = playingIndex >= 0 ? playingIndex : 0;
@@ -92,15 +97,14 @@ export const SetlistEnergyVisualization: React.FC<SetlistEnergyVisualizationProp
        {/* Indicador de progreso animado */}
        {currentPlayingSongId && duration > 0 && (
          <div
-           className="absolute top-4 transition-all duration-100 ease-linear"
+           className="absolute top-0 bottom-0 flex items-center transition-all duration-100 ease-linear pointer-events-none"
            style={{
-             left: `calc(${progressPercentage}% + ${Math.max(8, Math.min(24, 320 / Math.max(1, ondaData.length))) / 2}px)`,
+             left: `${indicatorPercent}%`,
              transform: 'translateX(-50%)',
-             height: '140px',
-             pointerEvents: 'none'
+             width: '4px'
            }}
          >
-           <div className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] shadow-sm" style={{ marginTop: '4px' }} />
+           <div className="w-4 h-4 rounded-full bg-[var(--ok)] shadow-lg" style={{ marginTop: '16px' }} />
          </div>
        )}
      </div>
