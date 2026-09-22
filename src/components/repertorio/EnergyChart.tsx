@@ -459,10 +459,10 @@ export function EnergyChart({
  {/* Mientras se arrastra un punto en horizontal, esta línea marca dónde caería la canción
  al soltar. En vertical, marca la altura (energía) a la que quedaría en su lugar. */}
  {draggingFromIndex !== null && dragAxis !=='y' && hoverIndex !== null && (
- <ReferenceLine x={hoverIndex} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
+ <ReferenceLine yAxisId="energy" x={hoverIndex} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
  )}
  {draggingFromIndex !== null && dragAxis ==='y' && liveEnergyScore !== null && (
- <ReferenceLine y={liveEnergyScore} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
+ <ReferenceLine yAxisId="energy" y={liveEnergyScore} stroke="var(--acc-soft)" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
  )}
 
  {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
@@ -470,6 +470,7 @@ export function EnergyChart({
  {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
  <ReferenceLine
  key={`clash-${d.id}`}
+ yAxisId="energy"
  x={d.xPos + 0.5}
  stroke="var(--alert)"
  strokeDasharray="3 3"
@@ -486,6 +487,7 @@ export function EnergyChart({
  return (
  <ReferenceLine
  key={`trans-${d.id}`}
+ yAxisId="energy"
  x={d.xPos + 0.5}
  stroke={isOk ?'var(--ok)' :'var(--alert)'}
  strokeWidth={isOk ? 1 : 1.5}
@@ -794,12 +796,15 @@ export function EnergyChart({
  {/* Eventos de"speech" (chapa, presentación, interludio...): no cuentan como un bajón de
  energía (score null + connectNulls en la curva de arriba), pero se marcan con su propia
  línea vertical + el icono de su subtipo (💬 chapa, 🎤 presentación, 💣 bis...) para que se
- lea de un vistazo qué es cada marcador, sin confundirlo con la curva. Se pintan los
- ÚLTIMOS a propósito (después del área/curva) para quedar SIEMPRE por encima del relleno
- semitransparente — si no, el propio relleno de la curva las tapaba casi por completo. */}
+ lea de un vistazo qué es cada marcador, sin confundirlo con la curva. yAxisId es
+ obligatorio aquí: el YAxis de este gráfico usa yAxisId="energy" (no el 0 por defecto de
+ Recharts), y sin especificarlo ReferenceLine no encuentra su eje y NO SE PINTA — sin
+ error en consola, sin avisar, directamente desaparece. Mismo motivo en el resto de
+ ReferenceLine de este componente (arrastre, choque de tonalidad, transiciones). */}
  {chartData.filter((d) => d.isSpeechEvent).map((d) => (
  <ReferenceLine
  key={`speech-${d.id}`}
+ yAxisId="energy"
  x={d.xPos}
  stroke={d.color}
  strokeWidth={2}
