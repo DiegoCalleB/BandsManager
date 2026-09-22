@@ -476,9 +476,9 @@ export async function dbUpsertSong(song: any, bandId: string) {
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
   // usuario no se reutiliza nunca.
   let finalSongId = song.id;
-  let existing: { id: string; band_id: string; audio_principal_url?: string; audio_ideas?: any[] } | null = null;
+  let existing: { id: string; band_id: string; audio_principal_url?: string; audio_ideas?: any[]; notas_miembros?: any; notas_por_miembro?: any[]; guia_sustituto?: any } | null = null;
   if (finalSongId) {
-    const { data } = await sb.from("songs").select("id, band_id, audio_principal_url, audio_ideas").eq("id", finalSongId).maybeSingle();
+    const { data } = await sb.from("songs").select("id, band_id, audio_principal_url, audio_ideas, notas_miembros, notas_por_miembro, guia_sustituto").eq("id", finalSongId).maybeSingle();
     existing = data;
     if (existing && existing.band_id !== targetBandId) {
       finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -556,12 +556,21 @@ export async function dbUpsertSong(song: any, bandId: string) {
     // viejo ganaba siempre y la nota por miembro no se guardaba nunca, ni reintentando.
     notas_internas: preferClearableString(song.notasInternas, song.notas_internas),
     notas_repertorio: preferClearableString(song.notasRepertorio, song.notas_repertorio),
-    notas_miembros: song.notasMiembros || song.notas_miembros || {},
-    notas_por_miembro: song.notasPorMiembro || song.notas_por_miembro || [],
+    // Igual que audio_ideas arriba: si NINGUNA de las dos variantes (camel/snake) viene en el
+    // payload, se preserva lo que hubiera en vez de resetear a {}/[] — mismo mecanismo que
+    // borró `miembros` en epk.ts, aplicado aquí a notas por miembro y guía del sustituto.
+    notas_miembros: (song.notasMiembros ?? song.notas_miembros) !== undefined
+      ? (song.notasMiembros || song.notas_miembros)
+      : (existing?.notas_miembros ?? {}),
+    notas_por_miembro: (song.notasPorMiembro ?? song.notas_por_miembro) !== undefined
+      ? (song.notasPorMiembro || song.notas_por_miembro)
+      : (existing?.notas_por_miembro ?? []),
     audio_principal_url: song.audioPrincipalUrl || song.audio_principal_url || song.audioUrl || song.audio_url || "",
     audio_ideas: incomingIdeas || [],
     cifrado_texto: preferClearableString(song.cifradoTexto, song.cifrado_texto),
-    guia_sustituto: song.guiaSustituto || song.guia_sustituto || {},
+    guia_sustituto: (song.guiaSustituto ?? song.guia_sustituto) !== undefined
+      ? (song.guiaSustituto || song.guia_sustituto)
+      : (existing?.guia_sustituto ?? {}),
     enlace_acordes: preferClearableString(song.enlaceAcordes, song.enlace_acordes),
     estructura_documento_url: preferClearableString(song.estructuraDocumentoUrl, song.estructura_documento_url),
     estructura_documento_nombre: preferClearableString(song.estructuraDocumentoNombre, song.estructura_documento_nombre),
