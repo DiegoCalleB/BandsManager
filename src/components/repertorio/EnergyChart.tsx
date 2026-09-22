@@ -62,6 +62,7 @@ interface EnergyChartProps {
  zonasEnergia: EnergyChartZone[];
  highlightedSongIds?: string[];
  selectedSetlistItemId?: string | null;
+ currentPlayingSongId?: string | null;
  onSelectItem?: (id: string) => void;
  /** Alto del contenedor del gráfico en px. Default 256 (el tamaño del Mapa de Energía grande). */
  height?: number;
@@ -109,6 +110,7 @@ export function EnergyChart({
  zonasEnergia,
  highlightedSongIds = [],
  selectedSetlistItemId = null,
+ currentPlayingSongId = null,
  onSelectItem,
  height = 256,
  compact = false,
@@ -128,6 +130,8 @@ export function EnergyChart({
  // Highlighted apenas un poco más grande que selected — antes saltaba mucho más (7/10) y el
  // efecto resultaba chillón al pasar el ratón por varias sugerencias seguidas.
  const dotHighlighted = compact ? 5 : 7;
+ // Canción que se está reproduciendo: mucho más grande para destacar
+ const dotPlaying = compact ? 7.5 : 10;
 
  // Tres velocidades de animación según el motivo del cambio — nunca la misma para las tres,
  // porque cada una pide algo distinto:
@@ -666,9 +670,10 @@ export function EnergyChart({
  const isSelected = payload.id === selectedSetlistItemId;
  const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
  const isDraggingThis = draggingFromIndex === payload.idx;
+ const isPlaying = currentPlayingSongId && payload.songId === currentPlayingSongId;
  const canEditThisEnergy = !!onEnergyChange && payload.songId != null;
  const canDragThis = !!onReorder || canEditThisEnergy;
- const dotRadius = isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault;
+ const dotRadius = isPlaying ? dotPlaying : isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault;
  return (
  <React.Fragment key={`dot-${payload.id}`}>
  {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
@@ -697,8 +702,8 @@ export function EnergyChart({
  cy={cy}
  r={dotRadius}
  fill={payload.color}
- stroke={isHighlighted ? payload.color : isSelected ?'var(--surface)' :'var(--bg)'}
- strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
+ stroke={isPlaying ? 'var(--ok)' : isHighlighted ? payload.color : isSelected ?'var(--surface)' :'var(--bg)'}
+ strokeWidth={isPlaying ? 3 : isHighlighted ? 2 : isSelected ? 2 : 1.5}
  style={{
  // move (cuatro flechas) cuando el punto admite ambos gestos (reordenar +
  // cambiar energía); ew-resize/ns-resize cuando solo admite uno de los dos.

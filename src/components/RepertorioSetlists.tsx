@@ -3168,6 +3168,7 @@ export default function RepertorioSetlists({
  highlightedSongIds={highlightedSongIds}
  selectedSetlistItemId={selectedSetlistItemId}
  showTransitionBadges={showTransitionBadges}
+ currentPlayingSongId={playerCurrentSong?.id}
  onSelectItem={(id) => {
  setSelectedSetlistItemId(id);
  }}
@@ -3245,14 +3246,14 @@ export default function RepertorioSetlists({
  categoría para que el joystick tenga vida propia en vez de ser cuatro
  flechas sueltas. */}
  <div
- className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-sans font-bold shrink-0"
+ className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"
  style={info ? {
- background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
+ background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, var(--sunken) 75%)`,
  boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
  color: info.hexColor
  } : {
- background:'#171717',
- color:'#71717a'
+ background:'var(--sunken)',
+ color:'var(--ink-3)'
  }}
  title={info ? `${info.label} · ${point.score}/20` : point.name}
  >
