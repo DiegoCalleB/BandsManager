@@ -28,12 +28,24 @@ export function RepertorioEnergyChartWidget({
  setlists: providedSetlists,
  songs: providedSongs
 }: ChartWidgetProps) {
- const [setlistsList, setSetlistsList] = useState<Setlist[]>(() => providedSetlists?.length ? providedSetlists : []);
- const [songsList, setSongsList] = useState<Song[]>(() => providedSongs?.length ? providedSongs : []);
+ const [setlistsList, setSetlistsList] = useState<Setlist[]>(providedSetlists || []);
+ const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
  const [selectedRepertorioId, setSelectedRepertorioId] = useState<string>('all');
 
+ // Dashboard.tsx ya carga setlists/songs una sola vez y se los pasa a TODOS sus widgets — este
+ // efecto solo debe reflejar esas props (aunque de entrada lleguen vacías, mientras el padre
+ // sigue cargando) y sincronizarse cuando cambien. Antes, comprobar `.length` en vez de
+ // `undefined` hacía que el widget disparara su PROPIO fetch en paralelo con el del padre en
+ // cuanto llegaba un array vacío (justo lo que pasa en el primer render, antes de que el padre
+ // termine de cargar) — dos peticiones idénticas a la vez, cada vez que se abre el dashboard.
+ // El fetch propio queda solo para cuando NADIE pasa estas props (undefined de verdad, p.ej.
+ // este widget usado aislado, sin Dashboard.tsx de por medio).
  useEffect(() => {
- if (providedSetlists?.length && providedSongs?.length) return;
+ if (providedSetlists !== undefined || providedSongs !== undefined) {
+ setSetlistsList(providedSetlists || []);
+ setSongsList(providedSongs || []);
+ return;
+ }
 
  const loadData = async () => {
  try {
