@@ -538,7 +538,7 @@ export default function SpotifyPlayerBar({
  // Así el reproductor flota debajo del sidebar con margen, nunca sobre ella.
  // z-40 en móvil (debajo del drawer z-50), z-50 en desktop (sobre todo).
  return (
- <div className="fixed bottom-[64px] md:bottom-5 left-0 md:left-[248px] md:right-5 z-40 md:z-50 transition-all duration-300">
+ <div className="fixed bottom-[64px] md:bottom-5 left-3 right-3 md:left-[248px] md:right-5 z-40 md:z-50 transition-all duration-300">
  {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
  en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
  <audio
@@ -560,10 +560,10 @@ export default function SpotifyPlayerBar({
  onEnded={() => { if (activeSlotRef.current ==='B') handleEnded(); }}
  />
 
- <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full">
+ <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 rounded-[var(--r-m)]">
  {isMinimized ? (
  /* Minimized Compact Strip: single-row bar sitting strictly above mobile bottom navbar */
- <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+ <div className="flex items-center justify-between gap-2 md:gap-3">
  {/* Left: Thumbnail & Song Info (click to expand) */}
  <div
  onClick={() => setIsMinimized(false)}
@@ -672,7 +672,7 @@ export default function SpotifyPlayerBar({
  </div>
  ) : (
  /* Full Expanded Player */
- <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+ <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
 
  {/* Left: Song Info */}
  <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
