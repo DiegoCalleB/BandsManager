@@ -3227,8 +3227,11 @@ export default function RepertorioSetlists({
  };
  const dirBtnClass ="w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
  const reorderBtnClass = `${dirBtnClass} bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70/90 hover:/60`;
+ // Antes era un rgba(23,23,23,0.8) fijo — negro casi puro sin importar el tema, por eso
+ // en Claro los botones de subir/bajar energía salían tan oscuros. var(--sunken) es la
+ // misma superficie hundida que usa el resto de la UI, y sí cambia con el tema.
  const energyBtnStyle = info
- ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background:'rgba(23,23,23,0.8)' }
+ ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background:'var(--sunken)' }
  : undefined;
  const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
  const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
