@@ -585,8 +585,12 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* MODAL / CATALOGO: AÑADIR NUEVO WIDGET */}
+ {/* z-[9999], no z-50: en móvil la barra del reproductor y la nav inferior van a z-40, pero
+ viven en un contexto de apilamiento propio de App.tsx — un z-50 local a este árbol no las
+ tapa. El resto de modales reales del repo (SongModal, BandSwitcherModal...) ya usan
+ z-[9999]/z-[10000] por este mismo motivo; este era el único que se había quedado en z-50. */}
  {isAddModalOpen && (
- <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
  {/* Header */}
  <div className="p-5 flex items-center justify-between">
@@ -614,7 +618,7 @@ export function DashboardWidgetGrid({
  </div>
 
  {/* Category Filter Pills */}
- <div className="p-4 /80 bg-[var(--surface)] flex gap-2 overflow-x-auto">
+ <div className="p-4 bg-[var(--surface)] flex gap-2 overflow-x-auto no-scrollbar">
  {categories.map(cat => (
  <button
  key={cat}
