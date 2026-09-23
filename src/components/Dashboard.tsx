@@ -13,6 +13,7 @@ import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
+import { NeedsAttentionBanner } from './dashboard/NeedsAttentionBanner';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
@@ -780,6 +781,10 @@ export default function Dashboard({
  </button>
  </div>
  </div>
+
+ {/* Solo se pinta si hay algo realmente esperando demasiado — no es un widget del catálogo
+ a propósito, es una alerta, no contenido que se pueda ordenar o quitar. */}
+ <NeedsAttentionBanner concerts={concerts} leads={leads} onNavigate={onNavigate} />
 
  {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD (incluye Resumen Ejecutivo como widget más) */}
  <DashboardWidgetGrid
