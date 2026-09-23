@@ -622,8 +622,15 @@ export function DashboardWidgetGrid({
  </button>
  </div>
 
- {/* Category Filter Pills */}
- <div className="p-4 bg-[var(--surface)] flex gap-2 overflow-x-auto no-scrollbar">
+ {/* Category Filter Pills — shrink-0 es la parte que importa: esta fila es hija de un
+ flex flex-col (la caja del modal) y, al llevar overflow-x-auto, el navegador computa
+ overflow-y como auto también (así lo pide la spec en cuanto un eje no es 'visible' y
+ el otro se queda en su valor por defecto) — eso convierte la fila en "scroll container"
+ y su alto mínimo automático en flexbox pasa a ser 0 en vez de basarse en su contenido,
+ así que el flex la aplastaba a ~15px y la píldora "Todos" salía cortada. shrink-0
+ saca la fila del cálculo de encogimiento por completo, sin depender de qué eje se
+ compute como auto. */}
+ <div className="p-4 bg-[var(--surface)] flex gap-2 overflow-x-auto no-scrollbar shrink-0">
  {categories.map(cat => (
  <button
  key={cat}
