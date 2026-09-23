@@ -20,6 +20,7 @@ import {
 import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors, Setlist, Song } from '../../types';
 import { api } from '../../services/api';
 import { hasModuleAccess } from '../../utils/planPermissions';
+import { useScrollLock } from '../../hooks/useScrollLock';
 import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
 
 export interface DashboardWidgetGridProps {
@@ -93,6 +94,7 @@ export function DashboardWidgetGrid({
 
  const [isEditMode, setIsEditMode] = useState(false);
  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+ useScrollLock(isAddModalOpen);
  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
  const [isSaving, setIsSaving] = useState(false);
  const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
@@ -265,7 +267,8 @@ export function DashboardWidgetGrid({
  };
 
  updateAndSaveWidgets([...widgets, newWidget]);
- setIsAddModalOpen(false);
+ // El modal se queda abierto a propósito: así se pueden añadir varios widgets seguidos sin
+ // tener que reabrir el catálogo cada vez. Se cierra solo con la X o "Cerrar".
  };
 
  const categories = ['Todos','Música & Repertorio','Booking & CRM','Calendario & Agenda','Negocio & Finanzas','Público & Redes','Promoción & IA'];
@@ -596,7 +599,7 @@ export function DashboardWidgetGrid({
  Catálogo de Widgets del Dashboard
  </h3>
  <p className="text-xs font-sans text-[var(--ink-2)]">
- Selecciona módulos y gráficos para añadirlos a tu panel principal
+ Añade los que quieras, uno detrás de otro — el catálogo no se cierra hasta que tú lo cierres
  </p>
  </div>
  </div>
