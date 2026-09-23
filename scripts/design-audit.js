@@ -50,6 +50,29 @@ const CHECKS = {
     filter: () => true,
     severity: 'error',
   },
+  // Los dos siguientes son heurísticas sobre className (no matches exactos de un token) —
+  // aviso, no error, porque dan falsos positivos: el primero solo importa si el elemento
+  // es de verdad hijo de un flex/grid, el segundo solo si el overlay lleva scrim de fondo.
+  // Nacen del bug real de "Añadir Widget" (sesión 2026-09-23): la fila de pestañas de
+  // categoría, con overflow-x-auto pero sin shrink-0, se aplastaba a 15px de alto porque
+  // al no ser 'visible' un eje de overflow, el navegador computa el otro como auto también
+  // — y un scroll-container que es flex item pierde su alto mínimo basado en contenido.
+  overflowAutoWithoutShrink: {
+    // Solo overflow-x-auto (no -y-auto): es la fila horizontal (pills, tabs, chips) sin su
+    // propia altura fija la que se aplasta cuando es flex item de un flex-col — un panel
+    // vertical con overflow-y-auto casi siempre ya lleva max-h-/flex-1 y no sufre esto, así
+    // que incluirlo aquí era puro ruido (260+ avisos, inútil de revisar).
+    description: 'overflow-x-auto sin shrink-0 en una fila que puede ser flex item — flexbox puede aplastarla a 0 de alto (ver DashboardWidgetGrid.tsx, píldoras de categoría)',
+    pattern: /className=\{?[`"'][^`"']*overflow-x-auto[^`"']*[`"']/g,
+    filter: (match) => !/shrink-0|flex-shrink-0/.test(match),
+    severity: 'warning',
+  },
+  modalOverlayLowZIndex: {
+    description: 'overlay fixed inset-0 con scrim en z-50/z-40 en vez de z-[9999] — puede quedar tapado por chrome persistente (barra del reproductor, nav inferior) que vive en su propio contexto de apilamiento (ver DashboardWidgetGrid.tsx)',
+    pattern: /className=\{?[`"'][^`"']*fixed inset-0[^`"']*[`"']/g,
+    filter: (match) => /scrim/.test(match) && !/z-\[9999\]|z-\[10000\]/.test(match),
+    severity: 'warning',
+  },
 };
 
 function walkDir(dir, callback) {

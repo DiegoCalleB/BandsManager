@@ -758,7 +758,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* In-App Create / Add Band Modal with Full 2-Step Flow & Plans */}
  {showCreateBandModal && (
- <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
  <div className={`w-full ${createBandStep === 1 ?'max-w-lg' :'max-w-5xl'} rounded-3xl bg-[var(--bg)] text-[var(--ink-2)] p-6 sm:p-8 space-y-6 transition-all duration-300 my-auto`}>
  
  {/* Step 1: Band Details */}
@@ -1192,7 +1192,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
  {/* In-App Delete Band Confirmation Modal */}
  {bandToDelete && (
- <div className="fixed inset-0 z-[85] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-150">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-150">
  <div className="w-full max-w-sm rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink-2)] p-5 space-y-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--alert)]/15 flex items-center justify-center text-[var(--alert)] shrink-0">
@@ -1237,7 +1237,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
  const currentPlanDef = getPlanDefinition(targetBandPlan);
 
  return (
- <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200 text-left">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200 text-left">
  <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)] /30 text-[var(--ink-2)] overflow-hidden flex flex-col">
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] /20 flex justify-between items-center">
  <div className="flex items-center gap-2.5">

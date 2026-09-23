@@ -1544,7 +1544,7 @@ Bakandeya Agent Manager IA & Músicos`;
 
  {/* 4. MODAL: CREATE / EDIT BAND CONTACT */}
  {isAddEditModalOpen && (
- <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-50">
+ <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-[9999]">
  <div className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
  'bg-[var(--surface)] text-[var(--ink)]'
  }`}>

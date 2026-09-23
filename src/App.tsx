@@ -876,8 +876,11 @@ export default function App() {
  })()}
 
  {/* MOBILE SLIDE-OVER DRAWER */}
+ {/* z-[9999], no z-50: mismo motivo que el resto de overlays de esta sesión — la barra del
+ reproductor y la nav inferior (z-40, en su propio contexto de apilamiento) pueden tapar
+ un z-50 local a este árbol. Encontrado por scripts/design-audit.js, no a mano. */}
  {isMobileMenuOpen && (
- <div className="md:hidden fixed inset-0 z-50 flex">
+ <div className="md:hidden fixed inset-0 z-[9999] flex">
  {/* Backdrop */}
  <div 
  className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity"
