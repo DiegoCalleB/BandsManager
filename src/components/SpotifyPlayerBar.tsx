@@ -565,12 +565,15 @@ export default function SpotifyPlayerBar({
 
  <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 rounded-[var(--r-m)]">
  {isMinimized ? (
- /* Minimized Compact Strip: centered controls with song info secondary */
- <div className="flex flex-col items-center justify-center gap-2 md:gap-3">
- {/* Top: Song Info (compact on mobile) */}
+ /* Minimized Compact Strip: una sola fila en escritorio (info a la izquierda, controles
+ a la derecha) — apilarla en dos filas en pantallas anchas la hacía más alta que el
+ reproductor completo, justo lo contrario de "minimizado". En móvil sigue apilada
+ porque ahí sí falta ancho para una sola fila. */
+ <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-2 md:gap-4">
+ {/* Info de la canción (compacta en móvil) */}
  <div
  onClick={() => setIsMinimized(false)}
- className="flex items-center gap-2 w-full md:flex-row cursor-pointer group"
+ className="flex items-center gap-2 w-full md:w-auto md:flex-1 min-w-0 cursor-pointer group"
  title="Haz clic para expandir el reproductor"
  >
  <div className="relative shrink-0 w-8 h-8 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden md:w-10 md:h-10">
