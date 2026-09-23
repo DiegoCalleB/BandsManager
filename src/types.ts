@@ -92,7 +92,7 @@ export interface SavedFilter {
   sectionTab?: 'salas' | 'medios' | 'grupos';
   searchTerm?: string;
   selectedCityFilter?: string;
-  statusFilter?: LeadStatus | 'todos';
+  statusFilter?: LeadStatus | 'todos' | 'seguimientos';
   typeFilter?: LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast';
   minCapacityFilter?: number;
 }
@@ -174,6 +174,8 @@ export interface Lead {
   icono?: string;
   imagen_url?: string;
   band_id?: string;
+  campaign_id?: string;
+  campaña_asociada?: string;
   es_favorito?: boolean;
   es_verificado?: boolean;
   fiabilidad_score?: number;
@@ -191,6 +193,19 @@ export interface Lead {
   ultimo_clic_at?: string;
   fechas_ocupadas?: string[];
   fechas_libres_detectadas?: string[];
+  disponible_para_campana?: boolean;
+  fechas_ocupadas_campana?: string[];
+  fechas_libres_campana?: string[];
+  datos_fechas_encontrados?: boolean;
+  mensaje_disponibilidad?: string;
+  radar_fuentes_verificadas?: string[];
+  radar_wegow_status?: 'ok' | 'sin_datos' | 'error';
+  radar_bandsintown_status?: 'ok' | 'sin_datos' | 'error';
+  contrastado_multi_fuente?: boolean;
+  fiabilidad_radar?: 'alta' | 'media' | 'baja' | 'sin_datos';
+  estado_cartelera?: 'publicada_libre' | 'ocupada' | 'no_publicada_aun' | 'fuera_temporada' | 'residencia_clubbing' | 'sin_datos';
+  max_fecha_publicada?: string;
+  min_fecha_publicada?: string;
   ultimo_sentimiento?: 'muy_positivo' | 'positivo' | 'neutral' | 'negativo_suave' | 'negativo_firme';
   ultimo_sentimiento_score?: number;
   ultimo_sentimiento_label?: string;

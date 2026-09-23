@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType } from '../../types';
+import { Lead, LeadStatus, LeadType, Concert } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { ReliabilityBadge } from '../common/ReliabilityBadge';
 import { FavoriteButton } from '../common/FavoriteButton';
 import { isLeadVerificado } from '../../utils/leadReliability';
+import { checkBandDateConflict, getCityTourHistory } from '../../utils/bookingTourContext';
 import { 
   MessageCircle, 
   PhoneCall, 
@@ -28,18 +29,21 @@ import {
   TrendingUp,
   Zap,
   Clock,
-  Sliders
+  Sliders,
+  ExternalLink,
+  Compass
 } from 'lucide-react';
 import { ChangeLeadImageModal } from './ChangeLeadImageModal';
 import { LeadAvatar } from './LeadAvatar';
 import { EmailDeliveryTicks } from './EmailDeliveryTicks';
 import { useEmailValidation, getEmailStatus, isBouncedLead } from '../../hooks/useEmailValidation';
 import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
+import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../utils/bookingFollowup';
 
 interface LeadsTableProps {
   leads: Lead[];
   selectedLead: Lead | null;
-  onSelectLead: (lead: Lead) => void;
+  onSelectLead: (lead: Lead, options?: { tab?: 'info' | 'emails' | 'copilot' | 'bitacora'; pitchDraft?: string }) => void;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
   onDeleteLead?: (id: string, name: string) => void;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
@@ -56,6 +60,10 @@ interface LeadsTableProps {
   onDeselectAll?: () => void;
   isAllSelected?: boolean;
   isSomeSelected?: boolean;
+  activeCampaign?: any;
+  onFilterByRouteCity?: (city: string) => void;
+  effectiveBandName?: string;
+  concerts?: Concert[];
 }
 
 export const LeadsTable: React.FC<LeadsTableProps> = ({
@@ -77,9 +85,304 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
   onSelectAllFiltered,
   onDeselectAll,
   isAllSelected = false,
-  isSomeSelected = false
+  isSomeSelected = false,
+  activeCampaign,
+  onFilterByRouteCity,
+  effectiveBandName,
+  concerts = []
 }) => {
   const headerCheckboxRef = useRef<HTMLInputElement>(null);
+
+  const renderLeadDatesInfo = (lead: Lead) => {
+    const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
+    
+    // Status indicators de fuentes de radar
+    const wegowStatus = (lead as any).radar_wegow_status || (lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0 ? 'ok' : undefined);
+    const bandsintownStatus = (lead as any).radar_bandsintown_status || (lead as any).contrastado_multi_fuente ? 'ok' : undefined;
+    const contrastado = Boolean((lead as any).contrastado_multi_fuente || (wegowStatus === 'ok' && bandsintownStatus === 'ok'));
+    const fiabilidad = (lead as any).fiabilidad_radar || (contrastado ? 'alta' : (lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0 ? 'media' : 'sin_datos'));
+
+    const getVenueProgrammingUrl = (leadItem: Lead) => {
+      if (leadItem.website && leadItem.website.trim().length > 0) {
+        let url = leadItem.website.trim();
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+        return url;
+      }
+      const query = `${leadItem.nombre_sala} ${leadItem.ciudad || ''} programacion cartelera conciertos`.trim();
+      return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    };
+
+    const programmingUrl = getVenueProgrammingUrl(lead);
+
+    const renderSourcePills = () => {
+      const targetDate = (lead as any).fecha_posible_evento || 
+        (lead.fechas_propuestas_sala && lead.fechas_propuestas_sala[0]) || 
+        (lead.fechas_libres_detectadas && lead.fechas_libres_detectadas[0]) ||
+        (lead as any).fechas_libres_campana?.[0] ||
+        (lead as any).fechas_propuestas?.[0] ||
+        (lead as any).fechas_disponibles?.[0];
+      const conflict = checkBandDateConflict(targetDate, concerts, lead.ciudad);
+      const hist = getCityTourHistory(lead.ciudad, concerts);
+
+      return (
+        <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[9px] font-mono">
+          <a 
+            href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(lead.nombre_sala)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded border hover:opacity-80 transition-opacity cursor-pointer ${
+              wegowStatus === 'ok' 
+                ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300' 
+                : wegowStatus === 'error'
+                ? 'bg-rose-950/80 border-rose-500/50 text-rose-300'
+                : 'bg-zinc-800/80 border-zinc-700 text-zinc-400'
+            }`} 
+            title={wegowStatus === 'ok' ? 'Wegow API verificado - Clic para ver cartelera en Wegow' : 'Buscar esta sala en Wegow'}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+            Wegow: {wegowStatus === 'ok' ? '✓ OK' : 'Sin datos'}
+            <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
+          </a>
+
+          <a 
+            href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(lead.nombre_sala)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded border hover:opacity-80 transition-opacity cursor-pointer ${
+              bandsintownStatus === 'ok' 
+                ? 'bg-sky-950/80 border-sky-500/50 text-sky-300' 
+                : 'bg-zinc-800/80 border-zinc-700 text-zinc-400'
+            }`} 
+            title={bandsintownStatus === 'ok' ? 'Bandsintown verificado - Clic para ver en Bandsintown' : 'Buscar esta sala en Bandsintown'}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+            Bandsintown: {bandsintownStatus === 'ok' ? '✓ OK' : 'Sin datos'}
+            <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
+          </a>
+
+          {contrastado && (
+            <span className="text-[8.5px] text-amber-300 font-bold bg-amber-950/70 border border-amber-600/40 px-1 py-0.2 rounded">
+              ⭐ Contrastado (Fiabilidad {fiabilidad})
+            </span>
+          )}
+
+          {conflict.status === 'conflicto_directo' && (
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-rose-950/90 text-rose-300 border border-rose-500/50 font-bold" title={conflict.mensaje}>
+              🔴 Conflicto agenda
+            </span>
+          )}
+
+          {conflict.status === 'cercano_compatible' && (
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-500/50 font-bold" title={conflict.mensaje}>
+              🚗 Enlace 2x1
+            </span>
+          )}
+
+          {hist && (
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-amber-950/70 text-amber-300 border border-amber-500/40" title={hist.resumenTexto}>
+              🏛️ {hist.totalConciertos} {hist.totalConciertos === 1 ? 'bolo' : 'bolos'} prev.
+            </span>
+          )}
+        </div>
+      );
+    };
+
+    // Cuando la campaña está ACTIVA:
+    if (campaignIsActive) {
+      const targetDates = activeCampaign?.targetDates || (activeCampaign as any)?.target_dates || [];
+      const targetDatesText = activeCampaign?.fechas_objetivo || activeCampaign?.fechasObjetivo || activeCampaign?.fechas || activeCampaign?.nombre || '';
+      
+      const campaignFreeDates = (lead as any).fechas_libres_campana || [];
+      const hasVerifiedSources = Array.isArray(lead.radar_fuentes_verificadas) && lead.radar_fuentes_verificadas.length > 0;
+      const hasOccupied = Array.isArray(lead.fechas_ocupadas) && lead.fechas_ocupadas.length > 0;
+      const hasWegowOk = (lead as any).radar_wegow_status === 'ok';
+      const hasBandsintownOk = (lead as any).radar_bandsintown_status === 'ok';
+
+      const hasConcertsOrSources = lead.datos_fechas_encontrados === true || hasWegowOk || hasBandsintownOk || hasVerifiedSources || hasOccupied;
+      const isSinDatos = !hasConcertsOrSources || lead.datos_fechas_encontrados === false;
+
+      // Si no se han encontrado datos de fechas ni cartelera verificada de esta sala
+      if (isSinDatos) {
+        return (
+          <div className="flex flex-col gap-0.5 mt-0.5">
+            <a
+              href={programmingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title={`Ver web u obtener programación de ${lead.nombre_sala}`}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-amber-400/90 bg-amber-950/50 border border-amber-800/50 hover:bg-amber-900/60 transition-colors cursor-pointer group"
+            >
+              <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
+              <span>(no se han encontrado datos de fechas de esta sala)</span>
+              <ExternalLink className="w-2.5 h-2.5 text-amber-400/70 group-hover:text-amber-200 shrink-0 ml-0.5" />
+            </a>
+            {renderSourcePills()}
+          </div>
+        );
+      }
+
+      // Evaluar coincidencia exclusiva con fechas de la campaña y horizonte de cartelera
+      const estadoCartelera = (lead as any).estado_cartelera;
+      const maxFecha = (lead as any).max_fecha_publicada;
+      const formatIsoShort = (isoStr?: string) => {
+        if (!isoStr || !/^\d{4}-\d{2}-\d{2}$/.test(isoStr)) return isoStr || '';
+        const [y, m, d] = isoStr.split('-').map(n => parseInt(n, 10));
+        const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        return `${d} ${months[m - 1] || ''}`.trim();
+      };
+      const maxFechaFmt = formatIsoShort(maxFecha);
+
+      let isAvailableForCampaign = false;
+      let matchingDatesInCampaign: string[] = [];
+
+      if ((lead as any).disponible_para_campana !== undefined) {
+        isAvailableForCampaign = Boolean((lead as any).disponible_para_campana);
+        matchingDatesInCampaign = (lead as any).fechas_libres_campana || [];
+      } else if (Array.isArray(targetDates) && targetDates.length > 0) {
+        const occupiedSet = new Set(lead.fechas_ocupadas || []);
+        matchingDatesInCampaign = targetDates.filter(t => !occupiedSet.has(t));
+        isAvailableForCampaign = matchingDatesInCampaign.length > 0;
+      } else if (targetDatesText) {
+        const terms = String(targetDatesText).toLowerCase().split(/[\s,;&\/]+/);
+        matchingDatesInCampaign = campaignFreeDates.filter((f: string) => {
+          const fLower = f.toLowerCase();
+          return terms.some(term => term.length >= 2 && fLower.includes(term));
+        });
+        isAvailableForCampaign = matchingDatesInCampaign.length > 0;
+      } else {
+        isAvailableForCampaign = campaignFreeDates.length > 0;
+        matchingDatesInCampaign = campaignFreeDates;
+      }
+
+      // 1. Caso: Programación de la sala no llega aún a la fecha de la campaña
+      if (estadoCartelera === 'no_publicada_aun') {
+        return (
+          <div className="flex flex-col gap-0.5 mt-0.5">
+            <a
+              href={programmingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title={`La agenda publicada de esta sala solo llega hasta ${maxFechaFmt || 'meses anteriores'}. Oportunidad para enviar propuesta antes de que cierren agenda.`}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-indigo-950/90 border border-indigo-500/80 text-indigo-300 hover:bg-indigo-900/90 hover:border-indigo-400 transition-colors shadow-2xs group cursor-pointer"
+            >
+              <Clock className="w-3 h-3 text-indigo-400 shrink-0" />
+              <span>📅 AGENDA AÚN NO PUBLICADA {maxFechaFmt ? `(Publicado hasta ${maxFechaFmt})` : ''}</span>
+              <ExternalLink className="w-2.5 h-2.5 text-indigo-400/80 group-hover:text-indigo-100 shrink-0 ml-0.5" />
+            </a>
+            {renderSourcePills()}
+          </div>
+        );
+      }
+
+      // 2. Caso: Fuera de temporada / vacaciones
+      if (estadoCartelera === 'fuera_temporada') {
+        return (
+          <div className="flex flex-col gap-0.5 mt-0.5">
+            <a
+              href={programmingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title={`Cierre temporal o fuera de temporada en la época de la campaña`}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-orange-950/90 border border-orange-500/80 text-orange-300 hover:bg-orange-900/90 transition-colors shadow-2xs group cursor-pointer"
+            >
+              <AlertCircle className="w-3 h-3 text-orange-400 shrink-0" />
+              <span>🏖️ FUERA DE TEMPORADA / VACACIONES</span>
+              <ExternalLink className="w-2.5 h-2.5 text-orange-400/80 group-hover:text-orange-100 shrink-0 ml-0.5" />
+            </a>
+            {renderSourcePills()}
+          </div>
+        );
+      }
+
+      // 3. Caso: Cartelera confirmada publicada y fecha disponible ("Sándwich")
+      if (isAvailableForCampaign || estadoCartelera === 'publicada_libre') {
+        return (
+          <div className="flex flex-col gap-0.5 mt-0.5">
+            <a
+              href={programmingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || 'Buscar en Google'})`}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-emerald-950 border border-emerald-500/80 text-emerald-300 hover:bg-emerald-900/90 hover:border-emerald-400 transition-colors shadow-2xs group cursor-pointer"
+            >
+              <CalendarCheck className="w-3 h-3 text-emerald-400 shrink-0" />
+              <span>🎯 Campaña: ✅ DISPONIBLE ({matchingDatesInCampaign.join(', ')})</span>
+              <ExternalLink className="w-2.5 h-2.5 text-emerald-400/80 group-hover:text-emerald-100 shrink-0 ml-0.5" />
+            </a>
+            {renderSourcePills()}
+          </div>
+        );
+      } else {
+        return (
+          <div className="flex flex-col gap-0.5 mt-0.5">
+            <a
+              href={programmingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || 'Buscar en Google'})`}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-rose-950/90 border border-rose-500/80 text-rose-300 hover:bg-rose-900/90 hover:border-rose-400 transition-colors shadow-2xs group cursor-pointer"
+            >
+              <AlertCircle className="w-3 h-3 text-rose-400 shrink-0" />
+              <span>🎯 Campaña: ❌ NO DISPONIBLE (Ocupada en fechas de campaña)</span>
+              <ExternalLink className="w-2.5 h-2.5 text-rose-400/80 group-hover:text-rose-100 shrink-0 ml-0.5" />
+            </a>
+            {renderSourcePills()}
+          </div>
+        );
+      }
+    }
+
+    // Modo estándar (sin campaña activa)
+    const freeDates = lead.fechas_libres_detectadas || [];
+    if (lead.datos_fechas_encontrados === false || (!freeDates.length && !(lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0))) {
+      return lead.nombre_sala ? (
+        <div className="flex flex-col gap-0.5 mt-0.5">
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-amber-400/90 bg-amber-950/40 border border-amber-800/40">
+            <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
+            (no se han encontrado datos de fechas de esta sala)
+          </span>
+          {renderSourcePills()}
+        </div>
+      ) : null;
+    }
+
+    if (freeDates.length > 0) {
+      return (
+        <div className="flex flex-col gap-0.5 mt-0.5">
+          <span
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-sky-950/90 border border-sky-600/80 text-sky-300 shadow-2xs cursor-pointer hover:bg-sky-900 transition-colors"
+            title={`Fechas libres detectadas por radar: ${freeDates.join(', ')}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelectLead(lead);
+            }}
+          >
+            <CalendarCheck className="w-3 h-3 text-sky-400 shrink-0" />
+            <span>{freeDates.length} fecha(s) libre(s) detectadas</span>
+          </span>
+          {renderSourcePills()}
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-0.5 mt-0.5">
+        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans text-amber-400/90 bg-amber-950/40 border border-amber-800/40">
+          (no se han encontrado datos de fechas de esta sala)
+        </span>
+        {renderSourcePills()}
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (headerCheckboxRef.current) {
@@ -419,6 +722,19 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans text-zinc-300 font-medium mt-1">
                       {renderTipoBadge(lead.tipo)}
                       <span className="text-zinc-200 font-semibold">{lead.ciudad || 'España'}</span>
+                      {lead.ciudad && onFilterByRouteCity && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onFilterByRouteCity(lead.ciudad!);
+                          }}
+                          className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-sky-300 transition-colors cursor-pointer shrink-0"
+                          title={`Filtrar salas para fin de semana doble desde ${lead.ciudad} (< 2.5h de ruta)`}
+                        >
+                          <Compass className="w-3 h-3" />
+                        </button>
+                      )}
                       <span>•</span>
                       <span className={lead.roster ? 'text-amber-300 font-semibold' : ''}>
                         {lead.roster 
@@ -427,6 +743,20 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               ? 'Agencia / Booking'
                               : (lead.aforo ? `${lead.aforo} pax` : 'Aforo n/d'))}
                       </span>
+                      {lead.financial_break_even?.entradas_break_even ? (
+                        <span
+                          className={`inline-flex items-center gap-1 text-[10px] font-sans font-semibold px-1.5 py-0.2 rounded ${
+                            (lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) <= 0.4
+                              ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
+                              : (lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) <= 0.7
+                              ? 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
+                              : 'bg-rose-950/60 text-rose-300 border border-rose-500/30'
+                          }`}
+                          title={`Break-Even: Cubre gastos vendiendo ${lead.financial_break_even.entradas_break_even} entradas (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
+                        >
+                          🎯 B-E: {lead.financial_break_even.entradas_break_even}
+                        </span>
+                      ) : null}
                       <span>•</span>
                       <span className="text-zinc-400">{lead.genero || 'Variado'}</span>
                     </div>
@@ -548,20 +878,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </a>
                   ) : null}
 
-                  {/* Icono de Fechas Libres detectadas por radar */}
-                  {lead.fechas_libres_detectadas && lead.fechas_libres_detectadas.length > 0 ? (
-                    <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-sky-950/90 border border-sky-600/80 text-sky-300 shadow-2xs cursor-pointer hover:bg-sky-900 transition-colors"
-                      title={`Fechas libres detectadas por radar: ${lead.fechas_libres_detectadas.join(', ')}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectLead(lead);
-                      }}
-                    >
-                      <CalendarCheck className="w-3 h-3 text-sky-400 shrink-0" />
-                      <span>{lead.fechas_libres_detectadas.length} fecha(s) libre(s)</span>
-                    </span>
-                  ) : null}
+                  {/* Icono de Fechas Libres / Disposicion de Campaña */}
+                  {renderLeadDatesInfo(lead)}
                 </div>
 
                 {/* Direct Action Bar (WhatsApp, Call, Quick Pitch Approve, View) */}
@@ -629,6 +947,23 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
                         <span className="text-[11px]">Aprobar</span>
+                      </button>
+                    )}
+
+                    {/* Direct Nudge Button if waiting */}
+                    {isLeadNeedsFollowup(lead) && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const nudgeText = generateFollowupTemplate(lead, effectiveBandName || 'Bakandeya');
+                          onSelectLead(lead, { tab: 'emails', pitchDraft: nudgeText });
+                        }}
+                        className="px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-xl font-bold text-xs flex items-center gap-1 transition-all cursor-pointer min-h-[38px] shadow-xs"
+                        title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
+                      >
+                        <Clock className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="text-[11px]">Nudge ({getDaysSinceContact(lead)}d)</span>
                       </button>
                     )}
                   </div>
@@ -811,26 +1146,45 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[110px] text-zinc-300 align-middle">
-                      <span className="font-semibold block">{lead.ciudad || 'España'}</span>
-                      {lead.fechas_libres_detectadas && lead.fechas_libres_detectadas.length > 0 && (
-                        <span
-                          className="inline-flex items-center gap-1 text-[10px] text-sky-400 font-sans font-medium mt-0.5 cursor-pointer hover:underline"
-                          title={`Fechas libres detectadas por radar: ${lead.fechas_libres_detectadas.join(', ')}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onSelectLead(lead);
-                          }}
-                        >
-                          <CalendarCheck className="w-3 h-3 text-sky-400 shrink-0" />
-                          <span>{lead.fechas_libres_detectadas.length} fecha(s) libre(s)</span>
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1">
+                        <span className="font-semibold block">{lead.ciudad || 'España'}</span>
+                        {lead.ciudad && onFilterByRouteCity && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onFilterByRouteCity(lead.ciudad!);
+                            }}
+                            className="p-1 rounded hover:bg-zinc-800 text-zinc-500 hover:text-sky-300 transition-colors cursor-pointer shrink-0"
+                            title={`Filtrar salas para fin de semana doble desde ${lead.ciudad} (< 2.5h de ruta)`}
+                          >
+                            <Compass className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                      {renderLeadDatesInfo(lead)}
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[90px] text-zinc-300 align-middle">
-                      <span className={lead.roster ? 'text-amber-300 font-semibold' : 'text-zinc-200'}>
-                        {lead.roster ? `Róster: ${lead.roster}` : (lead.aforo ? `${lead.aforo} pax` : 'n/d')}
-                      </span>
+                      <div className="flex flex-col">
+                        <span className={lead.roster ? 'text-amber-300 font-semibold' : 'text-zinc-200'}>
+                          {lead.roster ? `Róster: ${lead.roster}` : (lead.aforo ? `${lead.aforo} pax` : 'n/d')}
+                        </span>
+                        {lead.financial_break_even?.entradas_break_even ? (
+                          <span
+                            className={`inline-flex items-center gap-1 text-[10px] font-sans font-semibold px-1.5 py-0.2 rounded mt-0.5 w-fit ${
+                              (lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) <= 0.4
+                                ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
+                                : (lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) <= 0.7
+                                ? 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
+                                : 'bg-rose-950/60 text-rose-300 border border-rose-500/30'
+                            }`}
+                            title={`Punto de Equilibrio: ${lead.financial_break_even.entradas_break_even} entradas necesarias para cubrir costes (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
+                          >
+                            🎯 B-E: {lead.financial_break_even.entradas_break_even}
+                          </span>
+                        ) : null}
+                      </div>
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[140px] whitespace-nowrap align-middle">
@@ -983,6 +1337,22 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           >
                             <CheckCircle2 className="w-3 h-3 text-amber-400" />
                             <span>Aprobar</span>
+                          </button>
+                        )}
+
+                        {isLeadNeedsFollowup(lead) && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const nudgeText = generateFollowupTemplate(lead, effectiveBandName || 'Bakandeya');
+                              onSelectLead(lead, { tab: 'emails', pitchDraft: nudgeText });
+                            }}
+                            className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-lg text-[10px] font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                            title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
+                          >
+                            <Clock className="w-3 h-3 text-amber-400" />
+                            <span>Nudge</span>
                           </button>
                         )}
 

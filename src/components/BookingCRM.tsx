@@ -13,7 +13,7 @@ import {
  Target, Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, RotateCcw,
  MapPin, Users, Bot, MessageSquare, MessageSquareText, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
- Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy, Wand2
+ Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy, Wand2, Activity
 } from 'lucide-react';
 import { VenueMap } from './VenueMap';
 import { AddLeadModal } from './booking/AddLeadModal';
@@ -23,6 +23,9 @@ import { ExcelImportModal } from './booking/ExcelImportModal';
 import { ExportLeadsModal } from './booking/ExportLeadsModal';
 import { LeadDuplicatesModal } from './booking/LeadDuplicatesModal';
 import { findDuplicateLeads } from '../utils/duplicateLeads';
+import { Compass } from 'lucide-react';
+import { isLeadNeedsFollowup } from '../utils/bookingFollowup';
+import { areCitiesLogisticallyCompatible } from '../utils/tourRouting';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
 import { TemplateRecommendationsCard } from './booking/TemplateRecommendationsCard';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
@@ -39,6 +42,7 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
 import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+import { AgentQueueMonitorModal } from './booking/AgentQueueMonitorModal';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
@@ -158,6 +162,7 @@ export default function BookingCRM({
  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
  const [isTemplatesSectionOpen, setIsTemplatesSectionOpen] = useState(false);
+ const [routeAnchorCity, setRouteAnchorCity] = useState<string | null>(null);
 
  useEffect(() => {
  if (initialSection) {
@@ -300,6 +305,7 @@ export default function BookingCRM({
  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
  const [isExportLeadsOpen, setIsExportLeadsOpen] = useState(false);
  const [isDuplicatesModalOpen, setIsDuplicatesModalOpen] = useState(false);
+ const [isQueueMonitorOpen, setIsQueueMonitorOpen] = useState(false);
  const duplicateGroups = useMemo(() => findDuplicateLeads(leads), [leads]);
  const duplicateGroupsCount = duplicateGroups.length;
  const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
@@ -518,8 +524,10 @@ export default function BookingCRM({
        (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
      const normSt = normalizeStatus(lead.estado);
      const matchesStatus = statusFilter === 'todos' || 
-       normSt === statusFilter || 
-       (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
+       (statusFilter === 'seguimientos' ? isLeadNeedsFollowup(lead) : (
+         normSt === statusFilter || 
+         (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado)
+       ));
 
      const matchesType = typeFilter === 'todos'
        ? true
@@ -532,9 +540,10 @@ export default function BookingCRM({
        (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
        (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
      const matchesCapacity = !minCapacityFilter || ((lead.aforo || 0) >= minCapacityFilter);
-     return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
+     const matchesRoute = !routeAnchorCity || areCitiesLogisticallyCompatible(routeAnchorCity, lead.ciudad || lead.region || '');
+     return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity && matchesRoute;
    });
- }, [sectionLeads, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, sectionTab, filterByCampaign, activeCampaign]);
+ }, [sectionLeads, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, sectionTab, filterByCampaign, activeCampaign, routeAnchorCity]);
 
  const handleModalScrape = async () => {
  if (!newLeadData.nombre_sala.trim()) {
@@ -1287,6 +1296,25 @@ export default function BookingCRM({
           <button
             type="button"
             onClick={() => {
+              setIsQueueMonitorOpen(true);
+              setIsMobileToolsOpen(false);
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-emerald-300 border border-emerald-500/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+          >
+            <span className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <Activity className="w-4 h-4 text-emerald-400" />
+              <span>Monitor de Cola & Workers en Vivo</span>
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
               setIsMobileToolsOpen(false);
               setIsTemplatesSectionOpen(true);
               setTimeout(() => {
@@ -2024,6 +2052,7 @@ export default function BookingCRM({
       { key: 'todos', label: 'Todos' },
       { key: 'nuevo', label: 'Por contactar' },
       { key: 'esperando_respuesta', label: 'Contactados' },
+      { key: 'seguimientos', label: '⏰ Seguimientos' },
       { key: 'respondido', label: 'En conversación' },
       { key: 'negociando', label: 'Negociando' },
       { key: 'confirmado', label: 'Confirmados 🎉' },
@@ -2032,6 +2061,8 @@ export default function BookingCRM({
     ] as const).map(tab => {
       const count = tab.key === 'todos' 
         ? sectionLeads.length 
+        : tab.key === 'seguimientos'
+        ? sectionLeads.filter(l => isLeadNeedsFollowup(l)).length
         : sectionLeads.filter(l => {
             const norm = normalizeStatus(l.estado);
             if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
@@ -2066,6 +2097,23 @@ export default function BookingCRM({
       );
     })}
   </div>
+
+  {/* Route Anchor Active Filter Banner */}
+  {routeAnchorCity && (
+    <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-sky-950/50 border border-sky-500/40 text-sky-200 text-xs">
+      <div className="flex items-center gap-2">
+        <Compass className="w-4 h-4 text-sky-400 shrink-0" />
+        <span>🚗 <strong>Enlace de Fin de Semana desde {routeAnchorCity}:</strong> Mostrando {filteredLeads.length} salas compatibles en ruta (&lt; 2.5h)</span>
+      </div>
+      <button
+        type="button"
+        onClick={() => setRouteAnchorCity(null)}
+        className="text-sky-300 hover:text-white text-xs font-bold px-2 py-0.5 rounded bg-sky-900/60 border border-sky-500/30 cursor-pointer transition-colors"
+      >
+        ✕ Quitar filtro de ruta
+      </button>
+    </div>
+  )}
 
   {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
   <BulkLeadsActionBar
@@ -2243,6 +2291,7 @@ export default function BookingCRM({
     selectedLead={selectedLead}
     onSelectLead={handleOpenLead}
     onUpdateLead={onUpdateLead}
+    activeCampaign={activeCampaign}
     onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
     viewMode={viewMode === 'grid' ? 'grid' : 'table'}
     getStatusBadgeClass={getStatusBadgeClass}
@@ -2262,6 +2311,9 @@ export default function BookingCRM({
     onDeselectAll={() => setSelectedLeadIds([])}
     isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
     isSomeSelected={filteredLeads.length > 0 && filteredLeads.some(l => selectedLeadIds.includes(l.id))}
+    onFilterByRouteCity={setRouteAnchorCity}
+    effectiveBandName={effectiveBandName}
+    concerts={concerts}
   />
   )}
   </div>
@@ -2291,6 +2343,9 @@ export default function BookingCRM({
           setRoadbookModalLead(lead);
           setIsRoadbookModalOpen(true);
         }}
+        onFilterByRouteCity={setRouteAnchorCity}
+        bandName={effectiveBandName}
+        concerts={concerts}
       />
     </div>
   )}
@@ -2312,6 +2367,9 @@ export default function BookingCRM({
     activeCampaign={activeCampaign}
     onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
     isUploadingLeadLogo={isUploadingLeadLogo}
+    onFilterByRouteCity={setRouteAnchorCity}
+    bandName={effectiveBandName}
+    concerts={concerts}
   />
 </div>
 
@@ -2504,6 +2562,12 @@ export default function BookingCRM({
     concerts={concerts}
     bandName={effectiveBandName}
     isStitchLight={isStitchLight}
+  />
+
+  <AgentQueueMonitorModal
+    isOpen={isQueueMonitorOpen}
+    onClose={() => setIsQueueMonitorOpen(false)}
+    bandName={effectiveBandName}
   />
 
 

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Rehearsal, Concert, ThemeColors, BookingCampaign, KeyContactItem, TechnicalLogistics, CierreMaterialItem, MerchBoloItem, MerchControlBolo } from '../types';
 import { calcularBreakEvenConcierto } from '../utils/breakEvenCalculator';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2, MessageCircle, MessageSquare, Share2, AlertTriangle, Thermometer, Edit, Phone, Wrench, ShieldCheck, Truck, Volume2, Zap, CheckCircle2, RotateCcw, UserCheck, Layers, ArrowUpRight, Shirt, Coins, CreditCard, Banknote, Calculator, ShoppingBag, Tag } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2, MessageCircle, MessageSquare, Share2, AlertTriangle, Thermometer, Edit, Phone, Wrench, ShieldCheck, Truck, Volume2, Zap, CheckCircle2, RotateCcw, UserCheck, Layers, ArrowUpRight, Shirt, Coins, CreditCard, Banknote, Calculator, ShoppingBag, Tag, Search, X } from 'lucide-react';
 import { EventWeatherCard } from './calendar/EventWeatherCard';
 import { CalendarWeatherBadge, AnimatedWeatherIcon } from './calendar/AnimatedWeatherIcon';
 import { getCachedEventWeatherAlerts, WeatherAlert } from '../services/weatherService';
@@ -509,7 +509,11 @@ export default function CalendarView({
   return true; // 'completa' or omitted -> visible to all
  }, [currentUser]);
 
- // Filtered concerts & rehearsals depending on filterBandMode and Convocatoria
+ // Estado de búsqueda rápida por palabra clave / sala / ciudad / notas / artista
+ const [calendarSearchTerm, setCalendarSearchTerm] = useState<string>('');
+ const [agendaFilterPast, setAgendaFilterPast] = useState<'all' | 'future' | 'past'>('all');
+
+ // Filtered concerts & rehearsals depending on filterBandMode, Convocatoria and search term
  const filteredConcerts = React.useMemo(() => {
   let list = concerts;
   if (filterBandMode === 'active') {
@@ -518,8 +522,23 @@ export default function CalendarView({
     return isSameBandId(c.band_id, activeBandId);
    });
   }
-  return list.filter(matchesConvocatoria);
- }, [concerts, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
+  list = list.filter(matchesConvocatoria);
+
+  if (calendarSearchTerm.trim()) {
+   const q = calendarSearchTerm.trim().toLowerCase();
+   list = list.filter(c => {
+    const matchSala = (c.sala || '').toLowerCase().includes(q);
+    const matchCiudad = (c.ciudad || '').toLowerCase().includes(q);
+    const matchDireccion = (c.direccion || '').toLowerCase().includes(q);
+    const matchNotas = (c.notas || '').toLowerCase().includes(q);
+    const matchBand = getEventBandName(c).toLowerCase().includes(q);
+    const matchTipo = (c.tipo || '').toLowerCase().includes(q);
+    const matchFecha = (c.fecha || '').toLowerCase().includes(q);
+    return matchSala || matchCiudad || matchDireccion || matchNotas || matchBand || matchTipo || matchFecha;
+   });
+  }
+  return list;
+ }, [concerts, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId, calendarSearchTerm, getEventBandName]);
 
  
   const activeBandConcerts = React.useMemo(() => {
@@ -544,8 +563,21 @@ export default function CalendarView({
     return isSameBandId(r.band_id, activeBandId);
    });
   }
-  return list.filter(matchesConvocatoria);
- }, [rehearsals, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
+  list = list.filter(matchesConvocatoria);
+
+  if (calendarSearchTerm.trim()) {
+   const q = calendarSearchTerm.trim().toLowerCase();
+   list = list.filter(r => {
+    const matchLugar = (r.lugar || '').toLowerCase().includes(q);
+    const matchAsunto = (r.asunto || '').toLowerCase().includes(q);
+    const matchNotas = (r.notas || '').toLowerCase().includes(q);
+    const matchBand = getEventBandName(r).toLowerCase().includes(q);
+    const matchFecha = (r.fecha || '').toLowerCase().includes(q);
+    return matchLugar || matchAsunto || matchNotas || matchBand || matchFecha;
+   });
+  }
+  return list;
+ }, [rehearsals, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId, calendarSearchTerm, getEventBandName]);
 
  // Handle initial selected date / event ID passed as props
  useEffect(() => {
@@ -2672,34 +2704,53 @@ export default function CalendarView({
     const allEventsList: Array<{
       date: Date;
       dateStr: string;
-      type: 'concert' | 'rehearsal';
+      type: "concert" | "rehearsal";
       event: Concert | Rehearsal;
+      isPast: boolean;
     }> = [];
 
-    const startRange = new Date(currentYear, currentMonth, 1);
-    const endRange = new Date(currentYear, currentMonth + 2, 0);
+    // Usamos filteredConcerts y filteredRehearsals para respetar búsqueda por texto y banda activa
+    filteredConcerts.forEach(c => {
+      const d = new Date(c.fecha + (c.fecha.includes("T") ? "" : "T12:00:00"));
+      if (!isNaN(d.getTime())) {
+        const dateOnlyStr = c.fecha.split("T")[0];
+        const isPast = dateOnlyStr < todayStr;
+        
+        // Filtrar según el selector de pasado / futuro de la agenda si no está en "all"
+        if (agendaFilterPast === "future" && isPast) return;
+        if (agendaFilterPast === "past" && !isPast) return;
 
-    concerts.forEach(c => {
-      const d = new Date(c.fecha);
-      if (!isNaN(d.getTime()) && d >= startRange && d <= endRange) {
-        allEventsList.push({
-          date: d,
-          dateStr: c.fecha.split('T')[0],
-          type: 'concert',
-          event: c
-        });
+        // Si hay búsqueda por texto o filtro pasados, mostramos sin restricción de mes. Si no, rango del bimestre
+        if (calendarSearchTerm.trim() || agendaFilterPast !== "all") {
+          allEventsList.push({ date: d, dateStr: dateOnlyStr, type: "concert", event: c, isPast });
+        } else {
+          const startRange = new Date(currentYear, currentMonth, 1);
+          const endRange = new Date(currentYear, currentMonth + 2, 0);
+          if (d >= startRange && d <= endRange) {
+            allEventsList.push({ date: d, dateStr: dateOnlyStr, type: "concert", event: c, isPast });
+          }
+        }
       }
     });
 
-    rehearsals.forEach(r => {
-      const d = new Date(r.fecha);
-      if (!isNaN(d.getTime()) && d >= startRange && d <= endRange) {
-        allEventsList.push({
-          date: d,
-          dateStr: r.fecha.split('T')[0],
-          type: 'rehearsal',
-          event: r
-        });
+    filteredRehearsals.forEach(r => {
+      const d = new Date(r.fecha + (r.fecha.includes("T") ? "" : "T12:00:00"));
+      if (!isNaN(d.getTime())) {
+        const dateOnlyStr = r.fecha.split("T")[0];
+        const isPast = dateOnlyStr < todayStr;
+        
+        if (agendaFilterPast === "future" && isPast) return;
+        if (agendaFilterPast === "past" && !isPast) return;
+
+        if (calendarSearchTerm.trim() || agendaFilterPast !== "all") {
+          allEventsList.push({ date: d, dateStr: dateOnlyStr, type: "rehearsal", event: r, isPast });
+        } else {
+          const startRange = new Date(currentYear, currentMonth, 1);
+          const endRange = new Date(currentYear, currentMonth + 2, 0);
+          if (d >= startRange && d <= endRange) {
+            allEventsList.push({ date: d, dateStr: dateOnlyStr, type: "rehearsal", event: r, isPast });
+          }
+        }
       }
     });
 
@@ -2715,54 +2766,118 @@ export default function CalendarView({
 
     return (
       <div className="w-full flex flex-col gap-4">
-        <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
-          <div className="flex items-center gap-2">
+        {/* Agenda Sub-Header con Filtro de Pasados / Futuros y Añadir Evento */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+          <div className="flex items-center gap-2 flex-wrap">
             <List className="w-4 h-4 text-[#d1b375]" />
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-              Agenda Cronológica ({allEventsList.length} eventos programados)
+              Agenda Cronológica ({allEventsList.length} eventos)
             </span>
+            {calendarSearchTerm.trim() && (
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                Filtrado por: "{calendarSearchTerm}"
+              </span>
+            )}
           </div>
-          <button
-            onClick={() => setShowCreateModal('concert')}
-            className="px-2.5 py-1 rounded-lg text-xs font-bold font-mono bg-[#d1b375] text-stone-950 hover:bg-[#d1b375]/90 transition-all cursor-pointer flex items-center gap-1.5"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Añadir Evento</span>
-          </button>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Selector de periodo para ver conciertos pasados y futuros en la agenda */}
+            <div className={`flex items-center rounded-lg p-0.5 border text-xs font-mono font-bold ${
+              isStitchLight ? "bg-slate-200 border-slate-300 text-slate-800" : "bg-neutral-900 border-zinc-800 text-neutral-300"
+            }`}>
+              <button
+                type="button"
+                onClick={() => setAgendaFilterPast("all")}
+                className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
+                  agendaFilterPast === "all"
+                    ? isStitchLight ? "bg-white text-slate-900 shadow-xs" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                Todos
+              </button>
+              <button
+                type="button"
+                onClick={() => setAgendaFilterPast("future")}
+                className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
+                  agendaFilterPast === "future"
+                    ? isStitchLight ? "bg-white text-slate-900 shadow-xs" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                Próximos
+              </button>
+              <button
+                type="button"
+                onClick={() => setAgendaFilterPast("past")}
+                className={`px-2.5 py-1 rounded transition-all cursor-pointer flex items-center gap-1 ${
+                  agendaFilterPast === "past"
+                    ? isStitchLight ? "bg-white text-slate-900 shadow-xs" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                <span>Pasados / Realizados</span>
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowCreateModal("concert")}
+              className="px-2.5 py-1 rounded-lg text-xs font-bold font-mono bg-[#d1b375] text-stone-950 hover:bg-[#d1b375]/90 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Añadir Evento</span>
+            </button>
+          </div>
         </div>
 
         {dateKeys.length === 0 ? (
           <div className="p-8 text-center rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/40">
             <Calendar className="w-8 h-8 text-slate-600 mx-auto mb-2" />
             <p className="text-sm font-bold text-slate-400">No hay eventos en este periodo</p>
-            <p className="text-xs text-slate-500 mt-1">Usa el botón "Añadir Evento" o cambia de mes para ver otras fechas</p>
+            <p className="text-xs text-slate-500 mt-1">
+              {agendaFilterPast === "past"
+                ? "No se han encontrado conciertos pasados registrados."
+                : "Usa el botón \"Añadir Evento\", cambia el filtro a Todos o ajusta la búsqueda por palabras clave."}
+            </p>
+            {agendaFilterPast !== "all" && (
+              <button
+                onClick={() => setAgendaFilterPast("all")}
+                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-all border border-amber-500/30"
+              >
+                Ver todos los eventos
+              </button>
+            )}
           </div>
         ) : (
           <div className="flex flex-col gap-3">
             {dateKeys.map(dateStr => {
               const items = groupedByDate[dateStr];
-              const d = new Date(dateStr + 'T12:00:00');
+              const d = new Date(dateStr + "T12:00:00");
               const isToday = realToday.toDateString() === d.toDateString();
               const isSelected = selectedDate.toDateString() === d.toDateString();
               const dayName = fullWeekdays[(d.getDay() + 6) % 7];
+              const isDatePast = dateStr < todayStr;
 
               return (
                 <div
                   key={dateStr}
                   className={`rounded-xl border transition-all p-3 ${
                     isSelected
-                      ? 'bg-slate-900/90 border-amber-500/60 ring-1 ring-amber-500/30'
+                      ? "bg-slate-900/90 border-amber-500/60 ring-1 ring-amber-500/30"
                       : isToday
-                      ? 'bg-slate-900/70 border-amber-500/40'
-                      : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
+                      ? "bg-slate-900/70 border-amber-500/40"
+                      : isDatePast
+                      ? "bg-slate-950/50 border-slate-800/50 opacity-95"
+                      : "bg-slate-900/40 border-slate-800/80 hover:border-slate-700"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-800/60">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
-                        isToday ? 'bg-amber-500 text-stone-950 font-black' : 'bg-slate-800 text-slate-300'
+                        isToday ? "bg-amber-500 text-stone-950 font-black" : isDatePast ? "bg-slate-800/80 text-slate-400" : "bg-slate-800 text-slate-300"
                       }`}>
-                        {dayName}, {d.getDate()} de {monthNames[d.getMonth()]}
+                        {dayName}, {d.getDate()} de {monthNames[d.getMonth()]} {d.getFullYear() !== currentYear ? d.getFullYear() : ""}
                       </span>
                       {isToday && (
                         <span className="text-[10px] font-mono font-bold uppercase text-amber-400 flex items-center gap-1">
@@ -2770,11 +2885,17 @@ export default function CalendarView({
                           Hoy
                         </span>
                       )}
+                      {isDatePast && !isToday && (
+                        <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          <span>Realizado</span>
+                        </span>
+                      )}
                     </div>
                     <button
                       onClick={() => {
                         setSelectedDate(d);
-                        setShowCreateModal('concert');
+                        setShowCreateModal("concert");
                       }}
                       className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer"
                       title="Añadir a esta fecha"
@@ -2784,11 +2905,11 @@ export default function CalendarView({
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    {items.map(({ type, event: evt }) => {
-                      const isConcert = type === 'concert';
+                    {items.map(({ type, event: evt, isPast }) => {
+                      const isConcert = type === "concert";
                       const c = isConcert ? (evt as Concert) : null;
                       const r = !isConcert ? (evt as Rehearsal) : null;
-                      const isReu = r?.tipo_evento === 'reunion';
+                      const isReu = r?.tipo_evento === "reunion";
                       const bandInfo = getBandIdentity(evt.band_id, (evt as any).bandName || (evt as any).band_name);
                       const isEvtSelected = selectedEventId === evt.id;
 
@@ -2798,12 +2919,14 @@ export default function CalendarView({
                           onClick={() => handleSelectEvent(evt)}
                           className={`flex items-center justify-between p-2.5 rounded-lg cursor-pointer border transition-all ${
                             isEvtSelected
-                              ? 'bg-amber-500/20 border-amber-400 shadow-md ring-1 ring-amber-400/50'
+                              ? "bg-amber-500/20 border-amber-400 shadow-md ring-1 ring-amber-400/50"
                               : isConcert
-                              ? 'bg-amber-950/20 border-amber-500/30 hover:border-amber-400/80 hover:bg-amber-900/20'
+                              ? isPast
+                                ? "bg-amber-950/15 border-amber-500/20 hover:border-amber-400/60 hover:bg-amber-900/20"
+                                : "bg-amber-950/20 border-amber-500/30 hover:border-amber-400/80 hover:bg-amber-900/20"
                               : isReu
-                              ? 'bg-indigo-950/20 border-indigo-500/30 hover:border-indigo-400/80 hover:bg-indigo-900/20'
-                              : 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-400/80 hover:bg-emerald-900/20'
+                              ? "bg-indigo-950/20 border-indigo-500/30 hover:border-indigo-400/80 hover:bg-indigo-900/20"
+                              : "bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-400/80 hover:bg-emerald-900/20"
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
@@ -2814,13 +2937,13 @@ export default function CalendarView({
                                 alt={bandInfo.name}
                                 className="w-8 h-8 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-white/20 shadow-xs"
                                 onError={(e) => {
-                                  (e.currentTarget as HTMLElement).style.display = 'none';
-                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
+                                  (e.currentTarget as HTMLElement).style.display = "none";
+                                  const fb = e.currentTarget.parentElement?.querySelector(".fallback-initials");
+                                  if (fb) (fb as HTMLElement).classList.remove("hidden");
                                 }}
                               />
                             ) : null}
-                            <span className={`fallback-initials w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-black shadow-xs ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                            <span className={`fallback-initials w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-black shadow-xs ${bandInfo.palette.badge} ${bandInfo.logoUrl ? "hidden" : ""}`}>
                               {bandInfo.initials}
                             </span>
 
@@ -2828,19 +2951,27 @@ export default function CalendarView({
                               <div className="flex items-center gap-2 flex-wrap">
                                 <span className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded border ${
                                   isConcert
-                                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                    ? isPast
+                                      ? "bg-amber-500/15 text-amber-200 border-amber-500/30"
+                                      : "bg-amber-500/20 text-amber-300 border-amber-500/40"
                                     : isReu
-                                    ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
-                                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                    ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
+                                    : "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                                 }`}>
-                                  {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
+                                  {isConcert ? "🎸 Concierto" : isReu ? "🤝 Reunión" : "🥁 Ensayo"}
                                 </span>
+                                {isPast && (
+                                  <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                                    <CheckCircle2 className="w-2.5 h-2.5" />
+                                    <span>Realizado</span>
+                                  </span>
+                                )}
                                 <span className="text-xs font-bold text-white truncate">
                                   {bandInfo.name}
                                 </span>
                               </div>
                               <div className="text-xs text-slate-300 font-medium truncate mt-0.5 flex items-center gap-1.5 flex-wrap">
-                                <span>{isConcert ? `${c?.sala}${c?.ciudad ? ` (${c?.ciudad})` : ''}` : isReu ? (r?.asunto || 'Reunión de coordinación') : r?.lugar}</span>
+                                <span>{isConcert ? `${c?.sala}${c?.ciudad ? ` (${c?.ciudad})` : ""}` : isReu ? (r?.asunto || "Reunión de coordinación") : r?.lugar}</span>
                                 {isConcert && c?.ciudad && (() => {
                                   const alerts = getCachedEventWeatherAlerts(c.ciudad, dateStr);
                                   return alerts[0] ? <CalendarWeatherBadge alert={alerts[0]} /> : null;
@@ -2849,13 +2980,32 @@ export default function CalendarView({
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-3 shrink-0">
-                            {((evt as any).hora || ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')) && (
+                          <div className="flex items-center gap-2.5 shrink-0">
+                            {((evt as any).hora || ((evt as any).fecha?.includes("T") ? (evt as any).fecha.split("T")[1].slice(0, 5) : "")) && (
                               <span className="text-xs font-mono text-neutral-400 flex items-center gap-1">
                                 <Clock className="w-3 h-3 text-neutral-500" />
-                                {(evt as any).hora || ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')}
+                                {((evt as any).hora || ((evt as any).fecha?.includes("T") ? (evt as any).fecha.split("T")[1].slice(0, 5) : ""))}
                               </span>
                             )}
+                            
+                            {/* Botón directo de Editar para ver y editar conciertos pasados o futuros */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (isConcert && c) {
+                                  setViewingConcert(c);
+                                } else if (r) {
+                                  setViewingRehearsal(r);
+                                }
+                              }}
+                              className="px-2 py-1 text-[11px] font-mono font-bold rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 flex items-center gap-1 transition-all cursor-pointer"
+                              title={isPast ? "Editar datos, notas o caché del bolo realizado" : "Editar evento"}
+                            >
+                              <Edit className="w-3 h-3" />
+                              <span>Editar</span>
+                            </button>
+
                             <ChevronRight className="w-4 h-4 text-slate-500" />
                           </div>
                         </div>
@@ -2994,6 +3144,43 @@ export default function CalendarView({
                   </button>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Quick Search Bar across calendar events (Palabras clave, sala, ciudad, banda, evento) */}
+          <div className="mt-3 pt-2">
+            <div className="flex items-center gap-2">
+              <div className={`relative flex-1 flex items-center rounded-xl border transition-all ${
+                isStitchLight
+                  ? "bg-white border-slate-300 focus-within:border-sky-500 shadow-xs"
+                  : "bg-neutral-900/90 border-zinc-800 focus-within:border-amber-500/80 shadow-inner"
+              }`}>
+                <Search className="w-4 h-4 ml-3 text-neutral-400 shrink-0" />
+                <input
+                  type="text"
+                  value={calendarSearchTerm}
+                  onChange={(e) => setCalendarSearchTerm(e.target.value)}
+                  placeholder="Buscar evento, sala, ciudad, artista, notas (ej. Joy Eslava, Madrid, acústico)..."
+                  className={`w-full px-2.5 py-1.5 text-xs font-sans bg-transparent outline-none ${
+                    isStitchLight ? "text-slate-900 placeholder:text-slate-400" : "text-neutral-100 placeholder:text-neutral-500"
+                  }`}
+                />
+                {calendarSearchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setCalendarSearchTerm("")}
+                    className="p-1 mr-2 text-neutral-400 hover:text-white rounded-full transition-colors cursor-pointer"
+                    title="Borrar búsqueda"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              {calendarSearchTerm && (
+                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                  {filteredConcerts.length + filteredRehearsals.length} resultados
+                </div>
+              )}
             </div>
           </div>
 

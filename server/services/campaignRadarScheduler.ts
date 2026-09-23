@@ -65,7 +65,7 @@ export async function syncActiveCampaignsRadar(targetBandId?: string): Promise<{
         try {
           lastScanTimestampByLead[lead.id] = now;
           const targetDates = activeCampaign?.targetDates || activeCampaign?.targetDatesText;
-          const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", targetDates);
+          const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", targetDates, lead.website);
           
           if (radar.success && Array.isArray(radar.fechas_libres_detectadas)) {
             const hasChanges = 

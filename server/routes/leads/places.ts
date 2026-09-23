@@ -7,6 +7,9 @@ import { safeParseJson } from "../../utils.js";
 import { getDomainFromUrl } from "./helpers.js";
 import { getBandDnaProfile } from "../../utils/bandDna.js";
 import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../../services/venueIntelligenceService.js";
+import { discoverVenuesMultiSource } from "../../services/multiSourceVenueDiscoveryService.js";
+import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatcherService.js";
+import { searchPublicCulturalOpportunities } from "../../services/publicCulturalEventsRadarService.js";
 
 const router = express.Router();
 
@@ -1092,6 +1095,74 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
   }
 });
 
-// Import Leads from Custom Excel / CSV with Intelligent Mapping & Classification
+/**
+ * Captación y Descubrimiento Multi-Fuente Omnicanal
+ * Integra Ticketmaster Discovery API, Setlist.fm, Eventbrite y Agregadores Locales (Entradium, Compralaentrada, Wegow)
+ */
+router.post(["/multi-source-venues", "/leads/multi-source-venues"], requireAuth, async (req, res) => {
+  try {
+    const { query, ciudad, region, tipo, countryCode, limit } = req.body;
+    const result = await discoverVenuesMultiSource({
+      query,
+      ciudad,
+      region,
+      tipo,
+      countryCode: countryCode || "ES",
+      limit: Number(limit) || 10
+    });
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/multi-source-venues:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al realizar la búsqueda multi-fuente de recintos."
+    });
+  }
+});
+
+/**
+ * Radar por Bandas Similares ("Efecto Espejo" / Setlist.fm & Spotify)
+ */
+router.post(["/similar-artists-venues", "/leads/similar-artists-venues"], requireAuth, async (req, res) => {
+  try {
+    const { bandName, genre, similarArtists, targetCities, limit } = req.body;
+    const result = await findVenuesBySimilarArtists({
+      bandName,
+      genre,
+      similarArtists,
+      targetCities,
+      limit: Number(limit) || 8
+    });
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/similar-artists-venues:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al buscar recintos por afinidad artística."
+    });
+  }
+});
+
+/**
+ * Radar de Contratación Pública, Ayuntamientos y Ciclos Culturales
+ */
+router.post(["/public-cultural-radar", "/leads/public-cultural-radar"], requireAuth, async (req, res) => {
+  try {
+    const { provinciaOrRegion, estiloMusical, bandName, limit } = req.body;
+    const result = await searchPublicCulturalOpportunities({
+      provinciaOrRegion,
+      estiloMusical,
+      bandName,
+      limit: Number(limit) || 8
+    });
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/public-cultural-radar:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al escanear oportunidades de contratación pública."
+    });
+  }
+});
 
 export default router;

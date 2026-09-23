@@ -32,7 +32,7 @@ async function getAccount(bandId: string): Promise<BandEmailAccount> {
 }
 
 // Comprueba que la cuenta de email configurada coincide con el email oficial de la banda en
-// registered_bands - sincroniza automáticamente si la banda configuró una cuenta válida.
+// registered_bands - mejor no enviar nada que enviar desde la bandeja equivocada.
 export async function verificarIdentidadEmail(bandId: string): Promise<{ ok: boolean; emailConectado: string | null; emailOficial: string | null }> {
   const account = await getAccount(bandId);
   const emailConectado = (account.email || "").toLowerCase().trim();
@@ -43,21 +43,10 @@ export async function verificarIdentidadEmail(bandId: string): Promise<{ ok: boo
     .select("email")
     .eq("band_id", bandId)
     .maybeSingle();
-  let emailOficial = (bandData?.email || "").toLowerCase().trim();
-
-  // Si hay una cuenta conectada por la banda pero registered_bands tenía un email desactualizado,
-  // sincronizamos registered_bands para evitar bloqueos espurios.
-  if (emailConectado && emailOficial && emailOficial !== emailConectado) {
-    try {
-      await sb.from("registered_bands").update({ email: emailConectado }).eq("band_id", bandId);
-      emailOficial = emailConectado;
-    } catch (syncErr) {
-      console.warn("[emailAgentClient] No se pudo sincronizar registered_bands.email:", syncErr);
-    }
-  }
+  const emailOficial = (bandData?.email || "").toLowerCase().trim();
 
   return {
-    ok: !!emailConectado && (emailOficial === emailConectado || !emailOficial),
+    ok: !!emailConectado && !!emailOficial && emailConectado === emailOficial,
     emailConectado: emailConectado || null,
     emailOficial: emailOficial || null
   };

@@ -2,7 +2,7 @@ import express from "express";
 import { GoogleGenAI } from "@google/genai";
 import { requireAuth } from "../state.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
-import { costEurFromTokens } from "../ai.js";
+import { costEurFromTokens, generateContentWithFallback } from "../ai.js";
 import { dbRecordAiUsage } from "../db/aiLedger.js";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
@@ -1619,8 +1619,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
 
     let aiResponseText = "";
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+      const response = await generateContentWithFallback(ai, {
         contents: analysisPrompt,
         config: {
           responseMimeType: "application/json",
@@ -2555,8 +2554,7 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
     // Secondary text guidance from Gemini 3.7 Flash for arrangement rationale
     let aiExplanation = "";
     try {
-      const expRes = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+      const expRes = await generateContentWithFallback(ai, {
         contents: `Describe en 2 frases breves en español qué idea musical de arreglo has compuesto para el instrumento "${requestedInst}" en la canción "${songTitle}" (Tonalidad: ${key || 'Am'}, Tempo: ${bpm || 120} BPM). Explica qué ritmo y notas debe tocar el músico.`
       });
       aiExplanation = expRes?.text || "";

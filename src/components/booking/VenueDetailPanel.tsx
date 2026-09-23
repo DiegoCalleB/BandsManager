@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog, Setlist, EmailMessage } from '../../types';
+import { Lead, LeadStatus, LeadType, InteractionLog, Setlist, EmailMessage, Concert } from '../../types';
+import { checkBandDateConflict, getCityTourHistory, getCommercialDealSnippets } from '../../utils/bookingTourContext';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { LeadAvatar } from './LeadAvatar';
@@ -12,6 +13,8 @@ import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
 import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
 import { DealAndLogisticsCopilot } from './DealAndLogisticsCopilot';
+import { QuickDealSimulator } from './QuickDealSimulator';
+import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../utils/bookingFollowup';
 import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import {
@@ -96,6 +99,9 @@ interface VenueDetailPanelProps {
   isUploadingLeadLogo?: boolean;
   initialTab?: 'info' | 'emails' | 'copilot' | 'bitacora';
   onOpenRoadbookModal?: (lead: Lead) => void;
+  onFilterByRouteCity?: (city: string) => void;
+  bandName?: string;
+  concerts?: Concert[];
 }
 
 export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
@@ -115,7 +121,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   onLeadLogoUpload,
   isUploadingLeadLogo = false,
   initialTab = 'info',
-  onOpenRoadbookModal
+  onOpenRoadbookModal,
+  onFilterByRouteCity,
+  bandName,
+  concerts = []
 }) => {
   // Active Tab inside panel
   const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'intelligence' | 'copilot' | 'bitacora'>(initialTab as any);
@@ -209,7 +218,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsDetectingDates(true);
-      setScoutActionFeedback('Consultando radar de conciertos y cartelera en Wegow...');
+      setScoutActionFeedback('Consultando y contrastando radar en Wegow y Bandsintown...');
       const res: any = await apiFetch(`/api/leads/${selectedLead.id}/detect-dates`, {
         method: 'POST'
       });
@@ -218,7 +227,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setEditedLeadInfo(res.lead);
         const numLibres = res.radar?.fechas_libres_detectadas?.length || 0;
         const numOcupadas = res.radar?.fechas_ocupadas?.length || 0;
-        setScoutActionFeedback(`✓ Radar Wegow: ${numOcupadas} conciertos ocupados detectados. ${numLibres} fines de semana libres disponibles.`);
+        const contrastado = res.radar?.contrastado_multi_fuente ? '✓ Multi-fuente contrastada (Wegow + Bandsintown)' : 'Radar consultado';
+        if (res.radar?.datos_fechas_encontrados === false) {
+          setScoutActionFeedback('(no se han encontrado datos de fechas de esta sala)');
+        } else if (res.radar?.is_campaign_active) {
+          setScoutActionFeedback(`${contrastado}: ${res.radar?.mensaje_disponibilidad || `${numLibres} fechas libres detectadas`}`);
+        } else {
+          setScoutActionFeedback(`${contrastado}: ${numOcupadas} eventos detectados. ${numLibres} fechas libres disponibles.`);
+        }
       } else {
         setScoutActionFeedback(`Aviso: ${res?.error || 'No se pudieron calcular las fechas.'}`);
       }
@@ -385,24 +401,40 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     }
   };
 
-  const handleRecalculateFinancial = async () => {
+  const handleRecalculateFinancial = async (overrideData?: {
+    precioAnticipada: number;
+    precioTaquilla: number;
+    alquilerSalaFijo: number;
+    porcentajeSala: number;
+    gastosProduccionFijos: number;
+    numMusicos: number;
+  }) => {
     if (!selectedLead) return;
     try {
       setIsRecalculatingFinancial(true);
+      const payload = overrideData || {
+        precioAnticipada: simAnticipada,
+        precioTaquilla: simTaquilla,
+        alquilerSalaFijo: simAlquiler,
+        porcentajeSala: simPctSala,
+        gastosProduccionFijos: simGastosProd,
+        numMusicos: simNumMusicos
+      };
       const res: any = await apiFetch(`/api/leads/${selectedLead.id}/calculate-break-even`, {
         method: 'POST',
-        body: JSON.stringify({
-          precioAnticipada: simAnticipada,
-          precioTaquilla: simTaquilla,
-          alquilerSalaFijo: simAlquiler,
-          porcentajeSala: simPctSala,
-          gastosProduccionFijos: simGastosProd,
-          numMusicos: simNumMusicos
-        })
+        body: JSON.stringify(payload)
       });
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
+        if (overrideData) {
+          setSimAnticipada(overrideData.precioAnticipada);
+          setSimTaquilla(overrideData.precioTaquilla);
+          setSimAlquiler(overrideData.alquilerSalaFijo);
+          setSimPctSala(overrideData.porcentajeSala);
+          setSimGastosProd(overrideData.gastosProduccionFijos);
+          setSimNumMusicos(overrideData.numMusicos);
+        }
         setScoutActionFeedback('✓ P&L Financiero y Break-Even actualizados.');
       }
     } catch (err: any) {
@@ -1037,14 +1069,32 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </h3>
                 <VerifiedBadge isVerified={isLeadVerificado(selectedLead)} size="md" showLabel={true} />
               </div>
-              <p className="text-xs sm:text-sm font-sans mt-0.5 text-zinc-300">
-                {selectedLead.ciudad} • {selectedLead.genero || 'Variado'} •{' '}
-                {selectedLead.roster
-                  ? `Róster: ${selectedLead.roster}`
-                  : (['agencia', 'manager', 'productora', 'sello'].includes(String(selectedLead.tipo || '').toLowerCase())
-                      ? 'Agencia de Booking'
-                      : (selectedLead.aforo ? `${selectedLead.aforo} pax` : 'Aforo n/d'))}
-              </p>
+              <div className="flex items-center flex-wrap gap-1.5 mt-0.5 text-xs sm:text-sm font-sans text-zinc-300">
+                <span className="font-semibold text-zinc-200">{selectedLead.ciudad}</span>
+                {onFilterByRouteCity && selectedLead.ciudad && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onFilterByRouteCity(selectedLead.ciudad!);
+                      onClose();
+                    }}
+                    className="inline-flex items-center gap-1 text-[11px] text-sky-400 hover:text-sky-300 bg-sky-950/50 hover:bg-sky-900/60 border border-sky-500/40 px-1.5 py-0.5 rounded cursor-pointer transition-colors"
+                    title={`Filtrar salas en ruta para fin de semana doble desde ${selectedLead.ciudad} (<2.5h)`}
+                  >
+                    <span>🚗 Enlazar Ruta (&lt;2.5h)</span>
+                  </button>
+                )}
+                <span>•</span>
+                <span>{selectedLead.genero || 'Variado'}</span>
+                <span>•</span>
+                <span className={selectedLead.roster ? 'text-amber-300 font-medium' : ''}>
+                  {selectedLead.roster
+                    ? `Róster: ${selectedLead.roster}`
+                    : (['agencia', 'manager', 'productora', 'sello'].includes(String(selectedLead.tipo || '').toLowerCase())
+                        ? 'Agencia de Booking'
+                        : (selectedLead.aforo ? `${selectedLead.aforo} pax` : 'Aforo n/d'))}
+                </span>
+              </div>
               {selectedLead.festival_start_date && selectedLead.festival_end_date && (
                 <div className="space-y-1 mt-1">
                   <p className="text-xs sm:text-sm font-sans text-amber-400 flex items-center gap-1.5">
@@ -1276,30 +1326,233 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
           )}
 
+          {/* 🎯 DISPONIBILIDAD Y CONFLICTO EN LA GIRA DE LA BANDA (Punto 1) */}
+          {(() => {
+            const targetDate = (selectedLead as any).fecha_posible_evento || 
+              (selectedLead.fechas_propuestas_sala && selectedLead.fechas_propuestas_sala[0]) || 
+              (selectedLead.fechas_libres_detectadas && selectedLead.fechas_libres_detectadas[0]) ||
+              (selectedLead as any).fechas_libres_campana?.[0] ||
+              (selectedLead as any).fechas_propuestas?.[0] ||
+              (selectedLead as any).fechas_disponibles?.[0] ||
+              activeCampaign?.fecha_inicio;
+            const conflictCheck = checkBandDateConflict(targetDate, concerts, selectedLead.ciudad);
+
+            if (conflictCheck.status === 'conflicto_directo') {
+              return (
+                <div className="p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/80 text-rose-200 text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-base shrink-0">🔴</span>
+                    <div className="min-w-0">
+                      <p className="font-bold text-rose-100 text-xs truncate">
+                        Conflicto en la agenda de {bandName || 'la banda'}
+                      </p>
+                      <p className="text-[11px] text-rose-300">
+                        {conflictCheck.mensaje}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-900 border border-rose-500/50 text-rose-100 shrink-0">
+                    Fecha Ocupada
+                  </span>
+                </div>
+              );
+            }
+
+            if (conflictCheck.status === 'cercano_compatible') {
+              return (
+                <div className="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/60 text-emerald-200 text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-base shrink-0">🚗</span>
+                    <div className="min-w-0">
+                      <p className="font-bold text-emerald-200 text-xs truncate">
+                        Oportunidad de Enlace en Ruta (Doble Fecha)
+                      </p>
+                      <p className="text-[11px] text-emerald-300/90">
+                        {conflictCheck.mensaje}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-900 border border-emerald-500/50 text-emerald-200 shrink-0">
+                    Compatible
+                  </span>
+                </div>
+              );
+            }
+
+            if (conflictCheck.status === 'cercano_aviso') {
+              return (
+                <div className="p-2.5 rounded-xl bg-amber-950/60 border border-amber-500/60 text-amber-200 text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-base shrink-0">⚠️</span>
+                    <div className="min-w-0">
+                      <p className="font-bold text-amber-200 text-xs truncate">
+                        Concierto en fecha adyacente
+                      </p>
+                      <p className="text-[11px] text-amber-300/90">
+                        {conflictCheck.mensaje}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-900 border border-amber-500/50 text-amber-200 shrink-0">
+                    Revisar Kilometraje
+                  </span>
+                </div>
+              );
+            }
+
+            if (targetDate) {
+              return (
+                <div className="p-2 rounded-xl bg-zinc-900/60 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span className="text-[11px]">
+                    Agenda de {bandName || 'la banda'} disponible para {targetDate}
+                  </span>
+                </div>
+              );
+            }
+
+            return null;
+          })()}
+
+          {/* 🏛️ HISTÓRICO DE BOLOS EN LA MISMA CIUDAD (Punto 4) */}
+          {(() => {
+            const cityHistory = getCityTourHistory(selectedLead.ciudad || selectedLead.region, concerts);
+            if (!cityHistory) return null;
+
+            return (
+              <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-500/40 flex items-center justify-between gap-2.5 flex-wrap animate-fadeIn">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400">
+                    <PartyPopper className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-xs font-bold text-amber-300 block truncate">
+                      Histórico en {cityHistory.ciudad} ({cityHistory.totalConciertos} {cityHistory.totalConciertos === 1 ? 'concierto' : 'conciertos'})
+                    </span>
+                    <span className="text-[11px] text-zinc-300 block">
+                      {cityHistory.resumenTexto}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const current = editedPitch || selectedLead.pitch_generado || '';
+                    if (!current.includes(cityHistory.pitchSnippet)) {
+                      const updated = current ? `${current}\n\n${cityHistory.pitchSnippet}` : cityHistory.pitchSnippet;
+                      setEditedPitch(updated);
+                      setIsEditingPitch(true);
+                      if (onUpdateLead) {
+                        onUpdateLead(selectedLead.id, { pitch_generado: updated });
+                      }
+                    }
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors shrink-0 shadow-2xs"
+                  title="Inserta este hito histórico en el pitch para dar credibilidad de taquilla a la sala"
+                >
+                  <TrendingUp className="w-3 h-3 text-amber-400" />
+                  <span>+ Citar hito en pitch</span>
+                </button>
+              </div>
+            );
+          })()}
+
           {/* Display Fechas Libres Detectadas Pills if available */}
           {(() => {
-            const fechasLibres = (editedLeadInfo?.fechas_libres_detectadas && editedLeadInfo.fechas_libres_detectadas.length > 0)
+            const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true);
+            const fechasLibres = (campaignIsActive && (editedLeadInfo as any)?.fechas_libres_campana)
+              ? (editedLeadInfo as any).fechas_libres_campana
+              : (editedLeadInfo?.fechas_libres_detectadas && editedLeadInfo.fechas_libres_detectadas.length > 0)
               ? editedLeadInfo.fechas_libres_detectadas
+              : (campaignIsActive && (selectedLead as any)?.fechas_libres_campana)
+              ? (selectedLead as any).fechas_libres_campana
               : (selectedLead?.fechas_libres_detectadas || []);
-            if (!fechasLibres || fechasLibres.length === 0) return null;
+
+            const hasVerifiedSources = (Array.isArray(selectedLead?.radar_fuentes_verificadas) && selectedLead.radar_fuentes_verificadas.length > 0) ||
+              (Array.isArray((editedLeadInfo as any)?.radar_fuentes_verificadas) && (editedLeadInfo as any).radar_fuentes_verificadas.length > 0);
+            const hasOccupied = ((selectedLead?.fechas_ocupadas?.length || 0) > 0) || (((editedLeadInfo as any)?.fechas_ocupadas?.length || 0) > 0);
+            const hasWegowOk = (selectedLead as any)?.radar_wegow_status === 'ok' || (editedLeadInfo as any)?.radar_wegow_status === 'ok';
+            const hasBandsintownOk = (selectedLead as any)?.radar_bandsintown_status === 'ok' || (editedLeadInfo as any)?.radar_bandsintown_status === 'ok';
+
+            const hasConcertsOrSources = selectedLead?.datos_fechas_encontrados === true || (editedLeadInfo as any)?.datos_fechas_encontrados === true || hasWegowOk || hasBandsintownOk || hasVerifiedSources || hasOccupied;
+            const hasNoData = !hasConcertsOrSources || selectedLead?.datos_fechas_encontrados === false || (editedLeadInfo as any)?.datos_fechas_encontrados === false;
+
+            const wegowStatus = (selectedLead as any)?.radar_wegow_status || ((selectedLead?.fechas_ocupadas?.length || 0) > 0 ? 'ok' : 'sin_datos');
+            const bandsintownStatus = (selectedLead as any)?.radar_bandsintown_status || 'sin_datos';
+            const contrastado = Boolean((selectedLead as any)?.contrastado_multi_fuente || (wegowStatus === 'ok' && bandsintownStatus === 'ok'));
+            
+            if (hasNoData) {
+              return (
+                <div className="pt-1.5 border-t border-zinc-800/80 flex flex-col gap-1.5">
+                  <span className="text-[10px] text-amber-400 font-sans font-medium flex items-center gap-1.5 bg-amber-950/40 border border-amber-800/40 px-2.5 py-1 rounded-md">
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    (no se han encontrado datos de fechas de esta sala)
+                  </span>
+                  <div className="flex items-center gap-2 text-[9px] font-mono text-zinc-400 pl-1">
+                    <span>Wegow: <strong className={wegowStatus === 'ok' ? 'text-emerald-400' : 'text-zinc-500'}>{wegowStatus === 'ok' ? 'Conectado' : 'Sin cartelera'}</strong></span>
+                    <span>•</span>
+                    <span>Bandsintown: <strong className={bandsintownStatus === 'ok' ? 'text-sky-400' : 'text-zinc-500'}>{bandsintownStatus === 'ok' ? 'Contrastado' : 'Sin datos'}</strong></span>
+                  </div>
+                </div>
+              );
+            }
+            
             return (
-              <div className="pt-1 border-t border-zinc-800/80 flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] text-sky-400 font-mono font-bold flex items-center gap-1">
-                  <CalendarCheck className="w-3 h-3 text-sky-400" />
-                  Fines de semana libres detectados:
-                </span>
-                {fechasLibres.map((fecha, idx) => (
-                  <button
-                    key={`free-date-${idx}`}
-                    type="button"
-                    onClick={() => setShowWhatsAppModal(true)}
-                    className="px-2 py-0.5 rounded-md bg-sky-950/80 border border-sky-600/60 text-sky-300 text-[10px] font-sans font-medium hover:bg-sky-900 transition-colors cursor-pointer flex items-center gap-1"
-                    title="Clic para proponer esta fecha por WhatsApp o Pitch"
+              <div className="pt-1 border-t border-zinc-800/80 flex flex-col gap-1.5">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className={`text-[10px] font-mono font-bold flex items-center gap-1 ${campaignIsActive ? 'text-purple-300' : 'text-sky-400'}`}>
+                    <CalendarCheck className="w-3 h-3 text-current" />
+                    {campaignIsActive ? 'Fechas disponibles para la campaña:' : 'Fechas disponibles detectadas:'}
+                  </span>
+                  {fechasLibres.map((fecha: string, idx: number) => (
+                    <button
+                      key={`free-date-${idx}`}
+                      type="button"
+                      onClick={() => setShowWhatsAppModal(true)}
+                      className={`px-2 py-0.5 rounded-md border text-[10px] font-sans font-medium transition-colors cursor-pointer flex items-center gap-1 ${
+                        campaignIsActive 
+                          ? 'bg-purple-950/80 border-purple-500/70 text-purple-200 hover:bg-purple-900' 
+                          : 'bg-sky-950/80 border-sky-600/60 text-sky-300 hover:bg-sky-900'
+                      }`}
+                      title="Clic para proponer esta fecha por WhatsApp o Pitch"
+                    >
+                      <span>{fecha}</span>
+                      <span className="text-[9px] opacity-70">💬</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2 text-[9px] font-mono text-zinc-400 pl-0.5">
+                  <a 
+                    href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 hover:text-emerald-300 transition-colors cursor-pointer"
+                    title="Clic para ver cartelera en Wegow"
                   >
-                    <span>{fecha}</span>
-                    <span className="text-[9px] opacity-70">💬</span>
-                  </button>
-                ))}
+                    <span className={`w-1.5 h-1.5 rounded-full ${wegowStatus === 'ok' ? 'bg-emerald-400' : 'bg-zinc-600'}`}></span>
+                    <span>Wegow: <strong className={wegowStatus === 'ok' ? 'text-emerald-400' : 'text-zinc-500'}>{wegowStatus === 'ok' ? '✓ OK' : 'Sin datos'}</strong></span>
+                    <ExternalLink className="w-2 h-2 opacity-60" />
+                  </a>
+                  <span>•</span>
+                  <a 
+                    href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 hover:text-sky-300 transition-colors cursor-pointer"
+                    title="Clic para ver cartelera en Bandsintown"
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${bandsintownStatus === 'ok' ? 'bg-sky-400' : 'bg-zinc-600'}`}></span>
+                    <span>Bandsintown: <strong className={bandsintownStatus === 'ok' ? 'text-sky-400' : 'text-zinc-500'}>{bandsintownStatus === 'ok' ? '✓ OK' : 'Sin datos'}</strong></span>
+                    <ExternalLink className="w-2 h-2 opacity-60" />
+                  </a>
+                  {contrastado && (
+                    <span className="text-amber-400 font-bold bg-amber-950/50 px-1 py-0.2 rounded border border-amber-600/40">
+                      ⭐ Multi-fuente contrastada
+                    </span>
+                  )}
+                </div>
               </div>
             );
           })()}
@@ -2045,6 +2298,45 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </div>
           )}
 
+          {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
+          {isLeadNeedsFollowup(selectedLead) && (
+            <div className="p-3 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/20 border border-amber-500/40 rounded-xl flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-amber-300 font-sans block">
+                    ⏰ Seguimiento Pendiente ({getDaysSinceContact(selectedLead)} días sin respuesta)
+                  </span>
+                  <span className="text-[11px] text-zinc-300 font-sans">
+                    Es el momento idóneo para un "Gentle Nudge" breve (&lt;50 palabras) y cordial.
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const draft = generateFollowupTemplate(selectedLead, bandName || 'Bakandeya');
+                  setEditedPitch(draft);
+                  setIsEditingPitch(true);
+                }}
+                className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>⚡ Cargar Nudge (40 palabras)</span>
+              </button>
+            </div>
+          )}
+
+          {/* 💰 Condiciones del Deal & Viabilidad (Break-Even) */}
+          <QuickDealSimulator
+            lead={selectedLead}
+            onSaveDeal={handleRecalculateFinancial}
+            isSaving={isRecalculatingFinancial}
+            isStitchLight={isStitchLight}
+          />
+
           {/* Pitch Generator Section */}
           <div className="bg-[#1A1918] rounded-xl p-4 space-y-3 border border-zinc-800">
             {/* Tactical Playbook & Entity Extraction Banner if Available */}
@@ -2276,6 +2568,52 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               );
             })()}
+
+            {/* 💰 Commercial Deal Snippets (Punto 2: Taquilla 100%, Garantía Mínima + %, Caché Fijo) */}
+            <div className="bg-zinc-900/90 p-2.5 rounded-xl border border-zinc-800 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Handshake className="w-3.5 h-3.5 text-emerald-400" />
+                  Condiciones Comerciales (Insertar propuesta con 1 clic):
+                </span>
+                <span className="text-[9px] text-zinc-400 font-sans">
+                  Fórmulas estándar de mánager profesional
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+                {getCommercialDealSnippets(bandName || 'la banda', selectedLead).map((deal) => (
+                  <button
+                    key={deal.id}
+                    type="button"
+                    onClick={() => {
+                      const current = editedPitch || selectedLead.pitch_generado || '';
+                      if (!current.includes(deal.textoCompleto.trim())) {
+                        const updated = current ? `${current}\n\n${deal.textoCompleto}` : deal.textoCompleto;
+                        setEditedPitch(updated);
+                        setIsEditingPitch(true);
+                        if (onUpdateLead) {
+                          onUpdateLead(selectedLead.id, { pitch_generado: updated });
+                        }
+                      }
+                    }}
+                    className="p-2 rounded-lg bg-black/40 hover:bg-zinc-800/80 border border-zinc-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
+                    title={deal.descripcionCorta}
+                  >
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">
+                        {deal.label}
+                      </span>
+                      <span className="text-[9px] font-medium px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300">
+                        {deal.badge}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-zinc-400 line-clamp-1 group-hover:text-zinc-300">
+                      {deal.descripcionCorta}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Quick Manager Safeguard Pills */}
             <div className="bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800 space-y-1.5">
@@ -2669,6 +3007,41 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       {/* TAB 2: EMAIL THREAD & REPLY SIMULATION */}
       {activeTab === 'emails' && (
         <div className="space-y-3">
+          {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
+          {isLeadNeedsFollowup(selectedLead) && (
+            <div className="p-3 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/20 border border-amber-500/40 rounded-xl flex flex-wrap items-center justify-between gap-2.5 shadow-md">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-amber-300 font-sans block">
+                    ⏰ Seguimiento Pendiente ({getDaysSinceContact(selectedLead)} días sin respuesta)
+                  </span>
+                  <span className="text-[11px] text-zinc-300 font-sans">
+                    Envía un recordatorio educado de 40 palabras para reactivar la conversación con la sala.
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const draft = generateFollowupTemplate(selectedLead, bandName || 'Bakandeya');
+                  setEditedPitch(draft);
+                  setIsEditingPitch(true);
+                  if (onUpdateLead) {
+                    onUpdateLead(selectedLead.id, { pitch_generado: draft });
+                  }
+                  setActiveTab('info');
+                }}
+                className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>⚡ Cargar Nudge de Seguimiento</span>
+              </button>
+            </div>
+          )}
+
           {hiloCompleto.length === 0 ? (
             <div className="p-6 text-center rounded-xl bg-[#1A1918] border border-zinc-800 text-zinc-400 text-xs italic">
               No hay correos registrados en el historial de esta sala aún.
@@ -2777,6 +3150,51 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
             ))
           )}
+
+          {/* Quick Manager Reply Actions with Deal Snippets */}
+          <div className="p-3 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-2 mt-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Handshake className="w-3.5 h-3.5 text-emerald-400" />
+                <span>¿La sala pide condiciones económicas? Inserta propuesta:</span>
+              </span>
+              <span className="text-[9px] text-zinc-400 font-sans">
+                Carga borrador y pasa a revisión
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+              {getCommercialDealSnippets(bandName || 'la banda', selectedLead).map((deal) => (
+                <button
+                  key={deal.id}
+                  type="button"
+                  onClick={() => {
+                    const current = editedPitch || selectedLead.pitch_generado || '';
+                    const updated = current ? `${current}\n\n${deal.textoCompleto}` : deal.textoCompleto;
+                    setEditedPitch(updated);
+                    setIsEditingPitch(true);
+                    if (onUpdateLead) {
+                      onUpdateLead(selectedLead.id, { pitch_generado: updated });
+                    }
+                    setActiveTab('info');
+                  }}
+                  className="p-2 rounded-lg bg-black/40 hover:bg-zinc-800/80 border border-zinc-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
+                  title={deal.descripcionCorta}
+                >
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">
+                      {deal.label}
+                    </span>
+                    <span className="text-[9px] font-medium px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300">
+                      {deal.badge}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-zinc-400 line-clamp-1 group-hover:text-zinc-300">
+                    {deal.descripcionCorta}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -3543,7 +3961,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={handleRecalculateFinancial}
+                  onClick={() => handleRecalculateFinancial()}
                   disabled={isRecalculatingFinancial}
                   className="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
                 >

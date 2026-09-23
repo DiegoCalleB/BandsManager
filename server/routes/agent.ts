@@ -1,6 +1,6 @@
 import express from "express";
 import { getRegionForCity } from "../../src/constants/regions.js";
-import { prepararLeadsDescubiertos, limpiarCampoContacto } from "../utils/scoutLeads.js";
+import { prepararLeadsDescubiertos, limpiarCampoContacto, determinarCorredorGira, clasificarAforoRecinto, calcularAfinidadMusical } from "../utils/scoutLeads.js";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES } from "../../src/db_seed.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand, getEpkConfigForBand, BAKANDEYA_BAND_ID } from "../state.js";
 import { dbUpsertLead, dbCheckDeletedLead, getSupabase } from "../db.js";
@@ -587,12 +587,20 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           }
         }
 
+        const locCiudad = raw.ciudad || targetLoc;
+        const locRegion = raw.region || targetLoc;
+        const corredorGira = determinarCorredorGira(locCiudad, locRegion);
+        const tierAforo = clasificarAforoRecinto(raw.aforo || 0, raw.tipo || tipo);
+        const afinidadMusical = calcularAfinidadMusical(raw.genero || "", generoBanda);
+
+        const notaEstrategica = `[Ruta: ${corredorGira} | Tier: ${tierAforo.toUpperCase()} | Afinidad Musical: ${afinidadMusical}%] ${raw.notas || `Descubierto por Agente Scout para ${targetLoc}.`}`;
+
         const initialLead = {
           id: `lead-scout-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           band_id: targetBandId,
           nombre_sala: raw.nombre_sala,
-          ciudad: raw.ciudad,
-          region: raw.region,
+          ciudad: locCiudad,
+          region: locRegion,
           aforo: raw.aforo || 0,
           genero: raw.genero || generoBanda,
           tipo: raw.tipo || tipo,
@@ -605,7 +613,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           fuente: `Agente Scout: ${targetLoc}`,
           estado: "nuevo",
           pitch_generado: "",
-          notas: raw.notas || `Descubierto por Agente Scout para ${targetLoc}.`
+          notas: notaEstrategica
         };
 
         // Enriquecer automáticamente con todas las herramientas disponibles (Google Places, Serper, Web Scraper, Gemini AI Fallback, Pitch) antes de guardar

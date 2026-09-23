@@ -2,6 +2,7 @@ import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbUpsertLead, dbGetLeads } from "../../db.js";
+import { dbGetCampaigns } from "../../db/campaigns.js";
 import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
@@ -813,11 +814,28 @@ router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async
       return res.status(404).json({ success: false, error: "Lead no encontrado o no pertenece a tu banda" });
     }
 
-    const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "");
+    const campaigns = await dbGetCampaigns(targetBandId);
+    const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
+    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText || (activeCampaign as any)?.target_dates || (activeCampaign as any)?.target_dates_text;
+
+    const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", campaignTargetDates, lead.website);
     
     const updates: Partial<Lead> = {
       fechas_ocupadas: radar.fechas_ocupadas,
-      fechas_libres_detectadas: radar.fechas_libres_detectadas
+      fechas_libres_detectadas: radar.fechas_libres_detectadas,
+      disponible_para_campana: radar.disponible_para_campana,
+      fechas_ocupadas_campana: radar.fechas_ocupadas_campana,
+      fechas_libres_campana: radar.fechas_libres_campana,
+      datos_fechas_encontrados: radar.datos_fechas_encontrados,
+      mensaje_disponibilidad: radar.mensaje_disponibilidad,
+      radar_fuentes_verificadas: radar.fuentes_verificadas,
+      radar_wegow_status: radar.radar_wegow_status,
+      radar_bandsintown_status: radar.radar_bandsintown_status,
+      contrastado_multi_fuente: radar.contrastado_multi_fuente,
+      fiabilidad_radar: radar.fiabilidad_radar,
+      estado_cartelera: radar.estado_cartelera,
+      max_fecha_publicada: radar.max_fecha_publicada,
+      min_fecha_publicada: radar.min_fecha_publicada
     };
 
     const updatedLead = { ...lead, ...updates };
@@ -858,16 +876,33 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
       return res.status(400).json({ success: false, error: "No hay recintos válidos para escanear" });
     }
 
+    const campaigns = await dbGetCampaigns(targetBandId);
+    const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
+    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText || (activeCampaign as any)?.target_dates || (activeCampaign as any)?.target_dates_text;
+
     const updatedLeads: Lead[] = [];
     let totalFreeDates = 0;
     let totalOccupiedDates = 0;
 
     for (const lead of targetLeads.slice(0, 15)) { // Escaneo en lote de hasta 15 recintos
       try {
-        const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "");
+        const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", campaignTargetDates, lead.website);
         const updates: Partial<Lead> = {
           fechas_ocupadas: radar.fechas_ocupadas || [],
-          fechas_libres_detectadas: radar.fechas_libres_detectadas || []
+          fechas_libres_detectadas: radar.fechas_libres_detectadas || [],
+          disponible_para_campana: radar.disponible_para_campana,
+          fechas_ocupadas_campana: radar.fechas_ocupadas_campana,
+          fechas_libres_campana: radar.fechas_libres_campana,
+          datos_fechas_encontrados: radar.datos_fechas_encontrados,
+          mensaje_disponibilidad: radar.mensaje_disponibilidad,
+          radar_fuentes_verificadas: radar.fuentes_verificadas,
+          radar_wegow_status: radar.radar_wegow_status,
+          radar_bandsintown_status: radar.radar_bandsintown_status,
+          contrastado_multi_fuente: radar.contrastado_multi_fuente,
+          fiabilidad_radar: radar.fiabilidad_radar,
+          estado_cartelera: radar.estado_cartelera,
+          max_fecha_publicada: radar.max_fecha_publicada,
+          min_fecha_publicada: radar.min_fecha_publicada
         };
         const updatedLead = { ...lead, ...updates };
         const saved = await dbUpsertLead(updatedLead, targetBandId);
@@ -889,6 +924,107 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
   } catch (error: any) {
     console.error("Error in POST /api/leads/detect-all-dates:", error);
     res.status(500).json({ success: false, error: error?.message || "Error en el escaneo masivo de fechas" });
+  }
+});
+
+/**
+ * POST /api/leads/batch-enrich-campaign
+ * Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos)
+ * para todos los leads filtrados por la campaña activa de la banda (por ejemplo "Bakandeya").
+ */
+router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const { campaignId, forceAll = false } = req.body || {};
+
+    const campaigns = await dbGetCampaigns(targetBandId);
+    let targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive || (c as any).is_active) || campaigns[0];
+
+    const campaignTargetDates = req.body?.campaignTargetDates || targetCampaign?.targetDates || targetCampaign?.targetDatesText || (targetCampaign as any)?.target_dates || (targetCampaign as any)?.target_dates_text;
+
+    const allLeads = await dbGetLeads(targetBandId);
+    if (!allLeads || allLeads.length === 0) {
+      return res.status(400).json({ success: false, error: "No hay leads registrados para esta banda." });
+    }
+
+    // Filtrar leads asociados a la campaña activa o de la banda
+    let campaignLeads = allLeads;
+    if (targetCampaign && !forceAll) {
+      const campNameNorm = (targetCampaign.name || "").toLowerCase().trim();
+      const campIdStr = String(targetCampaign.id);
+
+      campaignLeads = allLeads.filter(l => {
+        if ((l as any).campaign_id === targetCampaign.id || (l as any).campaign_id === campIdStr) return true;
+        if (l.campaña_asociada && l.campaña_asociada.toLowerCase().trim() === campNameNorm) return true;
+        // Si el lead no tiene campaña explícita pero hay una campaña activa, se incluye en el proceso
+        return !l.campaña_asociada;
+      });
+    }
+
+    const validLeads = campaignLeads.filter(l => l.nombre_sala && l.nombre_sala.trim());
+    if (validLeads.length === 0) {
+      return res.json({
+        success: true,
+        message: "No se encontraron recintos pendientes de enriquecer para la campaña activa.",
+        processedCount: 0,
+        updatedLeads: []
+      });
+    }
+
+    const updatedLeads: Lead[] = [];
+    let totalFreeDates = 0;
+    let totalAvailableForCampaign = 0;
+
+    // Procesar en lotes seguros
+    for (const lead of validLeads.slice(0, 20)) {
+      try {
+        const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", campaignTargetDates, lead.website);
+
+        const updates: Partial<Lead> = {
+          fechas_ocupadas: radar.fechas_ocupadas || [],
+          fechas_libres_detectadas: radar.fechas_libres_detectadas || [],
+          disponible_para_campana: radar.disponible_para_campana,
+          fechas_ocupadas_campana: radar.fechas_ocupadas_campana,
+          fechas_libres_campana: radar.fechas_libres_campana,
+          datos_fechas_encontrados: radar.datos_fechas_encontrados,
+          mensaje_disponibilidad: radar.mensaje_disponibilidad,
+          radar_fuentes_verificadas: radar.fuentes_verificadas,
+          radar_wegow_status: radar.radar_wegow_status,
+          radar_bandsintown_status: radar.radar_bandsintown_status,
+          contrastado_multi_fuente: radar.contrastado_multi_fuente,
+          fiabilidad_radar: radar.fiabilidad_radar,
+          estado_cartelera: radar.estado_cartelera,
+          max_fecha_publicada: radar.max_fecha_publicada,
+          min_fecha_publicada: radar.min_fecha_publicada
+        };
+
+        if (targetCampaign?.name) {
+          updates.campaña_asociada = targetCampaign.name;
+        }
+
+        const updatedLead = { ...lead, ...updates };
+        const saved = await dbUpsertLead(updatedLead, targetBandId);
+        updatedLeads.push(saved || updatedLead);
+
+        if (radar.disponible_para_campana) totalAvailableForCampaign++;
+        totalFreeDates += (radar.fechas_libres_detectadas?.length || 0);
+      } catch (err) {
+        console.warn(`[Batch Campaign Enrich] Error actualizando lead "${lead.nombre_sala}":`, err);
+      }
+    }
+
+    return res.json({
+      success: true,
+      campaña: targetCampaign?.name || "Campaña Activa",
+      processedCount: updatedLeads.length,
+      totalAvailableForCampaign,
+      totalFreeDates,
+      updatedLeads,
+      resumen: `Se han actualizado ${updatedLeads.length} recintos de la campaña "${targetCampaign?.name || 'Activa'}" contrastando datos con Ticketmaster, Wegow y Bandsintown. ${totalAvailableForCampaign} recintos coinciden con las fechas de la campaña.`
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/batch-enrich-campaign:", error);
+    return res.status(500).json({ success: false, error: error?.message || "Error al enriquecer masivamente los leads de la campaña" });
   }
 });
 

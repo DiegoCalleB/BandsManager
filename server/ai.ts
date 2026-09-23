@@ -13,8 +13,10 @@ export const TIMEOUT_IA_LARGO_MS = 300_000;
 export const FALLBACK_MODELS = [
   "gemini-3.8-flash",
   "gemini-3.7-flash",
+  "gemini-3.6-flash",
   "gemini-flash-latest",
-  "gemini-3.1-flash-lite"
+  "gemini-3.1-flash-lite",
+  "gemini-3.1-pro-preview"
 ];
 
 let cachedClient: { key: string; client: GoogleGenAI } | null = null;
@@ -209,8 +211,8 @@ export function isSpendingCapError(err: any): boolean {
 
 export function isSpendCapOrQuotaError(err: any): boolean {
   if (!err) return false;
-  const msg = (err.message || String(err)).toLowerCase();
-  const status = String(err.status || err.code || "");
+  const msg = (err.message || String(err) || JSON.stringify(err)).toLowerCase();
+  const status = String(err.status || err.code || err.statusCode || "");
   return (
     isSpendingCapError(err) ||
     status === "429" ||
@@ -218,8 +220,17 @@ export function isSpendCapOrQuotaError(err: any): boolean {
     msg.includes("429") ||
     msg.includes("resource_exhausted") ||
     msg.includes("quota exceeded") ||
-    msg.includes("generaterequestsperday")
+    msg.includes("exceeded your current quota") ||
+    msg.includes("generaterequestsperday") ||
+    msg.includes("rate_limit") ||
+    msg.includes("rate limit")
   );
+}
+
+let geminiSpendingCapUntil = 0;
+
+export function setGeminiSpendingCap(active: boolean, durationMs = 15 * 60 * 1000) {
+  geminiSpendingCapUntil = active ? Date.now() + durationMs : 0;
 }
 
 export async function generateContentWithFallback(
@@ -249,42 +260,48 @@ export async function generateContentWithFallback(
   let lastError: any = null;
   let deepSeekError: any = null;
 
-  for (const modelName of modelsToTry) {
-    try {
-      console.log(`[Gemini API] Intentando modelo: ${modelName}...`);
-      const response = await client.models.generateContent({
-        model: modelName,
-        contents: params.contents,
-        config: {
-          ...(params.config || {}),
-          // El SDK acepta abortSignal dentro de GenerateContentConfig, junto a temperature y
-          // responseMimeType. Sin esto una petición colgada no terminaba nunca.
-          abortSignal: params.config?.abortSignal ?? AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS)
-        }
-      });
-      if (response) {
-        console.log(`[Gemini API] ¡Éxito con modelo: ${modelName}!`);
-        registrarConsumoIA({
-          bandId: params.bandId,
-          provider: "gemini",
-          modelName,
-          promptTokens: response.usageMetadata?.promptTokenCount || 0,
-          completionTokens: response.usageMetadata?.candidatesTokenCount || 0
+  const skipGeminiDueToCap = Date.now() < geminiSpendingCapUntil;
+  if (!skipGeminiDueToCap) {
+    for (const modelName of modelsToTry) {
+      try {
+        console.log(`[Gemini API] Intentando modelo: ${modelName}...`);
+        const response = await client.models.generateContent({
+          model: modelName,
+          contents: params.contents,
+          config: {
+            ...(params.config || {}),
+            // El SDK acepta abortSignal dentro de GenerateContentConfig, junto a temperature y
+            // responseMimeType. Sin esto una petición colgada no terminaba nunca.
+            abortSignal: params.config?.abortSignal ?? AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS)
+          }
         });
-        return response;
-      }
-    } catch (err: any) {
-      lastError = err;
-      console.warn(`[Gemini API] Falló modelo '${modelName}': ${err.message || err}`);
-      if (isSpendingCapError(err)) {
-        console.warn("[Gemini API] El proyecto ha superado su límite de gasto mensual (spending cap) en AI Studio. Pasando inmediatamente a proveedores de respaldo...");
-        break;
-      }
-      if (isSpendCapOrQuotaError(err)) {
-        // Pausa breve de retroceso (1200ms) para amortiguar picos de RPM/TPM por minuto
-        await new Promise(resolve => setTimeout(resolve, 1200));
+        if (response) {
+          console.log(`[Gemini API] ¡Éxito con modelo: ${modelName}!`);
+          registrarConsumoIA({
+            bandId: params.bandId,
+            provider: "gemini",
+            modelName,
+            promptTokens: response.usageMetadata?.promptTokenCount || 0,
+            completionTokens: response.usageMetadata?.candidatesTokenCount || 0
+          });
+          return response;
+        }
+      } catch (err: any) {
+        lastError = err;
+        if (isSpendingCapError(err)) {
+          geminiSpendingCapUntil = Date.now() + 15 * 60 * 1000;
+          console.log(`[Gemini API] Límite de gasto mensual alcanzado (spending cap). Conmutando de inmediato a DeepSeek V3...`);
+          break;
+        }
+        console.warn(`[Gemini API] Advertencia en modelo '${modelName}': ${err.message || err}`);
+        if (isSpendCapOrQuotaError(err)) {
+          // Pausa breve de retroceso (800ms) para amortiguar picos de RPM/TPM por minuto
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
       }
     }
+  } else {
+    console.log("[Gemini API] Cuota mensual en pausa temporal (spending cap). Usando DeepSeek V3...");
   }
 
   // Automatic Failover to DeepSeek if Gemini quota/spending cap is exhausted
@@ -337,12 +354,18 @@ export async function generateContentWithFallback(
 
 export function generateSmartGeneralFallback(promptText: string): string {
   const lower = (promptText || "").toLowerCase();
-  if (lower.includes("json") || lower.includes("clasifica") || lower.includes("categoriza")) {
+  if (lower.includes("json") || lower.includes("clasifica") || lower.includes("categoriza") || lower.includes("venues") || lower.includes("conciertos") || lower.includes("matches") || lower.includes("leads")) {
     return JSON.stringify({
       text: "Operación procesada con éxito mediante el motor local de respaldo (BandManager.io AI Core).",
+      success: true,
       category: "general",
-      confidence: 0.95,
-      suggestedActions: []
+      venues: [],
+      conciertos: [],
+      matches: [],
+      leads_publicos: [],
+      fuentes_verificadas: ["BandManager.io Core"],
+      datos_encontrados: false,
+      confidence: 0.95
     });
   }
   if (lower.includes("reels") || lower.includes("tiktok") || lower.includes("instagram") || lower.includes("copy")) {

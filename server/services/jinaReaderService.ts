@@ -218,7 +218,11 @@ export async function scrapeVenueWithJina(targetUrl: string): Promise<JinaExtrac
       resumen_markdown: markdown.slice(0, 600)
     };
   } catch (err: any) {
-    console.warn(`[JinaReader] Error leyendo ${targetUrl}:`, err?.message || err);
+    if (err?.name === "AbortError") {
+      console.log(`[JinaReader] Timeout (9s) consultando ${targetUrl}`);
+    } else {
+      console.warn(`[JinaReader] Error leyendo ${targetUrl}:`, err?.message || err);
+    }
     return {
       url: targetUrl,
       success: false,
