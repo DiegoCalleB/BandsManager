@@ -113,7 +113,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
  const targetCount = getTargetLeads().length;
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-fadeIn">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-6 text-[var(--ink)] relative">
  {/* Header */}
  <div className="flex items-center justify-between pb-4800">

@@ -1633,7 +1633,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
  {/* Privacy Policy Modal */}
  {showPrivacyModal && (
- <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 flex items-center justify-center p-4">
+ <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
  <div className="max-w-lg w-full bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-4 max-h-[85vh] overflow-y-auto">
  <div className="flex items-center justify-between pb-4">
  <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm tracking-wider">

@@ -356,7 +356,7 @@ export function ModoLocalEnVivoTab({
  onTouchEnd={handleTouchEnd}
  className={`animate-fade-in select-none ${
  isFullscreen 
- ?'fixed inset-0 z-50 bg-[var(--bg)] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between' 
+ ?'fixed inset-0 z-[9999] bg-[var(--bg)] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between' 
  :'space-y-4'
  }`}
  >

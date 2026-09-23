@@ -2363,7 +2363,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
  {/* Modal de Vinculación de Sesión / Cookies de YouTube */}
  {cookieModalOpen && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-4 text-[var(--ink-2)]">
  <div className="flex items-center justify-between pb-3">
  <div className="flex items-center gap-2">
@@ -2471,7 +2471,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
  )}
  {/* Modal: Asistente para Nombrar Temas y Speeches */}
  {showQuickNamingModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-fade-in">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-fade-in">
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-3xl w-full p-6 space-y-4 text-[var(--ink-2)] max-h-[90vh] flex flex-col">
  {/* Header */}
  <div className="flex items-center justify-between pb-3 shrink-0">

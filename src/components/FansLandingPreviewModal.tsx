@@ -53,7 +53,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
  return (
  <div 
  id="fans-landing-preview-modal"
- className="fixed inset-0 z-50 bg-[var(--scrim)]/95 flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
+ className="fixed inset-0 z-[9999] bg-[var(--scrim)]/95 flex flex-col h-[100dvh] w-screen animate-fade-in overflow-hidden select-none"
  >
  {/* BARRA SUPERIOR PRINCIPAL (DESKTOP & MOBILE) */}
  <header className="w-full bg-[var(--surface)] px-3 sm:px-5 py-2.5 shrink-0 z-30 flex items-center justify-between gap-2">

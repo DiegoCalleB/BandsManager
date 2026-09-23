@@ -1706,7 +1706,7 @@ export function ReelsMetricsView({
 
  {/* 4. Instagram Meta Graph API & OAuth Connection Modal */}
  {showIgModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/75 animate-in fade-in duration-200">
  <div 
  className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden ${
  'bg-[var(--surface)] text-[var(--ink)]'
@@ -1948,7 +1948,7 @@ export function ReelsMetricsView({
 
  {/* 5. GEMINI MULTIMODAL SCREENSHOT SCANNER MODAL */}
  {showScanModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div className={`w-full max-w-xl rounded-[var(--r-l)] overflow-hidden flex flex-col ${
  'bg-[var(--surface)] text-[var(--ink)]'
  }`}>

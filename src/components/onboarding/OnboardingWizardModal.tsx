@@ -1000,7 +1000,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
  return (
  <ModalPortal>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-[var(--scrim)]/85 overflow-y-auto">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 bg-[var(--scrim)]/85 overflow-y-auto">
  <div className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface)] overflow-hidden flex flex-col max-h-[90vh] my-auto">
  
  {/* Header */}

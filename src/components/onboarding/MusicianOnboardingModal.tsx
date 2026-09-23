@@ -39,7 +39,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
  };
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div 
  role="dialog"
  aria-modal="true"

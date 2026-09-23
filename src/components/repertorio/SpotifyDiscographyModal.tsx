@@ -273,7 +273,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
  if (!isOpen) return null;
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 animate-fadeIn">
  <div
  className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl overflow-hidden transition-all ${
  'bg-[var(--surface)] text-[var(--ink)]'

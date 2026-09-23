@@ -103,7 +103,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
  };
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface)]/80">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--surface)]/80">
  <div className="bg-[var(--surface)] rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
  {/* Cabecera */}
  <div className="flex items-center justify-between pb-4">

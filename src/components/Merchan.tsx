@@ -720,7 +720,7 @@ export default function Merchan({ colors, currentTheme, bandId, bandName, bandLo
 
  {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
  {showClaimModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
  <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)] /50 overflow-hidden flex flex-col max-h-[90vh]">
  {/* Modal Header */}
  <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[var(--sunken)] flex items-center justify-between">

@@ -988,7 +988,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
  {/* Drawer: Repertorio completo, pistas Iris y accesos directos a Studio */}
  {showSongListDrawer && (
- <div className="fixed inset-0 z-50 flex justify-end bg-[var(--scrim)]/75 animate-in fade-in duration-150">
+ <div className="fixed inset-0 z-[9999] flex justify-end bg-[var(--scrim)]/75 animate-in fade-in duration-150">
  <div className="w-full max-w-md h-full bg-[var(--surface)] flex flex-col text-[var(--ink)]">
  {/* Drawer Header */}
  <div className="p-4 flex items-center justify-between bg-[var(--surface)]">

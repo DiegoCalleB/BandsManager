@@ -2835,7 +2835,7 @@ export default function CalendarView({
  <div
  ref={calendarContainerRef}
  className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${'text-[var(--ink)] bg-[var(--sunken)]'} font-sans items-stretch w-full max-w-full overflow-x-hidden ${
- isCalendarFullscreen ?'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto' :''
+ isCalendarFullscreen ?'fixed inset-0 z-[9999] p-4 sm:p-6 overflow-y-auto' :''
  }`}
  >
  {/* LEFT: MONTH GRID CALENDAR (2/3 width) */}
@@ -6313,7 +6313,7 @@ export default function CalendarView({
  {/* Modal de Sincronización Automática con Google Calendar / Apple iCal */}
  {showSyncModal && (
  <ModalPortal>
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
  <div className={`relative w-full max-w-xl rounded-[var(--r-l)] p-6 ${
  "bg-[var(--surface)] text-[var(--ink)]"
  }`}>
