@@ -78,6 +78,7 @@ import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typ
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from './utils/planPermissions';
 import { NAV_ITEMS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
+import { SkeletonDashboard } from './components/ui/Skeleton';
 import { NavItemButton } from './components/common/NavItemButton';
 import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
 import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
@@ -1392,10 +1393,7 @@ export default function App() {
  {/* Dynamic Views */}
  <div key={currentView} className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in">
  {isLoading ? (
- <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
- <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
- <p className="text-xs text-[var(--ink-3)] font-sans">Cargando base de datos Bakandeya...</p>
- </div>
+ <SkeletonDashboard />
  ) : (
  <Suspense fallback={
  <div className="flex flex-col items-center justify-center py-24 text-center gap-3">

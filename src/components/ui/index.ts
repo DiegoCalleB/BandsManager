@@ -6,3 +6,6 @@ export type { OndaBar, OndaProps, OndaSeriesProps } from './Onda';
 
 export { PublicoSilhouette } from './PublicoSilhouette';
 export type { PublicoSilhouetteProps } from './PublicoSilhouette';
+
+export { Skeleton, SkeletonText, SkeletonKpiCard, SkeletonDashboard } from './Skeleton';
+export type { SkeletonProps } from './Skeleton';
