@@ -21,6 +21,7 @@ import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors
 import { api } from '../../services/api';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { useScrollLock } from '../../hooks/useScrollLock';
+import { useVisualViewportOverlayStyle } from '../../hooks/useVisualViewportOverlayStyle';
 import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
 
 export interface DashboardWidgetGridProps {
@@ -95,6 +96,7 @@ export function DashboardWidgetGrid({
  const [isEditMode, setIsEditMode] = useState(false);
  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
  useScrollLock(isAddModalOpen);
+ const addModalOverlayStyle = useVisualViewportOverlayStyle();
  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
  const [isSaving, setIsSaving] = useState(false);
  const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
@@ -590,7 +592,10 @@ export function DashboardWidgetGrid({
  tapa. El resto de modales reales del repo (SongModal, BandSwitcherModal...) ya usan
  z-[9999]/z-[10000] por este mismo motivo; este era el único que se había quedado en z-50. */}
  {isAddModalOpen && (
- <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
+ <div
+ style={addModalOverlayStyle}
+ className="z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4"
+ >
  <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
  {/* Header */}
  <div className="p-5 flex items-center justify-between">
