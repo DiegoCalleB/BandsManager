@@ -247,4 +247,55 @@ test.describe('regresión visual — móvil', () => {
       await expect(page).toHaveScreenshot(`${ranura}-movil.png`, COMPARACION);
     });
   }
+
+  /**
+   * Regresión directa de la sesión 2026-09-23: el modal de "Añadir Widget" se
+   * pintaba tapado por la barra del reproductor y la nav inferior (z-50 vs su
+   * propio contexto de apilamiento en App.tsx) y la píldora "Todos" se
+   * aplastaba a 0 de alto (overflow-x-auto sin shrink-0 dentro de un
+   * flex-col). Un diff de píxeles no basta aquí — lo que importa es la
+   * geometría: el overlay debe cubrir el viewport entero y "Cerrar" debe
+   * quedar visible y clicable, no una franja de arriba nada más.
+   */
+  test('modal añadir widget cubre el viewport y no lo tapa nada', async ({ page }) => {
+    await abrirApp(page, true);
+
+    await page.getByText('Personalizar Dashboard').click();
+    await page.getByText('Añadir Widget').click();
+
+    const cerrar = page.getByRole('button', { name: 'Cerrar' });
+    await expect(cerrar).toBeVisible();
+
+    const viewport = page.viewportSize();
+    if (!viewport) throw new Error('viewport no disponible');
+
+    // Selector por clase ambiguo (puede haber otros z-[9999] montados aunque cerrados,
+    // p. ej. el panel de chat del agente IA) — se sube desde el propio título del modal
+    // hasta el primer ancestro con position:fixed, que es el overlay real sea cual sea
+    // su clase.
+    const overlayBox = await page.evaluate(() => {
+      const heading = Array.from(document.querySelectorAll('h3')).find((h) =>
+        h.textContent?.includes('Catálogo de Widgets del Dashboard')
+      );
+      if (!heading) return null;
+      let el: HTMLElement | null = heading;
+      while (el && getComputedStyle(el).position !== 'fixed') el = el.parentElement;
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    });
+    expect(overlayBox).not.toBeNull();
+    expect(overlayBox!.x).toBeCloseTo(0, 0);
+    expect(overlayBox!.y).toBeCloseTo(0, 0);
+    expect(overlayBox!.width).toBeCloseTo(viewport.width, 0);
+    expect(overlayBox!.height).toBeCloseTo(viewport.height, 0);
+
+    const cerrarBox = await cerrar.boundingBox();
+    expect(cerrarBox).not.toBeNull();
+    expect(cerrarBox!.y).toBeLessThanOrEqual(viewport.height);
+    expect(cerrarBox!.y).toBeGreaterThanOrEqual(0);
+
+    await prepararPagina(page);
+    await expect(page).toHaveScreenshot('catalogo-widgets-movil.png', COMPARACION);
+  });
 });

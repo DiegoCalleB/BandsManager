@@ -162,15 +162,30 @@ input:focus, textarea:focus, select:focus, button:focus {
   transform: translateY(-2px);
 }
 
-/* Lightweight Hardware-Accelerated Entrance Animations */
+/* Entrance animations — solo opacity, nunca transform.
+ *
+ * Antes tenían un translate3d/scale de "from" que volvía a transform:none en "to". Con
+ * animation-fill-mode:forwards (ver .animate-fade-in/.animate-pop-in abajo), el navegador
+ * mantiene el valor animado de "transform" indefinidamente incluso después de terminar la
+ * animación — getComputedStyle() ya no devuelve la palabra 'none', devuelve una matriz
+ * identidad (matrix(1,0,0,1,0,0)), que SÍ cuenta como "transform distinto de none" a
+ * efectos de containing block. Cualquier position:fixed descendiente (un modal, un menú)
+ * deja de posicionarse contra el viewport y pasa a posicionarse contra esta caja.
+ *
+ * Esto es justo lo que rompía el modal de "Añadir Widget" en producción (sesión
+ * 2026-09-23): App.tsx:~1393 envuelve CADA vista de la app en un div con animate-fade-in
+ * — no era un bug de ese modal en concreto, afectaba a cualquier position:fixed montado
+ * dentro de cualquier vista. El z-index nunca fue suficiente por sí solo: el contenedor
+ * ya estaba mal posicionado antes de comparar z-index con nada.
+ */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translate3d(0, 3px, 0); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .animate-fade-in {
