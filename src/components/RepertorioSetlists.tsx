@@ -3214,15 +3214,7 @@ export default function RepertorioSetlists({
  showBpmLine={showBpmLine}
  showTonalidad={showTonalidad}
  expandedWidthPx={chartZoom ? Math.max(700, chartData.length * 60) : undefined}
- />
- </div>
-
- {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
- baja su energía un punto exacto — alternativa al arrastre del gráfico para
- cuando se quiere precisión, o directamente para móvil, donde el arrastre (sobre
- todo en vertical, encima de un SVG de recharts) no siempre responde igual de
- bien que en escritorio. */}
- {selectedSetlistItemId && (() => {
+ belowChartSlot={selectedSetlistItemId && (() => {
  const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
  if (selectedIndex === -1) return null;
  const point = chartData[selectedIndex];
@@ -3383,6 +3375,8 @@ export default function RepertorioSetlists({
  </div>
  );
  })()}
+ />
+ </div>
 
  {/* Avisos y sugerencias — plegados por defecto, con un solo toggle que resume
  cuántos hay entre los heurísticos y los del último Análisis IA, en vez de dos

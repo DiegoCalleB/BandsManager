@@ -100,6 +100,11 @@ interface EnergyChartProps {
  * horizontal entre puntos para leer etiquetas (tonalidad, BPM) sin que se pisen. El que llama
  * es responsable de envolver el componente en un contenedor con scroll horizontal. */
  expandedWidthPx?: number;
+ /** Controles del punto seleccionado (joystick de reordenar/energía) que quien llama quiere
+ * justo debajo del gráfico, ANTES del panel de detalle — que puede crecer bastante (unión,
+ * botón de probar transición...) y dejarían el joystick"enterrado" varios scrolls más abajo
+ * si se renderizase aparte, después de este componente. */
+ belowChartSlot?: React.ReactNode;
 }
 
 /**
@@ -126,7 +131,8 @@ export function EnergyChart({
  showTonalidad = false,
  showTransitionBadges = true,
  onPreviewTransition,
- expandedWidthPx
+ expandedWidthPx,
+ belowChartSlot
 }: EnergyChartProps) {
  const gradientSuffix = compact ?'-compact' :'';
  const fontSize = compact ? 8 : 9;
@@ -179,11 +185,38 @@ export function EnergyChart({
  const containerRef = useRef<HTMLDivElement>(null);
  const [draggingFromIndex, setDraggingFromIndex] = useState<number | null>(null);
  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
- // Índice (en songsOnlyData) del punto"activo" para mostrar su detalle — el detalle vive en un
- // panel FUERA del SVG, nunca como tooltip flotante encima de la curva (en móvil, sin"salir con
- // el ratón" para cerrarlo, se quedaba pegado tapando el gráfico entero). Se cierra al soltar el
- // dedo/ratón fuera del gráfico, al tocar el mismo punto otra vez, o con la ✕ del panel.
- const [activePointIndex, setActivePointIndex] = useState<number | null>(null);
+ // El panel de detalle vive FUERA del SVG, nunca como tooltip flotante encima de la curva (en
+ // móvil, sin"salir con el ratón" para cerrarlo, se quedaba pegado tapando el gráfico entero).
+ // Antes llevaba su propio índice (`activePointIndex`), separado de `selectedSetlistItemId` (el
+ // que mueve el joystick) — dos"punto seleccionado" que no se enteraban el uno del otro, así que
+ // tocar una canción movía el joystick pero el panel se quedaba con el último punto que sí había
+ // pasado por el click-por-posición del contenedor. Ahora el panel se deriva directamente de
+ // `selectedSetlistItemId`, la misma fuente que ya usa el joystick — un solo"seleccionado" real.
+ // `dismissedId` es el único estado propio: qué selección se cerró a propósito con la ✕, para no
+ // reabrir el panel solo porque `selectedSetlistItemId` no cambió.
+ const [dismissedId, setDismissedId] = useState<string | null>(null);
+ const activePoint = (selectedSetlistItemId && selectedSetlistItemId !== dismissedId)
+ ? (chartData.find((d) => d.id === selectedSetlistItemId) ?? null)
+ : null;
+ // Único punto de entrada para seleccionar un punto (clic en el punto, en el contenedor, o tap
+ // sin arrastre) — limpia el "cerrado a mano" para que volver a tocar el mismo punto tras cerrar
+ // su panel lo vuelva a abrir, no lo deje muerto para siempre.
+ const selectPoint = (id: string) => {
+ setDismissedId(null);
+ onSelectItem?.(id);
+ };
+ // Tooltip compacto al pasar el ratón — solo en dispositivos con hover real (ratón), nunca en
+ // táctil: es justo el "se queda pegado tapando el gráfico" que forzó a sacar el detalle del
+ // tooltip flotante en primer lugar (ver comentario de arriba). En PC no estorba porque
+ // desaparece solo al mover el ratón fuera.
+ const [isPointerFine, setIsPointerFine] = useState(false);
+ useEffect(() => {
+ const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+ setIsPointerFine(mq.matches);
+ const onChange = (e: MediaQueryListEvent) => setIsPointerFine(e.matches);
+ mq.addEventListener('change', onChange);
+ return () => mq.removeEventListener('change', onChange);
+ }, []);
  const draggingFromIndexRef = useRef<number | null>(null);
  const activePointerIdRef = useRef<number | null>(null);
  const dragStartClientXRef = useRef<number | null>(null);
@@ -346,7 +379,7 @@ export function EnergyChart({
  // tap/clic normal: selecciona ese tema. La diana táctil que arranca el arrastre tiene
  // pointer-events encima del punto visible, así que su onClick nativo ya no llega — se
  // resuelve aquí.
- else if (from !== null) onSelectItem?.(chartData[from]?.id);
+ else if (from !== null && chartData[from]) selectPoint(chartData[from].id);
  }
  resetDragState();
  };
@@ -373,8 +406,12 @@ export function EnergyChart({
  ref={containerRef}
  onClick={(e) => {
  if (draggingFromIndex !== null) return;
+ // Clic cerca de un punto sin acertarlo exactamente: mismo camino que clicar el punto
+ // en sí (selectPoint), para que sea SIEMPRE la fuente que mueve panel + joystick a la
+ // vez — nunca su propio índice suelto otra vez.
  const idx = getIndexFromClientX(e.clientX);
- setActivePointIndex((prev) => (prev === idx ? null : idx));
+ const point = chartData[idx];
+ if (point) selectPoint(point.id);
  }}
  className={`relative w-full bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden`}
  style={{
@@ -565,10 +602,35 @@ export function EnergyChart({
  />
  )}
 
- {/* Solo la línea guía vertical del cursor — el detalle del punto YA NO se pinta aquí como
- tooltip flotante (ver panel fijo debajo del ResponsiveContainer): en móvil, sin"salir con
- el ratón" para cerrarlo, se quedaba pegado encima de la curva tapando el gráfico entero. */}
- <RechartsTooltip cursor={{ stroke:'var(--ink-2)', strokeDasharray:'3 3' }} content={() => null} />
+ {/* Tooltip compacto — SOLO con ratón real (isPointerFine); en táctil vuelve a devolver
+ null, exactamente el comportamiento de antes: el detalle completo del punto YA NO se
+ pinta aquí como tooltip flotante en móvil (ver panel fijo debajo del
+ ResponsiveContainer) porque sin"salir con el ratón" para cerrarlo, se quedaba pegado
+ encima de la curva tapando el gráfico entero. En escritorio ese problema no existe —
+ el tooltip desaparece solo en cuanto el ratón se mueve fuera del punto — así que ahí sí
+ vale la pena un vistazo rápido (nombre, energía, tono) sin tener que hacer clic. */}
+ <RechartsTooltip
+ cursor={{ stroke:'var(--ink-2)', strokeDasharray:'3 3' }}
+ content={({ active, payload }: any) => {
+ if (!isPointerFine || !active || !payload || payload.length === 0) return null;
+ const d: EnergyChartPoint | undefined = payload[0]?.payload;
+ if (!d) return null;
+ return (
+ <div className="bg-[var(--surface)] text-[var(--ink)] text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px]">
+ <p className="font-bold text-[var(--acc)] truncate">{d.name}</p>
+ {d.isSpeechEvent ? (
+ <p className="text-[var(--ink-2)]">{d.icon} Interludio / Pausa</p>
+ ) : (
+ <p className="text-[var(--ink-2)] truncate">
+ {d.icon} {d.label} ({Math.round(d.score / 2)}/10)
+ {d.tonalidad ? ` · ${d.tonalidad}` : ''}
+ {typeof d.bpm === 'number' ? ` · ${d.bpm} BPM` : ''}
+ </p>
+ )}
+ </div>
+ );
+ }}
+ />
 
  {/* Curva"ideal" de referencia — dibujada ANTES (por debajo, en capas) que la curva real
  para poder comparar de un vistazo dónde se aleja más, sin depender del texto del
@@ -679,7 +741,7 @@ export function EnergyChart({
  transition: isDraggingThis ?'none' :'all 0.2s ease',
  pointerEvents: canDragThis ?'none' :'auto'
  }}
- onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
+ onClick={() => { if (draggingFromIndex === null) selectPoint(payload.id); }}
  />
  {/* Etiqueta de tonalidad — puramente informativa, nunca captura el puntero (si
  no, taparía la diana táctil del punto justo debajo). Los picos de energía
@@ -770,16 +832,17 @@ export function EnergyChart({
  </ComposedChart>
  </ResponsiveContainer>
  </div>
+ {belowChartSlot}
  {/* Panel de detalle del punto activo — FUERA del contenedor del gráfico (que tiene
  overflow-hidden y alto fijo), debajo de él, nunca flotando encima de la curva. Ver
  comentario en RechartsTooltip más arriba sobre por qué se sacó de ahí. */}
- {activePointIndex !== null && chartData[activePointIndex] && (() => {
- const d = chartData[activePointIndex];
+ {activePoint && (() => {
+ const d = activePoint;
  return (
  <div className="mt-2 bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] relative">
  <button
  type="button"
- onClick={() => setActivePointIndex(null)}
+ onClick={() => setDismissedId(d.id)}
  className="absolute top-1.5 right-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
  title="Cerrar"
  >
