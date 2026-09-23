@@ -14,6 +14,7 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
 import { NeedsAttentionBanner } from './dashboard/NeedsAttentionBanner';
+import { ConvocarEnsayoModal } from './ensayos/ConvocarEnsayoModal';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
@@ -47,6 +48,8 @@ interface DashboardProps {
  currentBandId?: string;
  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
  rehearsals?: Rehearsal[];
+ onAddRehearsal?: (rehearsal: Rehearsal) => void;
+ bandUsers?: Array<{ id: string; name: string; instrument?: string }>;
  epkConfig?: Partial<EPKConfig>;
  tours?: Tour[];
  fans?: Fan[];
@@ -78,6 +81,8 @@ export default function Dashboard({
  metrics = [],
  concerts = [],
  rehearsals = [],
+ onAddRehearsal,
+ bandUsers = [],
  currentUser,
  bandName,
  currentBandId,
@@ -96,6 +101,8 @@ export default function Dashboard({
  const [genreFilter, setGenreFilter] = useState('todos');
  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+ const [isQuickRehearsalOpen, setIsQuickRehearsalOpen] = useState(false);
+ const [showQuickAddMenu, setShowQuickAddMenu] = useState(false);
  const [isEmailTemplatesOpen, setIsEmailTemplatesOpen] = useState(false);
  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
  const [syncLoading, setSyncLoading] = useState(false);
@@ -771,6 +778,37 @@ export default function Dashboard({
  </div>
 
  <div className="flex items-center gap-2">
+ <div className="relative">
+ <button
+ type="button"
+ onClick={() => setShowQuickAddMenu(v => !v)}
+ title="Añadir rápido"
+ className="p-2 rounded-[var(--r-pill)] bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] transition-[filter] cursor-pointer"
+ >
+ <Plus className="w-4 h-4" />
+ </button>
+ {showQuickAddMenu && (
+ <>
+ <div className="fixed inset-0 z-30" onClick={() => setShowQuickAddMenu(false)} />
+ <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
+ <button
+ type="button"
+ onClick={() => { setShowQuickAddMenu(false); setIsAddModalOpen(true); }}
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
+ >
+ <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" /> Lead rápido
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowQuickAddMenu(false); setIsQuickRehearsalOpen(true); }}
+ className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
+ >
+ <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" /> Ensayo rápido
+ </button>
+ </div>
+ </>
+ )}
+ </div>
  <button
  type="button"
  onClick={() => onNavigate && onNavigate('calendario')}
@@ -852,6 +890,24 @@ export default function Dashboard({
  newNotas={newNotas}
  setNewNotas={setNewNotas}
  />
+
+ {/* MODAL: CONVOCAR ENSAYO RÁPIDO — mismo componente que usa el módulo de Ensayos, solo
+ con la entrada más a mano desde el panel. */}
+ {isQuickRehearsalOpen && (
+ <ConvocarEnsayoModal
+ isOpen={isQuickRehearsalOpen}
+ onClose={() => setIsQuickRehearsalOpen(false)}
+ onSave={(rehearsal) => {
+ onAddRehearsal?.(rehearsal as Rehearsal);
+ setIsQuickRehearsalOpen(false);
+ }}
+ colors={colors}
+ setlists={setlists}
+ bandUsers={bandUsers}
+ currentBandId={currentBandId}
+ initialRehearsal={null}
+ />
+ )}
 
  {/* MODAL / BOTTOM SHEET MOBILE FOR SELECTED LEAD IN DASHBOARD */}
  {selectedLead && (

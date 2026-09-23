@@ -1409,6 +1409,8 @@ export default function App() {
  metrics={metrics}
  concerts={concerts}
  rehearsals={rehearsals}
+ onAddRehearsal={handleAddRehearsal}
+ bandUsers={bandUsers}
  currentUser={currentUser}
  bandName={currentActiveBandName}
  currentBandId={currentActiveBandId}
