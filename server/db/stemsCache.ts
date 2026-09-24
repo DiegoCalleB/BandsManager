@@ -1,4 +1,5 @@
 import { getSupabase } from "./core.js";
+import { ensureRegisteredBandExists } from "./bands.js";
 
 export interface StemsCacheRecord {
   bandId: string;
@@ -129,6 +130,9 @@ export async function acquireStemsSeparationLock(
   }
 
   try {
+    if (bandId && bandId !== "sin-banda") {
+      await ensureRegisteredBandExists(bandId).catch(() => {});
+    }
     const sb = getSupabase();
 
     // 2. Comprobar si ya existe fila en Supabase
@@ -311,6 +315,9 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
   // devuelve { error } — hay que comprobarlo explícitamente o un fallo real (p.ej. PGRST204 por un
   // esquema desincronizado) se registra como "guardado con éxito" mientras la fila real nunca cambia.
   try {
+    if (record.bandId && record.bandId !== "sin-banda") {
+      await ensureRegisteredBandExists(record.bandId).catch(() => {});
+    }
     const sb = getSupabase();
     const { error } = await sb
       .from("song_stems_cache")

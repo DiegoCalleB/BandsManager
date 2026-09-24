@@ -896,7 +896,9 @@ export default function SongStudioModal({
       const finalSeparationEngine = data.degraded
         ? 'Iris Básico (modo degradado)'
         : engineToUse === 'mvsep-mdx23' ? 'Iris Studio' : engineToUse === 'demucs' ? 'Iris Cloud' : 'Iris Básico';
-      const existingIndex = (song.audioIdeas || []).findIndex(i => i.id === targetIdea.id);
+      const existingIndex = (song.audioIdeas || []).findIndex(
+        i => i.id === targetIdea.id || (targetIdea.audioUrl && i.audioUrl === targetIdea.audioUrl) || (i.titulo && i.titulo === targetIdea.titulo)
+      );
       let updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
       const updatedIdeaContent: SongAudioIdea = {
         ...targetIdea,
@@ -912,6 +914,9 @@ export default function SongStudioModal({
         updatedIdeas.push(updatedIdeaContent);
       }
       onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+
+      // Asegurar que la idea quede expandida y visible en pantalla de inmediato
+      setExpandedIdeaIds(prev => new Set([...prev, targetIdea.id, updatedIdeaContent.id]));
 
       const stemsInfo = newTracks.map(t => ({
         instrument: t.instrumento || 'Pista',
@@ -6430,7 +6435,12 @@ export default function SongStudioModal({
 
                 <button
                   type="button"
-                  onClick={() => setStemProgressModal(null)}
+                  onClick={() => {
+                    if (stemProgressModal?.targetIdea?.id) {
+                      setExpandedIdeaIds(prev => new Set([...prev, stemProgressModal.targetIdea!.id]));
+                    }
+                    setStemProgressModal(null);
+                  }}
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-zinc-950 font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2"
                 >
                   <Sliders className="w-4 h-4" />

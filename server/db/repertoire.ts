@@ -316,11 +316,34 @@ function dispararDeteccionTonalidadDesdeStemEnSegundoPlano(songId: string, stemA
   });
 }
 
+function parseJsonArray(val: any): any[] {
+  if (!val) return [];
+  if (Array.isArray(val)) return val;
+  if (typeof val === "string" && val.trim()) {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {}
+  }
+  return [];
+}
+
 export function mapSongRecord(s: any) {
   if (!s || typeof s !== "object") return s;
   const audioUrl = s.audio_principal_url || s.audioPrincipalUrl || s.audio_url || s.audioUrl || "";
   const portada = s.portada_url || s.portadaUrl || "";
   const albumDisco = s.album_disco || s.albumDisco || s.album || "";
+  const parsedIdeas = parseJsonArray(s.audio_ideas || s.audioIdeas);
+  const audioIdeas = parsedIdeas.length > 0
+    ? parsedIdeas
+    : (audioUrl ? [{
+        id: `idea_${s.id}`,
+        titulo: "Audio Oficial",
+        seccion: "general" as const,
+        audioUrl,
+        subidoPor: "Sync",
+        fecha: new Date().toISOString()
+      }] : []);
 
   return {
     ...s,
@@ -374,23 +397,8 @@ export function mapSongRecord(s: any) {
     audioPrincipalUrl: audioUrl,
     audio_principal_url: audioUrl,
     audioUrl,
-    audioIdeas: (Array.isArray(s.audio_ideas) && s.audio_ideas.length > 0)
-      ? s.audio_ideas
-      : (Array.isArray(s.audioIdeas) && s.audioIdeas.length > 0)
-        ? s.audioIdeas
-        : (audioUrl ? [{
-            id: `idea_${s.id}`,
-            titulo: "Audio Oficial",
-            seccion: "general" as const,
-            audioUrl,
-            subidoPor: "Sync",
-            fecha: new Date().toISOString()
-          }] : []),
-    audio_ideas: (Array.isArray(s.audio_ideas) && s.audio_ideas.length > 0)
-      ? s.audio_ideas
-      : (Array.isArray(s.audioIdeas) && s.audioIdeas.length > 0)
-        ? s.audioIdeas
-        : [],
+    audioIdeas,
+    audio_ideas: audioIdeas,
     cifradoTexto: s.cifrado_texto || s.cifradoTexto || "",
     cifrado_texto: s.cifrado_texto || s.cifradoTexto || "",
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
@@ -440,35 +448,43 @@ function preferClearableString(camelValue: any, snakeValue: any, fallback = ""):
   return fallback;
 }
 
-export async function dbUpsertSong(song: any, bandId: string) {
+export async function dbUpsertSong(song: any, bandId: string, isAdmin: boolean = false) {
   const sb = getSupabase();
-  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
-  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
-  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
-  const targetBandId = cleanBandId(bandId);
-  await ensureRegisteredBandExists(targetBandId);
+  // 'bandId' es el origen de confianza resuelto desde la sesión; si el usuario es admin,
+  // se permite actualizar canciones existentes preservando su band_id original.
+  let targetBandId = cleanBandId(bandId);
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
-  // usuario no se reutiliza nunca.
+  // usuario no se reutiliza nunca, salvo si el usuario es admin con acceso global.
   let finalSongId = song.id;
   let existing: { id: string; band_id: string; audio_principal_url?: string; audio_ideas?: any[] } | null = null;
   if (finalSongId) {
     const { data } = await sb.from("songs").select("id, band_id, audio_principal_url, audio_ideas").eq("id", finalSongId).maybeSingle();
     existing = data;
     const stripPrefix = (b?: string) => (b || "").trim().toLowerCase().replace(/^(band|reg)-/, "");
-    if (existing && stripPrefix(existing.band_id) !== stripPrefix(targetBandId)) {
-      finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-      existing = null;
+    if (existing) {
+      const sameBand = stripPrefix(existing.band_id) === stripPrefix(targetBandId);
+      if (sameBand) {
+        // Misma banda
+      } else if (isAdmin) {
+        // El usuario admin tiene permiso global: respetamos la banda original de la canción
+        targetBandId = existing.band_id;
+      } else {
+        finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+        existing = null;
+      }
     }
   }
 
-  // Fusionar inteligentemente audio_ideas para NO perder pistas/stems extraídas previamente
-  const existingIdeas = existing?.audio_ideas || [];
-  let incomingIdeas = song.audioIdeas || song.audio_ideas;
+  await ensureRegisteredBandExists(targetBandId);
 
-  if ((!incomingIdeas || !Array.isArray(incomingIdeas) || incomingIdeas.length === 0) && existingIdeas.length > 0) {
+  // Fusionar inteligentemente audio_ideas para NO perder pistas/stems extraídas previamente
+  const existingIdeas = parseJsonArray(existing?.audio_ideas);
+  let incomingIdeas = parseJsonArray(song.audioIdeas || song.audio_ideas);
+
+  if (incomingIdeas.length === 0 && existingIdeas.length > 0) {
     incomingIdeas = existingIdeas;
-  } else if (Array.isArray(incomingIdeas) && existingIdeas.length > 0) {
+  } else if (incomingIdeas.length > 0 && existingIdeas.length > 0) {
     incomingIdeas = incomingIdeas.map((incIdea: any) => {
       const existingMatch = existingIdeas.find(
         (e: any) => e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
@@ -476,7 +492,11 @@ export async function dbUpsertSong(song: any, bandId: string) {
       if (existingMatch && (!incIdea.pistas || incIdea.pistas.length === 0) && existingMatch.pistas && existingMatch.pistas.length > 0) {
         return {
           ...incIdea,
-          pistas: existingMatch.pistas
+          pistas: existingMatch.pistas,
+          stemEngineUsed: incIdea.stemEngineUsed || existingMatch.stemEngineUsed,
+          stemIsNeural: incIdea.stemIsNeural ?? existingMatch.stemIsNeural,
+          stemDegraded: incIdea.stemDegraded ?? existingMatch.stemDegraded,
+          stemProcessedAt: incIdea.stemProcessedAt || existingMatch.stemProcessedAt
         };
       }
       return incIdea;
