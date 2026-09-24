@@ -189,7 +189,12 @@ async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: 
       try {
         const isSafe = await esUrlExternaSegura(audioUrl);
         if (isSafe) {
-          const res = await fetch(audioUrl);
+          const res = await fetch(audioUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': '*/*'
+            }
+          });
           if (res.ok) {
             const ab = await res.arrayBuffer();
             buffer = Buffer.from(ab);
@@ -251,7 +256,11 @@ async function ensureCompressedAudioForReplicate(url: string, bandId: string, so
   const MIN_WORTHWHILE_SIZE = 300 * 1024; // Clips muy cortos no compensan el viaje de ida y vuelta
 
   try {
-    const headRes = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(8000) });
+    const fetchHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': '*/*'
+    };
+    const headRes = await fetch(url, { method: 'HEAD', headers: fetchHeaders, signal: AbortSignal.timeout(8000) });
     const contentType = (headRes.headers.get('content-type') || '').toLowerCase();
     const contentLength = parseInt(headRes.headers.get('content-length') || '0', 10);
     const urlLooksLikeMp3 = url.toLowerCase().split('?')[0].endsWith('.mp3');
@@ -264,7 +273,13 @@ async function ensureCompressedAudioForReplicate(url: string, bandId: string, so
   }
 
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(45000) });
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': '*/*'
+      },
+      signal: AbortSignal.timeout(45000)
+    });
     if (!res.ok) return url;
     const original = Buffer.from(await res.arrayBuffer());
     if (original.length === 0) return url;
@@ -1397,7 +1412,12 @@ async function processServerStemsFfmpeg(
       } else {
         const isSafe = await esUrlExternaSegura(audioUrl);
         if (isSafe) {
-          const res = await fetch(audioUrl);
+          const res = await fetch(audioUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': '*/*'
+            }
+          });
           if (res.ok) {
             const arrayBuf = await res.arrayBuffer();
             fs.writeFileSync(tempLocalFile, Buffer.from(arrayBuf));

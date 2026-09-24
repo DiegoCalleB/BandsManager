@@ -33,7 +33,7 @@ import {
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
   Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
   FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
-  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical, GripVertical
+  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical, GripVertical, Zap
 } from 'lucide-react';
 
 
@@ -189,7 +189,8 @@ interface SongStudioModalProps {
 
 // Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
 // una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
-const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+const IRIS_ENGINE_COST_EUR: Record<'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+  'lalalai': 0.05,
   'mvsep-mdx23': 0.08,
   'demucs': 0.03,
   'dsp-server': 0
@@ -478,7 +479,7 @@ export default function SongStudioModal({
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
-  const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('demucs');
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server'>('lalalai');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('6_stems');
@@ -581,7 +582,7 @@ export default function SongStudioModal({
     degraded?: boolean;
     degradedReason?: string;
     separationEngine?: string;
-    engineChoice?: 'mvsep-mdx23' | 'demucs' | 'dsp-server';
+    engineChoice?: 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server';
     stemsAdded?: number;
     stemsInfo?: Array<{ instrument: string; trackName: string; formato: string; tamano: string; audioUrl?: string }>;
     errorMessage?: string;
@@ -637,7 +638,7 @@ export default function SongStudioModal({
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (
     targetIdea: SongAudioIdea,
-    overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server',
+    overrideEngine?: 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server',
     stemsToInclude?: string[]
   ) => {
     setIsSeparatingStemsAi(true);
@@ -646,8 +647,9 @@ export default function SongStudioModal({
     const activeStemsToInclude = stemsToInclude || selectedStemsToExtract;
 
     const stepInitText =
-      engineToUse === 'mvsep-mdx23' ? "Iniciando Iris Studio (red neuronal de máxima calidad)..." :
-      engineToUse === 'demucs' ? 'Iniciando Iris Cloud (red neuronal en la nube)...' :
+      engineToUse === 'lalalai' ? "Iniciando Iris Pro (LALAL.AI Commercial Engine ~15s)..." :
+      engineToUse === 'mvsep-mdx23' ? "Iniciando Iris Studio (MDX-Net / Demucs v4 GPU)..." :
+      engineToUse === 'demucs' ? 'Iniciando Iris Cloud (HT-Demucs v4 Neural)...' :
       'Iniciando Iris Básico (procesamiento local, gratis)...';
 
     setStemProgressModal({
@@ -676,7 +678,12 @@ export default function SongStudioModal({
         }
         if (prev.stage === 'demucs') {
           const elapsedSec = prev.demucsStartedAt ? (Date.now() - prev.demucsStartedAt) / 1000 : 0;
-          return { ...prev, progressPct: Math.min(45 + elapsedSec / 3, 88) };
+          const targetCap = prev.engineChoice === 'mvsep-mdx23'
+            ? Math.min(30 + Math.floor(elapsedSec / 5.5), 92)
+            : prev.engineChoice === 'demucs'
+            ? Math.min(35 + Math.floor(elapsedSec / 1.5), 90)
+            : Math.min(30 + Math.floor(elapsedSec * 4), 92);
+          return { ...prev, progressPct: targetCap };
         }
         if (prev.stage === 'persisting') {
           return { ...prev, progressPct: Math.min(prev.progressPct + 1, 96) };
@@ -748,9 +755,11 @@ export default function SongStudioModal({
               ? `${stepProcessingText} (${elapsedSec}s transcurridos)`
               : elapsedSec < 12
               ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
-              : elapsedSec < 40
-              ? `🧊 Arrancando el motor — si llevaba un rato sin usarse, tarda hasta ~1 min en "despertar"... (${elapsedSec}s)`
-              : `🎛️ ${engineLabel} separando voz, batería, bajo, guitarras, teclados y arreglos por frecuencia... (${elapsedSec}s transcurridos, puede tardar varios minutos)`;
+              : elapsedSec < 45
+              ? `🧊 Reservando GPU e inicializando contenedor neuronal en la nube para ${engineLabel}... (${elapsedSec}s)`
+              : engineToUse === 'mvsep-mdx23'
+              ? `✨ Iris Studio (MDX-Net + Demucs4) procesando 6 pasadas de alta precisión... (${elapsedSec}s transcurridos — este ensamble de estudio tarda ~4-6 min en aislar temas completos)`
+              : `🎛️ ${engineLabel} aislando canales de frecuencia en GPU... (${elapsedSec}s transcurridos, suele tardar 1-2 min)`;
           setStemProgressModal(prev => prev ? {
             ...prev,
             stage: 'demucs',
@@ -5592,32 +5601,59 @@ export default function SongStudioModal({
                   </p>
                 </div>
 
-                {/* SELECTOR DE MOTOR IRIS: STUDIO / CLOUD / BÁSICO */}
+                {/* SELECTOR DE MOTOR IRIS: PRO (LALAL.AI) / STUDIO (REPLICATE) / BÁSICO (DSP) */}
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris:
+                      <Sliders className="w-3.5 h-3.5 text-emerald-400" /> Selecciona el Motor de Iris:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
-                      selectedStemEngine === 'mvsep-mdx23'
+                      selectedStemEngine === 'lalalai'
+                        ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                        : selectedStemEngine === 'mvsep-mdx23' || selectedStemEngine === 'demucs'
                         ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                        : selectedStemEngine === 'demucs'
-                        ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
                         : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
                     }`}>
-                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio (MVSEP-MDX23)"}
-                      {selectedStemEngine === 'demucs' && '⚡ Iris Cloud (Demucs v4)'}
+                      {selectedStemEngine === 'lalalai' && "⚡ Iris Pro (LALAL.AI Phoenix)"}
+                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio (MDX-Net / Demucs4)"}
+                      {selectedStemEngine === 'demucs' && '⚡ Iris Cloud (HT-Demucs v4)'}
                       {selectedStemEngine === 'dsp-server' && '⚙️ Iris Básico (DSP Local)'}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    {/* Iris Studio */}
+                    {/* Iris Pro (LALAL.AI) */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStemEngine('lalalai')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
+                        selectedStemEngine === 'lalalai'
+                          ? 'bg-gradient-to-br from-emerald-950/80 to-teal-950/80 border-emerald-400 text-emerald-100 ring-1 ring-emerald-400/50 shadow-lg shadow-emerald-950/50'
+                          : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                          <Zap className="w-3.5 h-3.5 text-emerald-400 fill-current animate-pulse" /> Iris Pro
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-black border border-emerald-500/30">
+                          Recomendado ~15s
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-neutral-300 leading-normal font-sans">
+                        Motor comercial LALAL.AI Phoenix. Aislamiento quirúrgico ultrarrápido en 15 segundos sin esperas de cola GPU.
+                      </span>
+                      <span className="text-[9px] text-emerald-400 font-bold">
+                        ⚡ Calidad de Estudio Comercial | LALAL.AI Engine
+                      </span>
+                    </button>
+
+                    {/* Iris Studio (Replicate MDX23/Demucs) */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('mvsep-mdx23')}
                       className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
-                        selectedStemEngine === 'mvsep-mdx23'
+                        selectedStemEngine === 'mvsep-mdx23' || selectedStemEngine === 'demucs'
                           ? 'bg-amber-950/60 border-amber-500 text-amber-200 ring-1 ring-amber-500/50 shadow-lg shadow-amber-950/50'
                           : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
                       }`}
@@ -5627,44 +5663,18 @@ export default function SongStudioModal({
                           <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Iris Studio
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-black border border-amber-500/30">
-                          Máxima calidad
+                          Neural GPU
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal font-sans">
-                        Red neuronal MDX23 con aislamiento quirúrgico en frecuencias medias/graves. Cero bleed de voces en bajo ni guitarra.
+                        Ensamble de redes neuronales HT-Demucs v4 y MDX-Net en GPU dedicada. Alta precisión para mezclas densas.
                       </span>
-                      <span className="text-[9px] text-amber-400/80 font-bold">
-                        🐢 Más lento, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['mvsep-mdx23'])}€ estimado por canción.
-                      </span>
-                    </button>
-
-                    {/* Iris Cloud */}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedStemEngine('demucs')}
-                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
-                        selectedStemEngine === 'demucs'
-                          ? 'bg-purple-950/60 border-purple-500 text-purple-200 ring-1 ring-purple-500/50 shadow-lg shadow-purple-950/50'
-                          : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Iris Cloud
-                        </span>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-black border border-purple-500/30">
-                          Recomendado
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-neutral-300 leading-normal font-sans">
-                        Red neuronal en la nube probada en estudio para aislamiento directo y rápido de pistas instrumentales.
-                      </span>
-                      <span className="text-[9px] text-emerald-400 font-bold">
-                        ⚡ Rápido, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['demucs'])}€ estimado por canción.
+                      <span className="text-[9px] text-amber-400/90 font-bold">
+                        🐢 ~1-3 min en GPU Replicate dedicada
                       </span>
                     </button>
 
-                    {/* Iris Básico (local) */}
+                    {/* Iris Básico (DSP local) */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('dsp-server')}
@@ -5683,7 +5693,10 @@ export default function SongStudioModal({
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal font-sans">
-                        Filtros de frecuencia y cancelación de fase procesados localmente en servidor. Instantáneo y sin coste.
+                        Filtros de frecuencia espectrales y fase procesados localmente con FFmpeg. Instantáneo y sin consumo de saldo.
+                      </span>
+                      <span className="text-[9px] text-sky-400 font-bold">
+                        ⚙️ Instantáneo (~2s) | Servidor Local
                       </span>
                     </button>
                   </div>
@@ -5692,7 +5705,7 @@ export default function SongStudioModal({
                   <div className="p-2 rounded-lg bg-emerald-950/30 border border-emerald-500/20 text-emerald-300 text-[10px] flex items-center gap-2">
                     <span className="text-emerald-400 font-bold">🛡️ Cero Coste Duplicado:</span>
                     <span className="text-neutral-300 font-sans">
-                      Las pistas procesadas se guardan en la nube por hash de canción. Nunca pagarás 2 veces por la misma canción.
+                      Las pistas procesadas se guardan de forma permanente en Supabase Storage. Nunca pagarás dos veces por la misma canción.
                     </span>
                   </div>
                 </div>
@@ -5708,23 +5721,23 @@ export default function SongStudioModal({
                     }
                   }}
                   className={`w-full py-3.5 rounded-xl font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    selectedStemEngine === 'mvsep-mdx23'
+                    selectedStemEngine === 'lalalai'
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-zinc-950 font-black shadow-emerald-900/30'
+                      : selectedStemEngine === 'mvsep-mdx23' || selectedStemEngine === 'demucs'
                       ? 'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white shadow-amber-900/30'
-                      : selectedStemEngine === 'demucs'
-                      ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white shadow-purple-900/30'
                       : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-900/30'
                   }`}
                 >
-                  {selectedStemEngine === 'mvsep-mdx23' && (
+                  {selectedStemEngine === 'lalalai' && (
+                    <>
+                      <Zap className="w-4 h-4 text-zinc-950 fill-current animate-bounce" />
+                      <span>⚡ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Pro (LALAL.AI)</span>
+                    </>
+                  )}
+                  {(selectedStemEngine === 'mvsep-mdx23' || selectedStemEngine === 'demucs') && (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
                       <span>✨ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Studio</span>
-                    </>
-                  )}
-                  {selectedStemEngine === 'demucs' && (
-                    <>
-                      <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
-                      <span>⚡ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Cloud</span>
                     </>
                   )}
                   {selectedStemEngine === 'dsp-server' && (
