@@ -93,11 +93,9 @@ export function extractBandIdFromUrl(searchParams?: string): string {
 export function getPublicEpkUrl(bandId: string, origin?: string): string {
   if (!bandId) return '';
   const token = encodeBandIdClient(bandId);
-  const base = origin || (typeof window !== 'undefined' 
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
-        ? `${window.location.origin}/epk` 
-        : 'https://bandmanager.io/epk') 
-    : 'https://bandmanager.io/epk');
+  const base = (origin && !origin.includes('run.app') && !origin.includes('localhost'))
+    ? `${origin.replace(/\/+$/, '')}/epk`
+    : 'https://bandmanager.io/epk';
     
   return `${base}?b=${encodeURIComponent(token)}`;
 }
@@ -108,11 +106,9 @@ export function getPublicEpkUrl(bandId: string, origin?: string): string {
 export function getPublicFansUrl(bandId: string, origin?: string): string {
   if (!bandId) return '';
   const token = encodeBandIdClient(bandId);
-  const base = origin || (typeof window !== 'undefined' 
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
-        ? `${window.location.origin}/unete` 
-        : 'https://bandmanager.io/unete') 
-    : 'https://bandmanager.io/unete');
+  const base = (origin && !origin.includes('run.app') && !origin.includes('localhost'))
+    ? `${origin.replace(/\/+$/, '')}/unete`
+    : 'https://bandmanager.io/unete';
     
   return `${base}?b=${encodeURIComponent(token)}`;
 }

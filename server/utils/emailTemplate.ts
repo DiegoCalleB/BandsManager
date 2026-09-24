@@ -243,6 +243,27 @@ ${adjuntarDossier ? `Dossier: ${webEpkUrl}` : ''}
   return { html, text, cleanPitch };
 }
 
+export function getProductionAppUrl(customUrl?: string): string {
+  const isDevOrPreview = (u: string) =>
+    !u ||
+    u.includes('run.app') ||
+    u.includes('localhost') ||
+    u.includes('127.0.0.1') ||
+    u.includes('googleusercontent.com') ||
+    u.includes('webcontainer') ||
+    u.includes('ais-dev') ||
+    u.includes('ais-pre');
+
+  if (customUrl && !isDevOrPreview(customUrl)) {
+    return customUrl.replace(/\/+$/, '');
+  }
+  const envUrl = process.env.APP_URL || '';
+  if (envUrl && !isDevOrPreview(envUrl)) {
+    return envUrl.replace(/\/+$/, '');
+  }
+  return 'https://bandmanager.io';
+}
+
 /**
  * Plantilla de email rica para notificaciones de calendario, ensayos y eventos.
  * Diseñada para enviarse desde no-reply@bandmanager.io identificando prioritariamente a la BANDA.
@@ -269,8 +290,11 @@ export function buildBandNotificationEmailHtml(params: {
     recipientMembers = [],
     customNotes,
     setlistSummary,
-    appUrl = process.env.APP_URL || 'https://bandmanager.io'
+    appUrl
   } = params;
+
+  const targetAppUrl = getProductionAppUrl(appUrl);
+  const calendarUrl = `${targetAppUrl}/?view=calendario`;
 
   const eventBadgeColor =
     eventLabel.toLowerCase() === 'concierto'
@@ -352,7 +376,7 @@ export function buildBandNotificationEmailHtml(params: {
 
       <!-- CALL TO ACTION -->
       <div style="text-align: center; margin-top: 28px; margin-bottom: 12px;">
-        <a href="${appUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-family: sans-serif;">
+        <a href="${calendarUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-family: sans-serif;">
           Abrir Calendario en BandManager.io
         </a>
       </div>

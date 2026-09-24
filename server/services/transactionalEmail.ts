@@ -10,6 +10,27 @@ function cleanEnvString(val?: string): string {
   return val.trim().replace(/^["']|["']$/g, "").trim();
 }
 
+export function getProductionAppUrl(customUrl?: string): string {
+  const isDevOrPreview = (u: string) =>
+    !u ||
+    u.includes('run.app') ||
+    u.includes('localhost') ||
+    u.includes('127.0.0.1') ||
+    u.includes('googleusercontent.com') ||
+    u.includes('webcontainer') ||
+    u.includes('ais-dev') ||
+    u.includes('ais-pre');
+
+  if (customUrl && !isDevOrPreview(customUrl)) {
+    return customUrl.replace(/\/+$/, '');
+  }
+  const envUrl = process.env.APP_URL || '';
+  if (envUrl && !isDevOrPreview(envUrl)) {
+    return envUrl.replace(/\/+$/, '');
+  }
+  return 'https://bandmanager.io';
+}
+
 let resendInstance: Resend | null = null;
 let lastApiKey: string | null = null;
 
@@ -86,7 +107,7 @@ export async function sendTransactionalEmail(options: SendEmailOptions): Promise
 export async function sendWelcomeEmail(toEmail: string, userName: string, bandName?: string): Promise<{ success: boolean; id?: string; error?: string }> {
   const displayName = userName || "Músico";
   const displayBand = bandName ? ` para la banda <strong>${bandName}</strong>` : "";
-  const appUrl = process.env.APP_URL || "https://bandmanager.io";
+  const appUrl = getProductionAppUrl(process.env.APP_URL);
 
   const html = `
     <!DOCTYPE html>

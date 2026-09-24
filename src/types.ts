@@ -516,6 +516,8 @@ export interface Concert {
   bandas_compartidas?: string[];
   post_show_review?: string;
   es_hito_destacado?: boolean;
+  cartelUrl?: string;
+  cartel_url?: string;
 }
 
 export interface EmailSignatureConfig {

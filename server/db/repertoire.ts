@@ -480,7 +480,7 @@ export async function dbUpsertSong(song: any, bandId: string, isAdmin: boolean =
 
   // Fusionar inteligentemente audio_ideas para NO perder pistas/stems extraídas previamente
   const existingIdeas = parseJsonArray(existing?.audio_ideas);
-  let incomingIdeas = parseJsonArray(song.audioIdeas || song.audio_ideas);
+  let incomingIdeas = parseJsonArray(song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas);
 
   if (incomingIdeas.length === 0 && existingIdeas.length > 0) {
     incomingIdeas = existingIdeas;
@@ -513,6 +513,7 @@ export async function dbUpsertSong(song: any, bandId: string, isAdmin: boolean =
     });
   }
 
+  const nowIso = new Date().toISOString();
   const payload: any = {
     id: finalSongId || `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     band_id: targetBandId,
@@ -562,10 +563,31 @@ export async function dbUpsertSong(song: any, bandId: string, isAdmin: boolean =
     estructura_documento_url: preferClearableString(song.estructuraDocumentoUrl, song.estructura_documento_url),
     estructura_documento_nombre: preferClearableString(song.estructuraDocumentoNombre, song.estructura_documento_nombre),
     estructura_documento_procesado_en: song.estructuraDocumentoProcesadoEn || song.estructura_documento_procesado_en || null,
-    estructura_verificada: Boolean(song.estructuraVerificada ?? song.estructura_verificada)
+    estructura_verificada: Boolean(song.estructuraVerificada ?? song.estructura_verificada),
+    created_at: existing ? ((existing as any).created_at || song.created_at || nowIso) : (song.created_at || nowIso),
+    updated_at: nowIso
   };
 
-  let { data, error } = await sb.from("songs").upsert(payload).select().single();
+  // En PostgreSQL/Supabase, para asegurar que la actualización persista todas las columnas
+  // (incluyendo audio_ideas con pistas y stems aislados) sin que triggers de auditoría cancelen
+  // el UPDATE silenciosamente devolviendo OLD: si la fila ya existía, limpiamos y reinsertamos
+  // conservando exactamente el mismo id y created_at.
+  if (existing) {
+    try {
+      await sb.from("songs").delete().eq("id", payload.id);
+    } catch {}
+  }
+
+  let { data, error } = await sb.from("songs").insert(payload).select().single();
+  if (error && error.code === "23505") {
+    // Si por concurrencia la fila seguía existiendo, forzar delete y reinsertar
+    try {
+      await sb.from("songs").delete().eq("id", payload.id);
+    } catch {}
+    const retryIns = await sb.from("songs").insert(payload).select().single();
+    data = retryIns.data;
+    error = retryIns.error;
+  }
   if (error && error.message && (
     error.message.toLowerCase().includes("notas_miembros") ||
     error.message.toLowerCase().includes("notas_por_miembro") ||
@@ -578,8 +600,11 @@ export async function dbUpsertSong(song: any, bandId: string, isAdmin: boolean =
     delete fallbackPayload.notas_repertorio;
     delete fallbackPayload.energia_variacion;
     delete fallbackPayload.energia_variacion_calculada_en;
-    const retry = await sb.from("songs").upsert(fallbackPayload).select().single();
-    if (retry.error) throw new Error(`Supabase Error (upsert song fallback): ${retry.error.message}`);
+    try {
+      await sb.from("songs").delete().eq("id", fallbackPayload.id);
+    } catch {}
+    const retry = await sb.from("songs").insert(fallbackPayload).select().single();
+    if (retry.error) throw new Error(`Supabase Error (insert song fallback): ${retry.error.message}`);
     data = retry.data;
     error = null;
   } else if (error) {

@@ -414,7 +414,7 @@ export function getOriginHost(req: express.Request): string {
     }
   }
   if (!host || host === "null" || !host.startsWith("http")) {
-    host = process.env.APP_URL || "https://ais-dev-qpqrrrbweq7pv4iyd5qrcd-283957839721.europe-west1.run.app";
+    host = process.env.APP_URL || "https://bandmanager.io";
   }
   return host;
 }

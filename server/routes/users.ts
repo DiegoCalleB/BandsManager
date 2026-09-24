@@ -20,7 +20,7 @@ import {
   dbCleanCorruptedLeadFields,
   invalidateBandStateCache
 } from "../db.js";
-import { sendTransactionalEmail, sendWelcomeEmail } from "../services/transactionalEmail.js";
+import { sendTransactionalEmail, sendWelcomeEmail, getProductionAppUrl } from "../services/transactionalEmail.js";
 
 // Run asynchronous migration & cleanup checks on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
@@ -2163,7 +2163,7 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
 
   // Enviar email de invitación al nuevo miembro si tiene email válido
   if (cleanEmail && cleanEmail.includes("@")) {
-    const appUrl = process.env.APP_URL || "https://bandmanager.io";
+    const appUrl = getProductionAppUrl(process.env.APP_URL);
     const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === targetBandId || b.id === targetBandId);
     const bName = bandInfo?.nombre_banda || "tu banda";
     sendTransactionalEmail({

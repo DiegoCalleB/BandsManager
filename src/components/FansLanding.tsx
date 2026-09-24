@@ -561,11 +561,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   // Lleva &lang= con el idioma del concierto: así quien entra al EPK desde un Únete de Italia
   // lo ve en italiano por defecto, no en español. EpkLanguage y FanFormLanguage comparten
   // exactamente los mismos códigos (es/en/it/cs), así que conciertoLanguage vale tal cual.
-  const epkUrl = (typeof window !== 'undefined'
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
-        ? `${window.location.origin}/epk`
-        : 'https://bandmanager.io/epk')
-    : 'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+  const epkUrl = `https://bandmanager.io/epk?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
     if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;

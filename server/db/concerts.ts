@@ -47,7 +47,9 @@ export async function dbGetConcerts(bandId: string | string[]) {
     asistencia_otras_bandas: Number(c.asistencia_otras_bandas ?? c.asistenciaOtrasBandas ?? 0),
     bandas_compartidas: Array.isArray(c.bandas_compartidas || c.bandasCompartidas) ? (c.bandas_compartidas || c.bandasCompartidas) : [],
     post_show_review: String(c.post_show_review || c.postShowReview || ""),
-    es_hito_destacado: Boolean(c.es_hito_destacado ?? c.esHitoDestacado ?? false)
+    es_hito_destacado: Boolean(c.es_hito_destacado ?? c.esHitoDestacado ?? false),
+    cartel_url: c.cartel_url || c.cartelUrl || undefined,
+    cartelUrl: c.cartel_url || c.cartelUrl || undefined
   }));
 }
 
@@ -104,7 +106,8 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     asistencia_otras_bandas: Number(merged.asistencia_otras_bandas ?? merged.asistenciaOtrasBandas ?? 0),
     bandas_compartidas: Array.isArray(merged.bandas_compartidas || merged.bandasCompartidas) ? (merged.bandas_compartidas || merged.bandasCompartidas) : [],
     post_show_review: merged.post_show_review || merged.postShowReview || "",
-    es_hito_destacado: Boolean(merged.es_hito_destacado ?? merged.esHitoDestacado)
+    es_hito_destacado: Boolean(merged.es_hito_destacado ?? merged.esHitoDestacado),
+    cartel_url: merged.cartel_url || merged.cartelUrl || null
   };
 
   let data: any = null;

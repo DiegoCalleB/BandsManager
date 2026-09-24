@@ -269,20 +269,65 @@ export default function App() {
   const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'ensayos', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
   const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
   const [currentView, setCurrentView] = useState<MainView>(() => {
-    // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
-    // que hace un deploy nuevo, o simplemente el usuario comprobando algo) manda siempre de
-    // vuelta a "Resumen" perdiendo dónde estaba trabajando.
+    // 1. Soporte para enlaces directos con parámetros de vista en URL (?view=calendario, ?modulo=..., ?tab=...)
     try {
-      // 'directo' era el módulo "Directo", eliminado y fusionado dentro de Repertorio — un
-      // usuario que lo tuviera como última pantalla aterriza en Repertorio, no en Resumen.
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const rawViewParam = (
+          urlParams.get('view') ||
+          urlParams.get('modulo') ||
+          urlParams.get('module') ||
+          urlParams.get('tab')
+        )?.toLowerCase();
+
+        const resolvedView =
+          rawViewParam === 'calendar' ? 'calendario' :
+          rawViewParam === 'repertoire' ? 'repertorio' :
+          rawViewParam === 'tours' ? 'giras' :
+          rawViewParam;
+
+        if (resolvedView && (VALID_VIEWS as string[]).includes(resolvedView)) {
+          return resolvedView as MainView;
+        }
+      }
+    } catch {
+      // Fallback seguro
+    }
+
+    // 2. Recordar la última pantalla entre recargas (F5)
+    try {
       const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
       const migrated = saved === 'directo' ? 'repertorio' : saved;
       if (migrated && (VALID_VIEWS as string[]).includes(migrated)) return migrated as MainView;
     } catch {
-      // localStorage puede no estar disponible (modo privado estricto, etc.) — no es crítico.
+      // localStorage puede no estar disponible
     }
     return 'resumen';
   });
+
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawViewParam = (
+        urlParams.get('view') ||
+        urlParams.get('modulo') ||
+        urlParams.get('module') ||
+        urlParams.get('tab')
+      )?.toLowerCase();
+
+      const resolvedView =
+        rawViewParam === 'calendar' ? 'calendario' :
+        rawViewParam === 'repertoire' ? 'repertorio' :
+        rawViewParam === 'tours' ? 'giras' :
+        rawViewParam;
+
+      if (resolvedView && (VALID_VIEWS as string[]).includes(resolvedView)) {
+        setCurrentView(resolvedView as MainView);
+      }
+    } catch {
+      // Ignorado a propósito
+    }
+  }, []);
 
   useEffect(() => {
     try {

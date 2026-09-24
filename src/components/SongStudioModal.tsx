@@ -381,9 +381,36 @@ export default function SongStudioModal({
   }, [song]);
 
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
-  // Máxima sencillez: cada idea empieza PLEGADA (solo título + escuchar + menú de opciones),
-  // el mezclador completo y las acciones secundarias solo aparecen al expandir a propósito.
-  const [expandedIdeaIds, setExpandedIdeaIds] = useState<Set<string>>(new Set());
+  // Auto-expandir de inicio cualquier idea que ya contenga pistas separadas por Iris
+  const [expandedIdeaIds, setExpandedIdeaIds] = useState<Set<string>>(() => {
+    const initialSet = new Set<string>();
+    if (song.audioIdeas) {
+      song.audioIdeas.forEach(idea => {
+        if ((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed) {
+          initialSet.add(idea.id);
+        }
+      });
+    }
+    return initialSet;
+  });
+
+  // Mantener expandidas las ideas con stems en cuanto cambie song.audioIdeas
+  useEffect(() => {
+    if (song.audioIdeas) {
+      setExpandedIdeaIds(prev => {
+        const next = new Set(prev);
+        let changed = false;
+        song.audioIdeas?.forEach(idea => {
+          if (((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed) && !next.has(idea.id)) {
+            next.add(idea.id);
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
+      });
+    }
+  }, [song.audioIdeas]);
+
   const toggleIdeaExpanded = (ideaId: string) => {
     setExpandedIdeaIds(prev => {
       const next = new Set(prev);
@@ -454,8 +481,8 @@ export default function SongStudioModal({
   const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('demucs');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
-  const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('4_stems');
-  const [selectedStemsToExtract, setSelectedStemsToExtract] = useState<string[]>(['Voz', 'Batería', 'Bajo', 'Guitarras']);
+  const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('6_stems');
+  const [selectedStemsToExtract, setSelectedStemsToExtract] = useState<string[]>(['Voz', 'Batería', 'Bajo', 'Guitarras', 'Teclados', 'Arreglos']);
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
 
   const handleSelectMoisesPreset = (preset: MoisesSeparationPreset) => {
@@ -489,7 +516,10 @@ export default function SongStudioModal({
     if (initialOpenIrisModal) {
       const existingIrisIdea = getSongIrisStemIdea(song);
       if (existingIrisIdea) {
-        setShowMoisesStemsModal(existingIrisIdea);
+        // La canción YA tiene pistas separadas: asegurar que quede expandida en el mezclador multipista
+        // de inmediato para que el usuario vea todos los canales (Voz, Batería, Bajo, Guitarras...)
+        setExpandedIdeaIds(prev => new Set([...prev, existingIrisIdea.id]));
+        setShowMoisesStemsModal(null);
       } else if (song.audioIdeas && song.audioIdeas.length > 0) {
         setShowMoisesStemsModal(song.audioIdeas[0]);
       } else {
@@ -770,29 +800,41 @@ export default function SongStudioModal({
           ? 'Iris Cloud'
           : 'Iris Básico (gratis)';
 
-        // Filtramos las pistas de acuerdo a la selección del usuario (estilo Moises)
-        const stemsToFilter = activeStemsToInclude && activeStemsToInclude.length > 0
-          ? data.stems.filter((st: any) => {
-              const instClean = (st.instrument || '').toLowerCase();
-              return activeStemsToInclude.some(req => req.toLowerCase() === instClean);
-            })
-          : data.stems;
+        // NUNCA descartar pistas separadas por IA de alto coste computacional.
+        // Se preservan todas las pistas en newTracks; si el usuario eligió un preset o selección
+        // específica (activeStemsToInclude), las pistas deseleccionadas se marcan como silenciadas (muted)
+        // por defecto para que la escucha inicial coincida con lo pedido, pero conservando el material
+        // completo en el mezclador para cuando quieran desmutearlo.
+        const normalizeInst = (s: string) => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 
-        stemsToFilter.forEach((st: any) => {
+        data.stems.forEach((st: any) => {
           if (!st.audioUrl) return;
 
           const instClean = (st.instrument || '').toLowerCase();
-          const existingIdx = newTracks.findIndex(t => 
-            (t.instrumento && t.instrumento.toLowerCase() === instClean) ||
-            (t.nombre && t.nombre.toLowerCase().includes(instClean)) ||
-            (instClean === 'voz' && t.nombre.toLowerCase().includes('voz')) ||
-            (instClean === 'instrumental' && t.nombre.toLowerCase().includes('instrumental')) ||
-            (instClean === 'batería' && (t.nombre.toLowerCase().includes('batería') || t.nombre.toLowerCase().includes('bateria'))) ||
-            (instClean === 'bajo' && t.nombre.toLowerCase().includes('bajo')) ||
-            (instClean === 'guitarras' && t.nombre.toLowerCase().includes('guitarra')) ||
-            (instClean === 'teclados' && (t.nombre.toLowerCase().includes('teclado') || t.nombre.toLowerCase().includes('piano'))) ||
-            (instClean === 'arreglos' && t.nombre.toLowerCase().includes('arreglo'))
-          );
+          const instNorm = normalizeInst(st.instrument);
+
+          // Verificar si esta pista está incluida en la selección activa del usuario
+          const isSelectedByPreset = !activeStemsToInclude || activeStemsToInclude.length === 0 || activeStemsToInclude.some(req => {
+            const reqNorm = normalizeInst(req);
+            if (reqNorm === 'instrumental' && instNorm !== 'voz') return true;
+            return reqNorm === instNorm || instNorm.includes(reqNorm) || reqNorm.includes(instNorm);
+          });
+
+          const existingIdx = newTracks.findIndex(t => {
+            const tInstNorm = normalizeInst(t.instrumento || '');
+            const tNombreNorm = normalizeInst(t.nombre || '');
+            return (
+              (tInstNorm && tInstNorm === instNorm) ||
+              (tNombreNorm && tNombreNorm.includes(instNorm)) ||
+              (instNorm === 'voz' && tNombreNorm.includes('voz')) ||
+              (instNorm === 'instrumental' && tNombreNorm.includes('instrumental')) ||
+              (instNorm === 'bateria' && tNombreNorm.includes('bateria')) ||
+              (instNorm === 'bajo' && tNombreNorm.includes('bajo')) ||
+              (instNorm === 'guitarras' && (tNombreNorm.includes('guitarra') || tNombreNorm.includes('guitarras'))) ||
+              (instNorm === 'teclados' && (tNombreNorm.includes('teclado') || tNombreNorm.includes('piano'))) ||
+              (instNorm === 'arreglos' && tNombreNorm.includes('arreglo'))
+            );
+          });
 
           const fmt = st.formato || (st.audioUrl.toLowerCase().includes('.wav') ? 'WAV' : 'MP3');
           const sz = st.tamano || '2.5 MB';
@@ -806,7 +848,8 @@ export default function SongStudioModal({
               instrumento: st.instrument,
               formato: fmt,
               tamano: sz,
-              volumen: st.recommendedVolume || newTracks[existingIdx].volumen || 1
+              volumen: st.recommendedVolume || newTracks[existingIdx].volumen || 1,
+              muted: false
             };
             stemsAdded++;
           } else {
