@@ -5,20 +5,31 @@ import { Resend } from "resend";
  * Utiliza la API de Resend para notificaciones de bienvenida, alertas de cuenta, etc.
  */
 
+function cleanEnvString(val?: string): string {
+  if (!val) return "";
+  return val.trim().replace(/^["']|["']$/g, "").trim();
+}
+
 let resendInstance: Resend | null = null;
+let lastApiKey: string | null = null;
 
 function getResendClient(): Resend | null {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = cleanEnvString(process.env.RESEND_API_KEY);
   if (!apiKey) {
     return null;
   }
-  if (!resendInstance) {
+  if (!resendInstance || lastApiKey !== apiKey) {
     resendInstance = new Resend(apiKey);
+    lastApiKey = apiKey;
   }
   return resendInstance;
 }
 
-const DEFAULT_SENDER = process.env.SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>";
+function getDefaultSender(): string {
+  const custom = cleanEnvString(process.env.SENDER_EMAIL);
+  if (custom) return custom;
+  return "BandManager <no-reply@bandmanager.io>";
+}
 
 export interface SendEmailOptions {
   to: string;
@@ -32,30 +43,39 @@ export interface SendEmailOptions {
  */
 export async function sendTransactionalEmail(options: SendEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
   const resend = getResendClient();
-  const from = options.from || DEFAULT_SENDER;
+  const from = cleanEnvString(options.from) || getDefaultSender();
+  const to = (options.to || "").trim().toLowerCase();
+
+  if (!to || !to.includes("@")) {
+    console.error(`[Email Transaccional Error] Dirección de destino inválida: "${options.to}"`);
+    return { success: false, error: `Dirección de destino inválida: "${options.to}"` };
+  }
 
   if (!resend) {
-    console.log(`[Email Transaccional - Modo Dev/Sin Key] Para: ${options.to} | Asunto: "${options.subject}"`);
+    console.warn(`[Email Transaccional - AVISO] No hay RESEND_API_KEY configurada en las variables de entorno de Railway/servidor. El email a "${to}" ("${options.subject}") se ejecuta en modo simulación (consola). Para envíos reales añade RESEND_API_KEY a Railway.`);
     return { success: true, id: "simulated-dev-id" };
   }
 
   try {
     const response = await resend.emails.send({
       from,
-      to: options.to,
+      to,
       subject: options.subject,
       html: options.html,
     });
 
     if (response.error) {
-      console.error(`[Resend Error] Fallo al enviar email a ${options.to}:`, response.error);
+      console.error(`[Resend Error] Fallo al enviar email a ${to} desde ${from}:`, response.error);
+      if (response.error.message?.includes("domain") || response.error.message?.includes("verify") || response.error.name === "validation_error") {
+        console.error(`[Resend Guía Configuración] Si el dominio "${from}" no está verificado en tu panel de Resend (resend.com/domains), Resend rechazará el envío. Configura la variable SENDER_EMAIL="BandManager <onboarding@resend.dev>" para pruebas o verifica tu dominio en Resend.`);
+      }
       return { success: false, error: response.error.message };
     }
 
-    console.log(`[Resend Success] Email enviado correctamente a ${options.to} (ID: ${response.data?.id})`);
+    console.log(`[Resend Success] Email enviado correctamente a ${to} desde ${from} (ID: ${response.data?.id})`);
     return { success: true, id: response.data?.id };
   } catch (err: any) {
-    console.error(`[Resend Exception] Error inesperado al enviar a ${options.to}:`, err);
+    console.error(`[Resend Exception] Error inesperado al enviar a ${to}:`, err);
     return { success: false, error: err?.message || String(err) };
   }
 }

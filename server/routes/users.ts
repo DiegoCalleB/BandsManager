@@ -20,7 +20,7 @@ import {
   dbCleanCorruptedLeadFields,
   invalidateBandStateCache
 } from "../db.js";
-import { sendTransactionalEmail } from "../services/transactionalEmail.js";
+import { sendTransactionalEmail, sendWelcomeEmail } from "../services/transactionalEmail.js";
 
 // Run asynchronous migration & cleanup checks on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
@@ -451,6 +451,13 @@ router.post("/auth/register", async (req, res) => {
     sameSite: "lax",
     path: "/"
   });
+
+  // Enviar email de bienvenida de forma asíncrona si es un nuevo usuario con email válido
+  if (isNewUserCreated && cleanEmail && cleanEmail.includes("@")) {
+    sendWelcomeEmail(cleanEmail, userToUse.name, rawBandName).catch(err => {
+      console.error(`[Registro] Error enviando email de bienvenida a ${cleanEmail}:`, err?.message || err);
+    });
+  }
 
   const { passwordHash, salt: _, ...safeUser } = userToUse;
   res.status(201).json({ token, user: safeUser, availableBands, multipleBands: availableBands.length > 1 });
@@ -1082,21 +1089,30 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
   // El código solo vale como prueba de que el usuario controla ESE correo si de verdad se lo
   // enviamos ahí; devolverlo en la respuesta (como hacía antes esta ruta) rompe la comprobación
   // por completo y deja resetear la contraseña de cualquiera con solo saber su email/usuario.
-  if (user.email && user.email.includes("@")) {
-    sendTransactionalEmail({
-      to: user.email,
-      subject: `Tu código de recuperación de contraseña: ${code}`,
-      html: `
-        <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px;">
-          <h2 style="margin:0 0 16px 0;">Recuperación de contraseña</h2>
-          <p>Usa este código para restablecer tu contraseña en BandManager. Caduca en 15 minutos.</p>
-          <p style="font-size:32px; font-weight:800; letter-spacing:6px; background:#18181b; border:1px solid #27272a; border-radius:8px; padding:16px; text-align:center;">${code}</p>
-          <p style="font-size:13px; color:#a1a1aa;">Si no has solicitado este cambio, ignora este correo.</p>
-        </div>
-      `
-    }).catch((err) => {
-      console.error(`Error enviando email de reseteo de contraseña a ${user.email}:`, err?.message || err);
-    });
+  const targetEmail = (user.email && user.email.includes("@")) 
+    ? user.email 
+    : (cleanInput.includes("@") ? cleanInput : (user.username && user.username.includes("@") ? user.username : null));
+
+  if (targetEmail) {
+    try {
+      const emailRes = await sendTransactionalEmail({
+        to: targetEmail,
+        subject: `Tu código de recuperación de contraseña: ${code}`,
+        html: `
+          <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto;">
+            <h2 style="margin:0 0 16px 0; color:#3b82f6;">Recuperación de contraseña</h2>
+            <p>Usa este código para restablecer tu contraseña en BandManager. Caduca en 15 minutos.</p>
+            <p style="font-size:32px; font-weight:800; letter-spacing:6px; background:#18181b; border:1px solid #27272a; border-radius:8px; padding:16px; text-align:center;">${code}</p>
+            <p style="font-size:13px; color:#a1a1aa;">Si no has solicitado este cambio, ignora este correo.</p>
+          </div>
+        `
+      });
+      if (!emailRes.success) {
+        console.error(`[Password Reset] Resend no pudo entregar el código a ${targetEmail}:`, emailRes.error);
+      }
+    } catch (err: any) {
+      console.error(`Error enviando email de reseteo de contraseña a ${targetEmail}:`, err?.message || err);
+    }
   } else {
     console.error(`No se pudo enviar el código de reseteo: el usuario "${cleanInput}" no tiene un email válido.`);
   }
@@ -1184,6 +1200,37 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
   return res.json({
     success: true,
     message: "Contraseña restablecida con éxito. Ya puedes iniciar sesión con tu nueva contraseña."
+  });
+});
+
+// Endpoint de diagnóstico para verificar el envío de emails con Resend
+router.post("/auth/test-email", requireAuth, async (req, res) => {
+  const { to } = req.body;
+  const user = (req as any).user;
+  const targetEmail = to ? String(to).trim() : user.email;
+
+  if (!targetEmail || !targetEmail.includes("@")) {
+    return res.status(400).json({ error: "Indica un email de destino válido." });
+  }
+
+  const result = await sendTransactionalEmail({
+    to: targetEmail,
+    subject: "🎸 Prueba de Envío de Email - BandManager",
+    html: `
+      <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto;">
+        <h2 style="color:#3b82f6;">¡El servicio de email está funcionando correctamente! 🚀</h2>
+        <p>Este es un email de comprobación enviado desde BandManager a través de Resend.</p>
+        <p style="font-size:13px; color:#a1a1aa;">Destino: ${targetEmail} | Fecha: ${new Date().toLocaleString('es-ES')}</p>
+      </div>
+    `
+  });
+
+  return res.json({
+    success: result.success,
+    id: result.id,
+    error: result.error,
+    resendConfigured: Boolean(process.env.RESEND_API_KEY),
+    senderConfigured: process.env.SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>"
   });
 });
 
@@ -2112,6 +2159,30 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
     await dbUpsertUserBand(newUB);
   } catch (err) {
     console.warn("Notice: User saved locally, Supabase update skipped or pending:", err);
+  }
+
+  // Enviar email de invitación al nuevo miembro si tiene email válido
+  if (cleanEmail && cleanEmail.includes("@")) {
+    const appUrl = process.env.APP_URL || "https://bandmanager.io";
+    const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === targetBandId || b.id === targetBandId);
+    const bName = bandInfo?.nombre_banda || "tu banda";
+    sendTransactionalEmail({
+      to: cleanEmail,
+      subject: `🎸 ¡Has sido invitado a unirte a ${bName} en BandManager!`,
+      html: `
+        <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto;">
+          <h2 style="margin:0 0 16px 0; color:#3b82f6;">¡Hola, ${name.trim()}! 👋</h2>
+          <p>Has sido agregado como músico (${instrument ? instrument.trim() : "Músico"}) a la banda <strong>${bName}</strong> en BandManager.</p>
+          <p>Para activar tu cuenta y acceder a los repertorios, letras, ensayos y calendarios de la banda, entra en:</p>
+          <div style="text-align:center; margin:28px 0;">
+            <a href="${appUrl}" style="background:#3b82f6; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold; display:inline-block;">Activar mi Cuenta</a>
+          </div>
+          <p style="font-size:13px; color:#a1a1aa;">Tu usuario asignado es: <strong>${cleanUsername}</strong></p>
+        </div>
+      `
+    }).catch(err => {
+      console.error(`[Miembros] Error enviando email de invitación a ${cleanEmail}:`, err?.message || err);
+    });
   }
 
   const { passwordHash, salt: _, ...safeUser } = newUser;
