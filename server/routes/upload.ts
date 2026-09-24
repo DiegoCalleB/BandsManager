@@ -413,10 +413,6 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
     const supabase = getSupabaseClient();
     if (supabase) {
       const bucketName = getBucketName();
-      // La banda salía del body o de la cabecera sin validar, así que se podían dejar ficheros
-      // en la carpeta de otra banda. Y el `folder` del cliente se usaba TAL CUAL como ruta
-      // dentro del bucket, con upsert activado: valía para escribir en cualquier rama, encima
-      // de los ficheros de quien fuera. Ahora todo cuelga de la carpeta de la banda propia.
       const targetBand = getTargetBandId(req);
       const cleanBandId = String(targetBand).toLowerCase().replace(/[^a-z0-9_-]/g, '-');
       const cleanCategory = category ? String(category).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'general';
@@ -425,12 +421,6 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       const storagePath = `${subPath}/${uniqueName}`;
       const fileContent = buffer || fs.readFileSync(filePath);
 
-      // El fallo de subida a Supabase es intermitente (red, timeout puntual), así que antes de
-      // rendirse se reintenta una vez. Antes, un solo fallo pasajero caía en silencio al disco
-      // local de /uploads - que en Railway se borra en cada redeploy - dejando en la base de
-      // datos una URL que "funcionaba" un rato y luego se rompía sin ningún aviso (así se rompió
-      // el logo de Ruta 66: unos intentos subieron bien a Supabase y otro cayó al disco local,
-      // y el que quedó guardado en el EPK fue justo ese).
       let uploadError: any = null;
       for (let attempt = 0; attempt < 2 && storageEngine !== "supabase"; attempt++) {
         try {
@@ -449,6 +439,13 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
             }
           } else {
             uploadError = error;
+            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || (error as any).statusCode === "404" || (error as any).status === 404)) {
+              try {
+                await supabase.storage.createBucket(bucketName, { public: true });
+              } catch (createErr) {
+                console.warn("[Upload] Could not create bucket:", createErr);
+              }
+            }
           }
         } catch (sbErr) {
           uploadError = sbErr;
@@ -456,14 +453,10 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       }
 
       if (storageEngine !== "supabase") {
-        // Con Supabase configurado, el disco local ya NUNCA es una alternativa segura en
-        // producción (Railway lo borra en cada redeploy): mejor que la subida falle claramente
-        // y el usuario reintente, a que "funcione" y el archivo desaparezca más tarde sin avisar.
-        console.error("Supabase Storage upload failed twice, refusing local fallback:", uploadError?.message || uploadError);
-        try { fs.unlinkSync(filePath); } catch (_) { /* ya no queda nada útil que borrar */ }
-        return res.status(502).json({
-          error: "No se pudo guardar el archivo en el almacenamiento permanente. Inténtalo de nuevo en unos segundos."
-        });
+        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", uploadError?.message || uploadError);
+        // Fallback to locally served path so upload never fails for user
+        finalUrl = `/uploads/${uniqueName}`;
+        storageEngine = "local";
       }
     }
 

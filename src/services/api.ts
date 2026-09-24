@@ -923,6 +923,17 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ feedback })
     });
+  },
+
+  async generateBandLogo(params: {
+    style?: string;
+    customPrompt?: string;
+    genre?: string;
+  }): Promise<{ success: boolean; logoUrl: string; bandName: string; style: string }> {
+    return request('/api/bands/generate-logo', {
+      method: 'POST',
+      body: JSON.stringify(params)
+    });
   }
 };
 

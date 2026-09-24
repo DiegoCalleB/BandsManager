@@ -40,6 +40,11 @@ const STEM_METADATA: Record<string, { trackName: string; description: string; re
     description: "Voz principal aislada en alta calidad mediante aprendizaje profundo. Permite silenciar la voz para ensayar cantando en directo.",
     recommendedVolume: 1.0
   },
+  "Instrumental": {
+    trackName: "🎵 Pista IA: Base Instrumental (Playback)",
+    description: "Mezcla completa sin voz principal. Ideal para practicar canto, directos con playback y karaoke.",
+    recommendedVolume: 0.95
+  },
   "Batería": {
     trackName: "🥁 Pista IA: Batería & Percusión",
     description: "Pista aislada de batería, caja, bombo y platillos en alta fidelidad.",
@@ -71,7 +76,7 @@ const STEM_METADATA: Record<string, { trackName: string; description: string; re
 // persisten de forma concurrente (Promise.all en persistRawStemsMap), así que el orden de llegada
 // al objeto stemsMap no es determinista entre ejecuciones ni entre motores (MDX23/Demucs/DSP) —
 // reordenamos aquí, en el único punto por el que pasan todas las respuestas al cliente, para que
-// la lista de pistas sea siempre Voz/Batería/Bajo/Guitarras/Teclados/Arreglos sin importar qué
+// la lista de pistas sea siempre Voz/Instrumental/Batería/Bajo/Guitarras/Teclados/Arreglos sin importar qué
 // motor las generó ni en qué orden terminaron sus subidas a Supabase.
 const CANONICAL_STEM_ORDER = Object.keys(STEM_METADATA);
 
@@ -761,7 +766,7 @@ async function persistRawStemsMap(
  * Además, persiste los stems en Supabase Storage de manera permanente y aislada por banda/canción,
  * previniendo errores de reproducción causados por URLs temporales expiradas de Replicate.
  */
-async function processNeuralStemsReplicate(
+export async function processDemucsStems(
   audioUrl: string,
   bandId?: string,
   songHash?: string,
@@ -1013,23 +1018,15 @@ async function processNeuralStemsReplicate(
  * 1. Inferencia en Replicate con lucataco/mvsep-mdx23-music-separation.
  * 2. Persistencia Inmutable en Supabase Storage.
  */
-async function processMdx23Stems(
+export async function processMdx23Stems(
   audioUrl: string,
   bandId?: string,
   songHash?: string,
   requestHost?: string,
   overrideToken?: string
 ): Promise<ProcessNeuralStemsResult | null> {
-  const effectiveBandId = bandId || "sin-banda";
-  const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
-  const t0 = Date.now();
-
   const modelFriendlyName = "MVSEP MDX'23 (MDX-Net + Demucs4)";
   const formatLabel = "MP3 (MVSEP MDX23 Neural)";
-
-  const publicUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
-  const resolvedUrl = await ensureCompressedAudioForReplicate(publicUrl, effectiveBandId, effectiveHash);
-  const tPreloadEnd = Date.now();
 
   const rawToken = overrideToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || "";
   const token = rawToken.trim().replace(/^["']|["']$/g, '').replace(/^(Token|Bearer)\s+/i, '');
@@ -1046,6 +1043,27 @@ async function processMdx23Stems(
       httpStatus: 400
     };
   }
+
+  if (!audioUrl) {
+    return {
+      stemsMap: null,
+      provider: 'replicate',
+      errorType: 'audio_unsupported',
+      errorTitle: 'Audio no Suministrado',
+      error: 'No se proporcionó una URL o archivo de audio válido para procesar en Replicate.',
+      actionAdvice: 'Sube o graba una idea de audio primero antes de solicitar la separación.',
+      errorDetail: 'audioUrl is empty or null',
+      httpStatus: 400
+    };
+  }
+
+  const effectiveBandId = bandId || "sin-banda";
+  const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
+  const t0 = Date.now();
+
+  const publicUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+  const resolvedUrl = await ensureCompressedAudioForReplicate(publicUrl, effectiveBandId, effectiveHash);
+  const tPreloadEnd = Date.now();
 
   const replicateModel = REPLICATE_MODEL_MVSEP_MDX23;
   const MVSEP_VERSION = REPLICATE_VERSION_MVSEP_MDX23;
@@ -1227,6 +1245,36 @@ async function processMdx23Stems(
 }
 
 /**
+ * Procesa la separación de stems con Red Neuronal en Replicate.
+ * Utiliza MVSEP-MDX23 (MDX-Net + Demucs4) como modelo principal para una separación
+ * de mayor pureza espectral en rangos de frecuencia medios y bajos sin artefactos de mezcla
+ * ni voces fantasma, manteniendo HT-Demucs v4 como fallback automático y seguro si MDX23 falla.
+ */
+export async function processNeuralStemsReplicate(
+  audioUrl: string,
+  bandId?: string,
+  songHash?: string,
+  requestHost?: string,
+  overrideToken?: string
+): Promise<ProcessNeuralStemsResult | null> {
+  console.log(`[Neural Stems Replicate] 🚀 Iniciando separación con modelo principal MVSEP-MDX23...`);
+  try {
+    const mdxRes = await processMdx23Stems(audioUrl, bandId, songHash, requestHost, overrideToken);
+    if (mdxRes && mdxRes.stemsMap && Object.keys(mdxRes.stemsMap).length > 0) {
+      console.log(`[Neural Stems Replicate] ✅ Separación neuronal completada con éxito usando MVSEP-MDX23.`);
+      return mdxRes;
+    }
+    console.warn(`[Neural Stems Replicate] ⚠️ MVSEP-MDX23 no devolvió stems válidos (${mdxRes?.error || 'sin resultado'}). Activando fallback a HT-Demucs v4...`);
+  } catch (mdxErr: any) {
+    console.warn(`[Neural Stems Replicate] ⚠️ Error durante la inferencia con MVSEP-MDX23:`, mdxErr?.message || mdxErr, `- Activando fallback a HT-Demucs v4...`);
+  }
+
+  // Fallback secundario a HT-Demucs v4 si MDX23 falla
+  console.log(`[Neural Stems Replicate] 🔄 Ejecutando separación de respaldo con HT-Demucs v4 en Replicate...`);
+  return await processDemucsStems(audioUrl, bandId, songHash, requestHost, overrideToken);
+}
+
+/**
  * Procesa la separación de stems con Fal.ai si FAL_KEY o FAL_API_KEY está configurado.
  */
 async function processNeuralStemsFal(
@@ -1393,6 +1441,11 @@ async function processServerStemsFfmpeg(
       key: "Voz",
       filename: `stem-vocal-${timestamp}.mp3`,
       filter: "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=280,lowpass=f=3600,equalizer=f=1200:width_type=h:width=1200:g=4,volume=1.4"
+    },
+    {
+      key: "Instrumental",
+      filename: `stem-instrumental-${timestamp}.mp3`,
+      filter: "pan=stereo|c0=0.5*c0-0.5*c1|c1=0.5*c1-0.5*c0,equalizer=f=1200:width_type=h:width=1200:g=-12,volume=1.3"
     },
     {
       key: "Batería",
@@ -1946,9 +1999,62 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         }
       }
       // ----------------------------------------------------------------------
-      // CASO B: DEMUCS V4 (HT-DEMUCS MULTI-CANAL EN REPLICATE)
+      // CASO B: DEMUCS V4 (HT-DEMUCS MULTI-CANAL EN REPLICATE) / REPLICATE
       // ----------------------------------------------------------------------
-      else if (selectedEngine === 'replicate' || selectedEngine === 'demucs') {
+      else if (selectedEngine === 'demucs') {
+        if (!effectiveReplicateToken) {
+          const tokenMissingMsg = "No se encontró la clave de Replicate (REPLICATE_API_TOKEN o REPLICATE_API_KEY) en las variables de entorno del servidor ni en la petición. Asegúrate de configurar REPLICATE_API_TOKEN en Settings.";
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'demucs', isNeural: false, errorInfo: null });
+          await failStemsJob(bandId, songHash, selectedEngine, {
+            provider: "replicate",
+            error: "Token de Replicate no configurado",
+            message: tokenMissingMsg,
+            errorType: "token_missing",
+            errorTitle: "Token de Replicate No Configurado",
+            actionAdvice: "Obtén un API token en https://replicate.com/account/api-tokens (comienza por 'r8_') y configúralo en Settings.",
+            details: "Missing environment variable REPLICATE_API_TOKEN",
+            httpStatus: 400,
+            engine: "demucs"
+          });
+          return;
+        }
+
+        if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
+          process.env.REPLICATE_API_TOKEN = replicateToken;
+        }
+
+        const demucsRes = await processDemucsStems(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
+        if (demucsRes && demucsRes.stemsMap && Object.keys(demucsRes.stemsMap).length > 0) {
+          finalStemsMap = demucsRes.stemsMap;
+          executionTimingBreakdown = demucsRes.timingBreakdown;
+          separationEngine = "demucs-neural-v4 (HT-Demucs Replicate)";
+          isNeural = true;
+        } else {
+          const errorType = demucsRes?.errorType || 'generic';
+          const errorTitle = demucsRes?.errorTitle || 'Fallo en la inferencia de Demucs v4';
+          const errorMessage = demucsRes?.error || 'La inferencia en la GPU de Replicate no devolvió resultados.';
+          const actionAdvice = demucsRes?.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.';
+          const errorDetail = demucsRes?.errorDetail || demucsRes?.error;
+          const httpStatus = demucsRes?.httpStatus || 502;
+
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'demucs', isNeural: false, errorInfo: demucsRes });
+          await failStemsJob(bandId, songHash, selectedEngine, {
+            provider: demucsRes?.provider || "replicate",
+            error: errorTitle,
+            message: errorMessage,
+            errorType,
+            errorTitle,
+            actionAdvice,
+            details: errorDetail,
+            httpStatus,
+            engine: "demucs"
+          });
+          return;
+        }
+      }
+      else if (selectedEngine === 'replicate') {
         if (!effectiveReplicateToken) {
           const tokenMissingMsg = "No se encontró la clave de Replicate (REPLICATE_API_TOKEN o REPLICATE_API_KEY) en las variables de entorno del servidor ni en la petición. Asegúrate de configurar REPLICATE_API_TOKEN en Settings.";
           inFlightSeparations.delete(cacheKey);
@@ -1975,7 +2081,9 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
           finalStemsMap = repRes.stemsMap;
           executionTimingBreakdown = repRes.timingBreakdown;
-          separationEngine = "demucs-neural-v4 (HT-Demucs Replicate)";
+          separationEngine = repRes.engine === 'mvsep-mdx23'
+            ? "MVSEP-MDX23 (MDX-Net + Demucs4 Neural)"
+            : "demucs-neural-v4 (HT-Demucs Replicate)";
           isNeural = true;
         } else {
           const errorType = repRes?.errorType || 'generic';
@@ -2032,35 +2140,23 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       // CASO D: MODO 'AUTO'
       // ----------------------------------------------------------------------
       else if (audioUrl) {
-        // 1. Replicate (MVSEP-MDX23 o Demucs v4)
+        // 1. Replicate (MVSEP-MDX23 como principal con fallback automático a Demucs v4)
         if (!isNeural && effectiveReplicateToken) {
           if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
             process.env.REPLICATE_API_TOKEN = replicateToken;
           }
           try {
-            const mdxRes = await processMdx23Stems(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
-            if (mdxRes && mdxRes.stemsMap && Object.keys(mdxRes.stemsMap).length > 0) {
-              finalStemsMap = mdxRes.stemsMap;
-              executionTimingBreakdown = mdxRes.timingBreakdown;
-              separationEngine = "MVSEP-MDX23 (Replicate)";
+            const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
+            if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
+              finalStemsMap = repRes.stemsMap;
+              executionTimingBreakdown = repRes.timingBreakdown;
+              separationEngine = repRes.engine === 'mvsep-mdx23'
+                ? "MVSEP-MDX23 (Replicate)"
+                : "demucs-neural-v4 (Replicate)";
               isNeural = true;
             }
-          } catch (e) {
-            console.warn("Fallo motor MVSEP-MDX23 en Replicate, buscando alternativa:", e);
-          }
-
-          if (!isNeural) {
-            try {
-              const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
-              if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
-                finalStemsMap = repRes.stemsMap;
-                executionTimingBreakdown = repRes.timingBreakdown;
-                separationEngine = "demucs-neural-v4 (Replicate)";
-                isNeural = true;
-              }
-            } catch (neuralErr) {
-              console.warn("Fallo motor neuronal Demucs en Replicate, buscando alternativas:", neuralErr);
-            }
+          } catch (neuralErr) {
+            console.warn("Fallo motor neuronal Replicate (MDX23/Demucs), buscando alternativas:", neuralErr);
           }
         }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ImageIcon,
   FileDown,
@@ -6,11 +6,13 @@ import {
   Upload,
   Download,
   Trash2,
-  Loader2
+  Loader2,
+  Sparkles
 } from 'lucide-react';
 import { EPKConfig } from '../../types';
 import { EPKBlockWrapper } from './EPKBlockWrapper';
 import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+import { AILogoGeneratorModal } from './AILogoGeneratorModal';
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -51,6 +53,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
   onSave,
   isAllView = false
 }) => {
+  const [showAiLogoModal, setShowAiLogoModal] = useState(false);
+
   return (
     <EPKBlockWrapper
       meta={EPK_BLOCKS[1]}
@@ -63,9 +67,18 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LOGO DE LA BANDA */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-            <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
-          </h3>
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowAiLogoModal(true)}
+              className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> Generar con IA
+            </button>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative shrink-0">
@@ -128,6 +141,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </div>
           </div>
         </div>
+
+        <AILogoGeneratorModal
+          isOpen={showAiLogoModal}
+          onClose={() => setShowAiLogoModal(false)}
+          onSelectLogo={(logoUrl) => setConfig(prev => ({ ...prev, logoUrl }))}
+          genre={config.genero}
+        />
 
         {/* DOSSIER EN PDF O DOCUMENTO OFICIAL */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">

@@ -2,7 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import crypto from 'crypto';
 import {
   REPLICATE_MODEL_DEMUCS_V4,
-  REPLICATE_MODEL_MVSEP_MDX23
+  REPLICATE_MODEL_MVSEP_MDX23,
+  processNeuralStemsReplicate,
+  processMdx23Stems,
+  processDemucsStems
 } from '../ai_music.js';
 import { esUrlExternaSegura } from '../../utils/ssrfGuard.js';
 import { verifyWebhookSignature, verifyReplicateWebhook } from '../../services/stemPredictionReconciler.js';
@@ -152,7 +155,8 @@ describe('Neural Stems Separation & Anti-Duplicate Architecture', () => {
     expect(REPLICATE_MODEL_MVSEP_MDX23).toBe('lucataco/mvsep-mdx23-music-separation');
   });
 
-  it('estructura correctamente los metadatos de los stems para MVSEP-MDX23', () => {
+  it('estructura correctamente los metadatos de los stems para MVSEP-MDX23 (4 y 6 stems posicionales)', () => {
+    // Caso 1: Objeto nominal estándar
     const mockOut = {
       vocals: 'https://replicate.delivery/vocal.mp3',
       drums: 'https://replicate.delivery/drums.mp3',
@@ -174,6 +178,48 @@ describe('Neural Stems Separation & Anti-Duplicate Architecture', () => {
     expect(stemsMap['Bajo']).toBe('https://replicate.delivery/bass.mp3');
     expect(stemsMap['Guitarras']).toBe('https://replicate.delivery/other.mp3');
     expect(stemsMap['Arreglos']).toBe('https://replicate.delivery/other.mp3');
+
+    // Caso 2: Array posicional de 6 stems de MVSEP-MDX23
+    const positionalOut6 = [
+      'https://replicate.delivery/bass.mp3',
+      'https://replicate.delivery/drums.mp3',
+      'https://replicate.delivery/keyboards.mp3',
+      'https://replicate.delivery/vocals.mp3',
+      'https://replicate.delivery/residual.mp3',
+      'https://replicate.delivery/guitars.mp3'
+    ];
+    const labels6 = ['Bajo', 'Batería', 'Teclados', 'Voz', 'Arreglos', 'Guitarras'];
+    const positionalStemsMap6: Record<string, string> = {};
+    positionalOut6.forEach((url, idx) => {
+      positionalStemsMap6[labels6[idx]] = url;
+    });
+
+    expect(positionalStemsMap6['Bajo']).toBe(positionalOut6[0]);
+    expect(positionalStemsMap6['Batería']).toBe(positionalOut6[1]);
+    expect(positionalStemsMap6['Teclados']).toBe(positionalOut6[2]);
+    expect(positionalStemsMap6['Voz']).toBe(positionalOut6[3]);
+    expect(positionalStemsMap6['Arreglos']).toBe(positionalOut6[4]);
+    expect(positionalStemsMap6['Guitarras']).toBe(positionalOut6[5]);
+  });
+
+  it('valida que processNeuralStemsReplicate devuelva error controlado si no hay token ni audio', async () => {
+    const origToken = process.env.REPLICATE_API_TOKEN;
+    const origKey = process.env.REPLICATE_API_KEY;
+    try {
+      delete process.env.REPLICATE_API_TOKEN;
+      delete process.env.REPLICATE_API_KEY;
+
+      const resNoToken = await processNeuralStemsReplicate('https://example.com/audio.mp3', 'band1', 'hash1', undefined, '');
+      expect(resNoToken).toBeDefined();
+      expect(resNoToken?.errorType).toBe('token_missing');
+    } finally {
+      if (origToken) process.env.REPLICATE_API_TOKEN = origToken;
+      if (origKey) process.env.REPLICATE_API_KEY = origKey;
+    }
+
+    const resNoAudio = await processNeuralStemsReplicate('', 'band1', 'hash1', undefined, 'r8_testtoken123');
+    expect(resNoAudio).toBeDefined();
+    expect(resNoAudio?.errorType).toBe('audio_unsupported');
   });
 
   it('marca degraded: true y engineUsed: dsp_fallback cuando no hay IA disponible y se recurre a DSP', () => {

@@ -30,6 +30,8 @@ export async function dbGetConcerts(bandId: string | string[]) {
 
   return validatedData.map(c => ({
     ...c,
+    setlist_id: c.setlist_id || c.setlistId || null,
+    setlistId: c.setlist_id || c.setlistId || undefined,
     gastosDetalle: c.gastos_detalle || c.gastosDetalle || {},
     gastos_detalle: c.gastos_detalle || c.gastosDetalle || {},
     convocatoria_tipo: c.convocatoria_tipo || c.convocatoriaTipo || "completa",
@@ -51,57 +53,58 @@ export async function dbGetConcerts(bandId: string | string[]) {
 
 export async function dbUpsertConcert(concert: any, bandId: string) {
   const sb = getSupabase();
-  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
-  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
-  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  // El upsert es por id (clave primaria): si `concert.id` coincidiera con el de un concierto de
-  // OTRA banda, este upsert lo sobrescribiría y se lo reasignaría a la banda del llamador. Un id
-  // que no pertenece a la banda del usuario no se reutiliza nunca.
   let finalConcertId = concert.id;
+  let existingConcert: any = null;
   if (finalConcertId) {
-    const existing = await sb.from("concerts").select("band_id").eq("id", finalConcertId).maybeSingle();
-    if (existing.data && existing.data.band_id && cleanBandId(existing.data.band_id) !== targetBandId) {
-      console.warn(`[dbUpsertConcert] Conflicto de band_id en id ${finalConcertId}. Se generará un id nuevo.`);
-      finalConcertId = `cnc-${Date.now()}`;
+    const existing = await sb.from("concerts").select("*").eq("id", finalConcertId).maybeSingle();
+    if (existing.data) {
+      if (existing.data.band_id && cleanBandId(existing.data.band_id) !== targetBandId) {
+        console.warn(`[dbUpsertConcert] Conflicto de band_id en id ${finalConcertId}. Se generará un id nuevo.`);
+        finalConcertId = `cnc-${Date.now()}`;
+      } else {
+        existingConcert = existing.data;
+      }
     }
   }
+
+  const merged = { ...(existingConcert || {}), ...concert };
 
   const payload: any = {
     id: finalConcertId || `cnc-${Date.now()}`,
     band_id: targetBandId,
-    band_name: concert.band_name || concert.bandName || "",
-    fecha: concert.fecha,
-    ciudad: concert.ciudad || "",
-    sala: concert.sala || "Sala",
-    direccion: concert.direccion || "",
-    cache: Number(concert.cache || 0),
-    aforo_vendido: Number(concert.aforo_vendido || concert.aforoVendido || 0),
-    aforo_total: Number(concert.aforo_total || concert.aforoTotal || 0),
-    contrato_firmado: Boolean(concert.contrato_firmado ?? concert.contratoFirmado),
-    estado_pago: concert.estado_pago || concert.estadoPago || "pendiente",
-    notas: concert.notas || "",
-    tipo: concert.tipo || "sala",
-    setlist_id: concert.setlist_id || concert.setlistId || null,
-    gastos_detalle: concert.gastos_detalle || concert.gastosDetalle || {},
-    gastos_estimados_tipicos: Number(concert.gastos_estimados_tipicos || concert.gastosEstimadosTipicos || 0),
-    convocatoria_tipo: concert.convocatoria_tipo || concert.convocatoriaTipo || "completa",
-    convocados_ids: concert.convocados_ids || concert.convocadosIds || [],
-    convocados_nombres: concert.convocados_nombres || concert.convocadosNombres || [],
-    gira_id: concert.gira_id || concert.giraId || null,
-    gira_nombre: concert.gira_nombre || concert.giraNombre || null,
-    idioma: concert.idioma || "",
-    is_posible: Boolean(concert.is_posible ?? concert.isPosible),
-    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null,
-    entradas_url: concert.entradas_url || concert.entradasUrl || null,
-    entradas_lugar_fisico: concert.entradas_lugar_fisico || concert.entradasLugarFisico || null,
-    asistencia_propia: Number(concert.asistencia_propia ?? concert.asistenciaPropia ?? 0),
-    asistencia_otras_bandas: Number(concert.asistencia_otras_bandas ?? concert.asistenciaOtrasBandas ?? 0),
-    bandas_compartidas: Array.isArray(concert.bandas_compartidas || concert.bandasCompartidas) ? (concert.bandas_compartidas || concert.bandasCompartidas) : [],
-    post_show_review: concert.post_show_review || concert.postShowReview || "",
-    es_hito_destacado: Boolean(concert.es_hito_destacado ?? concert.esHitoDestacado)
+    band_name: merged.band_name || merged.bandName || "",
+    fecha: merged.fecha || new Date().toISOString().split("T")[0],
+    ciudad: merged.ciudad || "",
+    sala: merged.sala || "Sala",
+    direccion: merged.direccion || "",
+    cache: Number(merged.cache || 0),
+    aforo_vendido: Number(merged.aforo_vendido || merged.aforoVendido || 0),
+    aforo_total: Number(merged.aforo_total || merged.aforoTotal || 0),
+    contrato_firmado: Boolean(merged.contrato_firmado ?? merged.contratoFirmado),
+    estado_pago: merged.estado_pago || merged.estadoPago || "pendiente",
+    notas: merged.notas || "",
+    tipo: merged.tipo || "sala",
+    setlist_id: merged.setlist_id || merged.setlistId || null,
+    gastos_detalle: merged.gastos_detalle || merged.gastosDetalle || {},
+    gastos_estimados_tipicos: Number(merged.gastos_estimados_tipicos || merged.gastosEstimadosTipicos || 0),
+    convocatoria_tipo: merged.convocatoria_tipo || merged.convocatoriaTipo || "completa",
+    convocados_ids: merged.convocados_ids || merged.convocadosIds || [],
+    convocados_nombres: merged.convocados_nombres || merged.convocadosNombres || [],
+    gira_id: merged.gira_id || merged.giraId || null,
+    gira_nombre: merged.gira_nombre || merged.giraNombre || null,
+    idioma: merged.idioma || "",
+    is_posible: Boolean(merged.is_posible ?? merged.isPosible),
+    custom_qr_url: merged.custom_qr_url || merged.customQrUrl || null,
+    entradas_url: merged.entradas_url || merged.entradasUrl || null,
+    entradas_lugar_fisico: merged.entradas_lugar_fisico || merged.entradasLugarFisico || null,
+    asistencia_propia: Number(merged.asistencia_propia ?? merged.asistenciaPropia ?? 0),
+    asistencia_otras_bandas: Number(merged.asistencia_otras_bandas ?? merged.asistenciaOtrasBandas ?? 0),
+    bandas_compartidas: Array.isArray(merged.bandas_compartidas || merged.bandasCompartidas) ? (merged.bandas_compartidas || merged.bandasCompartidas) : [],
+    post_show_review: merged.post_show_review || merged.postShowReview || "",
+    es_hito_destacado: Boolean(merged.es_hito_destacado ?? merged.esHitoDestacado)
   };
 
   let data: any = null;

@@ -260,6 +260,111 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
   }];
 }
 
+export type MoisesSeparationPreset = '2_stems' | '4_stems' | '6_stems' | 'custom';
+
+export interface MoisesStemOption {
+  id: string;
+  name: string;
+  shortName: string;
+  icon: string;
+  tag: string;
+  desc: string;
+  badgeBg: string;
+}
+
+export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
+  {
+    id: 'Voz',
+    name: 'Voz Principal (Vocals)',
+    shortName: 'Voz',
+    icon: '🎤',
+    tag: 'Acapella / Melodía',
+    desc: 'Voz aislada en alta pureza espectral. Permite silenciar la voz original para ensayar cantando o directos.',
+    badgeBg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
+  },
+  {
+    id: 'Instrumental',
+    name: 'Base Instrumental (Playback)',
+    shortName: 'Instrumental',
+    icon: '🎵',
+    tag: 'Karaoke / Backing Track',
+    desc: 'Mezcla musical completa sin voz principal. La opción predilecta para directos con playback o práctica vocal.',
+    badgeBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+  },
+  {
+    id: 'Batería',
+    name: 'Batería & Percusión (Drums)',
+    shortName: 'Batería',
+    icon: '🥁',
+    tag: 'Ritmo & Platos',
+    desc: 'Aislamiento de bombo, caja, timbales y platos (>1800Hz) para practicar con metrónomo y batería real.',
+    badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+  },
+  {
+    id: 'Bajo',
+    name: 'Bajo Eléctrico (Bass)',
+    shortName: 'Bajo',
+    icon: '🎸',
+    tag: 'Sub-Bass & Graves',
+    desc: 'Frecuencias fundamentales y transitorios de bajo (<180Hz) para estudiar la línea o tocar encima.',
+    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+  },
+  {
+    id: 'Guitarras',
+    name: 'Guitarras (Rítmicas & Solos)',
+    shortName: 'Guitarras',
+    icon: '🎸',
+    tag: 'Eléctricas & Acústicas',
+    desc: 'Guitarras eléctricas, distorsiones y acústicas sin bleed de voz ni percusión.',
+    badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+  },
+  {
+    id: 'Teclados',
+    name: 'Teclados & Piano (Keys)',
+    shortName: 'Teclados',
+    icon: '🎹',
+    tag: 'Pianos & Sintes',
+    desc: 'Pianos acústicos, sintetizadores polifónicos y teclados aislados para acompañamiento armónico.',
+    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
+  },
+  {
+    id: 'Arreglos',
+    name: 'Arreglos, Vientos & Cuerdas (Other)',
+    shortName: 'Arreglos',
+    icon: '🎺',
+    tag: 'Metales & Efectos',
+    desc: 'Secciones de viento metal, cuartetos de cuerda, solos y efectos secundarios de mezcla.',
+    badgeBg: 'bg-orange-500/20 text-orange-300 border-orange-500/40'
+  }
+];
+
+export const MOISES_PRESETS_CONFIG: Record<MoisesSeparationPreset, { label: string; badge: string; subtitle: string; stems: string[] }> = {
+  '2_stems': {
+    label: '🎤 2 Pistas',
+    badge: 'Karaoke / Playback',
+    subtitle: 'Voz Principal + Base Instrumental completa',
+    stems: ['Voz', 'Instrumental']
+  },
+  '4_stems': {
+    label: '🥁 4 Pistas',
+    badge: 'Moises Estándar',
+    subtitle: 'Voz, Batería, Bajo y Guitarras/Armonía',
+    stems: ['Voz', 'Batería', 'Bajo', 'Guitarras']
+  },
+  '6_stems': {
+    label: '🎛️ 6 Pistas',
+    badge: 'Estudio Completo',
+    subtitle: 'Voz, Batería, Bajo, Guitarras, Teclados y Arreglos',
+    stems: ['Voz', 'Batería', 'Bajo', 'Guitarras', 'Teclados', 'Arreglos']
+  },
+  'custom': {
+    label: '⚡ A Tu Medida',
+    badge: 'Personalizado',
+    subtitle: 'Selección manual de instrumentos a aislar',
+    stems: []
+  }
+};
+
 export default function SongStudioModal({
   song,
   colors,
@@ -349,7 +454,35 @@ export default function SongStudioModal({
   const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('demucs');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
+  const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('4_stems');
+  const [selectedStemsToExtract, setSelectedStemsToExtract] = useState<string[]>(['Voz', 'Batería', 'Bajo', 'Guitarras']);
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
+
+  const handleSelectMoisesPreset = (preset: MoisesSeparationPreset) => {
+    setMoisesPreset(preset);
+    if (preset !== 'custom') {
+      setSelectedStemsToExtract(MOISES_PRESETS_CONFIG[preset].stems);
+    }
+  };
+
+  const handleToggleStem = (stemId: string) => {
+    let next: string[];
+    if (selectedStemsToExtract.includes(stemId)) {
+      if (selectedStemsToExtract.length <= 1) return; // Mantener al menos 1 pista seleccionada
+      next = selectedStemsToExtract.filter(s => s !== stemId);
+    } else {
+      next = [...selectedStemsToExtract, stemId];
+    }
+    setSelectedStemsToExtract(next);
+
+    // Comprobar si la combinación actual coincide con un preset estándar
+    const matchingPreset = (Object.keys(MOISES_PRESETS_CONFIG) as MoisesSeparationPreset[]).find(p => {
+      if (p === 'custom') return false;
+      const pStems = MOISES_PRESETS_CONFIG[p].stems;
+      return pStems.length === next.length && pStems.every(s => next.includes(s));
+    });
+    setMoisesPreset(matchingPreset || 'custom');
+  };
 
   // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo "Procesar con Iris"
   useEffect(() => {
@@ -472,10 +605,15 @@ export default function SongStudioModal({
   };
 
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
-  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
+  const handlePerformAiStemSeparation = async (
+    targetIdea: SongAudioIdea,
+    overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server',
+    stemsToInclude?: string[]
+  ) => {
     setIsSeparatingStemsAi(true);
     setSeparationElapsedSeconds(0);
     const engineToUse = overrideEngine || selectedStemEngine;
+    const activeStemsToInclude = stemsToInclude || selectedStemsToExtract;
 
     const stepInitText =
       engineToUse === 'mvsep-mdx23' ? "Iniciando Iris Studio (red neuronal de máxima calidad)..." :
@@ -553,7 +691,8 @@ export default function SongStudioModal({
           audioUrl: sendableAudioUrl,
           bpm: song.bpm,
           key: song.tonalidad,
-          forceEngine: engineToUse
+          forceEngine: engineToUse,
+          requestedStems: activeStemsToInclude
         })
       });
 
@@ -630,7 +769,16 @@ export default function SongStudioModal({
           : data.isNeural
           ? 'Iris Cloud'
           : 'Iris Básico (gratis)';
-        data.stems.forEach((st: any) => {
+
+        // Filtramos las pistas de acuerdo a la selección del usuario (estilo Moises)
+        const stemsToFilter = activeStemsToInclude && activeStemsToInclude.length > 0
+          ? data.stems.filter((st: any) => {
+              const instClean = (st.instrument || '').toLowerCase();
+              return activeStemsToInclude.some(req => req.toLowerCase() === instClean);
+            })
+          : data.stems;
+
+        stemsToFilter.forEach((st: any) => {
           if (!st.audioUrl) return;
 
           const instClean = (st.instrument || '').toLowerCase();
@@ -638,6 +786,7 @@ export default function SongStudioModal({
             (t.instrumento && t.instrumento.toLowerCase() === instClean) ||
             (t.nombre && t.nombre.toLowerCase().includes(instClean)) ||
             (instClean === 'voz' && t.nombre.toLowerCase().includes('voz')) ||
+            (instClean === 'instrumental' && t.nombre.toLowerCase().includes('instrumental')) ||
             (instClean === 'batería' && (t.nombre.toLowerCase().includes('batería') || t.nombre.toLowerCase().includes('bateria'))) ||
             (instClean === 'bajo' && t.nombre.toLowerCase().includes('bajo')) ||
             (instClean === 'guitarras' && t.nombre.toLowerCase().includes('guitarra')) ||
@@ -679,7 +828,7 @@ export default function SongStudioModal({
       } else {
         let renderedStems: IsolatedStemResult[] = [];
         try {
-          renderedStems = await separateAudioIntoStems(targetIdea.audioUrl);
+          renderedStems = await separateAudioIntoStems(targetIdea.audioUrl, activeStemsToInclude);
         } catch (renderErr) {
           console.warn("Could not render client audio stem buffers:", renderErr);
         }
@@ -3856,10 +4005,10 @@ export default function SongStudioModal({
                       <div className="flex items-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 shadow-md overflow-hidden">
                         <button
                           type="button"
-                          onClick={() => handlePerformAiStemSeparation(idea)}
+                          onClick={() => setShowMoisesStemsModal(idea)}
                           disabled={isSeparatingStemsAi}
                           className="px-3 py-1.5 hover:bg-amber-400/20 text-zinc-950 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
-                          title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
+                          title="Elegir pistas y aislar voz, batería, bajo, guitarras, etc. (Modo Moises)"
                         >
                           <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
                           <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar con Iris'}</span>
@@ -3868,7 +4017,7 @@ export default function SongStudioModal({
                           type="button"
                           onClick={() => setShowMoisesStemsModal(idea)}
                           className="px-2 py-1.5 border-l border-amber-600/60 hover:bg-amber-400/30 text-zinc-950 transition-all cursor-pointer flex items-center"
-                          title="Elegir motor de separación (Iris Studio, Iris Cloud o Iris Básico) o comparar calidad"
+                          title="Elegir pistas y motor de separación (Iris Studio, Iris Cloud o Iris Básico)"
                         >
                           <Sliders className="w-3.5 h-3.5" />
                         </button>
@@ -5252,48 +5401,136 @@ export default function SongStudioModal({
               </button>
             </div>
 
-            {/* TAB 1: CANALES DE PISTAS SEPARADAS & HABILITACIÓN */}
+            {/* TAB 1: CANALES DE PISTAS SEPARADAS & CONFIGURACIÓN MOISES */}
             {moisesTab === 'stems' && (
               <div className="space-y-4 text-xs text-neutral-300 leading-relaxed">
-                <p className="text-neutral-300 font-sans">
-                  BandManager crea canales de pistas independientes (Voz, Batería, Bajo, Guitarras) para controlar el volumen, silenciar (Mute) o dejar en Solo cada instrumento en tus ensayos y composición.
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[11px]">
-                  <div className="p-3 rounded-xl bg-black/60 border border-indigo-500/30 text-indigo-200 space-y-1">
-                    <span className="font-bold text-white block flex items-center gap-1.5">
-                      🎤 1. Voz (Vocals)
-                    </span>
-                    <p className="text-[10px] text-neutral-400">
-                      Filtro DSP de frecuencia centrada en 1200Hz. Silencia la voz para cantar la letra en directo o practicar afinación.
-                    </p>
+                {/* Cabecera & Selector de Presets (Estilo Moises) */}
+                <div className="p-3.5 rounded-2xl bg-zinc-900/90 border border-white/10 space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div>
+                      <h4 className="font-bold text-white text-sm flex items-center gap-1.5 font-mono">
+                        <Sliders className="w-4 h-4 text-amber-400" />
+                        Elige qué pistas aislar (Modo Moises)
+                      </h4>
+                      <p className="text-[11px] text-neutral-400 font-sans">
+                        Selecciona un modo predefinido o personaliza individualmente cada instrumento para tu DAW.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 font-bold">
+                      <Sparkles className="w-3 h-3" />
+                      <span>{selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'pista activa' : 'pistas activas'}</span>
+                    </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-black/60 border border-amber-500/30 text-amber-200 space-y-1">
-                    <span className="font-bold text-white block flex items-center gap-1.5">
-                      🥁 2. Batería (Drums)
+                  {/* Botones de Presets */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
+                    {(['2_stems', '4_stems', '6_stems', 'custom'] as MoisesSeparationPreset[]).map((presetKey) => {
+                      const presetCfg = MOISES_PRESETS_CONFIG[presetKey];
+                      const isActive = moisesPreset === presetKey;
+                      return (
+                        <button
+                          key={presetKey}
+                          type="button"
+                          onClick={() => handleSelectMoisesPreset(presetKey)}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                            isActive
+                              ? 'bg-gradient-to-b from-amber-500/20 to-amber-950/40 border-amber-500 text-white ring-1 ring-amber-500/40 shadow-md shadow-amber-950/40'
+                              : 'bg-black/40 border-white/5 text-neutral-400 hover:border-white/15 hover:text-neutral-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-xs text-white truncate">{presetCfg.label}</span>
+                            {isActive && <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+                          </div>
+                          <span className="text-[9px] text-amber-300/90 font-bold tracking-tight">{presetCfg.badge}</span>
+                          <span className="text-[9px] text-neutral-400 line-clamp-2 leading-tight font-sans">{presetCfg.subtitle}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Matriz interactiva de selección de pistas */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[11px] font-mono font-bold text-neutral-300 flex items-center gap-1.5">
+                      <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                      Pistas disponibles para aislar:
                     </span>
-                    <p className="text-[10px] text-neutral-400">
-                      Aísla transitorios de platos (&gt;1800Hz) y golpes de bombo/caja. Ideal para tocar la batería encima sin estorbar.
-                    </p>
+                    <div className="flex items-center gap-2 text-[10px] font-mono">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedStemsToExtract(MOISES_AVAILABLE_STEMS.map(s => s.id));
+                          setMoisesPreset('6_stems');
+                        }}
+                        className="text-amber-400 hover:underline cursor-pointer"
+                      >
+                        Todas (6+)
+                      </button>
+                      <span className="text-white/20">•</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedStemsToExtract(['Voz', 'Instrumental']);
+                          setMoisesPreset('2_stems');
+                        }}
+                        className="text-rose-400 hover:underline cursor-pointer"
+                      >
+                        Voz + Base
+                      </button>
+                      <span className="text-white/20">•</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedStemsToExtract(['Batería', 'Bajo']);
+                          setMoisesPreset('custom');
+                        }}
+                        className="text-emerald-400 hover:underline cursor-pointer"
+                      >
+                        Solo Ritmo
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-black/60 border border-emerald-500/30 text-emerald-200 space-y-1">
-                    <span className="font-bold text-white block flex items-center gap-1.5">
-                      🎸 3. Bajo (Bass)
-                    </span>
-                    <p className="text-[10px] text-neutral-400">
-                      Filtro sub-bass paso bajo en 220Hz. Apaga la línea de bajo grabada para que el bajista de la banda toque su línea real.
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-black/60 border border-purple-500/30 text-purple-200 space-y-1">
-                    <span className="font-bold text-white block flex items-center gap-1.5">
-                      🎹 4. Guitarras & Armonía
-                    </span>
-                    <p className="text-[10px] text-neutral-400">
-                      Filtro de espectro medio (350Hz-3.5kHz). Controla el nivel armónico para acompañar con teclado o rítmicas.
-                    </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-[11px]">
+                    {MOISES_AVAILABLE_STEMS.map((stem) => {
+                      const isSelected = selectedStemsToExtract.includes(stem.id);
+                      return (
+                        <div
+                          key={stem.id}
+                          onClick={() => handleToggleStem(stem.id)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleToggleStem(stem.id); } }}
+                          className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 select-none ${
+                            isSelected
+                              ? 'bg-zinc-900 border-indigo-500/60 ring-1 ring-indigo-500/40 shadow-lg shadow-indigo-950/30'
+                              : 'bg-black/50 border-white/5 opacity-55 hover:opacity-85 hover:border-white/20'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-bold text-white flex items-center gap-1.5 text-xs">
+                              <span className="text-base">{stem.icon}</span>
+                              <span>{stem.name}</span>
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <span className={`text-[9px] px-1.5 py-0.5 rounded border font-semibold ${stem.badgeBg}`}>
+                                {stem.tag}
+                              </span>
+                              <div className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${
+                                isSelected ? 'bg-amber-500 border-amber-400 text-zinc-950' : 'border-white/30 bg-transparent'
+                              }`}>
+                                {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-neutral-400 leading-normal font-sans">
+                            {stem.desc}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -5302,8 +5539,8 @@ export default function SongStudioModal({
                     <Sparkles className="w-4 h-4 text-amber-400" />
                     Controles Activos en la Línea de Tiempo:
                   </span>
-                  <p className="text-neutral-300">
-                    Al separar las pistas, cada instrumento tendrá su propia pista con botones <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, Fader de Volumen (0-100%), Ecualizador de 3 bandas (Graves, Medios, Agudos) y Paneo L/R estéreo.
+                  <p className="text-neutral-300 font-sans">
+                    Al separar las pistas seleccionadas ({selectedStemsToExtract.join(', ')}), cada instrumento tendrá su propio canal con botones <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, Fader de Volumen, Ecualizador de 3 bandas y Paneo estéreo.
                   </p>
                 </div>
 
@@ -5311,7 +5548,7 @@ export default function SongStudioModal({
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris Espectro:
+                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
                       selectedStemEngine === 'mvsep-mdx23'
@@ -5320,9 +5557,9 @@ export default function SongStudioModal({
                         ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
                         : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
                     }`}>
-                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio"}
-                      {selectedStemEngine === 'demucs' && '⚡ Iris Cloud'}
-                      {selectedStemEngine === 'dsp-server' && '⚙️ Iris Básico (gratis)'}
+                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio (MVSEP-MDX23)"}
+                      {selectedStemEngine === 'demucs' && '⚡ Iris Cloud (Demucs v4)'}
+                      {selectedStemEngine === 'dsp-server' && '⚙️ Iris Básico (DSP Local)'}
                     </span>
                   </div>
 
@@ -5345,8 +5582,8 @@ export default function SongStudioModal({
                           Máxima calidad
                         </span>
                       </div>
-                      <span className="text-[10px] text-neutral-300 leading-normal">
-                        Combina dos redes neuronales de alta precisión para aislar voz, bajo, batería y demás fuentes al máximo detalle.
+                      <span className="text-[10px] text-neutral-300 leading-normal font-sans">
+                        Red neuronal MDX23 con aislamiento quirúrgico en frecuencias medias/graves. Cero bleed de voces en bajo ni guitarra.
                       </span>
                       <span className="text-[9px] text-amber-400/80 font-bold">
                         🐢 Más lento, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['mvsep-mdx23'])}€ estimado por canción.
@@ -5371,8 +5608,8 @@ export default function SongStudioModal({
                           Recomendado
                         </span>
                       </div>
-                      <span className="text-[10px] text-neutral-300 leading-normal">
-                        Red neuronal en la nube probada en estudio para aislamiento directo de Voz, Batería, Bajo y Guitarras.
+                      <span className="text-[10px] text-neutral-300 leading-normal font-sans">
+                        Red neuronal en la nube probada en estudio para aislamiento directo y rápido de pistas instrumentales.
                       </span>
                       <span className="text-[9px] text-emerald-400 font-bold">
                         ⚡ Rápido, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['demucs'])}€ estimado por canción.
@@ -5397,8 +5634,8 @@ export default function SongStudioModal({
                           100% Gratis
                         </span>
                       </div>
-                      <span className="text-[10px] text-neutral-300 leading-normal">
-                        Filtros de frecuencia y Mid/Side procesados en nuestro propio servidor. Rápido y sin coste.
+                      <span className="text-[10px] text-neutral-300 leading-normal font-sans">
+                        Filtros de frecuencia y cancelación de fase procesados localmente en servidor. Instantáneo y sin coste.
                       </span>
                     </button>
                   </div>
@@ -5406,7 +5643,7 @@ export default function SongStudioModal({
                   {/* Banner de Garantía Anti-Duplicación */}
                   <div className="p-2 rounded-lg bg-emerald-950/30 border border-emerald-500/20 text-emerald-300 text-[10px] flex items-center gap-2">
                     <span className="text-emerald-400 font-bold">🛡️ Cero Coste Duplicado:</span>
-                    <span className="text-neutral-300">
+                    <span className="text-neutral-300 font-sans">
                       Las pistas procesadas se guardan en la nube por hash de canción. Nunca pagarás 2 veces por la misma canción.
                     </span>
                   </div>
@@ -5414,14 +5651,15 @@ export default function SongStudioModal({
 
                 <button
                   type="button"
+                  disabled={selectedStemsToExtract.length === 0}
                   onClick={() => {
                     const targetIdea = showMoisesStemsModal;
                     setShowMoisesStemsModal(null);
                     if (targetIdea) {
-                      handlePerformAiStemSeparation(targetIdea, selectedStemEngine);
+                      handlePerformAiStemSeparation(targetIdea, selectedStemEngine, selectedStemsToExtract);
                     }
                   }}
-                  className={`w-full py-3 rounded-xl font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 ${
+                  className={`w-full py-3.5 rounded-xl font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                     selectedStemEngine === 'mvsep-mdx23'
                       ? 'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white shadow-amber-900/30'
                       : selectedStemEngine === 'demucs'
@@ -5432,19 +5670,19 @@ export default function SongStudioModal({
                   {selectedStemEngine === 'mvsep-mdx23' && (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-                      <span>✨ Separar con Iris Studio</span>
+                      <span>✨ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Studio</span>
                     </>
                   )}
                   {selectedStemEngine === 'demucs' && (
                     <>
                       <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
-                      <span>⚡ Separar con Iris Cloud</span>
+                      <span>⚡ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Cloud</span>
                     </>
                   )}
                   {selectedStemEngine === 'dsp-server' && (
                     <>
                       <Cpu className="w-4 h-4 text-cyan-200" />
-                      <span>⚙️ Separar con Iris Básico (gratis)</span>
+                      <span>⚙️ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Básico (gratis)</span>
                     </>
                   )}
                 </button>

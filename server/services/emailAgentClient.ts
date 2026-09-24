@@ -217,10 +217,11 @@ export interface RespuestaEntrante {
 export async function leerRespuestasEntrantes(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
   const account = await getAccount(bandId);
 
+  const isPortSecure = Number(account.imap_port) === 993 || (account as any).imap_secure === true;
   const client = new ImapFlow({
     host: account.imap_host,
-    port: account.imap_port,
-    secure: true,
+    port: Number(account.imap_port) || 993,
+    secure: isPortSecure,
     auth: { user: account.email, pass: account.app_password },
     logger: false
   });
@@ -256,7 +257,8 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 20): 
     await client.logout();
   } catch (err: any) {
     try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
-    throw new EmailAgentError(`No se pudo leer las respuestas entrantes de '${bandId}': ${err.message || err}`, "api_error");
+    const details = err.responseText || err.responseStatus || err.description || (err.authenticationFailed ? "Fallo de autenticación IMAP: contraseña o contraseña de aplicación incorrecta" : "") || err.message || String(err);
+    throw new EmailAgentError(`No se pudo leer las respuestas entrantes de '${bandId}': ${details}`, "api_error");
   }
 
   return results;
