@@ -312,7 +312,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
       // Persist to EPK and upload-logo endpoints
       const authHeaders = getAuthHeaders() as Record<string, string>;
-      await fetch('/api/users/upload-logo', {
+      const res = await fetch('/api/users/upload-logo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -324,6 +324,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           logoUrl: uploadedUrl
         })
       });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Error al guardar el logotipo en el servidor');
+      }
 
       setCustomLogos(prev => ({ ...prev, [clean]: uploadedUrl }));
 

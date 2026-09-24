@@ -1181,6 +1181,20 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
 
 export const INITIAL_USERS = [
   {
+    id: 'user-admin',
+    username: 'Admin',
+    email: 'admin@bandmanager.io',
+    name: 'Admin',
+    role: 'admin' as const,
+    instrument: 'Administración y Dirección',
+    avatarColor: '#6366f1',
+    initialPassword: 'admin',
+    band_id: 'band-vertice',
+    main_band_id: 'band-vertice',
+    bandName: 'Vértice',
+    createdAt: '2026-01-01T10:00:00.000Z'
+  },
+  {
     id: 'user-diego',
     username: 'diego',
     email: 'diego.delacalleb@gmail.com',

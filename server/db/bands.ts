@@ -29,31 +29,67 @@ export async function dbMigrateAllPlansToNewTiers() {
 }
 
 // --- REGISTERED BANDS ---
-export async function ensureRegisteredBandExists(bandId: string, nombreBanda?: string) {
+export async function ensureRegisteredBandExists(bandId: string, nombreBanda?: string): Promise<string> {
   const cleanId = cleanBandId(bandId);
+  const rawClean = cleanId.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([cleanId, `band-${rawClean}`, rawClean])).filter(Boolean);
+  const candidateRegIds = Array.from(new Set([`reg-${rawClean}`, `reg-${cleanId}`, cleanId])).filter(Boolean);
+
   const sb = getSupabase();
   try {
-    const { data } = await sb.from("registered_bands").select("*").eq("band_id", cleanId).maybeSingle();
+    const { data, error: selectErr } = await sb
+      .from("registered_bands")
+      .select("*")
+      .or(`band_id.in.(${candidateIds.join(',')}),id.in.(${candidateRegIds.join(',')})`)
+      .limit(1)
+      .maybeSingle();
+
+    if (selectErr) {
+      console.warn("Notice in ensureRegisteredBandExists select:", selectErr.message);
+    }
+
+    if (data) {
+      if (nombreBanda && nombreBanda.trim() && nombreBanda.trim() !== "Banda" && (data.nombre_banda === "Banda" || !data.nombre_banda)) {
+        const { error: updateErr } = await sb.from("registered_bands").update({ nombre_banda: nombreBanda.trim() }).eq("band_id", data.band_id);
+        if (updateErr) {
+          console.warn("Notice in ensureRegisteredBandExists update:", updateErr.message);
+        }
+      }
+      return data.band_id;
+    }
+
+    const canonicalBandId = cleanId.startsWith("band-") ? cleanId : `band-${rawClean}`;
     const resolvedName = (nombreBanda && nombreBanda.trim() && nombreBanda.trim() !== "Banda") 
       ? nombreBanda.trim() 
-      : (data?.nombre_banda && data.nombre_banda !== "Banda" ? data.nombre_banda : cleanId.replace(/^band-/, "").split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" "));
+      : rawClean.split("-").map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 
-    if (!data) {
-      const payload = {
-        id: `reg-${cleanId}`,
-        band_id: cleanId,
-        nombre_banda: resolvedName,
-        email: "contacto@banda.com",
-        plan: "promo",
-        contacto_nombre: "Contacto",
-        estado_cuenta: "activo"
-      };
-      await sb.from("registered_bands").upsert(payload);
-    } else if (nombreBanda && nombreBanda.trim() && nombreBanda.trim() !== "Banda" && (data.nombre_banda === "Banda" || !data.nombre_banda)) {
-      await sb.from("registered_bands").update({ nombre_banda: nombreBanda.trim() }).eq("band_id", cleanId);
+    const payload = {
+      id: `reg-${rawClean}`,
+      band_id: canonicalBandId,
+      nombre_banda: resolvedName || "Banda",
+      email: "contacto@banda.com",
+      plan: "promo",
+      contacto_nombre: "Contacto",
+      estado_cuenta: "activo"
+    };
+
+    const { data: inserted, error: upsertErr } = await sb
+      .from("registered_bands")
+      .upsert(payload, { onConflict: "band_id" })
+      .select()
+      .maybeSingle();
+
+    if (upsertErr) {
+      const { data: existing } = await sb.from("registered_bands").select("band_id").eq("id", payload.id).maybeSingle();
+      if (existing?.band_id) return existing.band_id;
+      console.error("Error in ensureRegisteredBandExists upsert:", upsertErr.message);
+      throw new Error(`Supabase Error (ensureRegisteredBandExists): ${upsertErr.message}`);
     }
+
+    return inserted?.band_id || canonicalBandId;
   } catch (err) {
     console.error("Error in ensureRegisteredBandExists:", err);
+    throw err;
   }
 }
 

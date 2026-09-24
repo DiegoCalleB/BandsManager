@@ -302,7 +302,7 @@ export async function enrichVenueDetailsWithSerper(
         hl: "es",
         num: 8
       }),
-      signal: AbortSignal.timeout(4000)
+      signal: AbortSignal.timeout(6000)
     });
 
     if (!response.ok) {

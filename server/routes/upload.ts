@@ -8,26 +8,50 @@ import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 
+export function detectMimeType(ext: string, fallback?: string): string {
+  const cleanExt = (ext || '').toLowerCase().replace('.', '');
+  const mimeMap: Record<string, string> = {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+    svg: 'image/svg+xml',
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    m4a: 'audio/x-m4a',
+    ogg: 'audio/ogg',
+    aac: 'audio/aac',
+    flac: 'audio/flac',
+    pdf: 'application/pdf',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    mp4: 'video/mp4',
+    mov: 'video/quicktime',
+    webm: 'video/webm'
+  };
+  return mimeMap[cleanExt] || (fallback && fallback !== 'application/octet-stream' ? fallback : 'application/octet-stream');
+}
+
 /**
  * Optimizador transparente de archivos de audio.
  * Si el usuario sube un archivo de audio (.wav, .flac, .aiff, .m4a, .wma, etc. o mp3 pesado > 2MB),
  * lo recodifica en segundo plano a MP3 de alta fidelidad (256kbps), reduciendo el peso de almacenamiento
  * en Supabase/disco hasta un 93% sin pérdida de calidad auditiva apreciable.
  */
-async function compressAudioFileIfNeeded(inputPath: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
+async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
   const ext = path.extname(inputPath).toLowerCase().replace('.', '');
   const isAudioExt = ['wav', 'flac', 'aiff', 'aif', 'alac', 'm4a', 'wma', 'ogg', 'opus'].includes(ext);
   
   if (!fs.existsSync(inputPath)) {
-    return { finalPath: inputPath, wasCompressed: false, newMime: 'application/octet-stream', newExt: ext };
+    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
   }
 
   const stats = fs.statSync(inputPath);
   
   // Si no es un formato de audio pesado o es un mp3 pequeño (< 2MB), no hace falta comprimir
   if (!isAudioExt && (ext !== 'mp3' || stats.size < 2 * 1024 * 1024)) {
-    const defaultMime = ext === 'mp3' ? 'audio/mpeg' : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'application/octet-stream';
-    return { finalPath: inputPath, wasCompressed: false, newMime: defaultMime, newExt: ext };
+    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
   }
 
   const outputPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '-opt.mp3');
@@ -400,10 +424,10 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
     }
 
     // Optimizador transparente: si es un audio pesado (.wav, .flac, .m4a, etc.), se comprime a MP3 256k
-    const compResult = await compressAudioFileIfNeeded(filePath);
+    const compResult = await compressAudioFileIfNeeded(filePath, mimeType);
     filePath = compResult.finalPath;
     uniqueName = path.basename(filePath);
-    mimeType = compResult.newMime;
+    mimeType = compResult.newMime || detectMimeType(path.extname(filePath), mimeType);
     buffer = null; // Forzar lectura del archivo optimizado desde disco
 
     let finalUrl = `/uploads/${uniqueName}`;

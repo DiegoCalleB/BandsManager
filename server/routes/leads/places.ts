@@ -6,6 +6,7 @@ import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from
 import { safeParseJson } from "../../utils.js";
 import { getDomainFromUrl } from "./helpers.js";
 import { getBandDnaProfile } from "../../utils/bandDna.js";
+import { getTargetBandId } from "../../utils/bandAccess.js";
 import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../../services/venueIntelligenceService.js";
 import { discoverVenuesMultiSource } from "../../services/multiSourceVenueDiscoveryService.js";
 import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatcherService.js";
@@ -1126,10 +1127,25 @@ router.post(["/multi-source-venues", "/leads/multi-source-venues"], requireAuth,
 router.post(["/similar-artists-venues", "/leads/similar-artists-venues"], requireAuth, async (req, res) => {
   try {
     const { bandName, genre, similarArtists, targetCities, limit } = req.body;
+    const userBandId = getTargetBandId(req);
+    const state = loadState();
+    const bandDna = userBandId ? getBandDnaProfile(state, userBandId) : null;
+    const bandConfig = userBandId ? (state?.epkConfigsByBand?.[userBandId] || state?.epkConfig) : state?.epkConfig;
+
+    const resolvedBandName = bandName || bandDna?.bandName || "Banda";
+    const resolvedGenre = genre || bandDna?.genero || bandConfig?.genero || "Música en directo";
+    const resolvedSimilar = (Array.isArray(similarArtists) && similarArtists.length > 0)
+      ? similarArtists
+      : (bandConfig?.bandasSimilares && bandConfig.bandasSimilares.length > 0
+          ? bandConfig.bandasSimilares
+          : bandDna?.artistasReferencia
+            ? bandDna.artistasReferencia.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : undefined);
+
     const result = await findVenuesBySimilarArtists({
-      bandName,
-      genre,
-      similarArtists,
+      bandName: resolvedBandName,
+      genre: resolvedGenre,
+      similarArtists: resolvedSimilar,
       targetCities,
       limit: Number(limit) || 8
     });

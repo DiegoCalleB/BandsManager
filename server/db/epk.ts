@@ -1,5 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { invalidateBandStateCache } from "./sync.js";
 
 export async function dbGetEpkConfig(bandId: string) {
   const sb = getSupabase();
@@ -140,12 +141,13 @@ export async function dbGetEpkLogosMap(bandIds: string[]): Promise<Record<string
 export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   const sb = getSupabase();
 
-  await ensureRegisteredBandExists(targetBandId);
+  const canonicalBandId = (await ensureRegisteredBandExists(targetBandId)) || targetBandId;
+  const bandIdToUse = canonicalBandId;
 
   // Fetch current config to merge partial updates safely without erasing existing fields
   let existing: any = null;
   try {
-    existing = await dbGetEpkConfig(targetBandId);
+    existing = await dbGetEpkConfig(bandIdToUse);
   } catch (err) {
     // Non-blocking
   }
@@ -180,7 +182,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   const newLogoUrl = (config.logoUrl !== undefined ? config.logoUrl : (config.logo_url !== undefined ? config.logo_url : existing?.logoUrl)) || "";
 
   const payload = {
-    band_id: targetBandId,
+    band_id: bandIdToUse,
     biografia: (config.biografia !== undefined ? config.biografia : existing?.biografia) || "",
     logo_url: newLogoUrl,
     dossier_pdf_url: (config.dossierPdfUrl !== undefined ? config.dossierPdfUrl : (config.dossier_pdf_url !== undefined ? config.dossier_pdf_url : existing?.dossierPdfUrl)) || "",
@@ -237,21 +239,41 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
 
   if (error) throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);
 
-  // Also sync logo & band name into registered_bands table
-  const regUpdates: Record<string, any> = {};
-  if (newLogoUrl && newLogoUrl.trim()) {
-    regUpdates.logo_url = newLogoUrl.trim();
+  // En Supabase PostgreSQL, si el upsert por ON CONFLICT no sobreescribió los campos actualizados,
+  // garantizamos la persistencia atómica reemplazando el registro para asegurar que el logo y datos queden guardados.
+  if (data && newLogoUrl && data.logo_url !== newLogoUrl) {
+    try {
+      await sb.from("epk_configs").delete().eq("band_id", bandIdToUse);
+      const insertRes = await sb.from("epk_configs").insert(currentPayload).select().single();
+      if (insertRes.data) {
+        data = insertRes.data;
+      }
+    } catch (_) {
+      // Non-blocking
+    }
   }
+
+  // Also sync band name into registered_bands table (logo_url lives in epk_configs)
+  const regUpdates: Record<string, any> = {};
   const providedName = (config.bandName || config.nombre_banda || config.localBandName || config.contactoBooking?.nombre || "").trim();
   if (providedName && providedName.toLowerCase() !== "banda" && !providedName.toLowerCase().includes("bakandeya")) {
     regUpdates.nombre_banda = providedName;
   }
   if (Object.keys(regUpdates).length > 0) {
     try {
-      await sb.from("registered_bands").update(regUpdates).eq("band_id", targetBandId);
+      await sb.from("registered_bands").update(regUpdates).eq("band_id", bandIdToUse);
     } catch (regErr) {
       // Non-blocking
     }
+  }
+
+  try {
+    invalidateBandStateCache(bandIdToUse);
+    if (targetBandId && targetBandId !== bandIdToUse) {
+      invalidateBandStateCache(targetBandId);
+    }
+  } catch (_) {
+    // Non-blocking
   }
 
   return data;

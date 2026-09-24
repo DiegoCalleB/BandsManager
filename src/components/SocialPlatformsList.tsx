@@ -10,6 +10,15 @@ export interface SocialLinks {
   twitter?: string;
   appleMusic?: string;
   bandcamp?: string;
+  soundcloud?: string;
+  bandsintown?: string;
+  songkick?: string;
+  wegow?: string;
+  tidal?: string;
+  deezer?: string;
+  amazonMusic?: string;
+  twitch?: string;
+  threads?: string;
   website?: string;
   whatsapp?: string;
   revolut?: string;
@@ -80,6 +89,51 @@ export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
       <path d="M0 18.75l7.437-13.5H24l-7.438 13.5H0z"/>
     </svg>
   ),
+  soundcloud: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M1.175 12.225c-.04 0-.074.032-.08.071L.82 15.01c-.01.066.036.126.102.13.007 0 .013 0 .02-.002l.275-.035c.04 0 .074-.032.08-.071l.275-2.714c.01-.066-.036-.126-.102-.13-.007 0-.013 0-.02.002l-.275.035zm1.53-.787c-.05 0-.094.036-.101.086l-.37 3.518c-.01.076.046.143.122.15.008 0 .017 0 .025-.002l.375-.048c.05 0 .093-.036.1-.086l.37-3.518c.01-.076-.046-.143-.122-.15-.008 0-.017 0-.025.002l-.474.048zm1.56-.81c-.06 0-.112.043-.12.102l-.445 4.34c-.012.088.053.167.142.176.01 0 .02 0 .03-.002l.45-.058c.06 0 .113-.043.12-.102l.446-4.34c.012-.088-.053-.167-.142-.176-.01 0-.02 0-.03.002l-.45.058zm1.57-.394c-.07 0-.13.05-.14.119l-.49 4.743c-.013.1.06.19.16.202.012 0 .024 0 .035-.003l.496-.064c.07 0 .13-.05.14-.118l.49-4.744c.014-.1-.06-.19-.16-.202-.012 0-.023 0-.035.003l-.496.064zm1.58-.292c-.08 0-.15.058-.16.136l-.52 5.045c-.016.112.068.213.18.226.013 0 .027 0 .04-.003l.53-.068c.08 0 .15-.057.16-.135l.52-5.046c.015-.112-.068-.213-.18-.226-.014 0-.027 0-.04.003l-.53.068zm1.59-.16c-.09 0-.17.065-.18.153l-.53 5.216c-.017.123.076.234.198.248.015 0 .03 0 .044-.003l.544-.07c.09 0 .17-.064.18-.152l.53-5.217c.017-.123-.076-.234-.198-.248-.015 0-.03 0-.044.003l-.544.07zm1.61.166c-.1 0-.188.072-.2.17l-.5 5.06c-.02.135.084.256.22.272.016 0 .033 0 .05-.004l.512-.065c.1 0 .188-.073.2-.17l.5-5.06c.02-.135-.084-.256-.22-.272-.016 0-.033 0-.05.003l-.512.066zm5.72-3.865c-.75 0-1.45.242-2.03.655-.13.093-.24.234-.23.393l.11 7.492c0 .127.103.23.23.23h7.68c2.22 0 4.02-1.8 4.02-4.02 0-2.12-1.65-3.86-3.74-4.01-.36-2.67-2.64-4.74-5.42-4.74-.21 0-.42.013-.62.038v-.038z"/>
+    </svg>
+  ),
+  bandsintown: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.667 0H5.333C2.388 0 0 2.388 0 5.333v13.334C0 21.612 2.388 24 5.333 24h13.334C21.612 24 24 21.612 24 18.667V5.333C24 2.388 21.612 0 18.667 0zm-3.111 18.222H8.444V5.778h7.112v12.444zm-1.778-3.555h-3.555v-1.778h3.555v1.778zm0-3.556h-3.555V9.333h3.555v1.778z"/>
+    </svg>
+  ),
+  songkick: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M2.5 4.5A2.5 2.5 0 0 0 0 7v10a2.5 2.5 0 0 0 2.5 2.5h19a2.5 2.5 0 0 0 2.5-2.5V7a2.5 2.5 0 0 0-2.5-2.5h-19zm4.25 4.25c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm10.5 0a1 1 0 0 1 1 1v4.5a1 1 0 1 1-2 0V9.75a1 1 0 0 1 1-1zm-4.75 0a1 1 0 0 1 1 1v4.5a1 1 0 1 1-2 0V9.75a1 1 0 0 1 1-1z"/>
+    </svg>
+  ),
+  wegow: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm-1 14.5l-4-2.5V9.8l4 2.2v4.5zm2 0v-4.5l4-2.2v4.2l-4 2.5zm4.8-8L12 5.6 6.2 8.5 12 11.4l5.8-2.9z"/>
+    </svg>
+  ),
+  tidal: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.012 3.992L8.008 7.996l4.004 4.004 4.004-4.004-4.004-4.004zm-8.004 8.004L0 7.996l4.008-4.004 4.004 4.004-4.004 4.004zm8.004 0l-4.004 4.004 4.004 4.004 4.004-4.004-4.004-4.004zm8.004-8.004l-4.004 4.004 4.004 4.004 4.004-4.004-4.004-4.004z"/>
+    </svg>
+  ),
+  deezer: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6.02 14.98H2v3.74h4.02v-3.74zm5.99-3.74H8.03v7.48h3.98v-7.48zm5.97-3.74h-3.99v11.22h3.99V7.5zm5.98-3.74h-4v14.96h4V3.76zM6.02 10.02H2v3.74h4.02v-3.74z"/>
+    </svg>
+  ),
+  amazonMusic: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M13.8 2.2c-.3 0-.6.2-.7.5l-.8 2.7c-.1.3.1.6.4.7.9.3 1.6.8 2.1 1.5.5.7.8 1.5.8 2.5 0 2.2-1.8 4-4 4s-4-1.8-4-4c0-1.8 1.2-3.4 3-3.8.3-.1.5-.4.4-.7l-.6-2.5c-.1-.3-.4-.5-.7-.4C5.7 3.5 3 6.7 3 10.5 3 15.2 6.8 19 11.5 19s8.5-3.8 8.5-8.5c0-4.6-3.7-8.3-8.2-8.3zm-8.6 18c3.2 1.6 7 1.8 10.3.5.3-.1.4-.4.2-.7-.2-.2-.5-.3-.7-.2-3 1.2-6.4 1-9.3-.4-.3-.1-.6 0-.7.3-.2.3 0 .6.2.8z"/>
+    </svg>
+  ),
+  twitch: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+    </svg>
+  ),
+  threads: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 18.2c-3.4 0-5.8-2.3-5.8-5.7 0-3.6 2.6-6 6.3-6 3.6 0 5.7 2.3 5.7 5.4 0 3.2-1.9 5.2-4.5 5.2-1.3 0-2.3-.6-2.7-1.6h-.1c-.4.9-1.3 1.6-2.5 1.6-1.5 0-2.5-.9-2.5-2.4 0-1.7 1.4-2.8 3.5-2.8h1.4v-.6c0-1.3-.9-2-2.3-2-1.1 0-2 .5-2.3 1.2l-1.3-.7c.5-1.2 1.9-2 3.7-2 2.3 0 3.8 1.3 3.8 3.3v4.6c0 .7.4 1.1 1.1 1.1 1.5 0 2.6-1.3 2.6-3.5 0-2.3-1.4-3.9-4-3.9-2.7 0-4.5 1.8-4.5 4.3 0 2.4 1.6 4.1 4.1 4.1 1.4 0 2.5-.5 3.2-1.3l1 1.1c-1 1-2.4 1.7-4.2 1.7zm-.6-6.4c-1.1 0-1.8.6-1.8 1.5 0 .8.5 1.3 1.3 1.3.8 0 1.4-.5 1.7-1.2v-.8l-1.2-.8z"/>
+    </svg>
+  ),
   facebook: ({ className = "w-5 h-5" }) => (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -143,6 +197,69 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
     borderClass: 'border-teal-500/30',
     hoverClass: 'hover:bg-teal-500/20 hover:border-teal-500/50 hover:text-teal-200'
   },
+  soundcloud: {
+    label: 'SoundCloud',
+    colorClass: 'text-orange-400',
+    bgClass: 'bg-orange-500/10',
+    borderClass: 'border-orange-500/30',
+    hoverClass: 'hover:bg-orange-500/20 hover:border-orange-500/50 hover:text-orange-300'
+  },
+  bandsintown: {
+    label: 'Bandsintown',
+    colorClass: 'text-cyan-300',
+    bgClass: 'bg-cyan-500/10',
+    borderClass: 'border-cyan-500/30',
+    hoverClass: 'hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-200'
+  },
+  songkick: {
+    label: 'Songkick',
+    colorClass: 'text-rose-400',
+    bgClass: 'bg-rose-500/10',
+    borderClass: 'border-rose-500/30',
+    hoverClass: 'hover:bg-rose-500/20 hover:border-rose-500/50 hover:text-rose-300'
+  },
+  wegow: {
+    label: 'Wegow',
+    colorClass: 'text-indigo-400',
+    bgClass: 'bg-indigo-500/10',
+    borderClass: 'border-indigo-500/30',
+    hoverClass: 'hover:bg-indigo-500/20 hover:border-indigo-500/50 hover:text-indigo-300'
+  },
+  tidal: {
+    label: 'TIDAL',
+    colorClass: 'text-slate-100',
+    bgClass: 'bg-slate-800',
+    borderClass: 'border-slate-700',
+    hoverClass: 'hover:bg-slate-700 hover:border-slate-600 hover:text-white'
+  },
+  deezer: {
+    label: 'Deezer',
+    colorClass: 'text-purple-400',
+    bgClass: 'bg-purple-500/10',
+    borderClass: 'border-purple-500/30',
+    hoverClass: 'hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-purple-300'
+  },
+  amazonMusic: {
+    label: 'Amazon Music',
+    colorClass: 'text-sky-400',
+    bgClass: 'bg-sky-500/10',
+    borderClass: 'border-sky-500/30',
+    hoverClass: 'hover:bg-sky-500/20 hover:border-sky-500/50 hover:text-sky-300'
+  },
+  twitch: {
+    label: 'Twitch',
+    colorClass: 'text-purple-400',
+    bgClass: 'bg-purple-600/10',
+    borderClass: 'border-purple-500/30',
+    hoverClass: 'hover:bg-purple-600/20 hover:border-purple-500/50 hover:text-purple-300'
+  },
+  threads: {
+    label: 'Threads',
+    colorClass: 'text-slate-200',
+    bgClass: 'bg-slate-800/90',
+    borderClass: 'border-slate-700',
+    hoverClass: 'hover:bg-slate-700 hover:border-slate-600 hover:text-white'
+  },
   facebook: {
     label: 'Facebook',
     colorClass: 'text-blue-400',
@@ -193,11 +310,20 @@ export const PLATFORM_PRIORITY_ORDER: string[] = [
   'instagram',
   'youtube',
   'spotify',
+  'soundcloud',
+  'bandsintown',
+  'songkick',
+  'wegow',
   'tiktok',
-  'facebook',
-  'twitter',
   'appleMusic',
   'bandcamp',
+  'tidal',
+  'deezer',
+  'amazonMusic',
+  'facebook',
+  'twitter',
+  'threads',
+  'twitch',
   'website'
 ];
 

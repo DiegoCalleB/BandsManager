@@ -34,6 +34,17 @@ export interface BandDnaProfile {
   epkUrl: string;
   instagramUrl: string;
   websiteUrl: string;
+  soundcloudUrl?: string;
+  bandsintownUrl?: string;
+  songkickUrl?: string;
+  wegowUrl?: string;
+  appleMusicUrl?: string;
+  bandcampUrl?: string;
+  tidalUrl?: string;
+  deezerUrl?: string;
+  amazonMusicUrl?: string;
+  twitchUrl?: string;
+  threadsUrl?: string;
   // Contacto oficial
   contactoNombre: string;
   contactoEmail: string;
@@ -131,6 +142,8 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     "Música en directo / Indie / Fusión";
 
   const artistasReferencia = bandConfig?.artistasReferencia ||
+    (Array.isArray(bandConfig?.bandasSimilares) && bandConfig.bandasSimilares.length > 0 ? bandConfig.bandasSimilares.join(", ") : undefined) ||
+    (typeof bandConfig?.bandasSimilares === "string" && bandConfig.bandasSimilares.trim() ? bandConfig.bandasSimilares.trim() : undefined) ||
     registeredBand?.artistas_similares ||
     registeredBand?.artistas_referencia ||
     undefined;
@@ -237,6 +250,17 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   const youtubeUrl = bandConfig?.enlacesRedes?.youtube || "";
   const instagramUrl = bandConfig?.enlacesRedes?.instagram || registeredBand?.instagram || "";
   const websiteUrl = bandConfig?.enlacesRedes?.website || registeredBand?.web || baseUrl;
+  const soundcloudUrl = bandConfig?.enlacesRedes?.soundcloud || undefined;
+  const bandsintownUrl = bandConfig?.enlacesRedes?.bandsintown || undefined;
+  const songkickUrl = bandConfig?.enlacesRedes?.songkick || undefined;
+  const wegowUrl = bandConfig?.enlacesRedes?.wegow || undefined;
+  const appleMusicUrl = bandConfig?.enlacesRedes?.appleMusic || undefined;
+  const bandcampUrl = bandConfig?.enlacesRedes?.bandcamp || undefined;
+  const tidalUrl = bandConfig?.enlacesRedes?.tidal || undefined;
+  const deezerUrl = bandConfig?.enlacesRedes?.deezer || undefined;
+  const amazonMusicUrl = bandConfig?.enlacesRedes?.amazonMusic || undefined;
+  const twitchUrl = bandConfig?.enlacesRedes?.twitch || undefined;
+  const threadsUrl = bandConfig?.enlacesRedes?.threads || undefined;
 
   // Contacto
   const contactoNombre = bandConfig?.contactoBooking?.nombre || bandConfig?.firmaEmail?.nombreRemitente || registeredBand?.contacto_nombre || `Booking & Management — ${bandName}`;
@@ -325,6 +349,17 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     epkUrl,
     instagramUrl,
     websiteUrl,
+    soundcloudUrl,
+    bandsintownUrl,
+    songkickUrl,
+    wegowUrl,
+    appleMusicUrl,
+    bandcampUrl,
+    tidalUrl,
+    deezerUrl,
+    amazonMusicUrl,
+    twitchUrl,
+    threadsUrl,
     contactoNombre,
     contactoEmail,
     contactoTelefono,
@@ -425,6 +460,28 @@ ${campaignSection}
    ${bandDna.artistasReferencia ? `- Artistas de referencia / Sonido afín: ${bandDna.artistasReferencia}` : ""}
    - Formato escénico: ${bandDna.formato}
    - ${bandDna.reglaDeOroInstrumentos}
+   - Presencia oficial y plataformas verificadas:
+     * Audio & Streaming: ${[
+       bandDna.spotifyUrl ? `Spotify (${bandDna.spotifyUrl})` : null,
+       bandDna.soundcloudUrl ? `SoundCloud (${bandDna.soundcloudUrl})` : null,
+       bandDna.bandcampUrl ? `Bandcamp (${bandDna.bandcampUrl})` : null,
+       bandDna.appleMusicUrl ? `Apple Music (${bandDna.appleMusicUrl})` : null,
+       bandDna.tidalUrl ? `TIDAL (${bandDna.tidalUrl})` : null,
+       bandDna.deezerUrl ? `Deezer (${bandDna.deezerUrl})` : null,
+       bandDna.amazonMusicUrl ? `Amazon Music (${bandDna.amazonMusicUrl})` : null
+     ].filter(Boolean).join(" • ") || "Dossier web oficial"}
+     * Giras, Conciertos y Venta de Entradas: ${[
+       bandDna.bandsintownUrl ? `Bandsintown (${bandDna.bandsintownUrl})` : null,
+       bandDna.songkickUrl ? `Songkick (${bandDna.songkickUrl})` : null,
+       bandDna.wegowUrl ? `Wegow (${bandDna.wegowUrl})` : null
+     ].filter(Boolean).join(" • ") || "Fechas activas en Dossier"}
+     * Vídeo y Redes Oficiales: ${[
+       bandDna.youtubeUrl ? `YouTube (${bandDna.youtubeUrl})` : null,
+       bandDna.instagramUrl ? `Instagram (${bandDna.instagramUrl})` : null,
+       bandDna.threadsUrl ? `Threads (${bandDna.threadsUrl})` : null,
+       bandDna.twitchUrl ? `Twitch (${bandDna.twitchUrl})` : null
+     ].filter(Boolean).join(" • ") || "Canales oficiales"}
+   * DIRECTIVA DE PLATAFORMAS: Si la banda tiene perfil en Bandsintown, Songkick o Wegow, tienes constancia de que tienen actividad y venta de entradas en gira. Si se requiere mostrar grabaciones de audio, puedes referenciar su catálogo en streaming o maquetas en SoundCloud / Bandcamp según proceda con naturalidad.
 
 2. DIRECTO, ENERGÍA Y CONSUMO DE BARRA:
    - Duración del show: ${bandDna.duracionDirecto}
@@ -743,7 +800,7 @@ Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}"
 ═════════════════════════════════════════════════════════════════════
 - Género / Fusión: ${bandDna.genero}
 - Concepto artístico: ${bandDna.biografia}
-- Formato escénico: ${bandDna.formato} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
+${bandDna.artistasReferencia ? `- Artistas de referencia / Sonido afín: ${bandDna.artistasReferencia}\n` : ""}- Formato escénico: ${bandDna.formato} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
 - Modelo económico: ${bandDna.flexibilidadEconomica}
 - Co-booking: ${bandDna.propuestaCoBooking}
 ${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `

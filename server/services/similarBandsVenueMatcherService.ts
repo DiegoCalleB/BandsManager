@@ -8,6 +8,7 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { searchSetlistFmVenues } from "./multiSourceVenueDiscoveryService.js";
+import { getVenuesFromBandsintown } from "./bandsintownVenueService.js";
 
 export interface SimilarVenueMatch {
   nombre_sala: string;
@@ -19,7 +20,7 @@ export interface SimilarVenueMatch {
   probabilidad_respuesta: 'alta' | 'media' | 'excelente';
   razon_recomendacion: string;
   contacto_sugerido?: string;
-  fuente: 'Setlist.fm' | 'Spotify Analytics' | 'Radar de Nicho IA';
+  fuente: 'Setlist.fm' | 'Bandsintown' | 'Spotify Analytics' | 'Radar de Nicho IA';
 }
 
 export interface SimilarVenueMatchResult {
@@ -48,21 +49,48 @@ export async function findVenuesBySimilarArtists(params: {
 
   const matches: SimilarVenueMatch[] = [];
 
-  // 1. Probar Setlist.fm para los artistas similares si la API está lista
+  // 1. Probar Bandsintown y Setlist.fm para los artistas similares
   for (const artist of similarArtists.slice(0, 3)) {
+    // A) Bandsintown (API oficial o radar)
+    try {
+      const bitVenues = await getVenuesFromBandsintown({ artistName: artist, targetCities: cities, limit: 4 });
+      bitVenues.forEach(bv => {
+        const norm = bv.nombre_sala.toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (!matches.some(m => m.nombre_sala.toLowerCase().replace(/[^a-z0-9]/g, "") === norm)) {
+          matches.push({
+            nombre_sala: bv.nombre_sala,
+            ciudad: bv.ciudad,
+            pais: bv.pais || "España",
+            bandas_similares_que_tocaron: [artist],
+            genero_predominante: genre,
+            aforo_estimado: bv.aforo_estimado,
+            probabilidad_respuesta: "excelente",
+            razon_recomendacion: `El artista afín "${artist}" ha actuado en esta sala${bv.fecha ? ` (${bv.fecha})` : ""}. Perfil de público compatible.`,
+            fuente: "Bandsintown"
+          });
+        }
+      });
+    } catch (e) {
+      // Continuar si falla
+    }
+
+    // B) Setlist.fm
     try {
       const setlists = await searchSetlistFmVenues(artist, cities[0]);
       setlists.forEach(v => {
-        matches.push({
-          nombre_sala: v.nombre,
-          ciudad: v.ciudad,
-          pais: v.pais || "España",
-          bandas_similares_que_tocaron: [artist],
-          genero_predominante: genre,
-          probabilidad_respuesta: "excelente",
-          razon_recomendacion: `El artista afín ${artist} ha tocado en este recinto con éxito verificado.`,
-          fuente: "Setlist.fm"
-        });
+        const norm = v.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (!matches.some(m => m.nombre_sala.toLowerCase().replace(/[^a-z0-9]/g, "") === norm)) {
+          matches.push({
+            nombre_sala: v.nombre,
+            ciudad: v.ciudad,
+            pais: v.pais || "España",
+            bandas_similares_que_tocaron: [artist],
+            genero_predominante: genre,
+            probabilidad_respuesta: "excelente",
+            razon_recomendacion: `El artista afín "${artist}" ha tocado en este recinto con éxito verificado.`,
+            fuente: "Setlist.fm"
+          });
+        }
       });
     } catch (e) {
       // Continuar con radar IA si no hay clave

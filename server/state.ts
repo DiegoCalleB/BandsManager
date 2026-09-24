@@ -185,11 +185,23 @@ export const BAKANDEYA_REGISTERED_BAND = {
   notas: "Banda oficial de la plataforma Bakandeya"
 };
 
+const VERTICE_REGISTERED_BAND = {
+  id: "reg-vertice",
+  band_id: "band-vertice",
+  user_id: "user-admin",
+  nombre_banda: "Vértice",
+  email: "diego.delacalleb@gmail.com",
+  plan: "cabeza_de_cartel",
+  contacto_nombre: "Diego",
+  estado_cuenta: "activo",
+  notas: "Banda principal asignada a usuario Admin"
+};
+
 export function ensureBakandeyaBandId(state: any): boolean {
   let changed = false;
 
   if (!state.registeredBands || !Array.isArray(state.registeredBands)) {
-    state.registeredBands = [BAKANDEYA_REGISTERED_BAND];
+    state.registeredBands = [BAKANDEYA_REGISTERED_BAND, VERTICE_REGISTERED_BAND];
     changed = true;
   } else {
     const existingBakandeya = state.registeredBands.find(
@@ -202,11 +214,22 @@ export function ensureBakandeyaBandId(state: any): boolean {
       existingBakandeya.band_id = BAKANDEYA_BAND_ID;
       changed = true;
     }
+
+    const existingVertice = state.registeredBands.find(
+      (b: any) => b.band_id === "band-vertice" || b.band_id === "vertice" || b.id === "reg-vertice" || String(b.nombre_banda || "").toLowerCase() === "vertice" || String(b.nombre_banda || "").toLowerCase() === "vértice"
+    );
+    if (!existingVertice) {
+      state.registeredBands.push(VERTICE_REGISTERED_BAND);
+      changed = true;
+    } else if (existingVertice.band_id !== "band-vertice") {
+      existingVertice.band_id = "band-vertice";
+      changed = true;
+    }
   }
 
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
     for (const b of state.registeredBands) {
-      if (b.nombre_banda && b.nombre_banda.toLowerCase() !== "bakandeya") {
+      if (b.nombre_banda && b.nombre_banda.toLowerCase() !== "bakandeya" && b.nombre_banda.toLowerCase() !== "vértice" && b.nombre_banda.toLowerCase() !== "vertice") {
         const cleanSlug = slugify(b.nombre_banda);
         if (cleanSlug && (b.band_id === BAKANDEYA_BAND_ID || b.band_id.startsWith("user-"))) {
           b.band_id = `band-${cleanSlug}`;
@@ -219,7 +242,15 @@ export function ensureBakandeyaBandId(state: any): boolean {
   if (state.users && Array.isArray(state.users)) {
     const initialSeedUserIds = new Set(['user-jose', 'user-diego', 'user-jon', 'user-elyar', 'user-raul']);
     for (const u of state.users) {
-      if (initialSeedUserIds.has(u.id)) {
+      if (u.id === 'user-admin' || u.username?.toLowerCase() === 'admin') {
+        const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
+        if (!u.band_id || cleanCurrent !== 'vertice' || u.band_id === 'vertice') {
+          u.band_id = 'band-vertice';
+          u.bandName = 'Vértice';
+          u.main_band_id = 'band-vertice';
+          changed = true;
+        }
+      } else if (initialSeedUserIds.has(u.id)) {
         // Estos 5 ids son las cuentas fundadoras de Bakandeya (incluido user-diego, la cuenta real
         // que usa la app). Antes esto forzaba SIEMPRE band_id de vuelta a Bakandeya en cada
         // loadState() -y loadState() se llama en casi cada petición-, así que un cambio de banda

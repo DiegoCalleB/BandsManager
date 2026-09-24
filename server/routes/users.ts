@@ -17,7 +17,8 @@ import {
   dbGetEpkLogosMap,
   normalizePlan,
   dbMigrateAllPlansToNewTiers,
-  dbCleanCorruptedLeadFields
+  dbCleanCorruptedLeadFields,
+  invalidateBandStateCache
 } from "../db.js";
 import { sendTransactionalEmail } from "../services/transactionalEmail.js";
 
@@ -1635,12 +1636,15 @@ router.post(['/upload-logo', '/users/upload-logo', '/bands/upload-logo', '/bands
       }
     });
 
-    if (cleanTarget === 'bakandeya') {
+    if (cleanTarget === 'bakandeya' || ((req as any).user?.band_id && cleanBandId((req as any).user.band_id) === cleanTarget)) {
       if (!state.epkConfig) state.epkConfig = {};
       state.epkConfig.logoUrl = logoUrl.trim();
     }
 
     saveState(state);
+    invalidateBandStateCache(targetBandId);
+    invalidateBandStateCache(cleanTarget);
+    invalidateBandStateCache(`band-${cleanTarget}`);
 
     res.json({ success: true, bandId: targetBandId, logoUrl: logoUrl.trim() });
   } catch (err: any) {

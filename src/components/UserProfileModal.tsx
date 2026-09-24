@@ -111,29 +111,35 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   setUploadingLogo(true);
   setError(null);
   setSuccessMsg(null);
-  if (!currentUser.band_id) {
-   setError('No hay ninguna banda activa para actualizar el logo.');
-   setUploadingLogo(false);
-   return;
+  const targetBand = selectedMainBandId || currentUser.band_id;
+  if (!targetBand) {
+    setError('No hay ninguna banda activa para actualizar el logo.');
+    setUploadingLogo(false);
+    return;
   }
   try {
-   const userBandId = currentUser.band_id;
-   const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
-   setBandLogoUrl(url);
+    const userBandId = targetBand;
+    const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
+    setBandLogoUrl(url);
 
-   const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
-   const authHeaders = getAuthHeaders() as Record<string, string>;
-   await fetch('/api/users/upload-logo', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json', ...authHeaders, 'x-band-id': userBandId },
-     body: JSON.stringify({ logoUrl: url, bandId: userBandId })
-   });
+    const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
+    const authHeaders = getAuthHeaders() as Record<string, string>;
+    const res = await fetch('/api/users/upload-logo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHeaders, 'x-band-id': userBandId },
+      body: JSON.stringify({ logoUrl: url, bandId: userBandId })
+    });
 
-   if (onUpdateEpkConfig) {
-     await onUpdateEpkConfig(updatedEpk);
-   }
-   if (onRefreshData) onRefreshData();
-   setSuccessMsg('¡Logo del proyecto actualizado con éxito!');
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Error al actualizar el logotipo en el servidor');
+    }
+
+    if (onUpdateEpkConfig) {
+      await onUpdateEpkConfig(updatedEpk);
+    }
+    if (onRefreshData) onRefreshData();
+    setSuccessMsg('¡Logo del proyecto actualizado con éxito!');
   } catch (err: any) {
    console.error('Error uploading band logo in profile:', err);
    setError('Error al subir el logo de la banda.');

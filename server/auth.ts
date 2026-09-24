@@ -91,6 +91,11 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (foundUser.band_id) addBandIdAndVariants(foundUser.band_id);
 
+  if (foundUser.role === 'admin') {
+    addBandIdAndVariants('vertice');
+    addBandIdAndVariants('bakandeya');
+  }
+
   if (state?.userBands) {
     state.userBands.forEach((ub: any) => {
       if ((ub.user_id === foundUser.id || (userEmail && ub.email?.toLowerCase() === userEmail)) && ub.band_id) {
@@ -146,6 +151,10 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     }
   }
   
+  if (!activeBandId && foundUser.role === 'admin') {
+    activeBandId = 'band-vertice';
+  }
+
   if (!activeBandId) return null;
 
   // Determine user's role for this active band

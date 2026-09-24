@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Download, Share2, ExternalLink,
   Check, Mail, Phone, MapPin, Play, Pause,
-  Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe, Ticket
+  Volume2, X, Music, Music2, Radio, Sparkles, Quote, Instagram, Globe, Ticket
 } from 'lucide-react';
 import { EPKConfig, Song, Concert, EPKSectionId } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
@@ -345,6 +345,28 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <div className="text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 opacity-90">
             {contenido.biografia}
           </div>
+
+          {/* Bloque FFO / Para fans de / Sonido afín */}
+          {config.bandasSimilares && config.bandasSimilares.length > 0 && config.mostrarBandasSimilares !== false && (
+            <div className="pt-4 border-t border-white/10 space-y-2.5">
+              <div className="flex items-center gap-2">
+                <Music2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="text-xs font-bold uppercase tracking-wider font-mono opacity-80">
+                  {language === 'en' ? 'For Fans Of (FFO):' : 'Para fans de (FFO) / Sonido afín:'}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {config.bandasSimilares.map((band, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 backdrop-blur-xs"
+                  >
+                    {band}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section className={`${styles.bookingCard} border rounded-2xl p-6 space-y-5 flex flex-col justify-between print:border-amber-400 print:bg-white print:text-black`}>

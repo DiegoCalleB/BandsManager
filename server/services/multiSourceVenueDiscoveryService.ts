@@ -11,6 +11,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { searchMusicBrainzVenues } from "./musicbrainzVenueService.js";
 
 export interface DiscoveredVenue {
   nombre: string;
@@ -19,7 +20,7 @@ export interface DiscoveredVenue {
   direccion?: string;
   capacidad?: number;
   tipo: 'sala' | 'festival' | 'teatro' | 'discoteca' | 'espacio_cultural';
-  fuente: 'Ticketmaster' | 'Setlist.fm' | 'Eventbrite' | 'Entradium' | 'Compralaentrada' | 'Google Places' | 'Gemini Radar';
+  fuente: 'Ticketmaster' | 'Setlist.fm' | 'MusicBrainz' | 'Bandsintown' | 'Songkick' | 'Wegow' | 'Eventbrite' | 'Entradium' | 'Compralaentrada' | 'Google Places' | 'Gemini Radar' | 'Datos Abiertos';
   fuentes_verificadas: string[];
   url_oficial?: string;
   email?: string;
@@ -173,11 +174,36 @@ export async function discoverVenuesMultiSource(params: {
     }
   }
 
-  // 3. Radar de Captación con IA Multi-Plataforma (Cubre Entradium, Compralaentrada, Eventbrite, Wegow)
+  // 3. Probar MusicBrainz API comunitaria de salas (sin API key requerida)
+  try {
+    const mbResults = await searchMusicBrainzVenues({ ciudad, limit: Math.min(limit, 10) });
+    if (mbResults.length > 0) {
+      fuentesConsultadas.push("MusicBrainz");
+      mbResults.forEach(mbv => {
+        const norm = mbv.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (!results.some(r => r.nombre.toLowerCase().replace(/[^a-z0-9]/g, "") === norm)) {
+          results.push({
+            nombre: mbv.nombre,
+            ciudad: mbv.ciudad || ciudad,
+            pais: mbv.pais || "España",
+            direccion: mbv.direccion || "",
+            tipo: "sala",
+            fuente: "MusicBrainz",
+            fuentes_verificadas: ["MusicBrainz"],
+            fiabilidad: "alta"
+          });
+        }
+      });
+    }
+  } catch (err: any) {
+    console.warn("[MultiSource Discovery] Error al consultar MusicBrainz:", err?.message);
+  }
+
+  // 4. Radar de Captación con IA Multi-Plataforma (Cubre Entradium, Compralaentrada, Eventbrite, Wegow)
   try {
     const client = getAiClient();
     if (client) {
-      fuentesConsultadas.push("Entradium", "Compralaentrada", "Eventbrite", "Wegow");
+      fuentesConsultadas.push("Songkick", "Wegow", "Bandsintown", "Entradium", "Compralaentrada", "Eventbrite");
 
       const prompt = `Actúa como el Scout Inteligente de BandManager.io, especializado en captación de salas de conciertos y festivales en España y a nivel internacional.
 
@@ -185,7 +211,7 @@ Búsqueda solicitada:
 - Criterio: "${query || `Salas y festivales de música en vivo`}"
 - Ciudad/Ubicación: ${ciudad} ${region ? `(${region})` : ""}
 - Tipo de recinto: ${tipo}
-- Objetivo: Descubrir recintos reales en activo, clasificando su aforo, email/contacto de programación si existe, y agregadores donde suelen publicar venta de entradas (Entradium, Compralaentrada, Eventbrite, Wegow, Ticketmaster).
+- Objetivo: Descubrir recintos reales en activo, clasificando su aforo, email/contacto de programación si existe, y agregadores donde suelen publicar venta de entradas o fechas de gira (Songkick, Wegow, Bandsintown, Entradium, Compralaentrada, Eventbrite, Ticketmaster).
 
 Devuelve un JSON estricto con esta estructura exacta:
 {
@@ -197,8 +223,8 @@ Devuelve un JSON estricto con esta estructura exacta:
       "direccion": "Dirección completa o zona",
       "capacidad": 350,
       "tipo": "${tipo === 'todos' ? 'sala' : tipo}",
-      "fuente": "Entradium", // Entradium, Compralaentrada, Eventbrite, Wegow, Ticketmaster o Gemini Radar
-      "fuentes_verificadas": ["Entradium", "Wegow", "Google Places"],
+      "fuente": "Wegow", // Songkick, Wegow, Bandsintown, Entradium, Compralaentrada, Eventbrite, Ticketmaster o Gemini Radar
+      "fuentes_verificadas": ["Wegow", "Songkick", "Google Places"],
       "url_oficial": "https://...",
       "email": "contacto@sala.com",
       "telefono": "+34...",

@@ -2490,6 +2490,7 @@ export default function BookingCRM({
     activeCampaign={activeCampaign}
     bandGenre={epkConfig?.genero || (currentUser as any)?.genero || ''}
     bandName={effectiveBandName}
+    similarBands={epkConfig?.bandasSimilares || []}
     onClose={() => setIsPlacesExplorerOpen(false)}
     onImportLeads={() => {
       window.dispatchEvent(new CustomEvent('app-data-updated'));

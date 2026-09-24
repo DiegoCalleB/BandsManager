@@ -536,10 +536,20 @@ export interface EmailSignatureConfig {
     twitter?: string;
     appleMusic?: string;
     bandcamp?: string;
+    soundcloud?: string;
+    bandsintown?: string;
+    songkick?: string;
+    wegow?: string;
+    tidal?: string;
+    deezer?: string;
+    amazonMusic?: string;
+    twitch?: string;
+    threads?: string;
     website?: string;
     whatsapp?: string;
     revolut?: string;
     paypal?: string;
+    [key: string]: string | undefined;
   };
 }
 
@@ -577,6 +587,10 @@ export interface EPKConfig {
   biografia: string;
   fraseImpacto?: string;
   genero?: string;
+  /** Bandas o artistas afines / Sonido similar ("Para fans de..." / FFO - For Fans Of) */
+  bandasSimilares?: string[];
+  /** Si está activo, muestra la etiqueta de "Para fans de (FFO)" en el dossier público */
+  mostrarBandasSimilares?: boolean;
   idioma?: string;
   fontStyle?: string;
   tipografia?: string;
@@ -602,6 +616,15 @@ export interface EPKConfig {
     twitter?: string;
     appleMusic?: string;
     bandcamp?: string;
+    soundcloud?: string;
+    bandsintown?: string;
+    songkick?: string;
+    wegow?: string;
+    tidal?: string;
+    deezer?: string;
+    amazonMusic?: string;
+    twitch?: string;
+    threads?: string;
     website?: string;
     whatsapp?: string;
     revolut?: string;

@@ -12,7 +12,9 @@ import {
   dbGetSongs,
   dbGetConcerts,
   dbUpsertMusicianWaitlist,
-  dbGetMusiciansWaitlist
+  dbGetMusiciansWaitlist,
+  invalidateBandStateCache,
+  cleanBandId
 } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
@@ -153,11 +155,24 @@ router.put("/epk", requireAuth, async (req, res) => {
       state.epkConfigsByBand[k] = newEpkConfig;
     });
 
-    if (cleanUserBandId === 'bakandeya') {
+    if (cleanUserBandId === 'bakandeya' || (user?.band_id && cleanBandId(user.band_id) === cleanUserBandId)) {
       state.epkConfig = newEpkConfig;
     }
 
+    if (newEpkConfig.logoUrl && state.registeredBands) {
+      state.registeredBands.forEach((b: any) => {
+        const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
+        if (bClean === cleanUserBandId || b.band_id === userBandId || b.id === userBandId) {
+          b.logo_url = newEpkConfig.logoUrl;
+          b.imagen_url = newEpkConfig.logoUrl;
+        }
+      });
+    }
+
     saveState(state);
+    invalidateBandStateCache(userBandId);
+    invalidateBandStateCache(cleanUserBandId);
+    invalidateBandStateCache(`band-${cleanUserBandId}`);
 
     res.json({ success: true, epkConfig: newEpkConfig });
   } catch (err: any) {
