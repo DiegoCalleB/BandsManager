@@ -990,7 +990,7 @@ export default function RepertorioSetlists({
  const handleUpdateSongFromStudio = (updatedSong: Song) => {
  const updatedList = songs.map(s => s.id === updatedSong.id ? updatedSong : s);
  setSongs(updatedList);
- saveSongsToLocalStorageSafely(updatedList);
+ saveSongsToLocalStorageSafely(updatedList, bandId);
  // Este handler se reutiliza como "guardar canción" genérico (MemberNotesModal, favorito,
  // PdfExportModal, SpotifyPlayerBar), no solo desde el propio Song Studio: sin este guard
  // (mismo patrón que handleUpdateSongFromChords de arriba) forzaba la apertura del Studio en
@@ -1005,7 +1005,21 @@ export default function RepertorioSetlists({
  method: "PUT",
  headers: getHeaders(),
  body: JSON.stringify(updatedSong)
- }).catch(err => console.error("Error updating song on server:", err));
+ })
+ .then(res => res.ok ? res.json() : null)
+ .then(data => {
+   if (data?.song) {
+     const savedSong = data.song;
+     setSongs(prev => prev.map(s => (s.id === savedSong.id || s.id === updatedSong.id) ? savedSong : s));
+     if (activeStudioSong?.id === updatedSong.id || activeStudioSong?.id === savedSong.id) {
+       setActiveStudioSong(savedSong);
+     }
+     if (activePlayerSong?.id === updatedSong.id || activePlayerSong?.id === savedSong.id) {
+       setActivePlayerSong(savedSong);
+     }
+   }
+ })
+ .catch(err => console.error("Error updating song on server:", err));
  };
 
  // Setlist Assign Modal State

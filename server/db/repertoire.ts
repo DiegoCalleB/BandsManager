@@ -455,7 +455,8 @@ export async function dbUpsertSong(song: any, bandId: string) {
   if (finalSongId) {
     const { data } = await sb.from("songs").select("id, band_id, audio_principal_url, audio_ideas").eq("id", finalSongId).maybeSingle();
     existing = data;
-    if (existing && existing.band_id !== targetBandId) {
+    const stripPrefix = (b?: string) => (b || "").trim().toLowerCase().replace(/^(band|reg)-/, "");
+    if (existing && stripPrefix(existing.band_id) !== stripPrefix(targetBandId)) {
       finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
       existing = null;
     }
