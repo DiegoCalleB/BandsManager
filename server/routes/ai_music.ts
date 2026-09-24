@@ -871,19 +871,19 @@ export async function processDemucsStems(
     let prediction = await response.json();
     const predictionId = prediction.id;
 
-    // Polling a Replicate con tiempo límite de 180s (3 minutos)
+    // Polling a Replicate con tiempo límite de 600s (10 minutos) para permitir cold-start y procesado completo
     const startTime = Date.now();
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-      if (Date.now() - startTime > 180000) {
-        console.warn("Demucs separation timeout en Replicate (>180s)...");
+      if (Date.now() - startTime > 600000) {
+        console.warn("Demucs separation timeout en Replicate (>600s)...");
         const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-4).join(' | ');
         return {
           stemsMap: null,
           provider: 'replicate',
           errorType: 'timeout',
-          errorTitle: 'Tiempo de Espera en GPU Excedido (>3 min)',
-          error: `La separación en la GPU de Replicate superó los 3 minutos de espera (Estado: ${prediction.status}).`,
-          actionAdvice: 'La máquina de Replicate puede haber tardado en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.',
+          errorTitle: 'Tiempo de Espera en GPU Excedido (>10 min)',
+          error: `La separación en la GPU de Replicate superó los 10 minutos de espera (Estado: ${prediction.status}).`,
+          actionAdvice: 'La máquina de Replicate tardó en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.',
           errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs: ${lastLogs || 'Sin logs disponibles'}`,
           httpStatus: 504
         };
@@ -1121,15 +1121,15 @@ export async function processMdx23Stems(
 
   const startTime = Date.now();
   while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-    if (Date.now() - startTime > 180000) {
-      console.warn(`[MDX23 Neural] Timeout en Replicate (>180s) para predicción ${predictionId}`);
+    if (Date.now() - startTime > 600000) {
+      console.warn(`[MDX23 Neural] Timeout en Replicate (>600s) para predicción ${predictionId}`);
       const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-6).join('\n');
       return {
         stemsMap: null,
         provider: 'replicate',
         errorType: 'timeout',
         errorTitle: `Tiempo de Espera Excedido en GPU (${modelFriendlyName})`,
-        error: `La inferencia en Replicate superó los 3 minutos de espera (Estado: ${prediction.status}).`,
+        error: `La inferencia en Replicate superó los 10 minutos de espera (Estado: ${prediction.status}).`,
         actionAdvice: 'Puedes reintentar o separar las pistas con el Motor DSP local.',
         errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs:\n${lastLogs || 'Sin logs'}`,
         httpStatus: 504

@@ -23,7 +23,7 @@ export interface StemsCacheRecord {
 // In-memory fast layer
 export const stemsMemoryCache = new Map<string, StemsCacheRecord>();
 
-const LOCK_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutos para declarar un pending como abandonado
+const LOCK_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutos para declarar un pending como abandonado (permite cold-start de GPU en Replicate)
 
 /**
  * Consulta la caché de stems con estrategia de dos capas:
@@ -280,7 +280,7 @@ export async function waitForStemsCompletion(
   bandId: string,
   songHash: string,
   engine: string,
-  maxWaitMs: number = 180000,
+  maxWaitMs: number = 600000,
   pollIntervalMs: number = 1500
 ): Promise<StemsCacheRecord | null> {
   const startTime = Date.now();
