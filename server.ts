@@ -136,12 +136,32 @@ app.use("/transposed", (req, res, next) => {
 
 // Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
 app.get(["/health", "/api/health"], (req, res) => {
+  const detectedKey =
+    process.env.RESEND_API_KEY ||
+    process.env.VITE_RESEND_API_KEY ||
+    process.env.RESEND_API_TOKEN ||
+    process.env.RESEND_KEY ||
+    process.env.RESEND_TOKEN;
+
+  const keyDetectedAs = process.env.RESEND_API_KEY
+    ? "RESEND_API_KEY"
+    : process.env.VITE_RESEND_API_KEY
+    ? "VITE_RESEND_API_KEY"
+    : process.env.RESEND_API_TOKEN
+    ? "RESEND_API_TOKEN"
+    : process.env.RESEND_KEY
+    ? "RESEND_KEY"
+    : process.env.RESEND_TOKEN
+    ? "RESEND_TOKEN"
+    : null;
+
   res.status(200).json({
     status: "ok",
     timestamp: new Date().toISOString(),
     emailService: {
-      configured: Boolean(process.env.RESEND_API_KEY),
-      sender: process.env.SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>"
+      configured: Boolean(detectedKey),
+      keyDetectedAs,
+      sender: process.env.SENDER_EMAIL || process.env.VITE_SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>"
     }
   });
 });
