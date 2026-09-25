@@ -189,7 +189,8 @@ interface SongStudioModalProps {
 
 // Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
 // una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
-const IRIS_ENGINE_COST_EUR: Record<'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+const IRIS_ENGINE_COST_EUR: Record<'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+  'fal': 0.01,
   'lalalai': 0.05,
   'mvsep-mdx23': 0.08,
   'demucs': 0.03,
@@ -476,10 +477,11 @@ export default function SongStudioModal({
   const trackMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const trackAudioChunksRef = useRef<Blob[]>([]);
   const trackRecordingTimerRef = useRef<any>(null);
+  const stemSeparationAbortRef = useRef<AbortController | null>(null);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
-  const [selectedStemEngine, setSelectedStemEngine] = useState<'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server'>('lalalai');
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server'>('fal');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('6_stems');
@@ -582,12 +584,12 @@ export default function SongStudioModal({
     degraded?: boolean;
     degradedReason?: string;
     separationEngine?: string;
-    engineChoice?: 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server';
+    engineChoice?: 'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server';
     stemsAdded?: number;
     stemsInfo?: Array<{ instrument: string; trackName: string; formato: string; tamano: string; audioUrl?: string }>;
     errorMessage?: string;
     errorDetail?: string;
-    errorProvider?: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
+    errorProvider?: 'fal' | 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
     errorType?: string;
     errorTitle?: string;
     actionAdvice?: string;
@@ -635,18 +637,34 @@ export default function SongStudioModal({
     return resultado;
   };
 
+  const handleCancelStemSeparation = () => {
+    if (stemSeparationAbortRef.current) {
+      stemSeparationAbortRef.current.abort();
+      stemSeparationAbortRef.current = null;
+    }
+    setIsSeparatingStemsAi(false);
+    setStemProgressModal(null);
+  };
+
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (
     targetIdea: SongAudioIdea,
-    overrideEngine?: 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server',
+    overrideEngine?: 'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server',
     stemsToInclude?: string[]
   ) => {
+    if (stemSeparationAbortRef.current) {
+      stemSeparationAbortRef.current.abort();
+    }
+    const abortController = new AbortController();
+    stemSeparationAbortRef.current = abortController;
+
     setIsSeparatingStemsAi(true);
     setSeparationElapsedSeconds(0);
     const engineToUse = overrideEngine || selectedStemEngine;
     const activeStemsToInclude = stemsToInclude || selectedStemsToExtract;
 
     const stepInitText =
+      engineToUse === 'fal' ? "Iniciando Iris Ultra (Fal.ai GPU A100 ~10s)..." :
       engineToUse === 'lalalai' ? "Iniciando Iris Pro (LALAL.AI Commercial Engine ~15s)..." :
       engineToUse === 'mvsep-mdx23' ? "Iniciando Iris Studio (MDX-Net / Demucs v4 GPU)..." :
       engineToUse === 'demucs' ? 'Iniciando Iris Cloud (HT-Demucs v4 Neural)...' :
@@ -664,6 +682,10 @@ export default function SongStudioModal({
     });
 
     const elapsedTimer = setInterval(() => {
+      if (abortController.signal.aborted) {
+        clearInterval(elapsedTimer);
+        return;
+      }
       setSeparationElapsedSeconds(prev => prev + 1);
     }, 1000);
 
@@ -671,6 +693,10 @@ export default function SongStudioModal({
     // ya NO toca progressPct, solo el texto explicativo — así nunca compiten dos relojes distintos
     // por el mismo valor y la barra no retrocede (ver demucsStartedAt más arriba).
     const progressTimer = setInterval(() => {
+      if (abortController.signal.aborted) {
+        clearInterval(progressTimer);
+        return;
+      }
       setStemProgressModal(prev => {
         if (!prev || prev.stage === 'completed' || prev.stage === 'error') return prev;
         if (prev.stage === 'preparing') {
@@ -678,7 +704,9 @@ export default function SongStudioModal({
         }
         if (prev.stage === 'demucs') {
           const elapsedSec = prev.demucsStartedAt ? (Date.now() - prev.demucsStartedAt) / 1000 : 0;
-          const targetCap = prev.engineChoice === 'mvsep-mdx23'
+          const targetCap = prev.engineChoice === 'fal'
+            ? Math.min(35 + Math.floor(elapsedSec * 6), 94)
+            : prev.engineChoice === 'mvsep-mdx23'
             ? Math.min(30 + Math.floor(elapsedSec / 5.5), 92)
             : prev.engineChoice === 'demucs'
             ? Math.min(35 + Math.floor(elapsedSec / 1.5), 90)
@@ -703,9 +731,14 @@ export default function SongStudioModal({
       } : null);
 
       const sendableAudioUrl = await resolverAudioUrlParaSubida(targetIdea.audioUrl);
+      if (abortController.signal.aborted) return;
 
       const stepProcessingText =
-        engineToUse === 'mvsep-mdx23'
+        engineToUse === 'fal'
+          ? "Iris Ultra aislando pistas en GPU A100 (~10-15s)..."
+          : engineToUse === 'lalalai'
+          ? "Iris Pro aislando pistas con LALAL.AI (~15s)..."
+          : engineToUse === 'mvsep-mdx23'
           ? "Iris Studio aislando pistas vocales e instrumentales..."
           : engineToUse === 'demucs'
           ? 'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
@@ -719,20 +752,46 @@ export default function SongStudioModal({
         currentStepText: stepProcessingText
       } : null);
 
-      const kickoff = await apiFetch('/api/ai-stem-separation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          songTitle: song.titulo,
-          sectionName: targetIdea.seccion,
-          audioUrl: sendableAudioUrl,
-          bpm: song.bpm,
-          key: song.tonalidad,
-          forceEngine: engineToUse,
-          requestedStems: activeStemsToInclude
-        })
-      });
+      let kickoff: any;
+      try {
+        kickoff = await apiFetch('/api/ai-stem-separation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            songTitle: song.titulo,
+            sectionName: targetIdea.seccion,
+            audioUrl: sendableAudioUrl,
+            bpm: song.bpm,
+            key: song.tonalidad,
+            forceEngine: engineToUse,
+            requestedStems: activeStemsToInclude
+          })
+        });
+      } catch (kickoffErr: any) {
+        const isNet = String(kickoffErr?.message || '').includes('Failed to fetch') || String(kickoffErr?.message || '').includes('NetworkError');
+        if (isNet && !abortController.signal.aborted) {
+          // Reintento rápido en caso de micro-corte o reconexión de red
+          await new Promise(r => setTimeout(r, 1200));
+          if (abortController.signal.aborted) return;
+          kickoff = await apiFetch('/api/ai-stem-separation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              songTitle: song.titulo,
+              sectionName: targetIdea.seccion,
+              audioUrl: sendableAudioUrl,
+              bpm: song.bpm,
+              key: song.tonalidad,
+              forceEngine: engineToUse,
+              requestedStems: activeStemsToInclude
+            })
+          });
+        } else {
+          throw kickoffErr;
+        }
+      }
 
+      if (abortController.signal.aborted) return;
       let data = kickoff;
 
       // El servidor responde al instante (202) y sigue procesando en segundo plano para no
@@ -740,40 +799,69 @@ export default function SongStudioModal({
       // polling ligero del resultado en vez de mantener esta petición abierta varios minutos.
       if (kickoff?.status === 'processing') {
         const pollStartedAt = Date.now();
-        const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
+        const maxWaitMs = engineToUse === 'fal' ? 90 * 1000 : 20 * 60 * 1000;
         const engineLabel =
-          engineToUse === 'mvsep-mdx23' ? "Iris Studio" :
-          engineToUse === 'demucs' ? 'Iris Cloud' :
-          'Iris Básico';
+          engineToUse === 'fal' ? "Iris Ultra (Fal.ai GPU)" :
+          engineToUse === 'lalalai' ? "Iris Pro (LALAL.AI)" :
+          engineToUse === 'mvsep-mdx23' ? "Iris Studio (MDX-Net)" :
+          engineToUse === 'demucs' ? 'Iris Cloud (HT-Demucs)' :
+          'Iris Básico (DSP Local)';
+        let consecutiveNetworkFailures = 0;
+
         while (true) {
-          await new Promise(r => setTimeout(r, 4000));
+          if (abortController.signal.aborted) return;
+          await new Promise(r => setTimeout(r, 3000));
+          if (abortController.signal.aborted) return;
+
           const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
           // Fases explicativas: qué está pasando realmente en cada tramo de tiempo de la GPU en
           // la nube (no es una barra ficticia: refleja subida, cold-start del contenedor e inferencia).
           const phaseText =
             engineToUse === 'dsp-server'
-              ? `${stepProcessingText} (${elapsedSec}s transcurridos)`
+              ? `⚙️ Iris Básico procesando filtrado espectral local... (${elapsedSec}s transcurridos)`
+              : engineToUse === 'fal'
+              ? (elapsedSec < 6
+                  ? `⚡ Conectando con GPU NVIDIA A100 en Fal.ai... (${elapsedSec}s)`
+                  : `⚡ Iris Ultra (Fal.ai GPU A100) aislando pistas vocales e instrumentales... (${elapsedSec}s transcurridos)`)
               : elapsedSec < 12
               ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
               : elapsedSec < 45
               ? `🧊 Reservando GPU e inicializando contenedor neuronal en la nube para ${engineLabel}... (${elapsedSec}s)`
               : engineToUse === 'mvsep-mdx23'
               ? `✨ Iris Studio (MDX-Net + Demucs4) procesando 6 pasadas de alta precisión... (${elapsedSec}s transcurridos — este ensamble de estudio tarda ~4-6 min en aislar temas completos)`
-              : `🎛️ ${engineLabel} aislando canales de frecuencia en GPU... (${elapsedSec}s transcurridos, suele tardar 1-2 min)`;
+              : `🎛️ ${engineLabel} aislando canales de frecuencia en la nube... (${elapsedSec}s transcurridos, suele tardar 1-2 min)`;
           setStemProgressModal(prev => prev ? {
             ...prev,
             stage: 'demucs',
             currentStepText: phaseText
           } : null);
 
-          const statusRes = await apiFetch(
-            `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
-          );
+          let statusRes: any = null;
+          try {
+            statusRes = await apiFetch(
+              `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
+            );
+            consecutiveNetworkFailures = 0;
+          } catch (pollErr: any) {
+            const isPollNetErr = String(pollErr?.message || '').includes('Failed to fetch') || String(pollErr?.message || '').includes('NetworkError');
+            if (isPollNetErr && consecutiveNetworkFailures < 4 && !abortController.signal.aborted) {
+              consecutiveNetworkFailures++;
+              console.warn(`[Stem Polling] Fallo transitorio de red (${consecutiveNetworkFailures}/4). Reintentando en el próximo ciclo...`);
+              continue;
+            }
+            throw pollErr;
+          }
+
+          if (abortController.signal.aborted) return;
+
           if (statusRes?.status === 'completed') {
             data = statusRes;
             break;
           }
           if (Date.now() - pollStartedAt > maxWaitMs) {
+            if (engineToUse === 'fal') {
+              throw new Error('Iris Ultra (Fal.ai) ha tardado más de 90s en responder. Puedes cancelarlo, reintentar o usar Iris Básico gratis en 1 segundo.');
+            }
             throw new Error('La separación sigue procesándose en el servidor tras 20 minutos. Cierra esta ventana e inténtalo de nuevo en un rato: el resultado quedará guardado y no se repetirá el gasto en GPU.');
           }
           // statusRes.status === 'processing' o 'not_found' (aún no escrito en caché): seguimos esperando.
@@ -781,6 +869,8 @@ export default function SongStudioModal({
           // que cae de forma natural en el catch de más abajo con el mismo formato de error enriquecido.
         }
       }
+
+      if (abortController.signal.aborted) return;
 
       setStemProgressModal(prev => prev ? {
         ...prev,
@@ -803,6 +893,8 @@ export default function SongStudioModal({
       if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
         const engineAuthor = data.degraded
           ? 'Iris Básico (Modo Degradado)'
+          : data.separationEngine?.includes('Fal.ai') || data.separationEngine?.includes('fal') || engineToUse === 'fal'
+          ? 'Iris Ultra (Fal.ai GPU A100)'
           : data.separationEngine?.includes('MVSEP')
           ? 'Iris Studio'
           : data.isNeural
@@ -858,7 +950,7 @@ export default function SongStudioModal({
               formato: fmt,
               tamano: sz,
               volumen: st.recommendedVolume || newTracks[existingIdx].volumen || 1,
-              muted: false
+              muted: !isSelectedByPreset
             };
             stemsAdded++;
           } else {
@@ -872,7 +964,7 @@ export default function SongStudioModal({
               tamano: sz,
               fecha: new Date().toISOString().split('T')[0],
               volumen: st.recommendedVolume || 1,
-              muted: false
+              muted: !isSelectedByPreset
             });
             stemsAdded++;
           }
@@ -947,7 +1039,11 @@ export default function SongStudioModal({
 
       const finalSeparationEngine = data.degraded
         ? 'Iris Básico (modo degradado)'
-        : engineToUse === 'mvsep-mdx23' ? 'Iris Studio' : engineToUse === 'demucs' ? 'Iris Cloud' : 'Iris Básico';
+        : engineToUse === 'fal' ? 'Iris Ultra'
+        : engineToUse === 'lalalai' ? 'Iris Pro'
+        : engineToUse === 'mvsep-mdx23' ? 'Iris Studio'
+        : engineToUse === 'demucs' ? 'Iris Cloud'
+        : 'Iris Básico';
       const existingIndex = (song.audioIdeas || []).findIndex(
         i => i.id === targetIdea.id || (targetIdea.audioUrl && i.audioUrl === targetIdea.audioUrl) || (i.titulo && i.titulo === targetIdea.titulo)
       );
@@ -1008,8 +1104,12 @@ export default function SongStudioModal({
       const data = err?.data || {};
       const errMsg = String(data.message || data.error || err?.message || "");
 
-      // Diferenciar el proveedor origen del error (Replicate, Gemini API Key, Librería FFmpeg, Supabase, etc.)
-      const errorProvider: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system' = data.provider || (
+      const isNetworkError = errMsg.includes('Failed to fetch') || errMsg.includes('NetworkError') || errMsg.includes('net::ERR_') || errMsg.includes('Load failed');
+
+      // Diferenciar el proveedor origen del error (Fal.ai, Replicate, Gemini API Key, Librería FFmpeg, Supabase, etc.)
+      const errorProvider: 'fal' | 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system' = data.provider || (
+        isNetworkError ? 'network' :
+        data.engine === 'fal' || engineToUse === 'fal' || errMsg.includes('Fal.ai') || errMsg.includes('fal.ai') || errMsg.includes('fal.run') || errMsg.includes('FAL_KEY') ? 'fal' :
         data.errorType?.startsWith('gemini_') || errMsg.includes('GEMINI_API_KEY') || errMsg.includes('Gemini') || errMsg.includes('GoogleGenAI') ? 'gemini' :
         data.errorType?.startsWith('ffmpeg_') || errMsg.includes('ffmpeg') || errMsg.includes('fluent-ffmpeg') ? 'ffmpeg' :
         data.errorType?.startsWith('supabase_') || errMsg.includes('supabase') || errMsg.includes('storage') ? 'supabase' :
@@ -1020,7 +1120,9 @@ export default function SongStudioModal({
       // Determinar el tipo específico de error
       let errorType = data.errorType;
       if (!errorType) {
-        if (errorProvider === 'gemini') {
+        if (isNetworkError) {
+          errorType = 'network_error';
+        } else if (errorProvider === 'gemini') {
           if (errMsg.includes('key') && (errMsg.includes('not valid') || errMsg.includes('API_KEY_INVALID') || err?.status === 400 || err?.status === 401)) {
             errorType = 'gemini_auth_invalid';
           } else if (errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED') || err?.status === 429) {
@@ -1058,6 +1160,7 @@ export default function SongStudioModal({
 
       // Títulos diferenciados por proveedor y tipo
       const errorTitle = data.errorTitle || (
+        errorType === 'network_error' ? 'Error de Conexión de Red (Failed to fetch)' :
         errorType === 'gemini_key_missing' ? 'Clave GEMINI_API_KEY No Configurada' :
         errorType === 'gemini_auth_invalid' ? 'Clave GEMINI_API_KEY Inválida o Revocada' :
         errorType === 'gemini_quota_exceeded' ? 'Cuota de Gemini API Excedida (HTTP 429)' :
@@ -1080,10 +1183,13 @@ export default function SongStudioModal({
         'Inconveniente en la Separación de Pistas'
       );
 
-      const specificMsg = data.message || data.error || errMsg || 'No se pudo conectar con el servidor de IA.';
+      const specificMsg = isNetworkError
+        ? 'No se pudo contactar con el backend o la conexión se interrumpió temporalmente (Failed to fetch).'
+        : data.message || data.error || errMsg || 'No se pudo conectar con el servidor de IA.';
 
       // Consejo / Acción guiada según el origen exacto
       const actionAdvice = data.actionAdvice || (
+        errorType === 'network_error' ? 'Comprueba tu conexión o pulsa "Separar con Iris Básico" para procesar las pistas al instante de forma local.' :
         errorType === 'gemini_key_missing' ? 'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.' :
         errorType === 'gemini_auth_invalid' ? 'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.' :
         errorType === 'gemini_quota_exceeded' ? 'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.' :
@@ -3960,7 +4066,7 @@ export default function SongStudioModal({
                           </div>
                         </div>
 
-                        {/* Únicas acciones siempre visibles: escuchar y el menú de más opciones */}
+                        {/* Únicas acciones siempre visibles: escuchar, eliminar directo y el menú de más opciones */}
                         <div className="flex items-center gap-1.5 shrink-0">
                           <button
                             type="button"
@@ -3971,6 +4077,15 @@ export default function SongStudioModal({
                             title="Play / Pausa"
                           >
                             {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteIdea(e, idea.id)}
+                            className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 transition-all cursor-pointer"
+                            title="Eliminar idea"
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </button>
 
                           <div className="relative">
@@ -5601,19 +5716,22 @@ export default function SongStudioModal({
                   </p>
                 </div>
 
-                {/* SELECTOR DE MOTOR IRIS: PRO (LALAL.AI) / STUDIO (REPLICATE) / BÁSICO (DSP) */}
+                {/* SELECTOR DE MOTOR IRIS: ULTRA (FAL.AI) / PRO (LALAL.AI) / STUDIO (REPLICATE) / BÁSICO (DSP) */}
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-emerald-400" /> Selecciona el Motor de Iris:
+                      <Sliders className="w-3.5 h-3.5 text-purple-400" /> Selecciona el Motor de Iris:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
-                      selectedStemEngine === 'lalalai'
+                      selectedStemEngine === 'fal'
+                        ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
+                        : selectedStemEngine === 'lalalai'
                         ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
                         : selectedStemEngine === 'mvsep-mdx23' || selectedStemEngine === 'demucs'
                         ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
                         : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
                     }`}>
+                      {selectedStemEngine === 'fal' && "⚡ Iris Ultra (Fal.ai GPU A100 ~10s)"}
                       {selectedStemEngine === 'lalalai' && "⚡ Iris Pro (LALAL.AI Phoenix)"}
                       {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio (MDX-Net / Demucs4)"}
                       {selectedStemEngine === 'demucs' && '⚡ Iris Cloud (HT-Demucs v4)'}
@@ -5621,7 +5739,33 @@ export default function SongStudioModal({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    {/* Iris Ultra (Fal.ai GPU A100) */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStemEngine('fal')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
+                        selectedStemEngine === 'fal'
+                          ? 'bg-gradient-to-br from-purple-950/80 to-indigo-950/80 border-purple-400 text-purple-100 ring-1 ring-purple-400/50 shadow-lg shadow-purple-950/50'
+                          : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                          <Zap className="w-3.5 h-3.5 text-purple-400 fill-current animate-pulse" /> Iris Ultra
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-black border border-purple-500/30">
+                          Recomendado ~10s
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-neutral-300 leading-normal font-sans">
+                        Red neuronal HT-Demucs v4 en GPU A100 de Fal.ai. Inferencia instantánea en 10-15 segundos.
+                      </span>
+                      <span className="text-[9px] text-purple-300 font-bold">
+                        ⚡ Fal.ai GPU A100 | 10 € de Saldo Inicial
+                      </span>
+                    </button>
+
                     {/* Iris Pro (LALAL.AI) */}
                     <button
                       type="button"
@@ -5634,17 +5778,17 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Zap className="w-3.5 h-3.5 text-emerald-400 fill-current animate-pulse" /> Iris Pro
+                          <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Iris Pro
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-black border border-emerald-500/30">
-                          Recomendado ~15s
+                          Comercial ~15s
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal font-sans">
-                        Motor comercial LALAL.AI Phoenix. Aislamiento quirúrgico ultrarrápido en 15 segundos sin esperas de cola GPU.
+                        Motor LALAL.AI Phoenix comercial. Aislamiento quirúrgico ultrarrápido en 15 segundos.
                       </span>
                       <span className="text-[9px] text-emerald-400 font-bold">
-                        ⚡ Calidad de Estudio Comercial | LALAL.AI Engine
+                        💎 LALAL.AI Engine comercial
                       </span>
                     </button>
 
@@ -5667,10 +5811,10 @@ export default function SongStudioModal({
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal font-sans">
-                        Ensamble de redes neuronales HT-Demucs v4 y MDX-Net en GPU dedicada. Alta precisión para mezclas densas.
+                        Ensamble HT-Demucs v4 y MDX-Net en Replicate. Alta precisión para mezclas complejas.
                       </span>
                       <span className="text-[9px] text-amber-400/90 font-bold">
-                        🐢 ~1-3 min en GPU Replicate dedicada
+                        🐢 ~1-3 min en GPU Replicate
                       </span>
                     </button>
 
@@ -5693,7 +5837,7 @@ export default function SongStudioModal({
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal font-sans">
-                        Filtros de frecuencia espectrales y fase procesados localmente con FFmpeg. Instantáneo y sin consumo de saldo.
+                        Filtros de frecuencia espectrales procesados localmente con FFmpeg. Instantáneo y sin saldo.
                       </span>
                       <span className="text-[9px] text-sky-400 font-bold">
                         ⚙️ Instantáneo (~2s) | Servidor Local
@@ -5721,13 +5865,21 @@ export default function SongStudioModal({
                     }
                   }}
                   className={`w-full py-3.5 rounded-xl font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    selectedStemEngine === 'lalalai'
+                    selectedStemEngine === 'fal'
+                      ? 'bg-gradient-to-r from-purple-500 via-indigo-600 to-violet-600 hover:from-purple-400 hover:to-indigo-500 text-white shadow-purple-900/30 font-black'
+                      : selectedStemEngine === 'lalalai'
                       ? 'bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-zinc-950 font-black shadow-emerald-900/30'
                       : selectedStemEngine === 'mvsep-mdx23' || selectedStemEngine === 'demucs'
                       ? 'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white shadow-amber-900/30'
                       : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-900/30'
                   }`}
                 >
+                  {selectedStemEngine === 'fal' && (
+                    <>
+                      <Zap className="w-4 h-4 text-purple-300 fill-current animate-bounce" />
+                      <span>⚡ Separar {selectedStemsToExtract.length} {selectedStemsToExtract.length === 1 ? 'Pista' : 'Pistas'} con Iris Ultra (Fal.ai GPU A100)</span>
+                    </>
+                  )}
                   {selectedStemEngine === 'lalalai' && (
                     <>
                       <Zap className="w-4 h-4 text-zinc-950 fill-current animate-bounce" />
@@ -6188,14 +6340,22 @@ export default function SongStudioModal({
               ) : stemProgressModal.stage !== 'completed' && (
                 <div className="flex items-center gap-2">
                   <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border flex items-center gap-1.5 animate-pulse ${
-                    stemProgressModal.engineChoice === 'mvsep-mdx23'
+                    stemProgressModal.engineChoice === 'fal'
+                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                      : stemProgressModal.engineChoice === 'lalalai'
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                      : stemProgressModal.engineChoice === 'mvsep-mdx23'
                       ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                       : stemProgressModal.engineChoice === 'demucs'
-                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                      ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
                       : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
                   }`}>
                     <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-                    {stemProgressModal.engineChoice === 'mvsep-mdx23'
+                    {stemProgressModal.engineChoice === 'fal'
+                      ? '⚡ Iris Ultra'
+                      : stemProgressModal.engineChoice === 'lalalai'
+                      ? '⚡ Iris Pro'
+                      : stemProgressModal.engineChoice === 'mvsep-mdx23'
                       ? '✨ Iris Studio'
                       : stemProgressModal.engineChoice === 'demucs'
                       ? '⚡ Iris Cloud'
@@ -6208,6 +6368,14 @@ export default function SongStudioModal({
                     title="Minimizar y seguir trabajando mientras Iris separa las pistas"
                   >
                     <Minimize2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelStemSeparation}
+                    className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:text-rose-100 transition-colors cursor-pointer shrink-0"
+                    title="Cancelar separación de pistas"
+                  >
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               )}
@@ -6309,6 +6477,26 @@ export default function SongStudioModal({
                     )}
                     <span>3. Codificación MP3 HQ & Carga al Mezclador Multipista</span>
                   </div>
+                </div>
+
+                {/* Bottom Action Controls During Separation */}
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleCancelStemSeparation}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <X className="w-4 h-4 text-rose-400" />
+                    <span>Cancelar Separación</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: true } : null)}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-neutral-200 border border-white/10 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <Minimize2 className="w-4 h-4 text-neutral-400" />
+                    <span>Minimizar</span>
+                  </button>
                 </div>
 
               </div>
@@ -6419,7 +6607,29 @@ export default function SongStudioModal({
                     <p className="text-[10px] text-neutral-400 font-sans leading-normal">
                       ¿Quieres comparar la pureza del aislamiento vocal y sangrado armónico? Selecciona un motor alternativo para re-procesar:
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
+                      {/* Iris Ultra */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const idea = stemProgressModal.targetIdea;
+                          if (idea) handlePerformAiStemSeparation(idea, 'fal');
+                        }}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                          stemProgressModal.engineChoice === 'fal'
+                            ? 'bg-purple-500/20 border-purple-500/60 text-purple-200 ring-1 ring-purple-400/40'
+                            : 'bg-zinc-900/90 border-white/10 text-neutral-300 hover:border-purple-400/50 hover:bg-zinc-800'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs text-white">⚡ Iris Ultra</span>
+                          {stemProgressModal.engineChoice === 'fal' && (
+                            <span className="text-[9px] px-1 py-0.2 rounded bg-purple-400 text-zinc-950 font-black">ACTIVO</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-neutral-400">Fal.ai GPU A100 (~10s)</span>
+                      </button>
+
                       {/* Iris Studio */}
                       <button
                         type="button"
@@ -6439,7 +6649,7 @@ export default function SongStudioModal({
                             <span className="text-[9px] px-1 py-0.2 rounded bg-amber-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
                         </div>
-                        <span className="text-[10px] text-neutral-400">Máxima calidad (ensamble)</span>
+                        <span className="text-[10px] text-neutral-400">Máxima pureza (ensamble)</span>
                       </button>
 
                       {/* Iris Cloud */}
@@ -6451,17 +6661,17 @@ export default function SongStudioModal({
                         }}
                         className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
                           stemProgressModal.engineChoice === 'demucs'
-                            ? 'bg-purple-500/20 border-purple-500/60 text-purple-200 ring-1 ring-purple-400/40'
-                            : 'bg-zinc-900/90 border-white/10 text-neutral-300 hover:border-purple-400/50 hover:bg-zinc-800'
+                            ? 'bg-indigo-500/20 border-indigo-500/60 text-indigo-200 ring-1 ring-indigo-400/40'
+                            : 'bg-zinc-900/90 border-white/10 text-neutral-300 hover:border-indigo-400/50 hover:bg-zinc-800'
                         }`}
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-xs text-white">⚡ Iris Cloud</span>
                           {stemProgressModal.engineChoice === 'demucs' && (
-                            <span className="text-[9px] px-1 py-0.2 rounded bg-purple-400 text-zinc-950 font-black">ACTIVO</span>
+                            <span className="text-[9px] px-1 py-0.2 rounded bg-indigo-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
                         </div>
-                        <span className="text-[10px] text-neutral-400">Recomendado (6 canales)</span>
+                        <span className="text-[10px] text-neutral-400">HT-Demucs v4 Neural</span>
                       </button>
 
                       {/* Iris Básico */}
@@ -6511,8 +6721,10 @@ export default function SongStudioModal({
                 {/* Provider Origin Badge */}
                 <div className="flex items-center justify-between">
                   <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold border ${
-                    stemProgressModal.errorProvider === 'replicate'
+                    stemProgressModal.errorProvider === 'fal'
                       ? 'bg-purple-950/70 border-purple-500/50 text-purple-200'
+                      : stemProgressModal.errorProvider === 'replicate'
+                      ? 'bg-indigo-950/70 border-indigo-500/50 text-indigo-200'
                       : stemProgressModal.errorProvider === 'gemini'
                       ? 'bg-sky-950/70 border-sky-500/50 text-sky-200'
                       : stemProgressModal.errorProvider === 'ffmpeg'
@@ -6521,7 +6733,8 @@ export default function SongStudioModal({
                       ? 'bg-amber-950/70 border-amber-500/50 text-amber-200'
                       : 'bg-zinc-900 border-zinc-700 text-zinc-300'
                   }`}>
-                    {stemProgressModal.errorProvider === 'replicate' && <Cpu className="w-3.5 h-3.5 text-purple-400" />}
+                    {stemProgressModal.errorProvider === 'fal' && <Zap className="w-3.5 h-3.5 text-purple-400 fill-current" />}
+                    {stemProgressModal.errorProvider === 'replicate' && <Cpu className="w-3.5 h-3.5 text-indigo-400" />}
                     {stemProgressModal.errorProvider === 'gemini' && <Bot className="w-3.5 h-3.5 text-sky-400" />}
                     {stemProgressModal.errorProvider === 'ffmpeg' && <Sliders className="w-3.5 h-3.5 text-emerald-400" />}
                     {stemProgressModal.errorProvider === 'supabase' && <Database className="w-3.5 h-3.5 text-amber-400" />}
@@ -6529,7 +6742,8 @@ export default function SongStudioModal({
                       <AlertCircle className="w-3.5 h-3.5 text-zinc-400" />
                     )}
                     <span>
-                      {stemProgressModal.errorProvider === 'replicate' && 'Origen: Proveedor de IA en la Nube'}
+                      {stemProgressModal.errorProvider === 'fal' && 'Origen: Fal.ai GPU A100 (Inferencia)'}
+                      {stemProgressModal.errorProvider === 'replicate' && 'Origen: Proveedor de IA en la Nube (Replicate)'}
                       {stemProgressModal.errorProvider === 'gemini' && 'Origen: Google Gemini API (GenAI)'}
                       {stemProgressModal.errorProvider === 'ffmpeg' && 'Origen: Librería Local FFmpeg (Motor DSP)'}
                       {stemProgressModal.errorProvider === 'supabase' && 'Origen: Supabase Storage (Almacenamiento)'}
@@ -6652,6 +6866,22 @@ export default function SongStudioModal({
                     </a>
                   )}
 
+                  {/* Fal.ai Specific Actions */}
+                  {stemProgressModal.errorProvider === 'fal' && (
+                    <div className="space-y-2">
+                      <a
+                        href="https://fal.ai/dashboard/billing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                      >
+                        <Zap className="w-4 h-4 text-amber-300 fill-current" />
+                        <span>Recargar Créditos / Ver Saldo en Fal.ai Dashboard</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+
                   {/* Gemini API Specific Actions */}
                   {stemProgressModal.errorProvider === 'gemini' && (stemProgressModal.errorType === 'gemini_key_missing' || stemProgressModal.errorType === 'gemini_auth_invalid') && (
                     <a
@@ -6680,29 +6910,38 @@ export default function SongStudioModal({
                   )}
 
                   {/* Fallback and Alternative Engine Buttons */}
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     {stemProgressModal.targetIdea && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const idea = stemProgressModal.targetIdea;
-                          if (idea) {
-                            if (stemProgressModal.engineChoice === 'dsp-server') {
-                              handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
-                            } else {
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const idea = stemProgressModal.targetIdea;
+                            if (idea) {
                               handlePerformAiStemSeparation(idea, 'dsp-server');
                             }
-                          }
-                        }}
-                        className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
-                      >
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>
-                          {stemProgressModal.engineChoice === 'dsp-server'
-                            ? 'Probar con Iris Studio'
-                            : 'Separar con Iris Básico (Gratis)'}
-                        </span>
-                      </button>
+                          }}
+                          className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                          <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Separar con Iris Básico (Gratis e Instantáneo)</span>
+                        </button>
+                        {stemProgressModal.engineChoice !== 'dsp-server' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const idea = stemProgressModal.targetIdea;
+                              if (idea) {
+                                handlePerformAiStemSeparation(idea, stemProgressModal.engineChoice || 'fal');
+                              }
+                            }}
+                            className="py-2.5 px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5 text-purple-400" />
+                            <span>Reintentar</span>
+                          </button>
+                        )}
+                      </>
                     )}
                     <button
                       type="button"

@@ -1,0 +1,25 @@
+---
+description: Universal Agentic Guidelines & Security Rules for BandManager.io
+globs: *
+---
+
+# BandManager.io — Universal Agentic Rules (Cursor / Windsurf / Open Code / Claude Code)
+
+1. **Multi-tenancy & Security Boundary:**
+   - Always resolve band ID via `getTargetBandId(req)` (`server/utils/bandAccess.ts`).
+   - Never trust `req.body.band_id`, `req.body.bandId`, or `x-band-id` header directly.
+   - All external user-provided URLs in `fetch()` must pass through `esUrlExternaSegura` (`server/utils/ssrfGuard.ts`).
+   - External text inputted into LLM prompts must be passed through `sanitizeExternalText` (`server/utils/promptSafety.ts`).
+
+2. **Knowledge Graph Navigation:**
+   - Refer to `docs/knowledge_graph/*.md` for architecture and [[Wikilinks]] dependency graphs.
+   - Run `npm run graph:sync` when adding new routes or data handlers.
+
+3. **Human-in-the-Loop & Autonomy Rules:**
+   - Emails/Pitches MUST NEVER be dispatched automatically without human approval (`estado: 'aprobado_propuesta'` or `'aprobado_respuesta'`).
+
+4. **Prompt Crafting & Read Aloud Standards:**
+   - Pitches must be <120 words, 80/20 structure, and pass Read Aloud Score (no AI clichés like "delve", "tapestry", "leverage").
+
+5. **Verification Loop:**
+   - Run `npm run check:fast` to verify TypeScript types and security boundary tests in <1.5s.

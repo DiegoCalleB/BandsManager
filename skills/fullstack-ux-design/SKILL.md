@@ -84,21 +84,8 @@ app.post('/api/songs', requireAuth, async (req, res) => {
 ---
 
 ## 🧪 3. Pruebas Unitarias con Vitest
-
 - Colocar los archivos de test adyacentes al código que prueban en una carpeta `__tests__/` (ejemplo: `server/utils/__tests__/bandAccess.test.ts`).
 - Ejecutar tests con `npm test` o test específico con `npx vitest run ruta/al/test.test.ts`.
-
-```typescript
-import { describe, it, expect } from 'vitest';
-import { getTargetBandId } from '../bandAccess.js';
-
-describe('bandAccess helper', () => {
-  it('debe resolver el band_id de la sesión del usuario autenticado', () => {
-    const req = { user: { band_id: 'banda_123' }, headers: {} } as any;
-    expect(getTargetBandId(req)).toBe('banda_123');
-  });
-});
-```
 
 ---
 

@@ -316,15 +316,25 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
      context/        React Context providers (auth, idioma, banda activa)
    e2e/              Playwright — smoke suite + 1 journey (§5.3.2)
    supabase/         Migraciones SQL idempotentes (§1)
-   skills/           Fuente única de los 4 skills especializados (agentic-harness,
-                     security-multitenancy, fullstack-ux-design, supabase-architect)
-   .claude/
-     skills/         Copia real de skills/ (no symlink) — la lee Claude Code (`/skill <nombre>`)
-     hooks/          Scripts de hooks (ver §2.2 punto 7)
-     settings.json   Config de hooks
+   skills/           Fuente única de las 9 Golden Tier Skills Universales:
+                     - cyber-and-trust-guardian (Security, multi-tenancy & OWASP LLM Defense)
+                     - graphify (AST TypeScript & Obsidian Knowledge Graph integration)
+                     - llm-evals-benchmark (Evaluación cuantitativa y Read Aloud test)
+                     - tdd-fast-feedback (Ciclo Red-Green-Refactor y check:fast <1.5s)
+                     - agentic-runtime-telemetry (Observabilidad 2 capas y contabilidad aiLedger)
+                     - prompt-craft-and-dna (Inyección Band DNA, anti-cliché & Read Aloud)
+                     - supabase-schema-architect (Migraciones PostgreSQL, índices & RLS)
+                     - human-in-the-loop-flow (Protocolo de estados CRM y despacho seguro)
+                     - audio-and-media-engine (Tone.js synth, MIDI export & Supabase Storage)
+   .claude/          Skills nativas para Claude Code CLI (`.claude/skills/`) y hooks (`.claude/hooks/`)
+   .opencode/        Skills nativas para Open Code (`.opencode/skills/`)
+   .cursor/          Reglas unificadas para Cursor y Windsurf (`.cursor/rules/00-agentic-rules.mdc`)
+   .gemini/          Skills nativas para Google AI Studio y Gemini (`.gemini/skills/`)
+   docs/
+     knowledge_graph/ Vault de Obsidian nativo (.obsidian/app.json y graph.json) sincronizable vía `npm run graph:sync`
    CLAUDE.md          Pointer corto a este archivo — Claude Code lo lee al arrancar
    ```
-   `.gemini/skills/` (copia real para AI Studio) sigue el mismo patrón. Si editas un `SKILL.md`, cópialo a las tres ubicaciones en el mismo commit (`skills/README.md` tiene el porqué) — ya hubo una vez documentación duplicada que se desincronizó sin que nadie se enterara (`context/`, retirada 2026-09-17, ver `git log -- context/`).
+   Todas las carpetas de skills (`skills/`, `.claude/skills/`, `.opencode/skills/`, `.gemini/skills/`) comparten la misma definición estandarizada y están 100% sincronizadas para operar con cualquier agente (Claude Code, Open Code, Cursor, Gemini). Si editas un `SKILL.md`, cópialo a todas las ubicaciones en el mismo commit.
    Antes de un glob/grep exploratorio, mirar aquí primero si la pregunta es "¿en qué carpeta vive esto?".
 1. **Lecturas dirigidas:** en un archivo largo, leer solo el rango de líneas relevante cuando la herramienta lo permita, no el archivo entero, si solo hace falta tocar una función o interfaz concreta.
 2. **Ediciones quirúrgicas:** diffs mínimos y contiguos sobre el archivo existente, no reescrituras completas salvo que el cambio lo justifique.

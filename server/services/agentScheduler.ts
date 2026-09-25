@@ -8,6 +8,7 @@ import { dbGetAgentLastRun, dbSetAgentLastRun } from "../db/agentSchedule.js";
 import { enqueueAgentJob } from "./agentQueueService.js";
 import { startAgentQueueWorker, stopAgentQueueWorker } from "./agentQueueWorker.js";
 import { captureError } from "../utils/errorTracking.js";
+import { isGmailRateLimited } from "./gmailApiClient.js";
 
 const TICK_MS = 60 * 1000;
 let schedulerHandle: NodeJS.Timeout | null = null;
@@ -129,12 +130,14 @@ async function tick() {
         });
       });
 
-      // Lector: Encola revisión periódica de la bandeja de entrada para la banda
-      await enqueueAgentJob({
-        bandId,
-        agentType: "lector_inbox_check",
-        payload: { trigger: "60s_poll" }
-      });
+      // Lector: Encola revisión periódica de la bandeja de entrada para la banda si no está en enfriamiento por rate limit
+      if (!isGmailRateLimited(bandId)) {
+        await enqueueAgentJob({
+          bandId,
+          agentType: "lector_inbox_check",
+          payload: { trigger: "60s_poll" }
+        });
+      }
     }
 
     console.log(`[AgentScheduler] Tick ${new Date().toISOString()} - ${activeBands.length} banda(s) sincronizada(s) con la cola de agentes.`);

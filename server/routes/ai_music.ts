@@ -17,6 +17,7 @@ import { stemStorageRetryManager } from "../services/stemStorageRetryQueue.js";
 import { verifyReplicateWebhook, verifyWebhookSignature, isPredictionWebhookProcessed, recordPredictionJob } from "../services/stemPredictionReconciler.js";
 import { uploadBufferToSupabase, uploadToSupabaseIfAvailable, rutaAlmacenamientoStem } from "../utils/storage.js";
 import { preprocesarAudioDirecto, construirFiltroPreprocesamientoDirecto } from "../utils/audioEnergy.js";
+import { AudioSeparatorFactory } from "../services/audioSeparator/index.js";
 
 if (ffmpegPath) {
   ffmpeg.setFfmpegPath(ffmpegPath);
@@ -129,7 +130,7 @@ async function failStemsJob(bandId: string, songHash: string, engine: string, pa
  * Garantiza que cualquier URL o ruta local de audio se convierta en una URL HTTPS pública
  * alcanzable por Replicate subiéndola a Supabase Storage si no es pública.
  */
-async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: string, requestHost?: string): Promise<string> {
+export async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: string, requestHost?: string): Promise<string> {
   // Fast-path: Si audioUrl ya es una URL pública HTTPS directa en un CDN o Storage público
   if (
     audioUrl.startsWith("https://") &&
@@ -675,7 +676,7 @@ export const inFlightSeparations = new Map<string, Promise<{
  * de eso sin pérdida perceptible para un instrumento aislado de ensayo.
  * Si la transcodificación falla por cualquier motivo, devuelve el buffer original sin tocar.
  */
-async function transcodeBufferToMp3(buffer: Buffer): Promise<Buffer> {
+export async function transcodeBufferToMp3(buffer: Buffer): Promise<Buffer> {
   const tmpId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
   const inputPath = path.join(os.tmpdir(), `stem-in-${tmpId}`);
   const outputPath = path.join(os.tmpdir(), `stem-out-${tmpId}.mp3`);
@@ -1384,11 +1385,12 @@ async function processNeuralStemsFal(
 /**
  * Función auxiliar para procesar stems en el servidor usando FFmpeg y supresión Mid/Side
  */
-async function processServerStemsFfmpeg(
+export async function processServerStemsFfmpeg(
   audioUrl: string,
   bandId?: string,
   songHash?: string,
-  preprocesarDirecto: boolean = false
+  preprocesarDirecto: boolean = false,
+  requestedStems?: string[]
 ): Promise<Record<string, { url: string; formato: string; tamano: string }>> {
   const uploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
   if (!fs.existsSync(uploadsDir)) {
@@ -1456,7 +1458,7 @@ async function processServerStemsFfmpeg(
   const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
 
   // Filtros DSP de alta separación y aislamiento de canales para evitar el filtrado cruzado (bleed)
-  const configs = [
+  const allConfigs = [
     {
       key: "Voz",
       filename: `stem-vocal-${timestamp}.mp3`,
@@ -1489,7 +1491,19 @@ async function processServerStemsFfmpeg(
     }
   ];
 
-  // Procesa los 5 stems en PARALELO directamente sobre archivo local (Tardo < 1.2 segundos total)
+  // Si el usuario especificó solo ciertas pistas (ej. solo 'Bajo'), filtramos la ejecución para máxima velocidad y eficiencia
+  const normalizeKey = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  const configs = (requestedStems && requestedStems.length > 0)
+    ? allConfigs.filter(cfg => {
+        const cfgNorm = normalizeKey(cfg.key);
+        return requestedStems.some(req => {
+          const reqNorm = normalizeKey(req);
+          return reqNorm === cfgNorm || cfgNorm.includes(reqNorm) || reqNorm.includes(cfgNorm);
+        });
+      })
+    : allConfigs;
+
+  // Procesa los stems solicitados en PARALELO directamente sobre archivo local (Tardo < 1.2 segundos total)
   await Promise.all(
     configs.map((cfg) => {
       return new Promise<void>((resolve) => {
@@ -1652,7 +1666,8 @@ router.post("/ai-stem-separation", requireAuth, iaRateLimiter, async (req, res) 
   let selectedEngine = "auto";
 
   try {
-    const { songTitle, sectionName, audioUrl, bpm, key, forceEngine, engine, forceNeural, replicateToken, preprocesarDirecto } = req.body || {};
+    const { songTitle, sectionName, audioUrl, bpm, key, forceEngine, engine, forceNeural, replicateToken, falKey, falApiKey, preprocesarDirecto, requestedStems } = req.body || {};
+    const effectiveFalKey = falKey || falApiKey || process.env.FAL_KEY || process.env.FAL_API_KEY;
 
     const analysisPrompt = `Eres un ingeniero de sonido e IA experto en 'Music Source Separation' (Separación de Fuentes Musicales en Stems) usando redes neuronales como HT-Demucs y MDX-Net.
 Analiza la siguiente sección de la canción:
@@ -1826,7 +1841,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         sectionName: sectionName || "General",
         detectedBpm: bpm || 120,
         detectedKey: key || "Am",
-        analysisSummary: `Stems cargados desde la base de datos persistente para el motor ${persistentEntry.engine}. Coste: $0.00 (sin consumo de créditos).`,
+        analysisSummary: `Stems cargados desde la base de datos persistente para el motor ${persistentEntry.engine}. Coste: 0,00 € (sin consumo de créditos).`,
         stems: buildFormattedStems(persistentEntry.stemsMap)
       });
     }
@@ -1858,7 +1873,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           sectionName: sectionName || "General",
           detectedBpm: bpm || 120,
           detectedKey: key || "Am",
-          analysisSummary: `Stems cargados desde reserva concurrente para ${cached.engine}. Coste: $0.00.`,
+          analysisSummary: `Stems cargados desde reserva concurrente para ${cached.engine}. Coste: 0,00 €.`,
           stems: buildFormattedStems(cached.stemsMap)
         });
       }
@@ -1894,9 +1909,24 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       }
     }
 
-    // A partir de aquí el trabajo puede tardar varios minutos (cold start de GPU en Replicate).
-    // Railway corta cualquier conexión HTTP inactiva a los 5 minutos, así que respondemos ya mismo
-    // y el resto se procesa en segundo plano; el cliente hace polling a GET /ai-stem-separation/status.
+    // ========================================================================
+    // 3. MUTEX LOCAL / IN-FLIGHT DEDUPLICATION (En la misma instancia)
+    // ========================================================================
+    if (inFlightSeparations.has(cacheKey)) {
+      console.log(`[Stem Separator] ⏳ Deduplicación activa: Petición en curso para ${cacheKey}. El cliente consultará el estado mediante polling.`);
+      return res.status(202).json({
+        success: true,
+        status: 'processing',
+        bandId,
+        songHash,
+        engine: selectedEngine,
+        songTitle: songTitle || "Canción",
+        sectionName: sectionName || "General"
+      });
+    }
+
+    // A partir de aquí el trabajo se procesa en segundo plano.
+    // Respondemos 202 al instante para no chocar con timeouts y el cliente hace polling a GET /ai-stem-separation/status.
     res.status(202).json({
       success: true,
       status: 'processing',
@@ -1906,60 +1936,6 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       songTitle: songTitle || "Canción",
       sectionName: sectionName || "General"
     });
-
-    // ========================================================================
-    // 3. MUTEX LOCAL / IN-FLIGHT DEDUPLICATION (En la misma instancia)
-    // ========================================================================
-    if (inFlightSeparations.has(cacheKey)) {
-      console.log(`[Stem Separator] ⏳ Deduplicación activa: Petición en curso para ${cacheKey}. Esperando al trabajo original sin duplicar gasto...`);
-      try {
-        const inFlightRes = await Promise.race([
-          inFlightSeparations.get(cacheKey)!,
-          new Promise<any>((_, reject) => setTimeout(() => reject(new Error('Deduplication wait timeout (60s)')), 60000))
-        ]);
-        if (inFlightRes.errorInfo) {
-          const diag = inFlightRes.errorInfo;
-          return res.status(diag.httpStatus || 502).json({
-            provider: diag.provider || 'replicate',
-            error: diag.errorTitle || 'Fallo en la inferencia',
-            message: diag.error || 'La inferencia no devolvió resultados.',
-            errorType: diag.errorType || 'generic',
-            errorTitle: diag.errorTitle || 'Error en Inferencia',
-            actionAdvice: diag.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.',
-            details: diag.errorDetail,
-            engine: selectedEngine
-          });
-        }
-        if (inFlightRes.stemsMap && Object.keys(inFlightRes.stemsMap).length > 0) {
-          const inFlightEngineUsed = inFlightRes.engineUsed || (inFlightRes.isNeural ? inFlightRes.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
-          const inFlightDegraded = !inFlightRes.isNeural && !isUserExplicitDsp;
-          return res.json({
-            success: true,
-            audioUrl: audioUrl || "",
-            separationEngine: inFlightRes.engine,
-            engineUsed: inFlightEngineUsed,
-            degraded: inFlightDegraded,
-            degradedReason: inFlightDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
-            isNeural: inFlightRes.isNeural,
-            cached: true,
-            executionTimeMs: 12,
-            executionTimeSec: "0.0s",
-            timingBreakdown: { ...inFlightRes.timingBreakdown, deduplicated: true },
-            replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
-            falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
-            songTitle: songTitle || "Canción",
-            sectionName: sectionName || "General",
-            detectedBpm: bpm || 120,
-            detectedKey: key || "Am",
-            analysisSummary: `Stems sincronizados desde el trabajo en ejecución (${inFlightRes.engine}). 0 llamadas duplicadas a la GPU.`,
-            stems: buildFormattedStems(inFlightRes.stemsMap)
-          });
-        }
-      } catch (inFlightWaitErr) {
-        console.warn(`[Stem Separator] Timeout esperando trabajo en vuelo para ${cacheKey}. Procediendo con ejecución directa.`);
-        inFlightSeparations.delete(cacheKey);
-      }
-    }
 
     const requestHost = req.get('host');
     const effectiveReplicateToken = replicateToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
@@ -1985,9 +1961,48 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
 
     try {
       // ----------------------------------------------------------------------
+      // CASO A0: FAL.AI (DEMUCS EN GPU A100 - ULTRARRÁPIDO ~10-15s)
+      // ----------------------------------------------------------------------
+      if (selectedEngine === 'fal' || selectedEngine === 'fal-ai') {
+        const falService = AudioSeparatorFactory.getService('fal');
+        const falRes = await falService.processAudio(audioUrl, {
+          bandId,
+          songHash,
+          songTitle,
+          sectionName,
+          bpm,
+          key,
+          requestHost,
+          requestedStems,
+          falKey: effectiveFalKey
+        });
+
+        if (falRes.success && Object.keys(falRes.stemsMap).length > 0) {
+          finalStemsMap = falRes.stemsMap;
+          executionTimingBreakdown = falRes.timingBreakdown;
+          separationEngine = "Fal.ai Demucs (GPU A100)";
+          isNeural = true;
+        } else {
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'fal', isNeural: false, errorInfo: falRes as any });
+          await failStemsJob(bandId, songHash, selectedEngine, {
+            provider: falRes.provider || "fal",
+            error: falRes.errorTitle || "Fallo en Fal.ai API",
+            message: falRes.error || "La inferencia con Fal.ai no devolvió resultados.",
+            errorType: "fal_error",
+            errorTitle: falRes.errorTitle || "Error en Fal.ai API",
+            actionAdvice: falRes.actionAdvice || "Prueba con Replicate o Motor DSP local.",
+            details: falRes.errorDetail || falRes.error,
+            httpStatus: falRes.httpStatus || 502,
+            engine: "fal"
+          });
+          return;
+        }
+      }
+      // ----------------------------------------------------------------------
       // CASO A: MVSEP-MDX23 (MDX-NET + DEMUCS4 EN REPLICATE)
       // ----------------------------------------------------------------------
-      if (selectedEngine === 'mvsep-mdx23') {
+      else if (selectedEngine === 'mvsep-mdx23') {
         const mdxRes = await processMdx23Stems(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
         if (mdxRes && mdxRes.stemsMap && Object.keys(mdxRes.stemsMap).length > 0) {
           finalStemsMap = mdxRes.stemsMap;
@@ -2135,7 +2150,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       else if (selectedEngine === 'dsp-server' || selectedEngine === 'dsp') {
         console.log("[Stem Separator] Motor DSP FFmpeg seleccionado por el usuario.");
         try {
-          finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash, Boolean(preprocesarDirecto));
+          finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash, Boolean(preprocesarDirecto), requestedStems);
           separationEngine = "dsp-server (FFmpeg)";
         } catch (stErr: any) {
           console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);
@@ -2198,7 +2213,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         if (!isNeural) {
           console.warn(`[STEM_SEPARATION_DEGRADED_FALLBACK] ⚠️ Alerta: Fallback a DSP activado para banda "${bandId}", tema "${songTitle || 'sin-titulo'}". Motor solicitado: auto/IA. Razón: No hay tokens de IA neuronal configurados o fallaron los proveedores externos.`);
           try {
-            finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash, Boolean(preprocesarDirecto));
+            finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash, Boolean(preprocesarDirecto), requestedStems);
             separationEngine = "dsp-server (FFmpeg)";
           } catch (stErr) {
             console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);

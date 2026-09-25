@@ -478,39 +478,34 @@ export async function dbUpsertSong(song: any, bandId: string, isAdmin: boolean =
 
   await ensureRegisteredBandExists(targetBandId);
 
-  // Fusionar inteligentemente audio_ideas para NO perder pistas/stems extraídas previamente
+  // Gestión de audio_ideas: si la petición envió explícitamente audioIdeas/audio_ideas (incluso si está vacío o se eliminaron elementos),
+  // se respeta la decisión del usuario sin resucitar ideas eliminadas. Si la petición no incluyó el campo (actualización parcial), se conservan las existentes.
   const existingIdeas = parseJsonArray(existing?.audio_ideas);
-  let incomingIdeas = parseJsonArray(song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas);
+  const hasExplicitIdeas = song.audioIdeas !== undefined || song.audio_ideas !== undefined;
+  let incomingIdeas: any[];
 
-  if (incomingIdeas.length === 0 && existingIdeas.length > 0) {
+  if (!hasExplicitIdeas) {
     incomingIdeas = existingIdeas;
-  } else if (incomingIdeas.length > 0 && existingIdeas.length > 0) {
-    incomingIdeas = incomingIdeas.map((incIdea: any) => {
-      const existingMatch = existingIdeas.find(
-        (e: any) => e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
-      );
-      if (existingMatch && (!incIdea.pistas || incIdea.pistas.length === 0) && existingMatch.pistas && existingMatch.pistas.length > 0) {
-        return {
-          ...incIdea,
-          pistas: existingMatch.pistas,
-          stemEngineUsed: incIdea.stemEngineUsed || existingMatch.stemEngineUsed,
-          stemIsNeural: incIdea.stemIsNeural ?? existingMatch.stemIsNeural,
-          stemDegraded: incIdea.stemDegraded ?? existingMatch.stemDegraded,
-          stemProcessedAt: incIdea.stemProcessedAt || existingMatch.stemProcessedAt
-        };
-      }
-      return incIdea;
-    });
-
-    // Preservar cualquier idea previa que contenga stems/pistas si no venía en el payload entrante
-    existingIdeas.forEach((e: any) => {
-      if (e.pistas && e.pistas.length > 0) {
-        const existsInIncoming = incomingIdeas.some((inc: any) => inc.id === e.id || inc.titulo === e.titulo);
-        if (!existsInIncoming) {
-          incomingIdeas.push(e);
+  } else {
+    incomingIdeas = parseJsonArray(song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas);
+    if (incomingIdeas.length > 0 && existingIdeas.length > 0) {
+      incomingIdeas = incomingIdeas.map((incIdea: any) => {
+        const existingMatch = existingIdeas.find(
+          (e: any) => e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
+        );
+        if (existingMatch && (!incIdea.pistas || incIdea.pistas.length === 0) && existingMatch.pistas && existingMatch.pistas.length > 0) {
+          return {
+            ...incIdea,
+            pistas: existingMatch.pistas,
+            stemEngineUsed: incIdea.stemEngineUsed || existingMatch.stemEngineUsed,
+            stemIsNeural: incIdea.stemIsNeural ?? existingMatch.stemIsNeural,
+            stemDegraded: incIdea.stemDegraded ?? existingMatch.stemDegraded,
+            stemProcessedAt: incIdea.stemProcessedAt || existingMatch.stemProcessedAt
+          };
         }
-      }
-    });
+        return incIdea;
+      });
+    }
   }
 
   const nowIso = new Date().toISOString();

@@ -93,7 +93,11 @@ async function processSingleJob(job: AgentJob): Promise<void> {
     const errorMsg = err?.message || String(err);
 
     console.error(`[AgentQueueWorker] [${WORKER_ID}] Error procesando trabajo ${job.id}:`, errorMsg);
-    captureError(err, { jobId: job.id, agentType: job.agent_type, bandId: job.band_id });
+    const isRateLimit = String(errorMsg).includes("429") || String(errorMsg).includes("RESOURCE_EXHAUSTED") || String(errorMsg).includes("Rate Limit");
+
+    if (!isRateLimit) {
+      captureError(err, { jobId: job.id, agentType: job.agent_type, bandId: job.band_id });
+    }
 
     // Ignorar log de auditoría en fallos comunes por falta de credenciales email
     const sinCuenta = err instanceof EmailAgentError && err.code === "no_token";
@@ -103,8 +107,10 @@ async function processSingleJob(job: AgentJob): Promise<void> {
         agente: (job.agent_type.split("_")[0] as any) || "sistema",
         motor: "worker_queue",
         disparado_por_tipo: "queue",
-        estado: "error",
-        mensaje: `Worker Queue fallo en trabajo ${job.id} (Intento ${job.attempts + 1}/${job.max_attempts}): ${errorMsg}`,
+        estado: isRateLimit ? "warning" : "error",
+        mensaje: isRateLimit
+          ? `Worker Lector: Enfriamiento temporal activado por límite de peticiones de Google (429 RESOURCE_EXHAUSTED). Reanudará automáticamente.`
+          : `Worker Queue fallo en trabajo ${job.id} (Intento ${job.attempts + 1}/${job.max_attempts}): ${errorMsg}`,
         duracion_ms: durationMs
       });
     }

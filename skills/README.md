@@ -65,6 +65,52 @@ Cada skill es independiente y proporciona checklist, patrones detallados, anti-p
 
 ---
 
+### 5. **graphify**
+**Cuándo usar:** Explorar relaciones complejas y navegar el mapa de dependencias del proyecto
+
+- Análisis determinista de AST (Tree-sitter) para indexar conexiones entre archivos
+- Mapeo de rutas de llamadas UI ➔ Hooks ➔ API Express ➔ DB Handlers ➔ Supabase
+- Trazabilidad de dependencias y análisis de impacto de cambios
+- Detección de código huérfano
+
+---
+
+### 6. **llm-evals-benchmark**
+**Cuándo usar:** Validar o modificar prompts de agentes, evaluar calidad de respuestas y benchmarks
+
+- Matriz de métricas cuantitativas (Read Aloud Score, Hallucination Rate, Rule of 20%)
+- Protocolo de evaluación ciega con Golden Dataset de salas
+- Tests automatizados de robustez de prompts en Vitest
+
+---
+
+### 7. **tdd-regression-guardian**
+**Cuándo usar:** Implementar nueva lógica de negocio, endpoints o corregir bugs
+
+- Ciclo Red-Green-Refactor estricto
+- Pirámide de pruebas (Vitest unitarios/integración + Playwright E2E)
+- Pruebas obligatorias de límite de confianza y multi-tenancy
+
+---
+
+### 8. **telemetry-and-cost-auditor**
+**Cuándo usar:** Modificar el scheduler agéntico, observabilidad y control de costes
+
+- Arquitectura de observabilidad en dos capas (`agent_execution_logs` vs Sentry)
+- Contabilidad de tokens e inferencia IA en `aiLedger`
+- Trazabilidad y latencia de tareas atómicas del scheduler de 60s
+
+---
+
+### 9. **owasp-llm-security-auditor**
+**Cuándo usar:** Auditar seguridad, flujos de datos externos y blindaje contra ciberataques
+
+- Mitigación del OWASP Top 10 for LLMs (Inyecciones directas/indirectas, SSRF, XSS)
+- Sanitización obligatoria con `sanitizeExternalText` y `esUrlExternaSegura`
+- Blindaje criptográfico de stems y propiedad intelectual musical
+
+---
+
 ## 🎯 Cómo Usar Skills
 
 ### Desde Claude Code
@@ -73,6 +119,11 @@ Cada skill es independiente y proporciona checklist, patrones detallados, anti-p
 /skill security-multitenancy
 /skill fullstack-ux-design
 /skill supabase-architect
+/skill graphify
+/skill llm-evals-benchmark
+/skill tdd-regression-guardian
+/skill telemetry-and-cost-auditor
+/skill owasp-llm-security-auditor
 ```
 
 ### Desde Google AI Studio
