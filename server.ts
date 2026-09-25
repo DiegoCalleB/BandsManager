@@ -40,7 +40,7 @@ import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
 
 import dotenv from "dotenv";
-dotenv.config({ override: true });
+dotenv.config(); // No sobreescribir variables de entorno inyectadas por Railway / producción
 
 // Pasivo sin SENTRY_DSN en el entorno - ver server/utils/errorTracking.ts.
 initErrorTracking();
@@ -158,10 +158,13 @@ app.get(["/health", "/api/health"], (req, res) => {
   res.status(200).json({
     status: "ok",
     timestamp: new Date().toISOString(),
+    uptimeSeconds: Math.floor(process.uptime()),
     emailService: {
       configured: Boolean(detectedKey),
       keyDetectedAs,
-      sender: process.env.SENDER_EMAIL || process.env.VITE_SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>"
+      keyLength: detectedKey ? detectedKey.trim().length : 0,
+      sender: process.env.SENDER_EMAIL || process.env.VITE_SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>",
+      resendEnvVarsFound: Object.keys(process.env).filter(k => k.toUpperCase().includes('RESEND'))
     }
   });
 });
