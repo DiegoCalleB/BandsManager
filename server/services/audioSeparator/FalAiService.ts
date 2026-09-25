@@ -76,7 +76,7 @@ export class FalAiService extends AudioSeparatorService {
         body: JSON.stringify({
           audio_url: resolvedUrl
         }),
-        signal: AbortSignal.timeout(45000)
+        signal: AbortSignal.timeout(180000) // 180s (3 min) para canciones completas y cold-starts
       });
 
       // Si falla por 401 usando 'Key ', intentamos con 'Bearer ' por si es un Personal Access Token
@@ -91,7 +91,7 @@ export class FalAiService extends AudioSeparatorService {
           body: JSON.stringify({
             audio_url: resolvedUrl
           }),
-          signal: AbortSignal.timeout(45000)
+          signal: AbortSignal.timeout(180000)
         }).catch(() => null);
         if (retryRes && (retryRes.ok || retryRes.status !== 401)) {
           res = retryRes;
@@ -130,7 +130,7 @@ export class FalAiService extends AudioSeparatorService {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({ audio_url: resolvedUrl }),
-              signal: AbortSignal.timeout(30000)
+              signal: AbortSignal.timeout(60000)
             });
 
             if (queueRes.ok) {
@@ -141,8 +141,8 @@ export class FalAiService extends AudioSeparatorService {
                 const responseUrl = queueData.response_url || `https://queue.fal.run/fal-ai/demucs/requests/${reqId}`;
                 let queueResult: any = null;
                 const pollStart = Date.now();
-                while (Date.now() - pollStart < 60000) {
-                  await new Promise(r => setTimeout(r, 2000));
+                while (Date.now() - pollStart < 240000) { // Hasta 4 minutos de polling en cola
+                  await new Promise(r => setTimeout(r, 2500));
                   const pollRes = await fetch(statusUrl, {
                     headers: { 'Authorization': authHeader }
                   });

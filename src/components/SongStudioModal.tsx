@@ -799,7 +799,7 @@ export default function SongStudioModal({
       // polling ligero del resultado en vez de mantener esta petición abierta varios minutos.
       if (kickoff?.status === 'processing') {
         const pollStartedAt = Date.now();
-        const maxWaitMs = engineToUse === 'fal' ? 90 * 1000 : 20 * 60 * 1000;
+        const maxWaitMs = engineToUse === 'fal' ? 240 * 1000 : 20 * 60 * 1000;
         const engineLabel =
           engineToUse === 'fal' ? "Iris Ultra (Fal.ai GPU)" :
           engineToUse === 'lalalai' ? "Iris Pro (LALAL.AI)" :
@@ -822,7 +822,9 @@ export default function SongStudioModal({
               : engineToUse === 'fal'
               ? (elapsedSec < 6
                   ? `⚡ Conectando con GPU NVIDIA A100 en Fal.ai... (${elapsedSec}s)`
-                  : `⚡ Iris Ultra (Fal.ai GPU A100) aislando pistas vocales e instrumentales... (${elapsedSec}s transcurridos)`)
+                  : elapsedSec < 60
+                  ? `⚡ Iris Ultra (Fal.ai GPU A100) aislando pistas vocales e instrumentales... (${elapsedSec}s transcurridos)`
+                  : `⚡ Iris Ultra procesando canción completa en alta fidelidad... (${elapsedSec}s transcurridos — temas largos suelen tardar entre 60 y 90s)`)
               : elapsedSec < 12
               ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
               : elapsedSec < 45
@@ -860,7 +862,7 @@ export default function SongStudioModal({
           }
           if (Date.now() - pollStartedAt > maxWaitMs) {
             if (engineToUse === 'fal') {
-              throw new Error('Iris Ultra (Fal.ai) ha tardado más de 90s en responder. Puedes cancelarlo, reintentar o usar Iris Básico gratis en 1 segundo.');
+              throw new Error('Iris Ultra (Fal.ai) ha tardado más de 4 minutos en responder. Puedes cancelarlo, reintentar o usar Iris Básico gratis en 1 segundo.');
             }
             throw new Error('La separación sigue procesándose en el servidor tras 20 minutos. Cierra esta ventana e inténtalo de nuevo en un rato: el resultado quedará guardado y no se repetirá el gasto en GPU.');
           }
