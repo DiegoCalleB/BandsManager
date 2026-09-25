@@ -1,7 +1,8 @@
 import express from "express";
 import crypto from "crypto";
 import { ACTIVE_SESSIONS, verifyPassword, hashPassword, getSafeUsers } from "../auth.js";
-import { loadState, saveState, requireAuth, requireLeader, getEpkConfigForBand, getUserFromRequestLocal } from "../state.js";
+import { loadState, saveState, requireAuth, requireLeader, getEpkConfigForBand, getUserFromRequestLocal, ensureValidUserEmails } from "../state.js";
+import { INITIAL_USERS } from "../../src/db_seed.js";
 import {
   dbGetUsers,
   dbUpsertUser,
@@ -289,6 +290,30 @@ router.post("/auth/register", async (req, res) => {
   const cleanEmail = email.trim().toLowerCase();
   const rawBandName = bandName.trim();
 
+  // Sync users from Supabase to ensure fresh state across restarts
+  try {
+    const dbUsers = await dbGetUsers();
+    if (dbUsers && dbUsers.length > 0) {
+      dbUsers.forEach((su: any) => {
+        const idx = state.users.findIndex(
+          (u: any) =>
+            u.id === su.id ||
+            (u.username && u.username.toLowerCase().trim() === su.username?.toLowerCase().trim()) ||
+            (u.email && u.email.toLowerCase().trim() === su.email?.toLowerCase().trim())
+        );
+        if (idx !== -1) {
+          state.users[idx] = { ...state.users[idx], ...su };
+        } else {
+          state.users.push(su);
+        }
+      });
+      ensureValidUserEmails(state);
+    }
+  } catch (err) {
+    // Non-blocking
+  }
+  ensureValidUserEmails(state);
+
   // Check if existing users exist for this email
   const existingUsersWithEmail = state.users.filter(
     (u: any) => u.username.toLowerCase() === cleanEmail || u.email?.toLowerCase() === cleanEmail
@@ -452,11 +477,19 @@ router.post("/auth/register", async (req, res) => {
     path: "/"
   });
 
-  // Enviar email de bienvenida de forma asíncrona si es un nuevo usuario con email válido
-  if (isNewUserCreated && cleanEmail && cleanEmail.includes("@")) {
-    sendWelcomeEmail(cleanEmail, userToUse.name, rawBandName).catch(err => {
-      console.error(`[Registro] Error enviando email de bienvenida a ${cleanEmail}:`, err?.message || err);
-    });
+  // Enviar email de bienvenida y confirmación de registro
+  if (cleanEmail && cleanEmail.includes("@")) {
+    try {
+      console.log(`[Registro] Despachando email de bienvenida a ${cleanEmail} para la banda "${rawBandName}"...`);
+      const emailResult = await sendWelcomeEmail(cleanEmail, userToUse.name, rawBandName);
+      if (emailResult.success) {
+        console.log(`[Registro] Email de bienvenida entregado con éxito a ${cleanEmail} (ID: ${emailResult.id})`);
+      } else {
+        console.warn(`[Registro] Aviso: No se pudo entregar el email de bienvenida a ${cleanEmail}: ${emailResult.error}`);
+      }
+    } catch (err: any) {
+      console.error(`[Registro] Error al enviar email de bienvenida a ${cleanEmail}:`, err?.message || err);
+    }
   }
 
   const { passwordHash, salt: _, ...safeUser } = userToUse;
@@ -1043,20 +1076,80 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
           state.users.push(su);
         }
       });
+      ensureValidUserEmails(state);
       saveState(state);
     }
   } catch (err) {
     // Continue with memory state if database call fails
   }
 
-  const user = (state.users || []).find(
+  ensureValidUserEmails(state);
+
+  // 1. Find user by username or email
+  let user = (state.users || []).find(
     (u: any) =>
       (u.username && u.username.toLowerCase().trim() === cleanInput) ||
       (u.email && u.email.toLowerCase().trim() === cleanInput)
   );
 
+  // 2. If not found and input is an email, check registeredBands
+  if (!user && cleanInput.includes("@")) {
+    const regBandWithEmail = (state.registeredBands || []).find(
+      (b: any) => b.email && b.email.toLowerCase().trim() === cleanInput
+    );
+    if (regBandWithEmail?.user_id) {
+      user = (state.users || []).find((u: any) => u.id === regBandWithEmail.user_id);
+    }
+  }
+
+  // 3. If still not found, check seed users in INITIAL_USERS
+  if (!user) {
+    const seedUser = INITIAL_USERS.find(
+      (iu: any) =>
+        iu.username.toLowerCase().trim() === cleanInput ||
+        iu.email?.toLowerCase().trim() === cleanInput
+    );
+    if (seedUser) {
+      user = (state.users || []).find((u: any) => u.id === seedUser.id);
+    }
+  }
+
   if (!user) {
     return res.status(404).json({ error: "No se encontró ningún usuario con ese correo o usuario." });
+  }
+
+  // Determine target email
+  let targetEmail: string | null = null;
+  if (cleanInput.includes("@")) {
+    targetEmail = cleanInput;
+  } else if (user.email && user.email.includes("@")) {
+    targetEmail = user.email.trim().toLowerCase();
+  } else {
+    // Check registeredBands for this user
+    const userBand = (state.registeredBands || []).find(
+      (b: any) => b.user_id === user.id && b.email && b.email.includes("@")
+    );
+    if (userBand?.email) {
+      targetEmail = userBand.email.trim().toLowerCase();
+    } else {
+      const seedUser = INITIAL_USERS.find(
+        (iu: any) => iu.id === user.id || iu.username.toLowerCase() === user.username?.toLowerCase()
+      );
+      if (seedUser?.email && seedUser.email.includes("@")) {
+        targetEmail = seedUser.email.trim().toLowerCase();
+      }
+    }
+  }
+
+  if (!targetEmail || !targetEmail.includes("@")) {
+    return res.status(400).json({
+      error: `La cuenta de usuario "${cleanInput}" no tiene una dirección de correo válida configurada. Por favor, introduce tu correo electrónico directamente para recuperar tu cuenta.`
+    });
+  }
+
+  // Ensure user has valid email set in state
+  if (!user.email || !user.email.includes("@")) {
+    user.email = targetEmail;
   }
 
   // Generate cryptographically secure 6 digit code
@@ -1066,13 +1159,17 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
   // Store reset code on user object(s) with matching email/username
   const matchingUsers = (state.users || []).filter(
     (u: any) =>
+      u.id === user.id ||
       (u.username && u.username.toLowerCase().trim() === cleanInput) ||
-      (u.email && u.email.toLowerCase().trim() === cleanInput)
+      (u.email && u.email.toLowerCase().trim() === targetEmail)
   );
 
   matchingUsers.forEach((u: any) => {
     u.resetCode = code;
     u.resetCodeExpires = expiresAt;
+    if (!u.email || !u.email.includes("@")) {
+      u.email = targetEmail;
+    }
   });
 
   saveState(state);
@@ -1087,9 +1184,8 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
   }
 
   // Mask email for privacy display
-  const userEmail = user.email || user.username;
-  const parts = userEmail.split("@");
-  let maskedEmail = userEmail;
+  const parts = targetEmail.split("@");
+  let maskedEmail = targetEmail;
   if (parts.length === 2) {
     const name = parts[0];
     const domain = parts[1];
@@ -1097,36 +1193,36 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
     maskedEmail = `${maskedName}@${domain}`;
   }
 
-  // El código solo vale como prueba de que el usuario controla ESE correo si de verdad se lo
-  // enviamos ahí; devolverlo en la respuesta (como hacía antes esta ruta) rompe la comprobación
-  // por completo y deja resetear la contraseña de cualquiera con solo saber su email/usuario.
-  const targetEmail = (user.email && user.email.includes("@")) 
-    ? user.email 
-    : (cleanInput.includes("@") ? cleanInput : (user.username && user.username.includes("@") ? user.username : null));
+  console.log(`[Password Reset] Enviando código de reseteo (${code}) a ${targetEmail}...`);
+  const emailRes = await sendTransactionalEmail({
+    to: targetEmail,
+    subject: `Tu código de recuperación de contraseña: ${code}`,
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto; border:1px solid #27272a;">
+        <div style="text-align:center; margin-bottom:24px;">
+          <h1 style="color:#ffffff; font-size:22px; margin:0;">BandManager<span style="color:#f2ca50;">.io</span></h1>
+        </div>
+        <h2 style="margin:0 0 16px 0; color:#f2ca50; font-size:18px;">Recuperación de contraseña</h2>
+        <p style="color:#d4d4d8; font-size:14px; line-height:1.6;">Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en BandManager.</p>
+        <p style="color:#d4d4d8; font-size:14px;">Introduce este código de verificación de 6 dígitos en la aplicación (caduca en 15 minutos):</p>
+        <div style="font-size:36px; font-weight:800; letter-spacing:8px; background:#18181b; border:2px solid #f2ca50; border-radius:12px; padding:20px; text-align:center; color:#f2ca50; margin:24px 0; font-family:monospace;">
+          ${code}
+        </div>
+        <p style="font-size:12px; color:#71717a; margin-top:24px; border-top:1px solid #27272a; padding-top:16px;">
+          Si tú no has solicitado este cambio de contraseña, puedes ignorar este correo de forma segura. Tu contraseña no cambiará hasta que introduzcas el código.
+        </p>
+      </div>
+    `
+  });
 
-  if (targetEmail) {
-    try {
-      const emailRes = await sendTransactionalEmail({
-        to: targetEmail,
-        subject: `Tu código de recuperación de contraseña: ${code}`,
-        html: `
-          <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto;">
-            <h2 style="margin:0 0 16px 0; color:#3b82f6;">Recuperación de contraseña</h2>
-            <p>Usa este código para restablecer tu contraseña en BandManager. Caduca en 15 minutos.</p>
-            <p style="font-size:32px; font-weight:800; letter-spacing:6px; background:#18181b; border:1px solid #27272a; border-radius:8px; padding:16px; text-align:center;">${code}</p>
-            <p style="font-size:13px; color:#a1a1aa;">Si no has solicitado este cambio, ignora este correo.</p>
-          </div>
-        `
-      });
-      if (!emailRes.success) {
-        console.error(`[Password Reset] Resend no pudo entregar el código a ${targetEmail}:`, emailRes.error);
-      }
-    } catch (err: any) {
-      console.error(`Error enviando email de reseteo de contraseña a ${targetEmail}:`, err?.message || err);
-    }
-  } else {
-    console.error(`No se pudo enviar el código de reseteo: el usuario "${cleanInput}" no tiene un email válido.`);
+  if (!emailRes.success) {
+    console.error(`[Password Reset] ERROR: No se pudo enviar el email a ${targetEmail}:`, emailRes.error);
+    return res.status(500).json({
+      error: `No se pudo entregar el correo con el código (${emailRes.error || "error del servicio de correo"}). Por favor, revisa que la dirección sea correcta o intenta nuevamente.`
+    });
   }
+
+  console.log(`[Password Reset] Código ${code} enviado exitosamente a ${targetEmail} (ID: ${emailRes.id})`);
 
   return res.json({
     success: true,
@@ -1168,17 +1264,27 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
           state.users.push(su);
         }
       });
+      ensureValidUserEmails(state);
       saveState(state);
     }
   } catch (err) {
     // Continue
   }
 
-  const matchingUsers = (state.users || []).filter(
+  // Find user by username or email
+  let matchingUsers = (state.users || []).filter(
     (u: any) =>
       (u.username && u.username.toLowerCase().trim() === cleanInput) ||
       (u.email && u.email.toLowerCase().trim() === cleanInput)
   );
+
+  // Fallback: if user typed username in step 1 and email in step 2 (or vice versa),
+  // match any user having this exact active code
+  if (matchingUsers.length === 0) {
+    matchingUsers = (state.users || []).filter(
+      (u: any) => u.resetCode && String(u.resetCode) === cleanCode && u.resetCodeExpires > Date.now()
+    );
+  }
 
   if (matchingUsers.length === 0) {
     return res.status(404).json({ error: "Usuario no encontrado." });

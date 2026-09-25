@@ -427,6 +427,30 @@ export function ensureBakandeyaBandId(state: any): boolean {
     changed = true;
   }
 
+  if (ensureValidUserEmails(state)) {
+    changed = true;
+  }
+
+  return changed;
+}
+
+export function ensureValidUserEmails(state: any): boolean {
+  let changed = false;
+  if (!state.users || !Array.isArray(state.users)) return false;
+
+  for (const u of state.users) {
+    const initUser = INITIAL_USERS.find(
+      (iu: any) => iu.id === u.id || (iu.username && iu.username.toLowerCase() === u.username?.toLowerCase())
+    );
+    if (initUser?.email && (!u.email || !u.email.includes("@") || u.email.toLowerCase() === u.username?.toLowerCase())) {
+      u.email = initUser.email;
+      changed = true;
+    }
+    if ((!u.email || !u.email.includes("@")) && u.username && u.username.includes("@")) {
+      u.email = u.username.toLowerCase().trim();
+      changed = true;
+    }
+  }
   return changed;
 }
 
@@ -852,6 +876,7 @@ export function loadState(): any {
             id: initUser.id,
             username: initUser.username,
             name: initUser.name,
+            email: initUser.email,
             role: initUser.role,
             instrument: initUser.instrument,
             avatarColor: initUser.avatarColor,
@@ -861,6 +886,10 @@ export function loadState(): any {
           });
           changed = true;
         } else {
+          if (!existing.email || !existing.email.includes("@") || existing.email === existing.username) {
+            existing.email = initUser.email;
+            changed = true;
+          }
           if (existing.instrument !== initUser.instrument) {
             existing.instrument = initUser.instrument;
             changed = true;
@@ -936,6 +965,7 @@ export function loadState(): any {
       return {
         id: u.id,
         username: u.username,
+        email: u.email,
         name: u.name,
         role: u.role,
         instrument: u.instrument,

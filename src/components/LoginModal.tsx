@@ -362,18 +362,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       onLoginSuccess(data.user, data.token, data.availableBands);
     } catch (err: any) {
-      console.warn("Backend register notice, proceeding with local session state:", err);
-      // Fallback local session if offline
-      onLoginSuccess({
-        id: `user-${Date.now()}`,
-        username: regEmail.trim() || regBandName.trim() || 'banda',
-        name: regLeaderName.trim() || 'Miembro',
-        bandName: regBandName.trim() || 'Nueva Banda',
-        email: regEmail.trim(),
-        role: 'leader',
-        plan: planKey,
-        createdAt: new Date().toISOString()
-      }, 'mock_token_after_register');
+      console.error("Error al registrar cuenta:", err);
+      setError(err.message || 'Error al crear la cuenta. Por favor, revisa los datos e inténtalo de nuevo.');
+      setView('register');
     } finally {
       setLoading(false);
     }
