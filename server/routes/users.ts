@@ -888,6 +888,17 @@ export async function ensureAdminUserExists(state: any) {
       state.users.push(adminUser);
     }
 
+    try {
+      const { getSupabase } = await import('../db/core.js');
+      const sb = getSupabase();
+      const { data: dbAdmin } = await sb.from("users").select("id").or("username.ilike.admin,email.ilike.admin@bandmanager.ai").maybeSingle();
+      if (dbAdmin?.id) {
+        adminUser.id = dbAdmin.id;
+      }
+    } catch {
+      // Ignorar si Supabase no está disponible en este momento
+    }
+
     saveState(state);
     await dbUpsertUser(adminUser).catch((err: any) => console.warn('Supabase admin upsert notice:', err));
     return adminUser;

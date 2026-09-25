@@ -1140,6 +1140,16 @@ export default function SongStudioModal({
           } else {
             errorType = 'ffmpeg_processing_error';
           }
+        } else if (errorProvider === 'fal') {
+          if (errMsg.includes('TOP_UP') || errMsg.includes('locked') || errMsg.includes('balance') || errMsg.includes('credit') || err?.status === 403) {
+            errorType = 'fal_billing_locked';
+          } else if (errMsg.includes('401') || errMsg.includes('auth') || errMsg.includes('Key') || errMsg.includes('unauthorized')) {
+            errorType = 'fal_auth_invalid';
+          } else if (errMsg.includes('429') || errMsg.includes('rate') || errMsg.includes('limit')) {
+            errorType = 'fal_rate_limit';
+          } else {
+            errorType = 'fal_generic';
+          }
         } else if (errorProvider === 'supabase') {
           if (errMsg.includes('credentials') || errMsg.includes('URL') || errMsg.includes('KEY')) {
             errorType = 'supabase_credentials_missing';
@@ -1161,6 +1171,10 @@ export default function SongStudioModal({
       // Títulos diferenciados por proveedor y tipo
       const errorTitle = data.errorTitle || (
         errorType === 'network_error' ? 'Error de Conexión de Red (Failed to fetch)' :
+        errorType === 'fal_billing_locked' ? 'Saldo Agotado en Fal.ai (HTTP 403 - Saldo Requerido TOP_UP)' :
+        errorType === 'fal_auth_invalid' ? 'Clave FAL_KEY Inválida o No Configurada (HTTP 401)' :
+        errorType === 'fal_rate_limit' ? 'Límite de Peticiones en Fal.ai Alcanzado (HTTP 429)' :
+        errorType === 'fal_generic' ? 'Error en la API de Fal.ai' :
         errorType === 'gemini_key_missing' ? 'Clave GEMINI_API_KEY No Configurada' :
         errorType === 'gemini_auth_invalid' ? 'Clave GEMINI_API_KEY Inválida o Revocada' :
         errorType === 'gemini_quota_exceeded' ? 'Cuota de Gemini API Excedida (HTTP 429)' :
@@ -1190,6 +1204,9 @@ export default function SongStudioModal({
       // Consejo / Acción guiada según el origen exacto
       const actionAdvice = data.actionAdvice || (
         errorType === 'network_error' ? 'Comprueba tu conexión o pulsa "Separar con Iris Básico" para procesar las pistas al instante de forma local.' :
+        errorType === 'fal_billing_locked' ? 'Tu cuenta de Fal.ai requiere recarga de créditos (Top Up). Puedes recargar en fal.ai/dashboard/billing o separar al instante y gratis con Iris Básico.' :
+        errorType === 'fal_auth_invalid' ? 'Comprueba que tu clave FAL_KEY esté activa en fal.ai/dashboard/keys o en las variables de entorno.' :
+        errorType === 'fal_rate_limit' ? 'Espera unos segundos o utiliza la separación local con Iris Básico.' :
         errorType === 'gemini_key_missing' ? 'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.' :
         errorType === 'gemini_auth_invalid' ? 'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.' :
         errorType === 'gemini_quota_exceeded' ? 'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.' :
@@ -6873,12 +6890,25 @@ export default function SongStudioModal({
                         href="https://fal.ai/dashboard/billing"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                        className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-zinc-950 font-mono text-xs font-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                       >
-                        <Zap className="w-4 h-4 text-amber-300 fill-current" />
-                        <span>Recargar Créditos / Ver Saldo en Fal.ai Dashboard</span>
+                        <CreditCard className="w-4 h-4 text-zinc-950" />
+                        <span>Recargar Saldo en Fal.ai (fal.ai/dashboard/billing)</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
+                      {stemProgressModal.targetIdea && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const idea = stemProgressModal.targetIdea;
+                            if (idea) handlePerformAiStemSeparation(idea, 'demucs');
+                          }}
+                          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                        >
+                          <Sparkles className="w-4 h-4 text-indigo-200" />
+                          <span>Probar con Iris Cloud (HT-Demucs Alternativo)</span>
+                        </button>
+                      )}
                     </div>
                   )}
 

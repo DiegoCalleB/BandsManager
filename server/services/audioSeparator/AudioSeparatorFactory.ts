@@ -1,7 +1,7 @@
 import { AudioSeparatorService } from './AudioSeparatorService.js';
 import { LalalAiService } from './LalalAiService.js';
 import { ReplicateService } from './ReplicateService.js';
-import { FalAiService } from './FalAiService.js';
+import { FalAiService, ACTIVE_FAL_KEY } from './FalAiService.js';
 import { LocalDspService } from './LocalDspService.js';
 
 export type SupportedEngine = 'lalalai' | 'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server' | 'auto';
@@ -21,8 +21,9 @@ export class AudioSeparatorFactory {
    * Devuelve la instancia del servicio según el motor solicitado o la disponibilidad de API keys.
    */
   static getService(engine: SupportedEngine = 'auto'): AudioSeparatorService {
+    const rawFal = (process.env.FAL_KEY || process.env.FAL_API_KEY || '').trim();
+    const hasFalKey = !!(rawFal && !rawFal.startsWith('58e0800a')) || !!ACTIVE_FAL_KEY;
     const hasLalalKey = !!(process.env.LALALAI_API_KEY || process.env.LALAL_API_KEY);
-    const hasFalKey = !!(process.env.FAL_KEY || process.env.FAL_API_KEY);
     const hasReplicateToken = !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY);
 
     if (engine === 'lalalai') {

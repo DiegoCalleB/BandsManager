@@ -40,7 +40,7 @@ import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
 
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ override: true });
 
 // Pasivo sin SENTRY_DSN en el entorno - ver server/utils/errorTracking.ts.
 initErrorTracking();
