@@ -147,6 +147,16 @@ export async function sendTransactionalEmail(options: SendEmailOptions): Promise
           if (!fallbackRes.error && fallbackRes.data?.id) {
             console.log(`[Resend Success] Email enviado correctamente con remitente de respaldo a ${to} (ID: ${fallbackRes.data.id})`);
             return { success: true, id: fallbackRes.data.id };
+          } else if (fallbackRes.error) {
+            console.error(`[Resend Fallback Error]:`, fallbackRes.error);
+            const fbMsg = fallbackRes.error.message || "";
+            if (fbMsg.includes("testing emails") || fbMsg.includes("own email")) {
+              return {
+                success: false,
+                error: "Resend requiere verificar el dominio bandmanager.io en https://resend.com/domains para enviar a cualquier destinatario. Durante las pruebas, envía los correos a tu email registrado en Resend (" + to + ")."
+              };
+            }
+            return { success: false, error: fallbackRes.error.message };
           }
         } catch (fbErr: any) {
           console.error(`[Resend Fallback Error]:`, fbErr?.message || fbErr);
