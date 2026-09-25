@@ -1332,12 +1332,15 @@ router.post("/auth/test-email", requireAuth, async (req, res) => {
 
   const result = await sendTransactionalEmail({
     to: targetEmail,
-    subject: "🎸 Prueba de Envío de Email - BandManager",
+    subject: "🎸 Prueba de Envío de Email - BandManager.io",
     html: `
-      <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto;">
-        <h2 style="color:#3b82f6;">¡El servicio de email está funcionando correctamente! 🚀</h2>
-        <p>Este es un email de comprobación enviado desde BandManager a través de Resend.</p>
-        <p style="font-size:13px; color:#a1a1aa;">Destino: ${targetEmail} | Fecha: ${new Date().toLocaleString('es-ES')}</p>
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:16px; max-width:600px; margin:auto; border:1px solid rgba(242, 202, 80, 0.35);">
+        <div style="text-align:center; margin-bottom:20px;">
+          <h1 style="color:#ffffff; font-size:24px; margin:0;">BandManager<span style="color:#f2ca50;">.io</span></h1>
+        </div>
+        <h2 style="color:#f2ca50; margin:0 0 16px 0;">¡El servicio de email está funcionando correctamente! 🚀</h2>
+        <p>Este es un email de comprobación enviado desde BandManager.io a través de Resend.</p>
+        <p style="font-size:13px; color:#a1a1aa; border-top:1px solid #27272a; padding-top:16px; margin-top:24px;">Destino: ${targetEmail} | Fecha: ${new Date().toLocaleString('es-ES')}</p>
       </div>
     `
   });
@@ -2285,16 +2288,19 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
     const bName = bandInfo?.nombre_banda || "tu banda";
     sendTransactionalEmail({
       to: cleanEmail,
-      subject: `🎸 ¡Has sido invitado a unirte a ${bName} en BandManager!`,
+      subject: `🎸 ¡Has sido invitado a unirte a ${bName} en BandManager.io!`,
       html: `
-        <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto;">
-          <h2 style="margin:0 0 16px 0; color:#3b82f6;">¡Hola, ${name.trim()}! 👋</h2>
-          <p>Has sido agregado como músico (${instrument ? instrument.trim() : "Músico"}) a la banda <strong>${bName}</strong> en BandManager.</p>
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:16px; max-width:600px; margin:auto; border:1px solid rgba(242, 202, 80, 0.35);">
+          <div style="text-align:center; margin-bottom:20px;">
+            <h1 style="color:#ffffff; font-size:24px; margin:0;">BandManager<span style="color:#f2ca50;">.io</span></h1>
+          </div>
+          <h2 style="margin:0 0 16px 0; color:#f2ca50;">¡Hola, ${name.trim()}! 👋</h2>
+          <p>Has sido agregado como músico (${instrument ? instrument.trim() : "Músico"}) a la banda <strong>${bName}</strong> en BandManager.io.</p>
           <p>Para activar tu cuenta y acceder a los repertorios, letras, ensayos y calendarios de la banda, entra en:</p>
           <div style="text-align:center; margin:28px 0;">
-            <a href="${appUrl}" style="background:#3b82f6; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold; display:inline-block;">Activar mi Cuenta</a>
+            <a href="${appUrl}" style="background:linear-gradient(135deg, #f2ca50 0%, #eab308 100%); color:#09090b; padding:14px 28px; text-decoration:none; border-radius:10px; font-weight:800; display:inline-block; box-shadow:0 8px 24px rgba(242, 202, 80, 0.3);">Activar mi Cuenta</a>
           </div>
-          <p style="font-size:13px; color:#a1a1aa;">Tu usuario asignado es: <strong>${cleanUsername}</strong></p>
+          <p style="font-size:13px; color:#a1a1aa; border-top:1px solid #27272a; padding-top:14px;">Tu usuario asignado es: <strong style="color:#f2ca50;">${cleanUsername}</strong></p>
         </div>
       `
     }).catch(err => {

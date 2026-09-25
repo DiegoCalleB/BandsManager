@@ -136,7 +136,14 @@ app.use("/transposed", (req, res, next) => {
 
 // Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
 app.get(["/health", "/api/health"], (req, res) => {
-  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    emailService: {
+      configured: Boolean(process.env.RESEND_API_KEY),
+      sender: process.env.SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>"
+    }
+  });
 });
 
 // Privacy Policy endpoint required for Google OAuth verification
