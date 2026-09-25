@@ -31,17 +31,42 @@ export function getProductionAppUrl(customUrl?: string): string {
   return 'https://bandmanager.io';
 }
 
+export function resolveResendApiKey(): { key: string; name: string } | null {
+  const explicitKeys = [
+    'RESEND_API_KEY',
+    'RESEND_APIKEY',
+    'VITE_RESEND_API_KEY',
+    'VITE_RESEND_APIKEY',
+    'RESEND_API_TOKEN',
+    'RESEND_APITOKEN',
+    'RESEND_KEY',
+    'RESEND_TOKEN',
+    'RESEND_SECRET'
+  ];
+
+  for (const k of explicitKeys) {
+    const val = cleanEnvString(process.env[k]);
+    if (val) return { key: val, name: k };
+  }
+
+  for (const [key, rawVal] of Object.entries(process.env)) {
+    const cleanKey = key.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const isExcluded = key.toUpperCase().includes('WEBHOOK') || key.toUpperCase().includes('FROM') || key.toUpperCase().includes('SENDER');
+    if (!isExcluded && (cleanKey === 'RESENDAPIKEY' || cleanKey === 'RESENDKEY' || cleanKey === 'RESENDTOKEN' || cleanKey === 'RESENDAPITOKEN' || cleanKey === 'VITERESENDAPIKEY')) {
+      const val = cleanEnvString(rawVal);
+      if (val) return { key: val, name: key };
+    }
+  }
+
+  return null;
+}
+
 let resendInstance: Resend | null = null;
 let lastApiKey: string | null = null;
 
 function getResendClient(): Resend | null {
-  const apiKey = cleanEnvString(
-    process.env.RESEND_API_KEY ||
-    process.env.VITE_RESEND_API_KEY ||
-    process.env.RESEND_API_TOKEN ||
-    process.env.RESEND_KEY ||
-    process.env.RESEND_TOKEN
-  );
+  const resolved = resolveResendApiKey();
+  const apiKey = resolved ? resolved.key : "";
   if (!apiKey) {
     return null;
   }

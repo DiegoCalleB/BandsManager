@@ -4,6 +4,7 @@ import helmet from "helmet";
 import path from "path";
 import * as XLSX from "xlsx";
 
+import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
 import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
@@ -136,24 +137,9 @@ app.use("/transposed", (req, res, next) => {
 
 // Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
 app.get(["/health", "/api/health"], (req, res) => {
-  const detectedKey =
-    process.env.RESEND_API_KEY ||
-    process.env.VITE_RESEND_API_KEY ||
-    process.env.RESEND_API_TOKEN ||
-    process.env.RESEND_KEY ||
-    process.env.RESEND_TOKEN;
-
-  const keyDetectedAs = process.env.RESEND_API_KEY
-    ? "RESEND_API_KEY"
-    : process.env.VITE_RESEND_API_KEY
-    ? "VITE_RESEND_API_KEY"
-    : process.env.RESEND_API_TOKEN
-    ? "RESEND_API_TOKEN"
-    : process.env.RESEND_KEY
-    ? "RESEND_KEY"
-    : process.env.RESEND_TOKEN
-    ? "RESEND_TOKEN"
-    : null;
+  const resolvedKey = resolveResendApiKey();
+  const detectedKey = resolvedKey ? resolvedKey.key : null;
+  const keyDetectedAs = resolvedKey ? resolvedKey.name : null;
 
   res.status(200).json({
     status: "ok",
