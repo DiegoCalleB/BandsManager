@@ -7,7 +7,7 @@
  */
 
 import { generateUnifiedAI } from "../ai.js";
-import { sanitizePitchDeterministically, auditPitchQuality, PitchQualityAudit } from "../utils/promptSafety.js";
+import { sanitizePitchDeterministically, auditPitchQuality, PitchQualityAudit, getRecommendedWordRange } from "../utils/promptSafety.js";
 
 export interface JudgeEvaluation {
   score: number; // 0 a 100
@@ -37,10 +37,11 @@ export async function evaluateAndRefinePitch(params: {
   let heuristicScore = audit.antiAiScore;
   const critique: string[] = [];
 
-  // Chequeo de palabras
-  if (audit.wordCount > 130) {
-    critique.push(`Exceso de palabras (${audit.wordCount} palabras; objetivo < 120).`);
-    heuristicScore -= 15;
+  // Chequeo de palabras alineado dinámicamente con la categoría (ayuntamientos y teatros admiten hasta 180 palabras)
+    const categoryRange = getRecommendedWordRange(leadCategory);
+  if (audit.wordCount > categoryRange.max && audit.wordCount > 150) {
+    critique.push(`Exceso de palabras (${audit.wordCount} palabras; rango óptimo para ${leadCategory}: ${categoryRange.max} palabras).`);
+    heuristicScore -= 12;
   } else if (audit.wordCount < 40) {
     critique.push(`Pitch excesivamente telegráfico (${audit.wordCount} palabras).`);
     heuristicScore -= 10;
@@ -63,6 +64,65 @@ export async function evaluateAndRefinePitch(params: {
   if (audit.chainedGerundsDetected) {
     critique.push("Detección de gerundios encadenados típicos de IA.");
     heuristicScore -= 6;
+  }
+
+
+  // Chequeo de Personnel Bio / enumeración irrelevante de músicos (Antipatrón 1 de NotebookLM)
+  const personnelBioRegex = /(al bajo|a la guitarra|a la bater[ií]a|a la voz principal|al teclado|al saxo)/gi;
+  const instrumentMatches = pitchText.match(personnelBioRegex);
+  if (instrumentMatches && instrumentMatches.length >= 2) {
+    critique.push('Detección de enumeración innecesaria de músicos/instrumentos (Personnel Bio fluff).');
+    heuristicScore -= 20;
+  }
+
+  // Chequeo de adjuntos pesados prometidos o archivos comprimidos
+  if (/(zip|.mp3|.wav|adjuntamos|te adjunto|adjunto archivo|descarga el archivo)/i.test(pitchText)) {
+    critique.push('Promesa de archivos adjuntos o descargas pesadas (Regla Zero Attachments incumplida).');
+    heuristicScore -= 25;
+  }
+
+  // Chequeo de ultimátums o exigencias de respuesta agresivas (Antipatrón 3 de NotebookLM)
+  if (/(respuesta r[aá]pida|firmad hoy|contrato firmado hoy|indiscutible|irrevocable)/i.test(pitchText)) {
+    critique.push('Tono agresivo o ultimátum de respuesta/contrato.');
+    heuristicScore -= 25;
+  }
+
+
+  // Chequeo de mentalidad de descubrimiento / pedir favores a agencias (Red Flag de NotebookLM)
+  if (/(desc[uú]brenos|que nos descubras|financiar nuestra grabaci[oó]n|buscamos que nos lleven la carrera|empezar desde cero con vosotros)/i.test(pitchText)) {
+    critique.push('Mentalidad pasiva de descubrimiento de talento detectada. Las agencias exigen tracción y profesionalismo previo.');
+    heuristicScore -= 25;
+  }
+
+
+  // Regla Anti-Alucinación de Género: Si la banda tiene género definido, no inventar subgéneros no declarados
+  if (/afrolatino|afrobeat|flamenco|reggaeton/i.test(pitchText)) {
+    // Si el género declarado no contiene afro/flamenco, avisar de posible desvío estético
+    critique.push('Aviso de precisión de estilo: verificar si los subgéneros citados corresponden al ADN real de la banda.');
+  }
+
+
+  // 1. Prohibición de anglicismos forzados de la industria anglosajona no habituales en salas españolas (ej: curfew -> hora límite de cierre / fin de show)
+  if (/curfew/i.test(pitchText)) {
+    critique.push('Anglicismo no natural detectado ("curfew"). En España usar "hora límite", "fin de concierto" o "cierre de show".');
+    heuristicScore -= 10;
+  }
+
+  // 2. Prohibición de "ingeniero de sonido" en circuito de salas independiente (en España se dice "técnico de sonido")
+  if (/ingeniero de sonido/i.test(pitchText)) {
+    critique.push('Término pomposo/anglosajón ("ingeniero de sonido"). En el circuito nacional de salas se dice "técnico de sonido".');
+    heuristicScore -= 10;
+  }
+
+  // 3. Prohibición de comprometer técnicos propios sin validar si la banda dispone de personal de gira
+  if (/traemos nuestro propio t[eé]cnico/i.test(pitchText)) {
+    critique.push('Cuidado: No comprometer técnico propio sin verificar si la banda viaja con personal técnico de sonido o usa el técnico de la sala.');
+  }
+
+  // 4. Prohibición de inventar merchandising si no consta stock en el perfil de la banda
+  if (/merchandising|merch/i.test(pitchText)) {
+    // Si la banda no tiene merch explícito, advertir al redactor
+    critique.push('Verificación de Merchandising: No asumir venta de merch si la banda no tiene productos físicos o stock registrado.');
   }
 
   // Chequeo de mención de la sala

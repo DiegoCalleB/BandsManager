@@ -338,6 +338,86 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors font-mono leading-relaxed resize-none"
               />
             </div>
+            {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
+            <div className="pt-3 border-t border-slate-800/80 space-y-3">
+              <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                Parámetros Técnicos Clave para el Agente (Respuestas directas a salas)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+                {/* Monitoreo */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Sistema de Monitoreo</label>
+                  <select
+                    value={config.riderConfig?.tipoMonitoreo || 'sin_preferencia'}
+                    onChange={e => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), tipoMonitoreo: e.target.value as any } })}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-amber-500"
+                  >
+                    <option value="sin_preferencia">Sin preferencia / Sala</option>
+                    <option value="cuñas_escenario">Cuñas de suelo</option>
+                    <option value="in_ear">In-Ears propios (IEM)</option>
+                    <option value="mixto">Mixto (In-Ears + Cuñas)</option>
+                  </select>
+                  <p className="text-[10px] text-slate-500">Evita pedir monitores extra si lleváis IEM.</p>
+                </div>
+                {/* Backline */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Backline (Amplis / Batería)</label>
+                  <select
+                    value={config.riderConfig?.backlinePropio || 'completo'}
+                    onChange={e => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), backlinePropio: e.target.value as any } })}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-amber-500"
+                  >
+                    <option value="completo">Backline completo propio</option>
+                    <option value="parcial">Parcial (pedimos batería/amplis)</option>
+                    <option value="sin_backline">Necesitamos backline de sala</option>
+                  </select>
+                  <p className="text-[10px] text-slate-500">Crucial para pactar dobles carteles.</p>
+                </div>
+                {/* Microfonía */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Microfonía / DIs</label>
+                  <div className="flex gap-1.5 pt-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), microfoniaPropia: false } })}
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}`}
+                    >
+                      De la sala
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), microfoniaPropia: true } })}
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}`}
+                    >
+                      Propia
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-slate-500">Informa al técnico de la casa.</p>
+                </div>
+                {/* Tiempo de prueba y canales */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Prueba / Canales Mínimos</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={config.riderConfig?.tiempoPruebaMinutos ?? ''}
+                      onChange={e => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), tiempoPruebaMinutos: e.target.value ? Number(e.target.value) : undefined } })}
+                      placeholder="30 min"
+                      className="w-1/2 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-amber-500"
+                    />
+                    <input
+                      type="number"
+                      value={config.riderConfig?.canalesMinimos ?? ''}
+                      onChange={e => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), canalesMinimos: e.target.value ? Number(e.target.value) : undefined } })}
+                      placeholder="12 ch"
+                      className="w-1/2 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-500">Minutos y canales de mesa.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

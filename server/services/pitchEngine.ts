@@ -20,7 +20,7 @@ import {
   getRecommendedWordRange
 } from "../utils/promptSafety.js";
 import { findCorridorForCity } from "../../src/utils/tourRouting.js";
-import { findSemanticallySimilarPitches } from "./pitchVectorStore.js";
+import { findSemanticallySimilarPitches, checkNegativePatternSimilarity } from "./pitchVectorStore.js";
 import { evaluateAndRefinePitch } from "./pitchJudge.js";
 import { fetchVenueLiveContext, fetchBandSpotifyTraction } from "./venueIntelligenceService.js";
 
@@ -143,7 +143,7 @@ export class PitchEngine {
           notas: lead.notas || ""
         },
         matchCount: 3,
-        threshold: 0.58
+        threshold: 0.10
       });
 
       if (vectorMatches.length > 0) {

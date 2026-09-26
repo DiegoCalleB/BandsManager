@@ -1,3 +1,4 @@
+import { findSemanticallySimilarPitches } from "./pitchVectorStore.js";
 // Lógica compartida de redacción de respuestas (el "Contestador"), extraída de
 // server/routes/leads/reply.ts para poder llamarla también desde el Agente Lector
 // (server/services/lectorAgent.ts) cuando detecta una respuesta real de una sala - así el
@@ -225,8 +226,33 @@ export async function generarBorradorRespuesta(
   try {
     const threads = await dbGetReplyFewShotThreads(bandId, category, 2);
     replyFewShotSection = formatReplyFewShotForPrompt(threads);
+
+    // [RAG VECTORIAL]: Recuperar semánticamente objeciones o respuestas exitosas afines
+    const vectorCategory = responseType === "price_negotiation" 
+      ? "negociacion_cache" 
+      : (lead.tipo || category);
+
+    const vectorMatches = await findSemanticallySimilarPitches({
+      band_id: bandId,
+      lead: {
+        nombre_sala: lead.nombre_sala || "Sala",
+        tipo: vectorCategory,
+        ciudad: lead.ciudad,
+        notas: incomingMessage
+      },
+      matchCount: 2,
+      threshold: 0.1
+    });
+
+    if (vectorMatches.length > 0) {
+      const vectorLines = vectorMatches.map((m, idx) => {
+        return 'CASO ' + (idx + 1) + ' (' + m.nombre_sala + '):\n' + m.texto_pitch;
+      }).join('\n\n');
+      const vectorSection = '\nEJEMPLOS MAESTROS DE NEGOCIACIÓN Y RESPUESTA (RECUPERADOS POR RAG VECTORIAL):\n' + vectorLines;
+      replyFewShotSection = (replyFewShotSection ? replyFewShotSection + '\n' : '') + vectorSection;
+    }
   } catch (err) {
-    console.warn("Notice cargando ejemplos de respuesta para el Contestador:", err);
+    console.warn("Notice cargando ejemplos de respuesta RAG para el Contestador:", err);
   }
 
   const systemPrompt = buildReplySystemPrompt(

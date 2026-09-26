@@ -153,7 +153,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const contenido = resolverContenidoEpk(config, language);
   const datos = config.datosContratacion || {};
   const hayDatosContratacion = Boolean(
-    datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario
+    datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario || datos.tieneMerchandising !== undefined || datos.tieneTecnicoSonidoPropio !== undefined
   );
 
   const styles = getTemplateStyles(config.plantilla);
@@ -214,7 +214,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 : ''
             },
             { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
-            { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
+            { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') },
+            { label: "Técnico de Sonido", valor: datos.tieneTecnicoSonidoPropio ? "Técnico propio" : (datos.tieneTecnicoSonidoPropio === false ? "Técnico de la sala" : "") },
+            { label: "Merchandising", valor: datos.tieneMerchandising ? (datos.detallesMerchandising || "Puesto disponible") : (datos.tieneMerchandising === false ? "No disponible" : "") },
+            { label: "Transporte", valor: datos.transportePropio ? "Furgoneta propia" : (datos.transportePropio === false ? "Transporte adaptable" : "") }
           ].filter(d => d.valor).map(d => (
             <div key={d.label} className={`${styles.card} border rounded-xl p-4`}>
               <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{d.label}</p>

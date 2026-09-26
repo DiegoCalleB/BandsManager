@@ -461,6 +461,9 @@ export function AddLeadModal({
                   <option value="agencia">Agencia de Booking</option>
                   <option value="manager">Mánager / Representante</option>
                   <option value="productora">Productora / Promotora</option>
+                  <option value="productor">Productor Artístico / Estudio</option>
+                  <option value="patrocinador">Marca / Patrocinador</option>
+                  <option value="supervisor_sync">Supervisor Musical (Sync)</option>
                   <option value="sello">Sello Discográfico</option>
                   <option value="grupo">Banda / Grupo Amigo</option>
                 </select>

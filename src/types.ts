@@ -42,7 +42,7 @@ export interface BookingCampaign {
   created_at?: string;
 }
 
-export type LeadType = 'sala' | 'festival' | 'ayuntamiento' | 'grupo' | 'productora' | 'medio' | 'discoteca' | 'agencia' | 'manager' | 'sello';
+export type LeadType = 'sala' | 'festival' | 'ayuntamiento' | 'grupo' | 'productora' | 'medio' | 'discoteca' | 'agencia' | 'manager' | 'sello' | 'productor' | 'patrocinador' | 'supervisor_sync';
 
 export type BandRelationshipStatus = 
   | 'sin_contactar' 
@@ -582,6 +582,22 @@ export interface DatosContratacion {
   ciudadBase?: string;
   formatos?: string;
   necesidadesEscenario?: string;
+  // Operativa real para el agente y salas:
+  tieneMerchandising?: boolean;
+  detallesMerchandising?: string; // ej: 'Camisetas y vinilos con datáfono propio'
+  tieneTecnicoSonidoPropio?: boolean; // true = viajan con técnico propio, false = usan técnico de la sala
+  transportePropio?: boolean; // furgoneta propia / transporte público
+  hospedajeRequerido?: boolean; // si necesitan alojamiento para bolos fuera de su comunidad
+  facturacion?: 'autonomo' | 'sociedad' | 'cooperativa' | 'asociacion' | 'facturacion_por_terceros';
+}
+
+export interface RiderConfig {
+  tipoMonitoreo?: "in_ear" | "cuñas_escenario" | "mixto" | "sin_preferencia";
+  microfoniaPropia?: boolean; // Traen sus propios micrófonos/DIs o dependen de la sala
+  canalesMinimos?: number; // Ej: 12, 16, 24 canales
+  backlinePropio?: "completo" | "parcial" | "sin_backline"; // Ej: traen ampli de bajo/guitarra/batería o piden todo a la sala
+  tiempoPruebaMinutos?: number; // Ej: 30, 45, 60 min
+  observacionesRider?: string;
 }
 
 export interface EPKConfig {
@@ -599,6 +615,7 @@ export interface EPKConfig {
   miembros?: BandMember[];
   videos?: EPKVideo[];
   datosContratacion?: DatosContratacion;
+  riderConfig?: RiderConfig;
   logoUrl: string;
   dossierPdfUrl?: string;
   dossierPdfName?: string;

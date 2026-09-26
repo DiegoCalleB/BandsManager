@@ -13,7 +13,7 @@ import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConecta
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword, detectResponseType } from "./replyDrafting.js";
 import { analyzeIncomingMessageSentiment } from "./sentimentAnalysis.js";
-import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, getSupabase } from "../db.js";
+import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, dbGetAutonomyConfig, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
 
@@ -336,13 +336,22 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     uidsProcesados.push(msg.uid);
   }
 
-  if (uidsProcesados.length > 0) {
+  // Solo se marcan los mensajes como "leídos" en la bandeja de entrada externa (Gmail/Outlook)
+  // si la banda activó explícitamente la opción 'markAsReadInInbox' en su configuración de autonomía.
+  // Por defecto (false), el Agente Lector extrae la información para el CRM pero respeta el estado
+  // SIN LEER en el buzón oficial para que el usuario mantenga el control total de su correo.
+  const autonomyConfig = await dbGetAutonomyConfig(bandId).catch(() => null);
+  const debeMarcarComoLeido = autonomyConfig?.markAsReadInInbox === true;
+
+  if (debeMarcarComoLeido && uidsProcesados.length > 0) {
     const marcarLeidos = usarGmailOAuth
       ? marcarComoLeidoGmailApi(bandId, uidsProcesados as string[])
       : marcarComoLeido(bandId, uidsProcesados as number[]);
     await marcarLeidos.catch((err) => {
       console.warn(`[Lector] No se pudieron marcar como leídos los mensajes de ${bandId}:`, err);
     });
+  } else if (uidsProcesados.length > 0) {
+    console.log(`[Lector] Banda ${bandId}: ${uidsProcesados.length} mensaje(s) procesados manteniendo su estado SIN LEER en la bandeja de entrada.`);
   }
 
   return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite };

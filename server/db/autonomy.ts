@@ -23,6 +23,7 @@ export interface AutonomyConfig {
   agentSenderEmail?: string;
   agentSenderName?: string;
   agentReplyToEmail?: string;
+  markAsReadInInbox?: boolean;
   responseStrategies?: Record<string, ResponseStrategy>;
   minCacheByType?: {
     salas?: number;
@@ -93,6 +94,7 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
     agentSenderEmail: data.agent_sender_email || undefined,
     agentSenderName: data.agent_sender_name || undefined,
     agentReplyToEmail: data.agent_reply_to_email || undefined,
+    markAsReadInInbox: Boolean(data.mark_as_read_in_inbox ?? false),
     responseStrategies: data.response_strategies || {},
     minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
     negotiationStartCacheByType: Object.keys(negotiationStartCacheByType).length > 0 ? negotiationStartCacheByType : undefined
@@ -112,6 +114,7 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
     notify_on_every_proposal: Boolean(config.notifyOnEveryProposal ?? config.notify_on_every_proposal ?? true),
     require_human_for_final_sign_off: Boolean(config.requireHumanForFinalSignOff ?? config.require_human_for_final_sign_off ?? true),
     dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail",
+    mark_as_read_in_inbox: Boolean(config.markAsReadInInbox ?? config.mark_as_read_in_inbox ?? false),
     response_strategies: config.responseStrategies || config.response_strategies || {},
     min_cache_by_type: (config.minCacheByType && typeof config.minCacheByType === "object")
       ? config.minCacheByType

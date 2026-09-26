@@ -8,6 +8,75 @@
 import { getAiClient } from "../ai.js";
 import { getSupabase } from "../db/core.js";
 
+
+export type RAGContentType = 
+  | "pitch_template"
+  | "objection_handler"
+  | "anti_pattern"
+  | "deal_memo"
+  | "sync_pitch"
+  | "sponsor_pitch"
+  | "follow_up";
+
+export type RAGFunnelStage = 
+  | "cold_outreach"
+  | "follow_up_1"
+  | "follow_up_2"
+  | "break_up"
+  | "deal_negotiation"
+  | "confirmation_advancing";
+
+export type RAGTargetActor = 
+  | "venue_club"
+  | "festival"
+  | "theater_auditorium"
+  | "public_circuit_city_hall"
+  | "label_ar"
+  | "agency_management"
+  | "producer"
+  | "peer_band"
+  | "brand_sponsor"
+  | "music_supervisor";
+
+export type RAGFinancialModel = 
+  | "guarantee_flat"
+  | "door_split"
+  | "guarantee_vs_split"
+  | "bar_deal"
+  | "pay_to_play_risk_shared"
+  | "public_grant_fee"
+  | "sponsorship_in_kind"
+  | "none";
+
+export type RAGRiskCategory = 
+  | "production_tech"
+  | "local_draw_attendance"
+  | "calendar_date"
+  | "financial_budget"
+  | "legal_contractual"
+  | "none";
+
+export interface BandManagerChunkMetadata {
+  chunk_id?: string;
+  content_type: RAGContentType;
+  stage: RAGFunnelStage;
+  target_actor: RAGTargetActor;
+  financial_model: RAGFinancialModel;
+  risk_category: RAGRiskCategory;
+  venue_capacity_range?: {
+    min?: number;
+    max?: number;
+  };
+  anti_ai_rules?: {
+    max_words?: number;
+    em_dash_allowed?: boolean;
+    single_link_only?: boolean;
+    burstiness_level?: "high" | "medium";
+  };
+  language?: string;
+  [key: string]: any;
+}
+
 export interface PitchVectorEntry {
   id?: string;
   band_id: string;
@@ -109,7 +178,7 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
     const truncated = cleanText.substring(0, 2048);
 
     // Intentar primero con text-embedding-004 y luego gemini-embedding-2-preview
-    const modelsToTry = ["text-embedding-004", "gemini-embedding-2-preview"];
+    const modelsToTry = ["gemini-embedding-001", "gemini-embedding-2-preview", "text-embedding-004"];
     let values: number[] | null = null;
 
     for (const modelName of modelsToTry) {
@@ -283,4 +352,47 @@ export async function autoIndexPitchOnSuccess(params: {
   }).catch(err => {
     console.warn("[PitchVectorStore] Background auto-index notice:", err);
   });
+}
+
+export interface NegativePatternEntry {
+  pattern_name: string;
+  reason: string;
+  example_text: string;
+}
+
+export const KNOWN_NEGATIVE_PATTERNS: NegativePatternEntry[] = [
+  {
+    pattern_name: "PERSONNEL_BIO_FLUFF",
+    reason: "Listar componentes, nombres y sus instrumentos en un primer correo frío aburre al programador y arruina la conversión.",
+    example_text: "Somos una banda de 5 integrantes con Juan a la guitarra y voz, Pedro al bajo, Carlos a la batería y Miguel al teclado."
+  },
+  {
+    pattern_name: "ZERO_ATTACHMENTS_VIOLATION",
+    reason: "Prometer adjuntar archivos pesados (PDFs de 15MB, ZIPs, audios WAV/MP3) activa filtros de spam y botones de truncamiento en Gmail.",
+    example_text: "Te adjunto en este correo nuestro dossier completo en PDF de 20MB y varios archivos MP3 de muestra."
+  },
+  {
+    pattern_name: "DESPERATION_DISCOVERY_MINDSET",
+    reason: "Pedir oportunidades, favores o decir que buscan que alguien les descubra y les lleve la carrera desde cero.",
+    example_text: "Agradeceríamos enormemente que nos dierais una pequeña oportunidad para tocar en vuestra sala y descubrirnos."
+  },
+  {
+    pattern_name: "UNEARNED_HYPE_SUPERLATIVES",
+    reason: "Usar adjetivos grandilocuentes sin métricas demostrables.",
+    example_text: "Ofrecemos una experiencia sónica absolutamente revolucionaria e inolvidable que transformará vuestro escenario."
+  }
+];
+
+export function checkNegativePatternSimilarity(text: string): { matchesNegative: boolean; reason?: string } {
+  const t = text.toLowerCase();
+  if (/(juan al|pedro al|carlos a la|miguel al|guitarra y voz.*bajo.*bater)/i.test(t)) {
+    return { matchesNegative: true, reason: "Detectado patrón negativo de Personnel Bio (enumeración de músicos)." };
+  }
+  if (/(adjunto.*pdf|adjuntamos.*zip|descarga el archivo|adjunto los audios)/i.test(t)) {
+    return { matchesNegative: true, reason: "Detectado patrón negativo de promesa de adjuntos pesados (Spam filter trigger)." };
+  }
+  if (/(agradeceríamos.*oportunidad|si tuvierais a bien|descubrirnos|empezar desde cero)/i.test(t)) {
+    return { matchesNegative: true, reason: "Detectado patrón negativo de tono rogante/amateur." };
+  }
+  return { matchesNegative: false };
 }

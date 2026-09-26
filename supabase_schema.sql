@@ -453,6 +453,7 @@ CREATE TABLE IF NOT EXISTS autonomy_configs (
     -- aprobación humana en sí (server/services/agentEngine.ts) - y solo tiene efecto si además
     -- el servidor entero tiene AGENT_EMAIL_MODE=send (si no, siempre se queda en borrador).
     dispatch_mode TEXT DEFAULT 'draft_gmail',
+    mark_as_read_in_inbox BOOLEAN DEFAULT FALSE,
     agent_sender_email TEXT,
     agent_sender_name TEXT,
     agent_reply_to_email TEXT,
@@ -1088,3 +1089,90 @@ END $$;
 
 
 
+
+
+-- ==============================================================================
+-- MIGRACIÓN PGVECTOR + RAG HÍBRIDO (METADATOS JSONB + HNSW) PARA BANDMANAGER.IO
+-- ==============================================================================
+
+-- 1. Habilitar la extensión de vectores si no está activa
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 2. Tabla de almacenamiento vectorial multi-tenant
+CREATE TABLE IF NOT EXISTS pitch_vector_store (
+    id TEXT PRIMARY KEY,
+    band_id TEXT NOT NULL REFERENCES bands(id) ON DELETE CASCADE,
+    lead_id TEXT REFERENCES leads(id) ON DELETE SET NULL,
+    nombre_sala TEXT NOT NULL,
+    tipo_entidad TEXT NOT NULL DEFAULT 'sala',
+    ciudad TEXT,
+    genero_musical TEXT,
+    texto_pitch TEXT NOT NULL,
+    embedding vector(768),
+    resultado_respuesta TEXT DEFAULT 'pendiente',
+    conversion_score NUMERIC DEFAULT 0.5,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Índices de alta velocidad: HNSW para distancia coseno + GIN para metadatos JSONB
+CREATE INDEX IF NOT EXISTS idx_pitch_vector_store_hnsw 
+ON pitch_vector_store USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+
+CREATE INDEX IF NOT EXISTS idx_pitch_vector_store_metadata_gin 
+ON pitch_vector_store USING gin (metadata);
+
+CREATE INDEX IF NOT EXISTS idx_pitch_vector_store_band_id 
+ON pitch_vector_store(band_id);
+
+-- 4. Función RPC de recuperación híbrida (Similitud Coseno + Filtro Multi-Tenant + Filtros JSONB)
+CREATE OR REPLACE FUNCTION match_pitch_embeddings(
+    query_embedding vector(768),
+    match_threshold float DEFAULT 0.55,
+    match_count int DEFAULT 3,
+    filter_band_id text DEFAULT NULL,
+    filter_category text DEFAULT NULL,
+    filter_stage text DEFAULT NULL,
+    filter_risk_category text DEFAULT NULL
+)
+RETURNS TABLE (
+    id text,
+    band_id text,
+    nombre_sala text,
+    tipo_entidad text,
+    ciudad text,
+    texto_pitch text,
+    resultado_respuesta text,
+    conversion_score numeric,
+    metadata jsonb,
+    similarity float
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        pvs.id,
+        pvs.band_id,
+        pvs.nombre_sala,
+        pvs.tipo_entidad,
+        pvs.ciudad,
+        pvs.texto_pitch,
+        pvs.resultado_respuesta,
+        pvs.conversion_score,
+        pvs.metadata,
+        1 - (pvs.embedding <=> query_embedding) AS similarity
+    FROM pitch_vector_store pvs
+    WHERE
+        (filter_band_id IS NULL OR pvs.band_id = filter_band_id)
+        AND (filter_category IS NULL OR pvs.tipo_entidad ILIKE % || filter_category || %)
+        AND (filter_stage IS NULL OR pvs.metadata->>stage = filter_stage)
+        AND (filter_risk_category IS NULL OR pvs.metadata->>risk_category = filter_risk_category)
+        AND (1 - (pvs.embedding <=> query_embedding)) >= match_threshold
+    ORDER BY pvs.embedding <=> query_embedding
+    LIMIT match_count;
+END;
+$$;

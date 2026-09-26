@@ -16,12 +16,22 @@ export interface BandDnaProfile {
   instrumentacion: string;
   reglaDeOroInstrumentos: string;
   duracionDirecto: string;
+  tieneMerchandising: boolean;
+  detallesMerchandising: string;
+  tieneTecnicoSonidoPropio: boolean;
+  transportePropio: boolean;
+  hospedajeRequerido: boolean;
   // Puesta en escena y energía
   energiaDirecto: string;
   puntosFuertesDirecto: string[];
   // Logística y técnica
   montajeRapido: string;
   riderResumen: string;
+  tipoMonitoreo: string;
+  backlinePropio: string;
+  microfoniaPropia: boolean;
+  canalesMinimos: number;
+  tiempoPruebaMinutos: number;
   riderPdfUrl?: string;
   // Modelo económico y contratación
   flexibilidadEconomica: string;
@@ -167,6 +177,14 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
 
   const reglaDeOroInstrumentos = "Respetar fielmente la instrumentación declarada por la banda. No inventar ni asumir instrumentos no especificados.";
 
+    // Operativa real de gira (Anti-alucinaciones del agente)
+  const tieneMerchandising = bandConfig?.datosContratacion?.tieneMerchandising === true;
+  const detallesMerchandising = bandConfig?.datosContratacion?.detallesMerchandising || (tieneMerchandising ? 'Puesto de merch propio (camisetas/físico)' : 'Sin merchandising físico disponible actualmente');
+  const tieneTecnicoSonidoPropio = bandConfig?.datosContratacion?.tieneTecnicoSonidoPropio === true;
+  const transportePropio = bandConfig?.datosContratacion?.transportePropio === true;
+  const hospedajeRequerido = bandConfig?.datosContratacion?.hospedajeRequerido === true;
+  const modoFacturacion = bandConfig?.datosContratacion?.facturacion || 'Cooperativa / Facturación estándar';
+
   const duracionDirecto = bandConfig?.datosContratacion?.duracionDirecto || "75 a 90 minutos de show continuo sin pausas";
 
   // Puesta en escena y energía
@@ -184,6 +202,12 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   // Logística y rider
   const montajeRapido = "30 a 45 minutos (setup ágil y linetime reducido, ideal para cambios de set rápidos o dobles carteles)";
   const riderResumen = bandConfig?.riderTecnico || "Rider estándar adaptado al aforo.";
+  const riderConfig = bandConfig?.riderConfig || {};
+  const tipoMonitoreo = riderConfig.tipoMonitoreo === 'in_ear' ? 'In-Ears propios (IEM inalámbrico)' : (riderConfig.tipoMonitoreo === 'cuñas_escenario' ? 'Cuñas de escenario estándar' : (riderConfig.tipoMonitoreo === 'mixto' ? 'Mixto (In-Ears + Cuñas)' : 'Adaptable a lo disponible en la sala'));
+  const backlinePropio = riderConfig.backlinePropio === 'sin_backline' ? 'Requiere backline completo de la sala/otra banda' : (riderConfig.backlinePropio === 'parcial' ? 'Backline parcial (llevan instrumentos y piden amplis/batería)' : 'Backline completo propio disponible');
+  const microfoniaPropia = riderConfig.microfoniaPropia === true;
+  const canalesMinimos = riderConfig.canalesMinimos || 12;
+  const tiempoPruebaMinutos = riderConfig.tiempoPruebaMinutos || 30;
 
   const riderPdfUrl = bandConfig?.riderPdfUrl || undefined;
 
@@ -336,10 +360,20 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     instrumentacion,
     reglaDeOroInstrumentos,
     duracionDirecto,
+    tieneMerchandising,
+    detallesMerchandising,
+    tieneTecnicoSonidoPropio,
+    transportePropio,
+    hospedajeRequerido,
     energiaDirecto,
     puntosFuertesDirecto,
     montajeRapido,
     riderResumen,
+    tipoMonitoreo,
+    backlinePropio,
+    microfoniaPropia,
+    canalesMinimos,
+    tiempoPruebaMinutos,
     riderPdfUrl,
     flexibilidadEconomica,
     propuestaCoBooking,
@@ -459,6 +493,9 @@ ${campaignSection}
    - Concepto artístico: ${bandDna.biografia}
    ${bandDna.artistasReferencia ? `- Artistas de referencia / Sonido afín: ${bandDna.artistasReferencia}` : ""}
    - Formato escénico: ${bandDna.formato}
+- Técnico de sonido: ${bandDna.tieneTecnicoSonidoPropio ? "Viajan con TÉCNICO DE SONIDO PROPIO." : "TOCAN CON EL TÉCNICO DE LA SALA (no llevan técnico propio)."}
+- Merchandising: ${bandDna.tieneMerchandising ? "Disponen de merchandising: " + bandDna.detallesMerchandising : "NO DISPONEN DE MERCHANDISING (Prohibido asumir venta de merch)."}
+- Logística: ${bandDna.transportePropio ? "Furgoneta/vehículo propio." : "Transporte adaptable."} | ${bandDna.hospedajeRequerido ? "Requiere alojamiento para bolos lejos." : "Sin alojamiento obligatorio."}
    - ${bandDna.reglaDeOroInstrumentos}
    - Presencia oficial y plataformas verificadas:
      * Audio & Streaming: ${[
@@ -646,6 +683,13 @@ NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas ex
      * PARA DISCOTECAS / CLUBS NOCTURNOS: Enfatiza el formato Live Set bailable y la energía de club.
      * PARA FUNDACIONES, TEATROS, AUDITORIOS Y CENTROS CULTURALES: ¡PROHIBIDO hablar de dinamizar barras o copas! Enfócate en la calidad artística, la calidez orgánica del sonido y el respeto a la acústica y al público del espacio. CERO listas de instrumentos.
      * CERO DETALLES OPERATIVOS O DE TIEMPOS (montajes, desmontajes, minutos, riders, fórmulas de taquilla/caché): En este primer contacto céntrate exclusivamente en la música, la afinidad con el espacio y las ganas de colaborar.
+    - ESTRATEGIA DE CO-BOOKING Y DOBLE CARTEL LOCAL (MITIGACIÓN DE RIESGO DE TAQUILLA):
+      * Al proponer fechas fuera de la ciudad base de la banda, menciona de forma natural la disposición a compartir fecha con una banda local afín ("Si preferís cuadrar un cartel doble con alguna banda local de la zona para sumar públicos y asegurar buena entrada, nos adaptamos encantados").
+      * Esto neutraliza el mayor freno del programador: el riesgo de taquilla y barra en artistas foráneos.
+    - ANCLAJE EN TEASER DE ALTA ENERGÍA (REGLA DE LOS 30 SEGUNDOS):
+      * Toda referencia audiovisual remite al teaser directo de 30-45s del dossier interactivo en la firma donde se aprecia la respuesta real del público. Cero enlaces a conciertos enteros.
+    - LLAMADA A LA ACCIÓN (CTA) DE ULTRA-BAJA FRICCIÓN:
+      * Haz una pregunta directa y sin compromiso que se responda en 5 segundos desde el móvil (ej: "¿Cómo tenéis la agenda para esos meses o tenéis la cartelera ya cerrada?", "¿Os cuadraría valorar un par de opciones de fechas para esa ventana?"). Cero preguntas densas ni peticiones formales de presupuesto en el primer contacto.
    - PASO 3 — INTERÉS POR SU PROGRAMACIÓN Y LLAMADA A LA ACCIÓN (CTA) CERCANA:
      * Interésate con humildad y curiosidad por su criterio: "¿Cómo tenéis enfocada la programación para el próximo trimestre o encajaría una propuesta así en vuestros ciclos?". Una pregunta simple y directa que el programador pueda responder en 5 segundos.
    - CADENCIA Y SEGUIMIENTO SEGÚN ETAPA DE CONTACTO (3 TOQUES):
@@ -800,7 +844,10 @@ Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}"
 ═════════════════════════════════════════════════════════════════════
 - Género / Fusión: ${bandDna.genero}
 - Concepto artístico: ${bandDna.biografia}
-${bandDna.artistasReferencia ? `- Artistas de referencia / Sonido afín: ${bandDna.artistasReferencia}\n` : ""}- Formato escénico: ${bandDna.formato} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
+${bandDna.artistasReferencia ? `- Artistas de referencia / Sonido afín: ${bandDna.artistasReferencia}\n` : ""}- Formato escénico: ${bandDna.formato}
+- Técnico de sonido: ${bandDna.tieneTecnicoSonidoPropio ? "Viajan con TÉCNICO DE SONIDO PROPIO." : "TOCAN CON EL TÉCNICO DE LA SALA (no llevan técnico propio)."}
+- Merchandising: ${bandDna.tieneMerchandising ? "Disponen de merchandising: " + bandDna.detallesMerchandising : "NO DISPONEN DE MERCHANDISING (Prohibido asumir venta de merch)."}
+- Logística: ${bandDna.transportePropio ? "Furgoneta/vehículo propio." : "Transporte adaptable."} | ${bandDna.hospedajeRequerido ? "Requiere alojamiento para bolos lejos." : "Sin alojamiento obligatorio."} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
 - Modelo económico: ${bandDna.flexibilidadEconomica}
 - Co-booking: ${bandDna.propuestaCoBooking}
 ${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `

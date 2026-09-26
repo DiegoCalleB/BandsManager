@@ -552,7 +552,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(band.band_id, e)}
                   onClick={() => !switchingBandId && !isSettingMain && !isLeavingThis && handleSelectBand(band.band_id)}
-                  className={`group relative flex flex-col items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none ${
+                  className={`group relative flex flex-col items-center justify-between p-3 sm:p-5 rounded-2xl border overflow-hidden transition-all duration-300 cursor-pointer select-none ${
                     isDragged ? 'opacity-30 scale-95 border-dashed border-amber-500' : ''
                   } ${
                     isActive
@@ -561,7 +561,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   } ${switchingBandId && !isSwitching ? 'opacity-40 grayscale pointer-events-none' : ''}`}
                 >
                   {/* Top Bar on Card: Star (Principal) + Reorder arrows on left, Delete Trash on top-right */}
-                  <div className="w-full flex items-center justify-between z-20 mb-1">
+                  <div className="w-full flex items-center justify-between gap-1 z-20 mb-1 shrink-0">
                     {/* Left: Star (Principal) + Reorder arrows */}
                     <div className="flex items-center gap-1">
                       {/* Star Button (Principal) */}
@@ -580,7 +580,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       </button>
 
                       {/* Quick Reorder (left/right) */}
-                      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="hidden sm:flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                         {array.length > 1 && (
                           <>
                             <button
@@ -607,7 +607,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
 
                     {/* Top Right: Manage Team (Gear) + Delete Button (Trash) */}
-                    <div className="flex items-center gap-1 z-30">
+                    <div className="flex items-center gap-0.5 sm:gap-1 z-30 shrink-0">
                       {onOpenBandManagement && (
                         <button
                           type="button"
@@ -620,7 +620,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             onClose();
                             onOpenBandManagement(band.band_id);
                           }}
-                          className="p-1.5 rounded-lg text-neutral-400 hover:text-amber-300 bg-black/60 hover:bg-neutral-800 border border-neutral-700/80 hover:border-amber-500/60 transition-all cursor-pointer shadow-xs"
+                          className="p-1 sm:p-1.5 rounded-lg text-neutral-400 hover:text-amber-300 bg-black/60 hover:bg-neutral-800 border border-neutral-700/80 hover:border-amber-500/60 transition-all cursor-pointer shadow-xs"
                           title="Gestionar músicos e integrantes"
                         >
                           <Settings className="w-3.5 h-3.5" />
@@ -635,7 +635,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           handleRequestLeaveBand(band.band_id, band.bandName);
                         }}
                         disabled={!!leavingBandId}
-                        className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-400 bg-black/60 hover:bg-rose-950/40 border border-neutral-700/80 hover:border-rose-500/50 transition-all cursor-pointer"
+                        className="p-1 sm:p-1.5 rounded-lg text-neutral-400 hover:text-rose-400 bg-black/60 hover:bg-rose-950/40 border border-neutral-700/80 hover:border-rose-500/50 transition-all cursor-pointer"
                         title="Eliminar esta banda de mi usuario"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

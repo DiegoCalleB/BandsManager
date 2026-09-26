@@ -21,7 +21,7 @@ import {
   dbCleanCorruptedLeadFields,
   invalidateBandStateCache
 } from "../db.js";
-import { sendTransactionalEmail, sendWelcomeEmail, getProductionAppUrl } from "../services/transactionalEmail.js";
+import { sendTransactionalEmail, sendWelcomeEmail, sendPasswordResetEmail, sendMemberInvitationEmail, getProductionAppUrl } from "../services/transactionalEmail.js";
 
 // Run asynchronous migration & cleanup checks on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
@@ -1194,26 +1194,7 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
   }
 
   console.log(`[Password Reset] Enviando código de reseteo (${code}) a ${targetEmail}...`);
-  const emailRes = await sendTransactionalEmail({
-    to: targetEmail,
-    subject: `Tu código de recuperación de contraseña: ${code}`,
-    html: `
-      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:12px; max-width:600px; margin:auto; border:1px solid #27272a;">
-        <div style="text-align:center; margin-bottom:24px;">
-          <h1 style="color:#ffffff; font-size:22px; margin:0;">BandManager<span style="color:#f2ca50;">.io</span></h1>
-        </div>
-        <h2 style="margin:0 0 16px 0; color:#f2ca50; font-size:18px;">Recuperación de contraseña</h2>
-        <p style="color:#d4d4d8; font-size:14px; line-height:1.6;">Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en BandManager.</p>
-        <p style="color:#d4d4d8; font-size:14px;">Introduce este código de verificación de 6 dígitos en la aplicación (caduca en 15 minutos):</p>
-        <div style="font-size:36px; font-weight:800; letter-spacing:8px; background:#18181b; border:2px solid #f2ca50; border-radius:12px; padding:20px; text-align:center; color:#f2ca50; margin:24px 0; font-family:monospace;">
-          ${code}
-        </div>
-        <p style="font-size:12px; color:#71717a; margin-top:24px; border-top:1px solid #27272a; padding-top:16px;">
-          Si tú no has solicitado este cambio de contraseña, puedes ignorar este correo de forma segura. Tu contraseña no cambiará hasta que introduzcas el código.
-        </p>
-      </div>
-    `
-  });
+  const emailRes = await sendPasswordResetEmail(targetEmail, code);
 
   if (!emailRes.success) {
     console.error(`[Password Reset] ERROR: No se pudo enviar el email a ${targetEmail}:`, emailRes.error);
@@ -2286,23 +2267,12 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
     const appUrl = getProductionAppUrl(process.env.APP_URL);
     const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === targetBandId || b.id === targetBandId);
     const bName = bandInfo?.nombre_banda || "tu banda";
-    sendTransactionalEmail({
-      to: cleanEmail,
-      subject: `🎸 ¡Has sido invitado a unirte a ${bName} en BandManager.io!`,
-      html: `
-        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:16px; max-width:600px; margin:auto; border:1px solid rgba(242, 202, 80, 0.35);">
-          <div style="text-align:center; margin-bottom:20px;">
-            <h1 style="color:#ffffff; font-size:24px; margin:0;">BandManager<span style="color:#f2ca50;">.io</span></h1>
-          </div>
-          <h2 style="margin:0 0 16px 0; color:#f2ca50;">¡Hola, ${name.trim()}! 👋</h2>
-          <p>Has sido agregado como músico (${instrument ? instrument.trim() : "Músico"}) a la banda <strong>${bName}</strong> en BandManager.io.</p>
-          <p>Para activar tu cuenta y acceder a los repertorios, letras, ensayos y calendarios de la banda, entra en:</p>
-          <div style="text-align:center; margin:28px 0;">
-            <a href="${appUrl}" style="background:linear-gradient(135deg, #f2ca50 0%, #eab308 100%); color:#09090b; padding:14px 28px; text-decoration:none; border-radius:10px; font-weight:800; display:inline-block; box-shadow:0 8px 24px rgba(242, 202, 80, 0.3);">Activar mi Cuenta</a>
-          </div>
-          <p style="font-size:13px; color:#a1a1aa; border-top:1px solid #27272a; padding-top:14px;">Tu usuario asignado es: <strong style="color:#f2ca50;">${cleanUsername}</strong></p>
-        </div>
-      `
+    sendMemberInvitationEmail({
+      toEmail: cleanEmail,
+      memberName: name.trim(),
+      bandName: bName,
+      instrument: instrument ? instrument.trim() : undefined,
+      username: cleanUsername,
     }).catch(err => {
       console.error(`[Miembros] Error enviando email de invitación a ${cleanEmail}:`, err?.message || err);
     });

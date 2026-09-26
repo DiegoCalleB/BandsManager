@@ -1449,6 +1449,10 @@ export default function BookingCRM({
              <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
              <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
              <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
+            <option value="agencia">💼 Agencias ({sectionLeads.filter(l => normalizeType(l.tipo) === 'agencia' || normalizeType(l.tipo) === 'manager').length})</option>
+            <option value="sello">💿 Sellos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sello').length})</option>
+            <option value="productora">🎛️ Productores ({sectionLeads.filter(l => normalizeType(l.tipo) === 'productora' || normalizeType(l.tipo) === 'productor').length})</option>
+            <option value="grupo">🎸 Bandas Amigas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'grupo').length})</option>
            </>
          )}
        </select>
@@ -1721,6 +1725,10 @@ export default function BookingCRM({
                 <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
                 <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
                 <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
+            <option value="agencia">💼 Agencias ({sectionLeads.filter(l => normalizeType(l.tipo) === 'agencia' || normalizeType(l.tipo) === 'manager').length})</option>
+            <option value="sello">💿 Sellos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sello').length})</option>
+            <option value="productora">🎛️ Productores ({sectionLeads.filter(l => normalizeType(l.tipo) === 'productora' || normalizeType(l.tipo) === 'productor').length})</option>
+            <option value="grupo">🎸 Bandas Amigas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'grupo').length})</option>
               </>
             )}
           </select>
