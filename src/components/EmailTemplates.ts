@@ -1,7 +1,7 @@
 export const EMAIL_TEMPLATES = {
- sala: {
- subject: 'Propuesta de concierto 2026: {bandName} en {{nombre_sala}}',
- body: `Hola equipo de booking de {{nombre_sala}},
+  sala: {
+    subject: 'Propuesta de concierto 2026: {bandName} en {{nombre_sala}}',
+    body: `Hola equipo de booking de {{nombre_sala}},
 
 Nos dirigimos a vosotros desde {bandName}, proyecto independiente de música en directo ({estilo}).
 
@@ -15,11 +15,11 @@ Puntos clave:
 ¿Tenéis disponibilidad en los próximos meses para valorar una fecha?
 
 Un saludo cordial,
-{bandName} Agent Manager IA`
- },
- festival: {
- subject: 'Propuesta de cartel / contratación 2026: {bandName} (Live Set)',
- body: `Estimada organización de {{nombre_sala}},
+{bandName} Agent Manager IA`,
+  },
+  festival: {
+    subject: 'Propuesta de cartel / contratación 2026: {bandName} (Live Set)',
+    body: `Estimada organización de {{nombre_sala}},
 
 Escribimos en representación de {bandName} para presentar nuestra propuesta artística ({estilo}) de cara a la próxima edición de vuestro festival.
 
@@ -33,11 +33,11 @@ Ventajas técnicas y de producción:
 Estaríamos encantados de enviaros rider técnico detallado y propuesta económica.
 
 Atentamente,
-{bandName} Agent Manager IA`
- },
- discoteca: {
- subject: 'Propuesta Live Set nocturno: {bandName} en {{nombre_sala}}',
- body: `Hola equipo de programación de {{nombre_sala}},
+{bandName} Agent Manager IA`,
+  },
+  discoteca: {
+    subject: 'Propuesta Live Set nocturno: {bandName} en {{nombre_sala}}',
+    body: `Hola equipo de programación de {{nombre_sala}},
 
 Os escribimos desde {bandName} para presentar nuestro formato especial de **Live Set nocturno** ({estilo}), diseñado específicamente para la sesión de madrugada en discotecas y clubs.
 
@@ -48,11 +48,12 @@ Dossier y vídeos en directo: {enlace_videos}
 ¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha?
 
 Saludos cordiales,
-{bandName} Agent Manager IA`
- },
- medio: {
- subject: '[Nota de Prensa / Dossier] {bandName} presenta su gira 2026 y nuevos lanzamientos',
- body: `Hola equipo de redacción de {{nombre_sala}},
+{bandName} Agent Manager IA`,
+  },
+  medio: {
+    subject:
+      '[Nota de Prensa / Dossier] {bandName} presenta su gira 2026 y nuevos lanzamientos',
+    body: `Hola equipo de redacción de {{nombre_sala}},
 
 Nos ponemos en contacto desde {bandName} ({estilo}) para haceros llegar nuestro dossier promocional y últimos lanzamientos con motivo de nuestra gira 2026.
 
@@ -63,11 +64,12 @@ Nos ponemos a vuestra total disposición para:
 Dossier EPK interactivo y videoclips: {enlace_videos}
 
 Muchas gracias por vuestro apoyo a la música independiente en directo,
-{bandName} Comunicación & Prensa`
- },
- grupo: {
- subject: 'Propuesta de concierto compartido e intercambio de fechas (Date Swap): {bandName} x {{nombre_sala}}',
- body: `¡Buenas chavales de {{nombre_sala}}! 🎸🔥
+{bandName} Comunicación & Prensa`,
+  },
+  grupo: {
+    subject:
+      'Propuesta de concierto compartido e intercambio de fechas (Date Swap): {bandName} x {{nombre_sala}}',
+    body: `¡Buenas chavales de {{nombre_sala}}! 🎸🔥
 
 Os escribimos desde {bandName} ({estilo}). Nos mola mucho vuestro proyecto y creemos que nuestros directos conectarían genial en una fecha compartida.
 
@@ -80,6 +82,6 @@ Podéis escuchar lo que hacemos aquí: {enlace_videos}
 ¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos una breve llamada?
 
 ¡Un fuerte abrazo!
-{bandName}`
- }
+{bandName}`,
+  },
 };

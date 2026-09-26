@@ -1,16 +1,20 @@
-import { getSupabase, cleanBandId } from "./core.js";
-import { ensureRegisteredBandExists } from "./bands.js";
+import { getSupabase, cleanBandId } from './core.js';
+import { ensureRegisteredBandExists } from './bands.js';
 
 // Los tipos válidos de respuesta y tono son responsabilidad de
 // server/routes/bands/responseStrategies.ts (VALID_RESPONSE_TYPES/VALID_TONES) - esta interfaz
 // solo describe la forma que devuelve/acepta la capa de datos, no valida nada por su cuenta.
 // Antes tenía un "conditional" en responseType que la validación real del endpoint nunca aceptó.
 export interface ResponseStrategy {
-  responseType: "price_negotiation" | "confirmation" | "rejection" | "follow_up";
+  responseType:
+    | 'price_negotiation'
+    | 'confirmation'
+    | 'rejection'
+    | 'follow_up';
   guidancePrompt?: string;
   autoRespond?: boolean;
   mentionLinks?: boolean;
-  tone?: "neutral" | "enthusiastic" | "cautious";
+  tone?: 'neutral' | 'enthusiastic' | 'cautious';
 }
 
 export interface AutonomyConfig {
@@ -46,25 +50,33 @@ export interface AutonomyConfig {
   };
 }
 
-export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfig | null> {
+export async function dbGetAutonomyConfig(
+  bandId: string
+): Promise<AutonomyConfig | null> {
   const sb = getSupabase();
   const { data, error } = await sb
-    .from("autonomy_configs")
-    .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .from('autonomy_configs')
+    .select('*')
+    .eq('band_id', cleanBandId(bandId))
     .maybeSingle();
 
-  if (error) throw new Error(`Supabase Error (autonomy_configs): ${error.message}`);
+  if (error)
+    throw new Error(`Supabase Error (autonomy_configs): ${error.message}`);
   if (!data) return null;
 
   let minCacheByType: any = {};
   const rawMinCache = data.min_cache_by_type;
-  if (rawMinCache && typeof rawMinCache === "object" && !Array.isArray(rawMinCache)) {
+  if (
+    rawMinCache &&
+    typeof rawMinCache === 'object' &&
+    !Array.isArray(rawMinCache)
+  ) {
     minCacheByType = rawMinCache;
-  } else if (typeof rawMinCache === "string" && rawMinCache) {
+  } else if (typeof rawMinCache === 'string' && rawMinCache) {
     try {
       const parsed = JSON.parse(rawMinCache);
-      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) minCacheByType = parsed;
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed))
+        minCacheByType = parsed;
     } catch {
       // Ignora JSON malformado
     }
@@ -72,12 +84,20 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
 
   let negotiationStartCacheByType: any = {};
   const rawNegotiationStartCache = data.negotiation_start_cache_by_type;
-  if (rawNegotiationStartCache && typeof rawNegotiationStartCache === "object" && !Array.isArray(rawNegotiationStartCache)) {
+  if (
+    rawNegotiationStartCache &&
+    typeof rawNegotiationStartCache === 'object' &&
+    !Array.isArray(rawNegotiationStartCache)
+  ) {
     negotiationStartCacheByType = rawNegotiationStartCache;
-  } else if (typeof rawNegotiationStartCache === "string" && rawNegotiationStartCache) {
+  } else if (
+    typeof rawNegotiationStartCache === 'string' &&
+    rawNegotiationStartCache
+  ) {
     try {
       const parsed = JSON.parse(rawNegotiationStartCache);
-      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) negotiationStartCacheByType = parsed;
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed))
+        negotiationStartCacheByType = parsed;
     } catch {
       // Ignora JSON malformado
     }
@@ -94,8 +114,12 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
     agentSenderName: data.agent_sender_name || undefined,
     agentReplyToEmail: data.agent_reply_to_email || undefined,
     responseStrategies: data.response_strategies || {},
-    minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
-    negotiationStartCacheByType: Object.keys(negotiationStartCacheByType).length > 0 ? negotiationStartCacheByType : undefined
+    minCacheByType:
+      Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
+    negotiationStartCacheByType:
+      Object.keys(negotiationStartCacheByType).length > 0
+        ? negotiationStartCacheByType
+        : undefined,
   };
 }
 
@@ -106,57 +130,101 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
 
   const payload: any = {
     band_id: targetBandId,
-    dispatch_level: config.dispatchLevel || config.dispatch_level || "draft_only",
-    negotiation_depth: config.negotiationDepth || config.negotiation_depth || "filter_conditions",
-    auto_decline_under_min_cache: Boolean(config.autoDeclineUnderMinCache ?? config.auto_decline_under_min_cache),
-    notify_on_every_proposal: Boolean(config.notifyOnEveryProposal ?? config.notify_on_every_proposal ?? true),
-    require_human_for_final_sign_off: Boolean(config.requireHumanForFinalSignOff ?? config.require_human_for_final_sign_off ?? true),
-    dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail",
+    dispatch_level:
+      config.dispatchLevel || config.dispatch_level || 'draft_only',
+    negotiation_depth:
+      config.negotiationDepth ||
+      config.negotiation_depth ||
+      'filter_conditions',
+    auto_decline_under_min_cache: Boolean(
+      config.autoDeclineUnderMinCache ?? config.auto_decline_under_min_cache
+    ),
+    notify_on_every_proposal: Boolean(
+      config.notifyOnEveryProposal ?? config.notify_on_every_proposal ?? true
+    ),
+    require_human_for_final_sign_off: Boolean(
+      config.requireHumanForFinalSignOff ??
+      config.require_human_for_final_sign_off ??
+      true
+    ),
+    dispatch_mode:
+      (config.dispatchMode || config.dispatch_mode) === 'direct_send'
+        ? 'direct_send'
+        : 'draft_gmail',
     // Como min_cache_by_type/negotiation_start_cache_by_type abajo: si el caller no manda este
- // campo, se deja `undefined` (Supabase omite la columna del UPDATE, preservando lo que
- // hubiera) en vez de {}. Antes caía a {} — el botón general "Guardar" del panel de
- // Autonomía nunca incluye responseStrategies en su payload (vive en su propio estado y se
- // guarda por un botón aparte, "Guardar estrategias"), así que pulsar "Guardar" borraba en
- // silencio TODAS las estrategias de respuesta condicionales configuradas en la otra
- // pestaña. Mismo mecanismo que el bug ya arreglado de `miembros` en epk.ts, pero disparado
- // por el flujo normal de guardado, no por un caso especial como el onboarding.
- response_strategies: (config.responseStrategies && typeof config.responseStrategies ==="object")
- ? config.responseStrategies
- : (config.response_strategies && typeof config.response_strategies ==="object")
- ? config.response_strategies
- : undefined,
-    min_cache_by_type: (config.minCacheByType && typeof config.minCacheByType === "object")
-      ? config.minCacheByType
-      : undefined,
-    negotiation_start_cache_by_type: (config.negotiationStartCacheByType && typeof config.negotiationStartCacheByType === "object")
-      ? config.negotiationStartCacheByType
-      : undefined,
-    agent_sender_email: config.agentSenderEmail || config.agent_sender_email || undefined,
-    agent_sender_name: config.agentSenderName || config.agent_sender_name || undefined,
-    agent_reply_to_email: config.agentReplyToEmail || config.agent_reply_to_email || undefined
+    // campo, se deja `undefined` (Supabase omite la columna del UPDATE, preservando lo que
+    // hubiera) en vez de {}. Antes caía a {} — el botón general "Guardar" del panel de
+    // Autonomía nunca incluye responseStrategies en su payload (vive en su propio estado y se
+    // guarda por un botón aparte, "Guardar estrategias"), así que pulsar "Guardar" borraba en
+    // silencio TODAS las estrategias de respuesta condicionales configuradas en la otra
+    // pestaña. Mismo mecanismo que el bug ya arreglado de `miembros` en epk.ts, pero disparado
+    // por el flujo normal de guardado, no por un caso especial como el onboarding.
+    response_strategies:
+      config.responseStrategies && typeof config.responseStrategies === 'object'
+        ? config.responseStrategies
+        : config.response_strategies &&
+            typeof config.response_strategies === 'object'
+          ? config.response_strategies
+          : undefined,
+    min_cache_by_type:
+      config.minCacheByType && typeof config.minCacheByType === 'object'
+        ? config.minCacheByType
+        : undefined,
+    negotiation_start_cache_by_type:
+      config.negotiationStartCacheByType &&
+      typeof config.negotiationStartCacheByType === 'object'
+        ? config.negotiationStartCacheByType
+        : undefined,
+    agent_sender_email:
+      config.agentSenderEmail || config.agent_sender_email || undefined,
+    agent_sender_name:
+      config.agentSenderName || config.agent_sender_name || undefined,
+    agent_reply_to_email:
+      config.agentReplyToEmail || config.agent_reply_to_email || undefined,
   };
 
   try {
-    const { data, error } = await sb.from("autonomy_configs").upsert(payload).select().single();
+    const { data, error } = await sb
+      .from('autonomy_configs')
+      .upsert(payload)
+      .select()
+      .single();
     if (error) {
       // Si la tabla en Supabase no tiene aún las nuevas columnas de sender email, reintentar sin ellas
-      if (error.message?.includes("agent_sender_") || error.code === "PGRST204" || error.message?.includes("column")) {
+      if (
+        error.message?.includes('agent_sender_') ||
+        error.code === 'PGRST204' ||
+        error.message?.includes('column')
+      ) {
         delete payload.agent_sender_email;
         delete payload.agent_sender_name;
         delete payload.agent_reply_to_email;
-        const { data: retryData, error: retryErr } = await sb.from("autonomy_configs").upsert(payload).select().single();
-        if (retryErr) throw new Error(`Supabase Error (upsert autonomy_configs): ${retryErr.message}`);
+        const { data: retryData, error: retryErr } = await sb
+          .from('autonomy_configs')
+          .upsert(payload)
+          .select()
+          .single();
+        if (retryErr)
+          throw new Error(
+            `Supabase Error (upsert autonomy_configs): ${retryErr.message}`
+          );
         return retryData;
       }
-      throw new Error(`Supabase Error (upsert autonomy_configs): ${error.message}`);
+      throw new Error(
+        `Supabase Error (upsert autonomy_configs): ${error.message}`
+      );
     }
     return data;
   } catch (err: any) {
-    if (err.message?.includes("agent_sender_")) {
+    if (err.message?.includes('agent_sender_')) {
       delete payload.agent_sender_email;
       delete payload.agent_sender_name;
       delete payload.agent_reply_to_email;
-      const { data: retryData } = await sb.from("autonomy_configs").upsert(payload).select().single();
+      const { data: retryData } = await sb
+        .from('autonomy_configs')
+        .upsert(payload)
+        .select()
+        .single();
       return retryData;
     }
     throw err;

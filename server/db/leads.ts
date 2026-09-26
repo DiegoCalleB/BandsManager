@@ -1,12 +1,12 @@
-import { getSupabase, cleanBandId } from "./core.js";
-import { ensureRegisteredBandExists } from "./bands.js";
+import { getSupabase, cleanBandId } from './core.js';
+import { ensureRegisteredBandExists } from './bands.js';
 
 export function sanitizeWebsiteUrl(val: unknown): string {
   if (!val || typeof val !== 'string') return '';
   const str = val.trim();
   if (!str) return '';
   const lower = str.toLowerCase();
-  
+
   if (
     lower.startsWith('asunto:') ||
     lower.startsWith('re:') ||
@@ -23,7 +23,11 @@ export function sanitizeWebsiteUrl(val: unknown): string {
     return '';
   }
 
-  if (str.includes('\n') || str.includes('\r') || (str.includes( '') && !str.includes('http'))) {
+  if (
+    str.includes('\n') ||
+    str.includes('\r') ||
+    (str.includes('') && !str.includes('http'))
+  ) {
     return '';
   }
 
@@ -53,7 +57,7 @@ export function sanitizeInstagramHandle(val: unknown): string {
     return '';
   }
 
-  if (str.includes('\n') || str.includes('\r') || str.includes( '')) {
+  if (str.includes('\n') || str.includes('\r') || str.includes('')) {
     return '';
   }
 
@@ -64,8 +68,8 @@ export async function dbCleanCorruptedLeadFields(): Promise<number> {
   try {
     const sb = getSupabase();
     const { data: leads, error } = await sb
-      .from("leads")
-      .select("id, website, instagram");
+      .from('leads')
+      .select('id, website, instagram');
 
     if (error || !leads) return 0;
 
@@ -74,20 +78,28 @@ export async function dbCleanCorruptedLeadFields(): Promise<number> {
       const cleanWeb = sanitizeWebsiteUrl(lead.website);
       const cleanIg = sanitizeInstagramHandle(lead.instagram);
 
-      if (cleanWeb !== (lead.website || '') || cleanIg !== (lead.instagram || '')) {
-        await sb.from("leads").update({
-          website: cleanWeb,
-          instagram: cleanIg
-        }).eq("id", lead.id);
+      if (
+        cleanWeb !== (lead.website || '') ||
+        cleanIg !== (lead.instagram || '')
+      ) {
+        await sb
+          .from('leads')
+          .update({
+            website: cleanWeb,
+            instagram: cleanIg,
+          })
+          .eq('id', lead.id);
         cleanedCount++;
       }
     }
     if (cleanedCount > 0) {
-      console.log(`[DB Cleanup] Saneadas ${cleanedCount} filas con metadatos basura en website/instagram.`);
+      console.log(
+        `[DB Cleanup] Saneadas ${cleanedCount} filas con metadatos basura en website/instagram.`
+      );
     }
     return cleanedCount;
   } catch (err) {
-    console.error("Error in dbCleanCorruptedLeadFields:", err);
+    console.error('Error in dbCleanCorruptedLeadFields:', err);
     return 0;
   }
 }
@@ -99,7 +111,7 @@ export interface GetLeadsOptions {
   search?: string;
   ciudad?: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface PaginatedLeadsResult {
@@ -116,46 +128,53 @@ export async function dbGetLeads(bandId: string): Promise<any[]> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
-    .from("leads")
-    .select("*")
-    .eq("band_id", cleanId)
-    .order("nombre_sala", { ascending: true });
+    .from('leads')
+    .select('*')
+    .eq('band_id', cleanId)
+    .order('nombre_sala', { ascending: true });
 
   if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
   // Validation layer: guarantee strict band_id isolation
-  const validated = (data || []).filter(l => cleanBandId(l.band_id) === cleanId);
-  return validated.map(l => ({
+  const validated = (data || []).filter(
+    (l) => cleanBandId(l.band_id) === cleanId
+  );
+  return validated.map((l) => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || [],
-    hilo_emails: l.hilo_emails || []
+    hilo_emails: l.hilo_emails || [],
   }));
 }
 
-export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptions): Promise<PaginatedLeadsResult> {
+export async function dbGetLeadsPaginated(
+  bandId: string,
+  options: GetLeadsOptions
+): Promise<PaginatedLeadsResult> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
 
   let query = sb
-    .from("leads")
-    .select("*", { count: "exact" })
-    .eq("band_id", cleanId);
+    .from('leads')
+    .select('*', { count: 'exact' })
+    .eq('band_id', cleanId);
 
-  if (options?.estado && options.estado !== "todos") {
-    query = query.eq("estado", options.estado);
+  if (options?.estado && options.estado !== 'todos') {
+    query = query.eq('estado', options.estado);
   }
 
   if (options?.ciudad && options.ciudad.trim()) {
-    query = query.ilike("ciudad", `%${options.ciudad.trim()}%`);
+    query = query.ilike('ciudad', `%${options.ciudad.trim()}%`);
   }
 
   if (options?.search && options.search.trim()) {
     const term = `%${options.search.trim()}%`;
-    query = query.or(`nombre_sala.ilike.${term},ciudad.ilike.${term},email_contacto.ilike.${term},genero.ilike.${term}`);
+    query = query.or(
+      `nombre_sala.ilike.${term},ciudad.ilike.${term},email_contacto.ilike.${term},genero.ilike.${term}`
+    );
   }
 
-  const sortCol = options?.sortBy || "nombre_sala";
-  const ascending = options?.sortOrder ? options.sortOrder === "asc" : true;
+  const sortCol = options?.sortBy || 'nombre_sala';
+  const ascending = options?.sortOrder ? options.sortOrder === 'asc' : true;
   query = query.order(sortCol, { ascending });
 
   const page = options?.page || 1;
@@ -166,16 +185,19 @@ export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptio
 
   const { data, count, error } = await query;
 
-  if (error) throw new Error(`Supabase Error (leads paginated): ${error.message}`);
-  
-  // Validation layer: guarantee strict band_id isolation
-  const validated = (data || []).filter(l => cleanBandId(l.band_id) === cleanId);
+  if (error)
+    throw new Error(`Supabase Error (leads paginated): ${error.message}`);
 
-  const leads = validated.map(l => ({
+  // Validation layer: guarantee strict band_id isolation
+  const validated = (data || []).filter(
+    (l) => cleanBandId(l.band_id) === cleanId
+  );
+
+  const leads = validated.map((l) => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || [],
-    hilo_emails: l.hilo_emails || []
+    hilo_emails: l.hilo_emails || [],
   }));
 
   const total = count ?? leads.length;
@@ -186,29 +208,33 @@ export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptio
       page,
       limit,
       total,
-      totalPages: Math.ceil(total / limit)
-    }
+      totalPages: Math.ceil(total / limit),
+    },
   };
 }
 
 export async function dbGetLeadById(id: string, bandId?: string) {
   const sb = getSupabase();
-  let query = sb.from("leads").select("*").eq("id", id);
+  let query = sb.from('leads').select('*').eq('id', id);
   if (bandId && bandId.trim()) {
-    query = query.eq("band_id", cleanBandId(bandId));
+    query = query.eq('band_id', cleanBandId(bandId));
   }
   const { data, error } = await query.maybeSingle();
 
   if (error) throw new Error(`Supabase Error (getLeadById): ${error.message}`);
   if (!data) return null;
-  if (bandId && bandId.trim() && cleanBandId(data.band_id) !== cleanBandId(bandId)) {
+  if (
+    bandId &&
+    bandId.trim() &&
+    cleanBandId(data.band_id) !== cleanBandId(bandId)
+  ) {
     return null;
   }
   return {
     ...data,
     historial_feedback_pitch: data.historial_feedback_pitch || [],
     historial_contacto: data.historial_contacto || [],
-    hilo_emails: data.hilo_emails || []
+    hilo_emails: data.hilo_emails || [],
   };
 }
 
@@ -223,7 +249,7 @@ export async function dbUpsertLead(lead: any, bandId: string) {
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const name = (lead.nombre_sala || lead.nombreSala || "").trim();
+  const name = (lead.nombre_sala || lead.nombreSala || '').trim();
 
   // Antes se buscaba el id sin filtrar por banda: si `lead.id` coincidía con el de un lead de
   // OTRA banda, ese registro pasaba a considerarse "el existente", el upsert (por id, clave
@@ -233,7 +259,11 @@ export async function dbUpsertLead(lead: any, bandId: string) {
   let existingRecord: any = null;
   let idBelongsToOtherBand = false;
   if (lead.id) {
-    const { data } = await sb.from("leads").select("*").eq("id", lead.id).maybeSingle();
+    const { data } = await sb
+      .from('leads')
+      .select('*')
+      .eq('id', lead.id)
+      .maybeSingle();
     if (data) {
       if (data.band_id === targetBandId) {
         existingRecord = data;
@@ -244,57 +274,131 @@ export async function dbUpsertLead(lead: any, bandId: string) {
   }
   if (!existingRecord && name) {
     const { data } = await sb
-      .from("leads")
-      .select("*")
-      .eq("band_id", targetBandId)
-      .ilike("nombre_sala", name)
+      .from('leads')
+      .select('*')
+      .eq('band_id', targetBandId)
+      .ilike('nombre_sala', name)
       .maybeSingle();
     existingRecord = data;
   }
 
-  const finalId = existingRecord?.id || (idBelongsToOtherBand ? `lead-${Date.now()}` : lead.id) || `lead-${Date.now()}`;
+  const finalId =
+    existingRecord?.id ||
+    (idBelongsToOtherBand ? `lead-${Date.now()}` : lead.id) ||
+    `lead-${Date.now()}`;
 
   const payload = {
     id: finalId,
     band_id: targetBandId,
-    nombre_sala: name || existingRecord?.nombre_sala || "Sala",
-    ciudad: lead.ciudad || existingRecord?.ciudad || "",
-    region: lead.region || existingRecord?.region || "",
-    direccion: lead.direccion || existingRecord?.direccion || "",
+    nombre_sala: name || existingRecord?.nombre_sala || 'Sala',
+    ciudad: lead.ciudad || existingRecord?.ciudad || '',
+    region: lead.region || existingRecord?.region || '',
+    direccion: lead.direccion || existingRecord?.direccion || '',
     aforo: Number(lead.aforo || existingRecord?.aforo || 0),
-    genero: lead.genero || existingRecord?.genero || "",
-    tipo: lead.tipo || existingRecord?.tipo || "sala",
-    email_contacto: lead.email_contacto || lead.emailContacto || existingRecord?.email_contacto || "",
-    email_secundario: lead.email_secundario || lead.emailSecundario || existingRecord?.email_secundario || "",
-    telefono: lead.telefono || existingRecord?.telefono || "",
-    website: sanitizeWebsiteUrl(lead.website || existingRecord?.website || ""),
-    instagram: sanitizeInstagramHandle(lead.instagram || existingRecord?.instagram || ""),
-    contacto_nombre: lead.contacto_nombre || lead.contactoNombre || existingRecord?.contacto_nombre || "",
-    fuente: lead.fuente || existingRecord?.fuente || "manual",
-    estado: lead.estado || existingRecord?.estado || "nuevo",
-    pitch_generado: lead.pitch_generado || lead.pitchGenerado || existingRecord?.pitch_generado || "",
-    fecha_envio: lead.fecha_envio || lead.fechaEnvio || existingRecord?.fecha_envio || "",
-    fecha_ultima_respuesta: lead.fecha_ultima_respuesta || lead.fechaUltimaRespuesta || existingRecord?.fecha_ultima_respuesta || "",
-    contexto_extra: lead.contexto_extra || lead.contextoExtra || existingRecord?.contexto_extra || "",
-    notas: lead.notas || existingRecord?.notas || "",
-    icono: lead.icono || existingRecord?.icono || "🏛️",
-    imagen_url: lead.imagen_url || lead.imagenUrl || existingRecord?.imagen_url || "",
-    es_favorito: Boolean(lead.es_favorito ?? lead.esFavorito ?? existingRecord?.es_favorito),
-    es_verificado: Boolean(lead.es_verificado ?? lead.esVerificado ?? existingRecord?.es_verificado),
-    fiabilidad_score: lead.fiabilidad_score ?? lead.fiabilidadScore ?? existingRecord?.fiabilidad_score ?? null,
-    pitch_feedback_tono: lead.pitch_feedback_tono ?? lead.pitchFeedbackTono ?? existingRecord?.pitch_feedback_tono ?? null,
-    pitch_feedback_contenido: lead.pitch_feedback_contenido ?? lead.pitchFeedbackContenido ?? existingRecord?.pitch_feedback_contenido ?? null,
-    pitch_feedback_comentario: lead.pitch_feedback_comentario || lead.pitchFeedbackComentario || existingRecord?.pitch_feedback_comentario || "",
-    historial_feedback_pitch: lead.historial_feedback_pitch || lead.historialFeedbackPitch || existingRecord?.historial_feedback_pitch || [],
-    historial_contacto: lead.historial_contacto || lead.historialContacto || existingRecord?.historial_contacto || [],
+    genero: lead.genero || existingRecord?.genero || '',
+    tipo: lead.tipo || existingRecord?.tipo || 'sala',
+    email_contacto:
+      lead.email_contacto ||
+      lead.emailContacto ||
+      existingRecord?.email_contacto ||
+      '',
+    email_secundario:
+      lead.email_secundario ||
+      lead.emailSecundario ||
+      existingRecord?.email_secundario ||
+      '',
+    telefono: lead.telefono || existingRecord?.telefono || '',
+    website: sanitizeWebsiteUrl(lead.website || existingRecord?.website || ''),
+    instagram: sanitizeInstagramHandle(
+      lead.instagram || existingRecord?.instagram || ''
+    ),
+    contacto_nombre:
+      lead.contacto_nombre ||
+      lead.contactoNombre ||
+      existingRecord?.contacto_nombre ||
+      '',
+    fuente: lead.fuente || existingRecord?.fuente || 'manual',
+    estado: lead.estado || existingRecord?.estado || 'nuevo',
+    pitch_generado:
+      lead.pitch_generado ||
+      lead.pitchGenerado ||
+      existingRecord?.pitch_generado ||
+      '',
+    fecha_envio:
+      lead.fecha_envio || lead.fechaEnvio || existingRecord?.fecha_envio || '',
+    fecha_ultima_respuesta:
+      lead.fecha_ultima_respuesta ||
+      lead.fechaUltimaRespuesta ||
+      existingRecord?.fecha_ultima_respuesta ||
+      '',
+    contexto_extra:
+      lead.contexto_extra ||
+      lead.contextoExtra ||
+      existingRecord?.contexto_extra ||
+      '',
+    notas: lead.notas || existingRecord?.notas || '',
+    icono: lead.icono || existingRecord?.icono || '🏛️',
+    imagen_url:
+      lead.imagen_url || lead.imagenUrl || existingRecord?.imagen_url || '',
+    es_favorito: Boolean(
+      lead.es_favorito ?? lead.esFavorito ?? existingRecord?.es_favorito
+    ),
+    es_verificado: Boolean(
+      lead.es_verificado ?? lead.esVerificado ?? existingRecord?.es_verificado
+    ),
+    fiabilidad_score:
+      lead.fiabilidad_score ??
+      lead.fiabilidadScore ??
+      existingRecord?.fiabilidad_score ??
+      null,
+    pitch_feedback_tono:
+      lead.pitch_feedback_tono ??
+      lead.pitchFeedbackTono ??
+      existingRecord?.pitch_feedback_tono ??
+      null,
+    pitch_feedback_contenido:
+      lead.pitch_feedback_contenido ??
+      lead.pitchFeedbackContenido ??
+      existingRecord?.pitch_feedback_contenido ??
+      null,
+    pitch_feedback_comentario:
+      lead.pitch_feedback_comentario ||
+      lead.pitchFeedbackComentario ||
+      existingRecord?.pitch_feedback_comentario ||
+      '',
+    historial_feedback_pitch:
+      lead.historial_feedback_pitch ||
+      lead.historialFeedbackPitch ||
+      existingRecord?.historial_feedback_pitch ||
+      [],
+    historial_contacto:
+      lead.historial_contacto ||
+      lead.historialContacto ||
+      existingRecord?.historial_contacto ||
+      [],
     hilo_emails: lead.hilo_emails || existingRecord?.hilo_emails || [],
-    festival_start_date: lead.festival_start_date || lead.festivalStartDate || existingRecord?.festival_start_date || null,
-    festival_end_date: lead.festival_end_date || lead.festivalEndDate || existingRecord?.festival_end_date || null
+    festival_start_date:
+      lead.festival_start_date ||
+      lead.festivalStartDate ||
+      existingRecord?.festival_start_date ||
+      null,
+    festival_end_date:
+      lead.festival_end_date ||
+      lead.festivalEndDate ||
+      existingRecord?.festival_end_date ||
+      null,
   };
 
-  const { data, error } = await sb.from("leads").upsert(payload).select().maybeSingle();
+  const { data, error } = await sb
+    .from('leads')
+    .upsert(payload)
+    .select()
+    .maybeSingle();
   if (error) {
-    console.warn("Primary Supabase upsert failed, retrying with core columns:", error.message);
+    console.warn(
+      'Primary Supabase upsert failed, retrying with core columns:',
+      error.message
+    );
     const corePayload = {
       id: finalId,
       band_id: targetBandId,
@@ -316,14 +420,25 @@ export async function dbUpsertLead(lead: any, bandId: string) {
       pitch_generado: payload.pitch_generado,
       notas: payload.notas,
       icono: payload.icono,
-      imagen_url: payload.imagen_url
+      imagen_url: payload.imagen_url,
     };
-    const { data: retryData, error: retryError } = await sb.from("leads").upsert(corePayload).select().single();
+    const { data: retryData, error: retryError } = await sb
+      .from('leads')
+      .upsert(corePayload)
+      .select()
+      .single();
     if (retryError) {
-      if (retryError.message.includes("email_secundario")) {
+      if (retryError.message.includes('email_secundario')) {
         const { email_secundario, ...withoutSec } = corePayload;
-        const { data: legacyData, error: legacyError } = await sb.from("leads").upsert(withoutSec).select().single();
-        if (legacyError) throw new Error(`Supabase Error (upsert lead): ${legacyError.message}`);
+        const { data: legacyData, error: legacyError } = await sb
+          .from('leads')
+          .upsert(withoutSec)
+          .select()
+          .single();
+        if (legacyError)
+          throw new Error(
+            `Supabase Error (upsert lead): ${legacyError.message}`
+          );
         return legacyData;
       }
       throw new Error(`Supabase Error (upsert lead): ${retryError.message}`);
@@ -339,8 +454,13 @@ export async function dbBulkDeleteLeads(ids: string[], bandId: string) {
   const cleanId = cleanBandId(bandId);
 
   // PostgreSQL Trigger (trg_archive_deleted_lead) automatically archives rows to deleted_leads BEFORE DELETE
-  const { error } = await sb.from("leads").delete().in("id", ids).eq("band_id", cleanId);
-  if (error) throw new Error(`Supabase Error (bulk delete leads): ${error.message}`);
+  const { error } = await sb
+    .from('leads')
+    .delete()
+    .in('id', ids)
+    .eq('band_id', cleanId);
+  if (error)
+    throw new Error(`Supabase Error (bulk delete leads): ${error.message}`);
   return true;
 }
 
@@ -348,7 +468,11 @@ export async function dbDeleteLead(id: string, bandId: string) {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
   // PostgreSQL Trigger (trg_archive_deleted_lead) handles blacklist archival atomically
-  const { error } = await sb.from("leads").delete().eq("id", id).eq("band_id", cleanId);
+  const { error } = await sb
+    .from('leads')
+    .delete()
+    .eq('id', id)
+    .eq('band_id', cleanId);
   if (error) throw new Error(`Supabase Error (delete lead): ${error.message}`);
   return true;
 }
@@ -358,10 +482,10 @@ export async function dbCheckDeletedLead(nombreSala: string, bandId: string) {
   const cleanId = cleanBandId(bandId);
   try {
     const { data } = await sb
-      .from("deleted_leads")
-      .select("*")
-      .eq("band_id", cleanId)
-      .ilike("nombre_sala", `%${nombreSala.trim()}%`)
+      .from('deleted_leads')
+      .select('*')
+      .eq('band_id', cleanId)
+      .ilike('nombre_sala', `%${nombreSala.trim()}%`)
       .limit(1);
     return data && data.length > 0 ? data[0] : null;
   } catch (e) {
@@ -374,10 +498,10 @@ export async function dbCheckDeletedBand(nombreBanda: string, bandId: string) {
   const cleanId = cleanBandId(bandId);
   try {
     const { data } = await sb
-      .from("deleted_bands")
-      .select("*")
-      .eq("band_id", cleanId)
-      .ilike("nombre_banda", `%${nombreBanda.trim()}%`)
+      .from('deleted_bands')
+      .select('*')
+      .eq('band_id', cleanId)
+      .ilike('nombre_banda', `%${nombreBanda.trim()}%`)
       .limit(1);
     return data && data.length > 0 ? data[0] : null;
   } catch (e) {
