@@ -683,7 +683,7 @@ export default function TourManager({
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-3)]">
+              <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)]">
                 Logística & Convocatorias Multi-Miembro
               </span>
             </div>
@@ -1018,7 +1018,7 @@ export default function TourManager({
                               selectedDate: tour.fechaInicio,
                             })
                           }
-                          className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-3)] transition-all flex items-center gap-1.5 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] transition-all flex items-center gap-1.5 cursor-pointer"
                           title="Abrir agenda y ver paradas de la gira en el calendario"
                         >
                           <Calendar className="w-3.5 h-3.5" />
@@ -1267,7 +1267,7 @@ export default function TourManager({
                     <div className="sm:col-span-3 p-4 rounded-[var(--r-m)] bg-[var(--bg)]/20 space-y-4">
                       <div className="flex flex-wrap items-center justify-between gap-2/20 pb-3">
                         <div>
-                          <span className="text-xs font-sans font-bold text-[var(--ink-3)] tracking-wider flex items-center gap-1.5">
+                          <span className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
                             <Truck className="w-4 h-4 text-[var(--ink-2)]" />{" "}
                             Flota & Vehículos de la Gira ({formVehiculos.length}{" "}
                             {formVehiculos.length === 1
@@ -1285,7 +1285,7 @@ export default function TourManager({
                           <button
                             type="button"
                             onClick={() => handleAddVehicle(0)}
-                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-3)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/30 text-xs font-sans font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
                           >
                             <Plus className="w-3.5 h-3.5" /> Añadir Vehículo
                           </button>
@@ -1310,7 +1310,7 @@ export default function TourManager({
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] text-[10px] font-sans font-bold">
+                                <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">
                                   Vehículo #{vIdx + 1}
                                 </span>
                                 <span className="text-xs font-semibold text-[var(--ink)]">
@@ -1507,7 +1507,7 @@ export default function TourManager({
                       <button
                         type="button"
                         onClick={addStop}
-                        className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider bg-[var(--acc)]/20 text-[var(--ink-3)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" /> Añadir Parada
                       </button>
@@ -1546,7 +1546,7 @@ export default function TourManager({
                                     )
                                   }
                                   defaultValue=""
-                                  className="ml-auto text-[10px] bg-[var(--sunken)] text-[var(--ink-3)] p-1 rounded focus:outline-none cursor-pointer"
+                                  className="ml-auto text-[10px] bg-[var(--sunken)] text-[var(--ink-2)] p-1 rounded focus:outline-none cursor-pointer"
                                 >
                                   <option value="" disabled>
                                     -- Cargar desde Salas BD --
@@ -1731,7 +1731,7 @@ export default function TourManager({
 
                   {/* Sincronización Automática Checkboxes */}
                   <div className="p-4 rounded-[var(--r-m)] bg-[var(--bg)]/30 space-y-2.5">
-                    <span className="text-xs font-sans font-bold text-[var(--ink-3)] tracking-wider block">
+                    <span className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider block">
                       ⚡ Integración con Calendario & Finanzas
                     </span>
 

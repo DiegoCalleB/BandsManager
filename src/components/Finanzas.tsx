@@ -530,7 +530,7 @@ export default function Finanzas({
                       <th className="p-3 text-right">Acción</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-800/60">
+                  <tbody className="divide-y dividebg-[var(--surface)]/60">
                     {concerts.map((c) => {
                       const g = c.gastosDetalle || {};
                       const gasolina = g.gasolina || 0;
@@ -594,7 +594,7 @@ export default function Finanzas({
                               {c.tipo}
                             </span>
                             {c.giraNombre && (
-                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] font-sans">
+                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--ink-2)] font-sans">
                                 🚐 {c.giraNombre}
                               </span>
                             )}

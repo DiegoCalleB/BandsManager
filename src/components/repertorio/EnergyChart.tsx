@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -10,10 +10,10 @@ import {
   CartesianGrid,
   ReferenceArea,
   ReferenceLine,
-} from 'recharts';
-import { titlesMatch } from '../../utils/songTitleMatch';
-import { getEnergyInfo } from '../../utils/energyPacingUtils';
-import { EvaluacionUnion } from '../../utils/setlistCompatibility';
+} from "recharts";
+import { titlesMatch } from "../../utils/songTitleMatch";
+import { getEnergyInfo } from "../../utils/energyPacingUtils";
+import { EvaluacionUnion } from "../../utils/setlistCompatibility";
 
 export interface EnergyChartPoint {
   idx: number;
@@ -145,7 +145,7 @@ export function EnergyChart({
   expandedWidthPx,
   belowChartSlot,
 }: EnergyChartProps) {
-  const gradientSuffix = compact ? '-compact' : '';
+  const gradientSuffix = compact ? "-compact" : "";
   const fontSize = compact ? 8 : 9;
   const dotDefault = compact ? 3.5 : 5.5;
   const dotSelected = compact ? 6 : 8;
@@ -172,16 +172,27 @@ export function EnergyChart({
   const SETLIST_SWITCH_MS = 1200;
   const FAST_EDIT_MS = 180;
   const hasPlayedGrandEntranceRef = useRef(false);
-  const [animMode, setAnimMode] = useState<'entrance' | 'switch' | 'fast'>('entrance');
+  const [animMode, setAnimMode] = useState<"entrance" | "switch" | "fast">(
+    "entrance",
+  );
   useEffect(() => {
     const isFirstEverPaint = !hasPlayedGrandEntranceRef.current;
     hasPlayedGrandEntranceRef.current = true;
-    setAnimMode(isFirstEverPaint ? 'entrance' : 'switch');
-    const t = setTimeout(() => setAnimMode('fast'), (isFirstEverPaint ? GRAND_ENTRANCE_MS : SETLIST_SWITCH_MS) + 100);
+    setAnimMode(isFirstEverPaint ? "entrance" : "switch");
+    const t = setTimeout(
+      () => setAnimMode("fast"),
+      (isFirstEverPaint ? GRAND_ENTRANCE_MS : SETLIST_SWITCH_MS) + 100,
+    );
     return () => clearTimeout(t);
   }, [setlistKey]);
-  const curveAnimationDuration = animMode === 'entrance' ? GRAND_ENTRANCE_MS : animMode === 'switch' ? SETLIST_SWITCH_MS : FAST_EDIT_MS;
-  const curveAnimationEasing = animMode === 'entrance' ? 'ease-in-out' : 'ease-out';
+  const curveAnimationDuration =
+    animMode === "entrance"
+      ? GRAND_ENTRANCE_MS
+      : animMode === "switch"
+        ? SETLIST_SWITCH_MS
+        : FAST_EDIT_MS;
+  const curveAnimationEasing =
+    animMode === "entrance" ? "ease-in-out" : "ease-out";
 
   // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
   // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
@@ -193,7 +204,9 @@ export function EnergyChart({
   // los navegadores móviles disparan tras un toque. `setPointerCapture` sustituye a preventDefault
   // para decirle al navegador que ese puntero ya está siendo gestionado por nosotros.
   const containerRef = useRef<HTMLDivElement>(null);
-  const [draggingFromIndex, setDraggingFromIndex] = useState<number | null>(null);
+  const [draggingFromIndex, setDraggingFromIndex] = useState<number | null>(
+    null,
+  );
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   // El panel de detalle vive FUERA del SVG, nunca como tooltip flotante encima de la curva (en
   // móvil, sin"salir con el ratón" para cerrarlo, se quedaba pegado tapando el gráfico entero).
@@ -206,7 +219,9 @@ export function EnergyChart({
   // reabrir el panel solo porque `selectedSetlistItemId` no cambió.
   const [dismissedId, setDismissedId] = useState<string | null>(null);
   const activePoint =
-    selectedSetlistItemId && selectedSetlistItemId !== dismissedId ? (chartData.find((d) => d.id === selectedSetlistItemId) ?? null) : null;
+    selectedSetlistItemId && selectedSetlistItemId !== dismissedId
+      ? (chartData.find((d) => d.id === selectedSetlistItemId) ?? null)
+      : null;
   // Único punto de entrada para seleccionar un punto (clic en el punto, en el contenedor, o tap
   // sin arrastre) — limpia el "cerrado a mano" para que volver a tocar el mismo punto tras cerrar
   // su panel lo vuelva a abrir, no lo deje muerto para siempre.
@@ -220,11 +235,11 @@ export function EnergyChart({
   // desaparece solo al mover el ratón fuera.
   const [isPointerFine, setIsPointerFine] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
     setIsPointerFine(mq.matches);
     const onChange = (e: MediaQueryListEvent) => setIsPointerFine(e.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
   const draggingFromIndexRef = useRef<number | null>(null);
   const activePointerIdRef = useRef<number | null>(null);
@@ -233,8 +248,8 @@ export function EnergyChart({
   // Arrastrar en vertical cambia la energía (1-20) del punto en vez de su posición — el eje se
   // decide al primer movimiento que supere el umbral (el que más se haya movido gana) y queda
   // fijo el resto del gesto, para que una diagonal no reordene y cambie energía a la vez.
-  const [dragAxis, setDragAxis] = useState<'x' | 'y' | null>(null);
-  const dragAxisRef = useRef<'x' | 'y' | null>(null);
+  const [dragAxis, setDragAxis] = useState<"x" | "y" | null>(null);
+  const dragAxisRef = useRef<"x" | "y" | null>(null);
   const dragStartClientYRef = useRef<number | null>(null);
   const dragStartScoreRef = useRef<number | null>(null);
   const [liveEnergyScore, setLiveEnergyScore] = useState<number | null>(null);
@@ -245,7 +260,10 @@ export function EnergyChart({
   // Posición del puntero (relativa al contenedor) mientras se arrastra en vertical, para pintar la
   // burbuja de energía justo al lado del dedo/cursor en vez de fija arriba en el centro — así se
   // ve claramente el número subir/bajar a la altura real a la que se está arrastrando.
-  const [dragPointerPos, setDragPointerPos] = useState<{ x: number; y: number } | null>(null);
+  const [dragPointerPos, setDragPointerPos] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   //'touch' |'mouse' |'pen' (de PointerEvent.pointerType) — en touch, el propio dedo tapa el
   // punto de contacto, así que la burbuja se planta encima del dedo en vez de al lado (ver render).
   const [dragPointerType, setDragPointerType] = useState<string | null>(null);
@@ -259,13 +277,19 @@ export function EnergyChart({
   // energía real y, si ocupasen su propio hueco en el eje X, separarían visualmente las
   // canciones de antes y de después más de lo normal. Se marcan aparte con su propia línea
   // vertical (ver más abajo), intercalados en `xPos` sin consumir espacio propio.
-  const songsOnlyData = useMemo(() => chartData.filter((d) => d.isSong), [chartData]);
+  const songsOnlyData = useMemo(
+    () => chartData.filter((d) => d.isSong),
+    [chartData],
+  );
 
   const getIndexFromClientX = (clientX: number): number => {
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect || chartData.length === 0 || songsOnlyData.length === 0) return 0;
     const ratio = (clientX - rect.left) / rect.width;
-    const targetXPos = Math.max(0, Math.min(songsOnlyData.length - 1, ratio * (songsOnlyData.length - 1)));
+    const targetXPos = Math.max(
+      0,
+      Math.min(songsOnlyData.length - 1, ratio * (songsOnlyData.length - 1)),
+    );
     // Busca en el array COMPLETO (con bloques) el punto más cercano a esa posición visual, para
     // que soltar cerca de un bloque también sea un objetivo válido al reordenar.
     let closest = 0;
@@ -292,7 +316,13 @@ export function EnergyChart({
     return plotHeight / Math.max(1, yDomain[1] - yDomain[0]);
   }, [height, compact, yDomain]);
 
-  const startDrag = (fromIndex: number, clientX: number, clientY: number, pointerId: number, pointerType: string) => {
+  const startDrag = (
+    fromIndex: number,
+    clientX: number,
+    clientY: number,
+    pointerId: number,
+    pointerType: string,
+  ) => {
     draggingFromIndexRef.current = fromIndex;
     dragStartClientXRef.current = clientX;
     dragStartClientYRef.current = clientY;
@@ -311,7 +341,9 @@ export function EnergyChart({
   useEffect(() => {
     if (draggingFromIndex === null) return;
 
-    const isActivePointer = (e: PointerEvent) => activePointerIdRef.current === null || e.pointerId === activePointerIdRef.current;
+    const isActivePointer = (e: PointerEvent) =>
+      activePointerIdRef.current === null ||
+      e.pointerId === activePointerIdRef.current;
 
     const resetDragState = () => {
       draggingFromIndexRef.current = null;
@@ -334,24 +366,36 @@ export function EnergyChart({
       const from = draggingFromIndexRef.current;
 
       if (dragAxisRef.current === null) {
-        const dx = dragStartClientXRef.current !== null ? Math.abs(e.clientX - dragStartClientXRef.current) : 0;
-        const dy = dragStartClientYRef.current !== null ? Math.abs(e.clientY - dragStartClientYRef.current) : 0;
+        const dx =
+          dragStartClientXRef.current !== null
+            ? Math.abs(e.clientX - dragStartClientXRef.current)
+            : 0;
+        const dy =
+          dragStartClientYRef.current !== null
+            ? Math.abs(e.clientY - dragStartClientYRef.current)
+            : 0;
         // Todavía no supera el umbral en ningún eje: sigue mostrando la posición tentativa (como
         // antes), pero sin decidir todavía si esto es un reordenamiento o un cambio de energía.
         if (dx < MIN_DRAG_PX && dy < MIN_DRAG_PX) {
           setHoverIndex(getIndexFromClientX(e.clientX));
           return;
         }
-        const canEditEnergy = !!onEnergyChange && from !== null && chartData[from]?.songId != null;
-        dragAxisRef.current = dy > dx && canEditEnergy ? 'y' : 'x';
+        const canEditEnergy =
+          !!onEnergyChange && from !== null && chartData[from]?.songId != null;
+        dragAxisRef.current = dy > dx && canEditEnergy ? "y" : "x";
         setDragAxis(dragAxisRef.current);
-        if (dragAxisRef.current === 'y' && from !== null) {
+        if (dragAxisRef.current === "y" && from !== null) {
           dragStartScoreRef.current = chartData[from]?.score ?? null;
         }
       }
 
-      if (dragAxisRef.current === 'y') {
-        if (from === null || dragStartScoreRef.current === null || dragStartClientYRef.current === null) return;
+      if (dragAxisRef.current === "y") {
+        if (
+          from === null ||
+          dragStartScoreRef.current === null ||
+          dragStartClientYRef.current === null
+        )
+          return;
         const dyUp = dragStartClientYRef.current - e.clientY; // positivo = arrastrado hacia arriba
         const rawScore = dragStartScoreRef.current + dyUp / pxPerEnergyUnit;
         const clamped = Math.max(1, Math.min(20, Math.round(rawScore)));
@@ -359,7 +403,10 @@ export function EnergyChart({
         // háptico al estilo slider nativo, para notar el cambio sin tener que mirar la burbuja
         // constantemente. Android Chrome lo soporta; iOS Safari ignora la llamada sin más, así
         // que no hace falta detectar la plataforma.
-        if (liveEnergyScoreRef.current !== null && clamped !== liveEnergyScoreRef.current) {
+        if (
+          liveEnergyScoreRef.current !== null &&
+          clamped !== liveEnergyScoreRef.current
+        ) {
           try {
             navigator.vibrate?.(10);
           } catch {
@@ -369,7 +416,11 @@ export function EnergyChart({
         liveEnergyScoreRef.current = clamped;
         setLiveEnergyScore(clamped);
         const rect = containerRef.current?.getBoundingClientRect();
-        if (rect) setDragPointerPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        if (rect)
+          setDragPointerPos({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+          });
       } else {
         setHoverIndex(getIndexFromClientX(e.clientX));
       }
@@ -379,20 +430,33 @@ export function EnergyChart({
       if (!isActivePointer(e)) return;
       const from = draggingFromIndexRef.current;
 
-      if (dragAxisRef.current === 'y') {
+      if (dragAxisRef.current === "y") {
         const finalScore = liveEnergyScoreRef.current;
-        if (from !== null && finalScore !== null && finalScore !== dragStartScoreRef.current) {
+        if (
+          from !== null &&
+          finalScore !== null &&
+          finalScore !== dragStartScoreRef.current
+        ) {
           onEnergyChange?.(chartData[from], finalScore);
         }
       } else {
         const to = getIndexFromClientX(e.clientX);
-        const movedEnough = dragStartClientXRef.current !== null && Math.abs(e.clientX - dragStartClientXRef.current) >= MIN_DRAG_PX;
-        if (dragAxisRef.current === 'x' && from !== null && to !== from && movedEnough) onReorder?.(from, to);
+        const movedEnough =
+          dragStartClientXRef.current !== null &&
+          Math.abs(e.clientX - dragStartClientXRef.current) >= MIN_DRAG_PX;
+        if (
+          dragAxisRef.current === "x" &&
+          from !== null &&
+          to !== from &&
+          movedEnough
+        )
+          onReorder?.(from, to);
         // Soltar sin moverse lo suficiente en ningún eje (o en el mismo punto de partida) es un
         // tap/clic normal: selecciona ese tema. La diana táctil que arranca el arrastre tiene
         // pointer-events encima del punto visible, así que su onClick nativo ya no llega — se
         // resuelve aquí.
-        else if (from !== null && chartData[from]) selectPoint(chartData[from].id);
+        else if (from !== null && chartData[from])
+          selectPoint(chartData[from].id);
       }
       resetDragState();
     };
@@ -402,13 +466,13 @@ export function EnergyChart({
       resetDragState();
     };
 
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    window.addEventListener('pointercancel', handlePointerCancel);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerCancel);
     return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('pointercancel', handlePointerCancel);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerCancel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggingFromIndex, pxPerEnergyUnit]);
@@ -433,11 +497,11 @@ export function EnergyChart({
           minWidth: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
           cursor:
             draggingFromIndex !== null
-              ? dragAxis === 'y'
-                ? 'ns-resize'
-                : 'ew-resize'
+              ? dragAxis === "y"
+                ? "ns-resize"
+                : "ew-resize"
               : onSelectItem || onReorder || onEnergyChange
-                ? 'pointer'
+                ? "pointer"
                 : undefined,
         }}
       >
@@ -452,12 +516,12 @@ export function EnergyChart({
  tire); en dedo se planta ENCIMA del punto de contacto, porque el propio dedo tapa una
  zona bastante más grande que un cursor y a un lado seguiría quedando oculta debajo. */}
         {draggingFromIndex !== null &&
-          dragAxis === 'y' &&
+          dragAxis === "y" &&
           liveEnergyScore !== null &&
           dragPointerPos &&
           (() => {
             const info = getEnergyInfo(liveEnergyScore);
-            const isTouch = dragPointerType === 'touch';
+            const isTouch = dragPointerType === "touch";
             const containerWidth = containerRef.current?.clientWidth ?? 300;
             const sideGap = 20;
             const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
@@ -467,15 +531,27 @@ export function EnergyChart({
                 style={{
                   boxShadow: `0 0 0 2px ${info.hexColor}66`,
                   ...(isTouch
-                    ? { left: dragPointerPos.x, top: dragPointerPos.y, transform: 'translate(-50%, calc(-100% - 34px))' }
+                    ? {
+                        left: dragPointerPos.x,
+                        top: dragPointerPos.y,
+                        transform: "translate(-50%, calc(-100% - 34px))",
+                      }
                     : {
                         top: dragPointerPos.y,
-                        transform: 'translateY(-50%)',
-                        ...(placeOnLeft ? { right: containerWidth - dragPointerPos.x + sideGap } : { left: dragPointerPos.x + sideGap }),
+                        transform: "translateY(-50%)",
+                        ...(placeOnLeft
+                          ? {
+                              right:
+                                containerWidth - dragPointerPos.x + sideGap,
+                            }
+                          : { left: dragPointerPos.x + sideGap }),
                       }),
                 }}
               >
-                <span className="font-bold text-base" style={{ color: info.hexColor }}>
+                <span
+                  className="font-bold text-base"
+                  style={{ color: info.hexColor }}
+                >
                   {info.icon} {Math.round(liveEnergyScore / 2)}
                 </span>
                 <span className="text-[var(--ink-2)]">/10 · {info.label}</span>
@@ -484,25 +560,41 @@ export function EnergyChart({
           })()}
         {/* Arrastrando en horizontal (o gesto aún sin decidir): nombre + destino del reordenamiento,
  para saber qué se está moviendo sin tener que leer el número de posición en el eje X. */}
-        {draggingFromIndex !== null && dragAxis !== 'y' && hoverIndex !== null && (
-          <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
-            <span className="text-[var(--acc)]/70 font-bold">{chartData[draggingFromIndex]?.name}</span>
-            {hoverIndex !== draggingFromIndex && (
-              <>
-                <span className="text-[var(--ink-2)]"> → posición de </span>
-                <span className="text-[var(--ink-2)]">"{chartData[hoverIndex]?.name}"</span>
-              </>
-            )}
-          </div>
-        )}
+        {draggingFromIndex !== null &&
+          dragAxis !== "y" &&
+          hoverIndex !== null && (
+            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--sunken)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
+              <span className="text-[var(--acc)]/70 font-bold">
+                {chartData[draggingFromIndex]?.name}
+              </span>
+              {hoverIndex !== draggingFromIndex && (
+                <>
+                  <span className="text-[var(--ink-2)]"> → posición de </span>
+                  <span className="text-[var(--ink-2)]">
+                    "{chartData[hoverIndex]?.name}"
+                  </span>
+                </>
+              )}
+            </div>
+          )}
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             key={setlistKey}
             data={songsOnlyData}
-            margin={compact ? { top: 8, right: 8, left: -22, bottom: 0 } : { top: 14, right: 14, left: -18, bottom: 0 }}
+            margin={
+              compact
+                ? { top: 8, right: 8, left: -22, bottom: 0 }
+                : { top: 14, right: 14, left: -18, bottom: 0 }
+            }
           >
             <defs>
-              <linearGradient id={`energyStrokeGradient${gradientSuffix}`} x1="0" y1="0" x2="1" y2="0">
+              <linearGradient
+                id={`energyStrokeGradient${gradientSuffix}`}
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0"
+              >
                 {songsOnlyData.map((d, i) => (
                   <stop
                     key={d.id}
@@ -514,7 +606,13 @@ export function EnergyChart({
               {/* El relleno bajo la curva usa los mismos colores por canción que el trazo (a opacidad
  baja) en vez de un dorado plano fijo — así el"aura" bajo la curva también cambia
  de color según la categoría de energía. */}
-              <linearGradient id={`energyFillGradient${gradientSuffix}`} x1="0" y1="0" x2="1" y2="0">
+              <linearGradient
+                id={`energyFillGradient${gradientSuffix}`}
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0"
+              >
                 {songsOnlyData.map((d, i) => (
                   <stop
                     key={d.id}
@@ -527,33 +625,50 @@ export function EnergyChart({
             </defs>
 
             {zonasEnergia.map((z) => (
-              <ReferenceArea key={z.min} y1={z.y1} y2={z.y2} fill={z.color} fillOpacity={0.07} stroke="none" ifOverflow="hidden" />
+              <ReferenceArea
+                key={z.min}
+                y1={z.y1}
+                y2={z.y2}
+                fill={z.color}
+                fillOpacity={0.07}
+                stroke="none"
+                ifOverflow="hidden"
+              />
             ))}
 
-            <CartesianGrid horizontal vertical={false} stroke="var(--ink-3)" strokeDasharray="0" />
+            <CartesianGrid
+              horizontal
+              vertical={false}
+              stroke="var(--ink-3)"
+              strokeDasharray="0"
+            />
 
             {/* Mientras se arrastra un punto en horizontal, esta línea marca dónde caería la canción
  al soltar. En vertical, marca la altura (energía) a la que quedaría en su lugar. */}
-            {draggingFromIndex !== null && dragAxis !== 'y' && hoverIndex !== null && (
-              <ReferenceLine
-                yAxisId="energy"
-                x={hoverIndex}
-                stroke="var(--acc-soft)"
-                strokeWidth={2}
-                strokeDasharray="4 3"
-                ifOverflow="extendDomain"
-              />
-            )}
-            {draggingFromIndex !== null && dragAxis === 'y' && liveEnergyScore !== null && (
-              <ReferenceLine
-                yAxisId="energy"
-                y={liveEnergyScore}
-                stroke="var(--acc-soft)"
-                strokeWidth={2}
-                strokeDasharray="4 3"
-                ifOverflow="extendDomain"
-              />
-            )}
+            {draggingFromIndex !== null &&
+              dragAxis !== "y" &&
+              hoverIndex !== null && (
+                <ReferenceLine
+                  yAxisId="energy"
+                  x={hoverIndex}
+                  stroke="var(--acc-soft)"
+                  strokeWidth={2}
+                  strokeDasharray="4 3"
+                  ifOverflow="extendDomain"
+                />
+              )}
+            {draggingFromIndex !== null &&
+              dragAxis === "y" &&
+              liveEnergyScore !== null && (
+                <ReferenceLine
+                  yAxisId="energy"
+                  y={liveEnergyScore}
+                  stroke="var(--acc-soft)"
+                  strokeWidth={2}
+                  strokeDasharray="4 3"
+                  ifOverflow="extendDomain"
+                />
+              )}
 
             {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
  camino entre ambos puntos, mismo patrón que los eventos de"speech" de arriba. */}
@@ -569,7 +684,11 @@ export function EnergyChart({
                     strokeDasharray="3 3"
                     strokeOpacity={0.8}
                     ifOverflow="extendDomain"
-                    label={{ value: '⚡', position: 'insideTop', fontSize: compact ? 10 : 13 }}
+                    label={{
+                      value: "⚡",
+                      position: "insideTop",
+                      fontSize: compact ? 10 : 13,
+                    }}
                   />
                 ))}
 
@@ -579,21 +698,25 @@ export function EnergyChart({
                 .filter((d) => d.transitionToNext)
                 .map((d) => {
                   const tr = d.transitionToNext!;
-                  const isOk = tr.status === 'ok';
+                  const isOk = tr.status === "ok";
                   return (
                     <ReferenceLine
                       key={`trans-${d.id}`}
                       yAxisId="energy"
                       x={d.xPos + 0.5}
-                      stroke={isOk ? 'var(--ok)' : 'var(--alert)'}
+                      stroke={isOk ? "var(--ok)" : "var(--alert)"}
                       strokeWidth={isOk ? 1 : 1.5}
-                      strokeDasharray={isOk ? '2 3' : '3 2'}
+                      strokeDasharray={isOk ? "2 3" : "3 2"}
                       strokeOpacity={isOk ? 0.45 : 0.85}
                       ifOverflow="extendDomain"
                       label={{
-                        value: isOk ? '✓' : tr.coste.harmonyRelation === 'choque' ? '✕ ⚡' : '✕',
-                        position: 'insideTop',
-                        fill: isOk ? 'var(--ok)' : 'var(--alert)',
+                        value: isOk
+                          ? "✓"
+                          : tr.coste.harmonyRelation === "choque"
+                            ? "✕ ⚡"
+                            : "✕",
+                        position: "insideTop",
+                        fill: isOk ? "var(--ok)" : "var(--alert)",
                         fontSize: compact ? (isOk ? 9 : 10) : isOk ? 11 : 12,
                         fontWeight: 900,
                       }}
@@ -604,7 +727,7 @@ export function EnergyChart({
             <XAxis
               dataKey="xPos"
               type="number"
-              domain={['dataMin', 'dataMax']}
+              domain={["dataMin", "dataMax"]}
               ticks={songsOnlyData.map((d) => d.xPos)}
               tickFormatter={(v: number) => `#${v + 1}`}
               stroke="var(--ink-2)"
@@ -636,7 +759,7 @@ export function EnergyChart({
               <YAxis
                 yAxisId="bpm"
                 orientation="right"
-                domain={['dataMin - 15', 'dataMax + 15']}
+                domain={["dataMin - 15", "dataMax + 15"]}
                 stroke="var(--acc)"
                 fontSize={fontSize}
                 tickLine={false}
@@ -654,21 +777,31 @@ export function EnergyChart({
  el tooltip desaparece solo en cuanto el ratón se mueve fuera del punto — así que ahí sí
  vale la pena un vistazo rápido (nombre, energía, tono) sin tener que hacer clic. */}
             <RechartsTooltip
-              cursor={{ stroke: 'var(--ink-2)', strokeDasharray: '3 3' }}
+              cursor={{ stroke: "var(--ink-2)", strokeDasharray: "3 3" }}
               content={({ active, payload }: any) => {
-                if (!isPointerFine || !active || !payload || payload.length === 0) return null;
+                if (
+                  !isPointerFine ||
+                  !active ||
+                  !payload ||
+                  payload.length === 0
+                )
+                  return null;
                 const d: EnergyChartPoint | undefined = payload[0]?.payload;
                 if (!d) return null;
                 return (
                   <div className="bg-[var(--surface)] text-[var(--ink)] text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px]">
-                    <p className="font-bold text-[var(--acc)] truncate">{d.name}</p>
+                    <p className="font-bold text-[var(--acc)] truncate">
+                      {d.name}
+                    </p>
                     {d.isSpeechEvent ? (
-                      <p className="text-[var(--ink-2)]">{d.icon} Interludio / Pausa</p>
+                      <p className="text-[var(--ink-2)]">
+                        {d.icon} Interludio / Pausa
+                      </p>
                     ) : (
                       <p className="text-[var(--ink-2)] truncate">
                         {d.icon} {d.label} ({Math.round(d.score / 2)}/10)
-                        {d.tonalidad ? ` · ${d.tonalidad}` : ''}
-                        {typeof d.bpm === 'number' ? ` · ${d.bpm} BPM` : ''}
+                        {d.tonalidad ? ` · ${d.tonalidad}` : ""}
+                        {typeof d.bpm === "number" ? ` · ${d.bpm} BPM` : ""}
                       </p>
                     )}
                   </div>
@@ -720,7 +853,8 @@ export function EnergyChart({
                 onReorder || onEnergyChange
                   ? false
                   : (activeDotProps: any) => {
-                      if (activeDotProps?.payload?.isSpeechEvent) return <React.Fragment key="speech-act-dot" />;
+                      if (activeDotProps?.payload?.isSpeechEvent)
+                        return <React.Fragment key="speech-act-dot" />;
                       return (
                         <circle
                           cx={activeDotProps.cx}
@@ -728,7 +862,9 @@ export function EnergyChart({
                           r={dotSelected}
                           strokeWidth={2}
                           stroke="var(--surface)"
-                          fill={activeDotProps.payload?.color || 'var(--acc-soft)'}
+                          fill={
+                            activeDotProps.payload?.color || "var(--acc-soft)"
+                          }
                         />
                       );
                     }
@@ -737,14 +873,25 @@ export function EnergyChart({
                 const { cx, cy, payload, index } = dotProps;
                 // payload.score null (eventos de"speech") no tiene una posición real que dibujar —
                 // Number.isNaN cubre el caso de que recharts calcule cy como NaN en vez de null/undefined.
-                if (cx == null || cy == null || Number.isNaN(cx) || Number.isNaN(cy) || payload?.isSpeechEvent) {
+                if (
+                  cx == null ||
+                  cy == null ||
+                  Number.isNaN(cx) ||
+                  Number.isNaN(cy) ||
+                  payload?.isSpeechEvent
+                ) {
                   return <React.Fragment key={`dot-${index}`} />;
                 }
                 const isSelected = payload.id === selectedSetlistItemId;
-                const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
+                const isHighlighted =
+                  highlightedSongIds.length > 0 &&
+                  titlesMatch(payload.name, highlightedSongIds);
                 const isDraggingThis = draggingFromIndex === payload.idx;
-                const isPlaying = currentPlayingSongId && payload.songId === currentPlayingSongId;
-                const canEditThisEnergy = !!onEnergyChange && payload.songId != null;
+                const isPlaying =
+                  currentPlayingSongId &&
+                  payload.songId === currentPlayingSongId;
+                const canEditThisEnergy =
+                  !!onEnergyChange && payload.songId != null;
                 const canDragThis = !!onReorder || canEditThisEnergy;
                 const dotRadius = isPlaying
                   ? dotPlaying
@@ -771,13 +918,26 @@ export function EnergyChart({
                         r={18}
                         fill="transparent"
                         style={{
-                          cursor: onReorder && canEditThisEnergy ? 'move' : canEditThisEnergy ? 'ns-resize' : 'ew-resize',
-                          touchAction: 'none',
+                          cursor:
+                            onReorder && canEditThisEnergy
+                              ? "move"
+                              : canEditThisEnergy
+                                ? "ns-resize"
+                                : "ew-resize",
+                          touchAction: "none",
                         }}
                         onPointerDown={(e) => {
                           e.stopPropagation();
-                          (e.target as Element).setPointerCapture?.(e.pointerId);
-                          startDrag(payload.idx, e.clientX, e.clientY, e.pointerId, e.pointerType);
+                          (e.target as Element).setPointerCapture?.(
+                            e.pointerId,
+                          );
+                          startDrag(
+                            payload.idx,
+                            e.clientX,
+                            e.clientY,
+                            e.pointerId,
+                            e.pointerType,
+                          );
                         }}
                       />
                     )}
@@ -786,25 +946,35 @@ export function EnergyChart({
                       cy={cy}
                       r={dotRadius}
                       fill={payload.color}
-                      stroke={isPlaying ? 'var(--ok)' : isHighlighted ? payload.color : isSelected ? 'var(--surface)' : 'var(--bg)'}
-                      strokeWidth={isPlaying ? 3 : isHighlighted ? 2 : isSelected ? 2 : 1.5}
+                      stroke={
+                        isPlaying
+                          ? "var(--ok)"
+                          : isHighlighted
+                            ? payload.color
+                            : isSelected
+                              ? "var(--surface)"
+                              : "var(--bg)"
+                      }
+                      strokeWidth={
+                        isPlaying ? 3 : isHighlighted ? 2 : isSelected ? 2 : 1.5
+                      }
                       style={{
                         // move (cuatro flechas) cuando el punto admite ambos gestos (reordenar +
                         // cambiar energía); ew-resize/ns-resize cuando solo admite uno de los dos.
                         cursor: canDragThis
                           ? onReorder && canEditThisEnergy
-                            ? 'move'
+                            ? "move"
                             : canEditThisEnergy
-                              ? 'ns-resize'
-                              : 'ew-resize'
+                              ? "ns-resize"
+                              : "ew-resize"
                           : onSelectItem
-                            ? 'pointer'
-                            : 'default',
+                            ? "pointer"
+                            : "default",
                         opacity: isDraggingThis ? 0.5 : isHighlighted ? 1 : 0.6,
                         // Espectro: zero/drop-shadow. Highlight via opacity change instead.
-                        filter: 'none',
-                        transition: isDraggingThis ? 'none' : 'all 0.2s ease',
-                        pointerEvents: canDragThis ? 'none' : 'auto',
+                        filter: "none",
+                        transition: isDraggingThis ? "none" : "all 0.2s ease",
+                        pointerEvents: canDragThis ? "none" : "auto",
                       }}
                       onClick={() => {
                         if (draggingFromIndex === null) selectPoint(payload.id);
@@ -819,14 +989,18 @@ export function EnergyChart({
                       payload.tonalidad &&
                       (() => {
                         const labelFontSize = compact ? 7.5 : 9;
-                        const espacioArriba = cy - dotRadius - 6 - labelFontSize;
+                        const espacioArriba =
+                          cy - dotRadius - 6 - labelFontSize;
                         const margenSuperior = compact ? 8 : 14; // mismo valor que el margin.top del ComposedChart
                         const pintarAbajo = espacioArriba < margenSuperior;
-                        const textoY = pintarAbajo ? cy + dotRadius + labelFontSize + 4 : cy - dotRadius - 6;
+                        const textoY = pintarAbajo
+                          ? cy + dotRadius + labelFontSize + 4
+                          : cy - dotRadius - 6;
                         // Monoespaciada: el ancho de cada carácter es constante, así que el pill de
                         // fondo se calcula sin medir texto (evita el efecto "manchado" de un
                         // stroke SVG desproporcionado al tamaño de fuente, ver AGENTS.md).
-                        const anchoTexto = payload.tonalidad.length * labelFontSize * 0.62 + 6;
+                        const anchoTexto =
+                          payload.tonalidad.length * labelFontSize * 0.62 + 6;
                         return (
                           <g pointerEvents="none">
                             <rect
@@ -868,8 +1042,8 @@ export function EnergyChart({
                 stroke="var(--acc)"
                 strokeWidth={compact ? 1.5 : 2}
                 strokeOpacity={0.85}
-                dot={{ r: compact ? 2 : 3, fill: 'var(--acc)', strokeWidth: 0 }}
-                activeDot={{ r: compact ? 3 : 4.5, fill: 'var(--acc)' }}
+                dot={{ r: compact ? 2 : 3, fill: "var(--acc)", strokeWidth: 0 }}
+                activeDot={{ r: compact ? 3 : 4.5, fill: "var(--acc)" }}
                 isAnimationActive={!compact}
                 animationDuration={curveAnimationDuration}
                 animationEasing={curveAnimationEasing}
@@ -897,7 +1071,12 @@ export function EnergyChart({
                   strokeWidth={2}
                   strokeDasharray="4 3"
                   ifOverflow="extendDomain"
-                  label={{ value: d.icon, position: 'insideTop', fontSize: compact ? 13 : 20, fill: 'var(--ink)' }}
+                  label={{
+                    value: d.icon,
+                    position: "insideTop",
+                    fontSize: compact ? 13 : 20,
+                    fill: "var(--ink)",
+                  }}
                 />
               ))}
           </ComposedChart>
@@ -930,37 +1109,58 @@ export function EnergyChart({
               ) : (
                 <>
                   <p className="text-[var(--ink-2)] flex items-center gap-1 mt-0.5">
-                    <span>{d.icon}</span> {d.label} ({Math.round(d.score / 2)}/10)
+                    <span>{d.icon}</span> {d.label} ({Math.round(d.score / 2)}
+                    /10)
                   </p>
-                  {typeof d.bpm === 'number' && <p className="text-[var(--ink-3)] mt-0.5">🥁 {d.bpm} BPM</p>}
-                  {d.tonalidad && <p className="text-[var(--acc)]/70 mt-0.5">🎼 {d.tonalidad}</p>}
-                  {d.variance > 0 && (
-                    <p className="text-[var(--ink-3)] mt-0.5">
-                      🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
+                  {typeof d.bpm === "number" && (
+                    <p className="text-[var(--ink-2)] mt-0.5">🥁 {d.bpm} BPM</p>
+                  )}
+                  {d.tonalidad && (
+                    <p className="text-[var(--acc)]/70 mt-0.5">
+                      🎼 {d.tonalidad}
                     </p>
                   )}
-                  {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
-                    <p className="text-[var(--ink-2)] mt-0.5">〰️ Ideal aquí: ~{Math.round(d.idealScore / 2)}/10</p>
+                  {d.variance > 0 && (
+                    <p className="text-[var(--ink-2)] mt-0.5">
+                      🎧 Dinámica interna:{" "}
+                      {d.variance >= 6
+                        ? "alta (sube y baja mucho)"
+                        : d.variance >= 3
+                          ? "media"
+                          : "suave"}
+                    </p>
                   )}
+                  {showIdealCurve &&
+                    typeof d.idealScore === "number" &&
+                    Math.abs(d.idealScore - d.score) >= 2 && (
+                      <p className="text-[var(--ink-2)] mt-0.5">
+                        〰️ Ideal aquí: ~{Math.round(d.idealScore / 2)}/10
+                      </p>
+                    )}
                   {d.transitionFromPrev && (
                     <div className="mt-1.5 pt-1">
                       <div className="flex items-center gap-1 font-bold">
                         <span
                           className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
-                            d.transitionFromPrev.status === 'ok'
-                              ? 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
-                              : 'bg-[var(--alert)]/20 text-[var(--ink-2)]'
+                            d.transitionFromPrev.status === "ok"
+                              ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
+                              : "bg-[var(--alert)]/20 text-[var(--ink-2)]"
                           }`}
                         >
                           {d.transitionFromPrev.icon}
                         </span>
                         <span>
-                          Unión con #{d.idx}: {d.transitionFromPrev.status === 'ok' ? 'Fluida' : 'Revisar'} (
-                          {d.transitionFromPrev.scorePercent}%)
+                          Unión con #{d.idx}:{" "}
+                          {d.transitionFromPrev.status === "ok"
+                            ? "Fluida"
+                            : "Revisar"}{" "}
+                          ({d.transitionFromPrev.scorePercent}%)
                         </span>
                       </div>
                       {d.transitionFromPrev.motivos.length > 0 && (
-                        <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">{d.transitionFromPrev.motivos.join('·')}</p>
+                        <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
+                          {d.transitionFromPrev.motivos.join("·")}
+                        </p>
                       )}
                     </div>
                   )}

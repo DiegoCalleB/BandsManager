@@ -396,7 +396,7 @@ export function CampaignManagerModal({
                   {formData.targetCities?.map((city) => (
                     <span
                       key={city}
-                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-3)]"
+                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink-2)]"
                     >
                       <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
                       {city}
@@ -763,7 +763,7 @@ export function CampaignManagerModal({
                           </div>
 
                           <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-2)] pt-0.5">
-                            <span className="flex items-center gap-1 text-[var(--ink-3)]">
+                            <span className="flex items-center gap-1 text-[var(--ink-2)]">
                               <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                               {camp.targetCities?.join(",") ||
                                 "Cualquier ciudad"}

@@ -172,7 +172,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         }));
                       }}
                       placeholder="tubanda"
-                      className="w-full bg-transparent py-1.5 text-xs text-[var(--ink-3)] font-bold outline-none font-sans"
+                      className="w-full bg-transparent py-1.5 text-xs text-[var(--ink-2)] font-bold outline-none font-sans"
                     />
                   </div>
                 </div>
@@ -282,7 +282,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       (config.donacionRevolut?.metodoPorDefecto ||
                         "revolut") === "revolut"
-                        ? "bg-[var(--acc)]/20 text-[var(--ink-3)]"
+                        ? "bg-[var(--acc)]/20 text-[var(--ink-2)]"
                         : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
@@ -384,7 +384,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowFansPreviewModal(true)}
-                  className="text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-3)] font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
+                  className="text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
                   title="Abrir simulador interactivo del formulario Únete"
                 >
                   <Eye className="w-3.5 h-3.5" /> Ver Formulario Únete
@@ -454,7 +454,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
             </div>
           )}
           {avisoTraduccion && (
-            <div className="rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-3)] p-3 text-xs flex items-start gap-2">
+            <div className="rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-2)] p-3 text-xs flex items-start gap-2">
               <Info className="w-4 h-4 shrink-0 mt-0.5" />{" "}
               <span>{avisoTraduccion}</span>
             </div>

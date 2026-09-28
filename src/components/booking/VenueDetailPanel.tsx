@@ -1632,8 +1632,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           ) : !selectedLead.telefono_movil && selectedLead.telefono ? (
             <a
               href={`tel:${selectedLead.telefono}`}
-              className="py-2.5 px-3 bg-[var(--bg)]/90 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-              title={`Llamar por teléfono: ${selectedLead.telefono}`}
+              className="py-2.5 px-3 bg-[var(--bg)]/90 hover:bg-[var(--tentative)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
               <span>Llamar por Tel</span>
@@ -2220,32 +2219,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             const clickCount = selectedLead.clics_epk || 0;
 
             return (
-              <div className="space-y-1.5">
-                <div className="p-2.5 bg-[#141d24] border border-sky-500/30 rounded-xl flex items-center justify-between gap-2 text-xs text-sky-200">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-medium">
-                      📬 Email enviado{" "}
-                      {selectedLead.fecha_envio
-                        ? `el ${selectedLead.fecha_envio}`
-                        : ""}
-                    </span>
-                  </div>
-                  <EmailDeliveryTicks
-                    lead={selectedLead}
-                    size="md"
-                    showLabel={true}
-                  />
-                </div>
-
-                {clickCount > 0 && (
-                  <div className="p-2 bg-purple-500/10 border border-purple-500/25 rounded-xl flex items-center gap-2 text-xs text-purple-300">
-                    <MousePointerClick className="w-3.5 h-3.5 text-purple-400 shrink-0 ml-1" />
-                    <span className="text-[11px] font-semibold">
-                      🔥 ¡Han pulsado en tu EPK / Dossier! ({clickCount}{" "}
-                      {clickCount === 1 ? "clic" : "clics"})
-                    </span>
-                  </div>
-                )}
+              <div className="p-2 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center gap-2 text-xs text-[var(--ink-2)]">
+                <span className="w-2 h-2 rounded-full bg-[var(--tentative)] shrink-0 ml-1" />
+                <span className="text-[11px] font-medium">
+                  📬 Email enviado el{" "}
+                  {selectedLead.fecha_envio || "recientemente"} • Agente a la
+                  espera de respuesta de la sala
+                </span>
               </div>
             );
           }
@@ -5374,7 +5354,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           ? "bg-[var(--ok)]/30 text-[var(--ink-2)] font-bold"
                           : res === "Rechazado"
                             ? "bg-[var(--alert)]/30 text-[var(--ink-2)] font-bold"
-                            : "bg-[var(--acc)]/30 text-[var(--ink-3)] font-bold"
+                            : "bg-[var(--acc)]/30 text-[var(--ink-2)] font-bold"
                         : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800"
                     }`}
                   >

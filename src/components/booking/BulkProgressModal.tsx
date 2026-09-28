@@ -1,11 +1,17 @@
-import React from 'react';
-import { Sparkles, CheckCircle2, AlertTriangle, X, Loader2 } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React from "react";
+import {
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  X,
+  Loader2,
+} from "lucide-react";
+import { ModalPortal } from "../common/ModalPortal";
 
 export interface BulkProgressItem {
   id: string;
   name: string;
-  status: 'pending' | 'processing' | 'in_progress' | 'success' | 'error';
+  status: "pending" | "processing" | "in_progress" | "success" | "error";
   message?: string;
   detail?: string;
 }
@@ -35,9 +41,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const percentage = totalCount > 0 ? Math.round(((currentIndex + (isCompleted ? 1 : 0)) / totalCount) * 100) : 0;
-  const successCount = items.filter((i) => i.status === 'success').length;
-  const errorCount = items.filter((i) => i.status === 'error').length;
+  const percentage =
+    totalCount > 0
+      ? Math.round(((currentIndex + (isCompleted ? 1 : 0)) / totalCount) * 100)
+      : 0;
+  const successCount = items.filter((i) => i.status === "success").length;
+  const errorCount = items.filter((i) => i.status === "error").length;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={isCompleted ? onClose : undefined}>
@@ -54,9 +63,14 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
                 )}
               </div>
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)] font-display">{title}</h3>
+                <h3 className="text-base font-bold text-[var(--ink)] font-display">
+                  {title}
+                </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
-                  {subtitle || (isCompleted ? 'Proceso completado' : `Procesando ${currentIndex + 1} de ${totalCount}...`)}
+                  {subtitle ||
+                    (isCompleted
+                      ? "Proceso completado"
+                      : `Procesando ${currentIndex + 1} de ${totalCount}...`)}
                 </p>
               </div>
             </div>
@@ -75,9 +89,12 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           {/* Progress bar */}
           <div className="p-4 sm:p-5 space-y-3 bg-[var(--surface)]/60800">
             <div className="flex items-center justify-between text-xs font-sans">
-              <span className="text-[var(--ink-2)] font-bold">Progreso global</span>
+              <span className="text-[var(--ink-2)] font-bold">
+                Progreso global
+              </span>
               <span className="text-[var(--acc)] font-bold">
-                {percentage}% ({isCompleted ? totalCount : currentIndex}/{totalCount})
+                {percentage}% ({isCompleted ? totalCount : currentIndex}/
+                {totalCount})
               </span>
             </div>
 
@@ -85,8 +102,8 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
               <div
                 className={`h-full transition-all duration-300 rounded-full ${
                   isCompleted
-                    ? 'bg-gradient-to-r from-[var(--ok)] to-teal-400'
-                    : 'bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-yellow-300'
+                    ? "bg-gradient-to-r from-[var(--ok)] to-teal-400"
+                    : "bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-yellow-300"
                 }`}
                 style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
               />
@@ -108,36 +125,49 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           </div>
 
           {/* Items List */}
-          <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-neutral-800/40">
+          <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y dividebg-[var(--surface)]/40">
             {items.map((item, idx) => (
-              <div key={item.id || idx} className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-sans">
+              <div
+                key={item.id || idx}
+                className="pt-2 first:pt-0 flex items-center justify-between gap-2 text-xs font-sans"
+              >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  {item.status === 'processing' && <Loader2 className="w-3.5 h-3.5 text-[var(--acc)] animate-spin shrink-0" />}
-                  {item.status === 'success' && <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />}
-                  {item.status === 'error' && <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)] shrink-0" />}
-                  {item.status === 'pending' && <div className="w-3.5 h-3.5 rounded-full600 shrink-0" />}
-                  <span className="text-[var(--ink)] truncate font-semibold">{item.name}</span>
+                  {item.status === "processing" && (
+                    <Loader2 className="w-3.5 h-3.5 text-[var(--acc)] animate-spin shrink-0" />
+                  )}
+                  {item.status === "success" && (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
+                  )}
+                  {item.status === "error" && (
+                    <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)] shrink-0" />
+                  )}
+                  {item.status === "pending" && (
+                    <div className="w-3.5 h-3.5 rounded-full600 shrink-0" />
+                  )}
+                  <span className="text-[var(--ink)] truncate font-semibold">
+                    {item.name}
+                  </span>
                 </div>
 
                 <span
                   className={`text-[11px] shrink-0 truncate max-w-[180px] ${
-                    item.status === 'processing'
-                      ? 'text-[var(--acc)]'
-                      : item.status === 'success'
-                        ? 'text-[var(--ok)]'
-                        : item.status === 'error'
-                          ? 'text-[var(--alert)]'
-                          : 'text-[var(--ink-2)]'
+                    item.status === "processing"
+                      ? "text-[var(--acc)]"
+                      : item.status === "success"
+                        ? "text-[var(--ok)]"
+                        : item.status === "error"
+                          ? "text-[var(--alert)]"
+                          : "text-[var(--ink-2)]"
                   }`}
                 >
                   {item.message ||
-                    (item.status === 'processing'
-                      ? 'Procesando...'
-                      : item.status === 'success'
-                        ? 'Listo'
-                        : item.status === 'error'
-                          ? 'Error'
-                          : 'En cola')}
+                    (item.status === "processing"
+                      ? "Procesando..."
+                      : item.status === "success"
+                        ? "Listo"
+                        : item.status === "error"
+                          ? "Error"
+                          : "En cola")}
                 </span>
               </div>
             ))}

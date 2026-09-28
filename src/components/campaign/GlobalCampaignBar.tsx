@@ -83,7 +83,7 @@ export function GlobalCampaignBar({
 
             {/* Desktop / Tablet Inline details */}
             <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-2)] mt-0.5">
-              <span className="inline-flex items-center gap-1 text-[var(--ink-3)] font-medium truncate max-w-[200px]">
+              <span className="inline-flex items-center gap-1 text-[var(--ink-2)] font-medium truncate max-w-[200px]">
                 <MapPin className="w-2.5 h-2.5 text-[var(--ink-2)] shrink-0" />
                 {campaign.targetCities?.join(",") || "Todas las ciudades"}
               </span>
@@ -167,7 +167,7 @@ export function GlobalCampaignBar({
             }`}
             title="Ver grupos en las ciudades objetivo para Co-booking"
           >
-            <Users className="w-3 h-3 text-[var(--ink-3)] shrink-0" />
+            <Users className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span className="hidden sm:inline">Co-booking</span>
             <span className="sm:hidden">Bandas</span>
           </button>
@@ -197,7 +197,7 @@ export function GlobalCampaignBar({
       {/* Mobile Collapsible Details */}
       {isMobileExpanded && (
         <div className="sm:hidden pt-2 mt-2/20 text-[10px] text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
-          <div className="flex items-center gap-1.5 text-[var(--ink-3)] font-medium">
+          <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-medium">
             <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>
               {campaign.targetCities?.join(",") || "Todas las ciudades"}

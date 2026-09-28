@@ -3907,7 +3907,7 @@ export default function RepertorioSetlists({
                 {/* Métricas secundarias, solo si se piden */}
                 {showSetlistStats && (
                   <div className="flex flex-wrap items-center gap-1.5 px-1 text-xs">
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] font-medium">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] font-medium">
                       💬 {activeSetlistMetrics.eventCount} interludios
                     </span>
                     <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
@@ -4177,7 +4177,7 @@ export default function RepertorioSetlists({
                             )
                               motivos.push("salto grande de energía");
                             return (
-                              <div className="flex flex-wrap items-center gap-2 text-[10px] font-sans text-[var(--ink-3)] bg-[var(--ok)]/10 rounded-[var(--r-s)] px-2 py-1">
+                              <div className="flex flex-wrap items-center gap-2 text-[10px] font-sans text-[var(--ink-2)] bg-[var(--ok)]/10 rounded-[var(--r-s)] px-2 py-1">
                                 <span>
                                   💬 Mejor sitio para una chapa: entre{" "}
                                   <b>"{chapaSuggestion.cancionAntes}"</b> y{" "}
@@ -4571,7 +4571,7 @@ export default function RepertorioSetlists({
                                         ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 /30"
                                         : w.type === "success"
                                           ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
-                                          : "bg-[var(--acc)]/10 text-[var(--ink-3)]/30"
+                                          : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
                                     } ${isHighlighted ? "ring-2 ring-white/60" : ""}`}
                                     style={{
                                       cursor: hasSongs ? "pointer" : "default",
@@ -5757,8 +5757,8 @@ export default function RepertorioSetlists({
                       )
                     }
                   />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Play className="w-6 h-6 text-white fill-white" />
+                  <div className="absolute inset-0 bg-[var(--scrim)]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Play className="w-6 h-6 text-white fill-[var(--surface)]" />
                   </div>
                 </div>
 
@@ -5774,7 +5774,7 @@ export default function RepertorioSetlists({
                     <span className="font-medium text-[var(--ink)]">
                       {songs.length} temas
                     </span>
-                    <span className="text-[var(--ink-3)]">•</span>
+                    <span className="text-[var(--ink-2)]">•</span>
                     <span>
                       {Math.round(
                         songs.reduce(
@@ -5784,7 +5784,7 @@ export default function RepertorioSetlists({
                       )}{" "}
                       min
                     </span>
-                    <span className="text-[var(--ink-3)]">•</span>
+                    <span className="text-[var(--ink-2)]">•</span>
                     <span className="font-medium">
                       {songs.filter((s) => s.favoritoGeneral).length} favoritos
                     </span>

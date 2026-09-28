@@ -3207,7 +3207,7 @@ export default function ReelsCenter({
 
                           {/* Kinetic Reels Subtitles Overlay */}
                           {currentSubtitleText && !renderedBurnedSubs && (
-                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)]  text-center">
+                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center">
                               <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
                                 ✨ {currentSubtitleText} ✨
                               </span>
@@ -3484,7 +3484,7 @@ export default function ReelsCenter({
 
                   {/* Track label scrolling simulation */}
                   <div
-                    className={`flex items-center gap-1 text-[8px] font-sans py-1 px-1.5 rounded-full max-w-[140px] truncate ${"text-[var(--acc)] bg-black/40 bg-[var(--surface)]/50"}`}
+                    className={`flex items-center gap-1 text-[8px] font-sans py-1 px-1.5 rounded-full max-w-[140px] truncate ${"text-[var(--acc)] bg-[var(--sunken)] bg-[var(--surface)]/50"}`}
                   >
                     <Music className="w-2.5 h-2.5 shrink-0" />
                     <span className="animate-marquee whitespace-nowrap">
@@ -3650,7 +3650,7 @@ export default function ReelsCenter({
 
                           {/* Subtitles Overlay inside Cinema Phone */}
                           {currentSubtitleText && !renderedBurnedSubs && (
-                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)]  text-center">
+                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center">
                               <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
                                 ✨ {currentSubtitleText} ✨
                               </span>
@@ -3722,7 +3722,7 @@ export default function ReelsCenter({
                   {PLATFORM_UI_ICONS[selectedPlatform].map((Icon, idx) => (
                     <div
                       key={idx}
-                      className="w-7 h-7 rounded-full bg-black/35 flex items-center justify-center text-[var(--ink)]/85"
+                      className="w-7 h-7 rounded-full bg-[var(--sunken)] flex items-center justify-center text-[var(--ink)]/85"
                     >
                       <Icon className="w-3.5 h-3.5" />
                     </div>

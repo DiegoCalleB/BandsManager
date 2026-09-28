@@ -1,6 +1,18 @@
-import React, { useState } from 'react';
-import { FileText, Copy, Check, X, Sparkles, Send, Radio, Building2, RefreshCw, MessageSquareCode, HelpCircle } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from "react";
+import {
+  FileText,
+  Copy,
+  Check,
+  X,
+  Sparkles,
+  Send,
+  Radio,
+  Building2,
+  RefreshCw,
+  MessageSquareCode,
+  HelpCircle,
+} from "lucide-react";
+import { ModalPortal } from "../common/ModalPortal";
 
 interface EmailTemplatesModalProps {
   isOpen: boolean;
@@ -10,12 +22,12 @@ interface EmailTemplatesModalProps {
 
 export const EMAIL_TEMPLATES = [
   {
-    id: 'sala_directa',
-    title: '1. Proposal Inicial a Sala de Conciertos (Aforo 200 - 600 pax)',
-    type: 'Booking directo',
+    id: "sala_directa",
+    title: "1. Proposal Inicial a Sala de Conciertos (Aforo 200 - 600 pax)",
+    type: "Booking directo",
     icon: Building2,
-    badgeColor: 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /30',
-    subject: 'Propuesta de Concierto - {bandName} en {nombre_sala} (Gira 2026)',
+    badgeColor: "bg-[var(--acc)]/20 text-[var(--acc)]/70 /30",
+    subject: "Propuesta de Concierto - {bandName} en {nombre_sala} (Gira 2026)",
     body: `Hola team de {nombre_sala},
 
 Espero que estéis teniendo una excelente semana.
@@ -34,12 +46,13 @@ Un cordial saludo,
 Mánager Virtual & Booking Team de {bandName}`,
   },
   {
-    id: 'intercambio_bandas',
-    title: '2. Propuesta de Intercambio de Fechas entre Bandas (Co-headlining)',
-    type: 'Intercambio de bolos',
+    id: "intercambio_bandas",
+    title: "2. Propuesta de Intercambio de Fechas entre Bandas (Co-headlining)",
+    type: "Intercambio de bolos",
     icon: MessageSquareCode,
-    badgeColor: 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30',
-    subject: 'Propuesta de bolo conjunto e intercambio de sala - {bandName} x {nombre_banda_amiga}',
+    badgeColor: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30",
+    subject:
+      "Propuesta de bolo conjunto e intercambio de sala - {bandName} x {nombre_banda_amiga}",
     body: `¡Hola compas de {nombre_banda_amiga}!
 
 ¿Cómo va todo por ahí? Os escribimos desde la banda {bandName}. Nos gusta mucho vuestro estilo y creemos que haríamos un cartel de lujo compartiendo escenario.
@@ -56,12 +69,13 @@ Si os motiva la idea, decidnos y os pasamos un par de fechas que tenemos pre-res
 {bandName}`,
   },
   {
-    id: 'nota_prensa_medios',
-    title: '3. Nota de Prensa & Estreno a Medios y Radios (Radio 3 / Prensa)',
-    type: 'Prensa & Radios',
+    id: "nota_prensa_medios",
+    title: "3. Nota de Prensa & Estreno a Medios y Radios (Radio 3 / Prensa)",
+    type: "Prensa & Radios",
     icon: Radio,
-    badgeColor: 'bg-[var(--alert)]/20 text-[var(--ink-2)]/30',
-    subject: 'NOTA DE PRENSA: {bandName} estrena nuevo sencillo y anuncia fechas de gira',
+    badgeColor: "bg-[var(--alert)]/20 text-[var(--ink-2)]/30",
+    subject:
+      "NOTA DE PRENSA: {bandName} estrena nuevo sencillo y anuncia fechas de gira",
     body: `A la atención del equipo de {nombre_medio},
 
 {bandName}, una de las propuestas más vibrantes del panorama de {genero}, presenta su nuevo lanzamiento y anuncia las primeras fechas de su gira estatal.
@@ -78,12 +92,12 @@ Atentamente,
 Prensa & Comunicación - {bandName}`,
   },
   {
-    id: 'seguimiento_sala',
-    title: '4. Recordatorio Educado a Sala sin Respuesta (A los 7-10 días)',
-    type: 'Seguimiento',
+    id: "seguimiento_sala",
+    title: "4. Recordatorio Educado a Sala sin Respuesta (A los 7-10 días)",
+    type: "Seguimiento",
     icon: RefreshCw,
-    badgeColor: 'bg-[var(--acc)]/20 text-[var(--ink-3)]/30',
-    subject: 'Re: Propuesta de Concierto - {bandName} en {nombre_sala}',
+    badgeColor: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+    subject: "Re: Propuesta de Concierto - {bandName} en {nombre_sala}",
     body: `Hola de nuevo, equipo de {nombre_sala},
 
 Os escribo brevemente para hacer un rápido seguimiento del correo que os envié la semana pasada respecto a la fecha para {bandName}.
@@ -97,13 +111,20 @@ Saludos,
   },
 ];
 
-export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen, onClose, bandName = 'Bakandeya' }) => {
+export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
+  isOpen,
+  onClose,
+  bandName = "Bakandeya",
+}) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('sala_directa');
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<string>("sala_directa");
 
   if (!isOpen) return null;
 
-  const currentTpl = EMAIL_TEMPLATES.find((t) => t.id === selectedTemplate) || EMAIL_TEMPLATES[0];
+  const currentTpl =
+    EMAIL_TEMPLATES.find((t) => t.id === selectedTemplate) ||
+    EMAIL_TEMPLATES[0];
 
   const handleCopy = (id: string, text: string) => {
     const formatted = text.replace(/{bandName}/g, bandName);
@@ -127,7 +148,8 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen
                   Plantillas & Ejemplos Reales de Email
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
-                  Modelos de redacción probados para salas, festivales, medios e intercambios
+                  Modelos de redacción probados para salas, festivales, medios e
+                  intercambios
                 </p>
               </div>
             </div>
@@ -153,15 +175,21 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen
                     onClick={() => setSelectedTemplate(tpl.id)}
                     className={`p-3 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-2 cursor-pointer ${
                       isSelected
-                        ? 'bg-[var(--acc)]/20 /60 text-[var(--acc)]/70'
-                        : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                        ? "bg-[var(--acc)]/20 /60 text-[var(--acc)]/70"
+                        : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <IconComp className="w-4 h-4 shrink-0 text-[var(--acc)]" />
-                      <span className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded ${tpl.badgeColor}`}>{tpl.type}</span>
+                      <span
+                        className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded ${tpl.badgeColor}`}
+                      >
+                        {tpl.type}
+                      </span>
                     </div>
-                    <span className="text-xs font-bold font-sans line-clamp-1">{tpl.title.split('.')[1] || tpl.title}</span>
+                    <span className="text-xs font-bold font-sans line-clamp-1">
+                      {tpl.title.split(".")[1] || tpl.title}
+                    </span>
                   </button>
                 );
               })}
@@ -171,12 +199,21 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-4">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3">
                 <div>
-                  <span className="text-[10px] font-sans text-[var(--acc)] tracking-widest font-bold">{currentTpl.type}</span>
-                  <h4 className="text-sm font-bold font-display text-[var(--ink)]">{currentTpl.title}</h4>
+                  <span className="text-[10px] font-sans text-[var(--acc)] tracking-widest font-bold">
+                    {currentTpl.type}
+                  </span>
+                  <h4 className="text-sm font-bold font-display text-[var(--ink)]">
+                    {currentTpl.title}
+                  </h4>
                 </div>
 
                 <button
-                  onClick={() => handleCopy(currentTpl.id, `Asunto: ${currentTpl.subject}\n\n${currentTpl.body}`)}
+                  onClick={() =>
+                    handleCopy(
+                      currentTpl.id,
+                      `Asunto: ${currentTpl.subject}\n\n${currentTpl.body}`,
+                    )
+                  }
                   className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-xs hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
                 >
                   {copiedId === currentTpl.id ? (
@@ -195,7 +232,9 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen
 
               {/* Subject preview */}
               <div className="space-y-1">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">Asunto del Correo:</span>
+                <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
+                  Asunto del Correo:
+                </span>
                 <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-sans font-bold text-[var(--acc)]/70">
                   {currentTpl.subject.replace(/{bandName}/g, bandName)}
                 </div>
@@ -203,7 +242,9 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen
 
               {/* Body preview */}
               <div className="space-y-1">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">Cuerpo del Mensaje:</span>
+                <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
+                  Cuerpo del Mensaje:
+                </span>
                 <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">
                   {currentTpl.body.replace(/{bandName}/g, bandName)}
                 </pre>
@@ -213,8 +254,9 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({ isOpen
             <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-xs flex items-center gap-2">
               <Sparkles className="w-4 h-4 shrink-0 text-[var(--acc)]" />
               <span>
-                <strong>Consejo de Agentes AI:</strong> El Agente Redactor utiliza este mismo estilo directo y conciso al generar propuestas
-                desde el panel de Booking.
+                <strong>Consejo de Agentes AI:</strong> El Agente Redactor
+                utiliza este mismo estilo directo y conciso al generar
+                propuestas desde el panel de Booking.
               </span>
             </div>
           </div>

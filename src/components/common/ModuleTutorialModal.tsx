@@ -303,17 +303,17 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
         "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40",
     },
     blue: {
-      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink-3)]/30",
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink-2)]/30",
       iconBox: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
       activeDot: "bg-[var(--tentative)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
       hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]/40",
       highlightText: "text-[var(--ink-2)]",
-      targetCard: "bg-[var(--acc)]/5",
+      targetCard: "border-[var(--acc)]/40 bg-[var(--acc)]/5",
       targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
       targetBtn:
-        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)]/40",
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-2)]/40",
     },
     emerald: {
       badgeBg: "bg-[var(--ok)]/15 text-[var(--ink-2)]/30",

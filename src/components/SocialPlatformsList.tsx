@@ -308,7 +308,7 @@ export const PLATFORM_CONFIG: Record<
   },
   revolut: {
     label: "Revolut",
-    colorClass: "text-[var(--ink-3)]",
+    colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--acc)]/10",
     borderClass: "",
     hoverClass: "hover:bg-[var(--acc)]/20 hover:text-[var(--tentative)]/40",
@@ -317,8 +317,9 @@ export const PLATFORM_CONFIG: Record<
     label: "PayPal",
     colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--bg)]/15",
-    borderClass: "",
-    hoverClass: "hover:bg-[var(--bg)]/25 hover:text-[var(--ink-2)]",
+    borderClass: "border-[var(--hair)]/40",
+    hoverClass:
+      "hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-[var(--ink-2)]",
   },
   whatsapp: {
     label: "WhatsApp",

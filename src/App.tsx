@@ -5,34 +5,36 @@
  react-hooks/exhaustive-deps,
  no-empty
 */
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Lead, LeadStatus, ThemeName, ThemeColors } from './types';
-import { THEMES, getEspectroColors } from './utils/theme';
-import { useAuth } from './hooks/useAuth';
-import { useAppData } from './hooks/useAppData';
-import { api } from './services/api';
-import { PlayerProvider } from './context/PlayerContext';
-import { GlobalPlayer } from './components/GlobalPlayer';
-import Dashboard from './components/Dashboard';
-import ErrorBoundary from './components/ErrorBoundary';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from "react";
+import { Lead, LeadStatus, ThemeName, ThemeColors } from "./types";
+import { THEMES, getEspectroColors } from "./utils/theme";
+import { useAuth } from "./hooks/useAuth";
+import { useAppData } from "./hooks/useAppData";
+import { api } from "./services/api";
+import { PlayerProvider } from "./context/PlayerContext";
+import { GlobalPlayer } from "./components/GlobalPlayer";
+import Dashboard from "./components/Dashboard";
+import ErrorBoundary from "./components/ErrorBoundary";
 // Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
 // metía en el mismo bundle inicial el CRM, calendario, reels, repertorio, etc. — un fan que
 // solo quiere donar por Revolut/PayPal pagaba el peso entero de todo el panel interno.
-function safeLazy<T extends React.ComponentType<any>>(factory: () => Promise<{ default: T } | any>) {
+function safeLazy<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T } | any>,
+) {
   return lazy(async () => {
     try {
       const mod = await factory();
       return mod.default ? mod : { default: mod };
     } catch (err: unknown) {
-      console.warn('Retrying dynamic module load after error:', err);
+      console.warn("Retrying dynamic module load after error:", err);
       await new Promise((resolve) => setTimeout(resolve, 200));
       try {
         const modRetry = await factory();
         return modRetry.default ? modRetry : { default: modRetry };
       } catch (retryErr: unknown) {
-        const key = 'last_dynamic_import_reload';
+        const key = "last_dynamic_import_reload";
         const last = Number(sessionStorage.getItem(key) || 0);
-        if (Date.now() - last > 10000 && typeof window !== 'undefined') {
+        if (Date.now() - last > 10000 && typeof window !== "undefined") {
           sessionStorage.setItem(key, String(Date.now()));
           window.location.reload();
           return new Promise(() => {}) as any;
@@ -43,50 +45,95 @@ function safeLazy<T extends React.ComponentType<any>>(factory: () => Promise<{ d
   });
 }
 
-const BookingCRM = safeLazy(() => import('./components/BookingCRM'));
-const BandCRM = safeLazy(() => import('./components/BandCRM'));
-const CalendarView = safeLazy(() => import('./components/CalendarView'));
-const ReelsCenter = safeLazy(() => import('./components/ReelsCenter'));
-const Finanzas = safeLazy(() => import('./components/Finanzas'));
-const TourManager = safeLazy(() => import('./components/TourManager'));
-const RepertorioSetlists = safeLazy(() => import('./components/RepertorioSetlists'));
-const Merchan = safeLazy(() => import('./components/Merchan'));
-const Chatbot = safeLazy(() => import('./components/Chatbot'));
-const EPKManager = safeLazy(() => import('./components/EPKManager'));
+const BookingCRM = safeLazy(() => import("./components/BookingCRM"));
+const BandCRM = safeLazy(() => import("./components/BandCRM"));
+const CalendarView = safeLazy(() => import("./components/CalendarView"));
+const ReelsCenter = safeLazy(() => import("./components/ReelsCenter"));
+const Finanzas = safeLazy(() => import("./components/Finanzas"));
+const TourManager = safeLazy(() => import("./components/TourManager"));
+const RepertorioSetlists = safeLazy(
+  () => import("./components/RepertorioSetlists"),
+);
+const Merchan = safeLazy(() => import("./components/Merchan"));
+const Chatbot = safeLazy(() => import("./components/Chatbot"));
+const EPKManager = safeLazy(() => import("./components/EPKManager"));
 const EnsayosManager = safeLazy(() =>
-  import('./components/ensayos/EnsayosManager').then((m) => ({
+  import("./components/ensayos/EnsayosManager").then((m) => ({
     default: m.EnsayosManager,
-  }))
+  })),
 );
-const FansPanel = safeLazy(() => import('./components/FansPanel'));
-const FansLanding = safeLazy(() => import('./components/FansLanding'));
+const FansPanel = safeLazy(() => import("./components/FansPanel"));
+const FansLanding = safeLazy(() => import("./components/FansLanding"));
 const PublicMusiciansLanding = safeLazy(() =>
-  import('./components/PublicMusiciansLanding').then((m) => ({
+  import("./components/PublicMusiciansLanding").then((m) => ({
     default: m.PublicMusiciansLanding,
-  }))
+  })),
 );
-const PublicEPK = safeLazy(() => import('./components/PublicEPK').then((m) => ({ default: m.PublicEPK })));
-const Planes = safeLazy(() => import('./components/Planes'));
-import { AiSupportWidget } from './components/dashboard/AiUsageSupportWidget';
-import { ThemeToggle } from './components/common/ThemeToggle';
-import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
+const PublicEPK = safeLazy(() =>
+  import("./components/PublicEPK").then((m) => ({ default: m.PublicEPK })),
+);
+const Planes = safeLazy(() => import("./components/Planes"));
+import { AiSupportWidget } from "./components/dashboard/AiUsageSupportWidget";
+import { ThemeToggle } from "./components/common/ThemeToggle";
+import { GlobalCampaignBar } from "./components/campaign/GlobalCampaignBar";
 
-const LoginModal = safeLazy(() => import('./components/LoginModal').then((m) => ({ default: m.LoginModal })));
+const LoginModal = safeLazy(() =>
+  import("./components/LoginModal").then((m) => ({ default: m.LoginModal })),
+);
 const SimplePromoLoginModal = safeLazy(() =>
-  import('./components/SimplePromoLoginModal').then((m) => ({ default: m.SimplePromoLoginModal }))
+  import("./components/SimplePromoLoginModal").then((m) => ({
+    default: m.SimplePromoLoginModal,
+  })),
 );
-const UserManagementModal = safeLazy(() => import('./components/UserManagementModal').then((m) => ({ default: m.UserManagementModal })));
-const UserProfileModal = safeLazy(() => import('./components/UserProfileModal').then((m) => ({ default: m.UserProfileModal })));
-const FontSelectorModal = safeLazy(() => import('./components/FontSelectorModal').then((m) => ({ default: m.FontSelectorModal })));
-const MetronomeModal = safeLazy(() => import('./components/MetronomeModal').then((m) => ({ default: m.MetronomeModal })));
-const TunerModal = safeLazy(() => import('./components/TunerModal').then((m) => ({ default: m.TunerModal })));
-const BandSwitcherModal = safeLazy(() => import('./components/BandSwitcherModal').then((m) => ({ default: m.BandSwitcherModal })));
-const PlanLimitModal = safeLazy(() => import('./components/PlanLimitModal').then((m) => ({ default: m.PlanLimitModal })));
+const UserManagementModal = safeLazy(() =>
+  import("./components/UserManagementModal").then((m) => ({
+    default: m.UserManagementModal,
+  })),
+);
+const UserProfileModal = safeLazy(() =>
+  import("./components/UserProfileModal").then((m) => ({
+    default: m.UserProfileModal,
+  })),
+);
+const FontSelectorModal = safeLazy(() =>
+  import("./components/FontSelectorModal").then((m) => ({
+    default: m.FontSelectorModal,
+  })),
+);
+const MetronomeModal = safeLazy(() =>
+  import("./components/MetronomeModal").then((m) => ({
+    default: m.MetronomeModal,
+  })),
+);
+const TunerModal = safeLazy(() =>
+  import("./components/TunerModal").then((m) => ({ default: m.TunerModal })),
+);
+const BandSwitcherModal = safeLazy(() =>
+  import("./components/BandSwitcherModal").then((m) => ({
+    default: m.BandSwitcherModal,
+  })),
+);
+const PlanLimitModal = safeLazy(() =>
+  import("./components/PlanLimitModal").then((m) => ({
+    default: m.PlanLimitModal,
+  })),
+);
 const CampaignManagerModal = safeLazy(() =>
-  import('./components/campaign/CampaignManagerModal').then((m) => ({ default: m.CampaignManagerModal }))
+  import("./components/campaign/CampaignManagerModal").then((m) => ({
+    default: m.CampaignManagerModal,
+  })),
 );
-import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
-import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from './utils/planPermissions';
+import {
+  FontPresetKey,
+  applyFontPreset,
+  getStoredFontPreset,
+} from "./utils/typography";
+import {
+  hasModuleAccess,
+  getPlanDefinition,
+  checkRecordLimit,
+  normalizePlan,
+} from "./utils/planPermissions";
 import {
   NAV_ITEMS,
   NAV_GROUPS_DESKTOP,
@@ -98,24 +145,30 @@ import {
   shouldGroupNavForPlan,
   findNavGroupIdForItem,
   NavItemId,
-} from './config/navGroups';
-import { NavGroupSection } from './components/common/NavGroupSection';
-import { SkeletonDashboard } from './components/ui/Skeleton';
-import { NavItemButton } from './components/common/NavItemButton';
-import { useBrowserPushNotifications } from './hooks/useBrowserPushNotifications';
-import { NotificationCenterBell } from './components/notifications/NotificationCenterBell';
+} from "./config/navGroups";
+import { NavGroupSection } from "./components/common/NavGroupSection";
+import { SkeletonDashboard } from "./components/ui/Skeleton";
+import { NavItemButton } from "./components/common/NavItemButton";
+import { useBrowserPushNotifications } from "./hooks/useBrowserPushNotifications";
+import { NotificationCenterBell } from "./components/notifications/NotificationCenterBell";
 
 const MusicianOnboardingModal = safeLazy(() =>
-  import('./components/onboarding/MusicianOnboardingModal').then((m) => ({ default: m.MusicianOnboardingModal }))
+  import("./components/onboarding/MusicianOnboardingModal").then((m) => ({
+    default: m.MusicianOnboardingModal,
+  })),
 );
 const OnboardingWizardModal = safeLazy(() =>
-  import('./components/onboarding/OnboardingWizardModal').then((m) => ({ default: m.OnboardingWizardModal }))
+  import("./components/onboarding/OnboardingWizardModal").then((m) => ({
+    default: m.OnboardingWizardModal,
+  })),
 );
 const NotificationSettingsModal = safeLazy(() =>
-  import('./components/notifications/NotificationSettingsModal').then((m) => ({ default: m.NotificationSettingsModal }))
+  import("./components/notifications/NotificationSettingsModal").then((m) => ({
+    default: m.NotificationSettingsModal,
+  })),
 );
-import { isOnboardingCompleted } from './utils/userPreferences';
-import { useLanguage } from './context/LanguageContext';
+import { isOnboardingCompleted } from "./utils/userPreferences";
+import { useLanguage } from "./context/LanguageContext";
 import {
   Menu,
   Sparkles,
@@ -131,7 +184,7 @@ import {
   Guitar,
   Sun,
   Moon,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function App() {
   const { t, language, isTranslating, refreshTranslation } = useLanguage();
@@ -202,72 +255,115 @@ export default function App() {
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showCampaignModal, setShowCampaignModal] = useState(false);
-  const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(false);
-  const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
-  const [showNotificationSettingsModal, setShowNotificationSettingsModal] = useState<boolean>(false);
+  const [showProfileWizardModal, setShowProfileWizardModal] =
+    useState<boolean>(false);
+  const [showOnboardingModal, setShowOnboardingModal] =
+    useState<boolean>(false);
+  const [showNotificationSettingsModal, setShowNotificationSettingsModal] =
+    useState<boolean>(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
   // datos reales de esa banda. Sin id de banda, cleanActiveBandId queda vacío (no coincide con
   //'bakandeya') y el resto de componentes deben tratarlo como "sin banda seleccionada".
-  const currentActiveBandId = currentUser?.band_id || '';
-  const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
+  const currentActiveBandId = currentUser?.band_id || "";
+  const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, "");
   const activeBandFromList = (availableBands || []).find(
     (b: any) =>
-      (b.band_id && (b.band_id === currentActiveBandId || b.band_id.replace(/^(band|reg)-/, '') === cleanActiveBandId)) ||
-      (b.id && (b.id === currentActiveBandId || b.id.replace(/^(band|reg)-/, '') === cleanActiveBandId))
+      (b.band_id &&
+        (b.band_id === currentActiveBandId ||
+          b.band_id.replace(/^(band|reg)-/, "") === cleanActiveBandId)) ||
+      (b.id &&
+        (b.id === currentActiveBandId ||
+          b.id.replace(/^(band|reg)-/, "") === cleanActiveBandId)),
   );
   const currentActiveBandName =
-    activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name || 'Mi Banda';
+    activeBandFromList?.nombre_banda ||
+    activeBandFromList?.bandName ||
+    currentUser?.bandName ||
+    currentUser?.name ||
+    "Mi Banda";
   const currentActiveBandLogo =
     epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0
       ? epkConfig.logoUrl
-      : activeBandFromList?.logo_url || activeBandFromList?.imagen_url || '';
+      : activeBandFromList?.logo_url || activeBandFromList?.imagen_url || "";
 
-  const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
-    if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
+  const isSameBand = (
+    id1?: string,
+    id2?: string,
+    name1?: string,
+    name2?: string,
+  ) => {
+    if (
+      name1 &&
+      name2 &&
+      name1.trim().toLowerCase() === name2.trim().toLowerCase()
+    ) {
       return true;
     }
     if (!id1 && !id2) return true;
     if (!id1 || !id2) return false;
     if (id1 === id2) return true;
     const clean1 = id1
-      .replace(/^(band|reg)-/, '')
-      .replace(/-\d+$/, '')
+      .replace(/^(band|reg)-/, "")
+      .replace(/-\d+$/, "")
       .trim()
       .toLowerCase();
     const clean2 = id2
-      .replace(/^(band|reg)-/, '')
-      .replace(/-\d+$/, '')
+      .replace(/^(band|reg)-/, "")
+      .replace(/-\d+$/, "")
       .trim()
       .toLowerCase();
     if (clean1 === clean2) return true;
-    if (clean1 && clean2 && (clean1.includes(clean2) || clean2.includes(clean1))) return true;
+    if (
+      clean1 &&
+      clean2 &&
+      (clean1.includes(clean2) || clean2.includes(clean1))
+    )
+      return true;
     return false;
   };
 
   const currentActiveBandPlan = React.useMemo(() => {
-    if (availableBands && Array.isArray(availableBands) && availableBands.length > 0) {
+    if (
+      availableBands &&
+      Array.isArray(availableBands) &&
+      availableBands.length > 0
+    ) {
       const match = availableBands.find((b: any) =>
-        isSameBand(b.band_id || b.id, currentActiveBandId, b.bandName || b.nombre_banda || b.name, currentActiveBandName)
+        isSameBand(
+          b.band_id || b.id,
+          currentActiveBandId,
+          b.bandName || b.nombre_banda || b.name,
+          currentActiveBandName,
+        ),
       );
       if (match && match.plan) {
         return normalizePlan(match.plan);
       }
     }
-    return normalizePlan(currentUser?.plan || 'ensayo');
-  }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
+    return normalizePlan(currentUser?.plan || "ensayo");
+  }, [
+    availableBands,
+    currentActiveBandId,
+    currentActiveBandName,
+    currentUser?.plan,
+  ]);
 
   // Plan Promo y Promo+ (fase beta, festivales): a diferencia del resto de planes, que enseñan los
   // módulos no incluidos con un candado "Plan" (invitando a mejorar), Promo no debe ni
   // enseñar que esos módulos existen — así que el nav los oculta del todo en vez de bloquearlos.
-  const isPromoPlan = currentActiveBandPlan === 'promo' || currentActiveBandPlan === 'promo_plus';
+  const isPromoPlan =
+    currentActiveBandPlan === "promo" || currentActiveBandPlan === "promo_plus";
 
   // Disparar reactivamente el asistente de perfil o bienvenida si la banda activa actual aún no lo ha completado
   useEffect(() => {
     if (isLoggedIn && cleanActiveBandId) {
       try {
-        const { wizardCompleted, onboardingCompleted } = isOnboardingCompleted(cleanActiveBandId, currentUser);
+        const { wizardCompleted, onboardingCompleted } = isOnboardingCompleted(
+          cleanActiveBandId,
+          currentUser,
+        );
 
         // Si es una banda nueva o sin asistente completado para este usuario, abrir el asistente
         if (!wizardCompleted) {
@@ -285,55 +381,59 @@ export default function App() {
   // Soft Limit Modal State
   const [planLimitModal, setPlanLimitModal] = useState<{
     isOpen: boolean;
-    resourceType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands';
+    resourceType: "leads" | "medios" | "fans" | "songs" | "bands";
     currentCount: number;
   }>({
     isOpen: false,
-    resourceType: 'leads',
+    resourceType: "leads",
     currentCount: 0,
   });
 
   // Guarded Handlers respecting Band Contracted Plan Limits
   const handleAddLeadWithLimitCheck = async (newLead: Lead) => {
     const isMedio =
-      newLead.tipo === 'medio' ||
-      String(newLead.tipo || '')
+      newLead.tipo === "medio" ||
+      String(newLead.tipo || "")
         .toLowerCase()
-        .includes('prensa') ||
-      String(newLead.tipo || '')
+        .includes("prensa") ||
+      String(newLead.tipo || "")
         .toLowerCase()
-        .includes('radio');
+        .includes("radio");
     const currentCount = isMedio
       ? leads.filter(
           (l) =>
-            String(l.tipo || '')
+            String(l.tipo || "")
               .toLowerCase()
-              .includes('medio') ||
-            String(l.tipo || '')
+              .includes("medio") ||
+            String(l.tipo || "")
               .toLowerCase()
-              .includes('radio') ||
-            String(l.tipo || '')
+              .includes("radio") ||
+            String(l.tipo || "")
               .toLowerCase()
-              .includes('prensa')
+              .includes("prensa"),
         ).length
       : leads.filter(
           (l) =>
-            !String(l.tipo || '')
+            !String(l.tipo || "")
               .toLowerCase()
-              .includes('medio') &&
-            !String(l.tipo || '')
+              .includes("medio") &&
+            !String(l.tipo || "")
               .toLowerCase()
-              .includes('radio') &&
-            !String(l.tipo || '')
+              .includes("radio") &&
+            !String(l.tipo || "")
               .toLowerCase()
-              .includes('prensa')
+              .includes("prensa"),
         ).length;
 
-    const limitCheck = checkRecordLimit(currentActiveBandPlan, isMedio ? 'medios' : 'leads', currentCount);
+    const limitCheck = checkRecordLimit(
+      currentActiveBandPlan,
+      isMedio ? "medios" : "leads",
+      currentCount,
+    );
     if (!limitCheck.allowed) {
       setPlanLimitModal({
         isOpen: true,
-        resourceType: isMedio ? 'medios' : 'leads',
+        resourceType: isMedio ? "medios" : "leads",
         currentCount,
       });
       return;
@@ -343,11 +443,15 @@ export default function App() {
 
   const handleAddFanWithLimitCheck = async (fanData: any) => {
     const currentCount = fans.length;
-    const limitCheck = checkRecordLimit(currentActiveBandPlan, 'fans', currentCount);
+    const limitCheck = checkRecordLimit(
+      currentActiveBandPlan,
+      "fans",
+      currentCount,
+    );
     if (!limitCheck.allowed) {
       setPlanLimitModal({
         isOpen: true,
-        resourceType: 'fans',
+        resourceType: "fans",
         currentCount,
       });
       return;
@@ -357,64 +461,64 @@ export default function App() {
 
   // Active View State mapping directly to the Stitch Design doc
   type MainView =
-    | 'resumen'
-    | 'booking'
-    | 'medios'
-    | 'management'
-    | 'bandas'
-    | 'calendario'
-    | 'ensayos'
-    | 'reels'
-    | 'repertorio'
-    | 'catalogo'
-    | 'discografia'
-    | 'finanzas'
-    | 'chat'
-    | 'giras'
-    | 'merchan'
-    | 'epk'
-    | 'fans'
-    | 'planes';
+    | "resumen"
+    | "booking"
+    | "medios"
+    | "management"
+    | "bandas"
+    | "calendario"
+    | "ensayos"
+    | "reels"
+    | "repertorio"
+    | "catalogo"
+    | "discografia"
+    | "finanzas"
+    | "chat"
+    | "giras"
+    | "merchan"
+    | "epk"
+    | "fans"
+    | "planes";
   const VALID_VIEWS: MainView[] = [
-    'resumen',
-    'booking',
-    'medios',
-    'management',
-    'bandas',
-    'calendario',
-    'ensayos',
-    'reels',
-    'repertorio',
-    'catalogo',
-    'discografia',
-    'finanzas',
-    'chat',
-    'giras',
-    'merchan',
-    'epk',
-    'fans',
-    'planes',
+    "resumen",
+    "booking",
+    "medios",
+    "management",
+    "bandas",
+    "calendario",
+    "ensayos",
+    "reels",
+    "repertorio",
+    "catalogo",
+    "discografia",
+    "finanzas",
+    "chat",
+    "giras",
+    "merchan",
+    "epk",
+    "fans",
+    "planes",
   ];
-  const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
+  const CURRENT_VIEW_STORAGE_KEY = "bandmanager_current_view";
   const [currentView, setCurrentView] = useState<MainView>(() => {
     // 1. Soporte para enlaces directos con parámetros de vista en URL (?view=calendario, ?modulo=..., ?tab=...)
     try {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         const urlParams = new URLSearchParams(window.location.search);
         const rawViewParam = (
-          urlParams.get('view') ||
-          urlParams.get('modulo') ||
-          urlParams.get('module') ||
-          urlParams.get('tab')
+          urlParams.get("view") ||
+          urlParams.get("modulo") ||
+          urlParams.get("module") ||
+          urlParams.get("tab")
         )?.toLowerCase();
 
         const resolvedView =
-          rawViewParam === 'calendar'
-            ? 'calendario'
-            : rawViewParam === 'repertoire'
-              ? 'repertorio'
-              : rawViewParam === 'tours'
-                ? 'giras'
+          rawViewParam === "calendar"
+            ? "calendario"
+            : rawViewParam === "repertoire"
+              ? "repertorio"
+              : rawViewParam === "tours"
+                ? "giras"
                 : rawViewParam;
 
         if (resolvedView && (VALID_VIEWS as string[]).includes(resolvedView)) {
@@ -428,31 +532,32 @@ export default function App() {
     // 2. Recordar la última pantalla entre recargas (F5)
     try {
       const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
-      const migrated = saved === 'directo' ? 'repertorio' : saved;
-      if (migrated && (VALID_VIEWS as string[]).includes(migrated)) return migrated as MainView;
+      const migrated = saved === "directo" ? "repertorio" : saved;
+      if (migrated && (VALID_VIEWS as string[]).includes(migrated))
+        return migrated as MainView;
     } catch {
       // localStorage puede no estar disponible
     }
-    return 'resumen';
+    return "resumen";
   });
 
   useEffect(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const rawViewParam = (
-        urlParams.get('view') ||
-        urlParams.get('modulo') ||
-        urlParams.get('module') ||
-        urlParams.get('tab')
+        urlParams.get("view") ||
+        urlParams.get("modulo") ||
+        urlParams.get("module") ||
+        urlParams.get("tab")
       )?.toLowerCase();
 
       const resolvedView =
-        rawViewParam === 'calendar'
-          ? 'calendario'
-          : rawViewParam === 'repertoire'
-            ? 'repertorio'
-            : rawViewParam === 'tours'
-              ? 'giras'
+        rawViewParam === "calendar"
+          ? "calendario"
+          : rawViewParam === "repertoire"
+            ? "repertorio"
+            : rawViewParam === "tours"
+              ? "giras"
               : rawViewParam;
 
       if (resolvedView && (VALID_VIEWS as string[]).includes(resolvedView)) {
@@ -469,7 +574,7 @@ export default function App() {
     } catch {
       // Ignorado a propósito: perder la persistencia de la vista no debe romper la navegación.
     }
-    if (language !== 'es') {
+    if (language !== "es") {
       refreshTranslation();
     }
   }, [currentView, language]);
@@ -477,12 +582,12 @@ export default function App() {
   // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a'resumen'
   useEffect(() => {
     if (!hasModuleAccess(currentActiveBandPlan, currentView)) {
-      setCurrentView('resumen');
+      setCurrentView("resumen");
     }
   }, [currentActiveBandPlan, currentView]);
   const [bookingOptions, setBookingOptions] = useState<{
-    sectionTab?: 'salas' | 'medios' | 'grupos';
-    statusFilter?: LeadStatus | 'todos' | string;
+    sectionTab?: "salas" | "medios" | "grupos";
+    statusFilter?: LeadStatus | "todos" | string;
     selectedLeadId?: string;
     selectedEventId?: string;
     selectedDate?: string;
@@ -491,42 +596,42 @@ export default function App() {
 
   const handleNavigate = (
     view:
-      | 'resumen'
-      | 'booking'
-      | 'medios'
-      | 'management'
-      | 'bandas'
-      | 'calendario'
-      | 'ensayos'
-      | 'reels'
-      | 'repertorio'
-      | 'catalogo'
-      | 'discografia'
-      | 'finanzas'
-      | 'chat'
-      | 'giras'
-      | 'merchan'
-      | 'epk'
-      | 'fans'
-      | 'planes'
-      | 'metronome'
-      | 'tuner',
+      | "resumen"
+      | "booking"
+      | "medios"
+      | "management"
+      | "bandas"
+      | "calendario"
+      | "ensayos"
+      | "reels"
+      | "repertorio"
+      | "catalogo"
+      | "discografia"
+      | "finanzas"
+      | "chat"
+      | "giras"
+      | "merchan"
+      | "epk"
+      | "fans"
+      | "planes"
+      | "metronome"
+      | "tuner",
     options?: {
-      sectionTab?: 'salas' | 'medios' | 'grupos';
-      statusFilter?: LeadStatus | 'todos' | string;
+      sectionTab?: "salas" | "medios" | "grupos";
+      statusFilter?: LeadStatus | "todos" | string;
       selectedLeadId?: string;
       selectedEventId?: string;
       selectedDate?: string;
       concertId?: string;
-    }
+    },
   ) => {
     // Herramientas (metronome/tuner): abren modal sin cambiar vista
-    if (view === 'metronome') {
+    if (view === "metronome") {
       setShowMetronomeModal(true);
       setIsMobileMenuOpen(false);
       return;
     }
-    if (view === 'tuner') {
+    if (view === "tuner") {
       setShowTunerModal(true);
       setIsMobileMenuOpen(false);
       return;
@@ -536,7 +641,7 @@ export default function App() {
     //'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
     // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
     // contratado, así que un admin con un plan que no incluye finanzas entra igualmente.
-    if (view === 'finanzas' && !isAdmin) {
+    if (view === "finanzas" && !isAdmin) {
       setShowUserProfileModal(true);
       return;
     }
@@ -550,19 +655,28 @@ export default function App() {
     setIsMobileMenuOpen(false);
     const targetGroupId = findNavGroupIdForItem(view);
     if (targetGroupId) {
-      setOpenNavGroupIds((prev) => (prev[targetGroupId] ? prev : { ...prev, [targetGroupId]: true }));
+      setOpenNavGroupIds((prev) =>
+        prev[targetGroupId] ? prev : { ...prev, [targetGroupId]: true },
+      );
     }
     if (options) {
       setBookingOptions({
-        sectionTab: view === 'medios' ? 'medios' : view === 'management' ? 'grupos' : view === 'booking' ? 'salas' : undefined,
+        sectionTab:
+          view === "medios"
+            ? "medios"
+            : view === "management"
+              ? "grupos"
+              : view === "booking"
+                ? "salas"
+                : undefined,
         ...options,
       });
-    } else if (view === 'medios') {
-      setBookingOptions({ sectionTab: 'medios', statusFilter: 'todos' });
-    } else if (view === 'management') {
-      setBookingOptions({ sectionTab: 'grupos', statusFilter: 'todos' });
-    } else if (view === 'booking') {
-      setBookingOptions({ sectionTab: 'salas', statusFilter: 'todos' });
+    } else if (view === "medios") {
+      setBookingOptions({ sectionTab: "medios", statusFilter: "todos" });
+    } else if (view === "management") {
+      setBookingOptions({ sectionTab: "grupos", statusFilter: "todos" });
+    } else if (view === "booking") {
+      setBookingOptions({ sectionTab: "salas", statusFilter: "todos" });
     } else {
       setBookingOptions({});
     }
@@ -586,7 +700,7 @@ export default function App() {
     messages,
     isLoggedIn,
     onSelectLead: (leadId) => {
-      handleNavigate('booking', { selectedLeadId: leadId });
+      handleNavigate("booking", { selectedLeadId: leadId });
     },
   });
 
@@ -603,41 +717,56 @@ export default function App() {
       .catch(() => {});
   }, [currentActiveBandId]);
 
-  const handleCrmSectionChange = useCallback((section: 'salas' | 'medios' | 'grupos' | 'bandas') => {
-    if (section === 'bandas') {
-      setCurrentView((prev) => {
-        if (prev !== 'bandas') {
-          const targetGroupId = findNavGroupIdForItem('bandas');
-          if (targetGroupId) {
-            setOpenNavGroupIds((openPrev) => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
+  const handleCrmSectionChange = useCallback(
+    (section: "salas" | "medios" | "grupos" | "bandas") => {
+      if (section === "bandas") {
+        setCurrentView((prev) => {
+          if (prev !== "bandas") {
+            const targetGroupId = findNavGroupIdForItem("bandas");
+            if (targetGroupId) {
+              setOpenNavGroupIds((openPrev) =>
+                openPrev[targetGroupId]
+                  ? openPrev
+                  : { ...openPrev, [targetGroupId]: true },
+              );
+            }
+            return "bandas";
           }
-          return 'bandas';
+          return prev;
+        });
+        return;
+      }
+
+      const targetView: "booking" | "medios" | "management" =
+        section === "medios"
+          ? "medios"
+          : section === "grupos"
+            ? "management"
+            : "booking";
+
+      setCurrentView((prev) => {
+        if (prev !== targetView) {
+          const targetGroupId = findNavGroupIdForItem(targetView);
+          if (targetGroupId) {
+            setOpenNavGroupIds((openPrev) =>
+              openPrev[targetGroupId]
+                ? openPrev
+                : { ...openPrev, [targetGroupId]: true },
+            );
+          }
+          return targetView;
         }
         return prev;
       });
-      return;
-    }
 
-    const targetView: 'booking' | 'medios' | 'management' =
-      section === 'medios' ? 'medios' : section === 'grupos' ? 'management' : 'booking';
-
-    setCurrentView((prev) => {
-      if (prev !== targetView) {
-        const targetGroupId = findNavGroupIdForItem(targetView);
-        if (targetGroupId) {
-          setOpenNavGroupIds((openPrev) => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
-        }
-        return targetView;
-      }
-      return prev;
-    });
-
-    setBookingOptions((prev) => ({
-      ...prev,
-      sectionTab: section,
-      statusFilter: 'todos',
-    }));
-  }, []);
+      setBookingOptions((prev) => ({
+        ...prev,
+        sectionTab: section,
+        statusFilter: "todos",
+      }));
+    },
+    [],
+  );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openGroupSheetId, setOpenGroupSheetId] = useState<string | null>(null);
@@ -654,24 +783,25 @@ export default function App() {
 
   // Redirect non-admins away from finanzas if they end up there
   useEffect(() => {
-    if (!isAdmin && (currentView as string) === 'finanzas') {
-      setCurrentView('resumen');
+    if (!isAdmin && (currentView as string) === "finanzas") {
+      setCurrentView("resumen");
     }
   }, [isAdmin, currentView]);
 
   // Active Theme State
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
-    const saved = localStorage.getItem('bakandeya_theme') as ThemeName;
+    const saved = localStorage.getItem("bakandeya_theme") as ThemeName;
     // Un tema guardado que ya no existe (p. ej. las paletas analog/legato/spectrum que llegaron a
     // estar en main) cae al por defecto en vez de dejar `colors` sin definir.
-    if (!saved || saved === ('stitch_light' as any) || !(saved in THEMES)) {
-      return 'indie_velvet';
+    if (!saved || saved === ("stitch_light" as any) || !(saved in THEMES)) {
+      return "indie_velvet";
     }
     return saved;
   });
 
   // Active Font State
-  const [currentFont, setCurrentFont] = useState<FontPresetKey>(getStoredFontPreset);
+  const [currentFont, setCurrentFont] =
+    useState<FontPresetKey>(getStoredFontPreset);
   const [showFontModal, setShowFontModal] = useState(false);
 
   useEffect(() => {
@@ -686,13 +816,15 @@ export default function App() {
   // Handle Stripe Payment Redirect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment');
-    const planParam = urlParams.get('plan');
-    const bandParam = urlParams.get('band');
-    const sessionParam = urlParams.get('session_id');
+    const paymentStatus = urlParams.get("payment");
+    const planParam = urlParams.get("plan");
+    const bandParam = urlParams.get("band");
+    const sessionParam = urlParams.get("session_id");
 
-    if (paymentStatus === 'success') {
-      const planName = planParam ? planParam.toUpperCase().replace('_', '') : 'PRO';
+    if (paymentStatus === "success") {
+      const planName = planParam
+        ? planParam.toUpperCase().replace("_", "")
+        : "PRO";
 
       // Clean URL params immediately
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -711,7 +843,7 @@ export default function App() {
             fetchState();
           })
           .catch((err) => {
-            console.warn('Error confirming payment with backend:', err);
+            console.warn("Error confirming payment with backend:", err);
             refreshSession();
             fetchState();
           });
@@ -720,37 +852,42 @@ export default function App() {
         fetchState();
       }
 
-      alert(`🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`);
-    } else if (paymentStatus === 'cancelled') {
+      alert(
+        `🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`,
+      );
+    } else if (paymentStatus === "cancelled") {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
   // Detecta cambios en data-theme para sincronizar colores Espectro
   const [dataTheme, setDataTheme] = React.useState<string>(() => {
-    if (typeof document === 'undefined') return 'classic';
-    return document.documentElement.getAttribute('data-theme') || 'classic';
+    if (typeof document === "undefined") return "classic";
+    return document.documentElement.getAttribute("data-theme") || "classic";
   });
 
   useEffect(() => {
     // Observa cambios en el atributo data-theme
     const observer = new MutationObserver(() => {
-      const newTheme = document.documentElement.getAttribute('data-theme') || 'classic';
+      const newTheme =
+        document.documentElement.getAttribute("data-theme") || "classic";
       setDataTheme(newTheme);
     });
 
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-theme'],
+      attributeFilter: ["data-theme"],
     });
 
     return () => observer.disconnect();
   }, []);
 
-  const isEspectroActive = dataTheme === 'light' || dataTheme === 'dark';
+  const isEspectroActive = dataTheme === "light" || dataTheme === "dark";
 
   // Proporciona colores del sistema Espectro o fallback al sistema antiguo
-  const colors: ThemeColors = isEspectroActive ? getEspectroColors() : THEMES[currentTheme] || THEMES.indie_velvet;
+  const colors: ThemeColors = isEspectroActive
+    ? getEspectroColors()
+    : THEMES[currentTheme] || THEMES.indie_velvet;
   // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` heredadas (slate/indigo)
   // que aún quedan en componentes no deben activarse nunca. Se mantiene el nombre porque el código
   // que llega de main lo pasa como prop.
@@ -759,33 +896,55 @@ export default function App() {
   // Persist Theme Selection - sincroniza tanto currentTheme como data-theme
   const handleThemeChange = (theme: ThemeName) => {
     setCurrentTheme(theme);
-    localStorage.setItem('bakandeya_theme', theme);
+    localStorage.setItem("bakandeya_theme", theme);
     // Actualiza data-theme para que Espectro sepa qué tema usar
-    const resolvedTheme = theme === 'classic' ? 'classic' : 'light';
-    document.documentElement.setAttribute('data-theme', resolvedTheme);
+    const resolvedTheme = theme === "classic" ? "classic" : "light";
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
   };
 
   const handleOpenStudio = (song: any) => {
     // Placeholder for Studio editor integration
-    console.log('Open Studio for song:', song);
+    console.log("Open Studio for song:", song);
   };
 
   const handleOpenIris = (song: any) => {
     // Placeholder for Iris integration
-    console.log('Open Iris for song:', song);
+    console.log("Open Iris for song:", song);
   };
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter((c) => {
-      if (!c.band_id && !c.bandName) return isSameBand(currentActiveBandId, 'band-bakandeya', '', currentActiveBandName);
-      return isSameBand(c.band_id, currentActiveBandId, c.bandName, currentActiveBandName);
+      if (!c.band_id && !c.bandName)
+        return isSameBand(
+          currentActiveBandId,
+          "band-bakandeya",
+          "",
+          currentActiveBandName,
+        );
+      return isSameBand(
+        c.band_id,
+        currentActiveBandId,
+        c.bandName,
+        currentActiveBandName,
+      );
     });
   }, [concerts, currentActiveBandId, currentActiveBandName]);
 
   const activeBandRehearsals = React.useMemo(() => {
     return rehearsals.filter((r) => {
-      if (!r.band_id && !r.bandName) return isSameBand(currentActiveBandId, 'band-bakandeya', '', currentActiveBandName);
-      return isSameBand(r.band_id, currentActiveBandId, r.bandName, currentActiveBandName);
+      if (!r.band_id && !r.bandName)
+        return isSameBand(
+          currentActiveBandId,
+          "band-bakandeya",
+          "",
+          currentActiveBandName,
+        );
+      return isSameBand(
+        r.band_id,
+        currentActiveBandId,
+        r.bandName,
+        currentActiveBandName,
+      );
     });
   }, [rehearsals, currentActiveBandId, currentActiveBandName]);
 
@@ -796,49 +955,82 @@ export default function App() {
     const isMedio = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
-      return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
+      return (
+        s.includes("medio") ||
+        s.includes("radio") ||
+        s.includes("prensa") ||
+        s.includes("tv") ||
+        s.includes("podc")
+      );
     };
     const isManagement = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
-      return ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some((t) => s.includes(t));
+      return [
+        "agencia",
+        "manager",
+        "productora",
+        "sello",
+        "promotora",
+        "management",
+      ].some((t) => s.includes(t));
     };
     const isBanda = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
       return (
-        s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico')
+        s === "grupo" ||
+        s.includes("grup") ||
+        s.includes("banda") ||
+        s.includes("artist") ||
+        s.includes("musico") ||
+        s.includes("músico")
       );
     };
     const totalEvents = concerts.length + rehearsals.length;
-    const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
+    const activeEvents =
+      activeBandConcerts.length + activeBandRehearsals.length;
     return {
-      booking: leads.filter((l) => !isMedio(l) && !isBanda(l) && !isManagement(l)).length,
+      booking: leads.filter(
+        (l) => !isMedio(l) && !isBanda(l) && !isManagement(l),
+      ).length,
       medios: leads.filter((l) => isMedio(l)).length,
       management: leads.filter((l) => isManagement(l)).length,
       bandas: bandsCount,
       calendario: totalEvents === 0 ? 0 : `${activeEvents}/${totalEvents}`,
     } as Record<string, number | string>;
-  }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals, bandsCount]);
+  }, [
+    leads,
+    concerts,
+    rehearsals,
+    activeBandConcerts,
+    activeBandRehearsals,
+    bandsCount,
+  ]);
 
   // Vista agrupada del menú (secciones colapsables) para planes con menú largo y para `promo_plus`/`promo_music`;
   // `promo` (4 módulos) se queda con la lista plana de siempre sin agrupaciones.
   const shouldGroupNav = shouldGroupNavForPlan(currentActiveBandPlan);
 
-  const [openNavGroupIds, setOpenNavGroupIds] = useState<Record<string, boolean>>(() => {
+  const [openNavGroupIds, setOpenNavGroupIds] = useState<
+    Record<string, boolean>
+  >(() => {
     try {
-      const stored = localStorage.getItem('bm_nav_open_groups');
+      const stored = localStorage.getItem("bm_nav_open_groups");
       if (stored) return JSON.parse(stored);
     } catch {
       /* localStorage no disponible o corrupto: se ignora */
     }
-    const initialGroupId = findNavGroupIdForItem('resumen');
+    const initialGroupId = findNavGroupIdForItem("resumen");
     return initialGroupId ? { [initialGroupId]: true } : {};
   });
 
   useEffect(() => {
     try {
-      localStorage.setItem('bm_nav_open_groups', JSON.stringify(openNavGroupIds));
+      localStorage.setItem(
+        "bm_nav_open_groups",
+        JSON.stringify(openNavGroupIds),
+      );
     } catch {
       /* localStorage no disponible: el toggle sigue funcionando en memoria */
     }
@@ -862,24 +1054,31 @@ export default function App() {
   // Public Landing Routes
   const isFanRoute = React.useMemo(() => {
     const p = window.location.pathname.toLowerCase();
-    return p.startsWith('/fans') || p.startsWith('/unete') || p.startsWith('/directo') || p.startsWith('/fan');
+    return (
+      p.startsWith("/fans") ||
+      p.startsWith("/unete") ||
+      p.startsWith("/directo") ||
+      p.startsWith("/fan")
+    );
   }, []);
 
   const isMusicianRoute = React.useMemo(() => {
     const p = window.location.pathname.toLowerCase();
     return (
-      p.startsWith('/musicos') ||
-      p.startsWith('/landing-musicos') ||
-      p.startsWith('/musicians') ||
-      p.startsWith('/artistas') ||
-      p.startsWith('/waitlist') ||
-      p.startsWith('/bandas-registro')
+      p.startsWith("/musicos") ||
+      p.startsWith("/landing-musicos") ||
+      p.startsWith("/musicians") ||
+      p.startsWith("/artistas") ||
+      p.startsWith("/waitlist") ||
+      p.startsWith("/bandas-registro")
     );
   }, []);
 
   const isEpkRoute = React.useMemo(() => {
     const p = window.location.pathname.toLowerCase();
-    return p.startsWith('/epk') || p.startsWith('/dossier') || p.startsWith('/press');
+    return (
+      p.startsWith("/epk") || p.startsWith("/dossier") || p.startsWith("/press")
+    );
   }, []);
 
   if (isMusicianRoute) {
@@ -919,7 +1118,11 @@ export default function App() {
           </div>
         }
       >
-        <FansLanding currentBandId={currentActiveBandId} currentBandName={currentActiveBandName} currentBandLogo={currentActiveBandLogo} />
+        <FansLanding
+          currentBandId={currentActiveBandId}
+          currentBandName={currentActiveBandName}
+          currentBandLogo={currentActiveBandLogo}
+        />
       </Suspense>
     );
   }
@@ -974,7 +1177,7 @@ export default function App() {
                   />
                 ) : (
                   <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center font-bold text-xs shrink-0">
-                    {currentActiveBandName[0]?.toUpperCase() || 'B'}
+                    {currentActiveBandName[0]?.toUpperCase() || "B"}
                   </div>
                 )}
               </div>
@@ -982,14 +1185,14 @@ export default function App() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <h1
-                    className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`}
+                    className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? "text-xs" : "text-xs sm:text-sm"}`}
                     translate="no"
                   >
                     {currentActiveBandName}
                   </h1>
                   <ChevronDown className="w-3.5 h-3.5 text-[var(--acc-ink)] group-hover:translate-y-0.5 transition-transform" />
                   <span
-                    className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`}
+                    className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === "synced" ? "bg-[var(--ok)]/30" : syncStatus === "error" ? "bg-[var(--alert)]" : "bg-[var(--ink-3)]"}`}
                   />
                 </div>
                 <button
@@ -1017,7 +1220,9 @@ export default function App() {
                 onMarkAllAsRead={markAllNotificationsAsRead}
                 onMarkAsRead={markNotificationAsRead}
                 onClearHistory={clearNotificationHistory}
-                onSelectLead={(leadId) => handleNavigate('booking', { selectedLeadId: leadId })}
+                onSelectLead={(leadId) =>
+                  handleNavigate("booking", { selectedLeadId: leadId })
+                }
                 variant="mobile"
               />
               <button
@@ -1034,13 +1239,15 @@ export default function App() {
                   onClick={() => setShowCampaignModal(true)}
                   className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
                     activeCampaign
-                      ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                      : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
+                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                   title="Gestionar Campañas de Booking"
                 >
                   <Target className="w-3.5 h-3.5" />
-                  <span className="text-[10px] hidden xs:inline">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
+                  <span className="text-[10px] hidden xs:inline">
+                    {activeCampaign ? "Campaña" : "Campañas"}
+                  </span>
                 </button>
               )}
             </div>
@@ -1056,25 +1263,34 @@ export default function App() {
           {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
             let isActive = false;
             if (openGroupSheetId) {
-              isActive = slot.kind === 'group' && openGroupSheetId === slot.groupId;
+              isActive =
+                slot.kind === "group" && openGroupSheetId === slot.groupId;
             } else if (isMobileMenuOpen) {
-              isActive = slot.kind === 'more';
+              isActive = slot.kind === "more";
             } else {
-              if (slot.kind === 'view') {
+              if (slot.kind === "view") {
                 isActive = currentView === slot.itemId;
-              } else if (slot.kind === 'group') {
-                isActive = (slot.itemId ? currentView === slot.itemId : false) || findNavGroupIdForItem(currentView) === slot.groupId;
-              } else if (slot.kind === 'more') {
+              } else if (slot.kind === "group") {
+                isActive =
+                  (slot.itemId ? currentView === slot.itemId : false) ||
+                  findNavGroupIdForItem(currentView) === slot.groupId;
+              } else if (slot.kind === "more") {
                 const groupOfView = findNavGroupIdForItem(currentView);
                 const isDirectBottomSlot =
-                  currentView === 'resumen' || currentView === 'calendario' || groupOfView === 'musica' || groupOfView === 'promocion';
+                  currentView === "resumen" ||
+                  currentView === "calendario" ||
+                  groupOfView === "musica" ||
+                  groupOfView === "promocion";
                 isActive = !isDirectBottomSlot;
               }
             }
             const IconComp = slot.itemId
               ? NAV_ITEMS[slot.itemId as NavItemId].icon
-              : slot.kind === 'group' && slot.groupId
-                ? NAV_ITEMS[NAV_GROUPS_MOBILE.find((g) => g.id === slot.groupId)!.itemIds[0]].icon
+              : slot.kind === "group" && slot.groupId
+                ? NAV_ITEMS[
+                    NAV_GROUPS_MOBILE.find((g) => g.id === slot.groupId)!
+                      .itemIds[0]
+                  ].icon
                 : Menu;
             const slotLabel = t(slot.labelKey, slot.labelDefault);
             return (
@@ -1082,19 +1298,24 @@ export default function App() {
                 key={slot.id}
                 type="button"
                 onClick={() => {
-                  if (slot.kind === 'view') {
+                  if (slot.kind === "view") {
                     setOpenGroupSheetId(null);
                     setIsMobileMenuOpen(false);
                     handleNavigate(slot.itemId as any);
-                  } else if (slot.kind === 'group') {
+                  } else if (slot.kind === "group") {
                     setIsMobileMenuOpen(false);
                     const isAlreadyInGroup =
-                      (slot.itemId && currentView === slot.itemId) || findNavGroupIdForItem(currentView) === slot.groupId;
+                      (slot.itemId && currentView === slot.itemId) ||
+                      findNavGroupIdForItem(currentView) === slot.groupId;
                     if (isAlreadyInGroup) {
-                      setOpenGroupSheetId((prev) => (prev === slot.groupId ? null : (slot.groupId as string)));
+                      setOpenGroupSheetId((prev) =>
+                        prev === slot.groupId ? null : (slot.groupId as string),
+                      );
                     } else {
                       setOpenGroupSheetId(null);
-                      const defaultTarget = slot.itemId || (slot.groupId === 'musica' ? 'repertorio' : 'epk');
+                      const defaultTarget =
+                        slot.itemId ||
+                        (slot.groupId === "musica" ? "repertorio" : "epk");
                       handleNavigate(defaultTarget as any);
                     }
                   } else {
@@ -1108,7 +1329,9 @@ export default function App() {
               >
                 <span
                   className={`flex items-center justify-center w-10 h-10 rounded-[var(--r-pill)] transition-colors ${
-                    isActive ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'
+                    isActive
+                      ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
+                      : "text-[var(--ink-2)]"
                   }`}
                 >
                   <IconComp className="w-5 h-5" />
@@ -1122,7 +1345,9 @@ export default function App() {
  en la bottom bar, reusando NavItemButton tal cual lo usa el drawer completo. */}
         {openGroupSheetId &&
           (() => {
-            const group = NAV_GROUPS_MOBILE.find((g) => g.id === openGroupSheetId);
+            const group = NAV_GROUPS_MOBILE.find(
+              (g) => g.id === openGroupSheetId,
+            );
             if (!group) return null;
             return (
               <>
@@ -1137,7 +1362,11 @@ export default function App() {
                   </div>
                   <div className="px-3 pb-4 flex flex-col gap-1">
                     {group.itemIds
-                      .filter((id) => (!NAV_ITEMS[id].adminOnly || isAdmin) && hasModuleAccess(currentActiveBandPlan, id))
+                      .filter(
+                        (id) =>
+                          (!NAV_ITEMS[id].adminOnly || isAdmin) &&
+                          hasModuleAccess(currentActiveBandPlan, id),
+                      )
                       .map((id) => {
                         const item = NAV_ITEMS[id];
                         return (
@@ -1146,7 +1375,10 @@ export default function App() {
                             item={item}
                             label={t(item.labelKey, item.labelDefault)}
                             isSelected={currentView === item.id}
-                            isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+                            isAllowed={hasModuleAccess(
+                              currentActiveBandPlan,
+                              item.id,
+                            )}
                             badge={navBadges[item.id]}
                             onNavigate={() => {
                               handleNavigate(item.id as any);
@@ -1169,7 +1401,10 @@ export default function App() {
         {isMobileMenuOpen && (
           <div className="md:hidden fixed inset-0 z-[9999] flex">
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity" onClick={() => setIsMobileMenuOpen(false)} />
+            <div
+              className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
             {/* Drawer panel */}
             <div className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
               {/* Drawer Header */}
@@ -1184,21 +1419,23 @@ export default function App() {
                     />
                   ) : (
                     <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center font-bold text-sm shrink-0">
-                      {currentActiveBandName[0]?.toUpperCase() || 'B'}
+                      {currentActiveBandName[0]?.toUpperCase() || "B"}
                     </div>
                   )}
                   <div className="flex flex-col">
                     <h1
-                      className={`font-bold font-display tracking-wide text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : currentActiveBandName.length > 12 ? 'text-sm' : 'text-base'}`}
+                      className={`font-bold font-display tracking-wide text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ? "text-xs" : currentActiveBandName.length > 12 ? "text-sm" : "text-base"}`}
                       translate="no"
                     >
                       {currentActiveBandName}
                     </h1>
                     <div className="flex items-center gap-1.5 mt-1">
                       <span
-                        className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`}
+                        className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === "synced" ? "bg-[var(--ok)]/30" : syncStatus === "error" ? "bg-[var(--alert)]" : "bg-[var(--ink-3)]"}`}
                       />
-                      <span className="text-[10px] font-sans text-[var(--ink-2)]">Banda activa</span>
+                      <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                        Banda activa
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1220,7 +1457,10 @@ export default function App() {
                       item={item}
                       label={t(item.labelKey, item.labelDefault)}
                       isSelected={currentView === item.id}
-                      isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+                      isAllowed={hasModuleAccess(
+                        currentActiveBandPlan,
+                        item.id,
+                      )}
                       badge={navBadges[item.id]}
                       onNavigate={() => handleNavigate(item.id as any)}
                       variant="mobile"
@@ -1243,23 +1483,35 @@ export default function App() {
                         variant="mobile"
                       />
                     ))
-                  : FLAT_NAV_ORDER_IDS.filter((id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id))
+                  : FLAT_NAV_ORDER_IDS.filter(
+                      (id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id),
+                    )
                       .map((id) => NAV_ITEMS[id])
-                      .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
+                      .filter(
+                        (item) =>
+                          (!item.adminOnly || isAdmin) &&
+                          (!isPromoPlan ||
+                            hasModuleAccess(currentActiveBandPlan, item.id)),
+                      )
                       .map((item) => (
                         <NavItemButton
                           key={item.id}
                           item={item}
                           label={t(item.labelKey, item.labelDefault)}
                           isSelected={currentView === item.id}
-                          isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+                          isAllowed={hasModuleAccess(
+                            currentActiveBandPlan,
+                            item.id,
+                          )}
                           badge={navBadges[item.id]}
                           onNavigate={() => handleNavigate(item.id as any)}
                           variant="mobile"
                         />
                       ))}
                 {shouldGroupNav &&
-                  NAV_PINNED_BOTTOM_IDS.filter((id) => hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
+                  NAV_PINNED_BOTTOM_IDS.filter((id) =>
+                    hasModuleAccess(currentActiveBandPlan, id),
+                  ).map((id) => {
                     const item = NAV_ITEMS[id];
                     return (
                       <NavItemButton
@@ -1267,7 +1519,10 @@ export default function App() {
                         item={item}
                         label={t(item.labelKey, item.labelDefault)}
                         isSelected={currentView === item.id}
-                        isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+                        isAllowed={hasModuleAccess(
+                          currentActiveBandPlan,
+                          item.id,
+                        )}
                         badge={navBadges[item.id]}
                         onNavigate={() => handleNavigate(item.id as any)}
                         variant="mobile"
@@ -1285,14 +1540,26 @@ export default function App() {
                   const userPlan = currentActiveBandPlan;
                   const pDef = getPlanDefinition(userPlan);
                   const totalCredits =
-                    userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
-                  const estimatedUsed = Math.min(totalCredits, Math.max(12, leads.length * 2 + posts.length));
-                  const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
+                    userPlan === "cabeza_de_cartel"
+                      ? 2500
+                      : userPlan === "de_gira"
+                        ? 800
+                        : userPlan === "local"
+                          ? 300
+                          : 100;
+                  const estimatedUsed = Math.min(
+                    totalCredits,
+                    Math.max(12, leads.length * 2 + posts.length),
+                  );
+                  const pct = Math.min(
+                    100,
+                    Math.round((estimatedUsed / totalCredits) * 100),
+                  );
 
                   return (
                     <div
                       onClick={() => {
-                        handleNavigate('planes');
+                        handleNavigate("planes");
                         setIsMobileMenuOpen(false);
                       }}
                       className="mx-3 my-2 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 transition-colors cursor-pointer group"
@@ -1301,7 +1568,9 @@ export default function App() {
                       <div className="flex items-center justify-between gap-1 mb-1.5">
                         <div className="flex items-center gap-1.5">
                           <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
-                          <span className="text-[11px] font-semibold text-[var(--ink-2)]">Créditos IA</span>
+                          <span className="text-[11px] font-semibold text-[var(--ink-2)]">
+                            Créditos IA
+                          </span>
                         </div>
                         <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">
                           {estimatedUsed} / {totalCredits}
@@ -1310,14 +1579,18 @@ export default function App() {
                       <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
                         <div
                           className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
-                            pct > 85 ? 'bg-[var(--alert)]' : 'bg-[var(--acc)]'
+                            pct > 85 ? "bg-[var(--alert)]" : "bg-[var(--acc)]"
                           }`}
                           style={{ width: `${pct}%` }}
                         />
                       </div>
                       <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
-                        <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
-                        <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
+                        <span className="truncate max-w-[100px]">
+                          Plan {pDef.name}
+                        </span>
+                        <span className="text-[var(--acc-ink)] font-semibold transition-colors">
+                          Planes →
+                        </span>
                       </div>
                     </div>
                   );
@@ -1343,14 +1616,20 @@ export default function App() {
                       <div
                         className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
                         style={{
-                          backgroundColor: currentUser.avatarColor || 'var(--acc)',
+                          backgroundColor:
+                            currentUser.avatarColor || "var(--acc)",
                         }}
                       >
-                        {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
+                        {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
                       </div>
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">{currentUser.name}</span>
-                        <span className="text-[10px] text-[var(--ink-2)] truncate" title={currentUser.email || currentUser.username}>
+                        <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
+                          {currentUser.name}
+                        </span>
+                        <span
+                          className="text-[10px] text-[var(--ink-2)] truncate"
+                          title={currentUser.email || currentUser.username}
+                        >
                           {currentUser.email || currentUser.username}
                         </span>
                       </div>
@@ -1406,7 +1685,9 @@ export default function App() {
               ) : (
                 <div className="w-24 h-24 xl:w-28 xl:h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1 p-2 shrink-0 group-hover:scale-105 transition-transform duration-300">
                   <Guitar className="w-6 h-6 opacity-80 group-hover:scale-110 transition-transform" />
-                  <span className="text-[9px] font-bold text-[var(--ink-2)] text-center">{currentActiveBandName}</span>
+                  <span className="text-[9px] font-bold text-[var(--ink-2)] text-center">
+                    {currentActiveBandName}
+                  </span>
                 </div>
               )}
             </div>
@@ -1416,12 +1697,12 @@ export default function App() {
                 <h1
                   className={`font-black font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
                     currentActiveBandName.length > 22
-                      ? 'text-xs'
+                      ? "text-xs"
                       : currentActiveBandName.length > 14
-                        ? 'text-sm'
+                        ? "text-sm"
                         : currentActiveBandName.length > 9
-                          ? 'text-base'
-                          : 'text-lg'
+                          ? "text-base"
+                          : "text-lg"
                   }`}
                   translate="no"
                 >
@@ -1481,23 +1762,35 @@ export default function App() {
                     variant="desktop"
                   />
                 ))
-              : FLAT_NAV_ORDER_IDS.filter((id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id))
+              : FLAT_NAV_ORDER_IDS.filter(
+                  (id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id),
+                )
                   .map((id) => NAV_ITEMS[id])
-                  .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
+                  .filter(
+                    (item) =>
+                      (!item.adminOnly || isAdmin) &&
+                      (!isPromoPlan ||
+                        hasModuleAccess(currentActiveBandPlan, item.id)),
+                  )
                   .map((item) => (
                     <NavItemButton
                       key={item.id}
                       item={item}
                       label={t(item.labelKey, item.labelDefault)}
                       isSelected={currentView === item.id}
-                      isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+                      isAllowed={hasModuleAccess(
+                        currentActiveBandPlan,
+                        item.id,
+                      )}
                       badge={navBadges[item.id]}
                       onNavigate={() => handleNavigate(item.id as any)}
                       variant="desktop"
                     />
                   ))}
             {shouldGroupNav &&
-              NAV_PINNED_BOTTOM_IDS.filter((id) => hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
+              NAV_PINNED_BOTTOM_IDS.filter((id) =>
+                hasModuleAccess(currentActiveBandPlan, id),
+              ).map((id) => {
                 const item = NAV_ITEMS[id];
                 return (
                   <NavItemButton
@@ -1518,7 +1811,9 @@ export default function App() {
           {!isPromoPlan && (
             <div className="px-3 pt-3 pb-2 space-y-1.5">
               <div className="flex items-center justify-between px-1">
-                <p className="text-[11px] font-semibold text-[var(--ink-2)]">Campañas</p>
+                <p className="text-[11px] font-semibold text-[var(--ink-2)]">
+                  Campañas
+                </p>
                 <button
                   onClick={() => setShowCampaignModal(true)}
                   className="text-[11px] font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
@@ -1534,28 +1829,30 @@ export default function App() {
                 onClick={() => setShowCampaignModal(true)}
                 className={`w-full flex items-center justify-between p-2 rounded-[var(--r-m)] text-left transition-colors cursor-pointer group ${
                   activeCampaign
-                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                    : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
+                    : "bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                 }`}
                 title="Configurar y activar campañas de booking con fechas objetivo"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <div
-                    className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'}`}
+                    className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? "bg-[var(--acc)]/25 text-[var(--on-acc)]" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
                   >
                     <Target className="w-3.5 h-3.5" />
                   </div>
                   <div className="flex flex-col min-w-0">
                     <span className="text-[11px] font-bold truncate leading-tight">
-                      {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
+                      {activeCampaign ? activeCampaign.name : "Modo Campaña"}
                     </span>
                     <span className="text-[10px] text-[var(--ink-2)] truncate">
-                      {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
+                      {activeCampaign
+                        ? `${activeCampaign.targetDates?.length || 0} fechas en calendario`
+                        : "Sin campaña activa"}
                     </span>
                   </div>
                 </div>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] shrink-0">
-                  {activeCampaign ? 'Activa' : 'Elegir'}
+                  {activeCampaign ? "Activa" : "Elegir"}
                 </span>
               </button>
             </div>
@@ -1566,20 +1863,35 @@ export default function App() {
             (() => {
               const userPlan = currentActiveBandPlan;
               const pDef = getPlanDefinition(userPlan);
-              const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
-              const estimatedUsed = Math.min(totalCredits, Math.max(12, leads.length * 2 + posts.length));
-              const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
+              const totalCredits =
+                userPlan === "cabeza_de_cartel"
+                  ? 2500
+                  : userPlan === "de_gira"
+                    ? 800
+                    : userPlan === "local"
+                      ? 300
+                      : 100;
+              const estimatedUsed = Math.min(
+                totalCredits,
+                Math.max(12, leads.length * 2 + posts.length),
+              );
+              const pct = Math.min(
+                100,
+                Math.round((estimatedUsed / totalCredits) * 100),
+              );
 
               return (
                 <div
-                  onClick={() => handleNavigate('planes')}
+                  onClick={() => handleNavigate("planes")}
                   className="mx-3 my-2 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 transition-colors cursor-pointer group"
                   title="Ver consumo de créditos IA y planes"
                 >
                   <div className="flex items-center justify-between gap-1 mb-1.5">
                     <div className="flex items-center gap-1.5">
                       <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
-                      <span className="text-[11px] font-semibold text-[var(--ink-2)]">Créditos IA</span>
+                      <span className="text-[11px] font-semibold text-[var(--ink-2)]">
+                        Créditos IA
+                      </span>
                     </div>
                     <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">
                       {estimatedUsed} / {totalCredits}
@@ -1588,14 +1900,18 @@ export default function App() {
                   <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
                     <div
                       className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
-                        pct > 85 ? 'bg-[var(--alert)]' : 'bg-[var(--acc)]'
+                        pct > 85 ? "bg-[var(--alert)]" : "bg-[var(--acc)]"
                       }`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
-                    <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
-                    <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
+                    <span className="truncate max-w-[100px]">
+                      Plan {pDef.name}
+                    </span>
+                    <span className="text-[var(--acc-ink)] font-semibold transition-colors">
+                      Planes →
+                    </span>
                   </div>
                 </div>
               );
@@ -1614,14 +1930,19 @@ export default function App() {
                   <div
                     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
                     style={{
-                      backgroundColor: currentUser.avatarColor || 'var(--acc)',
+                      backgroundColor: currentUser.avatarColor || "var(--acc)",
                     }}
                   >
-                    {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
+                    {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">{currentUser.name}</span>
-                    <span className="text-[10px] text-[var(--ink-2)] truncate" title={currentUser.email || currentUser.username}>
+                    <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
+                      {currentUser.name}
+                    </span>
+                    <span
+                      className="text-[10px] text-[var(--ink-2)] truncate"
+                      title={currentUser.email || currentUser.username}
+                    >
                       {currentUser.email || currentUser.username}
                     </span>
                   </div>
@@ -1655,7 +1976,9 @@ export default function App() {
                   onMarkAllAsRead={markAllNotificationsAsRead}
                   onMarkAsRead={markNotificationAsRead}
                   onClearHistory={clearNotificationHistory}
-                  onSelectLead={(leadId) => handleNavigate('booking', { selectedLeadId: leadId })}
+                  onSelectLead={(leadId) =>
+                    handleNavigate("booking", { selectedLeadId: leadId })
+                  }
                   variant="desktop"
                 />
                 <button
@@ -1673,25 +1996,29 @@ export default function App() {
         {/* Main Content Area */}
         <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
           {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
-          {activeCampaign && ['booking', 'medios', 'management', 'bandas'].includes(currentView) && (
-            <GlobalCampaignBar
-              campaign={activeCampaign}
-              allLeads={leads}
-              onOpenManager={() => setShowCampaignModal(true)}
-              onDeactivate={() => handleSetActiveCampaign(null)}
-              onNavigate={handleNavigate}
-              currentView={currentView}
-            />
-          )}
+          {activeCampaign &&
+            ["booking", "medios", "management", "bandas"].includes(
+              currentView,
+            ) && (
+              <GlobalCampaignBar
+                campaign={activeCampaign}
+                allLeads={leads}
+                onOpenManager={() => setShowCampaignModal(true)}
+                onDeactivate={() => handleSetActiveCampaign(null)}
+                onNavigate={handleNavigate}
+                currentView={currentView}
+              />
+            )}
 
           {/* Sync warning if backend fails */}
-          {syncStatus === 'error' && (
+          {syncStatus === "error" && (
             <div className="mb-4 p-3 bg-[var(--alert)]/10/20 rounded-lg text-[var(--alert)]/60 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
               <div className="flex gap-2 items-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
                 <span>
-                  <strong>Modo Simulación Activo:</strong> No se pudo conectar con el servidor Express backend local. Los cambios actuales
-                  se almacenarán temporalmente en memoria.
+                  <strong>Modo Simulación Activo:</strong> No se pudo conectar
+                  con el servidor Express backend local. Los cambios actuales se
+                  almacenarán temporalmente en memoria.
                 </span>
               </div>
               <button
@@ -1704,7 +2031,10 @@ export default function App() {
           )}
 
           {/* Dynamic Views */}
-          <div key={currentView} className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in">
+          <div
+            key={currentView}
+            className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in"
+          >
             {isLoading ? (
               <SkeletonDashboard />
             ) : (
@@ -1715,7 +2045,7 @@ export default function App() {
                   </div>
                 }
               >
-                {currentView === 'resumen' && (
+                {currentView === "resumen" && (
                   <Dashboard
                     leads={leads}
                     colors={colors}
@@ -1739,7 +2069,9 @@ export default function App() {
                     isPromoPlan={isPromoPlan}
                   />
                 )}
-                {(currentView === 'booking' || currentView === 'medios' || currentView === 'management') && (
+                {(currentView === "booking" ||
+                  currentView === "medios" ||
+                  currentView === "management") && (
                   <BookingCRM
                     key="contacts-crm"
                     activeCampaign={activeCampaign}
@@ -1753,12 +2085,19 @@ export default function App() {
                     epkConfig={epkConfig}
                     onUpdateEpkConfig={handleUpdateEpkConfig}
                     initialSection={
-                      currentView === 'medios' ? 'medios' : currentView === 'management' ? 'grupos' : bookingOptions.sectionTab || 'salas'
+                      currentView === "medios"
+                        ? "medios"
+                        : currentView === "management"
+                          ? "grupos"
+                          : bookingOptions.sectionTab || "salas"
                     }
                     onSectionChange={handleCrmSectionChange}
                     onNavigate={handleNavigate}
                     bandsCount={bandsCount}
-                    initialStatusFilter={(bookingOptions.statusFilter as LeadStatus | 'todos') || 'todos'}
+                    initialStatusFilter={
+                      (bookingOptions.statusFilter as LeadStatus | "todos") ||
+                      "todos"
+                    }
                     initialSelectedLeadId={bookingOptions.selectedLeadId}
                     currentUser={currentUser}
                     bandName={currentActiveBandName}
@@ -1767,7 +2106,7 @@ export default function App() {
                     tours={tours}
                   />
                 )}
-                {currentView === 'bandas' && (
+                {currentView === "bandas" && (
                   <BandCRM
                     colors={colors}
                     leads={leads}
@@ -1778,7 +2117,7 @@ export default function App() {
                     onNavigate={handleNavigate}
                   />
                 )}
-                {currentView === 'calendario' && (
+                {currentView === "calendario" && (
                   <CalendarView
                     colors={colors}
                     rehearsals={rehearsals}
@@ -1803,7 +2142,7 @@ export default function App() {
                     isPromoPlan={isPromoPlan}
                   />
                 )}
-                {currentView === 'ensayos' && (
+                {currentView === "ensayos" && (
                   <ErrorBoundary fallbackTitle="Ensayos & Local en Vivo">
                     <EnsayosManager
                       rehearsals={activeBandRehearsals}
@@ -1822,7 +2161,7 @@ export default function App() {
                     />
                   </ErrorBoundary>
                 )}
-                {currentView === 'reels' && (
+                {currentView === "reels" && (
                   <ReelsCenter
                     colors={colors}
                     posts={posts}
@@ -1834,20 +2173,22 @@ export default function App() {
                     onDeleteMetric={handleDeleteMetric}
                     bandName={currentActiveBandName}
                     instagramHandle={
-                      (epkConfig?.enlacesRedes?.instagram || '')
-                        .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
-                        .replace(/^@/, '')
-                        .replace(/\/$/, '') || undefined
+                      (epkConfig?.enlacesRedes?.instagram || "")
+                        .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+                        .replace(/^@/, "")
+                        .replace(/\/$/, "") || undefined
                     }
                     hasAnySocialLink={Boolean(
                       epkConfig?.enlacesRedes?.instagram ||
                       epkConfig?.enlacesRedes?.tiktok ||
                       epkConfig?.enlacesRedes?.youtube ||
-                      epkConfig?.enlacesRedes?.facebook
+                      epkConfig?.enlacesRedes?.facebook,
                     )}
                   />
                 )}
-                {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia') && (
+                {(currentView === "repertorio" ||
+                  currentView === "catalogo" ||
+                  currentView === "discografia") && (
                   <ErrorBoundary fallbackTitle="Repertorio y Setlists">
                     <RepertorioSetlists
                       key={currentActiveBandId}
@@ -1866,7 +2207,7 @@ export default function App() {
                     />
                   </ErrorBoundary>
                 )}
-                {currentView === 'merchan' && (
+                {currentView === "merchan" && (
                   <Merchan
                     colors={colors}
                     currentTheme={currentTheme}
@@ -1875,7 +2216,7 @@ export default function App() {
                     bandLogoUrl={currentActiveBandLogo}
                   />
                 )}
-                {currentView === 'epk' && (
+                {currentView === "epk" && (
                   <ErrorBoundary fallbackTitle="EPK / Dossier Promocional">
                     <EPKManager
                       key={currentActiveBandId}
@@ -1888,7 +2229,7 @@ export default function App() {
                     />
                   </ErrorBoundary>
                 )}
-                {currentView === 'fans' && (
+                {currentView === "fans" && (
                   <FansPanel
                     fans={fans}
                     concerts={activeBandConcerts}
@@ -1912,7 +2253,7 @@ export default function App() {
                     initialConcertId={bookingOptions.concertId}
                   />
                 )}
-                {currentView === 'giras' && (
+                {currentView === "giras" && (
                   <ErrorBoundary fallbackTitle="Gestor de Giras">
                     <TourManager
                       colors={colors}
@@ -1936,7 +2277,7 @@ export default function App() {
                     />
                   </ErrorBoundary>
                 )}
-                {currentView === 'finanzas' &&
+                {currentView === "finanzas" &&
                   (isAdmin ? (
                     <Finanzas
                       colors={colors}
@@ -1949,19 +2290,24 @@ export default function App() {
                       bandUsers={bandUsers}
                     />
                   ) : (
-                    <div className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}>
+                    <div
+                      className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}
+                    >
                       <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
-                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60 tracking-wider">Acceso Restringido</h3>
-                      <p className="text-xs text-[var(--ink-3)] max-w-md mx-auto">
-                        El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda.
+                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60 tracking-wider">
+                        Acceso Restringido
+                      </h3>
+                      <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
+                        El apartado de Finanzas es confidencial y solo está
+                        accesible para los administradores de la banda.
                       </p>
                     </div>
                   ))}
                 {/* Full View Chatbot Instance */}
-                {currentView === 'chat' && (
+                {currentView === "chat" && (
                   <div className="w-full h-[calc(100vh-140px)] min-h-[600px] block">
                     <Chatbot
-                      key={`main_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
+                      key={`main_${currentUser?.id || "guest"}_${currentUser?.band_id || "default"}`}
                       colors={colors}
                       leads={leads}
                       rehearsals={rehearsals}
@@ -1981,7 +2327,7 @@ export default function App() {
                   </div>
                 )}
 
-                {currentView === 'planes' && (
+                {currentView === "planes" && (
                   <Planes
                     colors={colors}
                     currentUser={currentUser}
@@ -1998,14 +2344,17 @@ export default function App() {
         {/* Los modales se cargan bajo demanda (safeLazy): necesitan su propio límite de Suspense. */}
         <Suspense fallback={null}>
           {/* User Management Modal for Band Leader */}
-          {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
-            <UserManagementModal
-              currentUser={currentUser}
-              users={bandUsers}
-              onClose={() => setShowUserManagementModal(false)}
-              onRefreshUsers={fetchState}
-            />
-          )}
+          {showUserManagementModal &&
+            (isAdmin ||
+              currentUser?.role === "leader" ||
+              currentUser?.role === "admin") && (
+              <UserManagementModal
+                currentUser={currentUser}
+                users={bandUsers}
+                onClose={() => setShowUserManagementModal(false)}
+                onRefreshUsers={fetchState}
+              />
+            )}
 
           {/* User Profile & Password Change Modal for All Users */}
           {showUserProfileModal && currentUser && (
@@ -2014,7 +2363,7 @@ export default function App() {
               onClose={() => setShowUserProfileModal(false)}
               onUpdateUser={(updated) => {
                 setCurrentUser(updated);
-                localStorage.setItem('bakandeya_user', JSON.stringify(updated));
+                localStorage.setItem("bakandeya_user", JSON.stringify(updated));
                 fetchState();
               }}
               isAdmin={isAdmin}
@@ -2030,9 +2379,11 @@ export default function App() {
               availableBands={availableBands}
               onSetMainBand={handleSetMainBand}
               onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
-              onNavigateToPlanes={() => handleNavigate('planes')}
+              onNavigateToPlanes={() => handleNavigate("planes")}
               onOpenProfileWizard={() => setShowProfileWizardModal(true)}
-              onOpenNotificationSettings={() => setShowNotificationSettingsModal(true)}
+              onOpenNotificationSettings={() =>
+                setShowNotificationSettingsModal(true)
+              }
             />
           )}
 
@@ -2048,15 +2399,17 @@ export default function App() {
           )}
 
           {/* Floating Chatbot Overlay */}
-          {currentView !== 'chat' && !isPromoPlan && (
+          {currentView !== "chat" && !isPromoPlan && (
             <div
               className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-all duration-200 ${
-                isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
+                isFloatingChatOpen
+                  ? "block animate-in slide-in-from-bottom-5"
+                  : "hidden"
               }`}
             >
               <Suspense fallback={null}>
                 <Chatbot
-                  key={`floating_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
+                  key={`floating_${currentUser?.id || "guest"}_${currentUser?.band_id || "default"}`}
                   colors={colors}
                   leads={leads}
                   rehearsals={rehearsals}
@@ -2079,34 +2432,42 @@ export default function App() {
           )}
 
           {/* Floating Chatbot Trigger Button */}
-          {currentView !== 'chat' && !isPromoPlan && (
+          {currentView !== "chat" && !isPromoPlan && (
             <button
               id="floating-chat-trigger-btn"
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
               className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
                 isFloatingChatOpen
-                  ? 'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
+                  ? "bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]"
                   : isChatLoading
-                    ? 'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50'
-                    : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105'
+                    ? "bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50"
+                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105"
               }`}
-              title={isChatLoading ? 'Agente AI ejecutando en segundo plano...' : 'Abrir Agente Mánager AI'}
+              title={
+                isChatLoading
+                  ? "Agente AI ejecutando en segundo plano..."
+                  : "Abrir Agente Mánager AI"
+              }
             >
               {isFloatingChatOpen ? (
                 <X className="w-5 h-5" />
               ) : (
                 <>
                   <div className="relative">
-                    {isChatLoading ? <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" /> : <Guitar className="w-5 h-5" />}
+                    {isChatLoading ? (
+                      <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" />
+                    ) : (
+                      <Guitar className="w-5 h-5" />
+                    )}
                     <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`}
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--acc)]/80 animate-ping" : "bg-[var(--ok)]/60 animate-ping"}`}
                     />
                     <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--tentative)]/50' : 'bg-[var(--ok)]'}`}
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--tentative)]/50" : "bg-[var(--ok)]"}`}
                     />
                   </div>
                   <span className="text-xs font-sans font-bold tracking-wider hidden sm:inline-block pr-1">
-                    {isChatLoading ? 'Ejecutando...' : 'Agente AI'}
+                    {isChatLoading ? "Ejecutando..." : "Agente AI"}
                   </span>
                 </>
               )}
@@ -2114,10 +2475,19 @@ export default function App() {
           )}
 
           {/* Metronome Pro Modal */}
-          <MetronomeModal isOpen={showMetronomeModal} onClose={() => setShowMetronomeModal(false)} songs={[]} colors={colors} />
+          <MetronomeModal
+            isOpen={showMetronomeModal}
+            onClose={() => setShowMetronomeModal(false)}
+            songs={[]}
+            colors={colors}
+          />
 
           {/* Tuner Pro Modal */}
-          <TunerModal isOpen={showTunerModal} onClose={() => setShowTunerModal(false)} colors={colors} />
+          <TunerModal
+            isOpen={showTunerModal}
+            onClose={() => setShowTunerModal(false)}
+            colors={colors}
+          />
 
           {/* Band Switcher Modal (Netflix Style) */}
           <BandSwitcherModal
@@ -2133,17 +2503,19 @@ export default function App() {
               await fetchState();
             }}
             onSetMainBand={handleSetMainBand}
-            onOpenRegisterBand={() => handleNavigate('bandas')}
+            onOpenRegisterBand={() => handleNavigate("bandas")}
             onOpenBandManagement={() => setShowUserManagementModal(true)}
           />
 
           {/* Soft Limits Upgrade Modal */}
           <PlanLimitModal
             isOpen={planLimitModal.isOpen}
-            onClose={() => setPlanLimitModal((prev) => ({ ...prev, isOpen: false }))}
+            onClose={() =>
+              setPlanLimitModal((prev) => ({ ...prev, isOpen: false }))
+            }
             onNavigateToPlanes={() => {
               setPlanLimitModal((prev) => ({ ...prev, isOpen: false }));
-              handleNavigate('planes');
+              handleNavigate("planes");
             }}
             currentUser={currentUser}
             activeBandName={currentActiveBandName}
@@ -2165,15 +2537,21 @@ export default function App() {
 
           {/* Musician First-Time Onboarding Modal ("Elige tu misión") */}
           <MusicianOnboardingModal
-            key={`musician-onboarding-${cleanActiveBandId || 'default'}`}
+            key={`musician-onboarding-${cleanActiveBandId || "default"}`}
             isOpen={showOnboardingModal && !showProfileWizardModal}
             onClose={() => {
               setShowOnboardingModal(false);
               try {
                 if (cleanActiveBandId) {
-                  localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`, 'true');
+                  localStorage.setItem(
+                    `bandmanager_onboarding_completed_${cleanActiveBandId}`,
+                    "true",
+                  );
                 }
-                localStorage.setItem('bandmanager_onboarding_completed', 'true');
+                localStorage.setItem(
+                  "bandmanager_onboarding_completed",
+                  "true",
+                );
               } catch {}
             }}
             onSelectMission={(targetView) => handleNavigate(targetView)}
@@ -2182,16 +2560,24 @@ export default function App() {
 
           {/* Comprehensive Band Profile Setup Wizard */}
           <OnboardingWizardModal
-            key={`profile-wizard-${cleanActiveBandId || 'default'}`}
+            key={`profile-wizard-${cleanActiveBandId || "default"}`}
             isOpen={showProfileWizardModal && isLoggedIn}
             onClose={() => {
               setShowProfileWizardModal(false);
               try {
                 if (cleanActiveBandId) {
-                  localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
+                  localStorage.setItem(
+                    `bandmanager_profile_wizard_completed_${cleanActiveBandId}`,
+                    "true",
+                  );
                 }
-                localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
-                window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
+                localStorage.setItem(
+                  "bandmanager_profile_wizard_completed",
+                  "true",
+                );
+                window.dispatchEvent(
+                  new CustomEvent("bandmanager_onboarding_finished"),
+                );
               } catch {}
             }}
             currentUser={currentUser}
@@ -2222,7 +2608,11 @@ export default function App() {
           />
         </Suspense>
 
-        <GlobalPlayer colors={colors} onOpenStudio={handleOpenStudio} onOpenIris={handleOpenIris} />
+        <GlobalPlayer
+          colors={colors}
+          onOpenStudio={handleOpenStudio}
+          onOpenIris={handleOpenIris}
+        />
       </div>
     </PlayerProvider>
   );

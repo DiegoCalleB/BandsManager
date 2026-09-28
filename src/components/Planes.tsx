@@ -716,7 +716,7 @@ export const Planes: React.FC<PlanesProps> = ({
           const getBadgeStyle = (type: PlanCardData["badgeType"]) => {
             switch (type) {
               case "blue":
-                return "bg-[var(--acc)]/15 text-[var(--ink-3)]/30";
+                return "bg-[var(--acc)]/15 text-[var(--ink-2)]/30";
               case "silver":
                 return "bg-[var(--sunken)]/15 text-[var(--ink-2)] /30";
               case "gold":
@@ -1199,7 +1199,7 @@ export const Planes: React.FC<PlanesProps> = ({
           </div>
 
           <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/60 space-y-2">
-            <div className="flex items-center gap-2 text-[var(--ink-3)] font-sans font-bold text-xs">
+            <div className="flex items-center gap-2 text-[var(--ink-2)] font-sans font-bold text-xs">
               <Lock className="w-4 h-4 text-[var(--ink-2)]" />
               <span>Cero Borrado de Datos</span>
             </div>

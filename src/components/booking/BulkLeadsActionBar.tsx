@@ -62,7 +62,7 @@ const STATUS_OPTIONS: {
   {
     status: "esperando_respuesta",
     label: "Esperando Respuesta",
-    color: "bg-[var(--acc)]/20 text-[var(--ink-3)]/40",
+    color: "bg-[var(--acc)]/20 text-[var(--ink-2)]/40",
     icon: Send,
   },
   {

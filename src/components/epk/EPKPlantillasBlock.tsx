@@ -316,8 +316,8 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                     <div
                       className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
                         item.isVisible
-                          ? "bg-[var(--acc)]/10 /20 text-[var(--acc)]"
-                          : "bg-[var(--surface)]/80 text-[var(--ink-3)]"
+                          ? "bg-[var(--acc)]/10  text-[var(--acc)]"
+                          : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -373,7 +373,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       disabled={isFirst}
                       className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
                         isFirst
-                          ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-3)]"
+                          ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-2)]"
                           : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] cursor-pointer"
                       }`}
                       title="Subir posición"
@@ -388,7 +388,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       disabled={isLast}
                       className={`p-1.5 rounded-[var(--r-s)] text-xs transition ${
                         isLast
-                          ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-3)]"
+                          ? "opacity-30 cursor-not-allowed bg-[var(--bg)] text-[var(--ink-2)]"
                           : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/60 text-[var(--ink-2)]/80 hover:text-[var(--ink)] cursor-pointer"
                       }`}
                       title="Bajar posición"

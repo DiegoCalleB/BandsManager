@@ -709,7 +709,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("repertorio")}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-3)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
               >
                 <Disc3 className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Repertorio</span>
@@ -1087,7 +1087,7 @@ export default function Dashboard({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" />{" "}
+                    <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
                     Lead rápido
                   </button>
                   <button
@@ -1098,7 +1098,7 @@ export default function Dashboard({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" />{" "}
+                    <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
                     Ensayo rápido
                   </button>
                 </div>

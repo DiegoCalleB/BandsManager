@@ -2633,7 +2633,7 @@ export const LiveConcertToAlbumModal: React.FC<
                                               );
                                             }
                                           }}
-                                          className="px-2.5 py-1 text-[10px] font-bold rounded bg-[var(--acc)]/20 text-[var(--ink-3)] hover:bg-[var(--acc)]/40 transition-all flex items-center gap-1 cursor-pointer"
+                                          className="px-2.5 py-1 text-[10px] font-bold rounded bg-[var(--acc)]/20 text-[var(--ink-2)] hover:bg-[var(--acc)]/40 transition-all flex items-center gap-1 cursor-pointer"
                                           title="Saltar al CUE In de entrada musical detectado"
                                         >
                                           <Target className="w-3 h-3 text-[var(--ink-2)]" />

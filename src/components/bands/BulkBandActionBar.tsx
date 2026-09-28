@@ -47,7 +47,7 @@ const BAND_STATUS_OPTIONS: {
   {
     status: "intercambio_propuesto",
     label: "Intercambio Propuesto",
-    color: "bg-[var(--acc)]/20 text-[var(--ink-3)]/40",
+    color: "bg-[var(--acc)]/20 text-[var(--ink-2)]/40",
     icon: Repeat,
   },
   {

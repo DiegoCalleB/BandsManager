@@ -839,7 +839,7 @@ export default function PracticeModePanel({
               <button
                 onClick={applyPresetPracticeWithBand}
                 disabled={!myTrack}
-                className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="flex flex-col items-center gap-1 px-3 py-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Headphones className="w-4 h-4" />
                 <span className="text-[11px] font-sans font-semibold text-center">
@@ -1172,7 +1172,7 @@ export default function PracticeModePanel({
                     onClick={handleAutoBalance}
                     disabled={isAutoBalancing}
                     title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
-                    className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-3)] disabled:opacity-50"
+                    className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] disabled:opacity-50"
                   >
                     {isAutoBalancing ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -1307,7 +1307,7 @@ export default function PracticeModePanel({
                 <button
                   onClick={() => handleExport("sin-mi-pista")}
                   disabled={!myTrack || isExporting !== null}
-                  className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
+                  className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
                 >
                   <Download className="w-3.5 h-3.5" />{" "}
                   {isExporting === "sin-mi-pista"

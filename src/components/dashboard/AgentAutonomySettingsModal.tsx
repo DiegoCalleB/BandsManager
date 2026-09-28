@@ -1116,7 +1116,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Clock className="w-5 h-5 text-[var(--acc)]" />
-                          <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] font-bold">
+                          <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink-2)] font-bold">
                             Ventana Horaria
                           </span>
                         </div>
@@ -1470,7 +1470,7 @@ export const AgentAutonomySettingsModal: React.FC<
             {activeTab === "email_dispatch" && (
               <div className="space-y-6">
                 {/* Header Info */}
-                <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-sky-500/10 to-indigo-500/10 text-[var(--ink-3)] text-xs flex items-start gap-3">
+                <div className="p-3.5 rounded-[var(--r-m)] bg-gradient-to-r from-sky-500/10 to-indigo-500/10 text-[var(--ink-2)] text-xs flex items-start gap-3">
                   <Mail className="w-5 h-5 text-[var(--ink-2)] shrink-0 mt-0.5" />
                   <div className="space-y-1 leading-relaxed">
                     <strong className="font-bold text-[var(--tentative)]/40">
@@ -2096,7 +2096,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           </div>
                         </div>
                       </div>
-                      <span className="text-[10px] font-sans text-[var(--ink-3)] bg-[var(--bg)]/60 px-2 py-0.5 rounded font-bold">
+                      <span className="text-[10px] font-sans text-[var(--ink-2)] bg-[var(--bg)]/60 px-2 py-0.5 rounded font-bold">
                         En Escucha
                       </span>
                     </div>
@@ -2248,7 +2248,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             key={cat}
                             className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1"
                           >
-                            <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-3)]">
+                            <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
                               {RESPONSE_LEARNED_CATEGORY_LABELS[cat] || cat}
                             </span>
                             {reglas.reglas_manuales &&
@@ -2303,7 +2303,7 @@ export const AgentAutonomySettingsModal: React.FC<
  onOpenTemplatesSection que ya usan la pestaña Autonomía y Tono para lo mismo. */}
                 <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-between gap-3">
                   <div>
-                    <h4 className="text-xs font-sans font-bold text-[var(--ink-3)] tracking-wider">
+                    <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider">
                       ¿Quieres que aprenda rápido, sin esperar a corregir
                       borradores?
                     </h4>
@@ -2600,7 +2600,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                     log.agente === "enviador"
                                       ? "bg-[var(--acc)]/10 text-[var(--acc)]/70"
                                       : log.agente === "scout"
-                                        ? "bg-[var(--acc)]/10 text-[var(--ink-3)]"
+                                        ? "bg-[var(--acc)]/10 text-[var(--ink-2)]"
                                         : log.agente === "redactor"
                                           ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80"
                                           : "bg-[var(--ok)]/10 text-[var(--ink-2)]"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Settings,
   Plus,
@@ -27,10 +27,15 @@ import {
   Info,
   Smartphone,
   Monitor,
-} from 'lucide-react';
-import { DashboardWidgetConfig, DEFAULT_DASHBOARD_WIDGETS, AVAILABLE_MODULE_WIDGETS, WidgetType } from '../../types/dashboardWidgets';
-import { CalendarWidget } from './widgets/CalendarWidget';
-import { ExecutiveSummaryHero } from './ExecutiveSummaryHero';
+} from "lucide-react";
+import {
+  DashboardWidgetConfig,
+  DEFAULT_DASHBOARD_WIDGETS,
+  AVAILABLE_MODULE_WIDGETS,
+  WidgetType,
+} from "../../types/dashboardWidgets";
+import { CalendarWidget } from "./widgets/CalendarWidget";
+import { ExecutiveSummaryHero } from "./ExecutiveSummaryHero";
 import {
   CrmPipelineWidget,
   RepertorioWidget,
@@ -39,14 +44,30 @@ import {
   EpkStatusWidget,
   AiAgentWidget,
   TourStatusWidget,
-} from './widgets/ModuleWidgets';
-import { RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget } from './widgets/ChartWidgets';
-import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors, Setlist, Song } from '../../types';
-import { api } from '../../services/api';
-import { hasModuleAccess } from '../../utils/planPermissions';
-import { useScrollLock } from '../../hooks/useScrollLock';
-import { useVisualViewportOverlayStyle } from '../../hooks/useVisualViewportOverlayStyle';
-import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
+} from "./widgets/ModuleWidgets";
+import {
+  RepertorioEnergyChartWidget,
+  BookingFunnelChartWidget,
+  FinancesChartWidget,
+  SocialFansGrowthWidget,
+} from "./widgets/ChartWidgets";
+import {
+  Concert,
+  Rehearsal,
+  Lead,
+  Tour,
+  Fan,
+  SocialPost,
+  EPKConfig,
+  ThemeColors,
+  Setlist,
+  Song,
+} from "../../types";
+import { api } from "../../services/api";
+import { hasModuleAccess } from "../../utils/planPermissions";
+import { useScrollLock } from "../../hooks/useScrollLock";
+import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
+import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -65,13 +86,13 @@ export interface DashboardWidgetGridProps {
   epkConfig?: Partial<EPKConfig>;
   activeBandName?: string;
   colors: ThemeColors;
-  agendaFilterMode: 'active' | 'all';
-  onSetAgendaFilterMode: (mode: 'active' | 'all') => void;
+  agendaFilterMode: "active" | "all";
+  onSetAgendaFilterMode: (mode: "active" | "all") => void;
   onNavigate?: (view: string, options?: any) => void;
   isEditMode?: boolean;
   setIsEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
-  viewDensityMode?: 'clean' | 'full';
-  setViewDensityMode?: React.Dispatch<React.SetStateAction<'clean' | 'full'>>;
+  viewDensityMode?: "clean" | "full";
+  setViewDensityMode?: React.Dispatch<React.SetStateAction<"clean" | "full">>;
 }
 
 export function DashboardWidgetGrid({
@@ -98,17 +119,22 @@ export function DashboardWidgetGrid({
   const userPlan = currentUser?.plan;
 
   // Internal fallback state if props not passed
-  const [internalDensityMode, setInternalDensityMode] = useState<'clean' | 'full'>('clean');
+  const [internalDensityMode, setInternalDensityMode] = useState<
+    "clean" | "full"
+  >("clean");
   const [internalEditMode, setInternalEditMode] = useState(false);
 
   const viewDensityMode = externalDensityMode ?? internalDensityMode;
-  const setViewDensityMode = externalSetViewDensityMode ?? setInternalDensityMode;
+  const setViewDensityMode =
+    externalSetViewDensityMode ?? setInternalDensityMode;
 
   const isEditMode = externalEditMode ?? internalEditMode;
   const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
 
   // Load saved widgets from user preferences or use default, filtering by module access
-  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as DashboardWidgetConfig[] | undefined;
+  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as
+    | DashboardWidgetConfig[]
+    | undefined;
 
   // true si la carga inicial tuvo que quitar algún widget duplicado — dispara un guardado
   // silencioso una vez montado, para que la limpieza no se pierda en la próxima carga (ver
@@ -116,7 +142,10 @@ export function DashboardWidgetGrid({
   const hadDuplicatesOnLoadRef = React.useRef(false);
 
   const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
-    const initial = Array.isArray(savedWidgets) && savedWidgets.length > 0 ? savedWidgets : DEFAULT_DASHBOARD_WIDGETS;
+    const initial =
+      Array.isArray(savedWidgets) && savedWidgets.length > 0
+        ? savedWidgets
+        : DEFAULT_DASHBOARD_WIDGETS;
     const withModuleAccess = initial.filter((w) => {
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
       if (meta && meta.requiredModule) {
@@ -142,7 +171,7 @@ export function DashboardWidgetGrid({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   useScrollLock(isAddModalOpen);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
 
@@ -158,7 +187,7 @@ export function DashboardWidgetGrid({
       setSaveSuccessMsg(true);
       setTimeout(() => setSaveSuccessMsg(false), 2000);
     } catch (err) {
-      console.error('Error al guardar disposición de widgets:', err);
+      console.error("Error al guardar disposición de widgets:", err);
     } finally {
       setIsSaving(false);
     }
@@ -184,13 +213,13 @@ export function DashboardWidgetGrid({
   // Drag and drop handlers
   const handleDragStart = (e: React.DragEvent, id: string) => {
     setDraggedWidgetId(id);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", id);
   };
 
   const handleDragOver = (e: React.DragEvent, id: string) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
+    e.dataTransfer.dropEffect = "move";
     if (draggedWidgetId && draggedWidgetId !== id) {
       setDragOverWidgetId(id);
     }
@@ -228,8 +257,8 @@ export function DashboardWidgetGrid({
   };
 
   // Move widget up/down manually
-  const handleMoveWidget = (index: number, direction: 'up' | 'down') => {
-    const targetIdx = direction === 'up' ? index - 1 : index + 1;
+  const handleMoveWidget = (index: number, direction: "up" | "down") => {
+    const targetIdx = direction === "up" ? index - 1 : index + 1;
     if (targetIdx < 0 || targetIdx >= widgets.length) return;
 
     const copy = [...widgets];
@@ -242,13 +271,20 @@ export function DashboardWidgetGrid({
 
   // Change width span (wSpan)
   const handleChangeWSpan = (id: string, newSpan: 3 | 4 | 6 | 8 | 12) => {
-    const updated = widgets.map((w) => (w.id === id ? { ...w, wSpan: newSpan } : w));
+    const updated = widgets.map((w) =>
+      w.id === id ? { ...w, wSpan: newSpan } : w,
+    );
     updateAndSaveWidgets(updated);
   };
 
   // Change height mode (hSpan)
-  const handleChangeHSpan = (id: string, newHSpan: 'compact' | 'normal' | 'tall') => {
-    const updated = widgets.map((w) => (w.id === id ? { ...w, hSpan: newHSpan } : w));
+  const handleChangeHSpan = (
+    id: string,
+    newHSpan: "compact" | "normal" | "tall",
+  ) => {
+    const updated = widgets.map((w) =>
+      w.id === id ? { ...w, hSpan: newHSpan } : w,
+    );
     updateAndSaveWidgets(updated);
   };
 
@@ -259,7 +295,10 @@ export function DashboardWidgetGrid({
   };
 
   // Update specific widget settings (e.g., calendar view mode)
-  const handleUpdateWidgetSettings = (id: string, newSettings: Record<string, any>) => {
+  const handleUpdateWidgetSettings = (
+    id: string,
+    newSettings: Record<string, any>,
+  ) => {
     const updated = widgets.map((w) => {
       if (w.id === id) {
         return {
@@ -292,7 +331,10 @@ export function DashboardWidgetGrid({
     const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === type);
     if (!meta) return;
 
-    if (meta.requiredModule && !hasModuleAccess(userPlan, meta.requiredModule)) {
+    if (
+      meta.requiredModule &&
+      !hasModuleAccess(userPlan, meta.requiredModule)
+    ) {
       return;
     }
 
@@ -307,10 +349,13 @@ export function DashboardWidgetGrid({
       type,
       title: meta.title,
       wSpan: meta.defaultWSpan,
-      hSpan: meta.defaultHSpan || 'normal',
+      hSpan: meta.defaultHSpan || "normal",
       visible: true,
       order: widgets.length,
-      settings: type === 'calendar' ? { calendarViewMode: 'list', calendarFilter: 'all' } : undefined,
+      settings:
+        type === "calendar"
+          ? { calendarViewMode: "list", calendarFilter: "all" }
+          : undefined,
     };
 
     updateAndSaveWidgets([...widgets, newWidget]);
@@ -319,13 +364,13 @@ export function DashboardWidgetGrid({
   };
 
   const categories = [
-    'Todos',
-    'Música & Repertorio',
-    'Booking & CRM',
-    'Calendario & Agenda',
-    'Negocio & Finanzas',
-    'Público & Redes',
-    'Promoción & IA',
+    "Todos",
+    "Música & Repertorio",
+    "Booking & CRM",
+    "Calendario & Agenda",
+    "Negocio & Finanzas",
+    "Público & Redes",
+    "Promoción & IA",
   ];
 
   // Filter available widgets in catalogue by module access according to current plan
@@ -335,16 +380,16 @@ export function DashboardWidgetGrid({
   });
 
   const filteredLibrary = allowedLibrary.filter((item) => {
-    if (selectedCategory === 'Todos') return true;
+    if (selectedCategory === "Todos") return true;
     return item.category === selectedCategory;
   });
 
   // Render individual widget by type
   const renderWidgetContent = (widget: DashboardWidgetConfig) => {
-    const heightMode = widget.hSpan || 'normal';
+    const heightMode = widget.hSpan || "normal";
 
     switch (widget.type) {
-      case 'calendar':
+      case "calendar":
         return (
           <CalendarWidget
             concerts={concerts}
@@ -354,36 +399,83 @@ export function DashboardWidgetGrid({
             agendaFilterMode={agendaFilterMode}
             onSetAgendaFilterMode={onSetAgendaFilterMode}
             onNavigate={onNavigate}
-            viewMode={widget.settings?.calendarViewMode || 'list'}
-            onChangeViewMode={(mode) => handleUpdateWidgetSettings(widget.id, { calendarViewMode: mode })}
-            filterType={widget.settings?.calendarFilter || 'all'}
-            onChangeFilterType={(f) => handleUpdateWidgetSettings(widget.id, { calendarFilter: f })}
+            viewMode={widget.settings?.calendarViewMode || "list"}
+            onChangeViewMode={(mode) =>
+              handleUpdateWidgetSettings(widget.id, { calendarViewMode: mode })
+            }
+            filterType={widget.settings?.calendarFilter || "all"}
+            onChangeFilterType={(f) =>
+              handleUpdateWidgetSettings(widget.id, { calendarFilter: f })
+            }
             isEditMode={isEditMode}
           />
         );
-      case 'executive_summary':
-        return <ExecutiveSummaryHero concerts={concerts} leads={leads} rehearsals={rehearsals} onNavigate={onNavigate} />;
-      case 'repertorio_energy':
-        return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} setlists={setlists} songs={songs} />;
-      case 'crm_pipeline':
+      case "executive_summary":
+        return (
+          <ExecutiveSummaryHero
+            concerts={concerts}
+            leads={leads}
+            rehearsals={rehearsals}
+            onNavigate={onNavigate}
+          />
+        );
+      case "repertorio_energy":
+        return (
+          <RepertorioEnergyChartWidget
+            onNavigate={onNavigate}
+            heightMode={heightMode}
+            setlists={setlists}
+            songs={songs}
+          />
+        );
+      case "crm_pipeline":
         return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} />;
-      case 'booking_funnel_chart':
-        return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
-      case 'finances_chart':
-        return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
-      case 'social_fans_chart':
-        return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
-      case 'repertorio_summary':
+      case "booking_funnel_chart":
+        return (
+          <BookingFunnelChartWidget
+            leads={leads}
+            onNavigate={onNavigate}
+            heightMode={heightMode}
+            isStitchLight={isStitchLight}
+          />
+        );
+      case "finances_chart":
+        return (
+          <FinancesChartWidget
+            concerts={concerts}
+            onNavigate={onNavigate}
+            heightMode={heightMode}
+            isStitchLight={isStitchLight}
+          />
+        );
+      case "social_fans_chart":
+        return (
+          <SocialFansGrowthWidget
+            fans={fans}
+            onNavigate={onNavigate}
+            heightMode={heightMode}
+            isStitchLight={isStitchLight}
+          />
+        );
+      case "repertorio_summary":
         return <RepertorioWidget onNavigate={onNavigate} />;
-      case 'finances_summary':
+      case "finances_summary":
         return <FinancesWidget concerts={concerts} onNavigate={onNavigate} />;
-      case 'social_fans':
+      case "social_fans":
         return <SocialFansWidget fans={fans} onNavigate={onNavigate} />;
-      case 'epk_status':
-        return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate} />;
-      case 'ai_agent_status':
-        return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate} />;
-      case 'tour_status':
+      case "epk_status":
+        return (
+          <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate} />
+        );
+      case "ai_agent_status":
+        return (
+          <AiAgentWidget
+            leads={leads}
+            currentUser={currentUser}
+            onNavigate={onNavigate}
+          />
+        );
+      case "tour_status":
         return <TourStatusWidget tours={tours} onNavigate={onNavigate} />;
       default:
         return null;
@@ -404,9 +496,17 @@ export function DashboardWidgetGrid({
 
   // In clean view, limit to essential operational widgets (max 4 core widgets) to prevent information overload
   const visibleWidgets =
-    viewDensityMode === 'clean' && !isEditMode
+    viewDensityMode === "clean" && !isEditMode
       ? allVisibleWidgets
-          .filter((w) => ['calendar', 'crm_pipeline', 'ai_agent_status', 'epk_status', 'repertorio_summary'].includes(w.type))
+          .filter((w) =>
+            [
+              "calendar",
+              "crm_pipeline",
+              "ai_agent_status",
+              "epk_status",
+              "repertorio_summary",
+            ].includes(w.type),
+          )
           .slice(0, 4)
       : allVisibleWidgets;
 
@@ -421,13 +521,16 @@ export function DashboardWidgetGrid({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-[var(--ink)]">Editando tu panel</span>
+                <span className="text-sm font-semibold text-[var(--ink)]">
+                  Editando tu panel
+                </span>
                 <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
                   Arrastra para reordenar
                 </span>
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-0.5">
-                {visibleWidgets.length} de {allVisibleWidgets.length} módulos visibles · se guardan solos
+                {visibleWidgets.length} de {allVisibleWidgets.length} módulos
+                visibles · se guardan solos
               </p>
             </div>
           </div>
@@ -487,13 +590,15 @@ export function DashboardWidgetGrid({
             <div className="flex items-center gap-1.5">
               <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
-                <strong>Ancho & Alto:</strong> Elige tamaño con los iconos de barra.
+                <strong>Ancho & Alto:</strong> Elige tamaño con los iconos de
+                barra.
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
-                <strong>Multi-dispositivo:</strong> En móvil se apila a 1 columna.
+                <strong>Multi-dispositivo:</strong> En móvil se apila a 1
+                columna.
               </span>
             </div>
           </div>
@@ -504,11 +609,11 @@ export function DashboardWidgetGrid({
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
         {visibleWidgets.map((widget, index) => {
           // Determine grid col span class
-          let colSpanClass = 'md:col-span-12';
-          if (widget.wSpan === 3) colSpanClass = 'md:col-span-3';
-          else if (widget.wSpan === 4) colSpanClass = 'md:col-span-4';
-          else if (widget.wSpan === 6) colSpanClass = 'md:col-span-6';
-          else if (widget.wSpan === 8) colSpanClass = 'md:col-span-8';
+          let colSpanClass = "md:col-span-12";
+          if (widget.wSpan === 3) colSpanClass = "md:col-span-3";
+          else if (widget.wSpan === 4) colSpanClass = "md:col-span-4";
+          else if (widget.wSpan === 6) colSpanClass = "md:col-span-6";
+          else if (widget.wSpan === 8) colSpanClass = "md:col-span-8";
 
           const isDragging = draggedWidgetId === widget.id;
           const isDragOver = dragOverWidgetId === widget.id;
@@ -522,25 +627,29 @@ export function DashboardWidgetGrid({
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, widget.id)}
               onDragEnd={handleDragEnd}
-              className={`${colSpanClass} relative transition-all duration-200 ${isDragging ? 'opacity-40 scale-[0.98]' : ''} ${
-                isDragOver ? 'ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10' : ''
-              } ${isEditMode ? 'ring-2 ring-[var(--acc)]/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-[var(--acc)]' : ''}`}
+              className={`${colSpanClass} relative transition-all duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
+                isDragOver
+                  ? "ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10"
+                  : ""
+              } ${isEditMode ? "ring-2 ring-[var(--acc)]/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-[var(--acc)]" : ""}`}
             >
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-xl mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
                   <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
                     <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                    <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">{widget.title || widget.type}</span>
+                    <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
+                      {widget.title || widget.type}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
                     {/* Ancho — 3 tamaños con icono de proporción, no 5 porcentajes en texto */}
                     <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
                       {[
-                        { span: 4 as const, w: 6, label: 'Estrecho' },
-                        { span: 6 as const, w: 10, label: 'Mitad' },
-                        { span: 12 as const, w: 14, label: 'Completo' },
+                        { span: 4 as const, w: 6, label: "Estrecho" },
+                        { span: 6 as const, w: 10, label: "Mitad" },
+                        { span: 12 as const, w: 14, label: "Completo" },
                       ].map(({ span, w, label }) => (
                         <button
                           key={span}
@@ -549,11 +658,13 @@ export function DashboardWidgetGrid({
                           title={label}
                           aria-label={`Ancho: ${label}`}
                           className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
-                            widget.wSpan === span ? 'bg-[var(--acc)]' : 'hover:bg-[var(--sunken)]'
+                            widget.wSpan === span
+                              ? "bg-[var(--acc)]"
+                              : "hover:bg-[var(--sunken)]"
                           }`}
                         >
                           <span
-                            className={`block h-2.5 rounded-[2px] ${widget.wSpan === span ? 'bg-[var(--on-acc)]' : 'bg-[var(--ink-2)]'}`}
+                            className={`block h-2.5 rounded-[2px] ${widget.wSpan === span ? "bg-[var(--on-acc)]" : "bg-[var(--ink-2)]"}`}
                             style={{ width: w }}
                           />
                         </button>
@@ -563,9 +674,9 @@ export function DashboardWidgetGrid({
                     {/* Alto — mismo patrón visual, icono de proporción vertical */}
                     <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
                       {[
-                        { val: 'compact' as const, h: 6, label: 'Bajo' },
-                        { val: 'normal' as const, h: 10, label: 'Medio' },
-                        { val: 'tall' as const, h: 14, label: 'Alto' },
+                        { val: "compact" as const, h: 6, label: "Bajo" },
+                        { val: "normal" as const, h: 10, label: "Medio" },
+                        { val: "tall" as const, h: 14, label: "Alto" },
                       ].map(({ val, h, label }) => (
                         <button
                           key={val}
@@ -574,11 +685,13 @@ export function DashboardWidgetGrid({
                           title={label}
                           aria-label={`Alto: ${label}`}
                           className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
-                            (widget.hSpan || 'normal') === val ? 'bg-[var(--acc)]' : 'hover:bg-[var(--sunken)]'
+                            (widget.hSpan || "normal") === val
+                              ? "bg-[var(--acc)]"
+                              : "hover:bg-[var(--sunken)]"
                           }`}
                         >
                           <span
-                            className={`block w-2.5 rounded-[2px] ${(widget.hSpan || 'normal') === val ? 'bg-[var(--on-acc)]' : 'bg-[var(--ink-2)]'}`}
+                            className={`block w-2.5 rounded-[2px] ${(widget.hSpan || "normal") === val ? "bg-[var(--on-acc)]" : "bg-[var(--ink-2)]"}`}
                             style={{ height: h }}
                           />
                         </button>
@@ -589,7 +702,7 @@ export function DashboardWidgetGrid({
                     <div className="flex items-center gap-0.5">
                       <button
                         type="button"
-                        onClick={() => handleMoveWidget(index, 'up')}
+                        onClick={() => handleMoveWidget(index, "up")}
                         disabled={index === 0}
                         className="p-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
                         title="Mover arriba"
@@ -598,7 +711,7 @@ export function DashboardWidgetGrid({
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleMoveWidget(index, 'down')}
+                        onClick={() => handleMoveWidget(index, "down")}
                         disabled={index === visibleWidgets.length - 1}
                         className="p-1 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)] disabled:opacity-30 cursor-pointer"
                         title="Mover abajo"
@@ -632,7 +745,9 @@ export function DashboardWidgetGrid({
         {isEditMode && (
           <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans font-bold flex items-center gap-1.5 w-fit">
             <Info className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-            <span>Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)</span>
+            <span>
+              Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)
+            </span>
           </div>
         )}
         <AiSupportWidget variant="card" />
@@ -645,7 +760,10 @@ export function DashboardWidgetGrid({
  tapa. El resto de modales reales del repo (SongModal, BandSwitcherModal...) ya usan
  z-[9999]/z-[10000] por este mismo motivo; este era el único que se había quedado en z-50. */}
       {isAddModalOpen && (
-        <div style={addModalOverlayStyle} className="z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
+        <div
+          style={addModalOverlayStyle}
+          className="z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4"
+        >
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
             {/* Header */}
             <div className="p-5 flex items-center justify-between">
@@ -654,9 +772,12 @@ export function DashboardWidgetGrid({
                   <Plus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Catálogo de Widgets del Dashboard</h3>
+                  <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">
+                    Catálogo de Widgets del Dashboard
+                  </h3>
                   <p className="text-xs font-sans text-[var(--ink-2)]">
-                    Añade los que quieras, uno detrás de otro — el catálogo no se cierra hasta que tú lo cierres
+                    Añade los que quieras, uno detrás de otro — el catálogo no
+                    se cierra hasta que tú lo cierres
                   </p>
                 </div>
               </div>
@@ -686,8 +807,8 @@ export function DashboardWidgetGrid({
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-all ${
                     selectedCategory === cat
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                      : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                   }`}
                 >
                   {cat}
@@ -698,7 +819,9 @@ export function DashboardWidgetGrid({
             {/* List of Available Widgets */}
             <div className="p-5 overflow-y-auto space-y-3 flex-1">
               {filteredLibrary.map((item) => {
-                const isAlreadyAdded = widgets.some((w) => w.type === item.type && w.visible);
+                const isAlreadyAdded = widgets.some(
+                  (w) => w.type === item.type && w.visible,
+                );
 
                 return (
                   <div
@@ -707,12 +830,16 @@ export function DashboardWidgetGrid({
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-[var(--ink-2)]">{item.title}</span>
+                        <span className="text-sm font-bold text-[var(--ink-2)]">
+                          {item.title}
+                        </span>
                         <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--acc)]">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-[var(--ink-2)] leading-relaxed">{item.description}</p>
+                      <p className="text-xs text-[var(--ink-2)] leading-relaxed">
+                        {item.description}
+                      </p>
                     </div>
 
                     <button
@@ -721,12 +848,18 @@ export function DashboardWidgetGrid({
                       disabled={isAlreadyAdded}
                       className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-all shrink-0 flex items-center gap-1 ${
                         isAlreadyAdded
-                          ? 'bg-[var(--sunken)] text-[var(--ink-3)] cursor-default'
-                          : 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-95'
+                          ? "bg-[var(--sunken)] text-[var(--ink-2)] cursor-default"
+                          : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-95"
                       }`}
                     >
-                      {isAlreadyAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                      <span>{isAlreadyAdded ? 'Ya en tu panel' : 'Añadir'}</span>
+                      {isAlreadyAdded ? (
+                        <Check className="w-4 h-4" />
+                      ) : (
+                        <Plus className="w-4 h-4" />
+                      )}
+                      <span>
+                        {isAlreadyAdded ? "Ya en tu panel" : "Añadir"}
+                      </span>
                     </button>
                   </div>
                 );

@@ -95,7 +95,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       case "cloud-sun":
         return "from-amber-0/25 via-neutral-700/25 to-transparent /35";
       case "cloud":
-        return "from-neutral-600/35 via-neutral-800/25 to-transparent /40";
+        return "from-neutral-600/35 viabg-[var(--surface)]/25 to-transparent ";
       case "rain":
         return "from-sky-500/30 via-blue-600/20 to-transparent/50";
       case "lightning":
@@ -368,7 +368,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
                   (weatherData.rainProbability || 0) >= 40
-                    ? "bg-[var(--acc)]/20/50 text-[var(--ink-3)]"
+                    ? "bg-[var(--acc)]/20 text-[var(--ink-2)]"
                     : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >

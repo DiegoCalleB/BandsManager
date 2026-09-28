@@ -1299,14 +1299,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <a
                         href={`tel:${phoneForCall}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--bg)]/80 hover:bg-[var(--tentative)] text-[var(--ink-3)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer min-h-[38px]"
-                        title={
-                          hasMovil && hasFijo
-                            ? `Llamar (Móvil: ${rawMovil} / Fijo: ${rawFijo})`
-                            : hasMovil
-                              ? `Llamar al móvil (${rawMovil})`
-                              : `Llamar al fijo (${rawFijo})`
-                        }
+                        className="p-2 sm:px-2.5 sm:py-1.5 bg-[var(--bg)]/80 hover:bg-[var(--tentative)] text-[var(--ink-2)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer min-h-[38px]"
+                        title="Llamar directamente por teléfono"
                       >
                         <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
                         <span className="hidden xs:inline text-[11px]">
