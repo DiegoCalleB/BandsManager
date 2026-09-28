@@ -1,8 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from 'lucide-react';
-import { User, UserRole } from '../types';
-import { ModalPortal } from './common/ModalPortal';
-import { STEM_INSTRUMENT_CATEGORIES, NON_STEM_ROLES } from '../config/stemInstruments';
+import React, { useState, useEffect } from "react";
+import {
+  Users,
+  UserPlus,
+  Key,
+  Trash2,
+  Shield,
+  Music,
+  X,
+  Check,
+  AlertCircle,
+  Edit2,
+  Sparkles,
+  RefreshCw,
+  Link2,
+} from "lucide-react";
+import { User, UserRole } from "../types";
+import { ModalPortal } from "./common/ModalPortal";
+import {
+  STEM_INSTRUMENT_CATEGORIES,
+  NON_STEM_ROLES,
+} from "../config/stemInstruments";
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -11,32 +28,42 @@ interface UserManagementModalProps {
   onRefreshUsers: () => void;
 }
 
-export const UserManagementModal: React.FC<UserManagementModalProps> = ({ currentUser, users, onClose, onRefreshUsers }) => {
-  const [activeTab, setActiveTab] = useState<'list' | 'create' | 'associate'>('list');
+export const UserManagementModal: React.FC<UserManagementModalProps> = ({
+  currentUser,
+  users,
+  onClose,
+  onRefreshUsers,
+}) => {
+  const [activeTab, setActiveTab] = useState<"list" | "create" | "associate">(
+    "list",
+  );
 
   // New user form state
-  const [newUsername, setNewUsername] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newName, setNewName] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [newRole, setNewRole] = useState<UserRole>('member');
-  const [newInstrument, setNewInstrument] = useState('');
-  const [newAvatarColor, setNewAvatarColor] = useState('#3b82f6');
+  const [newUsername, setNewUsername] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newRole, setNewRole] = useState<UserRole>("member");
+  const [newInstrument, setNewInstrument] = useState("");
+  const [newAvatarColor, setNewAvatarColor] = useState("#3b82f6");
 
   // Associate existing user form state
-  const [assocEmail, setAssocEmail] = useState('');
-  const [assocRole, setAssocRole] = useState<UserRole>('member');
-  const [assocInstrument, setAssocInstrument] = useState('');
+  const [assocEmail, setAssocEmail] = useState("");
+  const [assocRole, setAssocRole] = useState<UserRole>("member");
+  const [assocInstrument, setAssocInstrument] = useState("");
 
   // Helper for Authorization Headers
   const getHeaders = () => {
-    const token = localStorage.getItem('bakandeya_token');
-    return { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+    const token = localStorage.getItem("bakandeya_token");
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
   };
 
   // Change password state
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
-  const [changePasswordValue, setChangePasswordValue] = useState('');
+  const [changePasswordValue, setChangePasswordValue] = useState("");
 
   // Status feedback
   const [loading, setLoading] = useState(false);
@@ -44,13 +71,18 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const colors = [
-    'var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'var(--acc)', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
+    "var(--ok)", // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'var(--acc)', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
   ];
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newUsername.trim() || !newEmail.trim() || !newName.trim() || !newPassword) {
-      setError('Por favor, completa usuario, email, nombre real y contraseña.');
+    if (
+      !newUsername.trim() ||
+      !newEmail.trim() ||
+      !newName.trim() ||
+      !newPassword
+    ) {
+      setError("Por favor, completa usuario, email, nombre real y contraseña.");
       return;
     }
 
@@ -59,8 +91,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
     setSuccessMsg(null);
 
     try {
-      const response = await fetch('/api/users', {
-        method: 'POST',
+      const response = await fetch("/api/users", {
+        method: "POST",
         headers: getHeaders(),
         body: JSON.stringify({
           username: newUsername.trim(),
@@ -77,19 +109,19 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al crear usuario');
+        throw new Error(data.error || "Error al crear usuario");
       }
 
       setSuccessMsg(`¡Usuario @${data.username} creado con éxito!`);
-      setNewUsername('');
-      setNewEmail('');
-      setNewName('');
-      setNewPassword('');
-      setNewInstrument('');
+      setNewUsername("");
+      setNewEmail("");
+      setNewName("");
+      setNewPassword("");
+      setNewInstrument("");
       onRefreshUsers();
-      setActiveTab('list');
+      setActiveTab("list");
     } catch (err: any) {
-      setError(err.message || 'Error en el servidor');
+      setError(err.message || "Error en el servidor");
     } finally {
       setLoading(false);
     }
@@ -98,7 +130,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
   const handleAssociateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!assocEmail) {
-      setError('Por favor, ingresa el email del músico.');
+      setError("Por favor, ingresa el email del músico.");
       return;
     }
 
@@ -107,8 +139,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
     setSuccessMsg(null);
 
     try {
-      const response = await fetch('/api/users/associate', {
-        method: 'POST',
+      const response = await fetch("/api/users/associate", {
+        method: "POST",
         headers: getHeaders(),
         body: JSON.stringify({
           email: assocEmail.trim(),
@@ -118,38 +150,46 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
       });
 
       let data: any = {};
-      const contentType = response.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
         data = await response.json();
       } else {
         const text = await response.text();
-        throw new Error(`Error en el servidor (${response.status}): ${text.slice(0, 100)}`);
+        throw new Error(
+          `Error en el servidor (${response.status}): ${text.slice(0, 100)}`,
+        );
       }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al asociar músico');
+        throw new Error(data.error || "Error al asociar músico");
       }
 
-      setSuccessMsg(`¡Músico ${data.name} (@${data.username}) asociado con éxito!`);
-      setAssocEmail('');
-      setAssocInstrument('');
+      setSuccessMsg(
+        `¡Músico ${data.name} (@${data.username}) asociado con éxito!`,
+      );
+      setAssocEmail("");
+      setAssocInstrument("");
       onRefreshUsers();
-      setActiveTab('list');
+      setActiveTab("list");
     } catch (err: any) {
-      setError(err.message || 'Error en el servidor');
+      setError(err.message || "Error en el servidor");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChangeRole = async (userId: string, newRole: UserRole, username: string) => {
+  const handleChangeRole = async (
+    userId: string,
+    newRole: UserRole,
+    username: string,
+  ) => {
     setLoading(true);
     setError(null);
     setSuccessMsg(null);
 
     try {
       const response = await fetch(`/api/users/${userId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ role: newRole }),
       });
@@ -157,13 +197,15 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al actualizar el rol');
+        throw new Error(data.error || "Error al actualizar el rol");
       }
 
-      setSuccessMsg(`Rol cambiado a ${newRole === 'leader' ? 'Admin / Mánager' : 'Miembro (Músico)'} para @${username}`);
+      setSuccessMsg(
+        `Rol cambiado a ${newRole === "leader" ? "Admin / Mánager" : "Miembro (Músico)"} para @${username}`,
+      );
       onRefreshUsers();
     } catch (err: any) {
-      setError(err.message || 'Error al actualizar rol');
+      setError(err.message || "Error al actualizar rol");
     } finally {
       setLoading(false);
     }
@@ -171,7 +213,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
 
   const handleChangePassword = async (userId: string) => {
     if (!changePasswordValue || changePasswordValue.trim().length < 3) {
-      setError('La nueva contraseña debe tener al menos 3 caracteres.');
+      setError("La nueva contraseña debe tener al menos 3 caracteres.");
       return;
     }
 
@@ -181,7 +223,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
 
     try {
       const response = await fetch(`/api/users/${userId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ newPassword: changePasswordValue.trim() }),
       });
@@ -189,22 +231,24 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al actualizar contraseña');
+        throw new Error(data.error || "Error al actualizar contraseña");
       }
 
       setSuccessMsg(`Contraseña actualizada para @${data.username}`);
       setEditingUserId(null);
-      setChangePasswordValue('');
+      setChangePasswordValue("");
       onRefreshUsers();
     } catch (err: any) {
-      setError(err.message || 'Error en el servidor');
+      setError(err.message || "Error en el servidor");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteUser = async (userId: string, username: string) => {
-    if (!window.confirm(`¿Estás seguro de eliminar el acceso para @${username}?`)) {
+    if (
+      !window.confirm(`¿Estás seguro de eliminar el acceso para @${username}?`)
+    ) {
       return;
     }
 
@@ -214,20 +258,20 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
 
     try {
       const response = await fetch(`/api/users/${userId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: getHeaders(),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al eliminar usuario');
+        throw new Error(data.error || "Error al eliminar usuario");
       }
 
       setSuccessMsg(`Usuario @${username} eliminado correctamente.`);
       onRefreshUsers();
     } catch (err: any) {
-      setError(err.message || 'Error al eliminar');
+      setError(err.message || "Error al eliminar");
     } finally {
       setLoading(false);
     }
@@ -237,7 +281,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
         <div
-          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           <datalist id="instrument-suggestions">
             {STEM_INSTRUMENT_CATEGORIES.map((cat) => (
@@ -248,7 +292,9 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
             ))}
           </datalist>
           {/* Modal Header */}
-          <div className={`px-6 py-4 flex justify-between items-center ${'-neutral-200 bg-[var(--bg)]'}`}>
+          <div
+            className={`px-6 py-4 flex justify-between items-center ${"-neutral-200 bg-[var(--bg)]"}`}
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
                 <Users className="w-5 h-5" />
@@ -261,7 +307,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                   </span>
                 </h3>
                 <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                  Crea cuentas, administra roles y gestiona contraseñas para el equipo
+                  Crea cuentas, administra roles y gestiona contraseñas para el
+                  equipo
                 </p>
               </div>
             </div>
@@ -274,15 +321,19 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
           </div>
 
           {/* Tab Selection */}
-          <div className={`px-6 pt-3 flex gap-2 ${'-neutral-200 bg-[var(--bg)]/50'}`}>
+          <div
+            className={`px-6 pt-3 flex gap-2 ${"-neutral-200 bg-[var(--bg)]/50"}`}
+          >
             <button
               onClick={() => {
-                setActiveTab('list');
+                setActiveTab("list");
                 setError(null);
                 setSuccessMsg(null);
               }}
               className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
-                activeTab === 'list' ? '-indigo-400 text-[var(--tentative)]' : '-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                activeTab === "list"
+                  ? "-indigo-400 text-[var(--tentative)]"
+                  : "-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -290,14 +341,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
             </button>
             <button
               onClick={() => {
-                setActiveTab('create');
+                setActiveTab("create");
                 setError(null);
                 setSuccessMsg(null);
               }}
               className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
-                activeTab === 'create'
-                  ? '-indigo-400 text-[var(--tentative)]'
-                  : '-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                activeTab === "create"
+                  ? "-indigo-400 text-[var(--tentative)]"
+                  : "-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -305,12 +356,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
             </button>
             <button
               onClick={() => {
-                setActiveTab('associate');
+                setActiveTab("associate");
                 setError(null);
                 setSuccessMsg(null);
               }}
               className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
-                activeTab === 'associate' ? 'text-[var(--tentative)]' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                activeTab === "associate"
+                  ? "text-[var(--tentative)]"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
               }`}
             >
               <Link2 className="w-3.5 h-3.5" />
@@ -336,32 +389,38 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
 
           {/* Tab Body */}
           <div className="p-6 overflow-y-auto flex-1 space-y-4">
-            {activeTab === 'list' ? (
+            {activeTab === "list" ? (
               <div className="space-y-3">
                 {users.map((u) => {
-                  const isLeader = u.role === 'leader';
+                  const isLeader = u.role === "leader";
                   const isSelf = u.id === currentUser.id;
                   const isEditingThisUser = editingUserId === u.id;
 
                   return (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-[var(--r-m)] transition-all ${'bg-[var(--bg)] -neutral-200/80 hover:-neutral-300'}`}
+                      className={`p-4 rounded-[var(--r-m)] transition-all ${"bg-[var(--bg)]  hover:bg-[var(--sunken)]"}`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <div
                             className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
-                            style={{ backgroundColor: u.avatarColor || 'var(--ok)' }}
+                            style={{
+                              backgroundColor: u.avatarColor || "var(--ok)",
+                            }}
                           >
                             {u.name.slice(0, 2)}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <strong className="font-bold text-sm font-sans">{u.name}</strong>
-                              <span className="text-xs text-[var(--ink-2)] font-sans">@{u.username}</span>
+                              <strong className="font-bold text-sm font-sans">
+                                {u.name}
+                              </strong>
+                              <span className="text-xs text-[var(--ink-2)] font-sans">
+                                @{u.username}
+                              </span>
                               {isLeader ? (
-                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/30 flex items-center gap-1">
+                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)]  flex items-center gap-1">
                                   <Shield className="w-2.5 h-2.5" />
                                   <span>Admin</span>
                                 </span>
@@ -379,7 +438,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                             <div className="text-xs text-[var(--ink-2)] flex items-center gap-2 mt-0.5">
                               <span className="flex items-center gap-1">
                                 <Music className="w-3 h-3 text-[var(--ok)]" />
-                                <span>{u.instrument || 'Músico'}</span>
+                                <span>{u.instrument || "Músico"}</span>
                               </span>
                             </div>
                           </div>
@@ -389,20 +448,36 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                         <div className="flex flex-wrap items-center gap-2">
                           {/* Role Select Dropdown */}
                           <select
-                            value={u.role || 'member'}
-                            onChange={(e) => handleChangeRole(u.id, e.target.value as UserRole, u.username)}
+                            value={u.role || "member"}
+                            onChange={(e) =>
+                              handleChangeRole(
+                                u.id,
+                                e.target.value as UserRole,
+                                u.username,
+                              )
+                            }
                             disabled={loading || isSelf}
-                            title={isSelf ? 'No puedes cambiar tu propio rol desde aquí' : 'Cambiar rol del usuario'}
+                            title={
+                              isSelf
+                                ? "No puedes cambiar tu propio rol desde aquí"
+                                : "Cambiar rol del usuario"
+                            }
                             className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
-                              u.role === 'leader'
-                                ? 'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/40 hover:bg-[var(--acc)]/25'
-                                : 'bg-[var(--surface)] text-[var(--acc)]/80 -blue-500/30 hover:bg-[var(--surface)]/80'
-                            } ${isSelf ? 'opacity-70 cursor-not-allowed' : ''}`}
+                              u.role === "leader"
+                                ? "bg-[var(--acc)]/15 text-[var(--acc)]  hover:bg-[var(--acc)]/25"
+                                : "bg-[var(--surface)] text-[var(--acc)]/80  hover:bg-[var(--surface)]/80"
+                            } ${isSelf ? "opacity-70 cursor-not-allowed" : ""}`}
                           >
-                            <option value="member" className="bg-[var(--surface)] text-[var(--ink-2)]">
+                            <option
+                              value="member"
+                              className="bg-[var(--surface)] text-[var(--ink-2)]"
+                            >
                               Rol: Miembro
                             </option>
-                            <option value="leader" className="bg-[var(--surface)] text-[var(--acc)]/70">
+                            <option
+                              value="leader"
+                              className="bg-[var(--surface)] text-[var(--acc)]/70"
+                            >
                               Rol: Admin
                             </option>
                           </select>
@@ -414,13 +489,15 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                                 setEditingUserId(null);
                               } else {
                                 setEditingUserId(u.id);
-                                setChangePasswordValue('');
+                                setChangePasswordValue("");
                               }
                             }}
                             className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
                           >
                             <Key className="w-3 h-3 text-[var(--acc)]" />
-                            <span>{isEditingThisUser ? 'Cancelar' : 'Contraseña'}</span>
+                            <span>
+                              {isEditingThisUser ? "Cancelar" : "Contraseña"}
+                            </span>
                           </button>
 
                           {!isSelf && (
@@ -442,9 +519,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                           <input
                             type="text"
                             value={changePasswordValue}
-                            onChange={(e) => setChangePasswordValue(e.target.value)}
+                            onChange={(e) =>
+                              setChangePasswordValue(e.target.value)
+                            }
                             placeholder="Nueva contraseña secreta..."
-                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${'bg-[var(--surface)]'}`}
+                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${"bg-[var(--surface)]"}`}
                           />
                           <button
                             type="button"
@@ -461,30 +540,34 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                   );
                 })}
               </div>
-            ) : activeTab === 'create' ? (
+            ) : activeTab === "create" ? (
               /* Create User Form */
               <form onSubmit={handleCreateUser} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Usuario (para login) *</label>
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                      Usuario (para login) *
+                    </label>
                     <input
                       type="text"
                       value={newUsername}
                       onChange={(e) => setNewUsername(e.target.value)}
                       placeholder="Ej: pablo, carlos, ana"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                       required
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Email *</label>
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                      Email *
+                    </label>
                     <input
                       type="email"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
                       placeholder="Ej: pablo@gmail.com"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                       required
                     />
                   </div>
@@ -492,36 +575,42 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Nombre Completo *</label>
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                      Nombre Completo *
+                    </label>
                     <input
                       type="text"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Ej: Pablo (Violín / Sintetizador)"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                       required
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Contraseña Inicial *</label>
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                      Contraseña Inicial *
+                    </label>
                     <input
                       type="text"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Contraseña del usuario"
-                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Rol en la App</label>
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                    Rol en la App
+                  </label>
                   <select
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                   >
                     <option value="member">Miembro de Banda (Músico)</option>
                     <option value="leader">Admin / Dirección de Banda</option>
@@ -529,23 +618,29 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Instrumento / Puesto</label>
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                    Instrumento / Puesto
+                  </label>
                   <input
                     type="text"
                     list="instrument-suggestions"
                     value={newInstrument}
                     onChange={(e) => setNewInstrument(e.target.value)}
                     placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)]"}`}
                   />
                   <p className="text-[10px] text-[var(--ink-2)]">
-                    Usa uno de los nombres sugeridos (Voz, Batería, Bajo, Guitarras, Teclados, Arreglos) para que el modo Ensayo Individual
-                    y Mi Monitor encuentren su pista aislada automáticamente.
+                    Usa uno de los nombres sugeridos (Voz, Batería, Bajo,
+                    Guitarras, Teclados, Arreglos) para que el modo Ensayo
+                    Individual y Mi Monitor encuentren su pista aislada
+                    automáticamente.
                   </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Color Identificador</label>
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                    Color Identificador
+                  </label>
                   <div className="flex items-center gap-2">
                     {colors.map((c) => (
                       <button
@@ -553,7 +648,9 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                         type="button"
                         onClick={() => setNewAvatarColor(c)}
                         className={`w-7 h-7 rounded-full transition-transform ${
-                          newAvatarColor === c ? 'scale-110 -white ring-2 ring-emerald-500' : '-transparent opacity-75 hover:opacity-100'
+                          newAvatarColor === c
+                            ? "scale-110 -white ring-2 ring-emerald-500"
+                            : "-transparent opacity-75 hover:opacity-100"
                         }`}
                         style={{ backgroundColor: c }}
                       />
@@ -585,29 +682,34 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                     <span>¿Músico ya registrado en la plataforma?</span>
                   </p>
                   <span>
-                    Aquí puedes agregar a tu banda un músico existente (como Wes Borland) que ya tiene cuenta en otra banda sin tener que
+                    Aquí puedes agregar a tu banda un músico existente (como Wes
+                    Borland) que ya tiene cuenta en otra banda sin tener que
                     recrear su usuario ni contraseña.
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Email del Músico Registrado *</label>
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                    Email del Músico Registrado *
+                  </label>
                   <input
                     type="email"
                     value={assocEmail}
                     onChange={(e) => setAssocEmail(e.target.value)}
                     placeholder="Introduce su email exacto..."
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
                     required
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Rol en esta Banda</label>
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                    Rol en esta Banda
+                  </label>
                   <select
                     value={assocRole}
                     onChange={(e) => setAssocRole(e.target.value as UserRole)}
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
                   >
                     <option value="member">Miembro de Banda (Músico)</option>
                     <option value="leader">Admin / Dirección de Banda</option>
@@ -615,14 +717,16 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Instrumento / Puesto (opcional)</label>
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
+                    Instrumento / Puesto (opcional)
+                  </label>
                   <input
                     type="text"
                     list="instrument-suggestions"
                     value={assocInstrument}
                     onChange={(e) => setAssocInstrument(e.target.value)}
                     placeholder="Ej: Guitarra, Bajista, Manager, Coros"
-                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
                   />
                 </div>
 
@@ -645,7 +749,9 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({ curren
           </div>
 
           {/* Modal Footer */}
-          <div className={`px-6 py-3 text-right ${'-neutral-200 bg-[var(--bg)]'}`}>
+          <div
+            className={`px-6 py-3 text-right ${"-neutral-200 bg-[var(--bg)]"}`}
+          >
             <button
               onClick={onClose}
               className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"

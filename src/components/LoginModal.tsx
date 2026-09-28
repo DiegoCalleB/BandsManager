@@ -760,7 +760,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)] to-[#e6b938] hover:from-[#f7dc82] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-sm tracking-wide transition-all duration-200 hover:shadow-[0_6px_30px_rgba(242,202,80,0.35)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-4 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] hover:from-[var(--acc-soft)] hover:to-[var(--acc)] text-[var(--ink)] font-bold text-sm tracking-wide transition-all duration-200 hover:shadow-[0_6px_30px_rgba(242,202,80,0.35)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">

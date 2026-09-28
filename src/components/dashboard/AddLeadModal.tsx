@@ -1,7 +1,7 @@
-import React from 'react';
-import { LeadType } from '../../types';
-import { Plus, X } from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
+import React from "react";
+import { LeadType } from "../../types";
+import { Plus, X } from "lucide-react";
+import { ModalPortal } from "../common/ModalPortal";
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -60,15 +60,23 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             <h3 className="text-sm font-bold font-display tracking-widest text-[var(--ink)] flex items-center gap-1.5">
               <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja
             </h3>
-            <button onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer">
+            <button
+              onClick={onClose}
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+            >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          <form onSubmit={onAddSubmit} className="p-5 space-y-4 text-[10px] font-sans">
+          <form
+            onSubmit={onAddSubmit}
+            className="p-5 space-y-4 text-[10px] font-sans"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Nombre de la Sala*</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Nombre de la Sala*
+                </label>
                 <input
                   id="new-lead-sala"
                   type="text"
@@ -76,12 +84,14 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                   value={newSala}
                   onChange={(e) => setNewSala(e.target.value)}
                   placeholder="Ej: Sala Apolo"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Ciudad*</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Ciudad*
+                </label>
                 <input
                   id="new-lead-ciudad"
                   type="text"
@@ -89,70 +99,92 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                   value={newCiudad}
                   onChange={(e) => setNewCiudad(e.target.value)}
                   placeholder="Ej: Barcelona"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Región / Provincia</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Región / Provincia
+                </label>
                 <input
                   id="new-lead-region"
                   type="text"
                   value={newRegion}
                   onChange={(e) => setNewRegion(e.target.value)}
                   placeholder="Ej: Cataluña"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Aforo Estimado (Pax)</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Aforo Estimado (Pax)
+                </label>
                 <input
                   id="new-lead-aforo"
                   type="number"
                   value={newAforo}
                   onChange={(e) => setNewAforo(Number(e.target.value))}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Género Musical Preferente</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Género Musical Preferente
+                </label>
                 <input
                   id="new-lead-genero"
                   type="text"
                   value={newGenero}
                   onChange={(e) => setNewGenero(e.target.value)}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Categoría de Contacto</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Categoría de Contacto
+                </label>
                 <select
                   id="new-lead-tipo"
                   value={newTipo}
                   onChange={(e) => setNewTipo(e.target.value as LeadType)}
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans cursor-pointer"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans cursor-pointer"
                 >
-                  <option value="sala">🏛️ Sala / Teatro (Booking directo)</option>
-                  <option value="festival">🎪 Festival (Escenarios / Carteles)</option>
-                  <option value="ayuntamiento">🎆 Ayuntamiento / Fiestas Patronales</option>
-                  <option value="grupo">🎸 Grupo / Artista (Colaboración)</option>
-                  <option value="productora">💼 Productora / Agencia Management</option>
-                  <option value="medio">📻 Medio de Comunicación (Radio 3 / Prensa / TV)</option>
+                  <option value="sala">
+                    🏛️ Sala / Teatro (Booking directo)
+                  </option>
+                  <option value="festival">
+                    🎪 Festival (Escenarios / Carteles)
+                  </option>
+                  <option value="ayuntamiento">
+                    🎆 Ayuntamiento / Fiestas Patronales
+                  </option>
+                  <option value="grupo">
+                    🎸 Grupo / Artista (Colaboración)
+                  </option>
+                  <option value="productora">
+                    💼 Productora / Agencia Management
+                  </option>
+                  <option value="medio">
+                    📻 Medio de Comunicación (Radio 3 / Prensa / TV)
+                  </option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Usuario de Instagram (@)</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Usuario de Instagram (@)
+                </label>
                 <input
                   id="new-lead-instagram"
                   type="text"
                   value={newInstagram}
                   onChange={(e) => setNewInstagram(e.target.value)}
                   placeholder="Ej: @sala_apolo"
-                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                  className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
                 />
               </div>
             </div>
@@ -167,19 +199,21 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="Ej: booking@salaapolo.com"
-                className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans"
+                className="w-full bg-[var(--sunken)] rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans"
               />
             </div>
 
             <div className="space-y-1.5 col-span-2">
-              <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Notas Iniciales</label>
+              <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                Notas Iniciales
+              </label>
               <textarea
                 id="new-lead-notes"
                 rows={3}
                 value={newNotas}
                 onChange={(e) => setNewNotas(e.target.value)}
                 placeholder="Alguna instrucción de booking, contacto recomendado..."
-                className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:-neutral-500/50 text-[var(--ink)] font-sans leading-relaxed"
+                className="w-full bg-[var(--sunken)] rounded p-3 focus:outline-none focus:ring-1 focus:ring-[var(--acc)] text-[var(--ink)] font-sans leading-relaxed"
               />
             </div>
 

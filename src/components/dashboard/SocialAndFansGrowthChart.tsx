@@ -1106,8 +1106,8 @@ export const SocialAndFansGrowthChart: React.FC<
 
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#ffffff",
-                  borderColor: "var(--hair)",
+                  backgroundColor: "var(--surface)",
+                  border: "none",
                   borderRadius: "10px",
                   fontSize: "11px",
                   fontFamily: "monospace",

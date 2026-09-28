@@ -1070,7 +1070,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
                   {/* Section Content */}
                   {isExpanded && (
-                    <div className="divide-y divide-[#222120]/60 bg-[var(--bg)]">
+                    <div className="bg-[var(--bg)]">
                       {section.items.map((row, rIdx) => (
                         <div
                           key={rIdx}

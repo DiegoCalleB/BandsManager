@@ -1571,7 +1571,7 @@ export default function ReelsCenter({
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${
               isSyncingReels
                 ? "bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] -[var(--acc)]/30"
+                : "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] "
             }`}
             title="Sincronizar todas las publicaciones de redes sociales"
           >
@@ -1582,7 +1582,7 @@ export default function ReelsCenter({
           </button>
 
           <span
-            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${"bg-[var(--ok)]/10 -[var(--ok)]/20 text-[var(--ok)]"}`}
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-sans font-bold ${"bg-[var(--ok)]/10  text-[var(--ok)]"}`}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping shrink-0" />{" "}
             Auto-sync
@@ -1691,8 +1691,8 @@ export default function ReelsCenter({
                             onClick={() => setSelectedPostInPhone(post)}
                             className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${"bg-[var(--surface)]"} ${
                               selectedPostInPhone?.id === post.id
-                                ? "-[var(--acc)]"
-                                : "-neutral-200 hover:-indigo-300"
+                                ? ""
+                                : " hover:bg-[var(--sunken)]"
                             }`}
                           >
                             <div className="flex justify-between items-start gap-1">
@@ -1766,8 +1766,8 @@ export default function ReelsCenter({
                             onClick={() => setSelectedPostInPhone(post)}
                             className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${"bg-[var(--surface)]"} ${
                               selectedPostInPhone?.id === post.id
-                                ? "-[var(--acc)]"
-                                : "bg-[var(--surface)] hover:-[var(--acc)]/40"
+                                ? ""
+                                : "bg-[var(--surface)] hover:bg-[var(--acc-soft)]"
                             }`}
                           >
                             <div className="flex justify-between items-start gap-1">
@@ -1850,8 +1850,8 @@ export default function ReelsCenter({
                             onClick={() => setSelectedPostInPhone(post)}
                             className={` rounded-md p-2.5 cursor-pointer transition-all space-y-1.5 ${"bg-[var(--surface)]"} ${
                               selectedPostInPhone?.id === post.id
-                                ? "-emerald-500"
-                                : "-neutral-200 hover:-emerald-300"
+                                ? ""
+                                : " hover:bg-[var(--sunken)]"
                             }`}
                           >
                             <div className="flex justify-between items-start gap-1">
@@ -1936,7 +1936,7 @@ export default function ReelsCenter({
                       value={reelIdea}
                       onChange={(e) => setReelIdea(e.target.value)}
                       placeholder="Ej: R-violin tocando el violín a toda velocidad o elyar ensayando con el hang pan en el camerino..."
-                      className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed ${"bg-[var(--surface)] -[#99907c]/20 text-[var(--ink)] focus:outline-none focus:-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] p-3 text-xs focus:outline-none font-sans leading-relaxed ${"bg-[var(--surface)]  text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                     />
                   </div>
 
@@ -1957,7 +1957,7 @@ export default function ReelsCenter({
                         id="btn-reels-chill"
                         onClick={() => handleGenerateCopy("chill")}
                         disabled={isGenerating}
-                        className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--surface)] hover:-emerald-400 text-[var(--ok)]"}`}
+                        className={`w-full py-3 font-sans font-bold text-xs tracking-widest rounded-[var(--r-s)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 ${"bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ok)]"}`}
                       >
                         <Music className="w-4 h-4" /> Reggae Chill 🌿🕊️
                       </button>
@@ -1979,7 +1979,7 @@ export default function ReelsCenter({
                         rows={6}
                         value={generatedCopy}
                         onChange={(e) => setGeneratedCopy(e.target.value)}
-                        className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${"bg-[var(--surface)] -[#99907c]/15 text-[var(--ink-2)] focus:-[var(--acc)]/30"}`}
+                        className={`w-full rounded-[var(--r-s)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${"bg-[var(--surface)]  text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/30"}`}
                       />
                     </div>
                   </div>
@@ -2056,10 +2056,10 @@ export default function ReelsCenter({
                     }
                     className={` -dashed rounded-[var(--r-l)] p-8 text-center cursor-pointer transition-all ${
                       dragActive
-                        ? "-[var(--acc)] bg-[var(--acc)]/5 scale-[1.01]"
+                        ? " bg-[var(--acc)]/5 scale-[1.01]"
                         : selectedFile
-                          ? "-emerald-500/40 bg-[var(--ok)]/[0.02]"
-                          : "-[#99907c]/25 hover:-[var(--acc)]/40 bg-[var(--surface)]/50"
+                          ? " bg-[var(--ok)]/[0.02]"
+                          : "hover:bg-[var(--acc-soft)] bg-[var(--surface)]/50"
                     }`}
                   >
                     <input
@@ -2107,7 +2107,7 @@ export default function ReelsCenter({
                     ) : (
                       <div className="space-y-3">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${"bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]"}`}
+                          className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
                         >
                           <Upload className="w-5 h-5" />
                         </div>
@@ -2131,7 +2131,7 @@ export default function ReelsCenter({
                   >
                     <div className="space-y-4 max-w-xl mx-auto text-center">
                       <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${"bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]"}`}
+                        className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
                       >
                         <Youtube className="w-5 h-5" />
                       </div>
@@ -2153,7 +2153,7 @@ export default function ReelsCenter({
                           value={youtubeUrl}
                           onChange={(e) => setYoutubeUrl(e.target.value)}
                           placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
-                          className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans ${"bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50"}`}
+                          className={`w-full rounded-[var(--r-m)] pl-3 pr-10 py-2.5 text-xs focus:outline-none font-sans ${"bg-[var(--surface)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                         />
                         {youtubeUrl && (
                           <button
@@ -2184,7 +2184,7 @@ export default function ReelsCenter({
                       )}
 
                       {!isFetchingMeta && metaError && (
-                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-0/20 text-[10px] text-[var(--acc)]/70 font-sans text-left flex items-start gap-2">
+                        <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10  text-[10px] text-[var(--acc)]/70 font-sans text-left flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                           <span>
                             {metaError} Puedes analizarlo igualmente, pero los
@@ -2266,7 +2266,7 @@ export default function ReelsCenter({
                         setContentType(e.target.value as typeof contentType)
                       }
                       title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                     >
                       <option value="auto">Detectar automáticamente</option>
                       <option value="concierto">Concierto / Directo</option>
@@ -2284,7 +2284,7 @@ export default function ReelsCenter({
                       value={videoTopic}
                       onChange={(e) => setVideoTopic(e.target.value)}
                       placeholder="Ej: Solo de violín rápido o improvisación de loops con percusión..."
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans ${"bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none font-sans ${"bg-[var(--surface)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                     />
                   </div>
                   <div className="space-y-1">
@@ -2295,7 +2295,7 @@ export default function ReelsCenter({
                       id="video-duration-select"
                       value={videoDuration}
                       onChange={(e) => setVideoDuration(Number(e.target.value))}
-                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50"}`}
+                      className={`w-full rounded-[var(--r-s)] px-3 py-2 text-xs focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                     >
                       <option value={15}>
                         15 segundos (Ideal para Reels cortos / Stories)
@@ -2407,7 +2407,7 @@ export default function ReelsCenter({
                 {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
  presentaban como si los hubiera elegido el modelo. */}
                 {!analysisError && analysisNotice && (
-                  <div className="p-3 bg-[var(--acc)]/10 -amber-0/20 rounded-[var(--r-s)] text-[var(--acc)]/70 text-xs flex gap-2 items-start">
+                  <div className="p-3 bg-[var(--acc)]/10  rounded-[var(--r-s)] text-[var(--acc)]/70 text-xs flex gap-2 items-start">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>{analysisNotice}</span>
                   </div>
@@ -2560,8 +2560,8 @@ export default function ReelsCenter({
                           onClick={() => handleSelectHighlight(index)}
                           className={` rounded-[var(--r-m)] p-3.5 cursor-pointer transition-all space-y-3 relative group overflow-hidden ${
                             isSelected
-                              ? "-[var(--acc)] bg-[var(--acc)]/5/5"
-                              : "-neutral-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50"
+                              ? " bg-[var(--acc)]/5"
+                              : " bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--bg)]/50"
                           }`}
                         >
                           {/* Simulated miniature video thumbnail track design */}
@@ -2686,12 +2686,12 @@ export default function ReelsCenter({
                                   ),
                                 );
                               }}
-                              className={`w-full bg-transparent text-xs font-bold font-sans -dashed -neutral-700/60 focus:-[var(--acc)] focus:outline-none py-0.5 ${textTitle}`}
+                              className={`w-full bg-transparent text-xs font-bold font-sans -dashed  focus:ring-1 focus:ring-[var(--acc)] focus:outline-none py-0.5 ${textTitle}`}
                               placeholder="Escribe un título para este corte..."
                             />
                           </div>
                           <span
-                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 ${"bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]"}`}
+                            className={`text-xs font-sans font-bold px-2.5 py-1 rounded shrink-0 ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
                           >
                             {highlights[selectedHighlightIndex]?.range}
                           </span>
@@ -2699,7 +2699,7 @@ export default function ReelsCenter({
 
                         {/* AI Re-analyzer & User Notes Panel */}
                         <div
-                          className={`p-3.5 rounded-[var(--r-l)] space-y-3 ${"bg-[var(--surface)]/90 -[var(--acc)]/20"}`}
+                          className={`p-3.5 rounded-[var(--r-l)] space-y-3 ${"bg-[var(--surface)]/90 "}`}
                         >
                           <div className="flex justify-between items-center flex-wrap gap-2">
                             <div className="flex items-center gap-2">
@@ -2742,7 +2742,7 @@ export default function ReelsCenter({
                               value={clipUserNote}
                               onChange={(e) => setClipUserNote(e.target.value)}
                               placeholder="Ej: En este tramo del 0:15 al 0:45 sólo toca el bajo Jon y la batería, no hay violín..."
-                              className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none ${"bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50"}`}
+                              className={`w-full rounded-[var(--r-m)] px-3 py-2 text-xs font-sans focus:outline-none ${"bg-[var(--surface)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                             />
                           </div>
 
@@ -2861,14 +2861,14 @@ export default function ReelsCenter({
                             rows={5}
                             value={editedCopy}
                             onChange={(e) => setEditedCopy(e.target.value)}
-                            className={`w-full rounded-[var(--r-m)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${"bg-[var(--surface)] text-[var(--ink-2)] focus:-[var(--acc)]/50"}`}
+                            className={`w-full rounded-[var(--r-m)] p-3 text-xs font-sans leading-relaxed focus:outline-none ${"bg-[var(--surface)] text-[var(--ink-2)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                           />
                         </div>
 
                         {/* Recommendation Tips */}
                         {optimalTime && (
                           <div
-                            className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed ${"bg-[var(--acc)]/5 -[var(--acc)]/15 text-[var(--ink)]"}`}
+                            className={`p-3 rounded-[var(--r-m)] flex gap-3 items-start text-[11px] leading-relaxed ${"bg-[var(--acc)]/5  text-[var(--ink)]"}`}
                           >
                             <Clock
                               className={`w-4.5 h-4.5 mt-0.5 shrink-0 ${"text-[var(--acc)]"}`}
@@ -2922,8 +2922,8 @@ export default function ReelsCenter({
                                 }}
                                 className={`py-2 px-2 rounded-[var(--r-s)] text-[10px] font-sans text-center transition-all cursor-pointer ${
                                   selectedPlatform === plat.id
-                                    ? "bg-[var(--acc)] -[var(--acc)] text-[var(--on-acc)] font-black"
-                                    : "-neutral-200 hover:-indigo-200 bg-[var(--surface)] text-[var(--ink-2)]"
+                                    ? "bg-[var(--acc)]  text-[var(--on-acc)] font-black"
+                                    : " hover:bg-[var(--sunken)] bg-[var(--surface)] text-[var(--ink-2)]"
                                 }`}
                               >
                                 {plat.name}
@@ -2942,7 +2942,7 @@ export default function ReelsCenter({
                               type="date"
                               value={scheduledDate}
                               onChange={(e) => setScheduledDate(e.target.value)}
-                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${"bg-[var(--surface)] focus:-[var(--acc)]/50"}`}
+                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${"bg-[var(--surface)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                             />
                           </div>
                           <div className="space-y-1">
@@ -2953,7 +2953,7 @@ export default function ReelsCenter({
                               type="time"
                               value={scheduledTime}
                               onChange={(e) => setScheduledTime(e.target.value)}
-                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${"bg-[var(--surface)] focus:-[var(--acc)]/50"}`}
+                              className={`w-full rounded-[var(--r-s)] p-2.5 text-xs font-sans focus:outline-none ${"bg-[var(--surface)] focus:ring-1 focus:ring-[var(--acc)]/50"}`}
                             />
                           </div>
                         </div>
@@ -3003,7 +3003,7 @@ export default function ReelsCenter({
                           </div>
                         )}
                         {scheduleWarnings.length > 0 && (
-                          <div className="p-2.5 bg-[var(--acc)]/10 -amber-0/30 rounded-[var(--r-s)] text-[var(--acc)] text-[11px] font-sans mt-2 space-y-1">
+                          <div className="p-2.5 bg-[var(--acc)]/10  rounded-[var(--r-s)] text-[var(--acc)] text-[11px] font-sans mt-2 space-y-1">
                             {scheduleWarnings.map((aviso) => (
                               <div
                                 key={aviso}
@@ -3061,7 +3061,7 @@ export default function ReelsCenter({
                     {[...posts].reverse().map((post) => (
                       <div
                         key={post.id}
-                        className={` rounded-[var(--r-m)] p-3 flex flex-col md:flex-row justify-between gap-3 items-stretch transition-all ${"bg-[var(--bg)]/50 hover:-indigo-300"}`}
+                        className={` rounded-[var(--r-m)] p-3 flex flex-col md:flex-row justify-between gap-3 items-stretch transition-all ${"bg-[var(--bg)]/50 hover:bg-[var(--sunken)]"}`}
                       >
                         <div className="space-y-2 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -3207,7 +3207,7 @@ export default function ReelsCenter({
 
                           {/* Kinetic Reels Subtitles Overlay */}
                           {currentSubtitleText && !renderedBurnedSubs && (
-                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center">
+                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)]  text-center">
                               <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
                                 ✨ {currentSubtitleText} ✨
                               </span>
@@ -3276,12 +3276,12 @@ export default function ReelsCenter({
                     >
                       <div className="flex gap-4">
                         <div
-                          className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-sans ${"-[var(--acc)]/50 text-[var(--acc)]/70"}`}
+                          className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-sans ${" text-[var(--acc)]/70"}`}
                         >
                           VOL
                         </div>
                         <div
-                          className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-sans ${"-[var(--accent)]/50 text-[var(--acc)]/70"}`}
+                          className={`w-10 h-10 rounded-full -dashed flex items-center justify-center text-[8px] font-sans ${" text-[var(--acc)]/70"}`}
                         >
                           SKA
                         </div>
@@ -3295,7 +3295,7 @@ export default function ReelsCenter({
                       </span>
                       {phoneDuration && (
                         <span
-                          className={`text-[10px] font-sans py-0.5 px-2 rounded-full font-bold ${"bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)]"}`}
+                          className={`text-[10px] font-sans py-0.5 px-2 rounded-full font-bold ${"bg-[var(--acc)]/10  text-[var(--acc)]"}`}
                         >
                           {phoneDuration}
                         </span>
@@ -3414,7 +3414,7 @@ export default function ReelsCenter({
                 <div className="z-10 space-y-2 mt-auto">
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-sans font-bold ${"bg-[var(--acc)]/20 -[var(--acc)] text-[var(--acc)]"}`}
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-sans font-bold ${"bg-[var(--acc)]/20  text-[var(--acc)]"}`}
                     >
                       {nombreBanda.charAt(0).toUpperCase()}
                     </span>
@@ -3650,7 +3650,7 @@ export default function ReelsCenter({
 
                           {/* Subtitles Overlay inside Cinema Phone */}
                           {currentSubtitleText && !renderedBurnedSubs && (
-                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-[var(--r-m)] -[var(--acc)]/40 text-center">
+                            <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--sunken)] px-2 py-1.5 rounded-[var(--r-m)]  text-center">
                               <span className="text-[10px] font-sans font-black tracking-wide text-[var(--acc)] leading-tight">
                                 ✨ {currentSubtitleText} ✨
                               </span>
@@ -3744,7 +3744,7 @@ export default function ReelsCenter({
 
                 <div className="z-10 space-y-2 mt-auto text-left">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full -[var(--acc)] bg-[var(--acc)]/20 flex items-center justify-center text-[8px] font-sans font-bold text-[var(--acc)]">
+                    <span className="w-5 h-5 rounded-full  bg-[var(--acc)]/20 flex items-center justify-center text-[8px] font-sans font-bold text-[var(--acc)]">
                       {nombreBanda.charAt(0).toUpperCase()}
                     </span>
                     <div>
@@ -3821,7 +3821,7 @@ export default function ReelsCenter({
                 <button
                   id="expanded-mute-btn"
                   onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] hover:text-[var(--ink)] hover:-neutral-700 hover:bg-[var(--surface)]/70 active:scale-95 transition-all cursor-pointer select-none text-xs font-sans font-bold"
+                  className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all cursor-pointer select-none text-xs font-sans font-bold"
                 >
                   {isPreviewMuted ? (
                     <>
@@ -3845,7 +3845,7 @@ export default function ReelsCenter({
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/30 tracking-wider">
+                      <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--acc)]  tracking-wider">
                         Highlight de Alto Impacto
                       </span>
                       <span className="px-2 py-0.5 rounded text-[9px] font-sans font-extrabold bg-[var(--acc)]/15 text-[var(--ink-2)] -sky-500/20 tracking-wider">
@@ -4006,7 +4006,7 @@ export default function ReelsCenter({
                                 Línea de Tiempo Interactiva
                               </span>
                             </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] -[var(--acc)]/20">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)] ">
                               REPRODUCIENDO CROP
                             </span>
                           </div>
@@ -4026,7 +4026,7 @@ export default function ReelsCenter({
                             <div
                               id="interactive-timeline-container"
                               onClick={handleTimelineClick}
-                              className="relative w-full h-10 bg-[var(--surface)] rounded-[var(--r-m)] overflow-hidden flex items-center cursor-pointer group hover:-neutral-700 transition-colors touch-none"
+                              className="relative w-full h-10 bg-[var(--surface)] rounded-[var(--r-m)] overflow-hidden flex items-center cursor-pointer group hover:bg-[var(--sunken)] transition-colors touch-none"
                               title="Haz click para ajustar el inicio o fin del recorte aquí"
                             >
                               {/* Visual highlight segment on the timeline */}
@@ -4142,7 +4142,7 @@ export default function ReelsCenter({
                                   onClick={() =>
                                     handleAdjustCrop("start_minus")
                                   }
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
+                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
                                   title="Mover inicio 1 segundo atrás (extender por la izquierda)"
                                 >
                                   <ChevronLeft className="w-4 h-4 text-[var(--ok)] shrink-0" />
@@ -4153,7 +4153,7 @@ export default function ReelsCenter({
                                   type="button"
                                   disabled={start >= end - 1}
                                   onClick={() => handleAdjustCrop("start_plus")}
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                                   title="Mover inicio 1 segundo adelante (recortar por la izquierda)"
                                 >
                                   <span>+1s (Recortar)</span>
@@ -4178,7 +4178,7 @@ export default function ReelsCenter({
                                   type="button"
                                   disabled={end <= start + 1}
                                   onClick={() => handleAdjustCrop("end_minus")}
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                                   title="Mover fin 1 segundo atrás (recortar por la derecha)"
                                 >
                                   <ChevronLeft className="w-4 h-4 text-[var(--acc)] shrink-0" />
@@ -4188,7 +4188,7 @@ export default function ReelsCenter({
                                   id="btn-crop-end-plus"
                                   type="button"
                                   onClick={() => handleAdjustCrop("end_plus")}
-                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:-neutral-700 hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
+                                  className="flex-1 px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 active:scale-95 transition-all text-xs font-sans font-bold text-[var(--ink)] flex items-center justify-center gap-1 cursor-pointer"
                                   title="Mover fin 1 segundo adelante (extender por la derecha)"
                                 >
                                   <span>+1s (Extender)</span>
@@ -4322,7 +4322,7 @@ export default function ReelsCenter({
                             title="Resalta cada palabra según se pronuncia, como en TikTok/CapCut, en vez de enseñar la línea entera fija."
                             className={`w-full px-3 py-1.5 rounded-[var(--r-s)] text-[9.5px] font-sans font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                               karaokeSubtitles
-                                ? "bg-[var(--acc)]/15 -[var(--acc)]/40 text-[var(--acc)]"
+                                ? "bg-[var(--acc)]/15  text-[var(--acc)]"
                                 : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                             }`}
                           >
@@ -4378,7 +4378,7 @@ export default function ReelsCenter({
                                   : "9:16"}
                             </span>
                             {renderedBurnedSubs && (
-                              <span className="px-1.5 py-0.5 rounded text-[8px] font-sans bg-[var(--acc)]/15 text-[var(--acc)] font-extrabold -[var(--acc)]/30">
+                              <span className="px-1.5 py-0.5 rounded text-[8px] font-sans bg-[var(--acc)]/15 text-[var(--acc)] font-extrabold ">
                                 SUBS
                               </span>
                             )}
@@ -4399,8 +4399,8 @@ export default function ReelsCenter({
                         <div
                           className={`p-2 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 ${
                             renderedStoredPermanently
-                              ? "bg-[var(--ok)]/10 -emerald-500/20 text-[var(--ink-2)]"
-                              : "bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70"
+                              ? "bg-[var(--ok)]/10  text-[var(--ink-2)]"
+                              : "bg-[var(--acc)]/10  text-[var(--acc)]/70"
                           }`}
                         >
                           <span>
@@ -4411,7 +4411,7 @@ export default function ReelsCenter({
                         </div>
 
                         {sinTranscripcionReal && (
-                          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 -amber-0/20 text-[10px] text-[var(--acc)]/70 font-sans flex items-center gap-2">
+                          <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/10  text-[10px] text-[var(--acc)]/70 font-sans flex items-center gap-2">
                             <span>
                               ℹ️ Este vídeo no tiene transcripción en YouTube,
                               así que el clip va sin subtítulos.
@@ -4429,7 +4429,7 @@ export default function ReelsCenter({
                                 .replace(/^-|-$/g, "") || "reel"
                             }-${highlights[selectedHighlightIndex]?.range?.replace(/[^0-9]/g, "") || "clip"}.mp4`}
                             rel="noreferrer noopener"
-                            className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:-neutral-700 text-[11px] font-sans font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                            className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--sunken)] text-[11px] font-sans font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                             <span>Descargar MP4</span>
@@ -4440,7 +4440,7 @@ export default function ReelsCenter({
                               href={renderedSubUrl}
                               download="subtitulos.vtt"
                               rel="noreferrer noopener"
-                              className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:-neutral-700 text-[11px] font-sans font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                              className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--sunken)] text-[11px] font-sans font-bold text-[var(--ink-2)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                               <span>Descargar .VTT</span>
@@ -4450,7 +4450,7 @@ export default function ReelsCenter({
                           <button
                             type="button"
                             onClick={handleCutPhysicalVideo}
-                            className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 -[var(--acc)]/20 hover:bg-[var(--acc)]/20 text-[11px] font-sans font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                            className="flex-1 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/10  hover:bg-[var(--acc)]/20 text-[11px] font-sans font-bold text-[var(--acc)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
                           >
                             <RotateCcw className="w-3.5 h-3.5" />
                             <span>Volver a Renderizar</span>
@@ -4533,7 +4533,7 @@ export default function ReelsCenter({
                           {wordOffsets.map((w, idx) => (
                             <div
                               key={idx}
-                              className="px-2 py-1 rounded bg-[var(--surface)] bg-[var(--surface)]/80 flex items-center gap-1 hover:-neutral-700 hover:bg-[var(--surface)]/70 transition-colors"
+                              className="px-2 py-1 rounded bg-[var(--surface)] bg-[var(--surface)]/80 flex items-center gap-1 hover:bg-[var(--sunken)] hover:bg-[var(--surface)]/70 transition-colors"
                               title={`Exact times: ${w.start.toFixed(2)}s to ${w.end.toFixed(2)}s`}
                             >
                               <span className="text-[var(--ink-2)] font-sans font-medium">
@@ -4699,7 +4699,7 @@ export default function ReelsCenter({
                     onChange={(e) => setEditedCopy(e.target.value)}
                     rows={7}
                     placeholder="Escribe el copy para tus redes sociales..."
-                    className="w-full text-xs font-sans bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-[var(--ink-2)] focus:outline-none focus:-neutral-700 leading-relaxed font-normal"
+                    className="w-full text-xs font-sans bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-[var(--ink-2)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)] leading-relaxed font-normal"
                   />
                   <p className="text-[9.5px] font-sans text-[var(--ink-2)]">
                     * Puedes editar este texto libremente antes de programarlo.

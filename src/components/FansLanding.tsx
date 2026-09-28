@@ -1961,7 +1961,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 mt-1 bg-gradient-to-r from-[var(--acc)] to-[#e0a820] hover:from-[#ffe088] hover:to-[var(--acc)] text-[#121111] font-black text-sm tracking-widest font-sans rounded-[var(--r-m)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
+              className="w-full py-4 mt-1 bg-gradient-to-r from-[var(--acc)] to-[var(--acc-soft)] hover:from-[var(--acc-soft)] hover:to-[var(--acc)] text-[#121111] font-black text-sm tracking-widest font-sans rounded-[var(--r-m)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
             >
               {loading ? (
                 <>
