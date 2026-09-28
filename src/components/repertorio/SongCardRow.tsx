@@ -323,9 +323,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               type="button"
               onClick={onOpenChords}
               className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                isStitchLight
-                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-[var(--ok)]'
-                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-[var(--ok)]/25'
+                'bg-[var(--ok-soft)] hover:bg-emerald-100 text-emerald-800 border-[var(--ok)]'
               }`}
               title="Ver cifrado de acordes, armonía y letra"
             >

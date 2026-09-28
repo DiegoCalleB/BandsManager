@@ -66,13 +66,13 @@ export function GenerateAllTemplatesModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div
         className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border overflow-hidden ${
-          isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-[#181818] border-[var(--hair)]/10 text-white'
+          'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
         {/* Header */}
         <div
           className={`p-5 flex items-center justify-between border-b ${
-            isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-[#1e1e1e] border-[var(--hair)]/5'
+            'bg-[var(--surface)] border-[var(--hair)]'
           }`}
         >
           <div className="flex items-center gap-2.5">
@@ -98,7 +98,7 @@ export function GenerateAllTemplatesModal({
                   7 Categorías en 1 Clic
                 </span>
               </h3>
-              <p className={`text-xs ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+              <p className={`text-xs ${'text-[var(--ink-2)]'}`}>
                 {isCampaign
                   ? `Adapta el objetivo de "${campaignContext?.name || 'la campaña'}" a los 7 tipos de programadores`
                   : 'Adapta automáticamente la propuesta de tu banda a los 7 tipos de programadores'}
@@ -110,7 +110,7 @@ export function GenerateAllTemplatesModal({
             onClick={onClose}
             disabled={isGenerating}
             className={`p-2 rounded-xl transition-colors cursor-pointer ${
-              isStitchLight ? 'hover:bg-slate-200 text-slate-500' : 'hover:bg-white/10 text-neutral-400'
+              'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
             }`}
           >
             <X className="w-5 h-5" />
@@ -160,9 +160,7 @@ export function GenerateAllTemplatesModal({
             className={`p-4 rounded-xl border text-xs leading-relaxed space-y-2 ${
               isCampaign
                 ? 'bg-purple-950/30 border-[var(--acc)]/20 text-purple-200'
-                : isStitchLight
-                  ? 'bg-amber-50 border-[var(--acc)] text-amber-900'
-                  : 'bg-amber-500/10 border-[var(--acc)]/20 text-amber-200'
+                : 'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--acc-ink)]'
             }`}
           >
             <div className={`flex items-center gap-2 font-bold ${isCampaign ? 'text-purple-400' : 'text-amber-400'}`}>
@@ -185,7 +183,7 @@ export function GenerateAllTemplatesModal({
               >
                 <span>{isCampaign ? 'Concepto y Enfoque de esta Campaña' : 'Propuesta Base, Sonido e Identidad de la Banda'}</span>
               </label>
-              <span className={`text-[10px] ${isStitchLight ? 'text-slate-400' : 'text-neutral-500'}`}>
+              <span className={`text-[10px] ${'text-[var(--ink-2)]'}`}>
                 {isCampaign ? 'Detalles clave de la gira o lanzamiento' : 'Pega aquí tu biografía, instrumentos o formato'}
               </span>
             </div>
@@ -195,9 +193,7 @@ export function GenerateAllTemplatesModal({
               onChange={(e) => setBaseProposal(e.target.value)}
               disabled={isGenerating}
               className={`w-full p-4 rounded-xl text-xs font-sans leading-relaxed focus:outline-none transition-all resize-y ${
-                isStitchLight
-                  ? 'bg-slate-50 border border-[var(--hair)] text-slate-800 focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-500'
-                  : 'bg-[#121212] border border-[var(--hair)]/10 text-neutral-200 focus:border-[var(--acc)]/50'
+                'bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink)] focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-500'
               }`}
               placeholder={
                 isCampaign
@@ -210,7 +206,7 @@ export function GenerateAllTemplatesModal({
           {/* Targets Grid Preview */}
           <div className="space-y-2">
             <span
-              className={`text-[11px] font-bold uppercase tracking-wider block ${isStitchLight ? 'text-slate-600' : 'text-neutral-400'}`}
+              className={`text-[11px] font-bold uppercase tracking-wider block ${'text-[var(--ink-2)]'}`}
             >
               Las 7 adaptaciones que se generarán:
             </span>
@@ -221,7 +217,7 @@ export function GenerateAllTemplatesModal({
                   <div
                     key={idx}
                     className={`p-2.5 rounded-xl border flex items-start gap-2.5 ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-[#141414] border-[var(--hair)]/5'
+                      'bg-[var(--surface)] border-[var(--hair)]'
                     }`}
                   >
                     <div
@@ -233,7 +229,7 @@ export function GenerateAllTemplatesModal({
                     </div>
                     <div className="min-w-0">
                       <div className="text-[11px] font-bold truncate">{cat.name}</div>
-                      <div className={`text-[10px] line-clamp-2 ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>{cat.desc}</div>
+                      <div className={`text-[10px] line-clamp-2 ${'text-[var(--ink-2)]'}`}>{cat.desc}</div>
                     </div>
                   </div>
                 );
@@ -245,7 +241,7 @@ export function GenerateAllTemplatesModal({
         {/* Footer */}
         <div
           className={`p-4 px-6 flex items-center justify-between border-t ${
-            isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-[#1e1e1e] border-[var(--hair)]/5'
+            'bg-[var(--surface)] border-[var(--hair)]'
           }`}
         >
           <button
@@ -253,7 +249,7 @@ export function GenerateAllTemplatesModal({
             onClick={onClose}
             disabled={isGenerating}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              isStitchLight ? 'text-slate-600 hover:bg-slate-200' : 'text-neutral-400 hover:text-white hover:bg-white/5'
+              'text-[var(--ink-2)] hover:bg-[var(--sunken)]'
             }`}
           >
             Cancelar

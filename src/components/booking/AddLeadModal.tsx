@@ -217,7 +217,7 @@ export function AddLeadModal({
                     value={newLeadData.genero}
                     onChange={(e) => setNewLeadData((prev) => ({ ...prev, genero: e.target.value }))}
                     className={`w-full rounded-xl px-3 py-2 text-xs focus:outline-none border cursor-pointer ${
-                      isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                      'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                   >
                     <option value="Radio">Radio / Programa</option>
@@ -231,7 +231,7 @@ export function AddLeadModal({
                     value={newLeadData.tipo}
                     onChange={(e) => setNewLeadData((prev) => ({ ...prev, tipo: e.target.value as LeadType }))}
                     className={`w-full rounded-xl px-3 py-2 text-xs focus:outline-none border cursor-pointer ${
-                      isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                      'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                   >
                     <option value="sala">Sala de Conciertos</option>
@@ -283,7 +283,7 @@ export function AddLeadModal({
                     }));
                   }}
                   className={`w-full rounded-xl px-3 py-2 text-xs focus:outline-none border ${
-                    isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                    'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                   }`}
                 />
               </div>
@@ -292,14 +292,14 @@ export function AddLeadModal({
             {/* Collapsible Advanced Section */}
             <div
               className={`rounded-2xl border transition-all overflow-hidden ${
-                isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-neutral-900/60 borderbg-[var(--surface)]'
+                'bg-[var(--surface)] border-[var(--hair)]'
               }`}
             >
               <button
                 type="button"
                 onClick={() => setShowAdvanced((prev) => !prev)}
                 className={`w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors cursor-pointer ${
-                  isStitchLight ? 'hover:bg-slate-100 text-slate-800' : 'hover:bgbg-[var(--surface)]/80 text-zinc-300'
+                  'hover:bg-[var(--sunken)] text-[var(--ink)]'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -396,7 +396,7 @@ export function AddLeadModal({
                         value={newLeadData.direccion || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, direccion: e.target.value }))}
                         className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
-                          isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                          'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
                     </div>
@@ -408,7 +408,7 @@ export function AddLeadModal({
                         value={newLeadData.region}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, region: e.target.value }))}
                         className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
-                          isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                          'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
                     </div>
@@ -424,7 +424,7 @@ export function AddLeadModal({
                         value={newLeadData.email_secundario || ''}
                         onChange={(e) => setNewLeadData((prev) => ({ ...prev, email_secundario: e.target.value }))}
                         className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
-                          isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                          'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
                     </div>
@@ -443,7 +443,7 @@ export function AddLeadModal({
                           }));
                         }}
                         className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
-                          isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                          'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                       />
                     </div>
@@ -458,7 +458,7 @@ export function AddLeadModal({
                       value={newLeadData.pitch_generado}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, pitch_generado: e.target.value }))}
                       className={`w-full rounded-xl p-2.5 text-xs focus:outline-none border ${
-                        isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                        'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                     />
                   </div>
@@ -472,7 +472,7 @@ export function AddLeadModal({
                       value={newLeadData.notas}
                       onChange={(e) => setNewLeadData((prev) => ({ ...prev, notas: e.target.value }))}
                       className={`w-full rounded-xl px-2.5 py-1.5 text-xs focus:outline-none border ${
-                        isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                        'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                     />
                   </div>

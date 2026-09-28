@@ -23,9 +23,7 @@ export function TemplateRecommendationsCard({
   return (
     <div
       className={`rounded-xl border p-4 transition-all duration-200 ${
-        isStitchLight
-          ? 'bg-amber-50/70 border-[var(--acc)] text-stone-900 shadow-sm'
-          : 'bg-[#181510] border-[var(--acc)]/30 text-amber-100 shadow-md'
+        'bg-[var(--acc-soft)]/70 border-[var(--acc)] text-stone-900 shadow-sm'
       }`}
     >
       {/* Header with category badge & toggle */}
@@ -33,7 +31,7 @@ export function TemplateRecommendationsCard({
         <div className="flex items-center gap-2.5 min-w-0">
           <div
             className={`p-1.5 rounded-lg flex items-center justify-center shrink-0 ${
-              isStitchLight ? 'bg-amber-500 text-stone-950 font-bold' : 'bg-amber-400/20 text-amber-300 border border-[var(--acc)]/40'
+              'bg-[var(--acc)] text-[var(--ink)] font-bold'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -43,13 +41,13 @@ export function TemplateRecommendationsCard({
               <span className="text-xs font-extrabold uppercase tracking-wide text-amber-400">Recomendaciones del Agente</span>
               <span
                 className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                  isStitchLight ? 'bg-amber-200 text-amber-900' : 'bg-amber-400/15 text-amber-300 border border-[var(--acc)]/20'
+                  'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                 }`}
               >
                 {rec.badge}
               </span>
             </div>
-            <p className={`text-[11px] font-sans truncate ${isStitchLight ? 'text-stone-600' : 'text-amber-200/80'}`}>{rec.tagline}</p>
+            <p className={`text-[11px] font-sans truncate ${'text-[var(--ink-2)]'}`}>{rec.tagline}</p>
           </div>
         </div>
 
@@ -59,9 +57,7 @@ export function TemplateRecommendationsCard({
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer active:scale-95 disabled:opacity-50 ${
-              isStitchLight
-                ? 'bg-amber-500 hover:bg-amber-600 text-stone-950 font-extrabold'
-                : 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black'
+              'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-extrabold'
             }`}
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"
           >
@@ -74,7 +70,7 @@ export function TemplateRecommendationsCard({
               type="button"
               onClick={onClose}
               className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                isStitchLight ? 'hover:bg-amber-200/50 text-stone-600' : 'hover:bg-white/10 text-neutral-400'
+                'hover:bg-[var(--acc-soft)] text-[var(--ink-2)]'
               }`}
               title="Cerrar recomendaciones"
             >
@@ -90,7 +86,7 @@ export function TemplateRecommendationsCard({
           {/* Quick AI Tip / Secret */}
           <div
             className={`p-2.5 rounded-lg flex items-start gap-2 text-[11px] leading-relaxed ${
-              isStitchLight ? 'bg-white text-stone-800 border border-[var(--acc)]' : 'bg-black/40 text-amber-200/90 border border-[var(--acc)]/20'
+              'bg-[var(--surface)] text-[var(--ink)] border border-[var(--acc)]'
             }`}
           >
             <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
@@ -105,7 +101,7 @@ export function TemplateRecommendationsCard({
             {/* DOs */}
             <div
               className={`p-3 rounded-lg border space-y-1.5 ${
-                isStitchLight ? 'bg-emerald-50/70 border-[var(--ok)]' : 'bg-emerald-950/20 border-[var(--ok)]/30'
+                'bg-[var(--ok-soft)]/70 border-[var(--ok)]'
               }`}
             >
               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
@@ -125,7 +121,7 @@ export function TemplateRecommendationsCard({
             {/* DON'Ts */}
             <div
               className={`p-3 rounded-lg border space-y-1.5 ${
-                isStitchLight ? 'bg-rose-50/70 border-[var(--alert)]' : 'bg-rose-950/20 border-[var(--alert)]/30'
+                'bg-[var(--alert)]/12 border-[var(--alert)]'
               }`}
             >
               <div className="flex items-center gap-1.5 text-xs font-bold text-rose-400">
@@ -147,7 +143,7 @@ export function TemplateRecommendationsCard({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px]">
             <div
               className={`p-2.5 rounded-lg border space-y-1 ${
-                isStitchLight ? 'bg-white border-[var(--acc)]' : 'bg-black/30 border-[var(--acc)]/20'
+                'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
               <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">
@@ -158,7 +154,7 @@ export function TemplateRecommendationsCard({
 
             <div
               className={`p-2.5 rounded-lg border space-y-1 ${
-                isStitchLight ? 'bg-white border-[var(--acc)]' : 'bg-black/30 border-[var(--acc)]/20'
+                'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
               <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">⚡ Ganchos Clave</span>
@@ -174,7 +170,7 @@ export function TemplateRecommendationsCard({
 
             <div
               className={`p-2.5 rounded-lg border space-y-1 ${
-                isStitchLight ? 'bg-white border-[var(--acc)]' : 'bg-black/30 border-[var(--acc)]/20'
+                'bg-[var(--surface)] border-[var(--acc)]'
               }`}
             >
               <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">
@@ -197,7 +193,7 @@ export function TemplateRecommendationsCard({
               onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
               disabled={isOptimizing}
               className={`px-2.5 py-1 rounded text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50 ${
-                isStitchLight ? 'bg-amber-500 text-stone-950 hover:bg-amber-600' : 'bg-amber-400 text-stone-950 hover:bg-amber-300'
+                'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]'
               }`}
             >
               <Sparkles className="w-3 h-3" />

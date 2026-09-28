@@ -408,9 +408,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               onClick={() => setActiveModalTab("tone")}
               className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "tone"
-                  ? isStitchLight
-                    ? "bg-amber-500 text-stone-950 shadow-md font-extrabold"
-                    : "bg-gradient-to-r from-[var(--acc)] to-amber-400 text-stone-950 shadow-md font-extrabold"
+                  ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
                   : "text-neutral-400 hover:text-white hover:bg-[var(--ink)]/5"
               }`}
             >
@@ -422,9 +420,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               onClick={() => setActiveModalTab("threads")}
               className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "threads"
-                  ? isStitchLight
-                    ? "bg-amber-500 text-stone-950 shadow-md font-extrabold"
-                    : "bg-gradient-to-r from-[var(--acc)] to-amber-400 text-stone-950 shadow-md font-extrabold"
+                  ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
                   : "text-neutral-400 hover:text-white hover:bg-[var(--ink)]/5"
               }`}
             >
@@ -482,7 +478,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <ExampleThreadsSection
                 category={selectedCategoryThread}
                 isStitchLight={isStitchLight}
-                textSub={isStitchLight ? "text-slate-500" : "text-neutral-400"}
+                textSub={"text-[var(--ink-2)]"}
               />
             </div>
           ) : (
@@ -704,7 +700,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 1. Main Tone Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
                     <div
-                      className={`p-3 rounded-xl border ${isStitchLight ? "bg-slate-50 border-[var(--hair)]" : "bg-neutral-900 borderbg-[var(--surface)]"}`}
+                      className={`p-3 rounded-xl border ${"bg-[var(--ink-3)] border-[var(--hair)]"}`}
                     >
                       <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">
                         Tono General
@@ -715,7 +711,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </div>
 
                     <div
-                      className={`p-3 rounded-xl border ${isStitchLight ? "bg-slate-50 border-[var(--hair)]" : "bg-neutral-900 borderbg-[var(--surface)]"}`}
+                      className={`p-3 rounded-xl border ${"bg-[var(--ink-3)] border-[var(--hair)]"}`}
                     >
                       <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">
                         Tratamiento
@@ -726,7 +722,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </div>
 
                     <div
-                      className={`p-3 rounded-xl border ${isStitchLight ? "bg-slate-50 border-[var(--hair)]" : "bg-neutral-900 borderbg-[var(--surface)]"}`}
+                      className={`p-3 rounded-xl border ${"bg-[var(--ink-3)] border-[var(--hair)]"}`}
                     >
                       <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">
                         Nivel de Energía
@@ -739,7 +735,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                   {/* 2. Key Vocabulary, Quotes & Emojis */}
                   <div
-                    className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? "bg-slate-50 border-[var(--hair)]" : "bg-neutral-900/60 borderbg-[var(--surface)]"}`}
+                    className={`p-3.5 rounded-xl border space-y-2.5 ${"bg-[var(--ink-3)] border-[var(--hair)]"}`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
@@ -860,7 +856,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 3. Pitch Recommendation & Connection Points */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
                     <div
-                      className={`p-3 rounded-xl border space-y-1 ${isStitchLight ? "bg-amber-50/50 border-[var(--acc)] text-amber-900" : "bg-amber-950/20 border-[var(--acc)]/40 text-amber-200"}`}
+                      className={`p-3 rounded-xl border space-y-1 ${"bg-[var(--acc)]/50 border-[var(--acc)] text-[var(--acc)]"}`}
                     >
                       <span className="font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1 text-[9px]">
                         <Flame className="w-3 h-3" /> Punto de Conexión con
@@ -873,7 +869,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     </div>
 
                     <div
-                      className={`p-3 rounded-xl border space-y-1 ${isStitchLight ? "bg-sky-50/50 border-[var(--acc)] text-sky-900" : "bg-sky-950/20 border-[var(--acc)]/40 text-sky-200"}`}
+                      className={`p-3 rounded-xl border space-y-1 ${"bg-[var(--acc)]/50 border-[var(--acc)] text-[var(--acc)]"}`}
                     >
                       <span className="font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1 text-[9px]">
                         <HeartHandshake className="w-3 h-3" /> Recomendación de
@@ -916,9 +912,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         rows={6}
                         value={toneData.pitch_personalizado_ejemplo}
                         className={`w-full p-3 rounded-xl font-mono text-[10px] leading-relaxed focus:outline-none ${
-                          isStitchLight
-                            ? "bg-slate-50 border border-[var(--hair)] text-slate-800"
-                            : "bg-[var(--sunken)] border borderbg-[var(--surface)] text-neutral-200"
+                          "bg-[var(--ink-3)] border border-[var(--hair)] text-[var(--ink)]"
                         }`}
                       />
 
@@ -942,7 +936,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
                   {editable && (
                     <div
-                      className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? "bg-violet-50/50 border-[var(--acc)]" : "bg-violet-950/20 border-[var(--acc)]/40"}`}
+                      className={`p-3.5 rounded-xl border space-y-2.5 ${"bg-[var(--acc)]/50 border-[var(--acc)]"}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">

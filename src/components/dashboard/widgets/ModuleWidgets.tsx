@@ -229,7 +229,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
           onClick={() => onNavigate && onNavigate('fans')}
           className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all flex flex-col items-center justify-center cursor-pointer"
         >
-          <QrCode className={`w-5 h-5 ${isStitchLight ? 'text-indigo-600' : 'text-amber-400'} mb-1`} />
+          <QrCode className={`w-5 h-5 ${'text-[var(--acc)]'} mb-1`} />
           <span className="text-[11px] font-sans font-bold">Generar QR Concierto</span>
         </button>
       </div>

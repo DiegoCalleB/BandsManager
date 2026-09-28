@@ -20,7 +20,7 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
 
   return (
     <div
-      className={`p-3 rounded-xl mt-3 ${isStitchLight ? 'bg-slate-50 border border-[var(--hair)]' : 'bg-neutral-950 border border-[var(--hair)]'} space-y-2`}
+      className={`p-3 rounded-xl mt-3 ${'bg-[var(--surface)] border border-[var(--hair)]'} space-y-2`}
     >
       <div className="flex items-center justify-between text-[11px] font-bold">
         <span className={textTitle}>📊 Viabilidad del Bolo</span>

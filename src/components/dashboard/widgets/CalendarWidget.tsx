@@ -208,18 +208,12 @@ export function CalendarWidget({
     year: "numeric",
   });
 
-  const cardContainerBg = isStitchLight
-    ? "bg-[var(--surface)] border border-[var(--hair)] shadow-xs"
-    : "bg-[#18181b]/95 border borderbg-[var(--surface)]/90 shadow-sm";
-  const subCardBg = isStitchLight
-    ? "bg-zinc-50 border border-[var(--hair)]/80 text-zinc-900 hover:border-[var(--acc)]"
-    : "bg-[#121214] border borderbg-[var(--surface)]/90 text-neutral-100 hover:border-[var(--acc)]/40";
-  const textTitleColor = isStitchLight ? "text-zinc-900" : "text-neutral-100";
-  const textSubColor = isStitchLight ? "text-zinc-500" : "text-neutral-400";
-  const dividerColor = isStitchLight
-    ? "border-[var(--hair)]"
-    : "borderbg-[var(--surface)]/80";
-  const accentColor = isStitchLight ? "text-[var(--acc)]" : "text-[var(--acc)]";
+  const cardContainerBg = "bg-[var(--surface)] border border-[var(--hair)]";
+  const subCardBg = "bg-[var(--ink-3)] border border-[var(--hair)]/80 text-[var(--ink)] hover:border-[var(--acc)]";
+  const textTitleColor = "text-[var(--ink)]";
+  const textSubColor = "text-[var(--ink-2)]";
+  const dividerColor = "border-[var(--hair)]";
+  const accentColor = "text-[var(--acc)]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-all space-y-4">
@@ -514,7 +508,7 @@ export function CalendarWidget({
                   <div className="flex items-center gap-0.5 mt-1">
                     {hasConcert && (
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${isStitchLight ? "bg-[var(--acc)]" : "bg-[var(--acc)]"} shadow-xs`}
+                        className={`w-1.5 h-1.5 rounded-full ${"bg-[var(--acc)]"} shadow-xs`}
                         title="Concierto"
                       />
                     )}
@@ -646,7 +640,7 @@ export function CalendarWidget({
                     ))}
                     {dayEvts.length === 0 && (
                       <span
-                        className={`text-[10px] ${isStitchLight ? "text-zinc-400" : "text-neutral-600"} block text-center py-2`}
+                        className={`text-[10px] ${"text-[var(--ink-2)]"} block text-center py-2`}
                       >
                         Libre
                       </span>

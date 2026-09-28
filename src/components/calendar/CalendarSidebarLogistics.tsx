@@ -411,12 +411,12 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             </div>
           ) : (
             <>
-              <div className={`p-3 rounded-full ${isStitchLight ? 'bg-slate-100 text-slate-400' : 'bgbg-[var(--surface)] text-neutral-500'}`}>
+              <div className={`p-3 rounded-full ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
                 <Calendar className="w-6 h-6" />
               </div>
               <div>
                 <p
-                  className={`text-xs font-mono font-bold uppercase tracking-wider ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}
+                  className={`text-xs font-mono font-bold uppercase tracking-wider ${'text-[var(--ink-2)]'}`}
                 >
                   {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                 </p>
@@ -430,9 +430,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
                   className={`py-1.5 px-3 rounded-xl text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    isStitchLight
-                      ? 'bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25'
-                      : 'bg-[#10b981]/20 text-[#10b981] hover:bg-[#10b981]/30'
+                    'bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25'
                   }`}
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -443,9 +441,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
                   className={`py-1.5 px-3 rounded-xl text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    isStitchLight
-                      ? 'bg-amber-500/15 text-amber-600 hover:bg-amber-500/25'
-                      : 'bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30'
+                    'bg-amber-500/15 text-amber-600 hover:bg-amber-500/25'
                   }`}
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -457,11 +453,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
           {/* Quick GPS & Upcoming Events List */}
           <div
-            className={`w-full text-left mt-4 pt-3 space-y-2.5 ${isStitchLight ? 'border-t border-[var(--hair)]' : 'border-t borderbg-[var(--surface)]'}`}
+            className={`w-full text-left mt-4 pt-3 space-y-2.5 ${'border-t border-[var(--hair)]'}`}
           >
             <div className="flex items-center justify-between gap-1 flex-wrap">
               <div
-                className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}
+                className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider ${'text-[var(--acc)]'}`}
               >
                 <MapPin className="w-3.5 h-3.5" />
                 <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
@@ -520,9 +516,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className={`p-2.5 rounded-xl flex items-start gap-3 transition-all cursor-pointer ${
                         evt.type === 'campaña'
                           ? 'bg-purple-950/20 hover:border-[var(--acc)]/50 border border-[var(--acc)]/30'
-                          : isStitchLight
-                            ? 'bg-[var(--surface)] hover:border-[var(--acc)] hover:shadow-sm border border-[var(--hair)]'
-                            : 'bg-[#141414] hover:border-[var(--acc)]/40 border border-[var(--hair)]'
+                          : 'bg-[var(--surface)] hover:border-[var(--acc)] hover:shadow-sm border border-[var(--hair)]'
                       }`}
                     >
                       {/* Custom calendar badge: Day number top, short month bottom */}
@@ -530,21 +524,19 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-sm border ${
                           evt.type === 'campaña'
                             ? 'bg-purple-900/30 border-[var(--acc)]/40 text-purple-200'
-                            : isStitchLight
-                              ? 'bg-slate-100 border-[var(--hair)] text-slate-800'
-                              : 'bg-[#1c1b1b] border-[var(--acc)]/30 text-neutral-100'
+                            : 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
                         }`}
                       >
                         <span
                           className={`text-base font-mono font-black leading-none ${
-                            evt.type === 'campaña' ? 'text-purple-300' : isStitchLight ? 'text-sky-500' : 'text-amber-400'
+                            evt.type === 'campaña' ? 'text-purple-300' : 'text-[var(--acc)]'
                           }`}
                         >
                           {evt.day}
                         </span>
                         <span
                           className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${
-                            evt.type === 'campaña' ? 'text-purple-200' : isStitchLight ? 'text-slate-600' : 'text-amber-300'
+                            evt.type === 'campaña' ? 'text-purple-200' : 'text-[var(--ink-2)]'
                           }`}
                         >
                           {evt.month}
@@ -556,14 +548,10 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           <span
                             className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
                               evt.type === 'concierto'
-                                ? isStitchLight
-                                  ? 'bg-sky-500/15 text-sky-400'
-                                  : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30'
+                                ? 'bg-sky-500/15 text-[var(--acc)]'
                                 : evt.type === 'campaña'
                                   ? 'bg-purple-500/20 text-purple-300 border border-[var(--acc)]/40'
-                                  : isStitchLight
-                                    ? 'bg-emerald-100 text-emerald-700'
-                                    : 'bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/30'
+                                  : 'bg-emerald-100 text-emerald-700'
                             }`}
                           >
                             {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
@@ -601,17 +589,17 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       ) : (
         <div id="calendar-event-detail-sidebar" className="concert-detail-view">
           {/* Day details */}
-          <div className={`pb-4 mb-4 flex items-center gap-3 border-b ${isStitchLight ? 'border-[var(--hair)]' : 'border-[#99907c]/15'}`}>
+          <div className={`pb-4 mb-4 flex items-center gap-3 border-b ${'border-[var(--hair)]'}`}>
             <div
               className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-sm border ${
-                isStitchLight ? 'bg-slate-100 border-[var(--hair)] text-slate-800' : 'bg-[#1c1b1b] border-[var(--acc)]/30 text-neutral-100'
+                'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
               }`}
             >
-              <span className={`text-base font-mono font-black leading-none ${isStitchLight ? 'text-sky-500' : 'text-amber-400'}`}>
+              <span className={`text-base font-mono font-black leading-none ${'text-[var(--acc)]'}`}>
                 {selectedDate.getDate()}
               </span>
               <span
-                className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${isStitchLight ? 'text-slate-600' : 'text-amber-300'}`}
+                className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${'text-[var(--ink-2)]'}`}
               >
                 {monthNames[selectedDate.getMonth()]?.slice(0, 3).toUpperCase()}
               </span>
@@ -619,7 +607,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <div
-                  className={`text-[10px] font-mono uppercase tracking-widest font-bold ${isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'}`}
+                  className={`text-[10px] font-mono uppercase tracking-widest font-bold ${'text-[var(--acc)]'}`}
                 >
                   Logística de Ensayos y Conciertos
                 </div>
@@ -640,9 +628,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
                   className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer items-center gap-1 ${
-                    isStitchLight
-                      ? 'bg-amber-50 border-[var(--acc)] text-amber-800 hover:bg-amber-100'
-                      : 'bg-gradient-to-r from-[var(--acc)]/20 to-yellow-600/20 border-[var(--acc)]/60 text-amber-300 hover:from-[var(--acc)]/30 hover:to-yellow-600/30'
+                    'bg-[var(--acc-soft)] border-[var(--acc)] text-amber-800 hover:bg-amber-100'
                   }`}
                   title="Ampliar esta ficha en un modal centrado"
                 >
@@ -660,9 +646,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setShowReminderModal(true);
                   }}
                   className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
-                    isStitchLight
-                      ? 'bg-sky-50 border-[var(--acc)] text-sky-800 hover:bg-sky-100'
-                      : 'bg-neutral-900 border-[var(--acc)]/40 text-sky-300 hover:bgbg-[var(--surface)]'
+                    'bg-sky-50 border-[var(--acc)] text-sky-800 hover:bg-sky-100'
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
                 >
@@ -674,9 +658,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
                   className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
-                    isStitchLight
-                      ? 'bg-amber-50 border-[var(--acc)] text-amber-800 hover:bg-amber-100'
-                      : 'bg-neutral-900 border-[var(--acc)]/40 text-amber-300 hover:bgbg-[var(--surface)]'
+                    'bg-[var(--acc-soft)] border-[var(--acc)] text-amber-800 hover:bg-amber-100'
                   }`}
                   title="Editar ficha completa del concierto"
                 >
@@ -688,9 +670,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
                   className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
-                    isStitchLight
-                      ? 'bg-emerald-50 border-[var(--ok)] text-emerald-800 hover:bg-emerald-100'
-                      : 'bg-neutral-900 border-[var(--ok)]/40 text-emerald-300 hover:bgbg-[var(--surface)]'
+                    'bg-[var(--ok-soft)] border-[var(--ok)] text-emerald-800 hover:bg-emerald-100'
                   }`}
                   title="Editar ficha completa del ensayo"
                 >
@@ -744,9 +724,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         ? evt.kind === 'concert'
                           ? 'bg-amber-500/30 border-[var(--acc)] text-amber-200'
                           : 'bg-emerald-500/30 border-[var(--ok)] text-emerald-200'
-                        : isStitchLight
-                          ? 'bg-slate-50 border-[var(--hair)] text-slate-600 hover:bg-slate-100'
-                          : 'bg-neutral-900 border-[var(--hair)] text-neutral-400 hover:bgbg-[var(--surface)]'
+                        : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                     }`}
                   >
                     {evt.label}
@@ -775,21 +753,21 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
           )}
 
           {/* Core Info */}
-          <div className={`space-y-3 mb-6 rounded-lg p-3 ${isStitchLight ? 'bg-slate-50' : 'bg-[#131313]/60'}`}>
+          <div className={`space-y-3 mb-6 rounded-lg p-3 ${'bg-[var(--surface)]'}`}>
             <div className="flex items-center gap-2 text-[10px]">
-              <Clock className={`w-4 h-4 shrink-0 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`} />
+              <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
               <span className={`font-mono ${textSub}`}>Hora:</span>
-              <span className={`font-bold font-mono ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
+              <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>
                 {selectedEventDetails.time}
               </span>
             </div>
             <div className="flex items-start gap-2 text-[10px]">
-              <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'}`} />
+              <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
               <div className="flex-1">
                 <span className={`font-mono ${textSub}`}>Lugar:</span>
                 <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
                 {selectedEventDetails.direccion && (
-                  <p className={`text-[10px] font-sans mt-1 ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>
+                  <p className={`text-[10px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
                     <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
                   </p>
                 )}
@@ -806,7 +784,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               </div>
             )}
             {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-              <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${isStitchLight ? '-slate-100' : '-neutral-900'}`}>
+              <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'-slate-100'}`}>
                 <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Compensación:</span>
                 <span className="text-[#10b981] dark:text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
@@ -838,7 +816,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
             {selectedEventDetails.notes && (
               <div
-                className={`text-[10px] font-sans italic pt-2 leading-relaxed ${isStitchLight ? '-slate-100 text-slate-500' : '-neutral-900 text-neutral-400'}`}
+                className={`text-[10px] font-sans italic pt-2 leading-relaxed ${'-slate-100 text-[var(--ink-2)]'}`}
               >
                 &ldquo;{selectedEventDetails.notes}&rdquo;
               </div>
@@ -883,7 +861,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 const targetQrUrl = selectedConcert.customQrUrl || defaultUrl;
 
                 return (
-                  <div className={`mt-3 pt-3 border-t ${isStitchLight ? 'border-[var(--hair)]' : 'borderbg-[var(--surface)]/80'}`}>
+                  <div className={`mt-3 pt-3 border-t ${'border-[var(--hair)]'}`}>
                     <div className="flex items-center justify-between gap-1 mb-2">
                       <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400">
                         <QrCode className="w-3.5 h-3.5 shrink-0 text-amber-400" />
@@ -904,7 +882,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                     <div
                       className={`p-2 rounded-xl border flex items-center gap-2.5 ${
-                        isStitchLight ? 'bg-white border-[var(--hair)] shadow-sm' : 'bg-neutral-950/80 borderbg-[var(--surface)]'
+                        'bg-[var(--surface)] border-[var(--hair)] shadow-sm'
                       }`}
                     >
                       <div
@@ -960,7 +938,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               })()}
             {/* WIDGET REUNIÓN (ENLACE VIDEOCONFERENCIA / ASUNTO) */}
             {selectedRehearsal?.tipo_evento === 'reunion' && (
-              <div className={`mt-3 pt-3 border-t ${isStitchLight ? 'border-[var(--hair)]' : 'borderbg-[var(--surface)]/80'}`}>
+              <div className={`mt-3 pt-3 border-t ${'border-[var(--hair)]'}`}>
                 <div className="flex items-center justify-between gap-1 mb-2">
                   <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-indigo-400">
                     <Video className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
@@ -973,7 +951,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                 <div
                   className={`p-2.5 rounded-xl border space-y-2 ${
-                    isStitchLight ? 'bg-white border-[var(--hair)] shadow-sm' : 'bg-neutral-950/80 border-[var(--acc)]/20'
+                    'bg-[var(--surface)] border-[var(--hair)] shadow-sm'
                   }`}
                 >
                   {selectedRehearsal.asunto && (
@@ -1007,7 +985,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
             {/* REPERTORIO / SETLIST ASIGNADO */}
             {(!isPromoPlan || hasModuleAccess(currentUser?.plan, 'repertorio')) && (selectedConcert || selectedRehearsal) && (
-              <div className={` pt-2.5 mt-2.5 ${isStitchLight ? '-slate-100' : '-neutral-900'}`}>
+              <div className={` pt-2.5 mt-2.5 ${'-slate-100'}`}>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
                     <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
@@ -1031,7 +1009,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     }
                   }}
                   className={`w-full text-[10px] font-mono p-1.5 rounded-lg focus:outline-none cursor-pointer ${
-                    isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-[var(--acc)] font-bold'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 >
                   <option value="">-- Sin repertorio asignado --</option>
@@ -1064,18 +1042,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
           </div>
 
           {/* Subtabs for Checklist */}
-          <div className={`flex flex-wrap gap-1 mb-4 pb-1 border-b ${isStitchLight ? 'border-[var(--hair)]' : 'borderbg-[var(--surface)]'}`}>
+          <div className={`flex flex-wrap gap-1 mb-4 pb-1 border-b ${'border-[var(--hair)]'}`}>
             <button
               id="calendar-subtab-runofshow"
               onClick={() => setActiveTab('runofshow')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
                 activeTab === 'runofshow'
-                  ? isStitchLight
-                    ? 'bg-amber-100 text-amber-900 font-bold'
-                    : 'bg-amber-400/20 text-[#f2ca50] font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-amber-100 text-[var(--acc-ink)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               Timing
@@ -1085,12 +1059,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('tecnica')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'tecnica'
-                  ? isStitchLight
-                    ? 'bg-sky-100 text-sky-900 font-bold'
-                    : 'bg-sky-500/20 text-sky-400 font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-sky-100 text-sky-900 font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               <Wrench className="w-2.5 h-2.5" />
@@ -1101,12 +1071,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('contactos')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'contactos'
-                  ? isStitchLight
-                    ? 'bg-emerald-100 text-emerald-900 font-bold'
-                    : 'bg-emerald-500/20 text-emerald-400 font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-emerald-100 text-emerald-900 font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               <Users className="w-2.5 h-2.5" />
@@ -1117,12 +1083,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('merchan')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'merchan'
-                  ? isStitchLight
-                    ? 'bg-amber-100 text-amber-900 font-bold'
-                    : 'bg-amber-500/20 text-amber-400 font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-amber-100 text-[var(--acc-ink)] font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               <Shirt className="w-2.5 h-2.5" />
@@ -1133,12 +1095,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('cierre')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'cierre'
-                  ? isStitchLight
-                    ? 'bg-purple-100 text-purple-900 font-bold'
-                    : 'bg-purple-500/20 text-purple-400 font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-purple-100 text-purple-900 font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               <ShieldCheck className="w-2.5 h-2.5" />
@@ -1149,12 +1107,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('roadbook')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
                 activeTab === 'roadbook'
-                  ? isStitchLight
-                    ? 'bg-teal-100 text-teal-900 font-bold'
-                    : 'bg-teal-500/20 text-[#10b981] font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-teal-100 text-teal-900 font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               Ruta
@@ -1164,12 +1118,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               onClick={() => setActiveTab('gear')}
               className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
                 activeTab === 'gear'
-                  ? isStitchLight
-                    ? 'bg-orange-100 text-orange-900 font-bold'
-                    : 'bg-orange-500/20 text-[#ffb596] font-bold'
-                  : isStitchLight
-                    ? 'text-slate-500 hover:text-slate-800'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-orange-100 text-orange-900 font-bold'
+                  : 'text-[var(--ink-2)] hover:text-slate-800'
               }`}
             >
               Cacharros
@@ -1193,9 +1143,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                 return (
                   <div className="space-y-3">
-                    <div className={`p-3 rounded-lg space-y-2 ${isStitchLight ? 'bg-slate-50' : 'bg-neutral-900/70'}`}>
+                    <div className={`p-3 rounded-lg space-y-2 ${'bg-[var(--surface)]'}`}>
                       <div className="flex items-center justify-between">
-                        <span className={`text-[10px] font-mono uppercase font-bold ${isStitchLight ? 'text-sky-400' : 'text-[#10b981]'}`}>
+                        <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--acc)]'}`}>
                           📞 Contacto Producción & Hotel
                         </span>
                       </div>
@@ -1206,7 +1156,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             type="text"
                             value={currentRb.contactoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, contactoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-[10px] ${isStitchLight ? 'bg-white' : 'bg-black text-white'}`}
+                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
                           />
                         </div>
                         <div>
@@ -1215,7 +1165,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             type="text"
                             value={currentRb.telefonoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, telefonoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-[10px] ${isStitchLight ? 'bg-white' : 'bg-black text-white'}`}
+                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
                           />
                         </div>
                       </div>
@@ -1226,7 +1176,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           type="text"
                           value={currentRb.hotelNombre}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, hotelNombre: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-[10px] ${isStitchLight ? 'bg-white' : 'bg-black text-white'}`}
+                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
                         />
                       </div>
 
@@ -1236,20 +1186,20 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           type="text"
                           value={currentRb.cateringInfo}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, cateringInfo: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-[10px] ${isStitchLight ? 'bg-white' : 'bg-black text-white'}`}
+                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
                         />
                       </div>
                     </div>
 
-                    <div className={`p-3 rounded-lg space-y-1.5 ${isStitchLight ? 'bg-slate-50' : 'bg-neutral-900/70'}`}>
-                      <span className={`text-[10px] font-mono uppercase font-bold ${isStitchLight ? 'text-sky-400' : 'text-[var(--acc)]'}`}>
+                    <div className={`p-3 rounded-lg space-y-1.5 ${'bg-[var(--surface)]'}`}>
+                      <span className={`text-[10px] font-mono uppercase font-bold ${'text-[var(--acc)]'}`}>
                         🎸 Input List / Rider de Canales
                       </span>
                       <textarea
                         rows={4}
                         value={currentRb.inputList}
                         onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, inputList: e.target.value })}
-                        className={`w-full p-2 rounded font-mono text-[10px] ${isStitchLight ? 'bg-white text-slate-800' : 'bg-black text-neutral-200'}`}
+                        className={`w-full p-2 rounded font-mono text-[10px] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                       />
                     </div>
 
@@ -1360,9 +1310,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         printWindow.document.close();
                       }}
                       className={`w-full py-2 px-3 rounded-xl font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
-                        isStitchLight
-                          ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white'
-                          : 'bg-gradient-to-r from-[var(--ok)] to-teal-500 text-stone-950 font-extrabold'
+                        'bg-gradient-to-r from-indigo-600 to-blue-600 text-[var(--ink)]'
                       }`}
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -1379,7 +1327,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2.5">
                     <div
-                      className={`p-2.5 rounded-lg border ${isStitchLight ? 'bg-sky-50/70 border-[var(--acc)]' : 'bg-sky-950/20 border-[var(--acc)]/40'}`}
+                      className={`p-2.5 rounded-lg border ${'bg-[var(--acc-soft)]/70 border-[var(--acc)]'}`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-bold flex items-center gap-1 text-sky-400 font-mono uppercase text-[10px]">
@@ -1397,25 +1345,25 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         </button>
                       </div>
                       <div className="grid grid-cols-2 gap-1.5 text-[9px]">
-                        <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+                        <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
                           <span className="block text-neutral-400 font-mono uppercase text-[8px]">Prueba de Sonido</span>
                           <span className="font-bold text-amber-400">{currentRb.horaPruebaSonido || '18:00'}</span>
                         </div>
-                        <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+                        <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
                           <span className="block text-neutral-400 font-mono uppercase text-[8px]">Horario Show</span>
                           <span className="font-bold text-emerald-400">{currentRb.horaShow || '21:30'}</span>
                         </div>
-                        <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+                        <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
                           <span className="block text-neutral-400 font-mono uppercase text-[8px]">Técnico Sonido FOH</span>
                           <span className="font-medium truncate">{currentRb.tecnicoSonido || 'Propio / Sala'}</span>
                         </div>
-                        <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+                        <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
                           <span className="block text-neutral-400 font-mono uppercase text-[8px]">Sistema P.A.</span>
                           <span className="font-medium truncate">{currentRb.paEspecificaciones ? 'Especificado' : 'Estándar Sala'}</span>
                         </div>
                       </div>
                       {currentRb.backlineInfo && (
-                        <div className={`mt-2 p-1.5 rounded text-[9px] ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+                        <div className={`mt-2 p-1.5 rounded text-[9px] ${'bg-[var(--surface)]'}`}>
                           <span className="block text-neutral-400 font-mono uppercase text-[8px]">Backline & Rider</span>
                           <p className="line-clamp-2 text-neutral-300">{currentRb.backlineInfo}</p>
                         </div>
@@ -1465,7 +1413,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         {contacts.map((c) => (
                           <div
                             key={c.id}
-                            className={`p-2 rounded-lg border flex items-center justify-between gap-2 ${isStitchLight ? 'bg-white border-[var(--hair)]' : 'bg-neutral-900/80 borderbg-[var(--surface)]'}`}
+                            className={`p-2 rounded-lg border flex items-center justify-between gap-2 ${'bg-[var(--surface)] border-[var(--hair)]'}`}
                           >
                             <div className="min-w-0">
                               <div className="font-bold truncate text-[10px]">{c.nombre}</div>
@@ -1584,7 +1532,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           <div
                             key={item.id}
                             className={`p-1.5 rounded flex items-center justify-between ${
-                              isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-neutral-200'
+                              'bg-[var(--surface)] text-[var(--ink)]'
                             }`}
                           >
                             <div className="truncate pr-2">
@@ -1655,12 +1603,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           onClick={() => handleToggleCierreItem(item.id, selectedDateKey)}
                           className={`p-1.5 rounded flex items-center gap-2 cursor-pointer transition-colors ${
                             item.checked
-                              ? isStitchLight
-                                ? 'bg-emerald-50/70 text-slate-400 line-through'
-                                : 'bg-neutral-900/40 text-neutral-500 line-through'
-                              : isStitchLight
-                                ? 'bg-[var(--surface)] text-slate-800 hover:bg-slate-50'
-                                : 'bg-neutral-900 text-neutral-200 hover:bg-neutral-850'
+                              ? 'bg-[var(--ok-soft)]/70 text-[var(--ink-2)] line-through'
+                              : 'bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--sunken)]'
                           }`}
                         >
                           <input
@@ -1703,7 +1647,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       value={newRunTime}
                       onChange={(e) => setNewRunTime(e.target.value)}
                       className={`w-16 px-2 py-1 text-[10px] font-mono rounded outline-none ${
-                        isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-neutral-200'
+                        'bg-[var(--surface)] text-[var(--ink)]'
                       }`}
                     />
                     <input
@@ -1712,15 +1656,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       value={newRunActivity}
                       onChange={(e) => setNewRunActivity(e.target.value)}
                       className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${
-                        isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-neutral-200'
+                        'bg-[var(--surface)] text-[var(--ink)]'
                       }`}
                     />
                     <button
                       type="submit"
                       className={`p-1.5 rounded transition-colors cursor-pointer ${
-                        isStitchLight
-                          ? 'bg-sky-500/15 text-white hover:bg-sky-500/15'
-                          : 'bg-[var(--acc)]/15 text-stone-950 hover:bg-[var(--acc)]/15 font-bold'
+                        'bg-sky-500/15 text-[var(--ink)] hover:bg-sky-500/15'
                       }`}
                       title="Añadir horario"
                     >
@@ -1735,15 +1677,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       value={newGearLabel}
                       onChange={(e) => setNewGearLabel(e.target.value)}
                       className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${
-                        isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-neutral-200'
+                        'bg-[var(--surface)] text-[var(--ink)]'
                       }`}
                     />
                     <button
                       type="submit"
                       className={`p-1.5 rounded transition-colors cursor-pointer ${
-                        isStitchLight
-                          ? 'bg-sky-500/15 text-white hover:bg-sky-500/15'
-                          : 'bg-[var(--acc)]/15 text-stone-950 hover:bg-[var(--acc)]/15 font-bold'
+                        'bg-sky-500/15 text-[var(--ink)] hover:bg-sky-500/15'
                       }`}
                       title="Añadir material"
                     >
@@ -1767,23 +1707,15 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           onClick={() => handleToggleRunOfShow(item.id)}
                           className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
                             isItemDone
-                              ? isStitchLight
-                                ? 'bg-slate-100 text-slate-400 line-through'
-                                : 'bg-[#131313]/50 text-neutral-500 line-through'
-                              : isStitchLight
-                                ? 'bg-[var(--surface)] text-slate-700 hover:-indigo-300'
-                                : 'bg-[#131313] text-neutral-200 hover:-[#99907c]/35'
+                              ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
+                              : 'bg-[var(--surface)] text-slate-700 hover:-indigo-300'
                           }`}
                         >
                           <span
                             className={`font-mono text-[10px] font-bold shrink-0 ${
                               isItemDone
-                                ? isStitchLight
-                                  ? 'text-slate-300'
-                                  : 'text-neutral-600'
-                                : isStitchLight
-                                  ? 'text-sky-400'
-                                  : 'text-[#f2ca50]'
+                                ? 'text-[var(--ink-2)]'
+                                : 'text-[var(--acc)]'
                             }`}
                           >
                             {item.time}
@@ -1812,12 +1744,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         onClick={() => handleToggleGear(item.id)}
                         className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
                           isChecked
-                            ? isStitchLight
-                              ? 'bg-slate-100 text-slate-400 line-through'
-                              : 'bg-[#131313]/50 text-neutral-500 line-through'
-                            : isStitchLight
-                              ? 'bg-[var(--surface)] text-slate-700 hover:-indigo-300'
-                              : 'bg-[#131313] text-neutral-200 hover:-[#99907c]/35'
+                            ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
+                            : 'bg-[var(--surface)] text-slate-700 hover:-indigo-300'
                         }`}
                       >
                         <input
@@ -1825,7 +1753,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           checked={isChecked}
                           onChange={() => {}} // handled by div click
                           className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${
-                            isStitchLight ? '-slate-300 text-sky-400 bg-white' : '-[#99907c]/40 text-[#f2ca50] bg-neutral-900'
+                            '-slate-300 text-[var(--acc)] bg-[var(--surface)]'
                           }`}
                         />
                         <p className="text-[10px] font-sans leading-normal flex-1">{item.label}</p>
@@ -1850,7 +1778,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
       {/* Footer info */}
       <div
         className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-mono ${
-          isStitchLight ? '-slate-100 text-slate-400' : '-[#99907c]/15 text-neutral-500'
+          '-slate-100 text-[var(--ink-2)]'
         }`}
       >
         <span>Huso Horario: Madrid (UTC+2)</span>

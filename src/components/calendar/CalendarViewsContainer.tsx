@@ -144,7 +144,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
         {showMonthHeader && (
           <div
             className={`text-center font-bold font-display uppercase tracking-wider text-[10px] mb-3 pb-1 ${
-              isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'
+              'text-[var(--acc)]'
             }`}
           >
             {monthNames[month]} {year}
@@ -188,9 +188,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             // Stylish border logic for non-selected vs event vs selected days
             let borderAndBgClass = '';
             if (isSelected) {
-              borderAndBgClass = isStitchLight
-                ? 'bg-sky-500 text-white font-extrabold border-2 border-[var(--acc)] shadow-xl shadow-sky-500/20 scale-[1.05] z-20'
-                : 'bg-amber-500 text-slate-950 font-black border-2 border-[var(--acc)] shadow-xl shadow-amber-500/25 scale-[1.05] z-20';
+              borderAndBgClass = 'bg-sky-500 text-[var(--ink)] font-extrabold border-2 border-[var(--acc)] shadow-xl shadow-sky-500/20 scale-[1.05] z-20';
             } else if (isToday) {
               borderAndBgClass =
                 'bg-amber-500/15 text-amber-300 font-bold border-2 border-[var(--acc)]/80 shadow-md shadow-amber-500/10 hover:border-[var(--acc)] z-10';
@@ -207,9 +205,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
               borderAndBgClass =
                 'bg-purple-950/30 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
             } else {
-              borderAndBgClass = isStitchLight
-                ? 'bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--acc)] hover:bg-slate-50 text-slate-800 shadow-xs'
-                : 'bg-slate-900/80 border border-[var(--hair)] hover:border-[var(--acc)]/60 hover:bg-slate-800/80 hover:shadow-md hover:shadow-amber-500/10 text-slate-200 shadow-xs';
+              borderAndBgClass = 'bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--acc)] hover:bg-[var(--sunken)] text-[var(--ink)] shadow-xs';
             }
 
             return (
@@ -329,14 +325,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setSelectedDate(d)}
                 className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all cursor-pointer border ${
                   isSelected
-                    ? isStitchLight
-                      ? 'bg-sky-500 text-white border-[var(--acc)] shadow-md font-bold'
-                      : 'bg-amber-500 text-stone-950 border-[var(--acc)] shadow-lg font-black'
+                    ? 'bg-sky-500 text-[var(--ink)] border-[var(--acc)] shadow-md font-bold'
                     : isToday
                       ? 'bg-amber-500/15 text-amber-300 border-[var(--acc)]/60 font-bold'
-                      : isStitchLight
-                        ? 'bg-[var(--surface)] border-[var(--hair)] text-slate-700 hover:border-[var(--acc)]'
-                        : 'bg-slate-900/90 border-[var(--hair)] text-slate-300 hover:border-[var(--acc)]/50'
+                      : 'bg-[var(--surface)] border-[var(--hair)] text-slate-700 hover:border-[var(--acc)]'
                 }`}
               >
                 <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
@@ -371,16 +363,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   onClick={() => setSelectedDate(d)}
                   className={`flex flex-col rounded-xl p-2 sm:p-2.5 transition-all border min-w-0 ${
                     isSelected
-                      ? isStitchLight
-                        ? 'bg-sky-50/50 border-[var(--acc)] ring-1 ring-sky-400'
-                        : 'bg-slate-900/90 border-[var(--acc)]/60 ring-1 ring-amber-500/40'
+                      ? 'bg-sky-50/50 border-[var(--acc)] ring-1 ring-sky-400'
                       : isToday
-                        ? isStitchLight
-                          ? 'bg-amber-50/40 border-[var(--acc)]'
-                          : 'bg-slate-900/60 border-[var(--acc)]/30'
-                        : isStitchLight
-                          ? 'bg-[var(--surface)] border-[var(--hair)]'
-                          : 'bg-slate-900/50 border-[var(--hair)]/80'
+                        ? 'bg-[var(--acc-soft)]/40 border-[var(--acc)]'
+                        : 'bg-[var(--surface)] border-[var(--hair)]'
                   }`}
                 >
                   <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--hair)]/50">
@@ -643,7 +629,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             {/* Selector de periodo para ver conciertos pasados y futuros en la agenda */}
             <div
               className={`flex items-center rounded-lg p-0.5 border text-xs font-mono font-bold ${
-                isStitchLight ? 'bg-slate-200 border-[var(--hair)] text-slate-800' : 'bg-neutral-900 border-[var(--hair)] text-neutral-300'
+                'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink)]'
               }`}
             >
               <button
@@ -651,9 +637,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setAgendaFilterPast('all')}
                 className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
                   agendaFilterPast === 'all'
-                    ? isStitchLight
-                      ? 'bg-[var(--surface)] text-slate-900 shadow-xs'
-                      : 'bg-[var(--acc)] text-stone-950 font-black'
+                    ? 'bg-[var(--surface)] text-[var(--ink)] shadow-xs'
                     : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
@@ -664,9 +648,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setAgendaFilterPast('future')}
                 className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
                   agendaFilterPast === 'future'
-                    ? isStitchLight
-                      ? 'bg-[var(--surface)] text-slate-900 shadow-xs'
-                      : 'bg-[var(--acc)] text-stone-950 font-black'
+                    ? 'bg-[var(--surface)] text-[var(--ink)] shadow-xs'
                     : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
@@ -677,9 +659,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 onClick={() => setAgendaFilterPast('past')}
                 className={`px-2.5 py-1 rounded transition-all cursor-pointer flex items-center gap-1 ${
                   agendaFilterPast === 'past'
-                    ? isStitchLight
-                      ? 'bg-[var(--surface)] text-slate-900 shadow-xs'
-                      : 'bg-[var(--acc)] text-stone-950 font-black'
+                    ? 'bg-[var(--surface)] text-[var(--ink)] shadow-xs'
                     : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >

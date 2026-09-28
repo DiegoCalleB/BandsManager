@@ -77,7 +77,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
       <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
           className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
-            isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
+            'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
           <button
@@ -104,7 +104,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, ciudad: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -116,7 +116,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -130,7 +130,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                 required
                 className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
-                  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
             </div>
@@ -143,7 +143,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, direccion: e.target.value } : prev))}
                 placeholder="ej. Calle Jardines 3, Madrid"
                 className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
             </div>
@@ -158,7 +158,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   value={editDraft.cache}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, cache: Number(e.target.value) } : prev))}
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -168,7 +168,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                   value={editDraft.estado_pago}
                   onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 >
                   <option value="pendiente">Pendiente</option>
@@ -189,9 +189,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 value={editDraft.setlistId || ''}
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
                 className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
-                  isStitchLight
-                    ? 'bg-slate-50 text-slate-900 border border-[var(--hair)]'
-                    : 'bg-neutral-900 text-white border borderbg-[var(--surface)]'
+                  'bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)]'
                 }`}
               >
                 <option value="">-- Sin repertorio asignado --</option>
@@ -226,7 +224,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}
                 className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
             </div>

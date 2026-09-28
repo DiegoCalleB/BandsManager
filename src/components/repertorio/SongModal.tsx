@@ -123,7 +123,7 @@ export function SongModal({
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
         <div
           className={`w-full max-w-lg p-5 sm:p-6 rounded-3xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
-            isStitchLight ? 'bg-white border-[var(--hair)] text-slate-800' : 'bg-[#16161a] borderbg-[var(--surface)] text-zinc-100'
+            'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
           }`}
         >
           {/* Header */}
@@ -152,9 +152,7 @@ export function SongModal({
               {/* Audio Upload Area (Compact & Clean) */}
               <div
                 className={`p-3 rounded-2xl border transition-all ${
-                  isStitchLight
-                    ? 'bg-slate-50 border-[var(--hair)] hover:border-[var(--ok)]'
-                    : 'bg-neutral-900/80 borderbg-[var(--surface)] hover:border-[var(--hair)]'
+                  'bg-[var(--surface)] border-[var(--hair)] hover:border-[var(--ok)]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -249,7 +247,7 @@ export function SongModal({
                       onChange={(e) => setCustomAlbumInput(e.target.value)}
                       placeholder="Nombre del nuevo disco..."
                       className={`w-full mt-2 px-3 py-2 rounded-xl focus:outline-none border border-[var(--ok)]/50 ${
-                        isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
+                        'bg-[var(--surface)] text-[var(--ink)]'
                       }`}
                     />
                   )}
@@ -265,7 +263,7 @@ export function SongModal({
                       value={minutos}
                       onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
                       className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-[var(--ok)] ${
-                        isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                        'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                       placeholder="3"
                     />
@@ -278,7 +276,7 @@ export function SongModal({
                       value={segundos}
                       onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
                       className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-[var(--ok)] ${
-                        isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                        'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                       }`}
                       placeholder="30"
                     />
@@ -295,7 +293,7 @@ export function SongModal({
                     type="text"
                     defaultValue={editingSong?.tonalidad || ''}
                     className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                      isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                      'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                     placeholder="ej. Am"
                   />
@@ -308,7 +306,7 @@ export function SongModal({
                     type="number"
                     defaultValue={editingSong?.bpm || 120}
                     className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                      isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
+                      'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                     }`}
                     placeholder="120"
                   />
@@ -332,14 +330,14 @@ export function SongModal({
               {/* Collapsible Accordion: Advanced Options & Notes */}
               <div
                 className={`rounded-2xl border transition-all overflow-hidden ${
-                  isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-neutral-900/60 borderbg-[var(--surface)]'
+                  'bg-[var(--surface)] border-[var(--hair)]'
                 }`}
               >
                 <button
                   type="button"
                   onClick={() => setShowAdvancedOptions((prev) => !prev)}
                   className={`w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors cursor-pointer ${
-                    isStitchLight ? 'hover:bg-slate-100 text-slate-800' : 'hover:bgbg-[var(--surface)]/80 text-zinc-300'
+                    'hover:bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -365,7 +363,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.genero || ''}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                            'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="ej. Rock, Rumba"
                         />
@@ -377,7 +375,7 @@ export function SongModal({
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
-                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                            'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                         >
                           <option value="propio">Propio / Original</option>
@@ -395,7 +393,7 @@ export function SongModal({
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
-                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                            'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                         >
                           <option value="listo">⚡ Listo para Directo</option>
@@ -412,7 +410,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.cantantePrincipal || ''}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                            'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="Cantante"
                         />
@@ -428,7 +426,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.afinacion || 'E Standard'}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                            'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="E Standard"
                         />
@@ -441,7 +439,7 @@ export function SongModal({
                           type="url"
                           defaultValue={editingSong?.enlaceAcordes || ''}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                            'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                           }`}
                           placeholder="https://drive.google.com/..."
                         />
@@ -456,7 +454,7 @@ export function SongModal({
                         rows={2}
                         defaultValue={editingSong?.notasInternas || ''}
                         className={`w-full p-2.5 rounded-xl focus:outline-none border text-xs ${
-                          isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
+                          'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)]'
                         }`}
                         placeholder="ej. Entrar directos tras el solo de batería..."
                       />
@@ -490,7 +488,7 @@ export function SongModal({
                               defaultValue={editingSong?.notasRepertorio || ''}
                               placeholder="ej. Parón en seco antes del último coro"
                               className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
-                                isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
+                                'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                               }`}
                             />
                           </div>
@@ -512,9 +510,7 @@ export function SongModal({
                                   onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
                                   placeholder={`Notas para ${member.name}...`}
                                   className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
-                                    isStitchLight
-                                      ? 'bg-[var(--surface)] border-[var(--hair)] text-slate-900'
-                                      : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
+                                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                                   }`}
                                 />
                               </div>

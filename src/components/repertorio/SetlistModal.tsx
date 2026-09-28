@@ -51,7 +51,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
         <div
           className={`w-full max-w-md p-5 sm:p-6 rounded-3xl shadow-2xl border ${
-            isStitchLight ? 'bg-white border-[var(--hair)] text-slate-800' : 'bg-[#16161a] borderbg-[var(--surface)] text-zinc-100'
+            'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
           } my-auto max-h-[90vh] overflow-y-auto`}
         >
           <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
@@ -105,9 +105,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 onChange={(e) => setDescripcion(e.target.value)}
                 placeholder="ej. Repertorio de ritmo alto pensado para festivales..."
                 className={`w-full p-3 rounded-xl border font-medium text-xs focus:outline-none ${
-                  isStitchLight
-                    ? 'bg-[var(--surface)] text-slate-900 border-[var(--hair)] focus:border-[var(--acc)]'
-                    : 'bg-neutral-900 text-white borderbg-[var(--surface)] focus:border-[var(--acc)]/50'
+                  'bg-[var(--surface)] text-[var(--ink)] border-[var(--hair)] focus:border-[var(--acc)]'
                 }`}
               />
             </div>

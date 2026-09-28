@@ -49,7 +49,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
     <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
       <div
         className={`max-w-md w-full rounded-2xl border p-5 shadow-2xl relative ${
-          isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
+          'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
         <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
@@ -83,7 +83,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           )}
 
           <div
-            className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-neutral-900/80 borderbg-[var(--surface)]'}`}
+            className={`p-3 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
           >
             <div className="font-mono text-[10px] text-sky-400 font-bold mb-1 uppercase tracking-wider">Detalles del Evento</div>
             <p className="font-semibold">
@@ -120,7 +120,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
               placeholder="Ej: Traer la lista de repertorio revisada o llegar 15 min antes para probar sonido..."
               rows={3}
               className={`w-full p-2 text-xs rounded-xl border outline-none font-sans ${
-                isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
               }`}
             />
           </div>

@@ -57,7 +57,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
       <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
           className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
-            isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
+            'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
           <button
@@ -88,7 +88,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, asunto: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -103,7 +103,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -115,7 +115,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, hora: e.target.value } : prev))}
                   required
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -131,7 +131,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, lugar: e.target.value } : prev))}
                 required
                 className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
             </div>
@@ -145,7 +145,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, enlace_reunion: e.target.value } : prev))}
                   placeholder="https://meet.google.com/xyz"
                   className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                    isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                    'bg-[var(--surface)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -163,9 +163,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   value={editRehearsalDraft.setlistId || ''}
                   onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
                   className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
-                    isStitchLight
-                      ? 'bg-slate-50 text-slate-900 border border-[var(--hair)]'
-                      : 'bg-neutral-900 text-white border borderbg-[var(--surface)]'
+                    'bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)]'
                   }`}
                 >
                   <option value="">-- Sin repertorio específico --</option>
@@ -184,7 +182,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 value={editRehearsalDraft.estado}
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
                 className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               >
                 <option value="programado">Programado</option>
@@ -202,7 +200,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                 onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                 rows={2}
                 className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
-                  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                  'bg-[var(--surface)] text-[var(--ink)]'
                 }`}
               />
             </div>

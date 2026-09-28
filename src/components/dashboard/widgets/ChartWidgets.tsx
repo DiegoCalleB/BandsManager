@@ -620,7 +620,7 @@ export function FinancesChartWidget({
                         <div>
                           Caché Medio:{" "}
                           <span
-                            className={`font-bold ${isStitchLight ? "text-amber-700" : "text-amber-400"}`}
+                            className={`font-bold ${"text-[var(--acc)]"}`}
                           >
                             {data.cacheMedio}€
                           </span>

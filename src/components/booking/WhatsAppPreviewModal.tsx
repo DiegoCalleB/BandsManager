@@ -136,7 +136,7 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
         <div
           className={`w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto border transition-all ${
-            isStitchLight ? 'bg-white text-slate-800 border-[var(--ok)]' : 'bg-[#141416] text-[#e5e2e1] border-[var(--ok)]/40'
+            'bg-[var(--surface)] text-[var(--ink)] border-[var(--ok)]'
           }`}
         >
           {/* Header */}

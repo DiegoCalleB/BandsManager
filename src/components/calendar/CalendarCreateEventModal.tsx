@@ -194,7 +194,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
       <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
           className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
-            isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
+            'bg-[var(--surface)] text-[var(--ink)]'
           }`}
         >
           <button
@@ -279,7 +279,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 >
                   {effectiveBandsList.map((b) => (
@@ -298,7 +298,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   onChange={(e) => setReuAsunto(e.target.value)}
                   placeholder="Ej: Repaso de repertorio y presupuestos"
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                   required
                 />
@@ -312,7 +312,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={reuHora}
                     onChange={(e) => setReuHora(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -324,7 +324,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     onChange={(e) => setReuLugar(e.target.value)}
                     placeholder="Online (Meet, Zoom, etc)"
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -338,7 +338,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   onChange={(e) => setReuEnlace(e.target.value)}
                   placeholder="https://meet.google.com/xyz-abc"
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -350,7 +350,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   onChange={(e) => setReuNotas(e.target.value)}
                   rows={3}
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -382,7 +382,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 >
                   {effectiveBandsList.map((b) => (
@@ -401,7 +401,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={rehTime}
                     onChange={(e) => setRehTime(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -412,7 +412,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={rehLugar}
                     onChange={(e) => setRehLugar(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -425,7 +425,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={rehSetlistId}
                     onChange={(e) => setRehSetlistId(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   >
                     <option value="">Sin repertorio específico</option>
@@ -445,7 +445,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   onChange={(e) => setRehNotas(e.target.value)}
                   rows={2}
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 />
               </div>
@@ -477,7 +477,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={selectedBandIdForNewEvent}
                   onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                   className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                    isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                    'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                   }`}
                 >
                   {effectiveBandsList.map((b) => (
@@ -497,7 +497,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     onChange={(e) => setConcCiudad(e.target.value)}
                     placeholder="Ej: Madrid"
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                     required
                   />
@@ -510,7 +510,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     onChange={(e) => setConcSala(e.target.value)}
                     placeholder="Ej: Sala El Sol"
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                     required
                   />
@@ -525,7 +525,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concCache}
                     onChange={(e) => setConcCache(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -536,7 +536,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concAforo}
                     onChange={(e) => setConcAforo(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   />
                 </div>
@@ -549,7 +549,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     value={concSetlistId}
                     onChange={(e) => setConcSetlistId(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-hidden ${
-                      isStitchLight ? 'bg-slate-50 border-[var(--hair)] text-slate-900' : 'bg-neutral-900 borderbg-[var(--surface)] text-white'
+                      'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                     }`}
                   >
                     <option value="">Seleccionar repertorio...</option>

@@ -121,40 +121,34 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
     <div
       id="manager-alerts-container"
       className={`mb-4 rounded-2xl ${
-        isStitchLight
-          ? 'bg-[var(--surface)] border border-[var(--hair)] shadow-xs text-zinc-900'
-          : 'bg-slate-900/80 border border-[var(--hair)]/90 shadow-xl text-slate-100'
+        'bg-[var(--surface)] border border-[var(--hair)] shadow-xs text-[var(--ink)]'
       } overflow-hidden transition-all`}
     >
       {/* Panel Header */}
       <div
         className={`px-3.5 py-2.5 ${
-          isStitchLight ? 'bg-zinc-50/80 border-b border-[var(--hair)]' : 'bg-slate-950/60 border-b border-[var(--hair)]/80'
+          'bg-[var(--surface)]/80 border-b border-[var(--hair)]'
         } flex items-center justify-between gap-2`}
       >
         <div className="flex items-center gap-2.5">
           <div
             className={`p-1.5 rounded-lg ${
-              isStitchLight
-                ? 'bg-indigo-50 text-indigo-600 border border-[var(--acc)]'
-                : 'bg-amber-500/15 text-amber-400 border border-[var(--acc)]/30'
+              'bg-[var(--acc-soft)] text-[var(--acc)] border border-[var(--acc)]'
             } relative shrink-0`}
           >
             <Bell className="w-3.5 h-3.5" />
             {unreadAlerts.length > 0 && (
               <span
-                className={`absolute -top-0.5 -right-0.5 w-2 h-2 ${isStitchLight ? 'bg-indigo-500' : 'bg-amber-400'} rounded-full animate-pulse`}
+                className={`absolute -top-0.5 -right-0.5 w-2 h-2 ${'bg-[var(--acc)]'} rounded-full animate-pulse`}
               />
             )}
           </div>
 
           <div className="flex items-center gap-2">
-            <h3 className={`text-xs font-bold ${isStitchLight ? 'text-zinc-900' : 'text-slate-100'} tracking-tight`}>Radar del Mánager</h3>
+            <h3 className={`text-xs font-bold ${'text-[var(--ink)]'} tracking-tight`}>Radar del Mánager</h3>
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
-                isStitchLight
-                  ? 'bg-indigo-50 text-indigo-700 border border-[var(--acc)]'
-                  : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30'
+                'bg-[var(--acc-soft)] text-indigo-700 border border-[var(--acc)]'
               }`}
             >
               {activeAlerts.length}
@@ -168,7 +162,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               id="mark-all-read-alerts-btn"
               onClick={handleMarkAllRead}
               className={`px-2 py-1 rounded-lg ${
-                isStitchLight ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700' : 'bg-slate-800/80 hover:bg-slate-800 text-slate-300'
+                'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-zinc-700'
               } text-[11px] font-medium transition-all flex items-center gap-1 cursor-pointer`}
               title="Marcar todas como leídas"
             >
@@ -181,9 +175,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             id="toggle-expand-alerts-panel-btn"
             onClick={() => setIsExpanded(!isExpanded)}
             className={`p-1 rounded-lg ${
-              isStitchLight
-                ? 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+              'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
             } transition-colors cursor-pointer`}
             title={isExpanded ? 'Plegar panel' : 'Desplegar panel'}
           >
@@ -197,11 +189,11 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           {/* Subheader Filter Bar */}
           <div
             className={`px-4 py-2.5 ${
-              isStitchLight ? 'bg-zinc-50/40 border-b border-[var(--hair)]' : 'bg-slate-950/30 border-b border-[var(--hair)]/60'
+              'bg-[var(--surface)]/40 border-b border-[var(--hair)]'
             } flex items-center justify-between gap-2 overflow-x-auto`}
           >
             <div className="flex items-center gap-1.5 text-xs">
-              <span className={`${isStitchLight ? 'text-zinc-400' : 'text-slate-500'} font-medium text-[11px] mr-1 hidden sm:inline`}>
+              <span className={`${'text-[var(--ink-2)]'} font-medium text-[11px] mr-1 hidden sm:inline`}>
                 Filtrar:
               </span>
 
@@ -210,12 +202,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 onClick={() => setFilterMode('all')}
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
                   filterMode === 'all'
-                    ? isStitchLight
-                      ? 'bg-zinc-200 text-zinc-900 font-semibold'
-                      : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30 font-semibold'
-                    : isStitchLight
-                      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-zinc-200 text-[var(--ink)] font-semibold'
+                    : 'text-[var(--ink-2)] hover:text-zinc-900 hover:bg-[var(--sunken)]'
                 }`}
               >
                 Todas ({activeAlerts.length})
@@ -226,12 +214,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 onClick={() => setFilterMode('unread')}
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'unread'
-                    ? isStitchLight
-                      ? 'bg-zinc-200 text-zinc-900 font-semibold'
-                      : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30 font-semibold'
-                    : isStitchLight
-                      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-zinc-200 text-[var(--ink)] font-semibold'
+                    : 'text-[var(--ink-2)] hover:text-zinc-900 hover:bg-[var(--sunken)]'
                 }`}
               >
                 <span>Sin Leer</span>
@@ -243,18 +227,14 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 onClick={() => setFilterMode('urgent')}
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'urgent'
-                    ? isStitchLight
-                      ? 'bg-rose-50 text-rose-700 border border-[var(--alert)] font-semibold'
-                      : 'bg-red-500/20 text-red-300 border border-[var(--alert)]/30 font-semibold'
-                    : isStitchLight
-                      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-rose-50 text-rose-700 border border-[var(--alert)] font-semibold'
+                    : 'text-[var(--ink-2)] hover:text-zinc-900 hover:bg-[var(--sunken)]'
                 }`}
               >
                 <span>Urgentes</span>
                 {urgentAlerts.length > 0 && (
                   <span
-                    className={`px-1.5 py-0.2 rounded text-[10px] ${isStitchLight ? 'bg-rose-100 text-rose-800' : 'bg-red-500/30 text-red-300'} font-mono`}
+                    className={`px-1.5 py-0.2 rounded text-[10px] ${'bg-[var(--alert)]/15 text-[var(--alert)]'} font-mono`}
                   >
                     {urgentAlerts.length}
                   </span>
@@ -266,12 +246,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 onClick={() => setFilterMode('booking')}
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
                   filterMode === 'booking'
-                    ? isStitchLight
-                      ? 'bg-indigo-50 text-indigo-700 border border-[var(--acc)] font-semibold'
-                      : 'bg-indigo-500/20 text-indigo-300 border border-[var(--acc)]/30 font-semibold'
-                    : isStitchLight
-                      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-[var(--acc-soft)] text-indigo-700 border border-[var(--acc)] font-semibold'
+                    : 'text-[var(--ink-2)] hover:text-zinc-900 hover:bg-[var(--sunken)]'
                 }`}
               >
                 Booking & CRM
@@ -282,12 +258,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 onClick={() => setFilterMode('finanzas')}
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
                   filterMode === 'finanzas'
-                    ? isStitchLight
-                      ? 'bg-emerald-50 text-emerald-700 border border-[var(--ok)] font-semibold'
-                      : 'bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/30 font-semibold'
-                    : isStitchLight
-                      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-[var(--ok-soft)] text-emerald-700 border border-[var(--ok)] font-semibold'
+                    : 'text-[var(--ink-2)] hover:text-zinc-900 hover:bg-[var(--sunken)]'
                 }`}
               >
                 Finanzas
@@ -298,7 +270,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="reset-dismissed-inline-btn"
                 onClick={handleResetDismissed}
-                className={`text-[11px] ${isStitchLight ? 'text-zinc-500 hover:text-zinc-800' : 'text-slate-500 hover:text-slate-300'} underline font-mono shrink-0 cursor-pointer`}
+                className={`text-[11px] ${'text-[var(--ink-2)] hover:text-[var(--ink)]'} underline font-mono shrink-0 cursor-pointer`}
               >
                 Restablecer {dismissedIds.length} descartadas
               </button>
@@ -309,7 +281,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {filteredAlerts.length === 0 ? (
               <div
-                className={`col-span-full py-8 text-center text-xs ${isStitchLight ? 'text-zinc-400 bg-zinc-50/50 border-[var(--hair)]' : 'text-slate-500 bg-slate-950/20 border-[var(--hair)]/40'} rounded-xl border`}
+                className={`col-span-full py-8 text-center text-xs ${'text-[var(--ink-2)] bg-[var(--surface)]/50 border-[var(--hair)]'} rounded-xl border`}
               >
                 No hay alertas que coincidan con el filtro seleccionado.
               </div>
@@ -319,33 +291,19 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 const isWarning = alert.severity === 'warning';
                 const isRead = readIds.includes(alert.id);
 
-                const cardBg = isStitchLight
-                  ? isRead
-                    ? 'bg-zinc-50/70 border-[var(--hair)] text-zinc-500'
-                    : isUrgent
-                      ? 'bg-rose-50/60 border-[var(--alert)] text-zinc-900'
-                      : isWarning
-                        ? 'bg-amber-50/60 border-[var(--acc)] text-zinc-900'
-                        : 'bg-[var(--surface)] border-[var(--hair)] text-zinc-900'
-                  : isRead
-                    ? 'bg-slate-950/40 border-[var(--hair)]/60 opacity-80 text-slate-300'
-                    : isUrgent
-                      ? 'bg-gradient-to-r from-red-950/30 via-slate-900/90 to-slate-900/90 border-[var(--alert)]/30 text-slate-100'
-                      : isWarning
-                        ? 'bg-gradient-to-r from-amber-950/25 via-slate-900/90 to-slate-900/90 border-[var(--acc)]/30 text-slate-100'
-                        : 'bg-slate-900/90 border-[var(--hair)] text-slate-100';
-
-                const badgeStyle = isStitchLight
-                  ? isUrgent
-                    ? 'bg-rose-100 text-rose-700 border-[var(--alert)]'
-                    : isWarning
-                      ? 'bg-amber-100 text-amber-800 border-[var(--acc)]'
-                      : 'bg-indigo-100 text-indigo-700 border-[var(--acc)]'
+                const cardBg = isRead
+                  ? 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] opacity-80'
                   : isUrgent
-                    ? 'bg-red-500/20 text-red-300 border-[var(--alert)]/30'
+                    ? 'bg-[var(--alert)]/8 border-[var(--alert)] text-[var(--ink)]'
                     : isWarning
-                      ? 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/30'
-                      : 'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/30';
+                      ? 'bg-[var(--acc-soft)] border-[var(--acc)] text-[var(--ink)]'
+                      : 'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]';
+
+                const badgeStyle = isUrgent
+                  ? 'bg-[var(--alert)]/15 text-[var(--alert)] border-[var(--alert)]/30'
+                  : isWarning
+                    ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] border-[var(--acc)]/30'
+                    : 'bg-[var(--ok-soft)] text-[var(--ok)] border-[var(--ok)]/30';
 
                 return (
                   <div
@@ -369,9 +327,9 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                           {alert.monthRange && (
                             <span
-                              className={`text-[11px] font-medium ${isStitchLight ? 'text-zinc-500' : 'text-slate-400'} flex items-center gap-1`}
+                              className={`text-[11px] font-medium ${'text-[var(--ink-2)]'} flex items-center gap-1`}
                             >
-                              <Calendar className={`w-3 h-3 ${isStitchLight ? 'text-zinc-400' : 'text-slate-500'}`} />
+                              <Calendar className={`w-3 h-3 ${'text-[var(--ink-2)]'}`} />
                               {alert.monthRange}
                             </span>
                           )}
@@ -382,20 +340,20 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           <button
                             id={`toggle-read-alert-${alert.id}`}
                             onClick={(e) => handleToggleRead(alert.id, e)}
-                            className={`p-1 rounded-lg ${isStitchLight ? 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/80'} transition-colors cursor-pointer`}
+                            className={`p-1 rounded-lg ${'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title={isRead ? 'Marcar como no leída' : 'Marcar como leída'}
                           >
                             {isRead ? (
                               <EyeOff className="w-3.5 h-3.5" />
                             ) : (
-                              <Eye className={`w-3.5 h-3.5 ${isStitchLight ? 'text-indigo-600' : 'text-amber-400'}`} />
+                              <Eye className={`w-3.5 h-3.5 ${'text-[var(--acc)]'}`} />
                             )}
                           </button>
 
                           <button
                             id={`dismiss-alert-${alert.id}`}
                             onClick={(e) => handleDismiss(alert.id, e)}
-                            className={`p-1 rounded-lg ${isStitchLight ? 'text-zinc-400 hover:text-rose-600 hover:bg-zinc-100' : 'text-slate-500 hover:text-red-400 hover:bg-slate-800/80'} transition-colors cursor-pointer`}
+                            className={`p-1 rounded-lg ${'text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--sunken)]'} transition-colors cursor-pointer`}
                             title="Descartar alerta"
                           >
                             <X className="w-3.5 h-3.5" />
@@ -404,24 +362,24 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                       </div>
 
                       <h4
-                        className={`text-sm font-bold mb-1.5 leading-snug ${isStitchLight ? (isRead ? 'text-zinc-500' : 'text-zinc-900') : isRead ? 'text-slate-300' : 'text-slate-100'}`}
+                        className={`text-sm font-bold mb-1.5 leading-snug ${isRead ? 'text-[var(--ink-2)]' : 'text-[var(--ink)]'}`}
                       >
                         {alert.title}
                       </h4>
 
-                      <p className={`text-xs ${isStitchLight ? 'text-zinc-600' : 'text-slate-400'} leading-relaxed mb-3`}>
+                      <p className={`text-xs ${'text-[var(--ink-2)]'} leading-relaxed mb-3`}>
                         {alert.description}
                       </p>
                     </div>
 
                     {/* Quick action button footer */}
                     <div
-                      className={`pt-2.5 border-t ${isStitchLight ? 'border-[var(--hair)]' : 'border-[var(--hair)]/70'} flex flex-col sm:flex-row sm:items-center justify-between gap-2`}
+                      className={`pt-2.5 border-t ${'border-[var(--hair)]'} flex flex-col sm:flex-row sm:items-center justify-between gap-2`}
                     >
                       <span
-                        className={`text-[10px] font-mono ${isStitchLight ? 'text-zinc-400' : 'text-slate-500'} flex items-center gap-1`}
+                        className={`text-[10px] font-mono ${'text-[var(--ink-2)]'} flex items-center gap-1`}
                       >
-                        <Zap className={`w-3 h-3 ${isStitchLight ? 'text-indigo-500' : 'text-amber-400/80'} shrink-0`} />
+                        <Zap className={`w-3 h-3 ${'text-[var(--acc)]'} shrink-0`} />
                         Acciones disponibles
                       </span>
 
@@ -439,12 +397,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                               }}
                               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer ${
                                 act.variant === 'secondary'
-                                  ? isStitchLight
-                                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-[var(--hair)]'
-                                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-[var(--hair)]/80'
-                                  : isStitchLight
-                                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                                    : 'bg-amber-500 hover:bg-amber-400 text-stone-950'
+                                  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-zinc-800 border border-[var(--hair)]'
+                                  : 'bg-[var(--acc)] hover:bg-indigo-700 text-[var(--ink)]'
                               }`}
                             >
                               <span>{act.label}</span>
@@ -461,9 +415,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                               onExecuteAction(alert);
                             }}
                             className={`px-3.5 py-1.5 rounded-xl ${
-                              isStitchLight
-                                ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                                : 'bg-amber-500 hover:bg-amber-400 text-stone-950'
+                              'bg-[var(--acc)] hover:bg-indigo-700 text-[var(--ink)]'
                             } text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer`}
                           >
                             <span>{alert.actionLabel}</span>
@@ -481,12 +433,12 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           {/* Footer toggle for compact vs expanded list */}
           {filteredAlerts.length > 2 && (
             <div
-              className={`px-4 py-2.5 ${isStitchLight ? 'bg-zinc-50/60 border-t border-[var(--hair)]' : 'bg-slate-950/50 border-t border-[var(--hair)]/60'} flex items-center justify-center`}
+              className={`px-4 py-2.5 ${'bg-[var(--surface)]/60 border-t border-[var(--hair)]'} flex items-center justify-center`}
             >
               <button
                 id="toggle-compact-alerts-mode-btn"
                 onClick={() => setIsCompactView(!isCompactView)}
-                className={`text-xs font-semibold ${isStitchLight ? 'text-indigo-600 hover:text-indigo-700' : 'text-amber-400 hover:text-amber-300'} transition-colors flex items-center gap-1.5 cursor-pointer`}
+                className={`text-xs font-semibold ${'text-[var(--acc)] hover:text-[var(--acc)]'} transition-colors flex items-center gap-1.5 cursor-pointer`}
               >
                 {isCompactView ? (
                   <>

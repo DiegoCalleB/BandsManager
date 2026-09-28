@@ -2246,9 +2246,7 @@ export default function CalendarView({
             <div className="flex items-center gap-2">
               <div
                 className={`relative flex-1 flex items-center rounded-xl border transition-all ${
-                  isStitchLight
-                    ? 'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--acc)] shadow-xs'
-                    : 'bg-neutral-900/90 border-[var(--hair)] focus-within:border-[var(--acc)]/80 shadow-inner'
+                  'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--acc)] shadow-xs'
                 }`}
               >
                 <Search className="w-4 h-4 ml-3 text-neutral-400 shrink-0" />
@@ -2258,7 +2256,7 @@ export default function CalendarView({
                   onChange={(e) => setCalendarSearchTerm(e.target.value)}
                   placeholder="Buscar evento, sala, ciudad, artista, notas (ej. Joy Eslava, Madrid, acústico)..."
                   className={`w-full px-2.5 py-1.5 text-xs font-sans bg-transparent outline-none ${
-                    isStitchLight ? 'text-slate-900 placeholder:text-slate-400' : 'text-neutral-100 placeholder:text-neutral-500'
+                    'text-[var(--ink)] placeholder:text-[var(--ink-3)]'
                   }`}
                 />
                 {calendarSearchTerm && (

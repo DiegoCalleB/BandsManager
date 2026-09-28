@@ -34,7 +34,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
     <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
       <div
         className={`max-w-lg w-full rounded-2xl border p-5 shadow-2xl relative ${
-          isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
+          'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
         <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
@@ -56,7 +56,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
         <div className="py-4 space-y-4 text-xs">
           <div
-            className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-neutral-900/80 borderbg-[var(--surface)]'}`}
+            className={`p-3 rounded-xl border ${'bg-[var(--surface)] border-[var(--hair)]'}`}
           >
             <label className="block text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-1 font-bold">
               URL de Suscripción iCal (Privada)
@@ -67,7 +67,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                 readOnly
                 value={rutaFeed}
                 className={`flex-1 p-2 text-xs rounded-xl border outline-none font-mono ${
-                  isStitchLight ? 'bg-white border-[var(--hair)] text-slate-800' : 'bg-neutral-950 borderbg-[var(--surface)] text-amber-300'
+                  'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
                 }`}
               />
               <button
