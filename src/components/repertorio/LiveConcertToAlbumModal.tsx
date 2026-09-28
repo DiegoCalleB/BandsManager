@@ -2013,7 +2013,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         key={track.index}
                         className={`p-3.5 rounded-[var(--r-m)] transition-all space-y-2 ${
                           isSelected
-                            ? "bg-[var(--acc)]/15 ring-1 ring-amber-0/50"
+                            ? "bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]/50"
                             : track.type === "musica"
                               ? "bg-[var(--acc-soft)]  "
                               : "bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/15"
@@ -2589,7 +2589,7 @@ export const LiveConcertToAlbumModal: React.FC<
                         {/* Interactive Audio Fragment Scrubber Player - Positioned directly underneath the active track */}
                         {activeSnippet &&
                           activeSnippet.trackIndex === track.index && (
-                            <div className="mt-3 p-3.5 bg-[var(--surface)] /60 rounded-[var(--r-m)] space-y-3 animate-fade-in ring-2 ring-amber-0/20">
+                            <div className="mt-3 p-3.5 bg-[var(--surface)]  rounded-[var(--r-m)] space-y-3 animate-fade-in ring-2 ring-[var(--acc)]/20">
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
                                 <div className="flex items-center gap-2">
                                   <div className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] shrink-0">

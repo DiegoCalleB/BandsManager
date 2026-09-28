@@ -183,9 +183,9 @@ export const PLATFORM_CONFIG: Record<
     colorClass: "text-[var(--alert)]",
     bgClass:
       "bg-gradient-to-r from-[var(--acc)]/10 via-pink-500/10 to-amber-400/10",
-    borderClass: "",
+    borderClass: "border-[var(--alert)]/30",
     hoverClass:
-      "hover:from-[var(--acc)]/20 hover:via-pink-500/20 hover:to-amber-400/20 hover:text-[var(--alert)]/60",
+      "hover:from-[var(--acc)]/20 hover:via-pink-500/20 hover:to-amber-400/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60",
   },
   youtube: {
     label: "YouTube",

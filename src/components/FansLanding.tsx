@@ -1455,7 +1455,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <h1 className="text-3xl font-black text-[var(--ink)] font-display tracking-widest">
               {t("joinTitle", { bandName })}
             </h1>
-            <p className="text-amber-0/80 text-[10px] font-sans tracking-widest font-bold">
+            <p className="text-[var(--acc)]/80 text-[10px] font-sans tracking-widest font-bold">
               {t("officialChannel")}
             </p>
           </div>
@@ -1600,7 +1600,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick("epk", epkUrl, "redes")}
-              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)] hover:/80 transition-all duration-300 hover:shadow-amber-0/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--surface)]  transition-all duration-300 hover:shadow-[var(--acc)]/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
             >
               {logoUrl && !imgError && (
                 <img
@@ -1618,7 +1618,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-500"
                 aria-hidden="true"
               />
-              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/25 to-rose-500/15 text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/25 to-rose-500/15 text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
                 {logoUrl && !imgError ? (
                   <img
                     src={logoUrl}
@@ -1706,7 +1706,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                             {c.sala}
                           </p>
                           <p className="text-[11px] text-[var(--ink-2)] truncate flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-amber-0/80 shrink-0" />{" "}
+                            <MapPin className="w-3 h-3 text-[var(--acc)]/80 shrink-0" />{" "}
                             {c.ciudad}
                           </p>
                         </div>

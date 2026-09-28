@@ -3617,7 +3617,7 @@ export default function RepertorioSetlists({
             className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] space-y-4 bg-[var(--surface)]`}
           >
             <input
-              className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 text-[var(--ink)]`}
+              className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 text-[var(--ink)]`}
               placeholder="Nombre del repertorio"
               value={activeSetlist?.nombre || ""}
               onChange={(e) => {

@@ -386,7 +386,7 @@ export function MetronomeModal({
               {/* Tap Tempo Button */}
               <button
                 onClick={handleTapTempo}
-                className="bg-gradient-to-br from-amber-0/20 to-orange-500/20 hover:from-amber-0/30 hover:to-orange-500/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
+                className="bg-gradient-to-br from-[var(--acc)]/20 to-orange-500/20 hover:from-[var(--acc)]/30 hover:to-orange-500/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
               >
                 <span className="text-xs font-black text-[var(--acc)]/70 tracking-wider group-hover:scale-105 transition-transform">
                   👆 TAP TEMPO

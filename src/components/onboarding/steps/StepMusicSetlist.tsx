@@ -422,7 +422,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
       )}
 
       {/* ⚡ Generador de Setlist de Debut */}
-      <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 via-amber-0/5 to-transparent space-y-2.5">
+      <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 via-[var(--acc)]/5 to-transparent space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[var(--acc)]" />

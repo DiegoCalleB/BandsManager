@@ -1,9 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet.markercluster';
-import { Lead } from '../types';
-import { MapPin, Navigation, Eye, Check, Loader2, RefreshCw, Layers } from 'lucide-react';
-import { escapeHtml } from '../utils/escapeHtml';
+import React, { useEffect, useRef, useState } from "react";
+import L from "leaflet";
+import "leaflet.markercluster";
+import { Lead } from "../types";
+import {
+  MapPin,
+  Navigation,
+  Eye,
+  Check,
+  Loader2,
+  RefreshCw,
+  Layers,
+} from "lucide-react";
+import { escapeHtml } from "../utils/escapeHtml";
 
 interface VenueMapProps {
   leads: Lead[];
@@ -15,33 +23,36 @@ interface VenueMapProps {
 }
 
 // Available map tile presets for best clarity & readability
-type MapStyleKey = 'voyager' | 'satellite' | 'osm' | 'positron' | 'dark';
+type MapStyleKey = "voyager" | "satellite" | "osm" | "positron" | "dark";
 
-const MAP_STYLES: Record<MapStyleKey, { name: string; url: string; attr: string }> = {
+const MAP_STYLES: Record<
+  MapStyleKey,
+  { name: string; url: string; attr: string }
+> = {
   voyager: {
-    name: '🗺️ Google / Callejero Claro (Recomendado)',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attr: '&copy; OpenStreetMap &copy; CARTO',
+    name: "🗺️ Google / Callejero Claro (Recomendado)",
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    attr: "&copy; OpenStreetMap &copy; CARTO",
   },
   satellite: {
-    name: '🛰️ Satélite Híbrido (Estilo Google Maps)',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attr: '&copy; Esri World Imagery',
+    name: "🛰️ Satélite Híbrido (Estilo Google Maps)",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attr: "&copy; Esri World Imagery",
   },
   osm: {
-    name: '🏙️ OpenStreetMap Detallado',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attr: '&copy; OpenStreetMap',
+    name: "🏙️ OpenStreetMap Detallado",
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attr: "&copy; OpenStreetMap",
   },
   positron: {
-    name: '⚪ Gris Minimalista',
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attr: '&copy; CARTO',
+    name: "⚪ Gris Minimalista",
+    url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    attr: "&copy; CARTO",
   },
   dark: {
-    name: '🌙 Oscuro Nocturno',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attr: '&copy; CARTO',
+    name: "🌙 Oscuro Nocturno",
+    url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    attr: "&copy; CARTO",
   },
 };
 
@@ -54,8 +65,8 @@ const SPANISH_CITIES_GEO: Record<string, [number, number]> = {
 
 // Smart normalizer & lookup function to ensure every lead gets realistic coords in its actual city
 function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
-  const rawCity = (lead.ciudad || '').trim();
-  const rawRegion = (lead.region || '').trim();
+  const rawCity = (lead.ciudad || "").trim();
+  const rawRegion = (lead.region || "").trim();
 
   // 1. Exact match in city
   if (SPANISH_CITIES_GEO[rawCity]) {
@@ -83,13 +94,13 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
   // 4. Fuzzy match normalized tokens
   const normCity = rawCity
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
   for (const [key, coords] of Object.entries(SPANISH_CITIES_GEO)) {
     const normKey = key
       .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
     if (normCity.includes(normKey) || normKey.includes(normCity)) {
       return offsetCoords(coords, index);
     }
@@ -105,13 +116,13 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
   if (rawRegion) {
     const normRegion = rawRegion
       .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
     for (const [key, coords] of Object.entries(SPANISH_CITIES_GEO)) {
       const normKey = key
         .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
       if (normRegion.includes(normKey) || normKey.includes(normRegion)) {
         return offsetCoords(coords, index);
       }
@@ -133,7 +144,10 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
 function offsetCoords(base: [number, number], index: number): [number, number] {
   const angle = index * 137.5 * (Math.PI / 180); // Golden angle scatter
   const radius = 0.008 + (index % 5) * 0.004; // Spread ~500m to 2km
-  return [base[0] + Math.sin(angle) * radius, base[1] + Math.cos(angle) * radius];
+  return [
+    base[0] + Math.sin(angle) * radius,
+    base[1] + Math.cos(angle) * radius,
+  ];
 }
 
 // Local cache for Nominatim geocoded queries
@@ -142,21 +156,33 @@ const GEO_CACHE: Record<string, [number, number]> = {};
 // Helper functions for marker tooltips
 function getStatusBadge(estado: string) {
   switch (estado) {
-    case 'aprobado':
-      return { text: '✓ Aprobado / Confirmado', bg: '#dcfce7', color: '#166534' };
-    case 'pendiente_aprobacion':
-      return { text: '⚡ Pendiente Aprobación', bg: '#fef3c7', color: '#92400e' };
-    case 'interesado':
-      return { text: '💡 Interesado', bg: '#dbeafe', color: '#1e40af' };
-    case 'negociando':
-      return { text: '🤝 En Negociación', bg: '#e0e7ff', color: '#3730a3' };
-    case 'esperando_respuesta':
-      return { text: '⏳ Esperando Respuesta', bg: '#f3e8ff', color: '#6b21a8' };
-    case 'no_interesado':
-      return { text: '❌ No Interesado', bg: '#ffe4e6', color: '#9f1239' };
-    case 'nuevo':
+    case "aprobado":
+      return {
+        text: "✓ Aprobado / Confirmado",
+        bg: "#dcfce7",
+        color: "#166534",
+      };
+    case "pendiente_aprobacion":
+      return {
+        text: "⚡ Pendiente Aprobación",
+        bg: "#fef3c7",
+        color: "#92400e",
+      };
+    case "interesado":
+      return { text: "💡 Interesado", bg: "#dbeafe", color: "#1e40af" };
+    case "negociando":
+      return { text: "🤝 En Negociación", bg: "#e0e7ff", color: "#3730a3" };
+    case "esperando_respuesta":
+      return {
+        text: "⏳ Esperando Respuesta",
+        bg: "#f3e8ff",
+        color: "#6b21a8",
+      };
+    case "no_interesado":
+      return { text: "❌ No Interesado", bg: "#ffe4e6", color: "#9f1239" };
+    case "nuevo":
     default:
-      return { text: '🎵 Nuevo Contacto', bg: '#f1f5f9', color: '#334155' };
+      return { text: "🎵 Nuevo Contacto", bg: "#f1f5f9", color: "#334155" };
   }
 }
 
@@ -167,7 +193,7 @@ function getFormattedLeadDate(lead: Lead): string {
   if (lead.fecha_envio) {
     return `Envío: ${lead.fecha_envio}`;
   }
-  return 'Fecha por determinar';
+  return "Fecha por determinar";
 }
 
 export const VenueMap: React.FC<VenueMapProps> = ({
@@ -175,18 +201,20 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   selectedLead,
   onSelectLead,
   onUpdateLead,
-  activeCityFilter = '',
-  activeRegionFilter = '',
+  activeCityFilter = "",
+  activeRegionFilter = "",
 }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const markersGroup = useRef<any>(null);
 
-  const [mapStyle, setMapStyle] = useState<MapStyleKey>('voyager');
+  const [mapStyle, setMapStyle] = useState<MapStyleKey>("voyager");
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
 
-  const [geoPositions, setGeoPositions] = useState<Record<string, [number, number]>>({});
+  const [geoPositions, setGeoPositions] = useState<
+    Record<string, [number, number]>
+  >({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
   const [geocodedCount, setGeocodedCount] = useState<number>(0);
 
@@ -202,7 +230,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         zoomControl: false,
       });
 
-      L.control.zoom({ position: 'bottomright' }).addTo(map);
+      L.control.zoom({ position: "bottomright" }).addTo(map);
 
       // Tile Layer (Default to Voyager for crisp bright visibility)
       const currentPreset = MAP_STYLES[mapStyle];
@@ -223,20 +251,20 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         iconCreateFunction: (cluster: any) => {
           const count = cluster.getChildCount();
           let size = 38;
-          let bgColor = 'var(--acc)';
-          let textColor = '#ffffff';
-          let ringColor = 'rgba(79, 70, 229, 0.25)';
+          let bgColor = "var(--acc)";
+          let textColor = "#ffffff";
+          let ringColor = "rgba(79, 70, 229, 0.25)";
 
           if (count >= 20) {
             size = 48;
-            bgColor = 'var(--acc)';
-            textColor = '#ffffff';
-            ringColor = 'rgba(67, 56, 202, 0.35)';
+            bgColor = "var(--acc)";
+            textColor = "#ffffff";
+            ringColor = "rgba(67, 56, 202, 0.35)";
           } else if (count >= 8) {
             size = 42;
-            bgColor = 'var(--acc)';
-            textColor = '#ffffff';
-            ringColor = 'rgba(59, 130, 246, 0.3)';
+            bgColor = "var(--acc)";
+            textColor = "#ffffff";
+            ringColor = "rgba(59, 130, 246, 0.3)";
           }
 
           return L.divIcon({
@@ -250,7 +278,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  box-shadow: 0 0 0 2px ${ringColor};
  font-weight: 800;
  font-family: ui-monospace, monospace;
- font-size: ${size > 42 ? '13px' : '11px'};
+ font-size: ${size > 42 ? "13px" : "11px"};
  display: flex;
  align-items: center;
  justify-content: center;
@@ -259,7 +287,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  ${count}
  </div>
  `,
-            className: 'custom-cluster-badge',
+            className: "custom-cluster-badge",
             iconSize: [size, size],
             iconAnchor: [size / 2, size / 2],
           });
@@ -284,7 +312,10 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   // Handle Tile Style changes dynamically
   useEffect(() => {
     if (!leafletMap.current) return;
-    if (tileLayerRef.current && leafletMap.current.hasLayer(tileLayerRef.current)) {
+    if (
+      tileLayerRef.current &&
+      leafletMap.current.hasLayer(tileLayerRef.current)
+    ) {
       leafletMap.current.removeLayer(tileLayerRef.current);
     }
     const currentPreset = MAP_STYLES[mapStyle];
@@ -332,11 +363,14 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       for (const item of pendingToGeocode) {
         if (!isSubscribed) break;
         const { lead, index } = item;
-        const query = `${lead.nombre_sala || ''}, ${lead.ciudad}, ${lead.region || 'España'}`;
+        const query = `${lead.nombre_sala || ""}, ${lead.ciudad}, ${lead.region || "España"}`;
         try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
-            headers: { 'Accept-Language': 'es' },
-          });
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+            {
+              headers: { "Accept-Language": "es" },
+            },
+          );
           const data = await res.json();
           if (data && data[0]) {
             const lat = parseFloat(data[0].lat);
@@ -363,7 +397,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   }, [leads]);
 
   const hasInitialFitRef = useRef<boolean>(false);
-  const prevFilterKeyRef = useRef<string>('');
+  const prevFilterKeyRef = useRef<string>("");
   const markersMapRef = useRef<Record<string, L.Marker>>({});
 
   // Render Markers on Map & Pan to fit bounds
@@ -375,10 +409,10 @@ export const VenueMap: React.FC<VenueMapProps> = ({
     const bounds = L.latLngBounds([]);
     let validCount = 0;
 
-    const isDarkMap = mapStyle === 'dark';
-    const isSatellite = mapStyle === 'satellite';
+    const isDarkMap = mapStyle === "dark";
+    const isSatellite = mapStyle === "satellite";
 
-    const currentFilterKey = `${activeCityFilter || ''}|${activeRegionFilter || ''}|${leads.map((l) => l.id).join(',')}`;
+    const currentFilterKey = `${activeCityFilter || ""}|${activeRegionFilter || ""}|${leads.map((l) => l.id).join(",")}`;
     const filterChanged = prevFilterKeyRef.current !== currentFilterKey;
 
     leads.forEach((lead) => {
@@ -389,37 +423,40 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       validCount++;
 
       // Badge color based on status (Google Maps style vibrant pins)
-      let pinColor = '#e11d48'; // Rose/Red default
-      if (lead.estado === 'aprobado' || lead.estado === ('confirmado' as any))
-        pinColor = 'var(--ok)'; // Green
-      else if (lead.estado === 'pendiente_aprobacion')
-        pinColor = 'var(--acc)'; // Amber
-      else if (lead.estado === 'interesado' || lead.estado === 'negociando')
-        pinColor = '#2563eb'; // Blue
-      else if (lead.estado === 'no_interesado') pinColor = '#64748b'; // Slate
+      let pinColor = "#e11d48"; // Rose/Red default
+      if (lead.estado === "aprobado" || lead.estado === ("confirmado" as any))
+        pinColor = "var(--ok)"; // Green
+      else if (lead.estado === "pendiente_aprobacion")
+        pinColor = "var(--acc)"; // Amber
+      else if (lead.estado === "interesado" || lead.estado === "negociando")
+        pinColor = "#2563eb"; // Blue
+      else if (lead.estado === "no_interesado") pinColor = "#64748b"; // Slate
 
       const isSelected = selectedLead?.id === lead.id;
 
-      let cleanMapImg = lead.imagen_url || '';
-      if (cleanMapImg.includes('icon.horse/icon/')) {
-        const domain = cleanMapImg.replace(/https?:\/\/icon\.horse\/icon\//, '').split('/')[0];
-        if (domain) cleanMapImg = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+      let cleanMapImg = lead.imagen_url || "";
+      if (cleanMapImg.includes("icon.horse/icon/")) {
+        const domain = cleanMapImg
+          .replace(/https?:\/\/icon\.horse\/icon\//, "")
+          .split("/")[0];
+        if (domain)
+          cleanMapImg = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
       }
 
       const fallbackIcon =
-        lead.icono && !lead.icono.startsWith('http')
+        lead.icono && !lead.icono.startsWith("http")
           ? lead.icono
-          : lead.tipo === 'festival'
-            ? '🎪'
-            : lead.tipo === 'ayuntamiento'
-              ? '🏛️'
-              : lead.tipo === 'discoteca'
-                ? '🪩'
-                : lead.tipo === 'medio'
-                  ? '📻'
-                  : lead.tipo === 'grupo'
-                    ? '🎸'
-                    : '🏛️';
+          : lead.tipo === "festival"
+            ? "🎪"
+            : lead.tipo === "ayuntamiento"
+              ? "🏛️"
+              : lead.tipo === "discoteca"
+                ? "🪩"
+                : lead.tipo === "medio"
+                  ? "📻"
+                  : lead.tipo === "grupo"
+                    ? "🎸"
+                    : "🏛️";
 
       const venueIconHtml = cleanMapImg
         ? `
@@ -449,7 +486,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       // Google Maps style pill badge + clean text label without background box
       const customIcon = L.divIcon({
-        className: 'custom-venue-pin',
+        className: "custom-venue-pin",
         html: `
  <div style="
  position: relative;
@@ -470,7 +507,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  white-space: nowrap;
  position: relative;
  z-index: 2;
- transform: ${isSelected ? 'scale(1.15)' : 'scale(1)'};
+ transform: ${isSelected ? "scale(1.15)" : "scale(1)"};
  transition: transform 0.15s ease;">
  ${venueIconHtml}
  <span style="
@@ -478,7 +515,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  font-size: 11px;
  font-weight: 800;
  color: #1e293b;">
- ${lead.aforo > 0 ? (lead.aforo >= 1000 ? `${(lead.aforo / 1000).toFixed(1)}k` : lead.aforo) : 'Sala'}
+ ${lead.aforo > 0 ? (lead.aforo >= 1000 ? `${(lead.aforo / 1000).toFixed(1)}k` : lead.aforo) : "Sala"}
  </span>
  </div>
 
@@ -489,11 +526,11 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  font-weight: 800;
  line-height: 1.15;
  white-space: nowrap;
- color: ${isSatellite || isDarkMap ? '#ffffff' : '#0f172a'};
+ color: ${isSatellite || isDarkMap ? "#ffffff" : "#0f172a"};
  text-shadow: ${
    isSatellite || isDarkMap
-     ? '-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)'
-     : '-1.5px -1.5px 0 #ffffff, 1.5px -1.5px 0 #ffffff, -1.5px 1.5px 0 #ffffff, 1.5px 1.5px 0 #ffffff, -2px 0 0 #ffffff, 2px 0 0 #ffffff, 0 -2px 0 #ffffff, 0 2px 0 #ffffff, 0 1px 3px rgba(0,0,0,0.6)'
+     ? "-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)"
+     : "-1.5px -1.5px 0 #ffffff, 1.5px -1.5px 0 #ffffff, -1.5px 1.5px 0 #ffffff, 1.5px 1.5px 0 #ffffff, -2px 0 0 #ffffff, 2px 0 0 #ffffff, 0 -2px 0 #ffffff, 0 2px 0 #ffffff, 0 1px 3px rgba(0,0,0,0.6)"
  };
  letter-spacing: -0.1px;
  z-index: 1;">
@@ -509,22 +546,22 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       markersMapRef.current[lead.id] = marker;
 
       // Popup content
-      const popupHtml = document.createElement('div');
-      popupHtml.className = 'font-sans p-1 min-w-[200px] text-[var(--ink)]';
+      const popupHtml = document.createElement("div");
+      popupHtml.className = "font-sans p-1 min-w-[200px] text-[var(--ink)]";
       popupHtml.innerHTML = `
  <div style="font-family: system-ui, sans-serif;">
- <div style="font-size: 13px; font-weight: 700; margin-bottom: 2px; color: ${'#0f172a'};">
+ <div style="font-size: 13px; font-weight: 700; margin-bottom: 2px; color: ${"#0f172a"};">
  ${escapeHtml(lead.nombre_sala)}
  </div>
  <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">
- 📍 ${escapeHtml(lead.ciudad)} ${lead.region ? `(${escapeHtml(lead.region)})` : ''}
+ 📍 ${escapeHtml(lead.ciudad)} ${lead.region ? `(${escapeHtml(lead.region)})` : ""}
  </div>
  <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; font-size: 10px; font-family: monospace;">
  <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">
- 👥 ${lead.aforo > 0 ? `${lead.aforo} personas` : 'Sin aforo'}
+ 👥 ${lead.aforo > 0 ? `${lead.aforo} personas` : "Sin aforo"}
  </span>
  <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">
- ${escapeHtml(lead.genero || 'Música')}
+ ${escapeHtml(lead.genero || "Música")}
  </span>
  </div>
  <div style="font-size: 10px; margin-bottom: 8px; font-family: monospace;">
@@ -543,7 +580,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  👁️ Intervenir
  </button>
  ${
-   lead.estado === 'pendiente_aprobacion'
+   lead.estado === "pendiente_aprobacion"
      ? `
  <button id="pop-approve-${lead.id}" style="
  background: var(--ok);
@@ -556,7 +593,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  ⚡ Aprobar
  </button>
  `
-     : ''
+     : ""
  }
  </div>
  </div>
@@ -580,7 +617,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  ${escapeHtml(lead.nombre_sala)}
  </div>
  <div style="font-size: 10.5px; color: #64748b; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
- <span>📍 ${escapeHtml(lead.ciudad)}${lead.region ? ` (${escapeHtml(lead.region)})` : ''}</span>
+ <span>📍 ${escapeHtml(lead.ciudad)}${lead.region ? ` (${escapeHtml(lead.region)})` : ""}</span>
  </div>
  <div style="display: flex; flex-direction: column; gap: 4px;">
  <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
@@ -594,7 +631,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  white-space: nowrap;">
  ${statusBadge.text}
  </span>
- ${lead.aforo > 0 ? `<span style="font-size: 9.5px; color: #475569; font-weight: 600;">👥 ${lead.aforo} cap.</span>` : ''}
+ ${lead.aforo > 0 ? `<span style="font-size: 9.5px; color: #475569; font-weight: 600;">👥 ${lead.aforo} cap.</span>` : ""}
  </div>
  <div style="font-size: 10px; color: #334155; font-weight: 600; font-family: monospace; display: flex; align-items: center; gap: 4px; margin-top: 1px;">
  <span>📅 ${formattedDate}</span>
@@ -604,13 +641,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  `;
 
       marker.bindTooltip(tooltipHtml, {
-        direction: 'top',
+        direction: "top",
         offset: [0, -14],
         opacity: 0.98,
-        className: 'custom-venue-map-tooltip',
+        className: "custom-venue-map-tooltip",
       });
 
-      marker.on('popupopen', () => {
+      marker.on("popupopen", () => {
         const btnSelect = document.getElementById(`pop-select-${lead.id}`);
         if (btnSelect) {
           btnSelect.onclick = () => {
@@ -620,7 +657,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         const btnApprove = document.getElementById(`pop-approve-${lead.id}`);
         if (btnApprove) {
           btnApprove.onclick = () => {
-            onUpdateLead(lead.id, { estado: 'aprobado' });
+            onUpdateLead(lead.id, { estado: "aprobado" });
             marker.closePopup();
           };
         }
@@ -632,7 +669,10 @@ export const VenueMap: React.FC<VenueMapProps> = ({
     // Auto fit bounds ONLY on initial load or when filter / leads list actually changes
     if (validCount > 0) {
       if (!hasInitialFitRef.current || filterChanged) {
-        leafletMap.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+        leafletMap.current.fitBounds(bounds, {
+          padding: [50, 50],
+          maxZoom: 14,
+        });
         hasInitialFitRef.current = true;
         prevFilterKeyRef.current = currentFilterKey;
       }
@@ -660,28 +700,40 @@ export const VenueMap: React.FC<VenueMapProps> = ({
     const marker = markersMapRef.current[selectedLead.id];
     if (marker && markersGroup.current) {
       if (
-        typeof markersGroup.current.zoomToShowLayer === 'function' &&
-        typeof markersGroup.current.hasLayer === 'function' &&
+        typeof markersGroup.current.zoomToShowLayer === "function" &&
+        typeof markersGroup.current.hasLayer === "function" &&
         markersGroup.current.hasLayer(marker)
       ) {
         try {
           markersGroup.current.zoomToShowLayer(marker, () => {
-            if (marker && typeof marker.openPopup === 'function') {
+            if (marker && typeof marker.openPopup === "function") {
               marker.openPopup();
             }
           });
         } catch (e) {
-          leafletMap.current.setView(pos, Math.max(leafletMap.current.getZoom(), 15), { animate: true });
-          if (marker && typeof marker.openPopup === 'function') {
+          leafletMap.current.setView(
+            pos,
+            Math.max(leafletMap.current.getZoom(), 15),
+            { animate: true },
+          );
+          if (marker && typeof marker.openPopup === "function") {
             marker.openPopup();
           }
         }
       } else {
-        leafletMap.current.setView(pos, Math.max(leafletMap.current.getZoom(), 15), { animate: true });
+        leafletMap.current.setView(
+          pos,
+          Math.max(leafletMap.current.getZoom(), 15),
+          { animate: true },
+        );
         marker.openPopup();
       }
     } else {
-      leafletMap.current.setView(pos, Math.max(leafletMap.current.getZoom(), 15), { animate: true });
+      leafletMap.current.setView(
+        pos,
+        Math.max(leafletMap.current.getZoom(), 15),
+        { animate: true },
+      );
     }
   }, [selectedLead, geoPositions]);
 
@@ -689,7 +741,9 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   const handleRecenter = () => {
     if (!leafletMap.current || Object.keys(geoPositions).length === 0) return;
     const bounds = L.latLngBounds([]);
-    (Object.values(geoPositions) as [number, number][]).forEach((pos) => bounds.extend(pos));
+    (Object.values(geoPositions) as [number, number][]).forEach((pos) =>
+      bounds.extend(pos),
+    );
     leafletMap.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
   };
 
@@ -697,7 +751,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
     <div
       className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden transition-all"
       style={{
-        borderColor: '#e2e8f0',
+        borderColor: "#e2e8f0",
       }}
     >
       <style>{`
@@ -719,7 +773,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pointer-events-none">
         {/* City Info Card */}
         <div
-          className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+          className={`pointer-events-auto px-3.5 py-2 rounded-[var(--r-m)] flex items-center gap-2 font-sans text-xs ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
           <div>
@@ -728,10 +782,10 @@ export const VenueMap: React.FC<VenueMapProps> = ({
                 ? `Salas en ${activeCityFilter}`
                 : activeRegionFilter
                   ? `Salas en ${activeRegionFilter}`
-                  : 'Mapa Global de Salas'}
+                  : "Mapa Global de Salas"}
             </span>
             <span className="ml-2 text-[10px] opacity-75">
-              ({leads.length} {leads.length === 1 ? 'sala' : 'salas'})
+              ({leads.length} {leads.length === 1 ? "sala" : "salas"})
             </span>
           </div>
         </div>
@@ -740,7 +794,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         <div className="pointer-events-auto flex items-center gap-2 relative">
           {isGeocoding && (
             <div
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center gap-1.5 ${'bg-[var(--acc-soft)] -amber-700/50 text-[var(--ink)]'}`}
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center gap-1.5 ${"bg-[var(--acc-soft)]  text-[var(--ink)]"}`}
             >
               <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
               <span>Geolocalizando salas...</span>
@@ -751,7 +805,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowStyleMenu(!showStyleMenu)}
-              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${'bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]'}`}
+              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
             >
               <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Estilo Mapa</span>
@@ -759,11 +813,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
             {showStyleMenu && (
               <div
-                className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] ${'bg-[var(--surface)]/95 text-[var(--ink)]'}`}
+                className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] ${"bg-[var(--surface)]/95 text-[var(--ink)]"}`}
               >
                 <div className="text-[10px] font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
                   <span>Elegir Capa de Mapa</span>
-                  <span className="text-[9px] font-normal text-[var(--ink-2)]">({Object.keys(MAP_STYLES).length} opciones)</span>
+                  <span className="text-[9px] font-normal text-[var(--ink-2)]">
+                    ({Object.keys(MAP_STYLES).length} opciones)
+                  </span>
                 </div>
                 {(Object.keys(MAP_STYLES) as MapStyleKey[]).map((key) => (
                   <button
@@ -773,11 +829,15 @@ export const VenueMap: React.FC<VenueMapProps> = ({
                       setShowStyleMenu(false);
                     }}
                     className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
-                      mapStyle === key ? 'bg-[var(--tentative)]/80 text-[var(--ink)]' : 'hover:bg-[var(--sunken)] text-[var(--ink-2)]'
+                      mapStyle === key
+                        ? "bg-[var(--tentative)]/80 text-[var(--ink)]"
+                        : "hover:bg-[var(--sunken)] text-[var(--ink-2)]"
                     }`}
                   >
                     <span className="truncate">{MAP_STYLES[key].name}</span>
-                    {mapStyle === key && <Check className="w-3.5 h-3.5 shrink-0" />}
+                    {mapStyle === key && (
+                      <Check className="w-3.5 h-3.5 shrink-0" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -786,7 +846,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
           <button
             onClick={handleRecenter}
-            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${'bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]'}`}
+            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
           >
             <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Centrar Vista</span>
@@ -796,9 +856,11 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       {/* Floating Legend */}
       <div
-        className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 hidden sm:block ${'bg-[var(--surface)]/90 text-[var(--ink-2)]'}`}
+        className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 hidden sm:block ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
       >
-        <div className="font-bold text-[9px] tracking-wider mb-1 text-[var(--ink-2)]">Leyenda</div>
+        <div className="font-bold text-[9px] tracking-wider mb-1 text-[var(--ink-2)]">
+          Leyenda
+        </div>
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)] inline-block" />
           <span>Aprobado / Confirmado</span>

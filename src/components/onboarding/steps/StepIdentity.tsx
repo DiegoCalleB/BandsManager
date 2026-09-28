@@ -178,8 +178,8 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 onClick={() => setFontStyle(f.id)}
                 className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
                   isSelected
-                    ? "bg-[var(--acc)]/10 /60 ring-1 ring-amber-0/30"
-                    : "bg-[var(--bg)]/90 hover:/30 hover:bg-[var(--bg)]"
+                    ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
+                    : "bg-[var(--bg)]/90  hover:bg-[var(--bg)]"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-2">

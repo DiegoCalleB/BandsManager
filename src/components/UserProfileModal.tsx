@@ -464,7 +464,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         >
           {/* Modal Header */}
           <div
-            className={`px-6 py-4 flex justify-between items-center ${"-neutral-200 bg-[var(--bg)]"}`}
+            className={`px-6 py-4 flex justify-between items-center ${" bg-[var(--bg)]"}`}
           >
             <div className="flex items-center gap-3">
               <div
@@ -503,14 +503,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             className="p-6 space-y-4 overflow-y-auto max-h-[75vh]"
           >
             {error && (
-              <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
+              <div className="p-3 bg-[var(--alert)]/10  rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             {successMsg && (
-              <div className="p-3 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
+              <div className="p-3 bg-[var(--ok)]/10  rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
                 <Check className="w-4 h-4 shrink-0" />
                 <span>{successMsg}</span>
               </div>
@@ -609,8 +609,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     onClick={() => setAvatarColor(c)}
                     className={`w-7 h-7 rounded-full transition-transform cursor-pointer ${
                       avatarColor === c
-                        ? "scale-110 -white ring-2 ring-emerald-500"
-                        : "-transparent opacity-75 hover:opacity-100"
+                        ? "scale-110  ring-2 ring-emerald-500"
+                        : " opacity-75 hover:opacity-100"
                     }`}
                     style={{ backgroundColor: c }}
                   />
@@ -1353,7 +1353,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         </div>
                       </div>
                     </div>
-                    <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
+                    <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                       Abrir &rarr;
                     </span>
                   </button>
@@ -1378,7 +1378,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
           {/* Modal Footer */}
           <div
-            className={`px-6 py-3 flex justify-between items-center ${"-neutral-200 bg-[var(--bg)]"}`}
+            className={`px-6 py-3 flex justify-between items-center ${" bg-[var(--bg)]"}`}
           >
             {(isAdmin ||
               currentUser.role === "leader" ||
@@ -1536,7 +1536,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           key={plan.id}
                           className={`p-4 rounded-[var(--r-m)] transition-all ${
                             isCurrent
-                              ? "bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30"
+                              ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
                               : "bg-[var(--surface)]/60 hover:"
                           }`}
                         >

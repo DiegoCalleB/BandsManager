@@ -792,7 +792,7 @@ export const AgentAutonomySettingsModal: React.FC<
             className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${"bg-[var(--surface)]"}`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/20 to-orange-500/20 text-[var(--acc)]">
+              <div className="p-2.5 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/20 to-orange-500/20 text-[var(--acc)]">
                 <Bot className="w-5 h-5" />
               </div>
               <div>
@@ -1063,7 +1063,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.dispatchLevel === "draft_only"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1109,7 +1109,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.dispatchLevel === "scheduled_window"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1152,7 +1152,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.dispatchLevel === "autonomous_first_contact"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1209,7 +1209,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.negotiationDepth === "outreach_only"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1243,7 +1243,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.negotiationDepth === "filter_conditions"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1277,7 +1277,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.negotiationDepth === "advanced_negotiation"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1589,7 +1589,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.dispatchMode !== "direct_send"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1624,7 +1624,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           : "cursor-pointer"
                       } ${
                         config.dispatchMode === "direct_send"
-                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-amber-0/50"
+                          ? "bg-[var(--acc)]/20 text-[var(--ink)] ring-1 ring-[var(--acc)]/50"
                           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                       }`}
                     >
@@ -1894,7 +1894,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 : "cursor-pointer active:scale-95"
                             } ${
                               isSelected
-                                ? "bg-[var(--acc)]/15 text-[var(--ink)]/10/10 ring-1 ring-amber-0/30"
+                                ? "bg-[var(--acc)]/15 text-[var(--ink)]/10 ring-1 ring-[var(--acc)]/30"
                                 : "bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                             }`}
                           >
@@ -2135,7 +2135,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* Enlace a ADN de Tono */}
-                <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 to-orange-500/10 flex items-center justify-between gap-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 to-orange-500/10 flex items-center justify-between gap-3">
                   <div>
                     <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70 tracking-wider">
                       ¿Quieres entrenar el tono de voz de la banda?
@@ -2165,7 +2165,7 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* Enlace rápido a plantillas en Booking */}
-                <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-amber-0/10 to-orange-500/10 flex items-center justify-between">
+                <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)]/10 to-orange-500/10 flex items-center justify-between">
                   <div>
                     <h4 className="text-xs font-sans font-bold text-[var(--acc)]/70 tracking-wider">
                       ¿Quieres afinar las plantillas de correo?

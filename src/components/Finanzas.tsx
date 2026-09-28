@@ -194,7 +194,7 @@ export default function Finanzas({
   const textTitle = "text-[var(--ink)]";
   const textSub = "text-[var(--ink-2)]";
   const textMuted = "text-[var(--ink-2)]";
-  const cardBorder = "-neutral-200";
+  const cardBorder = "";
 
   return (
     <div
@@ -203,7 +203,7 @@ export default function Finanzas({
     >
       {/* Header con Sincronización en Excel */}
       <div
-        className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${"-neutral-100"}`}
+        className={`flex justify-between items-start md:items-center pb-4 mb-2 gap-4 ${""}`}
       >
         <div>
           <h4
@@ -324,7 +324,9 @@ export default function Finanzas({
 
         {/* Net balance */}
         <div
-          className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden ${balanceNeto >= 0 ? "-emerald-500/20" : "-rose-500/20"}`}
+          className={`${colors.card} p-5 space-y-1.5 relative overflow-hidden ${
+            balanceNeto >= 0 ? "" : ""
+          }`}
         >
           <div
             className={`flex justify-between items-center text-xs font-sans font-bold tracking-wider ${
@@ -349,7 +351,7 @@ export default function Finanzas({
 
       {/* Tabs / Filter Bar */}
       <div
-        className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${"-neutral-100"}`}
+        className={`flex flex-col md:flex-row md:items-center justify-between pb-4 mb-2 gap-4 ${""}`}
       >
         <div className="flex gap-2 flex-wrap">
           <button
@@ -969,8 +971,8 @@ export default function Finanzas({
                       <div
                         className={`p-2 rounded-[var(--r-s)] shrink-0 ${
                           p.tipo === "ingreso"
-                            ? "bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20"
-                            : "bg-[var(--alert)]/15 text-[var(--alert)] -rose-500/20"
+                            ? "bg-[var(--surface)]/15 text-[var(--ok)] "
+                            : "bg-[var(--alert)]/15 text-[var(--alert)] "
                         }`}
                       >
                         <DollarSign className="w-4 h-4" />
@@ -1017,7 +1019,7 @@ export default function Finanzas({
                         className={`px-2.5 py-1 text-[9px] font-sans rounded font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ${
                           p.estado === "pagado"
                             ? "bg-[var(--ok)]/10 text-[var(--ok)]"
-                            : "bg-[var(--acc)]/10  text-[var(--acc)] hover:bg-[var(--acc)]/15"
+                            : "bg-[var(--acc)]/10 -[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/15"
                         }`}
                         title="Hacer clic para cambiar el estado de pago"
                       >

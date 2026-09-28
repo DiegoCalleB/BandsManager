@@ -371,7 +371,7 @@ export default function Merchan({
 
       {/* 🎁 Banner de Regalo Pendiente de Canjear */}
       {hasGiftPending && (
-        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/15 to-[var(--acc)]/10  flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-amber-400/15 to-[var(--acc)]/10  flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0">
               <Gift className="w-6 h-6 stroke-[2.5]" />

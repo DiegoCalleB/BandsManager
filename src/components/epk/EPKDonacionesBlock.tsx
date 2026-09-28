@@ -564,7 +564,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                             </div>
                           </div>
                           <div>
-                            <label className="block text-[10px] tracking-wider text-amber-0/80 font-semibold mb-1.5">
+                            <label className="block text-[10px] tracking-wider text-[var(--acc)]/80 font-semibold mb-1.5">
                               {f.etiqueta} — {idioma.label}
                             </label>
                             <textarea

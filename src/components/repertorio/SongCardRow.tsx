@@ -364,11 +364,36 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           ) : onOpenChords ? (
             <button
               type="button"
-              onClick={onOpenChords}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                isStitchLight
-                  ? "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200"
-                  : "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/25"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onOpenIris) onOpenIris();
+                else if (onOpenStudio) onOpenStudio();
+              }}
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                hasIrisStems(song)
+                  ? "bg-gradient-to-r from-[var(--acc)]/20 via-orange-500/20 to-purple-500/20 hover:from-[var(--acc)]/30 hover:to-purple-500text-[var(--acc)]/70 "
+                  : "bg-[var(--surface)] hover:bg-[var(--surface)]text-[var(--acc)]/70 "
+              }`}
+              title={
+                hasIrisStems(song)
+                  ? "Ver pistas e instrumentos separados con Iris"
+                  : "Procesar esta canción con Iris (Separador de Pistas/Stems con IA)"
+              }
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
+              <span className="hidden sm:inline text-xs font-sans">Iris</span>
+            </button>
+          )}
+
+          {/* 3. Direct Member Notes Button */}
+          {onOpenMemberNotes && (
+            <button
+              type="button"
+              onClick={onOpenMemberNotes}
+              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
+                hasMemberNotes
+                  ? "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70"
+                  : "bg-[var(--surface)] hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
               title="Ver cifrado de acordes, armonía y letra"
             >

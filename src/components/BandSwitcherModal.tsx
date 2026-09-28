@@ -698,7 +698,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     } ${
                       isActive
                         ? "bg-gradient-to-b from-[var(--acc)]/20 via-[var(--surface)] to-[var(--bg)]  ring-1 ring-[var(--acc)]/40"
-                        : "bg-[var(--surface)] hover:bg-[var(--sunken)]"
+                        : "bg-[var(--surface)]  hover:bg-[var(--surface)] hover:shadow-lg"
                     } ${switchingBandId && !isSwitching ? "opacity-40 grayscale pointer-events-none" : ""}`}
                   >
                     {/* Top Bar on Card: Star (Principal) + Reorder arrows on left, Settings + Delete on right */}
@@ -811,7 +811,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/15 to-orange-600/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
+                        <div className="w-full h-full rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)]/15 to-orange-600/15 flex flex-col items-center justify-center text-[var(--acc)] gap-1">
                           <Guitar className="w-8 h-8 opacity-80" />
                           <span className="text-xs font-black font-sans text-[var(--ink-2)]">
                             {band.bandName.slice(0, 2).toUpperCase()}
@@ -1636,7 +1636,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                               key={plan.id}
                               className={`p-4 rounded-[var(--r-m)] transition-all ${
                                 isCurrent
-                                  ? "bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30"
+                                  ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
                                   : "bg-[var(--surface)]/60 hover:"
                               }`}
                             >

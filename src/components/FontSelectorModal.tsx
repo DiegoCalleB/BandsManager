@@ -34,18 +34,18 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
         >
           {/* Header */}
           <div
-            className={`px-6 py-4 flex justify-between items-center shrink-0 ${"-neutral-200 bg-[var(--bg)]"}`}
+            className={`px-6 py-4 flex justify-between items-center shrink-0 ${" bg-[var(--bg)]"}`}
           >
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${"bg-[var(--acc)]/15 text-[var(--acc)] "}`}
+                className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center font-bold shrink-0 ${"bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/20"}`}
               >
                 <Type className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-bold tracking-wider text-sm flex items-center gap-2">
                   <span>Selección de Tipografía & Fuente</span>
-                  <span className="text-[10px] font-sans font-normal px-2 py-0.5 rounded-full bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/20">
+                  <span className="text-[10px] font-sans font-normal px-2 py-0.5 rounded-full bg-[var(--surface)]/15 text-[var(--ok)] ">
                     En tiempo real
                   </span>
                 </h3>
@@ -89,7 +89,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                   className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer relative group ${
                     isSelected
                       ? "bg-[var(--acc)]/10 ring-2 ring-[var(--acc)]/20"
-                      : "bg-[var(--bg)] hover:bg-[var(--sunken)] hover:bg-[var(--sunken)]/80"
+                      : "bg-[var(--bg)] hover:-neutral-300 hover:bg-[var(--sunken)]/80"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3 mb-2">
@@ -104,10 +104,10 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                         <span
                           className={`text-[9px] font-sans font-bold px-2 py-0.5 rounded-full tracking-wider ${
                             preset.id === "plus_jakarta"
-                              ? "bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/30"
+                              ? "bg-[var(--surface)]/15 text-[var(--ok)] "
                               : preset.isSoft
                                 ? "bg-[var(--acc)]/15 text-[var(--ink-2)] "
-                                : "bg-[var(--acc)]/15 text-[var(--acc)] "
+                                : "bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/25"
                           }`}
                         >
                           {preset.badge}
@@ -156,7 +156,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
           {/* Footer */}
           <div
-            className={`px-6 py-3 flex justify-between items-center shrink-0 ${"-neutral-200 bg-[var(--bg)]"}`}
+            className={`px-6 py-3 flex justify-between items-center shrink-0 ${" bg-[var(--bg)]"}`}
           >
             <span className="text-[10px] font-sans text-[var(--ink-2)]">
               Cambio instantáneo guardado en tu navegador

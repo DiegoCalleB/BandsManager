@@ -293,16 +293,16 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </datalist>
           {/* Modal Header */}
           <div
-            className={`px-6 py-4 flex justify-between items-center ${"-neutral-200 bg-[var(--bg)]"}`}
+            className={`px-6 py-4 flex justify-between items-center ${" bg-[var(--bg)]"}`}
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10  text-[var(--tentative)] flex items-center justify-center">
                 <Users className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-bold font-display tracking-wider text-base flex items-center gap-2">
                   <span>Gestión de Miembros de la Banda</span>
-                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
+                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                     Panel Admin
                   </span>
                 </h3>
@@ -321,9 +321,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </div>
 
           {/* Tab Selection */}
-          <div
-            className={`px-6 pt-3 flex gap-2 ${"-neutral-200 bg-[var(--bg)]/50"}`}
-          >
+          <div className={`px-6 pt-3 flex gap-2 ${" bg-[var(--bg)]/50"}`}>
             <button
               onClick={() => {
                 setActiveTab("list");
@@ -332,8 +330,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               }}
               className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
                 activeTab === "list"
-                  ? "-indigo-400 text-[var(--tentative)]"
-                  : "-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"
+                  ? " text-[var(--tentative)]"
+                  : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -347,8 +345,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               }}
               className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
                 activeTab === "create"
-                  ? "-indigo-400 text-[var(--tentative)]"
-                  : "-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]"
+                  ? " text-[var(--tentative)]"
+                  : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -374,13 +372,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           {/* Messages */}
           <div className="px-6 pt-3">
             {error && (
-              <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
+              <div className="p-3 bg-[var(--alert)]/10  rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
             {successMsg && (
-              <div className="p-3 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
+              <div className="p-3 bg-[var(--ok)]/10  rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
                 <Check className="w-4 h-4 shrink-0" />
                 <span>{successMsg}</span>
               </div>
@@ -399,7 +397,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   return (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-[var(--r-m)] transition-all ${"bg-[var(--bg)]  hover:bg-[var(--sunken)]"}`}
+                      className={`p-4 rounded-[var(--r-m)] transition-all ${"bg-[var(--bg)]  hover:-neutral-300"}`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -420,12 +418,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 @{u.username}
                               </span>
                               {isLeader ? (
-                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)]  flex items-center gap-1">
+                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/30 flex items-center gap-1">
                                   <Shield className="w-2.5 h-2.5" />
                                   <span>Admin</span>
                                 </span>
                               ) : (
-                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -blue-500/30">
+                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                                   Miembro
                                 </span>
                               )}
@@ -464,7 +462,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             }
                             className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
                               u.role === "leader"
-                                ? "bg-[var(--acc)]/15 text-[var(--acc)]  hover:bg-[var(--acc)]/25"
+                                ? "bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/40 hover:bg-[var(--acc)]/25"
                                 : "bg-[var(--surface)] text-[var(--acc)]/80  hover:bg-[var(--surface)]/80"
                             } ${isSelf ? "opacity-70 cursor-not-allowed" : ""}`}
                           >
@@ -492,7 +490,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 setChangePasswordValue("");
                               }
                             }}
-                            className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
+                            className="px-2.5 py-1.5 rounded-[var(--r-s)]  text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
                           >
                             <Key className="w-3 h-3 text-[var(--acc)]" />
                             <span>
@@ -504,7 +502,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                             <button
                               type="button"
                               onClick={() => handleDeleteUser(u.id, u.username)}
-                              className="p-1.5 rounded-[var(--r-s)] -rose-500/30 text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
+                              className="p-1.5 rounded-[var(--r-s)]  text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
                               title="Eliminar usuario"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -649,8 +647,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                         onClick={() => setNewAvatarColor(c)}
                         className={`w-7 h-7 rounded-full transition-transform ${
                           newAvatarColor === c
-                            ? "scale-110 -white ring-2 ring-emerald-500"
-                            : "-transparent opacity-75 hover:opacity-100"
+                            ? "scale-110  ring-2 ring-emerald-500"
+                            : " opacity-75 hover:opacity-100"
                         }`}
                         style={{ backgroundColor: c }}
                       />
@@ -749,9 +747,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           </div>
 
           {/* Modal Footer */}
-          <div
-            className={`px-6 py-3 text-right ${"-neutral-200 bg-[var(--bg)]"}`}
-          >
+          <div className={`px-6 py-3 text-right ${" bg-[var(--bg)]"}`}>
             <button
               onClick={onClose}
               className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
