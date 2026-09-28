@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -28,14 +34,20 @@ import {
   ArrowUpDown,
   SlidersHorizontal,
   WifiOff,
-} from 'lucide-react';
-import { Setlist, SetlistItem, Song, SongAudioIdea, User } from '../types';
-import { isImageDocument, isPdfDocument } from '../utils/documentType';
-import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
-import { getSongIrisStemIdea, getIdeaTracks } from '../utils/irisTracks';
-import { cacheActiveStageSetlist } from '../utils/stageOfflineCache';
-import PracticeModePanel from './PracticeModePanel';
-import { PublicoSilhouette } from './ui/PublicoSilhouette';
+} from "lucide-react";
+import { Setlist, SetlistItem, Song, SongAudioIdea, User } from "../types";
+import { isImageDocument, isPdfDocument } from "../utils/documentType";
+import {
+  getSemitoneDifference,
+  transposeChordToken,
+  processChordText,
+  splitIntoChordSections,
+  ChordSection,
+} from "../utils/chordUtils";
+import { getSongIrisStemIdea, getIdeaTracks } from "../utils/irisTracks";
+import { cacheActiveStageSetlist } from "../utils/stageOfflineCache";
+import PracticeModePanel from "./PracticeModePanel";
+import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -45,34 +57,40 @@ interface SetlistPerformanceViewProps {
   onOpenPracticeMode?: (song: Song, idea: SongAudioIdea) => void;
   onUpdateSong?: (song: Song) => void;
   currentUser?: User;
-  initialMode?: 'directo' | 'ensayo';
+  initialMode?: "directo" | "ensayo";
 }
 
 // Distancia mínima de swipe (px) para contar como"pasar página" y no como un scroll normal
 // dentro del documento.
 const SWIPE_THRESHOLD = 60;
 
-const FONT_SIZES = ['text-base sm:text-lg', 'text-lg sm:text-xl', 'text-xl sm:text-2xl', 'text-2xl sm:text-3xl'];
+const FONT_SIZES = [
+  "text-base sm:text-lg",
+  "text-lg sm:text-xl",
+  "text-xl sm:text-2xl",
+  "text-2xl sm:text-3xl",
+];
 
 // Icono/etiqueta por tipo de bloque del setlist (presentación, cambio de instrumento...) — lo
 // que se muestra en modo teleprompter cuando toca un bloque en vez de una canción.
 const BLOCK_META: Record<string, { icon: string; label: string }> = {
-  header: { icon: '📌', label: 'Sección' },
-  presentacion: { icon: '🎤', label: 'Presentación' },
-  intro_tema: { icon: '🔥', label: 'Intro' },
-  beatbox: { icon: '🎵', label: 'Beatbox' },
-  solo_performance: { icon: '⭐', label: 'Solo / Performance' },
-  cambio_instrumento: { icon: '🎸', label: 'Cambio de instrumento' },
-  chapa: { icon: '💬', label: 'Chapa con el público' },
-  descanso: { icon: '☕', label: 'Descanso' },
-  bis: { icon: '👏', label: 'Bis' },
-  otro: { icon: '📋', label: 'Bloque' },
+  header: { icon: "📌", label: "Sección" },
+  presentacion: { icon: "🎤", label: "Presentación" },
+  intro_tema: { icon: "🔥", label: "Intro" },
+  beatbox: { icon: "🎵", label: "Beatbox" },
+  solo_performance: { icon: "⭐", label: "Solo / Performance" },
+  cambio_instrumento: { icon: "🎸", label: "Cambio de instrumento" },
+  chapa: { icon: "💬", label: "Chapa con el público" },
+  descanso: { icon: "☕", label: "Descanso" },
+  bis: { icon: "👏", label: "Bis" },
+  otro: { icon: "📋", label: "Bloque" },
 };
 
-const getBlockMeta = (item: SetlistItem) => BLOCK_META[item.bloqueSubtipo || 'otro'] || BLOCK_META.otro;
+const getBlockMeta = (item: SetlistItem) =>
+  BLOCK_META[item.bloqueSubtipo || "otro"] || BLOCK_META.otro;
 const itemLabel = (item: SetlistItem, songs: Song[]) =>
-  item.tipoItem === 'cancion'
-    ? songs.find((s) => s.id === item.songId)?.titulo || 'Canción'
+  item.tipoItem === "cancion"
+    ? songs.find((s) => s.id === item.songId)?.titulo || "Canción"
     : item.tituloCustom || getBlockMeta(item).label;
 
 export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
@@ -83,17 +101,22 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   onOpenPracticeMode,
   onUpdateSong,
   currentUser,
-  initialMode = 'directo',
+  initialMode = "directo",
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [modeArchetype, setModeArchetype] = useState<'directo' | 'ensayo'>(initialMode);
+  const [modeArchetype, setModeArchetype] = useState<"directo" | "ensayo">(
+    initialMode,
+  );
   const [showSongListDrawer, setShowSongListDrawer] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [internalPracticeIdea, setInternalPracticeIdea] = useState<SongAudioIdea | null>(null);
-  const [internalPracticeSong, setInternalPracticeSong] = useState<Song | null>(null);
+  const [internalPracticeIdea, setInternalPracticeIdea] =
+    useState<SongAudioIdea | null>(null);
+  const [internalPracticeSong, setInternalPracticeSong] = useState<Song | null>(
+    null,
+  );
   // Un navegador no puede subir el brillo real de la pantalla (no existe esa API por
   // privacidad/seguridad) — esto es lo más parecido que se puede ofrecer: fondo blanco con
   // texto negro muy grueso, que en la práctica se ve mucho mejor que ámbar-sobre-negro bajo sol
@@ -116,7 +139,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // eso que fingir un dato de batería falso en la mitad de los móviles.
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
   const [batteryCharging, setBatteryCharging] = useState(false);
-  const [isOffline, setIsOffline] = useState(() => typeof navigator !== 'undefined' && !navigator.onLine);
+  const [isOffline, setIsOffline] = useState(
+    () => typeof navigator !== "undefined" && !navigator.onLine,
+  );
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const wakeLockRef = useRef<any>(null);
@@ -132,30 +157,36 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   // Incluye TANTO canciones como bloques (presentación, cambio de instrumento, descanso...) en
   // su orden real del repertorio — antes el modo concierto solo conocía canciones, así que un
   // bloque entre dos temas desaparecía sin más en vez de mostrarse como guion en pantalla.
-  const allItems = setlist.items.filter((item) => (item.tipoItem === 'cancion' && item.songId) || item.tipoItem === 'bloque');
+  const allItems = setlist.items.filter(
+    (item) =>
+      (item.tipoItem === "cancion" && item.songId) ||
+      item.tipoItem === "bloque",
+  );
   const currentItem = allItems[currentIndex];
-  const isBlock = currentItem?.tipoItem === 'bloque';
-  const currentSong = !isBlock ? songs.find((s) => s.id === currentItem?.songId) : undefined;
+  const isBlock = currentItem?.tipoItem === "bloque";
+  const currentSong = !isBlock
+    ? songs.find((s) => s.id === currentItem?.songId)
+    : undefined;
   const nextItem = allItems[currentIndex + 1];
 
   const songsInSetlistCount = useMemo(() => {
-    return allItems.filter((i) => i.tipoItem === 'cancion' && i.songId).length;
+    return allItems.filter((i) => i.tipoItem === "cancion" && i.songId).length;
   }, [allItems]);
 
   const songsWithIrisCount = useMemo(() => {
     return allItems.filter((item) => {
-      if (item.tipoItem !== 'cancion' || !item.songId) return false;
+      if (item.tipoItem !== "cancion" || !item.songId) return false;
       const s = songs.find((x) => x.id === item.songId);
       return s ? Boolean(getSongIrisStemIdea(s)) : false;
     }).length;
@@ -168,7 +199,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const handleLaunchPractice = useCallback(
     (customSong?: Song, customIdea?: SongAudioIdea) => {
       const targetSong = customSong || currentSong;
-      const targetIdea = customIdea || (targetSong ? getSongIrisStemIdea(targetSong) : null);
+      const targetIdea =
+        customIdea || (targetSong ? getSongIrisStemIdea(targetSong) : null);
       if (!targetSong || !targetIdea) return;
       if (onOpenPracticeMode) {
         onOpenPracticeMode(targetSong, targetIdea);
@@ -177,7 +209,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         setInternalPracticeIdea(targetIdea);
       }
     },
-    [currentSong, onOpenPracticeMode]
+    [currentSong, onOpenPracticeMode],
   );
 
   const handleLaunchStudio = useCallback(
@@ -186,12 +218,13 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       if (!targetSong) return;
       onOpenStudioModal?.(targetSong);
     },
-    [currentSong, onOpenStudioModal]
+    [currentSong, onOpenStudioModal],
   );
 
   // Notación (ES/EN) a mantener al mostrar/transportar un tono — se detecta de la propia
   // tonalidad guardada de la canción, para no forzar"Re" a salir como"D" o viceversa.
-  const detectNotation = (key: string): 'ES' | 'EN' => (/^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(key.trim()) ? 'ES' : 'EN');
+  const detectNotation = (key: string): "ES" | "EN" =>
+    /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(key.trim()) ? "ES" : "EN";
 
   const transposeKey = (key: string, semitones: number): string => {
     if (!key || semitones === 0) return key;
@@ -203,14 +236,22 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // la mano y cantando, es justo lo que NO se quiere. El Modo Concierto solo APLICA lo ya
   // decidido de antemano — se calcula de forma derivada a partir de tonalidadDeseada.
   const effectiveTranspose =
-    currentItem?.tonalidadDeseada && currentSong ? (getSemitoneDifference(currentSong.tonalidad, currentItem.tonalidadDeseada) ?? 0) : 0;
+    currentItem?.tonalidadDeseada && currentSong
+      ? (getSemitoneDifference(
+          currentSong.tonalidad,
+          currentItem.tonalidadDeseada,
+        ) ?? 0)
+      : 0;
 
   // Transposición en tiempo real en escenario (Live Pitch Shift)
   const [liveTransposeOffset, setLiveTransposeOffset] = useState<number>(0);
 
   // Modo teleprompter:'sections' (por bloques con pedal) o'scroll' (desplazamiento continuo)
-  const [teleprompterMode, setTeleprompterMode] = useState<'sections' | 'scroll'>('sections');
-  const [isTeleprompterPlaying, setIsTeleprompterPlaying] = useState<boolean>(false);
+  const [teleprompterMode, setTeleprompterMode] = useState<
+    "sections" | "scroll"
+  >("sections");
+  const [isTeleprompterPlaying, setIsTeleprompterPlaying] =
+    useState<boolean>(false);
   const [teleprompterSpeed, setTeleprompterSpeed] = useState<number>(1);
   const teleprompterScrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -223,12 +264,21 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const hasChordsText = Boolean(currentSong?.cifradoTexto?.trim());
   const hasScannedSheet = Boolean(
     currentSong?.estructuraDocumentoUrl &&
-    (isImageDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl) ||
-      isPdfDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl))
+    (isImageDocument(
+      currentSong.estructuraDocumentoNombre,
+      currentSong.estructuraDocumentoUrl,
+    ) ||
+      isPdfDocument(
+        currentSong.estructuraDocumentoNombre,
+        currentSong.estructuraDocumentoUrl,
+      )),
   );
-  const [manualViewOverride, setManualViewOverride] = useState<'chords' | 'sheet' | null>(null);
-  const effectiveViewMode: 'chords' | 'sheet' = manualViewOverride ?? (hasChordsText ? 'chords' : 'sheet');
-  const showScannedSheet = effectiveViewMode === 'sheet' && hasScannedSheet;
+  const [manualViewOverride, setManualViewOverride] = useState<
+    "chords" | "sheet" | null
+  >(null);
+  const effectiveViewMode: "chords" | "sheet" =
+    manualViewOverride ?? (hasChordsText ? "chords" : "sheet");
+  const showScannedSheet = effectiveViewMode === "sheet" && hasScannedSheet;
 
   // El autoscroll a velocidad fija se desincroniza en cuanto la banda alarga un solo o repite
   // un estribillo — para cuando te das cuenta, la letra ya bajó sola de más. En su lugar, la
@@ -252,7 +302,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
   // Autoscroll suave para el modo Teleprompter
   useEffect(() => {
-    if (teleprompterMode !== 'scroll' || !isTeleprompterPlaying) return;
+    if (teleprompterMode !== "scroll" || !isTeleprompterPlaying) return;
 
     let animId: number;
     let lastTime = performance.now();
@@ -276,12 +326,18 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // Transpone los acordes DE VERDAD (las letras Do/Re/Mi... dentro del texto), no solo la
   // etiqueta de tonalidad, aplicando la suma de la tonalidad fijada y el ajuste en vivo.
   const chords = currentSong?.cifradoTexto
-    ? processChordText(currentSong.cifradoTexto, totalTranspose, detectNotation(currentSong.tonalidad || 'C'))
-    : 'Sin acordes guardados';
+    ? processChordText(
+        currentSong.cifradoTexto,
+        totalTranspose,
+        detectNotation(currentSong.tonalidad || "C"),
+      )
+    : "Sin acordes guardados";
   const chordSections = hasChordsText ? splitIntoChordSections(chords) : [];
   const hasMultipleSections = chordSections.length >= 2;
 
-  const notes = [currentSong?.notasInternas, currentSong?.notasRepertorio].filter(Boolean).join('\n\n');
+  const notes = [currentSong?.notasInternas, currentSong?.notasRepertorio]
+    .filter(Boolean)
+    .join("\n\n");
 
   // BATERÍA: con pantalla+wake lock+fullscreen encendidos todo el bolo, avisar antes de que se
   // apague en el bis es más útil que descubrirlo cuando ya se apagó. Se degrada en silencio
@@ -294,21 +350,21 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         setBatteryCharging(batteryRef.charging);
       }
     };
-    if ('getBattery' in navigator) {
+    if ("getBattery" in navigator) {
       (navigator as any)
         .getBattery()
         .then((battery: any) => {
           batteryRef = battery;
           handleChange();
-          battery.addEventListener('levelchange', handleChange);
-          battery.addEventListener('chargingchange', handleChange);
+          battery.addEventListener("levelchange", handleChange);
+          battery.addEventListener("chargingchange", handleChange);
         })
         .catch(() => {});
     }
     return () => {
       if (batteryRef) {
-        batteryRef.removeEventListener('levelchange', handleChange);
-        batteryRef.removeEventListener('chargingchange', handleChange);
+        batteryRef.removeEventListener("levelchange", handleChange);
+        batteryRef.removeEventListener("chargingchange", handleChange);
       }
     };
   }, []);
@@ -328,8 +384,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     let released = false;
     const requestLock = async () => {
       try {
-        if ('wakeLock' in navigator) {
-          wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+        if ("wakeLock" in navigator) {
+          wakeLockRef.current = await (navigator as any).wakeLock.request(
+            "screen",
+          );
         }
       } catch {
         // Algunos navegadores lo rechazan si la pestaña no está en foco o no hay soporte —
@@ -340,18 +398,18 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
     // iOS/Android liberan el wake lock al cambiar de pestaña/app; lo repedimos al volver.
     const handleVisibility = () => {
-      if (!released && document.visibilityState === 'visible') {
+      if (!released && document.visibilityState === "visible") {
         requestLock();
-      } else if (document.visibilityState === 'hidden') {
+      } else if (document.visibilityState === "hidden") {
         wakeLockRef.current?.release?.().catch(() => {});
         wakeLockRef.current = null;
       }
     };
-    document.addEventListener('visibilitychange', handleVisibility);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
       released = true;
-      document.removeEventListener('visibilitychange', handleVisibility);
+      document.removeEventListener("visibilitychange", handleVisibility);
       wakeLockRef.current?.release?.().catch(() => {});
     };
   }, [isResting]);
@@ -370,9 +428,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener('fullscreenchange', handleChange);
-    return () => document.removeEventListener('fullscreenchange', handleChange);
+    const handleChange = () =>
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", handleChange);
+    return () => document.removeEventListener("fullscreenchange", handleChange);
   }, []);
 
   const handlePrev = () => {
@@ -387,14 +446,24 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // al llegar al final o al principio, pasa de canción — así el pedal/tecla de"pasar página"
   // funciona igual de natural para moverse dentro de un tema largo que para cambiar de tema.
   const handleAdvance = () => {
-    if (!isBlock && !showScannedSheet && hasMultipleSections && currentSectionIndex < chordSections.length - 1) {
+    if (
+      !isBlock &&
+      !showScannedSheet &&
+      hasMultipleSections &&
+      currentSectionIndex < chordSections.length - 1
+    ) {
       setCurrentSectionIndex((i) => i + 1);
     } else {
       handleNext();
     }
   };
   const handleRetreat = () => {
-    if (!isBlock && !showScannedSheet && hasMultipleSections && currentSectionIndex > 0) {
+    if (
+      !isBlock &&
+      !showScannedSheet &&
+      hasMultipleSections &&
+      currentSectionIndex > 0
+    ) {
       setCurrentSectionIndex((i) => i - 1);
     } else {
       handlePrev();
@@ -405,30 +474,38 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // partituras (los que usan orquestas de verdad con iPad) emulan esas teclas, no solo flechas.
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      if (e.key === "ArrowLeft" || e.key === "PageUp") {
         e.preventDefault();
         handleRetreat();
       }
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      if (e.key === "ArrowRight" || e.key === "PageDown") {
         e.preventDefault();
         handleAdvance();
       }
-      if (e.key === '') {
+      if (e.key === "") {
         e.preventDefault();
-        if (teleprompterMode === 'scroll') {
+        if (teleprompterMode === "scroll") {
           setIsTeleprompterPlaying((p) => !p);
         } else {
           handleAdvance();
         }
       }
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+      if (e.key === "Escape") onClose();
+      if (e.key === "f" || e.key === "F") toggleFullscreen();
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allItems.length, toggleFullscreen, currentSectionIndex, hasMultipleSections, isBlock, showScannedSheet, teleprompterMode]);
+  }, [
+    allItems.length,
+    toggleFullscreen,
+    currentSectionIndex,
+    hasMultipleSections,
+    isBlock,
+    showScannedSheet,
+    teleprompterMode,
+  ]);
 
   // Swipe táctil estilo"pasar página" (iBooks / forScore): un swipe horizontal claro pasa de
   // canción; un gesto vertical o corto se deja pasar para no robarle el scroll al documento.
@@ -451,7 +528,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           <PublicoSilhouette opacity={0.12} size="large" />
           <div>
             <p className="font-medium text-lg">Repertorio vacío</p>
-            <p className="text-xs text-[var(--ink-2)] mt-2 max-w-xs">Añade canciones a tu repertorio para comenzar a ensayar.</p>
+            <p className="text-xs text-[var(--ink-2)] mt-2 max-w-xs">
+              Añade canciones a tu repertorio para comenzar a ensayar.
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -464,9 +543,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     );
   }
 
-  const transposedKey = currentSong ? transposeKey(currentSong.tonalidad, totalTranspose) : '';
-  const structure = currentSong?.guiaSustituto?.estructura || '';
-  const progression = currentSong?.guiaSustituto?.progresionClave || '';
+  const transposedKey = currentSong
+    ? transposeKey(currentSong.tonalidad, totalTranspose)
+    : "";
+  const structure = currentSong?.guiaSustituto?.estructura || "";
+  const progression = currentSong?.guiaSustituto?.progresionClave || "";
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === allItems.length - 1;
   const blockMeta = isBlock ? getBlockMeta(currentItem) : null;
@@ -480,8 +561,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         onClick={() => setIsResting(false)}
       >
         <span className="text-5xl mb-4">😴</span>
-        <p className="text-[var(--ink-2)] text-sm font-sans mb-1">Modo descanso — ahorrando batería</p>
-        <p className="text-[var(--ink)] text-xs font-sans">Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"</p>
+        <p className="text-[var(--ink-2)] text-sm font-sans mb-1">
+          Modo descanso — ahorrando batería
+        </p>
+        <p className="text-[var(--ink)] text-xs font-sans">
+          Toca la pantalla para volver a"{itemLabel(currentItem, songs)}"
+        </p>
       </div>
     );
   }
@@ -489,7 +574,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ? 'bg-[var(--surface)] text-[var(--ink)]' : 'bg-black text-[var(--ink)]'}`}
+      className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ? "bg-[var(--surface)] text-[var(--ink)]" : "bg-black text-[var(--ink)]"}`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -499,13 +584,19 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  (menú y cerrar) — todo lo demás vive en el menú"⋯", y los datos pasivos (batería,
  posición, verificación) bajan a una segunda línea fina que no le roba sitio al título. */}
       <div
-        className={`shrink-0 px-3 sm:px-4 pt-2 pb-1.5 z-20 ${glareMode ? 'bg-gradient-to-b from-white to-white/0' : 'bg-gradient-to-b from-black to-[var(--sunken)]/0'}`}
+        className={`shrink-0 px-3 sm:px-4 pt-2 pb-1.5 z-20 ${glareMode ? "bg-gradient-to-b from-white to-white/0" : "bg-gradient-to-b from-black to-[var(--sunken)]/0"}`}
       >
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0 flex items-center gap-2 flex-1">
-            <span className="text-lg shrink-0">{isBlock ? blockMeta!.icon : '🎤'}</span>
-            <h1 className={`text-base sm:text-lg font-bold truncate ${glareMode ? 'text-[var(--ink)]' : 'text-[var(--acc)]/70'}`}>
-              {isBlock ? currentItem.tituloCustom || blockMeta!.label : currentSong?.titulo}
+            <span className="text-lg shrink-0">
+              {isBlock ? blockMeta!.icon : "🎤"}
+            </span>
+            <h1
+              className={`text-base sm:text-lg font-bold truncate ${glareMode ? "text-[var(--ink)]" : "text-[var(--acc)]/70"}`}
+            >
+              {isBlock
+                ? currentItem.tituloCustom || blockMeta!.label
+                : currentSong?.titulo}
             </h1>
             {isOffline && (
               <span
@@ -522,33 +613,33 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             {/* Toggle Directo / Ensayo */}
             <div
               className={`flex items-center rounded-[var(--r-s)] p-0.5 text-xs font-bold shrink-0 ${
-                glareMode ? 'bg-[var(--surface)]300' : 'bg-[var(--sunken)]'
+                glareMode ? "bg-[var(--surface)]300" : "bg-[var(--sunken)]"
               }`}
             >
               <button
                 type="button"
-                onClick={() => setModeArchetype('directo')}
+                onClick={() => setModeArchetype("directo")}
                 className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                  modeArchetype === 'directo'
+                  modeArchetype === "directo"
                     ? glareMode
-                      ? 'bg-[var(--acc)]/60 text-[var(--on-acc)]'
-                      : 'bg-[var(--acc)] text-[var(--on-acc)]'
+                      ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
+                      : "bg-[var(--acc)] text-[var(--on-acc)]"
                     : glareMode
-                      ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      ? "text-[var(--ink-2)] hover:text-[var(--ink)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
                 Directo
               </button>
               <button
                 type="button"
-                onClick={() => setModeArchetype('ensayo')}
+                onClick={() => setModeArchetype("ensayo")}
                 className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
-                  modeArchetype === 'ensayo'
-                    ? 'bg-[var(--ok)] text-[var(--ink)]'
+                  modeArchetype === "ensayo"
+                    ? "bg-[var(--ok)] text-[var(--ink)]"
                     : glareMode
-                      ? 'text-[var(--ink-2)] hover:text-[var(--ok)]'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ok)]'
+                      ? "text-[var(--ink-2)] hover:text-[var(--ok)]"
+                      : "text-[var(--ink-2)] hover:text-[var(--ok)]"
                 }`}
               >
                 <Headphones className="w-3 h-3" />
@@ -563,8 +654,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               onClick={() => setShowSongListDrawer(true)}
               className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
                 glareMode
-                  ? 'bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]'
-                  : 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40'
+                  ? "bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"
+                  : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40"
               }`}
               title="Repertorio completo: ver todos los temas, estado de pistas Iris y accesos directos a Studio"
             >
@@ -586,8 +677,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => handleLaunchPractice()}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
                   glareMode
-                    ? 'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)]'
-                    : 'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] hover:border-[var(--ok)]'
+                    ? "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ok)]"
+                    : "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]"
                 }`}
                 title="Modo Ensayo: practica este tema con pistas separadas por Iris (silenciar/aislar pistas, tempo, bucle A/B)"
               >
@@ -604,8 +695,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => handleLaunchStudio()}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
                   glareMode
-                    ? 'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]300'
-                    : 'bg-[var(--sunken)]/80 hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]'
+                    ? "bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]"
+                    : "bg-[var(--sunken)]/80 hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
                 }`}
                 title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
               >
@@ -623,8 +714,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 onClick={() => handleLaunchStudio()}
                 className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
                   glareMode
-                    ? 'bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]'
-                    : 'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 hover:border-[var(--acc)]'
+                    ? "bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]"
+                    : "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50"
                 }`}
                 title="Modo Studio: grabaciones multipista, ideas de audio, acordes y arreglos de este tema"
               >
@@ -636,7 +727,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
             <button
               onClick={() => setShowMoreMenu((v) => !v)}
-              className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ? 'bg-[var(--sunken)]' : 'bg-[var(--ink)]/15') : glareMode ? 'hover:bg-[var(--sunken)] text-[var(--ink-2)]' : 'hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'}`}
+              className={`p-1.5 rounded-[var(--r-s)] transition ${showMoreMenu ? (glareMode ? "bg-[var(--sunken)]" : "bg-[var(--ink)]/15") : glareMode ? "hover:bg-[var(--sunken)] text-[var(--ink-2)]" : "hover:bg-[var(--ink)]/10 text-[var(--ink-2)]"}`}
               title="Más opciones"
             >
               <MoreVertical className="w-5 h-5" />
@@ -644,7 +735,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
             <button
               onClick={onClose}
-              className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ? 'hover:bg-[var(--sunken)] text-[var(--ink)]' : 'hover:bg-[var(--ink)]/10 text-[var(--ink)]'}`}
+              className={`p-1.5 rounded-[var(--r-s)] transition ${glareMode ? "hover:bg-[var(--sunken)] text-[var(--ink)]" : "hover:bg-[var(--ink)]/10 text-[var(--ink)]"}`}
               title="Cerrar (ESC)"
             >
               <X className="w-5 h-5" />
@@ -652,10 +743,15 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
             {showMoreMenu && (
               <>
-                <div className="fixed inset-0 z-30" onClick={() => setShowMoreMenu(false)} />
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setShowMoreMenu(false)}
+                />
                 <div
                   className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] p-1.5 space-y-0.5 text-sm ${
-                    glareMode ? 'bg-[var(--surface)] border-text-[var(--ink-2)] text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--ink)]'
+                    glareMode
+                      ? "bg-[var(--surface)] border-text-[var(--ink-2)] text-[var(--ink)]"
+                      : "bg-[var(--surface)] text-[var(--ink)]"
                   }`}
                 >
                   {/* Studio & Ensayo shortcuts inside menu */}
@@ -668,7 +764,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             handleLaunchPractice();
                           }}
                           className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition font-semibold ${
-                            glareMode ? 'hover:bg-[var(--sunken)] text-[var(--ok)]' : 'hover:bg-[var(--ink)]/10 text-[var(--ok)]'
+                            glareMode
+                              ? "hover:bg-[var(--sunken)] text-[var(--ok)]"
+                              : "hover:bg-[var(--ink)]/10 text-[var(--ok)]"
                           }`}
                         >
                           <Headphones className="w-4 h-4 shrink-0 text-[var(--ok)]" />
@@ -681,7 +779,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             handleLaunchStudio();
                           }}
                           className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
-                            glareMode ? 'hover:bg-[var(--sunken)] text-[var(--ink-2)]' : 'hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
+                            glareMode
+                              ? "hover:bg-[var(--sunken)] text-[var(--ink-2)]"
+                              : "hover:bg-[var(--ink)]/10 text-[var(--ink-2)]"
                           }`}
                           title="Abre el Studio para separar las pistas de este tema con el motor de IA Iris"
                         >
@@ -703,8 +803,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           }}
                           className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
                             glareMode
-                              ? 'hover:bg-[var(--sunken)] text-[var(--tentative)]'
-                              : 'hover:bg-[var(--ink)]/10 text-[var(--tentative)]'
+                              ? "hover:bg-[var(--sunken)] text-[var(--tentative)]"
+                              : "hover:bg-[var(--ink)]/10 text-[var(--tentative)]"
                           }`}
                         >
                           <Sliders className="w-4 h-4 shrink-0 text-[var(--tentative)]" />
@@ -712,7 +812,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                         </button>
                       )}
 
-                      <div className={`my-1 ${glareMode ? 'border-[var(--sunken)]' : ''}`} />
+                      <div
+                        className={`my-1 ${glareMode ? "h-px bg-[var(--sunken)]" : ""}`}
+                      />
                     </>
                   )}
 
@@ -721,9 +823,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       setGlareMode((v) => !v);
                       setShowMoreMenu(false);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'} ${glareMode ? 'text-[var(--accent-alt)]' : ''}`}
+                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"} ${glareMode ? "text-[var(--accent-alt)]" : ""}`}
                   >
-                    <Sun className="w-4 h-4 shrink-0" /> {glareMode ? 'Quitar' : 'Activar'} alto contraste
+                    <Sun className="w-4 h-4 shrink-0" />{" "}
+                    {glareMode ? "Quitar" : "Activar"} alto contraste
                   </button>
 
                   <button
@@ -731,9 +834,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       setIsResting(true);
                       setShowMoreMenu(false);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'}`}
+                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"}`}
                   >
-                    <Moon className="w-4 h-4 shrink-0" /> Modo descanso (ahorra batería)
+                    <Moon className="w-4 h-4 shrink-0" /> Modo descanso (ahorra
+                    batería)
                   </button>
 
                   {!isBlock && notes && (
@@ -742,22 +846,32 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                         setShowNotes((v) => !v);
                         setShowMoreMenu(false);
                       }}
-                      className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'} text-[var(--acc)]`}
+                      className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"} text-[var(--acc)]`}
                     >
-                      <StickyNote className="w-4 h-4 shrink-0" /> {showNotes ? 'Ocultar' : 'Ver'} notas del tema
+                      <StickyNote className="w-4 h-4 shrink-0" />{" "}
+                      {showNotes ? "Ocultar" : "Ver"} notas del tema
                     </button>
                   )}
 
                   {!isBlock && hasChordsText && hasScannedSheet && (
                     <button
                       onClick={() => {
-                        setManualViewOverride(effectiveViewMode === 'sheet' ? 'chords' : 'sheet');
+                        setManualViewOverride(
+                          effectiveViewMode === "sheet" ? "chords" : "sheet",
+                        );
                         setShowMoreMenu(false);
                       }}
-                      className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'}`}
+                      className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"}`}
                     >
-                      {showScannedSheet ? <FileText className="w-4 h-4 shrink-0" /> : <ImageIcon className="w-4 h-4 shrink-0" />}
-                      Ver {showScannedSheet ? 'acordes en texto' : 'documento original'}
+                      {showScannedSheet ? (
+                        <FileText className="w-4 h-4 shrink-0" />
+                      ) : (
+                        <ImageIcon className="w-4 h-4 shrink-0" />
+                      )}
+                      Ver{" "}
+                      {showScannedSheet
+                        ? "acordes en texto"
+                        : "documento original"}
                     </button>
                   )}
 
@@ -767,9 +881,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                         setFontSizeIdx((i) => (i + 1) % FONT_SIZES.length);
                         setShowMoreMenu(false);
                       }}
-                      className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'}`}
+                      className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"}`}
                     >
-                      <Type className="w-4 h-4 shrink-0" /> Cambiar tamaño de letra
+                      <Type className="w-4 h-4 shrink-0" /> Cambiar tamaño de
+                      letra
                     </button>
                   )}
 
@@ -778,10 +893,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       toggleFullscreen();
                       setShowMoreMenu(false);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'}`}
+                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"}`}
                   >
-                    {isFullscreen ? <Minimize className="w-4 h-4 shrink-0" /> : <Maximize className="w-4 h-4 shrink-0" />}
-                    {isFullscreen ? 'Salir de' : 'Entrar en'} pantalla completa
+                    {isFullscreen ? (
+                      <Minimize className="w-4 h-4 shrink-0" />
+                    ) : (
+                      <Maximize className="w-4 h-4 shrink-0" />
+                    )}
+                    {isFullscreen ? "Salir de" : "Entrar en"} pantalla completa
                   </button>
 
                   <button
@@ -789,7 +908,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       setShowFlightModeInfo((v) => !v);
                       setShowMoreMenu(false);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-[var(--sunken)]' : 'hover:bg-[var(--ink)]/10'} text-[var(--ink-2)]`}
+                    className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"} text-[var(--ink-2)]`}
                   >
                     <Plane className="w-4 h-4 shrink-0" /> Sobre el modo avión
                   </button>
@@ -803,7 +922,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  repertorio, batería (si el navegador la soporta) y si hace falta revisar los
  acordes de este tema. */}
         <div className="flex items-center gap-2 mt-1 pl-7 text-[11px] font-sans flex-wrap">
-          <span className={glareMode ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}>
+          <span
+            className={
+              glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"
+            }
+          >
             {currentIndex + 1}/{allItems.length}
           </span>
 
@@ -811,14 +934,20 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <span
               className={`flex items-center gap-1 ${
                 batteryCharging
-                  ? 'text-[var(--ok)]'
+                  ? "text-[var(--ok)]"
                   : batteryLevel < 0.2
-                    ? 'text-[var(--alert)] font-bold'
+                    ? "text-[var(--alert)] font-bold"
                     : glareMode
-                      ? 'text-[var(--ink-2)]'
-                      : 'text-[var(--ink-2)]'
+                      ? "text-[var(--ink-2)]"
+                      : "text-[var(--ink-2)]"
               }`}
-              title={batteryCharging ? 'Cargando' : batteryLevel < 0.2 ? 'Batería baja — busca un cargador' : 'Batería'}
+              title={
+                batteryCharging
+                  ? "Cargando"
+                  : batteryLevel < 0.2
+                    ? "Batería baja — busca un cargador"
+                    : "Batería"
+              }
             >
               {batteryCharging ? (
                 <BatteryCharging className="w-3 h-3" />
@@ -837,8 +966,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               onClick={() => handleLaunchPractice()}
               className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
                 glareMode
-                  ? 'bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20'
-                  : 'bg-[var(--ok)]/10 text-[var(--ok)]/30 hover:bg-[var(--ok)]/20'
+                  ? "bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"
+                  : "bg-[var(--ok)]/10 text-[var(--ok)]/30 hover:bg-[var(--ok)]/20"
               }`}
               title="Pistas separadas por Iris disponibles. Clic para abrir el Modo Ensayo"
             >
@@ -847,38 +976,48 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </button>
           )}
 
-          {!isBlock && currentSong?.estructuraDocumentoUrl && !currentSong?.estructuraVerificada && (
-            <span
-              className="font-bold px-1.5 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]"
-              title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
-            >
-              ⚠️ sin verificar
-            </span>
-          )}
+          {!isBlock &&
+            currentSong?.estructuraDocumentoUrl &&
+            !currentSong?.estructuraVerificada && (
+              <span
+                className="font-bold px-1.5 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]"
+                title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
+              >
+                ⚠️ sin verificar
+              </span>
+            )}
         </div>
       </div>
 
       {/* BANNER MODO ENSAYO: destacado con tempo, tonalidad y acceso directo a Iris/Studio */}
-      {modeArchetype === 'ensayo' && !isBlock && currentSong && (
+      {modeArchetype === "ensayo" && !isBlock && currentSong && (
         <div
           className={`shrink-0 px-3 sm:px-4 py-2 flex items-center justify-between gap-3 text-xs z-20 ${
-            glareMode ? 'bg-[var(--ok)]/10 text-[var(--ok)]' : 'bg-[var(--ok-soft)]/40 text-[var(--ink)]'
+            glareMode
+              ? "bg-[var(--ok)]/10 text-[var(--ok)]"
+              : "bg-[var(--ok-soft)]/40 text-[var(--ink)]"
           }`}
         >
           <div className="flex items-center gap-2 min-w-0">
             <div
               className={`w-7 h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
-                glareMode ? 'bg-[var(--ok)]/30 text-[var(--ok)]' : 'bg-[var(--ok)]/20 text-[var(--ok)]'
+                glareMode
+                  ? "bg-[var(--ok)]/30 text-[var(--ok)]"
+                  : "bg-[var(--ok)]/20 text-[var(--ok)]"
               }`}
             >
               <Headphones className="w-4 h-4" />
             </div>
             <div className="truncate">
-              <span className="font-bold text-[var(--ok)]">Modo Ensayo Activo</span>
+              <span className="font-bold text-[var(--ok)]">
+                Modo Ensayo Activo
+              </span>
               <span className="opacity-80 ml-2 font-sans text-[11px]">
-                {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` : ''}
-                {currentSong.bpm ? ` · ${currentSong.bpm} BPM` : ''}
-                {irisStemIdea ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris` : '· Sin pistas separadas'}
+                {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` : ""}
+                {currentSong.bpm ? ` · ${currentSong.bpm} BPM` : ""}
+                {irisStemIdea
+                  ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris`
+                  : "· Sin pistas separadas"}
               </span>
             </div>
           </div>
@@ -917,7 +1056,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       {/* NOTES BANNER — cosas como"cambio de afinación","entra el segundo cantante", que un
  músico necesita ver ANTES de tocar el tema, no descubrirlas a mitad. */}
       {!isBlock && showNotes && notes && (
-        <div className="shrink-0 bg-[var(--acc-soft)] /40 px-4 py-2.5 text-sm text-[var(--acc)] whitespace-pre-wrap z-20">{notes}</div>
+        <div className="shrink-0 bg-[var(--acc-soft)] /40 px-4 py-2.5 text-sm text-[var(--acc)] whitespace-pre-wrap z-20">
+          {notes}
+        </div>
       )}
 
       {/* Una web no puede activar el modo avión del dispositivo — ninguna app sin permisos de
@@ -927,9 +1068,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         <div className="shrink-0 bg-[var(--bg)]/90/40 px-4 py-2.5 text-sm text-[var(--tentative)]/40 z-20 flex items-start gap-2">
           <Plane className="w-4 h-4 shrink-0 mt-0.5" />
           <p>
-            No hay forma de activar el modo avión desde aquí — ninguna web (ni casi ninguna app) puede tocar la conectividad del móvil, es
-            una restricción de seguridad del propio sistema. Actívalo tú a mano antes de subir al escenario: la app ya funciona sin conexión
-            una vez cargado el repertorio, así que no pasa nada por quedarte sin señal.
+            No hay forma de activar el modo avión desde aquí — ninguna web (ni
+            casi ninguna app) puede tocar la conectividad del móvil, es una
+            restricción de seguridad del propio sistema. Actívalo tú a mano
+            antes de subir al escenario: la app ya funciona sin conexión una vez
+            cargado el repertorio, así que no pasa nada por quedarte sin señal.
           </p>
         </div>
       )}
@@ -963,7 +1106,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         )}
 
         {isBlock ? (
-          <TeleprompterBlockPage item={currentItem} meta={blockMeta!} glareMode={glareMode} />
+          <TeleprompterBlockPage
+            item={currentItem}
+            meta={blockMeta!}
+            glareMode={glareMode}
+          />
         ) : showScannedSheet ? (
           <ScannedSheetPage song={currentSong!} />
         ) : (
@@ -976,7 +1123,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             structure={structure}
             progression={progression}
             transposedKey={transposedKey}
-            originalKey={currentSong?.tonalidad || ''}
+            originalKey={currentSong?.tonalidad || ""}
             transpose={effectiveTranspose}
             liveTransposeOffset={liveTransposeOffset}
             onLiveTransposeChange={setLiveTransposeOffset}
@@ -988,14 +1135,21 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             onToggleDetails={() => setShowDetails((v) => !v)}
             glareMode={glareMode}
             teleprompterMode={teleprompterMode}
-            onToggleTeleprompterMode={() => setTeleprompterMode((m) => (m === 'scroll' ? 'sections' : 'scroll'))}
+            onToggleTeleprompterMode={() =>
+              setTeleprompterMode((m) =>
+                m === "scroll" ? "sections" : "scroll",
+              )
+            }
             isTeleprompterPlaying={isTeleprompterPlaying}
             onToggleTeleprompterPlay={() => setIsTeleprompterPlaying((p) => !p)}
             teleprompterSpeed={teleprompterSpeed}
             onChangeTeleprompterSpeed={setTeleprompterSpeed}
             onResetTeleprompterScroll={() => {
               if (teleprompterScrollRef.current) {
-                teleprompterScrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                teleprompterScrollRef.current.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
               }
             }}
             teleprompterScrollRef={teleprompterScrollRef}
@@ -1005,7 +1159,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
       {/* THIN BOTTOM BAR — page dots + prev/next for touch, live transposition & teleprompter */}
       <div
-        className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? 'bg-gradient-to-t from-white to-white/0' : 'bg-gradient-to-t from-black to-[var(--sunken)]/0'}`}
+        className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? "bg-gradient-to-t from-white to-white/0" : "bg-gradient-to-t from-black to-[var(--sunken)]/0"}`}
       >
         {!isBlock && !showScannedSheet && currentSong?.tonalidad && (
           <div className="flex items-center justify-center gap-2 text-xs">
@@ -1018,7 +1172,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               >
                 -
               </button>
-              <span className="text-[var(--acc)] font-bold font-sans">🎯 {transposedKey}</span>
+              <span className="text-[var(--acc)] font-bold font-sans">
+                🎯 {transposedKey}
+              </span>
               <button
                 type="button"
                 onClick={() => setLiveTransposeOffset((v) => v + 1)}
@@ -1034,12 +1190,17 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   className="ml-1 text-[10px] px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 cursor-pointer"
                   title="Restablecer tono"
                 >
-                  {liveTransposeOffset > 0 ? `+${liveTransposeOffset}` : liveTransposeOffset} ⟲
+                  {liveTransposeOffset > 0
+                    ? `+${liveTransposeOffset}`
+                    : liveTransposeOffset}{" "}
+                  ⟲
                 </button>
               )}
             </div>
             {effectiveTranspose !== 0 && (
-              <span className="text-[var(--ink-2)] font-sans text-[11px] hidden sm:inline">(original {currentSong?.tonalidad})</span>
+              <span className="text-[var(--ink-2)] font-sans text-[11px] hidden sm:inline">
+                (original {currentSong?.tonalidad})
+              </span>
             )}
           </div>
         )}
@@ -1050,8 +1211,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             disabled={isFirst}
             className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
               glareMode
-                ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
-                : 'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink)]'
+                ? "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"
+                : "bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink)]"
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -1066,14 +1227,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 key={it.id}
                 onClick={() => setCurrentIndex(i)}
-                className={`shrink-0 transition-all ${it.tipoItem === 'bloque' ? 'rounded-sm' : 'rounded-full'} ${
+                className={`shrink-0 transition-all ${it.tipoItem === "bloque" ? "rounded-sm" : "rounded-full"} ${
                   i === currentIndex
-                    ? 'w-5 h-1.5 bg-[var(--acc)]/60'
-                    : it.tipoItem === 'bloque'
-                      ? 'w-1.5 h-1.5 bg-[var(--tentative)]/60 hover:bg-[var(--tentative)]'
+                    ? "w-5 h-1.5 bg-[var(--acc)]/60"
+                    : it.tipoItem === "bloque"
+                      ? "w-1.5 h-1.5 bg-[var(--tentative)]/60 hover:bg-[var(--tentative)]"
                       : glareMode
-                        ? 'w-1.5 h-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]'
-                        : 'w-1.5 h-1.5 bg-[var(--ink)]/25 hover:bg-[var(--ink)]/50'
+                        ? "w-1.5 h-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]"
+                        : "w-1.5 h-1.5 bg-[var(--ink)]/25 hover:bg-[var(--ink)]/50"
                 }`}
                 title={itemLabel(it, songs)}
               />
@@ -1085,8 +1246,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             disabled={isLast}
             className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 ${
               glareMode
-                ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
-                : 'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink)]'
+                ? "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"
+                : "bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink)]"
             }`}
           >
             <span className="hidden sm:inline text-xs">Siguiente</span>
@@ -1095,11 +1256,24 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         </div>
 
         {nextItem && (
-          <p className={`text-center text-[11px] font-sans truncate ${glareMode ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
-            Siguiente: <span className={glareMode ? 'text-[var(--ink)]' : 'text-[var(--ink-2)]'}>{itemLabel(nextItem, songs)}</span>
-            {nextItem.tipoItem === 'cancion' && songs.find((s) => s.id === nextItem.songId)?.tonalidad && (
-              <span> · {songs.find((s) => s.id === nextItem.songId)?.tonalidad}</span>
-            )}
+          <p
+            className={`text-center text-[11px] font-sans truncate ${glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
+          >
+            Siguiente:{" "}
+            <span
+              className={
+                glareMode ? "text-[var(--ink)]" : "text-[var(--ink-2)]"
+              }
+            >
+              {itemLabel(nextItem, songs)}
+            </span>
+            {nextItem.tipoItem === "cancion" &&
+              songs.find((s) => s.id === nextItem.songId)?.tonalidad && (
+                <span>
+                  {" "}
+                  · {songs.find((s) => s.id === nextItem.songId)?.tonalidad}
+                </span>
+              )}
           </p>
         )}
       </div>
@@ -1142,9 +1316,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   <ListMusic className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[var(--ink)] tracking-wider">Repertorio & Pistas Iris</h3>
+                  <h3 className="text-sm font-bold text-[var(--ink)] tracking-wider">
+                    Repertorio & Pistas Iris
+                  </h3>
                   <p className="text-[11px] text-[var(--ink-2)]">
-                    {songsWithIrisCount} de {songsInSetlistCount} temas con pistas Iris listas
+                    {songsWithIrisCount} de {songsInSetlistCount} temas con
+                    pistas Iris listas
                   </p>
                 </div>
               </div>
@@ -1159,11 +1336,15 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             {/* Drawer List */}
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
               {allItems.map((item, idx) => {
-                const isItemBlock = item.tipoItem === 'bloque';
-                const song = !isItemBlock ? songs.find((s) => s.id === item.songId) : undefined;
+                const isItemBlock = item.tipoItem === "bloque";
+                const song = !isItemBlock
+                  ? songs.find((s) => s.id === item.songId)
+                  : undefined;
                 const isCurrent = idx === currentIndex;
                 const songIrisIdea = song ? getSongIrisStemIdea(song) : null;
-                const stemCount = songIrisIdea ? getIdeaTracks(songIrisIdea).length : 0;
+                const stemCount = songIrisIdea
+                  ? getIdeaTracks(songIrisIdea).length
+                  : 0;
 
                 if (isItemBlock) {
                   const meta = getBlockMeta(item);
@@ -1176,18 +1357,24 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       }}
                       className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
                         isCurrent
-                          ? 'bg-[var(--acc)]/90/40/50 text-[var(--acc)]/40'
-                          : 'bg-[var(--bg)]/60800 hover:border-[var(--hair)]700 text-[var(--ink-2)]'
+                          ? "bg-[var(--acc)]/90 text-[var(--acc)]/40"
+                          : "bg-[var(--bg)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)]"
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <span className="text-lg">{meta.icon}</span>
                         <div>
-                          <div className="text-xs font-bold text-[var(--ink)]">{item.tituloCustom || meta.label}</div>
-                          <div className="text-[10px] text-[var(--ink-2)] font-sans">Bloque de escenario</div>
+                          <div className="text-xs font-bold text-[var(--ink)]">
+                            {item.tituloCustom || meta.label}
+                          </div>
+                          <div className="text-[10px] text-[var(--ink-2)] font-sans">
+                            Bloque de escenario
+                          </div>
                         </div>
                       </div>
-                      <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-sans">Ir al bloque</span>
+                      <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-sans">
+                        Ir al bloque
+                      </span>
                     </div>
                   );
                 }
@@ -1198,26 +1385,38 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   <div
                     key={item.id}
                     className={`p-3 rounded-[var(--r-m)] transition flex flex-col gap-2.5 ${
-                      isCurrent ? 'bg-[var(--acc)]/10 /50' : 'bg-[var(--surface)]800/80 hover:border-[var(--hair)]700'
+                      isCurrent
+                        ? "bg-[var(--acc)]/10 "
+                        : "bg-[var(--surface)]/80 hover:bg-[var(--sunken)]"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         <span
                           className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-sans font-bold shrink-0 ${
-                            isCurrent ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                            isCurrent
+                              ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                              : "bg-[var(--sunken)] text-[var(--ink-2)]"
                           }`}
                         >
                           {idx + 1}
                         </span>
                         <div className="min-w-0">
-                          <h4 className={`text-xs font-bold truncate ${isCurrent ? 'text-[var(--acc)]' : 'text-[var(--ink)]'}`}>
+                          <h4
+                            className={`text-xs font-bold truncate ${isCurrent ? "text-[var(--acc)]" : "text-[var(--ink)]"}`}
+                          >
                             {song.titulo}
                           </h4>
                           <div className="flex items-center gap-2 text-[10px] text-[var(--ink-2)] font-sans">
-                            {song.tonalidad && <span className="text-[var(--acc)]/70">Tono: {song.tonalidad}</span>}
+                            {song.tonalidad && (
+                              <span className="text-[var(--acc)]/70">
+                                Tono: {song.tonalidad}
+                              </span>
+                            )}
                             {song.bpm ? <span>· {song.bpm} BPM</span> : null}
-                            {song.duracion ? <span>· {song.duracion}</span> : null}
+                            {song.duracion ? (
+                              <span>· {song.duracion}</span>
+                            ) : null}
                           </div>
                         </div>
                       </div>
@@ -1225,7 +1424,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       {songIrisIdea ? (
                         <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
                           <Headphones className="w-2.5 h-2.5" />
-                          {stemCount > 0 ? `${stemCount} pistas` : 'Iris'}
+                          {stemCount > 0 ? `${stemCount} pistas` : "Iris"}
                         </span>
                       ) : (
                         <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] text-[var(--ink-2)] bg-[var(--sunken)]/50">
@@ -1303,12 +1502,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 // Vista"teleprompter" para los bloques del repertorio (presentación al público, cambio de
 // instrumento, descanso...) que antes desaparecían sin más del modo concierto. Texto grande y
 // centrado, como un guion, para leerlo en voz alta o seguir la indicación sin acercarse a mirar.
-const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string; label: string }; glareMode: boolean }> = ({
-  item,
-  meta,
-  glareMode,
-}) => {
-  const script = item.notas || item.notaTema || '';
+const TeleprompterBlockPage: React.FC<{
+  item: SetlistItem;
+  meta: { icon: string; label: string };
+  glareMode: boolean;
+}> = ({ item, meta, glareMode }) => {
+  const script = item.notas || item.notaTema || "";
   const duration = item.duracionEstimadaMinutos
     ? `${item.duracionEstimadaMinutos} min`
     : item.duracionEstimadaSegundos
@@ -1318,23 +1517,31 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
   return (
     <div
       className={`w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center overflow-y-auto ${
-        glareMode ? 'bg-[var(--surface)]' : 'bg-gradient-to-b from-indigo-950/40 via-[var(--surface)] to-[var(--sunken)]'
+        glareMode
+          ? "bg-[var(--surface)]"
+          : "bg-gradient-to-b from-indigo-950/40 via-[var(--surface)] to-[var(--sunken)]"
       }`}
     >
       <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>
-      <h2 className={`text-2xl sm:text-4xl font-bold mb-6 tracking-wide ${glareMode ? 'text-[var(--ink)]' : 'text-[var(--acc)]/70'}`}>
+      <h2
+        className={`text-2xl sm:text-4xl font-bold mb-6 tracking-wide ${glareMode ? "text-[var(--ink)]" : "text-[var(--acc)]/70"}`}
+      >
         {item.tituloCustom || meta.label}
       </h2>
       {script ? (
         <p
-          className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ? 'text-[var(--ink)] font-bold' : 'text-[var(--ink)]'}`}
+          className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ? "text-[var(--ink)] font-bold" : "text-[var(--ink)]"}`}
         >
           {script}
         </p>
       ) : (
         <p className="text-[var(--ink-2)] text-lg">{meta.label}</p>
       )}
-      {duration && <p className="mt-8 text-[var(--ink-2)] font-sans text-sm">⏱ {duration}</p>}
+      {duration && (
+        <p className="mt-8 text-[var(--ink-2)] font-sans text-sm">
+          ⏱ {duration}
+        </p>
+      )}
     </div>
   );
 };
@@ -1342,9 +1549,15 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
 // Página tipo"atril digital": el documento original escaneado a pantalla completa, tal cual
 // lo vería un músico de orquesta pasando hojas en un iPad.
 const ScannedSheetPage: React.FC<{ song: Song }> = ({ song }) => {
-  const isImage = isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl);
+  const isImage = isImageDocument(
+    song.estructuraDocumentoNombre,
+    song.estructuraDocumentoUrl,
+  );
 
-  if (!song.estructuraDocumentoUrl || song.estructuraDocumentoUrl.trim() === '') {
+  if (
+    !song.estructuraDocumentoUrl ||
+    song.estructuraDocumentoUrl.trim() === ""
+  ) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-[var(--surface)] p-4 text-[var(--ink-2)] text-sm">
         No hay documento adjunto disponible
@@ -1395,7 +1608,7 @@ const ChordSheetPage: React.FC<{
   showDetails: boolean;
   onToggleDetails: () => void;
   glareMode: boolean;
-  teleprompterMode: 'sections' | 'scroll';
+  teleprompterMode: "sections" | "scroll";
   onToggleTeleprompterMode: () => void;
   isTeleprompterPlaying: boolean;
   onToggleTeleprompterPlay: () => void;
@@ -1433,15 +1646,19 @@ const ChordSheetPage: React.FC<{
   teleprompterScrollRef,
 }) => {
   const hasMultipleSections = sections.length >= 2;
-  const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
-  const chordTextClass = glareMode ? 'text-[var(--ink)] font-bold' : 'text-[var(--acc)]';
-  const borderClass = glareMode ? 'border-[var(--hair)]/10' : 'border-[var(--hair)]';
+  const currentSection = hasMultipleSections
+    ? sections[currentSectionIndex]
+    : null;
+  const chordTextClass = glareMode
+    ? "text-[var(--ink)] font-bold"
+    : "text-[var(--acc)]";
+  const borderClass = "";
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* Ficha compacta con transposición en tiempo real y selector de modo */}
       <div
-        className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-sans ${borderClass} ${glareMode ? 'bg-[var(--sunken)]' : 'bg-[var(--sunken)]'}`}
+        className={`shrink-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-2 text-xs sm:text-sm font-sans ${borderClass} bg-[var(--sunken)]`}
       >
         <div className="flex items-center gap-2 flex-wrap">
           {/* Selector de tono con transposición en tiempo real */}
@@ -1454,8 +1671,14 @@ const ChordSheetPage: React.FC<{
             >
               -
             </button>
-            <span className={glareMode ? 'text-[var(--ok)] font-bold' : 'text-[var(--ok)] font-bold'}>
-              🎯 {transposedKey || 'Sin tono'}
+            <span
+              className={
+                glareMode
+                  ? "text-[var(--ok)] font-bold"
+                  : "text-[var(--ok)] font-bold"
+              }
+            >
+              🎯 {transposedKey || "Sin tono"}
             </span>
             <button
               type="button"
@@ -1472,28 +1695,57 @@ const ChordSheetPage: React.FC<{
                 className="ml-1 text-[10px] px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition cursor-pointer"
                 title="Restablecer al tono del repertorio"
               >
-                {liveTransposeOffset > 0 ? `+${liveTransposeOffset}` : liveTransposeOffset} ⟲
+                {liveTransposeOffset > 0
+                  ? `+${liveTransposeOffset}`
+                  : liveTransposeOffset}{" "}
+                ⟲
               </button>
             )}
           </div>
 
           {originalKey && (transpose !== 0 || liveTransposeOffset !== 0) && (
-            <span className="text-[11px] text-[var(--ink-2)] font-normal">(orig: {originalKey})</span>
+            <span className="text-[11px] text-[var(--ink-2)] font-normal">
+              (orig: {originalKey})
+            </span>
           )}
-          {bpm && <span className={glareMode ? 'text-[var(--tentative)]' : 'text-[var(--tentative)]/50'}>{bpm} BPM</span>}
-          {duracion && <span className={glareMode ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}>{duracion}</span>}
-          {afinacion && <span className={glareMode ? 'text-[var(--acc)]' : 'text-[var(--tentative)]/80'}>{afinacion}</span>}
+          {bpm && (
+            <span
+              className={
+                glareMode
+                  ? "text-[var(--tentative)]"
+                  : "text-[var(--tentative)]/50"
+              }
+            >
+              {bpm} BPM
+            </span>
+          )}
+          {duracion && (
+            <span
+              className={glareMode ? "text-[var(--ok)]" : "text-[var(--ink-2)]"}
+            >
+              {duracion}
+            </span>
+          )}
+          {afinacion && (
+            <span
+              className={
+                glareMode ? "text-[var(--acc)]" : "text-[var(--tentative)]/80"
+              }
+            >
+              {afinacion}
+            </span>
+          )}
           {(structure || progression) && (
             <button
               onClick={onToggleDetails}
               className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
                 showDetails
                   ? glareMode
-                    ? 'bg-[var(--sunken)] text-[var(--ink)]'
-                    : 'bg-[var(--ink)]/15 text-[var(--ink)]'
+                    ? "bg-[var(--sunken)] text-[var(--ink)]"
+                    : "bg-[var(--ink)]/15 text-[var(--ink)]"
                   : glareMode
-                    ? 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    ? "text-[var(--ink-2)] hover:text-[var(--ink)]"
+                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
               title="Estructura y progresión de acordes"
             >
@@ -1508,30 +1760,62 @@ const ChordSheetPage: React.FC<{
             type="button"
             onClick={onToggleTeleprompterMode}
             className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
-              teleprompterMode === 'scroll'
-                ? 'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70'
-                : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
+              teleprompterMode === "scroll"
+                ? "bg-[var(--acc)]/20 /50 text-[var(--acc)]/70"
+                : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
-            title={teleprompterMode === 'scroll' ? 'Cambiar a modo pedal por secciones' : 'Cambiar a modo teleprompter scroll continuo'}
+            title={
+              teleprompterMode === "scroll"
+                ? "Cambiar a modo pedal por secciones"
+                : "Cambiar a modo teleprompter scroll continuo"
+            }
           >
-            <span>{teleprompterMode === 'scroll' ? '📜 Teleprompter Auto' : '📑 Modo Secciones'}</span>
+            <span>
+              {teleprompterMode === "scroll"
+                ? "📜 Teleprompter Auto"
+                : "📑 Modo Secciones"}
+            </span>
           </button>
         </div>
       </div>
 
       {showDetails && (structure || progression) && (
         <div
-          className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm ${borderClass} ${glareMode ? 'bg-[var(--sunken)]' : 'bg-[var(--sunken)]'}`}
+          className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm ${borderClass} ${glareMode ? "bg-[var(--sunken)]" : "bg-[var(--sunken)]"}`}
         >
           {structure && (
-            <p className={glareMode ? 'text-[var(--tentative)]' : 'text-[var(--tentative)]/40'}>
-              <span className={glareMode ? 'text-[var(--tentative)] font-bold' : 'text-[var(--tentative)] font-bold'}>🎵 Estructura: </span>
+            <p
+              className={
+                glareMode
+                  ? "text-[var(--tentative)]"
+                  : "text-[var(--tentative)]/40"
+              }
+            >
+              <span
+                className={
+                  glareMode
+                    ? "text-[var(--tentative)] font-bold"
+                    : "text-[var(--tentative)] font-bold"
+                }
+              >
+                🎵 Estructura:{" "}
+              </span>
               {structure}
             </p>
           )}
           {progression && (
-            <p className={glareMode ? 'text-[var(--ok)]' : 'text-[var(--ok)]/60'}>
-              <span className={glareMode ? 'text-[var(--ok)] font-bold' : 'text-[var(--ok)] font-bold'}>🎸 Progresión: </span>
+            <p
+              className={glareMode ? "text-[var(--ok)]" : "text-[var(--ok)]/60"}
+            >
+              <span
+                className={
+                  glareMode
+                    ? "text-[var(--ok)] font-bold"
+                    : "text-[var(--ok)] font-bold"
+                }
+              >
+                🎸 Progresión:{" "}
+              </span>
               {progression}
             </p>
           )}
@@ -1539,11 +1823,11 @@ const ChordSheetPage: React.FC<{
       )}
 
       {/* MODO TELEPROMPTER AUTO-SCROLL */}
-      {teleprompterMode === 'scroll' ? (
+      {teleprompterMode === "scroll" ? (
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Barra de control del teleprompter */}
           <div
-            className={`shrink-0 flex items-center justify-between gap-3 px-4 py-2 ${borderClass} ${glareMode ? 'bg-[var(--sunken)]' : 'bg-[var(--surface)]/90'}`}
+            className={`shrink-0 flex items-center justify-between gap-3 px-4 py-2 ${borderClass} ${glareMode ? "bg-[var(--sunken)]" : "bg-[var(--surface)]/90"}`}
           >
             <div className="flex items-center gap-2">
               <button
@@ -1551,8 +1835,8 @@ const ChordSheetPage: React.FC<{
                 onClick={onToggleTeleprompterPlay}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition cursor-pointer ${
                   isTeleprompterPlaying
-                    ? 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]'
-                    : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)]'
+                    ? "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]"
+                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)]"
                 }`}
                 title="Pausar o reanudar teleprompter (o pulsar Espacio)"
               >
@@ -1582,7 +1866,9 @@ const ChordSheetPage: React.FC<{
 
             {/* Velocidades */}
             <div className="flex items-center gap-1 text-[11px] font-sans">
-              <span className="text-[var(--ink-2)] hidden sm:inline mr-1">Vel:</span>
+              <span className="text-[var(--ink-2)] hidden sm:inline mr-1">
+                Vel:
+              </span>
               {[0.5, 1, 1.5, 2].map((speed) => (
                 <button
                   key={speed}
@@ -1590,8 +1876,8 @@ const ChordSheetPage: React.FC<{
                   onClick={() => onChangeTeleprompterSpeed(speed)}
                   className={`px-2 py-1 rounded text-xs transition cursor-pointer ${
                     teleprompterSpeed === speed
-                      ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
-                      : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold"
+                      : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
                   {speed}x
@@ -1601,7 +1887,10 @@ const ChordSheetPage: React.FC<{
           </div>
 
           {/* Contenedor de lectura continua */}
-          <div ref={teleprompterScrollRef} className="flex-1 overflow-y-auto p-4 sm:p-8 scroll-smooth">
+          <div
+            ref={teleprompterScrollRef}
+            className="flex-1 overflow-y-auto p-4 sm:p-8 scroll-smooth"
+          >
             <pre
               className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words pb-32 ${fontSizeClass} ${chordTextClass}`}
             >
@@ -1613,12 +1902,18 @@ const ChordSheetPage: React.FC<{
         // NAVEGACIÓN POR SECCIONES (PEDAL / TAP)
         <div className="flex-1 flex flex-col overflow-hidden">
           <div
-            className={`shrink-0 text-center py-1.5 text-[11px] font-sans ${borderClass} ${glareMode ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}
+            className={`shrink-0 text-center py-1.5 text-[11px] font-sans ${borderClass} ${glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
           >
             Parte {currentSectionIndex + 1}/{sections.length}
             {currentSection?.title && (
-              <span className={glareMode ? 'text-[var(--acc)] font-bold' : 'text-[var(--tentative)]/80 font-bold'}>
-                {' '}
+              <span
+                className={
+                  glareMode
+                    ? "text-[var(--acc)] font-bold"
+                    : "text-[var(--tentative)]/80 font-bold"
+                }
+              >
+                {" "}
                 · {currentSection.title}
               </span>
             )}
@@ -1630,14 +1925,16 @@ const ChordSheetPage: React.FC<{
               {currentSection?.body}
             </pre>
           </div>
-          <div className={`shrink-0 flex items-center gap-2 p-3 ${borderClass}`}>
+          <div
+            className={`shrink-0 flex items-center gap-2 p-3 ${borderClass}`}
+          >
             <button
               onClick={onRetreatSection}
               disabled={currentSectionIndex === 0}
               className={`px-4 py-2.5 disabled:opacity-30 rounded-[var(--r-s)] text-sm font-sans font-bold transition ${
                 glareMode
-                  ? 'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'
-                  : 'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]'
+                  ? "bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"
+                  : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)]"
               }`}
             >
               ◀ Parte anterior
@@ -1653,7 +1950,9 @@ const ChordSheetPage: React.FC<{
       ) : (
         // Sin encabezados de sección detectados: se muestra todo el cifrado de una vez, con scroll manual
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <pre className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}>
+          <pre
+            className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}
+          >
             {chords}
           </pre>
         </div>

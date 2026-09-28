@@ -2015,8 +2015,8 @@ export const LiveConcertToAlbumModal: React.FC<
                           isSelected
                             ? "bg-[var(--acc)]/15 ring-1 ring-amber-0/50"
                             : track.type === "musica"
-                              ? "bg-[var(--acc-soft)] /20 hover:/40"
-                              : "bg-[var(--tentative)]/5/20/20 hover:border-[var(--acc)]/40"
+                              ? "bg-[var(--acc-soft)]  "
+                              : "bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/15"
                         }`}
                       >
                         {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
@@ -3193,8 +3193,8 @@ export const LiveConcertToAlbumModal: React.FC<
                           key={`quick-rename-${tr.index}`}
                           className={`p-2.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
                             tr.type === "musica"
-                              ? "bg-[var(--acc-soft)] /20 hover:/40"
-                              : "bg-[var(--tentative)]/5/20/20 hover:border-[var(--acc)]/40"
+                              ? "bg-[var(--acc-soft)]  "
+                              : "bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/15"
                           }`}
                         >
                           {/* Index + Type Toggle Button */}

@@ -452,7 +452,7 @@ export const SpotifyDiscographyModal: React.FC<
                 href={artistProfile.spotifyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="px-3.5 py-1.5 rounded-[var(--r-m)] hover:border-[var(--hair)] text-xs font-sans font-bold flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ok)] transition-all"
+                className="px-3.5 py-1.5 rounded-[var(--r-m)] hover:bg-[var(--sunken)] text-xs font-sans font-bold flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ok)] transition-all"
               >
                 <span>Ver en Spotify</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -568,8 +568,8 @@ export const SpotifyDiscographyModal: React.FC<
                       key={album.id}
                       className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
                         isSelected
-                          ? "border-[var(--hair)] bg-[var(--surface)]"
-                          : "border-[var(--hair)]/50 bg-[var(--surface)]/90"
+                          ? "bg-[var(--surface)] ring-1 ring-[var(--acc)]/30"
+                          : "bg-[var(--surface)]/90"
                       }`}
                     >
                       {/* Album Header Bar */}

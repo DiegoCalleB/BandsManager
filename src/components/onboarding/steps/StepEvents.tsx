@@ -1,13 +1,13 @@
-import React from 'react';
-import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from 'lucide-react';
-import { QuickEventItem } from '../types';
+import React from "react";
+import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from "lucide-react";
+import { QuickEventItem } from "../types";
 
 interface StepEventsProps {
   events: QuickEventItem[];
   newEventTitle: string;
   setNewEventTitle: (v: string) => void;
-  newEventType: 'concierto' | 'festival' | 'ensayo' | 'privado';
-  setNewEventType: (v: 'concierto' | 'festival' | 'ensayo' | 'privado') => void;
+  newEventType: "concierto" | "festival" | "ensayo" | "privado";
+  setNewEventType: (v: "concierto" | "festival" | "ensayo" | "privado") => void;
   newEventDate: string;
   setNewEventDate: (v: string) => void;
   newEventTime: string;
@@ -52,9 +52,9 @@ export const StepEvents: React.FC<StepEventsProps> = ({
   setNewEventAttendancePropia,
   newEventAttendanceOtras = 0,
   setNewEventAttendanceOtras,
-  newEventSharedBands = '',
+  newEventSharedBands = "",
   setNewEventSharedBands,
-  newEventPostShowReview = '',
+  newEventPostShowReview = "",
   setNewEventPostShowReview,
   newEventIsMilestone = false,
   setNewEventIsMilestone,
@@ -65,11 +65,14 @@ export const StepEvents: React.FC<StepEventsProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Calendar className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Próximos Conciertos & Ensayos (Agenda)</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Próximos Conciertos & Ensayos (Agenda)
+        </h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
-        Publica tus próximas fechas para que tus fans compren entradas y los promotores vean que tenéis una gira activa.
+        Publica tus próximas fechas para que tus fans compren entradas y los
+        promotores vean que tenéis una gira activa.
       </p>
 
       {/* Events List */}
@@ -78,27 +81,35 @@ export const StepEvents: React.FC<StepEventsProps> = ({
           {events.map((ev) => (
             <div
               key={ev.id}
-              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:border-[var(--hair)] transition-colors"
+              className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--sunken)] transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
-                    ev.tipo === 'ensayo' ? 'bg-[var(--acc)]/10 text-[var(--acc)]' : 'bg-[var(--acc)]/10 text-[var(--acc)]'
+                    ev.tipo === "ensayo"
+                      ? "bg-[var(--acc)]/10 text-[var(--acc)]"
+                      : "bg-[var(--acc)]/10 text-[var(--acc)]"
                   }`}
                 >
                   <span className="text-[9px] font-semibold">
                     {ev.fecha
-                      ? new Date(ev.fecha).toLocaleDateString('es-ES', {
-                          month: 'short',
+                      ? new Date(ev.fecha).toLocaleDateString("es-ES", {
+                          month: "short",
                         })
-                      : 'DÍA'}
+                      : "DÍA"}
                   </span>
-                  <span className="text-sm leading-none">{ev.fecha ? new Date(ev.fecha).getDate() : '--'}</span>
+                  <span className="text-sm leading-none">
+                    {ev.fecha ? new Date(ev.fecha).getDate() : "--"}
+                  </span>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-[var(--ink)]">{ev.titulo}</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">{ev.tipo}</span>
+                    <span className="text-sm font-medium text-[var(--ink)]">
+                      {ev.titulo}
+                    </span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
+                      {ev.tipo}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
                     {ev.ciudad && <span>{ev.ciudad}</span>}
@@ -213,8 +224,10 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               <div>
                 <input
                   type="number"
-                  value={newEventAttendancePropia || ''}
-                  onChange={(e) => setNewEventAttendancePropia?.(Number(e.target.value))}
+                  value={newEventAttendancePropia || ""}
+                  onChange={(e) =>
+                    setNewEventAttendancePropia?.(Number(e.target.value))
+                  }
                   placeholder="Asistentes propios (ej. 250 espect.)"
                   className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
                 />

@@ -1,10 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { Building2, DollarSign, Users, ArrowRight, Zap, TrendingUp } from 'lucide-react';
-import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from '../../../types';
-import { getEnergyInfo } from '../../../utils/energyPacingUtils';
-import { Onda } from '../../ui/Onda';
-import { api } from '../../../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
+import {
+  Building2,
+  DollarSign,
+  Users,
+  ArrowRight,
+  Zap,
+  TrendingUp,
+} from "lucide-react";
+import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from "../../../types";
+import { getEnergyInfo } from "../../../utils/energyPacingUtils";
+import { Onda } from "../../ui/Onda";
+import { api } from "../../../services/api";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -22,19 +39,22 @@ export interface ChartWidgetProps {
   activeBandName?: string;
   colors?: ThemeColors;
   onNavigate?: (view: string, options?: Record<string, unknown>) => void;
-  heightMode?: 'compact' | 'normal' | 'tall';
+  heightMode?: "compact" | "normal" | "tall";
 }
 
 /* 1. GRÁFICO DE ENERGÍA DE REPERTORIO & SETLIST */
 export function RepertorioEnergyChartWidget({
   onNavigate,
-  heightMode = 'normal',
+  heightMode = "normal",
   setlists: providedSetlists,
   songs: providedSongs,
 }: ChartWidgetProps) {
-  const [setlistsList, setSetlistsList] = useState<Setlist[]>(providedSetlists || []);
+  const [setlistsList, setSetlistsList] = useState<Setlist[]>(
+    providedSetlists || [],
+  );
   const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
-  const [selectedRepertorioId, setSelectedRepertorioId] = useState<string>('all');
+  const [selectedRepertorioId, setSelectedRepertorioId] =
+    useState<string>("all");
 
   // Dashboard.tsx ya carga setlists/songs una sola vez y se los pasa a TODOS sus widgets — este
   // efecto solo debe reflejar esas props (aunque de entrada lleguen vacías, mientras el padre
@@ -53,11 +73,14 @@ export function RepertorioEnergyChartWidget({
 
     const loadData = async () => {
       try {
-        const [setlistsRes, songsRes] = await Promise.all([api.getSetlists(), api.getSongs()]);
+        const [setlistsRes, songsRes] = await Promise.all([
+          api.getSetlists(),
+          api.getSongs(),
+        ]);
         setSetlistsList(setlistsRes?.setlists || []);
         setSongsList(songsRes?.songs || []);
       } catch (err) {
-        console.error('[Dashboard] Error fetching setlists/songs:', err);
+        console.error("[Dashboard] Error fetching setlists/songs:", err);
       }
     };
 
@@ -77,52 +100,94 @@ export function RepertorioEnergyChartWidget({
   }> = [];
 
   // Use selected repertorio/setlist or active setlist
-  const activeSetlist = selectedRepertorioId === 'all' ? setlistsList[0] : setlistsList.find((s) => s.id === selectedRepertorioId);
+  const activeSetlist =
+    selectedRepertorioId === "all"
+      ? setlistsList[0]
+      : setlistsList.find((s) => s.id === selectedRepertorioId);
 
-  if (activeSetlist?.items && Array.isArray(activeSetlist.items) && activeSetlist.items.length > 0) {
+  if (
+    activeSetlist?.items &&
+    Array.isArray(activeSetlist.items) &&
+    activeSetlist.items.length > 0
+  ) {
     chartData = activeSetlist.items.map((item, idx: number) => {
       const itemAny = item as unknown as Record<string, unknown>;
       const matchedSong =
-        songsList.find((s) => s.id === itemAny.song_id || s.titulo === itemAny.title || s.id === itemAny.songId) ||
-        (itemAny.song as Song | undefined);
-      const energyVal = (itemAny.energia as number) || matchedSong?.energia || 12;
+        songsList.find(
+          (s) =>
+            s.id === itemAny.song_id ||
+            s.titulo === itemAny.title ||
+            s.id === itemAny.songId,
+        ) || (itemAny.song as Song | undefined);
+      const energyVal =
+        (itemAny.energia as number) || matchedSong?.energia || 12;
       const energyInfo = getEnergyInfo(energyVal);
       return {
         num: idx + 1,
-        title: (itemAny.title as string) || matchedSong?.titulo || `Tema ${idx + 1}`,
+        title:
+          (itemAny.title as string) || matchedSong?.titulo || `Tema ${idx + 1}`,
         energy: energyVal,
         bpm: (itemAny.bpm as number) || matchedSong?.bpm || 120,
-        keyStr: (itemAny.tonalidad as string) || matchedSong?.tonalidad || 'Am',
+        keyStr: (itemAny.tonalidad as string) || matchedSong?.tonalidad || "Am",
         label: energyInfo.label,
         hexColor: energyInfo.hexColor,
-        durationMin: (itemAny.duracion_segundos as number) ? Math.round((itemAny.duracion_segundos as number) / 60) : 4,
+        durationMin: (itemAny.duracion_segundos as number)
+          ? Math.round((itemAny.duracion_segundos as number) / 60)
+          : 4,
       };
     });
   } else if (songsList.length > 0) {
     chartData = songsList.slice(0, 20).map((song, idx: number) => {
       const songAny = song as unknown as Record<string, unknown>;
-      const energyVal = (songAny.energia as number) || ((songAny.bpm as number) >= 140 ? 18 : (songAny.bpm as number) <= 95 ? 6 : 12);
+      const energyVal =
+        (songAny.energia as number) ||
+        ((songAny.bpm as number) >= 140
+          ? 18
+          : (songAny.bpm as number) <= 95
+            ? 6
+            : 12);
       const energyInfo = getEnergyInfo(energyVal);
       return {
         num: idx + 1,
         title: (songAny.titulo as string) || `Canción ${idx + 1}`,
         energy: energyVal,
         bpm: (songAny.bpm as number) || 120,
-        keyStr: (songAny.tonalidad as string) || 'C',
+        keyStr: (songAny.tonalidad as string) || "C",
         label: energyInfo.label,
         hexColor: energyInfo.hexColor,
-        durationMin: Math.round((Number(songAny.duracionSegundos ?? songAny.duracion_segundos) || 240) / 60),
+        durationMin: Math.round(
+          (Number(songAny.duracionSegundos ?? songAny.duracion_segundos) ||
+            240) / 60,
+        ),
       };
     });
   } else {
     // Fallback demo data
     const demoItems = [
-      { title: 'Intro: Despegue', energy: 6, bpm: 90, keyStr: 'Em', dur: 2 },
-      { title: 'Ritmo en las Calles', energy: 12, bpm: 124, keyStr: 'G', dur: 4 },
-      { title: 'Furia Eléctrica', energy: 16, bpm: 132, keyStr: 'A', dur: 4 },
-      { title: 'Balada de Medianoche', energy: 8, bpm: 85, keyStr: 'C', dur: 5 },
-      { title: 'Clímax Festival', energy: 19, bpm: 140, keyStr: 'D', dur: 4 },
-      { title: 'Bis: Himno de la Banda', energy: 17, bpm: 138, keyStr: 'A', dur: 5 },
+      { title: "Intro: Despegue", energy: 6, bpm: 90, keyStr: "Em", dur: 2 },
+      {
+        title: "Ritmo en las Calles",
+        energy: 12,
+        bpm: 124,
+        keyStr: "G",
+        dur: 4,
+      },
+      { title: "Furia Eléctrica", energy: 16, bpm: 132, keyStr: "A", dur: 4 },
+      {
+        title: "Balada de Medianoche",
+        energy: 8,
+        bpm: 85,
+        keyStr: "C",
+        dur: 5,
+      },
+      { title: "Clímax Festival", energy: 19, bpm: 140, keyStr: "D", dur: 4 },
+      {
+        title: "Bis: Himno de la Banda",
+        energy: 17,
+        bpm: 138,
+        keyStr: "A",
+        dur: 5,
+      },
     ];
     chartData = demoItems.map((item, idx) => {
       const energyInfo = getEnergyInfo(item.energy);
@@ -139,17 +204,33 @@ export function RepertorioEnergyChartWidget({
     });
   }
 
-  const avgEnergy = chartData.length > 0 ? (chartData.reduce((acc, curr) => acc + curr.energy, 0) / chartData.length).toFixed(1) : '12.0';
-  const totalDuration = chartData.reduce((acc, curr) => acc + curr.durationMin, 0);
+  const avgEnergy =
+    chartData.length > 0
+      ? (
+          chartData.reduce((acc, curr) => acc + curr.energy, 0) /
+          chartData.length
+        ).toFixed(1)
+      : "12.0";
+  const totalDuration = chartData.reduce(
+    (acc, curr) => acc + curr.durationMin,
+    0,
+  );
 
   // Height container class based on heightMode
-  const minHeightClass = heightMode === 'compact' ? 'h-[220px]' : heightMode === 'tall' ? 'h-[380px]' : 'h-[290px]';
+  const minHeightClass =
+    heightMode === "compact"
+      ? "h-[220px]"
+      : heightMode === "tall"
+        ? "h-[380px]"
+        : "h-[290px]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       {/* Repertorio/Setlist Selector - Above the chart */}
-      <div className="flex flex-col gap-2 pb-3 border-b border-[var(--hair)]">
-        <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wide">Repertorio</label>
+      <div className="flex flex-col gap-2 pb-3">
+        <label className="text-[10px] font-semibold text-[var(--ink-2)] uppercase tracking-wide">
+          Repertorio
+        </label>
         <div className="relative">
           <select
             value={selectedRepertorioId}
@@ -160,7 +241,7 @@ export function RepertorioEnergyChartWidget({
             {setlistsList.length > 0 ? (
               setlistsList.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.nombre || 'Setlist sin nombre'}
+                  {s.nombre || "Setlist sin nombre"}
                 </option>
               ))
             ) : (
@@ -177,9 +258,13 @@ export function RepertorioEnergyChartWidget({
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">Energía del repertorio</h3>
+            <h3 className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+              Energía del repertorio
+            </h3>
             <p className="text-[11px] text-[var(--ink-2)]">
-              {activeSetlist ? activeSetlist.nombre || 'Setlist activo' : 'Perfil de ritmo del bolo'}
+              {activeSetlist
+                ? activeSetlist.nombre || "Setlist activo"
+                : "Perfil de ritmo del bolo"}
             </p>
           </div>
         </div>
@@ -188,7 +273,7 @@ export function RepertorioEnergyChartWidget({
           {onNavigate && (
             <button
               type="button"
-              onClick={() => onNavigate('repertorio')}
+              onClick={() => onNavigate("repertorio")}
               className="text-xs text-[var(--acc-ink)] hover:opacity-80 font-semibold flex items-center gap-1 cursor-pointer shrink-0"
             >
               <span>Setlists</span>
@@ -202,15 +287,25 @@ export function RepertorioEnergyChartWidget({
       <div className="grid grid-cols-3 gap-2 text-center text-xs">
         <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
           <span className="text-[10px] text-[var(--ink-2)] block">Temas</span>
-          <span className="font-semibold text-[var(--acc-ink)] text-sm tabular-nums">{chartData.length}</span>
+          <span className="font-semibold text-[var(--acc-ink)] text-sm tabular-nums">
+            {chartData.length}
+          </span>
         </div>
         <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">Energía media</span>
-          <span className="font-semibold text-[var(--ink)] text-sm tabular-nums">{avgEnergy} / 20</span>
+          <span className="text-[10px] text-[var(--ink-2)] block">
+            Energía media
+          </span>
+          <span className="font-semibold text-[var(--ink)] text-sm tabular-nums">
+            {avgEnergy} / 20
+          </span>
         </div>
         <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">Duración</span>
-          <span className="font-semibold text-[var(--ok)] text-sm tabular-nums">~{totalDuration} min</span>
+          <span className="text-[10px] text-[var(--ink-2)] block">
+            Duración
+          </span>
+          <span className="font-semibold text-[var(--ok)] text-sm tabular-nums">
+            ~{totalDuration} min
+          </span>
         </div>
       </div>
 
@@ -220,11 +315,18 @@ export function RepertorioEnergyChartWidget({
  de un vistazo la misma forma que ya conoce de Repertorio. */}
       <div className={`w-full ${minHeightClass} pt-2`}>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 14, right: 10, left: 10, bottom: 0 }}>
+          <AreaChart
+            data={chartData}
+            margin={{ top: 14, right: 10, left: 10, bottom: 0 }}
+          >
             <defs>
               <linearGradient id="dashEnergyStroke" x1="0" y1="0" x2="1" y2="0">
                 {chartData.map((d, i) => (
-                  <stop key={d.num} offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`} stopColor={d.hexColor} />
+                  <stop
+                    key={d.num}
+                    offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
+                    stopColor={d.hexColor}
+                  />
                 ))}
               </linearGradient>
               <linearGradient id="dashEnergyFill" x1="0" y1="0" x2="1" y2="0">
@@ -242,14 +344,16 @@ export function RepertorioEnergyChartWidget({
             <XAxis dataKey="num" hide />
             <Tooltip
               contentStyle={{
-                background: 'var(--surface)',
-                borderRadius: 'var(--r-m)',
+                background: "var(--surface)",
+                borderRadius: "var(--r-m)",
                 fontSize: 11,
               }}
-              labelFormatter={(num) => chartData.find((d) => d.num === num)?.title || `Tema ${num}`}
+              labelFormatter={(num) =>
+                chartData.find((d) => d.num === num)?.title || `Tema ${num}`
+              }
               formatter={(val: number, _name, item) => {
                 const payload = (item?.payload as Record<string, number>) || {};
-                return [`${val}/20 · ${payload.bpm ?? ''} BPM`, 'Energía'];
+                return [`${val}/20 · ${payload.bpm ?? ""} BPM`, "Energía"];
               }}
             />
             <Area
@@ -260,10 +364,21 @@ export function RepertorioEnergyChartWidget({
               fill="url(#dashEnergyFill)"
               fillOpacity={1}
               isAnimationActive={true}
-              dot={(dotProps: { cx?: number; cy?: number; payload?: Record<string, unknown> }) => {
+              dot={(dotProps: {
+                cx?: number;
+                cy?: number;
+                payload?: Record<string, unknown>;
+              }) => {
                 const { cx, cy, payload } = dotProps;
-                if (cx == null || cy == null) return <React.Fragment key={`d-${(payload as Record<string, unknown>)?.num}`} />;
-                const hexColor = (payload as Record<string, unknown>)?.hexColor || 'var(--acc)';
+                if (cx == null || cy == null)
+                  return (
+                    <React.Fragment
+                      key={`d-${(payload as Record<string, unknown>)?.num}`}
+                    />
+                  );
+                const hexColor =
+                  (payload as Record<string, unknown>)?.hexColor ||
+                  "var(--acc)";
                 return (
                   <circle
                     key={`d-${(payload as Record<string, unknown>)?.num}`}
@@ -276,7 +391,7 @@ export function RepertorioEnergyChartWidget({
                   />
                 );
               }}
-              activeDot={{ r: 6, strokeWidth: 2, stroke: 'var(--surface)' }}
+              activeDot={{ r: 6, strokeWidth: 2, stroke: "var(--surface)" }}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -286,27 +401,44 @@ export function RepertorioEnergyChartWidget({
 }
 
 /* 2. GRÁFICO DE EMBUDO Y CONVERSIÓN DE BOOKING */
-export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
+export function BookingFunnelChartWidget({
+  leads = [],
+  onNavigate,
+  heightMode = "normal",
+  isStitchLight = false,
+}: ChartWidgetProps) {
   const counts = {
-    nuevo: leads.filter((l) => l.estado === 'nuevo').length,
-    contactado: leads.filter((l) => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length,
-    aprobacion: leads.filter((l) => l.estado === 'pendiente_aprobacion').length,
-    negociando: leads.filter((l) => l.estado === 'respondido' || l.estado === 'interesado' || l.estado === 'negociando').length,
-    confirmado: leads.filter((l) => l.estado === 'confirmado').length,
+    nuevo: leads.filter((l) => l.estado === "nuevo").length,
+    contactado: leads.filter(
+      (l) => l.estado === "contactado" || l.estado === "esperando_respuesta",
+    ).length,
+    aprobacion: leads.filter((l) => l.estado === "pendiente_aprobacion").length,
+    negociando: leads.filter(
+      (l) =>
+        l.estado === "respondido" ||
+        l.estado === "interesado" ||
+        l.estado === "negociando",
+    ).length,
+    confirmado: leads.filter((l) => l.estado === "confirmado").length,
   };
 
   const funnelData = [
-    { name: 'Nuevos', count: counts.nuevo, color: 'var(--hair)' },
-    { name: 'Contactados', count: counts.contactado, color: 'var(--ink-3)' },
-    { name: 'Por Aprobar', count: counts.aprobacion, color: 'var(--ink-2)' },
-    { name: 'Negociando', count: counts.negociando, color: 'var(--acc)' },
-    { name: 'Confirmados', count: counts.confirmado, color: 'var(--ok)' },
+    { name: "Nuevos", count: counts.nuevo, color: "var(--hair)" },
+    { name: "Contactados", count: counts.contactado, color: "var(--ink-3)" },
+    { name: "Por Aprobar", count: counts.aprobacion, color: "var(--ink-2)" },
+    { name: "Negociando", count: counts.negociando, color: "var(--acc)" },
+    { name: "Confirmados", count: counts.confirmado, color: "var(--ok)" },
   ];
 
   const total = leads.length || 1;
   const conversionRate = ((counts.confirmado / total) * 100).toFixed(1);
 
-  const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
+  const minHeightClass =
+    heightMode === "compact"
+      ? "h-[200px]"
+      : heightMode === "tall"
+        ? "h-[360px]"
+        : "h-[270px]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
@@ -316,15 +448,19 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
             <Building2 className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display text-[var(--ink)]">Embudo de Contrataciones</h3>
-            <p className="text-[11px] font-sans text-[var(--ink-2)]">Conversión de Salas & Festivales</p>
+            <h3 className="text-sm font-bold font-display text-[var(--ink)]">
+              Embudo de Contrataciones
+            </h3>
+            <p className="text-[11px] font-sans text-[var(--ink-2)]">
+              Conversión de Salas & Festivales
+            </p>
           </div>
         </div>
 
         {onNavigate && (
           <button
             type="button"
-            onClick={() => onNavigate('booking')}
+            onClick={() => onNavigate("booking")}
             className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver CRM</span>
@@ -334,22 +470,31 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
       </div>
 
       <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
-        <span className="text-[var(--ink-2)]">Tasa de Conversión a Conciertos:</span>
+        <span className="text-[var(--ink-2)]">
+          Tasa de Conversión a Conciertos:
+        </span>
         <span className="font-bold text-[var(--ok)] flex items-center gap-1">
-          <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% ({counts.confirmado} cierres)
+          <TrendingUp className="w-3.5 h-3.5" /> {conversionRate}% (
+          {counts.confirmado} cierres)
         </span>
       </div>
 
-      <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>
+      <div
+        className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}
+      >
         <Onda
           data={funnelData.map((d) => ({
             label: d.name,
             value: d.count,
             color: d.color,
           }))}
-          height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
-          barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
-          gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+          height={
+            heightMode === "compact" ? 140 : heightMode === "tall" ? 300 : 200
+          }
+          barWidth={
+            heightMode === "compact" ? 12 : heightMode === "tall" ? 18 : 14
+          }
+          gap={heightMode === "compact" ? 6 : heightMode === "tall" ? 10 : 8}
           showLabels={true}
           animated={true}
           tooltipFormatter={(val) => {
@@ -364,22 +509,30 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
 }
 
 /* 3. GRÁFICO DE FINANZAS & CACHÉ POR CONCIERTO */
-export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function FinancesChartWidget({
+  onNavigate,
+  heightMode = "normal",
+}: ChartWidgetProps) {
   // Aggregate revenue and average cache
   const defaultMonths = [
-    { month: 'Ene', ingresos: 1200, gastos: 450, cacheMedio: 1200 },
-    { month: 'Feb', ingresos: 1800, gastos: 600, cacheMedio: 1500 },
-    { month: 'Mar', ingresos: 2400, gastos: 800, cacheMedio: 1800 },
-    { month: 'Abr', ingresos: 3100, gastos: 950, cacheMedio: 2000 },
-    { month: 'May', ingresos: 4200, gastos: 1200, cacheMedio: 2200 },
-    { month: 'Jun', ingresos: 5800, gastos: 1600, cacheMedio: 2500 },
+    { month: "Ene", ingresos: 1200, gastos: 450, cacheMedio: 1200 },
+    { month: "Feb", ingresos: 1800, gastos: 600, cacheMedio: 1500 },
+    { month: "Mar", ingresos: 2400, gastos: 800, cacheMedio: 1800 },
+    { month: "Abr", ingresos: 3100, gastos: 950, cacheMedio: 2000 },
+    { month: "May", ingresos: 4200, gastos: 1200, cacheMedio: 2200 },
+    { month: "Jun", ingresos: 5800, gastos: 1600, cacheMedio: 2500 },
   ];
 
   const totalIngresos = defaultMonths.reduce((acc, m) => acc + m.ingresos, 0);
   const totalGastos = defaultMonths.reduce((acc, m) => acc + m.gastos, 0);
   const beneficio = totalIngresos - totalGastos;
 
-  const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
+  const minHeightClass =
+    heightMode === "compact"
+      ? "h-[200px]"
+      : heightMode === "tall"
+        ? "h-[360px]"
+        : "h-[270px]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
@@ -389,15 +542,19 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display text-[var(--ink)]">Evolución Financiera & Caché</h3>
-            <p className="text-[11px] font-sans text-[var(--ink-2)]">Ingresos vs Gastos de Directos</p>
+            <h3 className="text-sm font-bold font-display text-[var(--ink)]">
+              Evolución Financiera & Caché
+            </h3>
+            <p className="text-[11px] font-sans text-[var(--ink-2)]">
+              Ingresos vs Gastos de Directos
+            </p>
           </div>
         </div>
 
         {onNavigate && (
           <button
             type="button"
-            onClick={() => onNavigate('finanzas')}
+            onClick={() => onNavigate("finanzas")}
             className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Finanzas</span>
@@ -408,19 +565,34 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
 
       <div className="grid grid-cols-2 gap-2 font-sans text-xs text-center">
         <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">Ingresos Totales</span>
-          <span className="font-bold text-[var(--ok)] text-sm">+{totalIngresos}€</span>
+          <span className="text-[10px] text-[var(--ink-2)] block">
+            Ingresos Totales
+          </span>
+          <span className="font-bold text-[var(--ok)] text-sm">
+            +{totalIngresos}€
+          </span>
         </div>
         <div className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">Neto / Beneficio</span>
-          <span className="font-bold text-[var(--acc)] text-sm">+{beneficio}€</span>
+          <span className="text-[10px] text-[var(--ink-2)] block">
+            Neto / Beneficio
+          </span>
+          <span className="font-bold text-[var(--acc)] text-sm">
+            +{beneficio}€
+          </span>
         </div>
       </div>
 
       <div className={`w-full ${minHeightClass} pt-2`}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={defaultMonths} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--hair)" vertical={false} />
+          <BarChart
+            data={defaultMonths}
+            margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--hair)"
+              vertical={false}
+            />
             <XAxis dataKey="month" stroke="var(--ink-3)" fontSize={10} />
             <YAxis stroke="var(--ink-3)" fontSize={10} />
             <Tooltip
@@ -429,17 +601,29 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
                   const data = payload[0].payload;
                   return (
                     <div className="bg-[var(--surface)]/80 p-2.5 rounded-[var(--r-m)] font-sans text-xs text-[var(--ink)] z-50">
-                      <div className="font-bold text-[var(--ok)]">{data.month}</div>
+                      <div className="font-bold text-[var(--ok)]">
+                        {data.month}
+                      </div>
                       <div className="text-[var(--ink-2)] mt-1 space-y-0.5">
                         <div>
-                          Ingresos: <span className="font-bold text-[var(--ok)]">+{data.ingresos}€</span>
+                          Ingresos:{" "}
+                          <span className="font-bold text-[var(--ok)]">
+                            +{data.ingresos}€
+                          </span>
                         </div>
                         <div>
-                          Gastos: <span className="font-bold text-[var(--alert)]">-{data.gastos}€</span>
+                          Gastos:{" "}
+                          <span className="font-bold text-[var(--alert)]">
+                            -{data.gastos}€
+                          </span>
                         </div>
                         <div>
-                          Caché Medio:{' '}
-                          <span className={`font-bold ${isStitchLight ? 'text-amber-700' : 'text-amber-400'}`}>{data.cacheMedio}€</span>
+                          Caché Medio:{" "}
+                          <span
+                            className={`font-bold ${isStitchLight ? "text-amber-700" : "text-amber-400"}`}
+                          >
+                            {data.cacheMedio}€
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -448,8 +632,18 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
                 return null;
               }}
             />
-            <Bar dataKey="ingresos" fill="var(--ok)" radius={[4, 4, 0, 0]} name="Ingresos" />
-            <Bar dataKey="gastos" fill="var(--alert)" radius={[4, 4, 0, 0]} name="Gastos" />
+            <Bar
+              dataKey="ingresos"
+              fill="var(--ok)"
+              radius={[4, 4, 0, 0]}
+              name="Ingresos"
+            />
+            <Bar
+              dataKey="gastos"
+              fill="var(--alert)"
+              radius={[4, 4, 0, 0]}
+              name="Gastos"
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -458,29 +652,39 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
 }
 
 /* 4. GRÁFICO DE CRECIMIENTO DE FANS & SOCIAL */
-export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
+export function SocialFansGrowthWidget({
+  fans = [],
+  onNavigate,
+  heightMode = "normal",
+  isStitchLight = false,
+}: ChartWidgetProps) {
   const fansCount = fans.length;
   const growthData = [
-    { mes: 'Ene', fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },
+    { mes: "Ene", fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },
     {
-      mes: 'Feb',
+      mes: "Feb",
       fans: Math.max(12, Math.round(fansCount * 0.4)),
       qrScans: 28,
     },
     {
-      mes: 'Mar',
+      mes: "Mar",
       fans: Math.max(25, Math.round(fansCount * 0.6)),
       qrScans: 45,
     },
     {
-      mes: 'Abr',
+      mes: "Abr",
       fans: Math.max(40, Math.round(fansCount * 0.8)),
       qrScans: 62,
     },
-    { mes: 'May', fans: Math.max(60, fansCount || 85), qrScans: 90 },
+    { mes: "May", fans: Math.max(60, fansCount || 85), qrScans: 90 },
   ];
 
-  const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
+  const minHeightClass =
+    heightMode === "compact"
+      ? "h-[200px]"
+      : heightMode === "tall"
+        ? "h-[360px]"
+        : "h-[270px]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
@@ -490,15 +694,19 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display text-[var(--ink)]">Captación de Fans & QR</h3>
-            <p className="text-[11px] font-sans text-[var(--ink-2)]">Crecimiento en Registro de Seguidores</p>
+            <h3 className="text-sm font-bold font-display text-[var(--ink)]">
+              Captación de Fans & QR
+            </h3>
+            <p className="text-[11px] font-sans text-[var(--ink-2)]">
+              Crecimiento en Registro de Seguidores
+            </p>
           </div>
         </div>
 
         {onNavigate && (
           <button
             type="button"
-            onClick={() => onNavigate('fans')}
+            onClick={() => onNavigate("fans")}
             className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
           >
             <span>Captura QR</span>
@@ -509,19 +717,27 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
 
       <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans">
         <span className="text-[var(--ink-2)]">Fans Registrados:</span>
-        <span className="font-bold text-[var(--acc)] text-sm">{fansCount > 0 ? fansCount : 85} seguidores</span>
+        <span className="font-bold text-[var(--acc)] text-sm">
+          {fansCount > 0 ? fansCount : 85} seguidores
+        </span>
       </div>
 
-      <div className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}>
+      <div
+        className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}
+      >
         <Onda
           data={growthData.map((d) => ({
             label: d.mes,
             value: d.fans,
-            color: 'var(--acc)',
+            color: "var(--acc)",
           }))}
-          height={heightMode === 'compact' ? 140 : heightMode === 'tall' ? 300 : 200}
-          barWidth={heightMode === 'compact' ? 12 : heightMode === 'tall' ? 18 : 14}
-          gap={heightMode === 'compact' ? 6 : heightMode === 'tall' ? 10 : 8}
+          height={
+            heightMode === "compact" ? 140 : heightMode === "tall" ? 300 : 200
+          }
+          barWidth={
+            heightMode === "compact" ? 12 : heightMode === "tall" ? 18 : 14
+          }
+          gap={heightMode === "compact" ? 6 : heightMode === "tall" ? 10 : 8}
           showLabels={true}
           animated={true}
           tooltipFormatter={(val) => `${val} fans acumulados`}

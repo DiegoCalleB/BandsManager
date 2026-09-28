@@ -1,6 +1,14 @@
-import React from 'react';
-import { Users, Plus, Trash2, Mail, Instagram, ShieldCheck, UserCheck } from 'lucide-react';
-import { WizardMemberItem } from '../types';
+import React from "react";
+import {
+  Users,
+  Plus,
+  Trash2,
+  Mail,
+  Instagram,
+  ShieldCheck,
+  UserCheck,
+} from "lucide-react";
+import { WizardMemberItem } from "../types";
 
 interface StepMembersProps {
   members: WizardMemberItem[];
@@ -33,7 +41,9 @@ export const StepMembers: React.FC<StepMembersProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Users className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Miembros de la Banda & Invitaciones</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Miembros de la Banda & Invitaciones
+        </h3>
       </div>
 
       {/* List of current members */}
@@ -41,19 +51,23 @@ export const StepMembers: React.FC<StepMembersProps> = ({
         {members.map((m, idx) => (
           <div
             key={m.id || idx}
-            className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:border-[var(--hair)] transition-colors"
+            className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--bg)] hover:bg-[var(--sunken)] transition-colors"
           >
             <div className="flex items-center gap-3">
               <div
                 className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center font-bold text-xs ${
-                  m.isLeader ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                  m.isLeader
+                    ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                    : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >
                 {m.name.charAt(0).toUpperCase()}
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-[var(--ink)]">{m.name}</span>
+                  <span className="text-sm font-medium text-[var(--ink)]">
+                    {m.name}
+                  </span>
                   {m.isLeader && (
                     <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
                       Líder / Creador
@@ -61,9 +75,15 @@ export const StepMembers: React.FC<StepMembersProps> = ({
                   )}
                 </div>
                 <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
-                  <span>{m.role || 'Músico'}</span>
-                  {m.email && <span className="text-[var(--ink-2)]">· {m.email}</span>}
-                  {m.instagram && <span className="text-[var(--ink-2)]">· @{m.instagram.replace('@', '')}</span>}
+                  <span>{m.role || "Músico"}</span>
+                  {m.email && (
+                    <span className="text-[var(--ink-2)]">· {m.email}</span>
+                  )}
+                  {m.instagram && (
+                    <span className="text-[var(--ink-2)]">
+                      · @{m.instagram.replace("@", "")}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

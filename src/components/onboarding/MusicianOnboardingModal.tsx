@@ -1,8 +1,24 @@
-import React from 'react';
-import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck, Globe, Check } from 'lucide-react';
-import { NavItemId } from '../../config/navGroups';
-import { markOnboardingCompleted } from '../../utils/userPreferences';
-import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../../context/LanguageContext';
+import React from "react";
+import {
+  Calendar,
+  BookOpen,
+  Disc3,
+  ArrowRight,
+  Sparkles,
+  X,
+  CheckCircle2,
+  Music2,
+  ShieldCheck,
+  Globe,
+  Check,
+} from "lucide-react";
+import { NavItemId } from "../../config/navGroups";
+import { markOnboardingCompleted } from "../../utils/userPreferences";
+import {
+  useLanguage,
+  SUPPORTED_LANGUAGES,
+  SupportedLanguage,
+} from "../../context/LanguageContext";
 
 interface MusicianOnboardingModalProps {
   isOpen: boolean;
@@ -11,24 +27,30 @@ interface MusicianOnboardingModalProps {
   bandName: string;
 }
 
-export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = ({ isOpen, onClose, onSelectMission, bandName }) => {
+export const MusicianOnboardingModal: React.FC<
+  MusicianOnboardingModalProps
+> = ({ isOpen, onClose, onSelectMission, bandName }) => {
   const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
 
   if (!isOpen) return null;
 
   const handleChooseMission = (view: NavItemId) => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
+    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(
+      () => {},
+    );
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
     }
     onSelectMission(view);
     onClose();
   };
 
   const handleDismiss = () => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
+    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(
+      () => {},
+    );
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
     }
     onClose();
   };
@@ -71,13 +93,15 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
                     onClick={() => setAppLang(l.code)}
                     className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-sans font-semibold transition-all cursor-pointer flex items-center gap-1 ${
                       isSelected
-                        ? 'bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold scale-105'
-                        : 'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
+                        ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold scale-105"
+                        : "bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]"
                     }`}
                     title={l.label}
                   >
                     <span>{l.flag}</span>
-                    <span className="hidden sm:inline">{l.label.slice(0, 3)}</span>
+                    <span className="hidden sm:inline">
+                      {l.label.slice(0, 3)}
+                    </span>
                   </button>
                 );
               })}
@@ -88,7 +112,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
             ¡Hola, {bandName}! ¿Por dónde empezamos hoy?
           </h2>
           <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1 max-w-lg">
-            Olvídate de paneles complicados o términos de oficina. Elige tu necesidad inmediata y te llevamos directo a la acción:
+            Olvídate de paneles complicados o términos de oficina. Elige tu
+            necesidad inmediata y te llevamos directo a la acción:
           </p>
         </div>
 
@@ -96,7 +121,7 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
         <div className="p-4 sm:p-6 space-y-3 overflow-y-auto">
           {/* Misión 1: Bolo / Concierto */}
           <div
-            onClick={() => handleChooseMission('calendario')}
+            onClick={() => handleChooseMission("calendario")}
             className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] hover:/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-amber-0/5"
           >
             <div className="flex items-start gap-3.5">
@@ -113,7 +138,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
                   </span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                  Apunta la sala, fecha, caché y horarios de prueba para que toda la banda tenga la ficha técnica a mano sin preguntar por
+                  Apunta la sala, fecha, caché y horarios de prueba para que
+                  toda la banda tenga la ficha técnica a mano sin preguntar por
                   WhatsApp.
                 </p>
               </div>
@@ -130,8 +156,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
           {/* Misión 2: Dossier / EPK */}
           <div
-            onClick={() => handleChooseMission('epk')}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] hover:border-[var(--acc)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sky-500/5"
+            onClick={() => handleChooseMission("epk")}
+            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
           >
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
@@ -147,7 +173,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
                   </span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                  Ten tu web de prensa con biografía, fotos en alta, enlaces de Spotify/YouTube y rider técnico lista para compartir con
+                  Ten tu web de prensa con biografía, fotos en alta, enlaces de
+                  Spotify/YouTube y rider técnico lista para compartir con
                   programadores.
                 </p>
               </div>
@@ -164,8 +191,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
 
           {/* Misión 3: Repertorio / Setlist */}
           <div
-            onClick={() => handleChooseMission('repertorio')}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] hover:border-[var(--ok)]/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-emerald-500/5"
+            onClick={() => handleChooseMission("repertorio")}
+            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--ok-soft)] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
           >
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ok)] shrink-0 group-hover:scale-105 transition-transform">
@@ -178,8 +205,9 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
                   </h3>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                  Crea setlists para conciertos o ensayos. Añade temas, notas de afinación, letras y duraciones para saber exactamente
-                  cuánto dura tu show.
+                  Crea setlists para conciertos o ensayos. Añade temas, notas de
+                  afinación, letras y duraciones para saber exactamente cuánto
+                  dura tu show.
                 </p>
               </div>
             </div>
@@ -198,7 +226,9 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
         <div className="p-4 sm:p-5 bg-[var(--surface)] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)]">
             <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0" />
-            <span>Tus datos y cambios se guardan automáticamente en tiempo real.</span>
+            <span>
+              Tus datos y cambios se guardan automáticamente en tiempo real.
+            </span>
           </div>
 
           <button

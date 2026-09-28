@@ -3607,8 +3607,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     onClick={() => setFeedbackScope("este_pitch")}
                     className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
                       feedbackScope === "este_pitch"
-                        ? "bg-[var(--acc)]/15 /60 text-[var(--ink)]"
-                        : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700"
+                        ? "bg-[var(--acc)]/15  text-[var(--ink)]"
+                        : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                     }`}
                   >
                     <input
@@ -3633,8 +3633,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     onClick={() => setFeedbackScope("global")}
                     className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
                       feedbackScope === "global"
-                        ? "bg-[var(--acc)]/15 /60 text-[var(--ink)]"
-                        : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700"
+                        ? "bg-[var(--acc)]/15  text-[var(--ink)]"
+                        : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                     }`}
                   >
                     <input
@@ -3693,8 +3693,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         onClick={() => setSelectedAiModel(m.id)}
                         className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 /50"
-                            : "bg-[var(--bg)]/60 text-[var(--ink-2)]800 hover:border-[var(--hair)]700"
+                            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
+                            : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                         }`}
                         title={`Coste aproximado por pitch: ${m.cost}`}
                       >

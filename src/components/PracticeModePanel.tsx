@@ -1199,7 +1199,7 @@ export default function PracticeModePanel({
                 return (
                   <div
                     key={tr.id}
-                    className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? "border-[var(--ok)]/40" : ""}`}
+                    className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? "ring-1 ring-[var(--ok)]/40" : ""}`}
                   >
                     <div className="flex items-center gap-2 px-3 py-2">
                       <span className="text-xs font-semibold truncate flex-1 min-w-0">

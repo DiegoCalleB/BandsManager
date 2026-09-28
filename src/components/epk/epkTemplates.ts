@@ -308,7 +308,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         },
         card: "bg-[var(--surface)]/90 text-[var(--ink)]",
         cardHighlight:
-          "bg-[var(--surface)] hover:border-[var(--hair)] text-[var(--ink)]",
+          "bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]",
         statNumber: "text-[var(--ink)] font-serif font-bold",
         badge: "bg-[var(--sunken)] text-[var(--ink)] font-serif",
         accentBtn:
@@ -348,7 +348,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
           fontFamily: "'Space Grotesk', system-ui, sans-serif",
         },
         card: "bg-[#120e24]/20 text-[var(--tentative)]/20",
-        cardHighlight: "bg-[#161030]/30 hover:border-[var(--tentative)]/80/50",
+        cardHighlight: "bg-[#161030]/30 hover:bg-[#1e1745]/40",
         statNumber: "text-[var(--acc)]/80 font-sans",
         badge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40",
         accentBtn:
@@ -383,8 +383,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         sectionHeadingClass: "text-[var(--ink)] tracking-wider/50 pb-4",
         sectionHeadingStyle: { fontFamily: "'Courier New', Georgia, serif" },
         card: "bg-[#201a16]/40 text-[var(--ink)]",
-        cardHighlight:
-          "bg-[#261e19] text-[var(--ink)] hover:border-[var(--hair)]",
+        cardHighlight: "bg-[#261e19] text-[var(--ink)] hover:bg-[#2f2620]",
         statNumber: "text-[var(--acc)]/80 font-sans",
         badge: "bg-[var(--accent-alt)]/10/60 text-[var(--acc)]/80",
         accentBtn:
@@ -421,7 +420,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         sectionHeadingClass: "text-[var(--ink)] tracking-wide/80 pb-4",
         sectionHeadingStyle: { fontFamily: "'Anton', 'Oswald', sans-serif" },
         card: "bg-[var(--bg)]",
-        cardHighlight: "bg-[var(--bg)]/90 hover:border-[var(--hair)]",
+        cardHighlight: "bg-[var(--bg)]/90 hover:bg-[var(--sunken)]",
         statNumber: "text-[var(--acc)]/80 font-sans",
         badge: "bg-[var(--acc)]/20 text-[var(--acc)]/80",
         accentBtn:

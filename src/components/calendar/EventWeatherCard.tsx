@@ -517,11 +517,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
                               transition={{ duration: 0.2 }}
-                              className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${
-                                isDanger
-                                  ? "border-[var(--alert)]/20 text-[var(--ink)]/90"
-                                  : "/20 text-[var(--ink)]/90"
-                              }`}
+                              className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${"text-[var(--ink)]/90"}`}
                             >
                               <div className="font-sans tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
                                 <ShieldAlert className="w-3 h-3 text-[var(--acc)]" />

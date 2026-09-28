@@ -687,9 +687,9 @@ export function OrdenDelDiaTab({
                         : isDragOver
                           ? "scale-[1.01] bg-[var(--acc)]/10"
                           : item.evaluacion === "bordada"
-                            ? "bg-[var(--surface)]/30 hover:border-[var(--ok)]/50"
+                            ? "bg-[var(--surface)]/30 hover:bg-[var(--ok-soft)]"
                             : item.evaluacion === "repetir"
-                              ? "bg-[var(--surface)]/30 hover:border-[var(--alert)]/50"
+                              ? "bg-[var(--surface)]/30 hover:bg-[var(--alert)]/10"
                               : "bg-[var(--surface)] hover:"
                     }`}
                   >

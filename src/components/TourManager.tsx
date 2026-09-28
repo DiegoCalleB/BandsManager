@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from '../types';
-import { calculateVehiclesFuelCost } from '../utils/tourUtils';
-import { ModalPortal } from './common/ModalPortal';
-import { HolidayDateWarning } from './common/HolidayDateWarning';
-import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import React, { useState } from "react";
+import {
+  ThemeColors,
+  Tour,
+  TourRouteStop,
+  TourVehicle,
+  Concert,
+  Lead,
+  BookingCampaign,
+} from "../types";
+import { calculateVehiclesFuelCost } from "../utils/tourUtils";
+import { ModalPortal } from "./common/ModalPortal";
+import { HolidayDateWarning } from "./common/HolidayDateWarning";
+import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import {
   Plus,
   Edit3,
@@ -24,7 +32,7 @@ import {
   ArrowRight,
   Sparkles,
   Target,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface TourManagerProps {
   colors: ThemeColors;
@@ -46,7 +54,14 @@ interface TourManagerProps {
     band_id?: string;
     bandName?: string;
   }>;
-  currentUser?: { id?: string; name?: string; username?: string; role?: string; band_id?: string; instrument?: string };
+  currentUser?: {
+    id?: string;
+    name?: string;
+    username?: string;
+    role?: string;
+    band_id?: string;
+    instrument?: string;
+  };
   currentBandId?: string;
   currentBandName?: string;
   onAddConcert?: (concert: Concert) => void;
@@ -66,8 +81,8 @@ export default function TourManager({
   onDeleteTour,
   bandUsers = [],
   currentUser,
-  currentBandId = 'band-bakandeya',
-  currentBandName = 'Bakandeya',
+  currentBandId = "band-bakandeya",
+  currentBandName = "Bakandeya",
   onAddConcert,
   onUpdateConcert,
   onAddPayment,
@@ -77,26 +92,35 @@ export default function TourManager({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Sync Notification Toast
-  const [syncFeedback, setSyncFeedback] = useState<{ tourId: string; message: string; type: 'success' | 'info' | 'error' } | null>(null);
+  const [syncFeedback, setSyncFeedback] = useState<{
+    tourId: string;
+    message: string;
+    type: "success" | "info" | "error";
+  } | null>(null);
 
   // Form state
-  const [formNombre, setFormNombre] = useState('');
+  const [formNombre, setFormNombre] = useState("");
   const [formVehiculos, setFormVehiculos] = useState<TourVehicle[]>([
     {
-      id: 'veh-1',
-      nombre: 'Furgoneta Sprinter / Master (Grande)',
+      id: "veh-1",
+      nombre: "Furgoneta Sprinter / Master (Grande)",
       consumoL100km: 9.5,
       precioCarburanteEUR: 1.55,
-      tipoCombustible: 'diesel',
+      tipoCombustible: "diesel",
     },
   ]);
-  const [formEstado, setFormEstado] = useState<'planificacion' | 'confirmada' | 'completada' | 'cancelada'>('planificacion');
+  const [formEstado, setFormEstado] = useState<
+    "planificacion" | "confirmada" | "completada" | "cancelada"
+  >("planificacion");
   const [formStops, setFormStops] = useState<TourRouteStop[]>([]);
 
   // Convocatoria / Miembros State
-  const [formConvocatoriaTipo, setFormConvocatoriaTipo] = useState<'completa' | 'parcial'>('completa');
+  const [formConvocatoriaTipo, setFormConvocatoriaTipo] = useState<
+    "completa" | "parcial"
+  >("completa");
   const [formConvocadosIds, setFormConvocadosIds] = useState<string[]>([]);
-  const [formSincronizarCalendario, setFormSincronizarCalendario] = useState(true);
+  const [formSincronizarCalendario, setFormSincronizarCalendario] =
+    useState(true);
   const [formSincronizarFinanzas, setFormSincronizarFinanzas] = useState(false);
   const [dietaPerPersona, setDietaPerPersona] = useState<number>(25);
 
@@ -105,46 +129,85 @@ export default function TourManager({
     if (bandUsers && bandUsers.length > 0) {
       return bandUsers.map((u, idx) => ({
         id: u.id || `member-${idx}-${u.name || u.username}`,
-        name: u.name || u.username || 'Músico',
-        role: u.role || 'Miembro',
-        instrument: u.instrument || (u.role === 'leader' ? 'Líder / Músico' : 'Músico'),
+        name: u.name || u.username || "Músico",
+        role: u.role || "Miembro",
+        instrument:
+          u.instrument || (u.role === "leader" ? "Líder / Músico" : "Músico"),
       }));
     }
     return [
-      { id: 'usr-1', name: 'Voz Principal / Guitarra', role: 'Músico', instrument: 'Voz / Guitarra' },
-      { id: 'usr-2', name: 'Batería / Percusión', role: 'Músico', instrument: 'Batería' },
-      { id: 'usr-3', name: 'Bajo', role: 'Músico', instrument: 'Bajo' },
-      { id: 'usr-4', name: 'Teclados / Sintes', role: 'Músico', instrument: 'Teclados' },
-      { id: 'usr-5', name: 'Técnico de Sonido', role: 'Staff', instrument: 'Sonido / P.A.' },
+      {
+        id: "usr-1",
+        name: "Voz Principal / Guitarra",
+        role: "Músico",
+        instrument: "Voz / Guitarra",
+      },
+      {
+        id: "usr-2",
+        name: "Batería / Percusión",
+        role: "Músico",
+        instrument: "Batería",
+      },
+      { id: "usr-3", name: "Bajo", role: "Músico", instrument: "Bajo" },
+      {
+        id: "usr-4",
+        name: "Teclados / Sintes",
+        role: "Músico",
+        instrument: "Teclados",
+      },
+      {
+        id: "usr-5",
+        name: "Técnico de Sonido",
+        role: "Staff",
+        instrument: "Sonido / P.A.",
+      },
     ];
   }, [bandUsers]);
 
   // Vehicle Presets
   const VEHICLE_PRESETS = [
     {
-      label: '🚐 Furgoneta Grande (Sprinter, Crafter, Master)',
-      name: 'Furgoneta Grande (Sprinter)',
+      label: "🚐 Furgoneta Grande (Sprinter, Crafter, Master)",
+      name: "Furgoneta Grande (Sprinter)",
       l100km: 9.5,
-      fuel: 'diesel',
+      fuel: "diesel",
       defaultPrice: 1.55,
     },
     {
-      label: '🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)',
-      name: 'Furgoneta Mediana (Transit/Vito)',
+      label: "🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)",
+      name: "Furgoneta Mediana (Transit/Vito)",
       l100km: 7.8,
-      fuel: 'diesel',
+      fuel: "diesel",
       defaultPrice: 1.55,
     },
     {
-      label: '🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)',
-      name: 'Furgoneta Pequeña (Berlingo)',
+      label: "🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)",
+      name: "Furgoneta Pequeña (Berlingo)",
       l100km: 6.2,
-      fuel: 'diesel',
+      fuel: "diesel",
       defaultPrice: 1.55,
     },
-    { label: '🚗 Turismo / Coche de Apoyo', name: 'Turismo / Coche de Apoyo', l100km: 6.8, fuel: 'gasolina95', defaultPrice: 1.62 },
-    { label: '⚡ Furgoneta Eléctrica', name: 'Furgoneta Eléctrica', l100km: 22.0, fuel: 'electrico', defaultPrice: 0.25 },
-    { label: '⚙️ Vehículo Personalizado', name: 'Vehículo Adicional', l100km: 8.5, fuel: 'diesel', defaultPrice: 1.55 },
+    {
+      label: "🚗 Turismo / Coche de Apoyo",
+      name: "Turismo / Coche de Apoyo",
+      l100km: 6.8,
+      fuel: "gasolina95",
+      defaultPrice: 1.62,
+    },
+    {
+      label: "⚡ Furgoneta Eléctrica",
+      name: "Furgoneta Eléctrica",
+      l100km: 22.0,
+      fuel: "electrico",
+      defaultPrice: 0.25,
+    },
+    {
+      label: "⚙️ Vehículo Personalizado",
+      name: "Vehículo Adicional",
+      l100km: 8.5,
+      fuel: "diesel",
+      defaultPrice: 1.55,
+    },
   ];
 
   const handleAddVehicle = (presetIndex: number = 0) => {
@@ -161,7 +224,11 @@ export default function TourManager({
     recalculateAllFuelStops(updated);
   };
 
-  const handleUpdateVehicle = (index: number, field: keyof TourVehicle, value: any) => {
+  const handleUpdateVehicle = (
+    index: number,
+    field: keyof TourVehicle,
+    value: any,
+  ) => {
     const updated = [...formVehiculos];
     updated[index] = { ...updated[index], [field]: value };
     setFormVehiculos(updated);
@@ -170,7 +237,7 @@ export default function TourManager({
 
   const handleRemoveVehicle = (index: number) => {
     if (formVehiculos.length <= 1) {
-      alert('Debe haber al menos un vehículo en la gira.');
+      alert("Debe haber al menos un vehículo en la gira.");
       return;
     }
     const updated = formVehiculos.filter((_, i) => i !== index);
@@ -199,14 +266,14 @@ export default function TourManager({
         const km = s.distanciaAnteriorKm || 0;
         const calcGas = calculateVehiclesFuelCost(km, vehicles);
         return { ...s, gastosGasolina: calcGas };
-      })
+      }),
     );
   };
 
   // Auto-calculate dietas based on active members in the expedition
   const handleAutoCalculateDietas = () => {
     const numMembers =
-      formConvocatoriaTipo === 'completa'
+      formConvocatoriaTipo === "completa"
         ? availableMembers.length
         : formConvocadosIds.length > 0
           ? formConvocadosIds.length
@@ -217,7 +284,7 @@ export default function TourManager({
       prev.map((s) => ({
         ...s,
         gastosDietas: calcDietasPerStop,
-      }))
+      })),
     );
   };
 
@@ -237,18 +304,18 @@ export default function TourManager({
 
   const handleOpenCreateModal = () => {
     setEditingTour(null);
-    setFormNombre('');
+    setFormNombre("");
     setFormVehiculos([
       {
-        id: 'veh-1',
-        nombre: 'Furgoneta Sprinter / Master (Grande)',
+        id: "veh-1",
+        nombre: "Furgoneta Sprinter / Master (Grande)",
         consumoL100km: 9.5,
         precioCarburanteEUR: 1.55,
-        tipoCombustible: 'diesel',
+        tipoCombustible: "diesel",
       },
     ]);
-    setFormEstado('planificacion');
-    setFormConvocatoriaTipo('completa');
+    setFormEstado("planificacion");
+    setFormConvocatoriaTipo("completa");
     setFormConvocadosIds(availableMembers.map((m) => m.id));
     setFormSincronizarCalendario(true);
     setFormSincronizarFinanzas(false);
@@ -265,18 +332,22 @@ export default function TourManager({
         ? tour.vehiculos
         : [
             {
-              id: 'veh-1',
-              nombre: tour.vehiculo || 'Furgoneta 9 Plazas',
+              id: "veh-1",
+              nombre: tour.vehiculo || "Furgoneta 9 Plazas",
               consumoL100km: tour.consumoL100km ?? 9.5,
               precioCarburanteEUR: tour.precioCarburanteEUR ?? 1.55,
-              tipoCombustible: tour.tipoCombustible ?? 'diesel',
+              tipoCombustible: tour.tipoCombustible ?? "diesel",
             },
           ];
 
     setFormVehiculos(vehicles);
     setFormEstado(tour.estado);
-    setFormConvocatoriaTipo(tour.convocatoria_tipo || 'completa');
-    setFormConvocadosIds(tour.convocados_ids && tour.convocados_ids.length > 0 ? tour.convocados_ids : availableMembers.map((m) => m.id));
+    setFormConvocatoriaTipo(tour.convocatoria_tipo || "completa");
+    setFormConvocadosIds(
+      tour.convocados_ids && tour.convocados_ids.length > 0
+        ? tour.convocados_ids
+        : availableMembers.map((m) => m.id),
+    );
     setFormSincronizarCalendario(tour.sincronizarCalendario ?? true);
     setFormSincronizarFinanzas(tour.sincronizarFinanzas ?? false);
     setFormStops([...tour.stops]);
@@ -286,35 +357,41 @@ export default function TourManager({
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formNombre.trim()) {
-      alert('Por favor introduce el nombre de la gira.');
+      alert("Por favor introduce el nombre de la gira.");
       return;
     }
 
     const startDate =
       formStops.length > 0
         ? [...formStops].sort((a, b) => a.fecha.localeCompare(b.fecha))[0].fecha
-        : new Date().toISOString().split('T')[0];
+        : new Date().toISOString().split("T")[0];
     const endDate =
       formStops.length > 0
         ? [...formStops].sort((a, b) => b.fecha.localeCompare(a.fecha))[0].fecha
-        : new Date().toISOString().split('T')[0];
+        : new Date().toISOString().split("T")[0];
 
     const totalGastos = formStops.reduce(
-      (sum, stop) => sum + (stop.gastosAlojamiento || 0) + (stop.gastosGasolina || 0) + (stop.gastosDietas || 0),
-      0
+      (sum, stop) =>
+        sum +
+        (stop.gastosAlojamiento || 0) +
+        (stop.gastosGasolina || 0) +
+        (stop.gastosDietas || 0),
+      0,
     );
 
     const primaryVehicle = formVehiculos[0] || {
-      nombre: 'Furgoneta',
+      nombre: "Furgoneta",
       consumoL100km: 9.5,
       precioCarburanteEUR: 1.55,
-      tipoCombustible: 'diesel',
+      tipoCombustible: "diesel",
     };
 
     const convocadosNombres =
-      formConvocatoriaTipo === 'completa'
+      formConvocatoriaTipo === "completa"
         ? availableMembers.map((m) => m.name)
-        : availableMembers.filter((m) => formConvocadosIds.includes(m.id)).map((m) => m.name);
+        : availableMembers
+            .filter((m) => formConvocadosIds.includes(m.id))
+            .map((m) => m.name);
 
     const tourId = editingTour ? editingTour.id : `tour-${Date.now()}`;
 
@@ -332,19 +409,23 @@ export default function TourManager({
           band_id: currentBandId,
           bandName: currentBandName,
           fecha: stop.fecha,
-          ciudad: stop.ciudad || 'Ciudad de Gira',
-          sala: stop.sala || 'Sala de Gira',
+          ciudad: stop.ciudad || "Ciudad de Gira",
+          sala: stop.sala || "Sala de Gira",
           cache: Number(stop.ingresoCacheEstimated || 0),
           aforo_vendido: 0,
           aforo_total: 300,
-          contrato_firmado: formEstado === 'confirmada' || formEstado === 'completada',
-          estado_pago: 'pendiente',
-          notas: `Gira: ${formNombre.trim()} (Parada #${idx + 1})${stop.notasLogisticas ? ` - ${stop.notasLogisticas}` : ''}`,
-          tipo: 'sala',
+          contrato_firmado:
+            formEstado === "confirmada" || formEstado === "completada",
+          estado_pago: "pendiente",
+          notas: `Gira: ${formNombre.trim()} (Parada #${idx + 1})${stop.notasLogisticas ? ` - ${stop.notasLogisticas}` : ""}`,
+          tipo: "sala",
           giraId: tourId,
           giraNombre: formNombre.trim(),
           convocatoria_tipo: formConvocatoriaTipo,
-          convocados_ids: formConvocatoriaTipo === 'completa' ? availableMembers.map((m) => m.id) : formConvocadosIds,
+          convocados_ids:
+            formConvocatoriaTipo === "completa"
+              ? availableMembers.map((m) => m.id)
+              : formConvocadosIds,
           convocados_nombres: convocadosNombres,
           gastosDetalle: {
             gasolina: stop.gastosGasolina || 0,
@@ -380,7 +461,7 @@ export default function TourManager({
         formVehiculos
           .map((v) => v.nombre)
           .filter(Boolean)
-          .join(',') || primaryVehicle.nombre,
+          .join(",") || primaryVehicle.nombre,
       consumoL100km: primaryVehicle.consumoL100km,
       precioCarburanteEUR: primaryVehicle.precioCarburanteEUR,
       tipoCombustible: primaryVehicle.tipoCombustible,
@@ -403,7 +484,7 @@ export default function TourManager({
     setSyncFeedback({
       tourId,
       message: `Gira"${tourData.nombre}" guardada y sincronizada con ${updatedStops.length} paradas en el Calendario.`,
-      type: 'success',
+      type: "success",
     });
     setTimeout(() => setSyncFeedback(null), 5000);
   };
@@ -411,14 +492,26 @@ export default function TourManager({
   // Volcar Gira completa en Finanzas
   const handleVolcarEnFinanzas = (tour: Tour) => {
     if (!onAddPayment) {
-      alert('La función de finanzas no está disponible en este momento.');
+      alert("La función de finanzas no está disponible en este momento.");
       return;
     }
 
-    const totalIngresos = tour.stops.reduce((sum, s) => sum + (s.ingresoCacheEstimated || 0), 0);
-    const totalGasolina = tour.stops.reduce((sum, s) => sum + (s.gastosGasolina || 0), 0);
-    const totalDietas = tour.stops.reduce((sum, s) => sum + (s.gastosDietas || 0), 0);
-    const totalAlojamiento = tour.stops.reduce((sum, s) => sum + (s.gastosAlojamiento || 0), 0);
+    const totalIngresos = tour.stops.reduce(
+      (sum, s) => sum + (s.ingresoCacheEstimated || 0),
+      0,
+    );
+    const totalGasolina = tour.stops.reduce(
+      (sum, s) => sum + (s.gastosGasolina || 0),
+      0,
+    );
+    const totalDietas = tour.stops.reduce(
+      (sum, s) => sum + (s.gastosDietas || 0),
+      0,
+    );
+    const totalAlojamiento = tour.stops.reduce(
+      (sum, s) => sum + (s.gastosAlojamiento || 0),
+      0,
+    );
 
     const now = Date.now();
     let count = 0;
@@ -429,12 +522,15 @@ export default function TourManager({
         onAddPayment({
           id: `pay-in-${tour.id}-${stop.id || idx}-${now}`,
           band_id: currentBandId,
-          tipo: 'ingreso',
-          categoria: 'concierto',
-          concepto: `Caché Gira: ${tour.nombre} - ${stop.ciudad || 'Parada'} (${stop.sala || 'Sala'})`,
+          tipo: "ingreso",
+          categoria: "concierto",
+          concepto: `Caché Gira: ${tour.nombre} - ${stop.ciudad || "Parada"} (${stop.sala || "Sala"})`,
           importe: Number(stop.ingresoCacheEstimated),
-          fecha: stop.fecha || tour.fechaInicio || new Date().toISOString().split('T')[0],
-          estado: 'pendiente',
+          fecha:
+            stop.fecha ||
+            tour.fechaInicio ||
+            new Date().toISOString().split("T")[0],
+          estado: "pendiente",
         });
         count++;
       }
@@ -445,12 +541,12 @@ export default function TourManager({
       onAddPayment({
         id: `pay-gas-${tour.id}-${now}`,
         band_id: currentBandId,
-        tipo: 'gasto',
-        categoria: 'transporte',
+        tipo: "gasto",
+        categoria: "transporte",
         concepto: `Combustible Flota Gira: ${tour.nombre} (${tour.vehiculos?.length || 1} veh.)`,
         importe: Number(totalGasolina),
-        fecha: tour.fechaInicio || new Date().toISOString().split('T')[0],
-        estado: 'pendiente',
+        fecha: tour.fechaInicio || new Date().toISOString().split("T")[0],
+        estado: "pendiente",
       });
       count++;
     }
@@ -458,16 +554,18 @@ export default function TourManager({
     // Gasto Dietas
     if (totalDietas > 0) {
       const numPers =
-        tour.convocatoria_tipo === 'parcial' && tour.convocados_ids?.length ? tour.convocados_ids.length : availableMembers.length;
+        tour.convocatoria_tipo === "parcial" && tour.convocados_ids?.length
+          ? tour.convocados_ids.length
+          : availableMembers.length;
       onAddPayment({
         id: `pay-dietas-${tour.id}-${now}`,
         band_id: currentBandId,
-        tipo: 'gasto',
-        categoria: 'comida',
+        tipo: "gasto",
+        categoria: "comida",
         concepto: `Dietas Expedición Gira: ${tour.nombre} (${numPers} miembros)`,
         importe: Number(totalDietas),
-        fecha: tour.fechaInicio || new Date().toISOString().split('T')[0],
-        estado: 'pendiente',
+        fecha: tour.fechaInicio || new Date().toISOString().split("T")[0],
+        estado: "pendiente",
       });
       count++;
     }
@@ -477,12 +575,12 @@ export default function TourManager({
       onAddPayment({
         id: `pay-hotel-${tour.id}-${now}`,
         band_id: currentBandId,
-        tipo: 'gasto',
-        categoria: 'alojamiento',
+        tipo: "gasto",
+        categoria: "alojamiento",
         concepto: `Hoteles / Alojamientos Gira: ${tour.nombre}`,
         importe: Number(totalAlojamiento),
-        fecha: tour.fechaInicio || new Date().toISOString().split('T')[0],
-        estado: 'pendiente',
+        fecha: tour.fechaInicio || new Date().toISOString().split("T")[0],
+        estado: "pendiente",
       });
       count++;
     }
@@ -490,7 +588,7 @@ export default function TourManager({
     setSyncFeedback({
       tourId: tour.id,
       message: `¡Volcado exitoso! Se han registrado ${count} movimientos contables en Finanzas para la gira"${tour.nombre}".`,
-      type: 'success',
+      type: "success",
     });
     setTimeout(() => setSyncFeedback(null), 6000);
   };
@@ -500,27 +598,33 @@ export default function TourManager({
       ...formStops,
       {
         id: `stop-${Date.now()}`,
-        ciudad: '',
-        sala: '',
-        fecha: new Date().toISOString().split('T')[0],
+        ciudad: "",
+        sala: "",
+        fecha: new Date().toISOString().split("T")[0],
         distanciaAnteriorKm: 0,
         tiempoConduccionHoras: 0,
         gastosAlojamiento: 0,
         gastosGasolina: 0,
         gastosDietas:
-          (formConvocatoriaTipo === 'completa' ? availableMembers.length : formConvocadosIds.length || availableMembers.length) *
+          (formConvocatoriaTipo === "completa"
+            ? availableMembers.length
+            : formConvocadosIds.length || availableMembers.length) *
           (dietaPerPersona || 25),
         ingresoCacheEstimated: 0,
       },
     ]);
   };
 
-  const updateStop = (index: number, field: keyof TourRouteStop, value: any) => {
+  const updateStop = (
+    index: number,
+    field: keyof TourRouteStop,
+    value: any,
+  ) => {
     const newStops = [...formStops];
     const currentStop = { ...newStops[index], [field]: value };
 
     // Auto-calculate fuel & driving time based on all vehicles parameters
-    if (field === 'distanciaAnteriorKm') {
+    if (field === "distanciaAnteriorKm") {
       const km = Number(value) || 0;
       currentStop.gastosGasolina = calculateVehiclesFuelCost(km, formVehiculos);
       currentStop.tiempoConduccionHoras = Math.round((km / 85) * 10) / 10; // Avg 85 km/h
@@ -548,7 +652,10 @@ export default function TourManager({
   };
 
   // Delete Confirmation Modal state
-  const [tourToDelete, setTourToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [tourToDelete, setTourToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const handleDelete = (id: string, name: string) => {
     setTourToDelete({ id, name });
@@ -564,7 +671,8 @@ export default function TourManager({
   // Combined fleet cost per 100 km
   const totalFleetCostPer100Km = formVehiculos.reduce((sum, v) => {
     const c = Number(v.consumoL100km) || 0;
-    const p = Number(v.precioCarburanteEUR) > 0 ? Number(v.precioCarburanteEUR) : 1.55;
+    const p =
+      Number(v.precioCarburanteEUR) > 0 ? Number(v.precioCarburanteEUR) : 1.55;
     return sum + c * p;
   }, 0);
 
@@ -584,7 +692,8 @@ export default function TourManager({
               Gestor Logístico & Giras de {currentBandName}
             </h2>
             <p className={`text-xs ${colors.textMuted} mt-1`}>
-              Planifica rutas, selecciona qué miembros participan (Banda Completa vs Parcial), calcula combustible multi-vehículo, dietas y
+              Planifica rutas, selecciona qué miembros participan (Banda
+              Completa vs Parcial), calcula combustible multi-vehículo, dietas y
               sincroniza automáticamente con el Calendario y Finanzas.
             </p>
           </div>
@@ -608,7 +717,7 @@ export default function TourManager({
           </div>
           {onNavigate && (
             <button
-              onClick={() => onNavigate('finanzas')}
+              onClick={() => onNavigate("finanzas")}
               className="px-2.5 py-1 rounded bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] font-sans text-[10px] font-bold tracking-wider flex items-center gap-1 cursor-pointer"
             >
               <span>Ver en Finanzas</span>
@@ -622,10 +731,17 @@ export default function TourManager({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {tours.length === 0 ? (
           <div className="col-span-full p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)]">
-            <PublicoSilhouette opacity={0.12} size="large" className="mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-[var(--ink)] mb-2">La gira está vacía</h3>
+            <PublicoSilhouette
+              opacity={0.12}
+              size="large"
+              className="mx-auto mb-4"
+            />
+            <h3 className="text-lg font-bold text-[var(--ink)] mb-2">
+              La gira está vacía
+            </h3>
             <p className="text-sm text-[var(--ink-2)] max-w-md mx-auto mb-4">
-              Agrupa tus conciertos en giras para calcular mejor los gastos logísticos, combustible de todos tus vehículos, dietas de los
+              Agrupa tus conciertos en giras para calcular mejor los gastos
+              logísticos, combustible de todos tus vehículos, dietas de los
               músicos convocados, alojamientos y el margen de beneficio neto.
             </p>
             <button
@@ -646,32 +762,51 @@ export default function TourManager({
             });
             return uniqueTours.map((tour, index) => {
               const totalGastos = tour.stops.reduce(
-                (sum, s) => sum + (s.gastosAlojamiento || 0) + (s.gastosGasolina || 0) + (s.gastosDietas || 0),
-                0
+                (sum, s) =>
+                  sum +
+                  (s.gastosAlojamiento || 0) +
+                  (s.gastosGasolina || 0) +
+                  (s.gastosDietas || 0),
+                0,
               );
-              const totalIngresos = tour.stops.reduce((sum, s) => sum + (s.ingresoCacheEstimated || 0), 0);
+              const totalIngresos = tour.stops.reduce(
+                (sum, s) => sum + (s.ingresoCacheEstimated || 0),
+                0,
+              );
               const beneficioNeto = totalIngresos - totalGastos;
-              const totalKm = tour.stops.reduce((sum, s) => sum + (s.distanciaAnteriorKm || 0), 0);
+              const totalKm = tour.stops.reduce(
+                (sum, s) => sum + (s.distanciaAnteriorKm || 0),
+                0,
+              );
 
-              const vehiclesCount = tour.vehiculos?.length || (tour.vehiculo ? 1 : 0);
+              const vehiclesCount =
+                tour.vehiculos?.length || (tour.vehiculo ? 1 : 0);
 
               // Formación info
-              const isFormacionParcial = tour.convocatoria_tipo === 'parcial';
-              const convocadosCount = isFormacionParcial && tour.convocados_ids ? tour.convocados_ids.length : availableMembers.length;
+              const isFormacionParcial = tour.convocatoria_tipo === "parcial";
+              const convocadosCount =
+                isFormacionParcial && tour.convocados_ids
+                  ? tour.convocados_ids.length
+                  : availableMembers.length;
 
               const isCurrentUserConvocado =
-                !currentUser?.id || !isFormacionParcial || (tour.convocados_ids && tour.convocados_ids.includes(currentUser.id));
+                !currentUser?.id ||
+                !isFormacionParcial ||
+                (tour.convocados_ids &&
+                  tour.convocados_ids.includes(currentUser.id));
 
               return (
                 <div
                   key={tour.id || `tour-${index}`}
-                  className={`p-5 rounded-[var(--r-l)] ${colors.card} group hover:border-[var(--hair)] transition-colors flex flex-col justify-between`}
+                  className={`p-5 rounded-[var(--r-l)] ${colors.card} group hover:bg-[var(--sunken)] transition-colors flex flex-col justify-between`}
                 >
                   <div>
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-lg font-display">{tour.nombre}</h3>
+                          <h3 className="font-bold text-lg font-display">
+                            {tour.nombre}
+                          </h3>
                           {isCurrentUserConvocado ? (
                             <span className="px-2 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
                               ✓ Convocado
@@ -686,18 +821,20 @@ export default function TourManager({
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold
  ${
-   tour.estado === 'confirmada'
+   tour.estado === "confirmada"
      ? colors.badgeGreen
-     : tour.estado === 'planificacion'
+     : tour.estado === "planificacion"
        ? colors.badgeYellow
-       : tour.estado === 'cancelada'
+       : tour.estado === "cancelada"
          ? colors.badgeRed
-         : 'bg-[var(--surface)]/80 text-[var(--ink)]'
+         : "bg-[var(--surface)]/80 text-[var(--ink)]"
  }`}
                           >
                             {tour.estado}
                           </span>
-                          <span className={`text-[10px] ${colors.textMuted} flex items-center gap-1 font-sans`}>
+                          <span
+                            className={`text-[10px] ${colors.textMuted} flex items-center gap-1 font-sans`}
+                          >
                             <Calendar className="w-3 h-3" />
                             {tour.fechaInicio} — {tour.fechaFin}
                           </span>
@@ -705,10 +842,13 @@ export default function TourManager({
                           <span
                             className={`text-[10px] px-2 py-0.5 rounded font-sans flex items-center gap-1 ${
                               isFormacionParcial
-                                ? 'bg-[var(--tentative)]/10 text-[var(--tentative)]/80/30'
-                                : 'bg-[var(--ok)]/10 text-[var(--ink-2)]/20'
+                                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80/30"
+                                : "bg-[var(--ok)]/10 text-[var(--ink-2)]/20"
                             }`}
-                            title={tour.convocados_nombres?.join(',') || 'Toda la banda'}
+                            title={
+                              tour.convocados_nombres?.join(",") ||
+                              "Toda la banda"
+                            }
                           >
                             <Users className="w-3 h-3" />
                             {isFormacionParcial
@@ -723,7 +863,9 @@ export default function TourManager({
                           {vehiclesCount > 1 ? (
                             <span
                               className="text-[10px] text-[var(--acc)]/70 bg-[var(--acc)]/10 px-2 py-0.5 rounded font-sans flex items-center gap-1"
-                              title={tour.vehiculos?.map((v) => v.nombre).join(' +')}
+                              title={tour.vehiculos
+                                ?.map((v) => v.nombre)
+                                .join(" +")}
                             >
                               <Truck className="w-3 h-3 text-[var(--acc)]" />
                               {vehiclesCount} vehículos
@@ -757,20 +899,33 @@ export default function TourManager({
                     {/* Metrics */}
                     <div className="grid grid-cols-3 gap-2 mb-4">
                       <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-                        <span className="text-[9px] text-[var(--ink-2)] tracking-wider block font-sans">Logística</span>
-                        <div className="text-xs font-bold text-[var(--alert)] mt-0.5">-{totalGastos} €</div>
+                        <span className="text-[9px] text-[var(--ink-2)] tracking-wider block font-sans">
+                          Logística
+                        </span>
+                        <div className="text-xs font-bold text-[var(--alert)] mt-0.5">
+                          -{totalGastos} €
+                        </div>
                       </div>
                       <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-                        <span className="text-[9px] text-[var(--ink-2)] tracking-wider block font-sans">Caché Est.</span>
-                        <div className="text-xs font-bold text-[var(--ok)] mt-0.5">+{totalIngresos} €</div>
+                        <span className="text-[9px] text-[var(--ink-2)] tracking-wider block font-sans">
+                          Caché Est.
+                        </span>
+                        <div className="text-xs font-bold text-[var(--ok)] mt-0.5">
+                          +{totalIngresos} €
+                        </div>
                       </div>
                       <div
-                        className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ? 'bg-[var(--ok)]/10/20 text-[var(--ok)]' : 'bg-[var(--alert)]/10/20 text-[var(--alert)]'}`}
+                        className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ? "bg-[var(--ok)]/10/20 text-[var(--ok)]" : "bg-[var(--alert)]/10/20 text-[var(--alert)]"}`}
                       >
-                        <span className="text-[9px] opacity-80 tracking-wider block font-sans">Margen Neto</span>
+                        <span className="text-[9px] opacity-80 tracking-wider block font-sans">
+                          Margen Neto
+                        </span>
                         <div className="text-xs font-extrabold mt-0.5 flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" />
-                          {beneficioNeto >= 0 ? `+${beneficioNeto}` : beneficioNeto} €
+                          {beneficioNeto >= 0
+                            ? `+${beneficioNeto}`
+                            : beneficioNeto}{" "}
+                          €
                         </div>
                       </div>
                     </div>
@@ -781,16 +936,21 @@ export default function TourManager({
                         <span>Ruta ({tour.stops.length} paradas)</span>
                         <span
                           className="text-[var(--ink-2)] truncate max-w-[200px]"
-                          title={tour.vehiculos?.map((v) => v.nombre).join(',') || tour.vehiculo}
+                          title={
+                            tour.vehiculos?.map((v) => v.nombre).join(",") ||
+                            tour.vehiculo
+                          }
                         >
                           {tour.vehiculos && tour.vehiculos.length > 1
                             ? `${tour.vehiculos.length} Vehículos`
-                            : tour.vehiculo || '1 Vehículo'}
+                            : tour.vehiculo || "1 Vehículo"}
                         </span>
                       </h4>
                       <div className="space-y-1.5">
                         {tour.stops.length === 0 ? (
-                          <span className="text-[10px] text-[var(--ink-2)] italic">Sin paradas configuradas</span>
+                          <span className="text-[10px] text-[var(--ink-2)] italic">
+                            Sin paradas configuradas
+                          </span>
                         ) : (
                           tour.stops.slice(0, 4).map((stop, idx) => (
                             <div
@@ -799,20 +959,32 @@ export default function TourManager({
                             >
                               <div className="flex items-center justify-between text-xs">
                                 <div className="flex items-center gap-2 min-w-0">
-                                  <span className="text-[var(--ink-2)] font-sans text-xs font-bold">{idx + 1}.</span>
-                                  <span className="font-bold truncate text-[var(--ink)] text-xs sm:text-sm">
-                                    {stop.ciudad || 'Por determinar'}
+                                  <span className="text-[var(--ink-2)] font-sans text-xs font-bold">
+                                    {idx + 1}.
                                   </span>
-                                  <span className="text-[var(--ink-2)] text-xs font-semibold truncate">({stop.sala || 'Sala tbd'})</span>
+                                  <span className="font-bold truncate text-[var(--ink)] text-xs sm:text-sm">
+                                    {stop.ciudad || "Por determinar"}
+                                  </span>
+                                  <span className="text-[var(--ink-2)] text-xs font-semibold truncate">
+                                    ({stop.sala || "Sala tbd"})
+                                  </span>
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0 font-sans text-xs">
                                   {stop.ingresoCacheEstimated ? (
-                                    <span className="text-[var(--ok)] font-bold">+{stop.ingresoCacheEstimated}€</span>
+                                    <span className="text-[var(--ok)] font-bold">
+                                      +{stop.ingresoCacheEstimated}€
+                                    </span>
                                   ) : null}
-                                  <span className="text-[var(--acc)]/70 font-sans text-xs font-bold">{stop.fecha}</span>
+                                  <span className="text-[var(--acc)]/70 font-sans text-xs font-bold">
+                                    {stop.fecha}
+                                  </span>
                                 </div>
                               </div>
-                              <HolidayDateWarning date={stop.fecha} city={stop.ciudad} compact />
+                              <HolidayDateWarning
+                                date={stop.fecha}
+                                city={stop.ciudad}
+                                compact
+                              />
                             </div>
                           ))
                         )}
@@ -841,7 +1013,11 @@ export default function TourManager({
                       {onNavigate && (
                         <button
                           type="button"
-                          onClick={() => onNavigate('calendario', { selectedDate: tour.fechaInicio })}
+                          onClick={() =>
+                            onNavigate("calendario", {
+                              selectedDate: tour.fechaInicio,
+                            })
+                          }
                           className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold tracking-wider bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-3)] transition-all flex items-center gap-1.5 cursor-pointer"
                           title="Abrir agenda y ver paradas de la gira en el calendario"
                         >
@@ -851,7 +1027,9 @@ export default function TourManager({
                       )}
                     </div>
 
-                    <span className="text-[10px] text-[var(--ink-2)] font-sans">{tour.stops.length} fechas</span>
+                    <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                      {tour.stops.length} fechas
+                    </span>
                   </div>
                 </div>
               );
@@ -864,16 +1042,19 @@ export default function TourManager({
       {isModalOpen && (
         <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
-            <div className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} flex flex-col my-auto max-h-[90vh]`}>
+            <div
+              className={`w-full max-w-4xl rounded-[var(--r-l)] ${colors.bg} flex flex-col my-auto max-h-[90vh]`}
+            >
               {/* Modal Header */}
               <div className="p-4 sm:p-6 flex justify-between items-center bg-[var(--sunken)] shrink-0">
                 <div>
                   <h3 className="text-lg font-bold font-display flex items-center gap-2">
                     <Truck className="w-5 h-5 text-[var(--ink-2)]" />
-                    {editingTour ? 'Editar Gira' : 'Nueva Gira'}
+                    {editingTour ? "Editar Gira" : "Nueva Gira"}
                   </h3>
                   <p className="text-xs text-[var(--ink-2)] mt-0.5">
-                    Configura la ruta, flota de vehículos, selección de miembros y sincronización automática.
+                    Configura la ruta, flota de vehículos, selección de miembros
+                    y sincronización automática.
                   </p>
                 </div>
                 <button
@@ -886,10 +1067,18 @@ export default function TourManager({
 
               {/* Modal Body */}
               <div className="p-4 sm:p-6 overflow-y-auto flex-1 custom-scrollbar">
-                <form id="tour-form" onSubmit={handleSave} className="space-y-6">
+                <form
+                  id="tour-form"
+                  onSubmit={handleSave}
+                  className="space-y-6"
+                >
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="sm:col-span-2 space-y-1.5">
-                      <label className={`text-[10px] font-sans tracking-wider ${colors.textMuted}`}>Nombre de la Gira *</label>
+                      <label
+                        className={`text-[10px] font-sans tracking-wider ${colors.textMuted}`}
+                      >
+                        Nombre de la Gira *
+                      </label>
                       <input
                         required
                         value={formNombre}
@@ -900,7 +1089,11 @@ export default function TourManager({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className={`text-[10px] font-sans tracking-wider ${colors.textMuted}`}>Estado de la Gira</label>
+                      <label
+                        className={`text-[10px] font-sans tracking-wider ${colors.textMuted}`}
+                      >
+                        Estado de la Gira
+                      </label>
                       <select
                         value={formEstado}
                         onChange={(e) => setFormEstado(e.target.value as any)}
@@ -918,11 +1111,14 @@ export default function TourManager({
                       <div className="flex flex-wrap items-center justify-between gap-2/20 pb-3">
                         <div>
                           <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 tracking-wider flex items-center gap-1.5">
-                            <Users className="w-4 h-4 text-[var(--acc)]" /> Miembros & Formación de la Gira
+                            <Users className="w-4 h-4 text-[var(--acc)]" />{" "}
+                            Miembros & Formación de la Gira
                           </span>
                           <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                            Selecciona si viaja toda la banda o una formación reducida/acústica. Afecta al cálculo de dietas, hoteles y
-                            visibilidad en el calendario de cada músico.
+                            Selecciona si viaja toda la banda o una formación
+                            reducida/acústica. Afecta al cálculo de dietas,
+                            hoteles y visibilidad en el calendario de cada
+                            músico.
                           </p>
                         </div>
 
@@ -931,24 +1127,26 @@ export default function TourManager({
                           <button
                             type="button"
                             onClick={() => {
-                              setFormConvocatoriaTipo('completa');
-                              setFormConvocadosIds(availableMembers.map((m) => m.id));
+                              setFormConvocatoriaTipo("completa");
+                              setFormConvocadosIds(
+                                availableMembers.map((m) => m.id),
+                              );
                             }}
                             className={`px-3 py-1 text-xs font-sans font-bold rounded-md transition-all cursor-pointer ${
-                              formConvocatoriaTipo === 'completa'
-                                ? 'bg-[var(--acc)] text-[var(--ink)]'
-                                : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                              formConvocatoriaTipo === "completa"
+                                ? "bg-[var(--acc)] text-[var(--ink)]"
+                                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                           >
                             👥 Banda Completa ({availableMembers.length})
                           </button>
                           <button
                             type="button"
-                            onClick={() => setFormConvocatoriaTipo('parcial')}
+                            onClick={() => setFormConvocatoriaTipo("parcial")}
                             className={`px-3 py-1 text-xs font-sans font-bold rounded-md transition-all cursor-pointer ${
-                              formConvocatoriaTipo === 'parcial'
-                                ? 'bg-[var(--acc)] text-[var(--ink)]'
-                                : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                              formConvocatoriaTipo === "parcial"
+                                ? "bg-[var(--acc)] text-[var(--ink)]"
+                                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                             }`}
                           >
                             👤 Formación Parcial / Reducida
@@ -957,10 +1155,13 @@ export default function TourManager({
                       </div>
 
                       {/* Lista de Miembros para Convocatoria */}
-                      {formConvocatoriaTipo === 'parcial' && (
+                      {formConvocatoriaTipo === "parcial" && (
                         <div className="space-y-2.5 animate-in fade-in duration-200">
                           <div className="flex justify-between items-center text-[11px] text-[var(--ink-2)] font-sans">
-                            <span>Marca los músicos o miembros del equipo que viajarán en esta gira:</span>
+                            <span>
+                              Marca los músicos o miembros del equipo que
+                              viajarán en esta gira:
+                            </span>
                             <div className="flex gap-2">
                               <button
                                 type="button"
@@ -982,7 +1183,9 @@ export default function TourManager({
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             {availableMembers.map((m) => {
-                              const isSelected = formConvocadosIds.includes(m.id);
+                              const isSelected = formConvocadosIds.includes(
+                                m.id,
+                              );
                               return (
                                 <button
                                   key={m.id}
@@ -990,20 +1193,28 @@ export default function TourManager({
                                   onClick={() => handleToggleMember(m.id)}
                                   className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
                                     isSelected
-                                      ? 'bg-[var(--tentative)]/20/50 text-[var(--ink)]'
-                                      : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+                                      ? "bg-[var(--tentative)]/20 text-[var(--ink)]"
+                                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]"
                                   }`}
                                 >
                                   <div
                                     className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${
-                                      isSelected ? 'bg-[var(--acc)] text-[var(--ink)]' : 'border'
+                                      isSelected
+                                        ? "bg-[var(--acc)] text-[var(--ink)]"
+                                        : "border"
                                     }`}
                                   >
-                                    {isSelected && <CheckSquare className="w-3.5 h-3.5" />}
+                                    {isSelected && (
+                                      <CheckSquare className="w-3.5 h-3.5" />
+                                    )}
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <div className="text-xs font-bold truncate text-[var(--ink)]">{m.name}</div>
-                                    <div className="text-[10px] text-[var(--ink-2)] truncate">{m.instrument || m.role}</div>
+                                    <div className="text-xs font-bold truncate text-[var(--ink)]">
+                                      {m.name}
+                                    </div>
+                                    <div className="text-[10px] text-[var(--ink-2)] truncate">
+                                      {m.instrument || m.role}
+                                    </div>
                                   </div>
                                 </button>
                               );
@@ -1016,21 +1227,30 @@ export default function TourManager({
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-3 text-xs">
                         <div className="flex items-center gap-2">
                           <span className="text-[var(--tentative)]/80 font-sans font-bold">
-                            Expedición: {formConvocatoriaTipo === 'completa' ? availableMembers.length : formConvocadosIds.length} personas
-                            convocadas
+                            Expedición:{" "}
+                            {formConvocatoriaTipo === "completa"
+                              ? availableMembers.length
+                              : formConvocadosIds.length}{" "}
+                            personas convocadas
                           </span>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[var(--ink-2)] font-sans text-[11px]">Dieta / pers. / día:</span>
+                          <span className="text-[var(--ink-2)] font-sans text-[11px]">
+                            Dieta / pers. / día:
+                          </span>
                           <input
                             type="number"
                             min="0"
                             value={dietaPerPersona}
-                            onChange={(e) => setDietaPerPersona(Number(e.target.value))}
+                            onChange={(e) =>
+                              setDietaPerPersona(Number(e.target.value))
+                            }
                             className="w-16 p-1 rounded bg-[var(--sunken)] text-xs font-sans text-center font-bold text-[var(--acc)]/70"
                           />
-                          <span className="text-[var(--ink-2)] text-xs font-sans">€</span>
+                          <span className="text-[var(--ink-2)] text-xs font-sans">
+                            €
+                          </span>
                           <button
                             type="button"
                             onClick={handleAutoCalculateDietas}
@@ -1048,11 +1268,17 @@ export default function TourManager({
                       <div className="flex flex-wrap items-center justify-between gap-2/20 pb-3">
                         <div>
                           <span className="text-xs font-sans font-bold text-[var(--ink-3)] tracking-wider flex items-center gap-1.5">
-                            <Truck className="w-4 h-4 text-[var(--ink-2)]" /> Flota & Vehículos de la Gira ({formVehiculos.length}{' '}
-                            {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'})
+                            <Truck className="w-4 h-4 text-[var(--ink-2)]" />{" "}
+                            Flota & Vehículos de la Gira ({formVehiculos.length}{" "}
+                            {formVehiculos.length === 1
+                              ? "vehículo"
+                              : "vehículos"}
+                            )
                           </span>
                           <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                            Añade todos los coches o furgonetas que viajan. El consumo de combustible sumará el gasto combinado de la flota.
+                            Añade todos los coches o furgonetas que viajan. El
+                            consumo de combustible sumará el gasto combinado de
+                            la flota.
                           </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -1069,7 +1295,8 @@ export default function TourManager({
                             className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                             title="Aplica la suma de consumos a las distancias de todas las paradas"
                           >
-                            <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" /> Recalcular Paradas
+                            <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
+                            Recalcular Paradas
                           </button>
                         </div>
                       </div>
@@ -1077,13 +1304,18 @@ export default function TourManager({
                       {/* Vehicles List */}
                       <div className="space-y-3">
                         {formVehiculos.map((veh, vIdx) => (
-                          <div key={veh.id || `veh-${vIdx}`} className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] relative space-y-3">
+                          <div
+                            key={veh.id || `veh-${vIdx}`}
+                            className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] relative space-y-3"
+                          >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--ink-3)] text-[10px] font-sans font-bold">
                                   Vehículo #{vIdx + 1}
                                 </span>
-                                <span className="text-xs font-semibold text-[var(--ink)]">{veh.nombre || 'Vehículo sin nombre'}</span>
+                                <span className="text-xs font-semibold text-[var(--ink)]">
+                                  {veh.nombre || "Vehículo sin nombre"}
+                                </span>
                               </div>
                               {formVehiculos.length > 1 && (
                                 <button
@@ -1093,16 +1325,25 @@ export default function TourManager({
                                   title="Eliminar este vehículo"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
-                                  <span className="hidden sm:inline text-[10px] font-sans">Eliminar</span>
+                                  <span className="hidden sm:inline text-[10px] font-sans">
+                                    Eliminar
+                                  </span>
                                 </button>
                               )}
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                               <div>
-                                <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">Cargar Plantilla</label>
+                                <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">
+                                  Cargar Plantilla
+                                </label>
                                 <select
-                                  onChange={(e) => handleApplyPresetToVehicle(vIdx, e.target.value)}
+                                  onChange={(e) =>
+                                    handleApplyPresetToVehicle(
+                                      vIdx,
+                                      e.target.value,
+                                    )
+                                  }
                                   defaultValue=""
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)] cursor-pointer"
                                 >
@@ -1110,7 +1351,10 @@ export default function TourManager({
                                     -- Seleccionar Modelo --
                                   </option>
                                   {VEHICLE_PRESETS.map((p, idx) => (
-                                    <option key={`veh-preset-${p.name}-${idx}`} value={p.label}>
+                                    <option
+                                      key={`veh-preset-${p.name}-${idx}`}
+                                      value={p.label}
+                                    >
                                       {p.label}
                                     </option>
                                   ))}
@@ -1118,10 +1362,18 @@ export default function TourManager({
                               </div>
 
                               <div>
-                                <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">Nombre / Identificador</label>
+                                <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">
+                                  Nombre / Identificador
+                                </label>
                                 <input
                                   value={veh.nombre}
-                                  onChange={(e) => handleUpdateVehicle(vIdx, 'nombre', e.target.value)}
+                                  onChange={(e) =>
+                                    handleUpdateVehicle(
+                                      vIdx,
+                                      "nombre",
+                                      e.target.value,
+                                    )
+                                  }
                                   placeholder="Ej. Furgoneta Principal (Banda)"
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs text-[var(--ink)]"
                                 />
@@ -1129,21 +1381,35 @@ export default function TourManager({
 
                               <div>
                                 <label className="text-[10px] font-sans text-[var(--acc)]/70 block mb-1">
-                                  Consumo ({veh.tipoCombustible === 'electrico' ? 'kWh/100km' : 'L/100km'})
+                                  Consumo (
+                                  {veh.tipoCombustible === "electrico"
+                                    ? "kWh/100km"
+                                    : "L/100km"}
+                                  )
                                 </label>
                                 <input
                                   type="number"
                                   step="0.1"
                                   min="0.1"
                                   value={veh.consumoL100km}
-                                  onChange={(e) => handleUpdateVehicle(vIdx, 'consumoL100km', Number(e.target.value))}
+                                  onChange={(e) =>
+                                    handleUpdateVehicle(
+                                      vIdx,
+                                      "consumoL100km",
+                                      Number(e.target.value),
+                                    )
+                                  }
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--acc)]/70 focus:"
                                 />
                               </div>
 
                               <div>
                                 <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">
-                                  Precio (€/{veh.tipoCombustible === 'electrico' ? 'kWh' : 'Litro'})
+                                  Precio (€/
+                                  {veh.tipoCombustible === "electrico"
+                                    ? "kWh"
+                                    : "Litro"}
+                                  )
                                 </label>
                                 <div className="flex gap-1">
                                   <input
@@ -1151,12 +1417,24 @@ export default function TourManager({
                                     step="0.01"
                                     min="0.01"
                                     value={veh.precioCarburanteEUR ?? 1.55}
-                                    onChange={(e) => handleUpdateVehicle(vIdx, 'precioCarburanteEUR', Number(e.target.value))}
+                                    onChange={(e) =>
+                                      handleUpdateVehicle(
+                                        vIdx,
+                                        "precioCarburanteEUR",
+                                        Number(e.target.value),
+                                      )
+                                    }
                                     className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-bold text-[var(--ink-2)]"
                                   />
                                   <select
-                                    value={veh.tipoCombustible || 'diesel'}
-                                    onChange={(e) => handleUpdateVehicle(vIdx, 'tipoCombustible', e.target.value)}
+                                    value={veh.tipoCombustible || "diesel"}
+                                    onChange={(e) =>
+                                      handleUpdateVehicle(
+                                        vIdx,
+                                        "tipoCombustible",
+                                        e.target.value,
+                                      )
+                                    }
                                     className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[10px] text-[var(--ink)] cursor-pointer"
                                   >
                                     <option value="diesel">Diésel</option>
@@ -1175,20 +1453,36 @@ export default function TourManager({
                       <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-3 text-xs font-sans">
                         <div className="space-y-1">
                           <span className="text-[var(--ink)] flex items-center gap-1.5">
-                            📐 <strong className="text-[var(--ink)]">Cálculo de Consumo Combinado:</strong>
+                            📐{" "}
+                            <strong className="text-[var(--ink)]">
+                              Cálculo de Consumo Combinado:
+                            </strong>
                           </span>
                           <div className="text-[11px] text-[var(--ink-2)]">
                             {formVehiculos.map((v, i) => (
-                              <span key={`veh-fleet-summary-${v.id || i}-${i}`} className="inline-block mr-2">
-                                • {v.nombre || `Vehículo ${i + 1}`}: {v.consumoL100km} {v.tipoCombustible === 'electrico' ? 'kWh' : 'L'}
-                                /100km @ {v.precioCarburanteEUR || 1.55}€ (≈{' '}
-                                {((Number(v.consumoL100km) || 0) * (Number(v.precioCarburanteEUR) || 1.55)).toFixed(2)}€/100km)
+                              <span
+                                key={`veh-fleet-summary-${v.id || i}-${i}`}
+                                className="inline-block mr-2"
+                              >
+                                • {v.nombre || `Vehículo ${i + 1}`}:{" "}
+                                {v.consumoL100km}{" "}
+                                {v.tipoCombustible === "electrico"
+                                  ? "kWh"
+                                  : "L"}
+                                /100km @ {v.precioCarburanteEUR || 1.55}€ (≈{" "}
+                                {(
+                                  (Number(v.consumoL100km) || 0) *
+                                  (Number(v.precioCarburanteEUR) || 1.55)
+                                ).toFixed(2)}
+                                €/100km)
                               </span>
                             ))}
                           </div>
                         </div>
                         <div className="bg-[var(--acc)]/10 px-3 py-1.5 rounded-[var(--r-s)] text-right shrink-0">
-                          <span className="text-[10px] block text-[var(--ink-2)] font-sans">Coste Flota Total / 100 km</span>
+                          <span className="text-[10px] block text-[var(--ink-2)] font-sans">
+                            Coste Flota Total / 100 km
+                          </span>
                           <span className="text-sm font-extrabold text-[var(--acc)]/70">
                             {totalFleetCostPer100Km.toFixed(2)} € / 100 km
                           </span>
@@ -1206,7 +1500,8 @@ export default function TourManager({
                           Ruta & Paradas
                         </h4>
                         <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                          Cada parada con fecha se reflejará en el calendario de la banda con sus gastos logísticos y convocatoria.
+                          Cada parada con fecha se reflejará en el calendario de
+                          la banda con sus gastos logísticos y convocatoria.
                         </p>
                       </div>
                       <button
@@ -1221,8 +1516,9 @@ export default function TourManager({
                     <div className="space-y-4">
                       {formStops.length === 0 ? (
                         <div className="p-6 text-center rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] text-sm italic">
-                          Añade paradas para calcular automáticamente kilometraje, estimación de combustible de todos tus vehículos, dietas
-                          y margen financiero.
+                          Añade paradas para calcular automáticamente
+                          kilometraje, estimación de combustible de todos tus
+                          vehículos, dietas y margen financiero.
                         </div>
                       ) : (
                         formStops.map((stop, idx) => (
@@ -1243,7 +1539,12 @@ export default function TourManager({
                               <span>PARADA #{idx + 1}</span>
                               {leads.length > 0 && (
                                 <select
-                                  onChange={(e) => handleSelectVenueForStop(idx, e.target.value)}
+                                  onChange={(e) =>
+                                    handleSelectVenueForStop(
+                                      idx,
+                                      e.target.value,
+                                    )
+                                  }
                                   defaultValue=""
                                   className="ml-auto text-[10px] bg-[var(--sunken)] text-[var(--ink-3)] p-1 rounded focus:outline-none cursor-pointer"
                                 >
@@ -1251,7 +1552,10 @@ export default function TourManager({
                                     -- Cargar desde Salas BD --
                                   </option>
                                   {leads.map((lead, lIdx) => (
-                                    <option key={`lead-opt-${lead.id || lIdx}-${lIdx}`} value={lead.id || lead.nombre_sala}>
+                                    <option
+                                      key={`lead-opt-${lead.id || lIdx}-${lIdx}`}
+                                      value={lead.id || lead.nombre_sala}
+                                    >
                                       {lead.nombre_sala} ({lead.ciudad})
                                     </option>
                                   ))}
@@ -1261,29 +1565,41 @@ export default function TourManager({
 
                             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-3">
                               <div className="space-y-1">
-                                <label className="text-[10px] font-sans text-[var(--ink-2)] block">Ciudad</label>
+                                <label className="text-[10px] font-sans text-[var(--ink-2)] block">
+                                  Ciudad
+                                </label>
                                 <input
                                   value={stop.ciudad}
-                                  onChange={(e) => updateStop(idx, 'ciudad', e.target.value)}
+                                  onChange={(e) =>
+                                    updateStop(idx, "ciudad", e.target.value)
+                                  }
                                   placeholder="Ciudad"
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
                                 />
                               </div>
                               <div className="space-y-1">
-                                <label className="text-[10px] font-sans text-[var(--ink-2)] block">Sala / Festival</label>
+                                <label className="text-[10px] font-sans text-[var(--ink-2)] block">
+                                  Sala / Festival
+                                </label>
                                 <input
                                   value={stop.sala}
-                                  onChange={(e) => updateStop(idx, 'sala', e.target.value)}
+                                  onChange={(e) =>
+                                    updateStop(idx, "sala", e.target.value)
+                                  }
                                   placeholder="Nombre de la sala"
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
                                 />
                               </div>
                               <div className="space-y-1">
-                                <label className="text-[10px] font-sans text-[var(--ink-2)] block">Fecha</label>
+                                <label className="text-[10px] font-sans text-[var(--ink-2)] block">
+                                  Fecha
+                                </label>
                                 <input
                                   type="date"
                                   value={stop.fecha}
-                                  onChange={(e) => updateStop(idx, 'fecha', e.target.value)}
+                                  onChange={(e) =>
+                                    updateStop(idx, "fecha", e.target.value)
+                                  }
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
                                 />
                               </div>
@@ -1295,17 +1611,27 @@ export default function TourManager({
                                       <Calculator className="w-3 h-3 text-[var(--ink-2)]" />
                                     </span>
                                   </span>
-                                  {stop.distanciaAnteriorKm && stop.distanciaAnteriorKm > 0 ? (
+                                  {stop.distanciaAnteriorKm &&
+                                  stop.distanciaAnteriorKm > 0 ? (
                                     <span className="text-[9px] text-[var(--acc)]/70 font-normal">
-                                      {formVehiculos.length} {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'}
+                                      {formVehiculos.length}{" "}
+                                      {formVehiculos.length === 1
+                                        ? "vehículo"
+                                        : "vehículos"}
                                     </span>
                                   ) : null}
                                 </label>
                                 <input
                                   type="number"
                                   min="0"
-                                  value={stop.distanciaAnteriorKm || ''}
-                                  onChange={(e) => updateStop(idx, 'distanciaAnteriorKm', Number(e.target.value))}
+                                  value={stop.distanciaAnteriorKm || ""}
+                                  onChange={(e) =>
+                                    updateStop(
+                                      idx,
+                                      "distanciaAnteriorKm",
+                                      Number(e.target.value),
+                                    )
+                                  }
                                   placeholder="Km desde anterior"
                                   className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-sm"
                                 />
@@ -1313,16 +1639,28 @@ export default function TourManager({
                             </div>
 
                             {/* Auditor de Festivos y Puentes para la Parada de Gira */}
-                            <HolidayDateWarning date={stop.fecha} city={stop.ciudad} className="mb-3" />
+                            <HolidayDateWarning
+                              date={stop.fecha}
+                              city={stop.ciudad}
+                              className="mb-3"
+                            />
 
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
                               <div>
-                                <label className="text-[10px] text-[var(--ok)] block font-sans">Caché / Taquilla (€)</label>
+                                <label className="text-[10px] text-[var(--ok)] block font-sans">
+                                  Caché / Taquilla (€)
+                                </label>
                                 <input
                                   type="number"
                                   min="0"
-                                  value={stop.ingresoCacheEstimated || ''}
-                                  onChange={(e) => updateStop(idx, 'ingresoCacheEstimated', Number(e.target.value))}
+                                  value={stop.ingresoCacheEstimated || ""}
+                                  onChange={(e) =>
+                                    updateStop(
+                                      idx,
+                                      "ingresoCacheEstimated",
+                                      Number(e.target.value),
+                                    )
+                                  }
                                   placeholder="0 €"
                                   className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs text-[var(--ink-2)] font-bold"
                                 />
@@ -1334,30 +1672,52 @@ export default function TourManager({
                                 <input
                                   type="number"
                                   min="0"
-                                  value={stop.gastosGasolina || ''}
-                                  onChange={(e) => updateStop(idx, 'gastosGasolina', Number(e.target.value))}
+                                  value={stop.gastosGasolina || ""}
+                                  onChange={(e) =>
+                                    updateStop(
+                                      idx,
+                                      "gastosGasolina",
+                                      Number(e.target.value),
+                                    )
+                                  }
                                   placeholder="0 €"
                                   className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs text-[var(--ink)] font-semibold"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-[var(--ink-2)] block font-sans">Alojamiento (€)</label>
+                                <label className="text-[10px] text-[var(--ink-2)] block font-sans">
+                                  Alojamiento (€)
+                                </label>
                                 <input
                                   type="number"
                                   min="0"
-                                  value={stop.gastosAlojamiento || ''}
-                                  onChange={(e) => updateStop(idx, 'gastosAlojamiento', Number(e.target.value))}
+                                  value={stop.gastosAlojamiento || ""}
+                                  onChange={(e) =>
+                                    updateStop(
+                                      idx,
+                                      "gastosAlojamiento",
+                                      Number(e.target.value),
+                                    )
+                                  }
                                   placeholder="0 €"
                                   className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-[var(--ink-2)] block font-sans">Dietas Expedición (€)</label>
+                                <label className="text-[10px] text-[var(--ink-2)] block font-sans">
+                                  Dietas Expedición (€)
+                                </label>
                                 <input
                                   type="number"
                                   min="0"
-                                  value={stop.gastosDietas || ''}
-                                  onChange={(e) => updateStop(idx, 'gastosDietas', Number(e.target.value))}
+                                  value={stop.gastosDietas || ""}
+                                  onChange={(e) =>
+                                    updateStop(
+                                      idx,
+                                      "gastosDietas",
+                                      Number(e.target.value),
+                                    )
+                                  }
                                   placeholder="0 €"
                                   className="w-full p-1.5 rounded bg-[var(--sunken)] text-xs"
                                 />
@@ -1379,12 +1739,19 @@ export default function TourManager({
                       <input
                         type="checkbox"
                         checked={formSincronizarCalendario}
-                        onChange={(e) => setFormSincronizarCalendario(e.target.checked)}
+                        onChange={(e) =>
+                          setFormSincronizarCalendario(e.target.checked)
+                        }
                         className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
                       />
                       <span>
-                        <strong className="text-[var(--ink)]">📅 Sincronizar paradas en el Calendario oficial de la Banda:</strong>{' '}
-                        Crea/actualiza automáticamente los conciertos correspondientes con los miembros convocados y badge de gira.
+                        <strong className="text-[var(--ink)]">
+                          📅 Sincronizar paradas en el Calendario oficial de la
+                          Banda:
+                        </strong>{" "}
+                        Crea/actualiza automáticamente los conciertos
+                        correspondientes con los miembros convocados y badge de
+                        gira.
                       </span>
                     </label>
                   </div>
@@ -1392,40 +1759,65 @@ export default function TourManager({
                   {/* Balance General de Gira */}
                   {formStops.length > 0 &&
                     (() => {
-                      const totalIngresos = formStops.reduce((sum, stop) => sum + (stop.ingresoCacheEstimated || 0), 0);
+                      const totalIngresos = formStops.reduce(
+                        (sum, stop) => sum + (stop.ingresoCacheEstimated || 0),
+                        0,
+                      );
                       const totalGastos = formStops.reduce(
-                        (sum, stop) => sum + (stop.gastosAlojamiento || 0) + (stop.gastosGasolina || 0) + (stop.gastosDietas || 0),
-                        0
+                        (sum, stop) =>
+                          sum +
+                          (stop.gastosAlojamiento || 0) +
+                          (stop.gastosGasolina || 0) +
+                          (stop.gastosDietas || 0),
+                        0,
                       );
                       const neto = totalIngresos - totalGastos;
                       const numPers =
-                        formConvocatoriaTipo === 'completa' ? availableMembers.length : formConvocadosIds.length || availableMembers.length;
-                      const netoPorPersona = numPers > 0 ? Math.round(neto / numPers) : 0;
+                        formConvocatoriaTipo === "completa"
+                          ? availableMembers.length
+                          : formConvocadosIds.length || availableMembers.length;
+                      const netoPorPersona =
+                        numPers > 0 ? Math.round(neto / numPers) : 0;
 
                       return (
                         <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                           <div>
-                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">Caché Total Est.</span>
-                            <span className="text-base sm:text-lg font-bold text-[var(--ok)]">+{totalIngresos} €</span>
+                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">
+                              Caché Total Est.
+                            </span>
+                            <span className="text-base sm:text-lg font-bold text-[var(--ok)]">
+                              +{totalIngresos} €
+                            </span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">Gastos Logística</span>
-                            <span className="text-base sm:text-lg font-bold text-[var(--alert)]">-{totalGastos} €</span>
+                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">
+                              Gastos Logística
+                            </span>
+                            <span className="text-base sm:text-lg font-bold text-[var(--alert)]">
+                              -{totalGastos} €
+                            </span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">Margen Neto Total</span>
+                            <span className="text-[10px] text-[var(--ink-2)] font-sans block">
+                              Margen Neto Total
+                            </span>
                             <span
-                              className={`text-base sm:text-lg font-extrabold ${neto >= 0 ? 'text-[var(--ok)]' : 'text-[var(--alert)]'}`}
+                              className={`text-base sm:text-lg font-extrabold ${neto >= 0 ? "text-[var(--ok)]" : "text-[var(--alert)]"}`}
                             >
                               {neto >= 0 ? `+${neto}` : neto} €
                             </span>
                           </div>
                           <div>
-                            <span className="text-[10px] text-[var(--tentative)]/80 font-sans block">Neto / Músico ({numPers}pax)</span>
+                            <span className="text-[10px] text-[var(--tentative)]/80 font-sans block">
+                              Neto / Músico ({numPers}pax)
+                            </span>
                             <span
-                              className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ? 'text-[var(--tentative)]/80' : 'text-[var(--alert)]'}`}
+                              className={`text-base sm:text-lg font-extrabold ${netoPorPersona >= 0 ? "text-[var(--tentative)]/80" : "text-[var(--alert)]"}`}
                             >
-                              {netoPorPersona >= 0 ? `+${netoPorPersona}` : netoPorPersona} €
+                              {netoPorPersona >= 0
+                                ? `+${netoPorPersona}`
+                                : netoPorPersona}{" "}
+                              €
                             </span>
                           </div>
                         </div>
@@ -1449,7 +1841,7 @@ export default function TourManager({
                   className="px-5 py-2 rounded-[var(--r-m)] text-sm font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc-soft)] active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Activity className="w-4 h-4" />
-                  {editingTour ? 'Guardar Cambios' : 'Crear Gira'}
+                  {editingTour ? "Guardar Cambios" : "Crear Gira"}
                 </button>
               </div>
             </div>
@@ -1459,7 +1851,10 @@ export default function TourManager({
 
       {/* Modal Confirm Deletion */}
       {tourToDelete && (
-        <ModalPortal isOpen={!!tourToDelete} onClose={() => setTourToDelete(null)}>
+        <ModalPortal
+          isOpen={!!tourToDelete}
+          onClose={() => setTourToDelete(null)}
+        >
           <div className="fixed inset-0 bg-[var(--scrim)]/80 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
             <div
               className={`w-full max-w-md rounded-[var(--r-l)] ${colors.card} p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}
@@ -1469,13 +1864,20 @@ export default function TourManager({
                   <Trash2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-[var(--ink)] font-display">¿Eliminar esta gira?</h3>
-                  <p className="text-xs text-[var(--ink-2)] mt-0.5">Esta acción eliminará la gira y no se puede deshacer.</p>
+                  <h3 className="font-bold text-lg text-[var(--ink)] font-display">
+                    ¿Eliminar esta gira?
+                  </h3>
+                  <p className="text-xs text-[var(--ink-2)] mt-0.5">
+                    Esta acción eliminará la gira y no se puede deshacer.
+                  </p>
                 </div>
               </div>
 
               <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-sm text-[var(--ink-2)]">
-                Gira: <strong className="text-[var(--ink)]">{tourToDelete.name}</strong>
+                Gira:{" "}
+                <strong className="text-[var(--ink)]">
+                  {tourToDelete.name}
+                </strong>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">

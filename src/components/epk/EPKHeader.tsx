@@ -530,7 +530,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition cursor-pointer shrink-0 ${
                 isActive
                   ? "bg-[var(--acc)] text-[var(--ink)] font-bold"
-                  : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:border-[var(--hair)]"
+                  : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
               }`}
             >
               <Icon

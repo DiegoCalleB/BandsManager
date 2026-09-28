@@ -1042,7 +1042,7 @@ export function ReelsMetricsView({
                   setScanResult(null);
                   setShowScanModal(true);
                 }}
-                className="px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all bg-[var(--acc-soft)]/40 text-[var(--acc-ink)] hover:border-[var(--acc)]"
+                className="px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all bg-[var(--acc-soft)]/40 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]/60"
                 title="Sube una captura de pantalla de tu Instagram, TikTok o Spotify y Gemini extraerá todas las métricas al instante"
               >
                 <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1057,7 +1057,7 @@ export function ReelsMetricsView({
                 }}
                 className={`px-3.5 py-2.5 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider cursor-pointer flex items-center justify-center gap-2 transition-all ${
                   igStatus?.connected
-                    ? "bg-[var(--alert-soft)]/40 text-[var(--alert)] hover:border-[var(--alert)]"
+                    ? "bg-[var(--alert-soft)]/40 text-[var(--alert)] hover:bg-[var(--alert-soft)]/60"
                     : "bg-[var(--surface)]/40 text-[var(--alert)] hover:bg-[var(--alert-soft)]"
                 }`}
                 title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
@@ -2810,7 +2810,7 @@ export function ReelsMetricsView({
 
                 {!scanImageBase64 ? (
                   <label
-                    className={`border-2 rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${"bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:border-[var(--acc)]/50"}`}
+                    className={`border-2 rounded-[var(--r-l)] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${"bg-[var(--sunken)] hover:bg-[var(--surface)]/80"}`}
                   >
                     <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center justify-center mb-3">
                       <UploadCloud className="w-6 h-6" />

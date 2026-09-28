@@ -905,7 +905,7 @@ export const AgentAutonomySettingsModal: React.FC<
               onClick={() => setActiveTab("audit_logs")}
               className={`py-3 px-3.5 text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === "audit_logs"
-                  ? "border-[var(--ok)] text-[var(--ok)]"
+                  ? "text-[var(--ok)]"
                   : "border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
             >
@@ -1406,7 +1406,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                     },
                                   });
                                 }}
-                                className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:outline-none disabled:opacity-60 ${isBelowMin ? "border-[var(--alert)]" : ""}`}
+                                className={`w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:outline-none disabled:opacity-60 ${isBelowMin ? "ring-1 ring-[var(--alert)]" : ""}`}
                                 placeholder="—"
                               />
                               <span className="absolute right-3 top-2.5 text-xs text-[var(--ink-2)] font-sans">

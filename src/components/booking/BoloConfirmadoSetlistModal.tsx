@@ -338,8 +338,8 @@ export const BoloConfirmadoSetlistModal: React.FC<
                         isSelected
                           ? "bg-[var(--acc)]/15 /80"
                           : isOptimal
-                            ? "bg-[var(--ok)]/10/40 hover:bg-[var(--ok)]/15"
-                            : "bg-[var(--bg)]/60800 hover:border-[var(--hair)]700"
+                            ? "bg-[var(--ok)]/10 hover:bg-[var(--ok)]/15"
+                            : "bg-[var(--bg)]/60 hover:bg-[var(--sunken)]"
                       }`}
                     >
                       <div className="space-y-0.5">
@@ -367,7 +367,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                         className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
                           isSelected
                             ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
-                            : "border-[var(--hair)]700"
+                            : "ring-1 ring-[var(--hair)]"
                         }`}
                       >
                         {isSelected && <Check className="w-3 h-3 stroke-[3]" />}

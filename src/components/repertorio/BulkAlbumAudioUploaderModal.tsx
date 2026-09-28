@@ -706,7 +706,7 @@ export function BulkAlbumAudioUploaderModal({
                   onClick={() => coverInputRef.current?.click()}
                   className={`w-full py-2.5 px-3 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs font-sans font-bold cursor-pointer transition ${
                     coverPreviewUrl
-                      ? "border-[var(--ok)] text-[var(--ok)] bg-[var(--ok)]/10"
+                      ? "text-[var(--ok)] bg-[var(--ok)]/10"
                       : "bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]"
                   }`}
                 >
@@ -728,8 +728,8 @@ export function BulkAlbumAudioUploaderModal({
             onClick={() => fileInputRef.current?.click()}
             className={`p-8 rounded-[var(--r-l)] text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
               items.length > 0
-                ? "border-[var(--ok)] bg-[var(--ok)]/10"
-                : "border-[var(--hair)]/30 bg-[var(--surface)]/5 hover:border-[var(--ok)] hover:bg-[var(--bg)]"
+                ? "bg-[var(--ok)]/10"
+                : "bg-[var(--surface)]/5 hover:bg-[var(--ok)]/10"
             }`}
           >
             <input

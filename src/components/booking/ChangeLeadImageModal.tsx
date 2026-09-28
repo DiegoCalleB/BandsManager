@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
-import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from 'lucide-react';
-import { Lead } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { uploadFileToServer } from '../../utils/audioStorage';
-import { LeadAvatar } from './LeadAvatar';
-import { ModalPortal } from '../common/ModalPortal';
+import React, { useState } from "react";
+import {
+  X,
+  Upload,
+  Sparkles,
+  Link as LinkIcon,
+  Trash2,
+  Camera,
+  Loader2,
+  Check,
+} from "lucide-react";
+import { Lead } from "../../types";
+import { apiFetch } from "../../utils/api";
+import { uploadFileToServer } from "../../utils/audioStorage";
+import { LeadAvatar } from "./LeadAvatar";
+import { ModalPortal } from "../common/ModalPortal";
 
 interface ChangeLeadImageModalProps {
   lead: Lead | null;
@@ -14,12 +23,21 @@ interface ChangeLeadImageModalProps {
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
 }
 
-export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead, isOpen, onClose, onUpdateLead, onLeadLogoUpload }) => {
+export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
+  lead,
+  isOpen,
+  onClose,
+  onUpdateLead,
+  onLeadLogoUpload,
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [customUrl, setCustomUrl] = useState('');
+  const [customUrl, setCustomUrl] = useState("");
   const [showUrlInput, setShowUrlInput] = useState(false);
-  const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [statusMsg, setStatusMsg] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   if (!isOpen || !lead) return null;
 
@@ -35,21 +53,21 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
         uploadedUrl = (await onLeadLogoUpload(file)) || null;
       }
       if (!uploadedUrl) {
-        uploadedUrl = await uploadFileToServer(file, { category: 'leads' });
+        uploadedUrl = await uploadFileToServer(file, { category: "leads" });
       }
 
       if (uploadedUrl) {
         onUpdateLead(lead.id, { imagen_url: uploadedUrl });
-        setStatusMsg({ type: 'success', text: '¡Imagen subida con éxito! ' });
+        setStatusMsg({ type: "success", text: "¡Imagen subida con éxito! " });
         setTimeout(() => {
           onClose();
         }, 600);
       } else {
-        setStatusMsg({ type: 'error', text: 'Error al subir la imagen' });
+        setStatusMsg({ type: "error", text: "Error al subir la imagen" });
       }
     } catch (err) {
-      console.error('Error subiendo imagen:', err);
-      setStatusMsg({ type: 'error', text: 'Fallo al procesar el archivo' });
+      console.error("Error subiendo imagen:", err);
+      setStatusMsg({ type: "error", text: "Fallo al procesar el archivo" });
     } finally {
       setIsUploading(false);
     }
@@ -60,18 +78,23 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
     setStatusMsg(null);
 
     try {
-      const res = await apiFetch('/api/leads/ai-lookup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await apiFetch("/api/leads/ai-lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nombre_sala: lead.nombre_sala || (lead as any).nombre || (lead as any).nombreSala || (lead as any).name || '',
+          nombre_sala:
+            lead.nombre_sala ||
+            (lead as any).nombre ||
+            (lead as any).nombreSala ||
+            (lead as any).name ||
+            "",
           ciudad: lead.ciudad,
           leadId: lead.id,
         }),
       });
 
       if (res.success && res.data) {
-        const newImg = res.data.imagen_url || '';
+        const newImg = res.data.imagen_url || "";
         const newIcon = res.data.icono || lead.icono;
         const newWebsite = res.data.website || lead.website;
 
@@ -82,20 +105,29 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
         });
 
         if (newImg) {
-          setStatusMsg({ type: 'success', text: '¡Logo encontrado e instalado! ' });
+          setStatusMsg({
+            type: "success",
+            text: "¡Logo encontrado e instalado! ",
+          });
         } else {
-          setStatusMsg({ type: 'error', text: 'No se encontró una imagen oficial pública' });
+          setStatusMsg({
+            type: "error",
+            text: "No se encontró una imagen oficial pública",
+          });
         }
 
         setTimeout(() => {
           onClose();
         }, 800);
       } else {
-        setStatusMsg({ type: 'error', text: 'No se obtuvo respuesta de la búsqueda' });
+        setStatusMsg({
+          type: "error",
+          text: "No se obtuvo respuesta de la búsqueda",
+        });
       }
     } catch (err) {
-      console.error('Error buscando logo con IA:', err);
-      setStatusMsg({ type: 'error', text: 'Error en la búsqueda con IA' });
+      console.error("Error buscando logo con IA:", err);
+      setStatusMsg({ type: "error", text: "Error en la búsqueda con IA" });
     } finally {
       setIsSearching(false);
     }
@@ -104,15 +136,15 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
   const handleSaveCustomUrl = () => {
     if (!customUrl.trim()) return;
     onUpdateLead(lead.id, { imagen_url: customUrl.trim() });
-    setStatusMsg({ type: 'success', text: 'URL guardada' });
+    setStatusMsg({ type: "success", text: "URL guardada" });
     setTimeout(() => {
       onClose();
     }, 500);
   };
 
   const handleRemoveImage = () => {
-    onUpdateLead(lead.id, { imagen_url: '' });
-    setStatusMsg({ type: 'success', text: 'Imagen eliminada' });
+    onUpdateLead(lead.id, { imagen_url: "" });
+    setStatusMsg({ type: "success", text: "Imagen eliminada" });
     setTimeout(() => {
       onClose();
     }, 500);
@@ -138,9 +170,11 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
                 <Camera className="w-5 h-5 text-[var(--acc)]" />
               </div>
               <div className="min-w-0">
-                <h3 className="font-display font-bold text-base text-[var(--ink)] truncate">Cambiar Imagen / Logo</h3>
+                <h3 className="font-display font-bold text-base text-[var(--ink)] truncate">
+                  Cambiar Imagen / Logo
+                </h3>
                 <p className="text-xs text-[var(--ink-2)] font-sans truncate">
-                  {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` : ''}
+                  {lead.nombre_sala} {lead.ciudad ? `(${lead.ciudad})` : ""}
                 </p>
               </div>
             </div>
@@ -160,10 +194,12 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
           {statusMsg && (
             <div
               className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold text-center flex items-center justify-center gap-1.5 ${
-                statusMsg.type === 'success' ? 'bg-[var(--ok-soft)] text-[var(--ink-2)]' : 'bg-[var(--alert-soft)] text-[var(--ink-2)]'
+                statusMsg.type === "success"
+                  ? "bg-[var(--ok-soft)] text-[var(--ink-2)]"
+                  : "bg-[var(--alert-soft)] text-[var(--ink-2)]"
               }`}
             >
-              {statusMsg.type === 'success' && <Check className="w-4 h-4" />}
+              {statusMsg.type === "success" && <Check className="w-4 h-4" />}
               <span>{statusMsg.text}</span>
             </div>
           )}
@@ -174,16 +210,30 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
             <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)] hover:/50 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--sunken)] group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
-                  {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
+                  {isUploading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Upload className="w-5 h-5" />
+                  )}
                 </div>
                 <div className="text-left">
                   <span className="block font-bold text-xs text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition-colors">
-                    {isUploading ? 'Subiendo imagen...' : 'Subir desde dispositivo'}
+                    {isUploading
+                      ? "Subiendo imagen..."
+                      : "Subir desde dispositivo"}
                   </span>
-                  <span className="block text-[11px] text-[var(--ink-2)] font-sans">Formatos JPG, PNG, WEBP o SVG</span>
+                  <span className="block text-[11px] text-[var(--ink-2)] font-sans">
+                    Formatos JPG, PNG, WEBP o SVG
+                  </span>
                 </div>
               </div>
-              <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={isUploading || isSearching} />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileUpload}
+                disabled={isUploading || isSearching}
+              />
             </label>
 
             {/* Option 2: AI / Google Places Lookup */}
@@ -203,9 +253,13 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
                 </div>
                 <div className="text-left">
                   <span className="block font-bold text-xs text-[var(--acc)]/70">
-                    {isSearching ? 'Buscando logo oficial...' : 'Buscar Logo con IA & Google'}
+                    {isSearching
+                      ? "Buscando logo oficial..."
+                      : "Buscar Logo con IA & Google"}
                   </span>
-                  <span className="block text-[11px] text-[var(--acc)]/80 font-sans">Encuentra fotos de recintos o favicons oficiales</span>
+                  <span className="block text-[11px] text-[var(--acc)]/80 font-sans">
+                    Encuentra fotos de recintos o favicons oficiales
+                  </span>
                 </div>
               </div>
             </button>
@@ -215,14 +269,16 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
               <button
                 type="button"
                 onClick={() => setShowUrlInput(true)}
-                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)]800 hover:border-[var(--hair)]700 rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
+                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
               >
                 <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Pegar URL directa de imagen</span>
               </button>
             ) : (
               <div className="p-3 bg-[var(--bg)]700 rounded-[var(--r-m)] space-y-2">
-                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Pegar enlace de imagen (URL)</label>
+                <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                  Pegar enlace de imagen (URL)
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="url"
@@ -248,7 +304,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({ lead
               <button
                 type="button"
                 onClick={handleRemoveImage}
-                className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] hover:border-[var(--alert)] rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer mt-1"
+                className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert)]/20 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer mt-1"
               >
                 <Trash2 className="w-4 h-4 text-[var(--alert)]" />
                 <span>Eliminar imagen actual y restablecer icono</span>

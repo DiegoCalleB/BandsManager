@@ -1,11 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, Concert } from '../../types';
-import { LeadHealthBadge } from './LeadHealthBadge';
-import { VerifiedBadge } from '../common/VerifiedBadge';
-import { ReliabilityBadge } from '../common/ReliabilityBadge';
-import { FavoriteButton } from '../common/FavoriteButton';
-import { isLeadVerificado } from '../../utils/leadReliability';
-import { checkBandDateConflict, getCityTourHistory } from '../../utils/bookingTourContext';
+import React, { useState, useRef, useEffect } from "react";
+import { Lead, LeadStatus, LeadType, Concert } from "../../types";
+import { LeadHealthBadge } from "./LeadHealthBadge";
+import { VerifiedBadge } from "../common/VerifiedBadge";
+import { ReliabilityBadge } from "../common/ReliabilityBadge";
+import { FavoriteButton } from "../common/FavoriteButton";
+import { isLeadVerificado } from "../../utils/leadReliability";
+import {
+  checkBandDateConflict,
+  getCityTourHistory,
+} from "../../utils/bookingTourContext";
 import {
   MessageCircle,
   PhoneCall,
@@ -32,28 +35,48 @@ import {
   Sliders,
   ExternalLink,
   Compass,
-} from 'lucide-react';
-import { ChangeLeadImageModal } from './ChangeLeadImageModal';
-import { LeadAvatar } from './LeadAvatar';
-import { EmailDeliveryTicks } from './EmailDeliveryTicks';
-import { useEmailValidation, getEmailStatus, isBouncedLead } from '../../hooks/useEmailValidation';
-import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
-import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../utils/bookingFollowup';
+} from "lucide-react";
+import { ChangeLeadImageModal } from "./ChangeLeadImageModal";
+import { LeadAvatar } from "./LeadAvatar";
+import { EmailDeliveryTicks } from "./EmailDeliveryTicks";
+import {
+  useEmailValidation,
+  getEmailStatus,
+  isBouncedLead,
+} from "../../hooks/useEmailValidation";
+import {
+  getWhatsAppUrl,
+  openWhatsAppChat,
+  WHATSAPP_WINDOW_NAME,
+} from "../../utils/whatsapp";
+import {
+  isLeadNeedsFollowup,
+  getDaysSinceContact,
+  generateFollowupTemplate,
+} from "../../utils/bookingFollowup";
 
 interface LeadsTableProps {
   leads: Lead[];
   selectedLead: Lead | null;
-  onSelectLead: (lead: Lead, options?: { tab?: 'info' | 'emails' | 'copilot' | 'bitacora'; pitchDraft?: string }) => void;
+  onSelectLead: (
+    lead: Lead,
+    options?: {
+      tab?: "info" | "emails" | "copilot" | "bitacora";
+      pitchDraft?: string;
+    },
+  ) => void;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
   onDeleteLead?: (id: string, name: string) => void;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
-  viewMode: 'grid' | 'table';
+  viewMode: "grid" | "table";
   getStatusBadgeClass: (status: LeadStatus | string) => string;
   getStatusLabel: (status: LeadStatus | string) => string;
   normalizeType: (type?: string) => string;
-  sectionTab?: 'salas' | 'medios' | 'grupos';
-  mediaTypeFilter?: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos';
-  setMediaTypeFilter?: (type: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos') => void;
+  sectionTab?: "salas" | "medios" | "grupos";
+  mediaTypeFilter?: "televisión" | "radio" | "redes" | "managements" | "todos";
+  setMediaTypeFilter?: (
+    type: "televisión" | "radio" | "redes" | "managements" | "todos",
+  ) => void;
   selectedLeadIds?: string[];
   onToggleSelectLead?: (id: string, e?: React.MouseEvent) => void;
   onSelectAllFiltered?: () => void;
@@ -77,8 +100,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
   getStatusBadgeClass,
   getStatusLabel,
   normalizeType,
-  sectionTab = 'salas',
-  mediaTypeFilter = 'todos',
+  sectionTab = "salas",
+  mediaTypeFilter = "todos",
   setMediaTypeFilter,
   selectedLeadIds = [],
   onToggleSelectLead,
@@ -107,11 +130,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       const hist = getCityTourHistory(lead.ciudad, concerts);
       const freeDates = lead.fechas_libres_detectadas || [];
       const campaignFreeDates = (lead as any).fechas_libres_campana || [];
-      const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
+      const campaignIsActive =
+        activeCampaign &&
+        (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
 
       const badges: React.ReactNode[] = [];
 
-      if (conflict.status === 'conflicto_directo') {
+      if (conflict.status === "conflicto_directo") {
         badges.push(
           <span
             key="conf"
@@ -119,9 +144,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             title={conflict.mensaje}
           >
             🔴 Conflicto
-          </span>
+          </span>,
         );
-      } else if (conflict.status === 'cercano_compatible') {
+      } else if (conflict.status === "cercano_compatible") {
         badges.push(
           <span
             key="compat"
@@ -129,7 +154,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             title={conflict.mensaje}
           >
             🚗 Enlace 2x1
-          </span>
+          </span>,
         );
       }
 
@@ -138,21 +163,21 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
           <span
             key="camp"
             className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-sky-950/80 text-sky-300 font-semibold border border-sky-500/40"
-            title={`Fechas campaña: ${campaignFreeDates.join(', ')}`}
+            title={`Fechas campaña: ${campaignFreeDates.join(", ")}`}
           >
             🎯 {campaignFreeDates.length} d.
-          </span>
+          </span>,
         );
       } else if (freeDates.length > 0) {
         badges.push(
           <span
             key="free"
             className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-sky-950/80 text-sky-300 font-semibold border border-sky-500/40"
-            title={`Fechas libres detectadas: ${freeDates.join(', ')}`}
+            title={`Fechas libres detectadas: ${freeDates.join(", ")}`}
           >
             <CalendarCheck className="w-2.5 h-2.5 text-sky-400 shrink-0" />
             <span>{freeDates.length} lib.</span>
-          </span>
+          </span>,
         );
       }
 
@@ -164,34 +189,54 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             title={hist.resumenTexto}
           >
             🏛️ {hist.totalConciertos} prev.
-          </span>
+          </span>,
         );
       }
 
       if (badges.length === 0) return null;
 
-      return <div className="flex items-center gap-1 mt-0.5 flex-wrap">{badges}</div>;
+      return (
+        <div className="flex items-center gap-1 mt-0.5 flex-wrap">{badges}</div>
+      );
     }
 
-    const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
+    const campaignIsActive =
+      activeCampaign &&
+      (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
 
     // Status indicators de fuentes de radar
-    const wegowStatus = (lead as any).radar_wegow_status || (lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0 ? 'ok' : undefined);
-    const bandsintownStatus = (lead as any).radar_bandsintown_status || (lead as any).contrastado_multi_fuente ? 'ok' : undefined;
-    const contrastado = Boolean((lead as any).contrastado_multi_fuente || (wegowStatus === 'ok' && bandsintownStatus === 'ok'));
+    const wegowStatus =
+      (lead as any).radar_wegow_status ||
+      (lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0
+        ? "ok"
+        : undefined);
+    const bandsintownStatus =
+      (lead as any).radar_bandsintown_status ||
+      (lead as any).contrastado_multi_fuente
+        ? "ok"
+        : undefined;
+    const contrastado = Boolean(
+      (lead as any).contrastado_multi_fuente ||
+      (wegowStatus === "ok" && bandsintownStatus === "ok"),
+    );
     const fiabilidad =
       (lead as any).fiabilidad_radar ||
-      (contrastado ? 'alta' : lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0 ? 'media' : 'sin_datos');
+      (contrastado
+        ? "alta"
+        : lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0
+          ? "media"
+          : "sin_datos");
 
     const getVenueProgrammingUrl = (leadItem: Lead) => {
       if (leadItem.website && leadItem.website.trim().length > 0) {
         let url = leadItem.website.trim();
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'https://' + url;
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+          url = "https://" + url;
         }
         return url;
       }
-      const query = `${leadItem.nombre_sala} ${leadItem.ciudad || ''} programacion cartelera conciertos`.trim();
+      const query =
+        `${leadItem.nombre_sala} ${leadItem.ciudad || ""} programacion cartelera conciertos`.trim();
       return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
     };
 
@@ -216,16 +261,20 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded border hover:opacity-80 transition-opacity cursor-pointer ${
-              wegowStatus === 'ok'
-                ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300'
-                : wegowStatus === 'error'
-                  ? 'bg-rose-950/80 border-rose-500/50 text-rose-300'
-                  : 'bg-zinc-800/80 border-zinc-700 text-zinc-400'
+              wegowStatus === "ok"
+                ? "bg-emerald-950/80 border-emerald-500/50 text-emerald-300"
+                : wegowStatus === "error"
+                  ? "bg-rose-950/80 border-rose-500/50 text-rose-300"
+                  : "bg-zinc-800/80 border-zinc-700 text-zinc-400"
             }`}
-            title={wegowStatus === 'ok' ? 'Wegow API verificado - Clic para ver cartelera en Wegow' : 'Buscar esta sala en Wegow'}
+            title={
+              wegowStatus === "ok"
+                ? "Wegow API verificado - Clic para ver cartelera en Wegow"
+                : "Buscar esta sala en Wegow"
+            }
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-            Wegow: {wegowStatus === 'ok' ? '✓ OK' : 'Sin datos'}
+            Wegow: {wegowStatus === "ok" ? "✓ OK" : "Sin datos"}
             <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
           </a>
 
@@ -235,12 +284,18 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             className={`inline-flex items-center gap-0.5 px-1 py-0.2 rounded border hover:opacity-80 transition-opacity cursor-pointer ${
-              bandsintownStatus === 'ok' ? 'bg-sky-950/80 border-sky-500/50 text-sky-300' : 'bg-zinc-800/80 border-zinc-700 text-zinc-400'
+              bandsintownStatus === "ok"
+                ? "bg-sky-950/80 border-sky-500/50 text-sky-300"
+                : "bg-zinc-800/80 border-zinc-700 text-zinc-400"
             }`}
-            title={bandsintownStatus === 'ok' ? 'Bandsintown verificado - Clic para ver en Bandsintown' : 'Buscar esta sala en Bandsintown'}
+            title={
+              bandsintownStatus === "ok"
+                ? "Bandsintown verificado - Clic para ver en Bandsintown"
+                : "Buscar esta sala en Bandsintown"
+            }
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-            Bandsintown: {bandsintownStatus === 'ok' ? '✓ OK' : 'Sin datos'}
+            Bandsintown: {bandsintownStatus === "ok" ? "✓ OK" : "Sin datos"}
             <ExternalLink className="w-2 h-2 ml-0.5 opacity-60 shrink-0" />
           </a>
 
@@ -250,7 +305,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             </span>
           )}
 
-          {conflict.status === 'conflicto_directo' && (
+          {conflict.status === "conflicto_directo" && (
             <span
               className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-rose-950/90 text-rose-300 border border-rose-500/50 font-bold"
               title={conflict.mensaje}
@@ -259,7 +314,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             </span>
           )}
 
-          {conflict.status === 'cercano_compatible' && (
+          {conflict.status === "cercano_compatible" && (
             <span
               className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-500/50 font-bold"
               title={conflict.mensaje}
@@ -273,7 +328,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-amber-950/70 text-amber-300 border border-amber-500/40"
               title={hist.resumenTexto}
             >
-              🏛️ {hist.totalConciertos} {hist.totalConciertos === 1 ? 'bolo' : 'bolos'} prev.
+              🏛️ {hist.totalConciertos}{" "}
+              {hist.totalConciertos === 1 ? "bolo" : "bolos"} prev.
             </span>
           )}
         </div>
@@ -282,19 +338,34 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
     // Cuando la campaña está ACTIVA:
     if (campaignIsActive) {
-      const targetDates = activeCampaign?.targetDates || (activeCampaign as any)?.target_dates || [];
+      const targetDates =
+        activeCampaign?.targetDates ||
+        (activeCampaign as any)?.target_dates ||
+        [];
       const targetDatesText =
-        activeCampaign?.fechas_objetivo || activeCampaign?.fechasObjetivo || activeCampaign?.fechas || activeCampaign?.nombre || '';
+        activeCampaign?.fechas_objetivo ||
+        activeCampaign?.fechasObjetivo ||
+        activeCampaign?.fechas ||
+        activeCampaign?.nombre ||
+        "";
 
       const campaignFreeDates = (lead as any).fechas_libres_campana || [];
-      const hasVerifiedSources = Array.isArray(lead.radar_fuentes_verificadas) && lead.radar_fuentes_verificadas.length > 0;
-      const hasOccupied = Array.isArray(lead.fechas_ocupadas) && lead.fechas_ocupadas.length > 0;
-      const hasWegowOk = (lead as any).radar_wegow_status === 'ok';
-      const hasBandsintownOk = (lead as any).radar_bandsintown_status === 'ok';
+      const hasVerifiedSources =
+        Array.isArray(lead.radar_fuentes_verificadas) &&
+        lead.radar_fuentes_verificadas.length > 0;
+      const hasOccupied =
+        Array.isArray(lead.fechas_ocupadas) && lead.fechas_ocupadas.length > 0;
+      const hasWegowOk = (lead as any).radar_wegow_status === "ok";
+      const hasBandsintownOk = (lead as any).radar_bandsintown_status === "ok";
 
       const hasConcertsOrSources =
-        lead.datos_fechas_encontrados === true || hasWegowOk || hasBandsintownOk || hasVerifiedSources || hasOccupied;
-      const isSinDatos = !hasConcertsOrSources || lead.datos_fechas_encontrados === false;
+        lead.datos_fechas_encontrados === true ||
+        hasWegowOk ||
+        hasBandsintownOk ||
+        hasVerifiedSources ||
+        hasOccupied;
+      const isSinDatos =
+        !hasConcertsOrSources || lead.datos_fechas_encontrados === false;
 
       // Si no se han encontrado datos de fechas ni cartelera verificada de esta sala
       if (isSinDatos) {
@@ -321,10 +392,23 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       const estadoCartelera = (lead as any).estado_cartelera;
       const maxFecha = (lead as any).max_fecha_publicada;
       const formatIsoShort = (isoStr?: string) => {
-        if (!isoStr || !/^\d{4}-\d{2}-\d{2}$/.test(isoStr)) return isoStr || '';
-        const [y, m, d] = isoStr.split('-').map((n) => parseInt(n, 10));
-        const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        return `${d} ${months[m - 1] || ''}`.trim();
+        if (!isoStr || !/^\d{4}-\d{2}-\d{2}$/.test(isoStr)) return isoStr || "";
+        const [y, m, d] = isoStr.split("-").map((n) => parseInt(n, 10));
+        const months = [
+          "Ene",
+          "Feb",
+          "Mar",
+          "Abr",
+          "May",
+          "Jun",
+          "Jul",
+          "Ago",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dic",
+        ];
+        return `${d} ${months[m - 1] || ""}`.trim();
       };
       const maxFechaFmt = formatIsoShort(maxFecha);
 
@@ -336,7 +420,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         matchingDatesInCampaign = (lead as any).fechas_libres_campana || [];
       } else if (Array.isArray(targetDates) && targetDates.length > 0) {
         const occupiedSet = new Set(lead.fechas_ocupadas || []);
-        matchingDatesInCampaign = targetDates.filter((t) => !occupiedSet.has(t));
+        matchingDatesInCampaign = targetDates.filter(
+          (t) => !occupiedSet.has(t),
+        );
         isAvailableForCampaign = matchingDatesInCampaign.length > 0;
       } else if (targetDatesText) {
         const terms = String(targetDatesText)
@@ -344,7 +430,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
           .split(/[\s,;&\/]+/);
         matchingDatesInCampaign = campaignFreeDates.filter((f: string) => {
           const fLower = f.toLowerCase();
-          return terms.some((term) => term.length >= 2 && fLower.includes(term));
+          return terms.some(
+            (term) => term.length >= 2 && fLower.includes(term),
+          );
         });
         isAvailableForCampaign = matchingDatesInCampaign.length > 0;
       } else {
@@ -353,7 +441,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       }
 
       // 1. Caso: Programación de la sala no llega aún a la fecha de la campaña
-      if (estadoCartelera === 'no_publicada_aun') {
+      if (estadoCartelera === "no_publicada_aun") {
         return (
           <div className="flex flex-col gap-0.5 mt-0.5">
             <a
@@ -361,11 +449,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              title={`La agenda publicada de esta sala solo llega hasta ${maxFechaFmt || 'meses anteriores'}. Oportunidad para enviar propuesta antes de que cierren agenda.`}
+              title={`La agenda publicada de esta sala solo llega hasta ${maxFechaFmt || "meses anteriores"}. Oportunidad para enviar propuesta antes de que cierren agenda.`}
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-indigo-950/90 border border-indigo-500/80 text-indigo-300 hover:bg-indigo-900/90 hover:border-indigo-400 transition-colors shadow-2xs group cursor-pointer"
             >
               <Clock className="w-3 h-3 text-indigo-400 shrink-0" />
-              <span>📅 AGENDA AÚN NO PUBLICADA {maxFechaFmt ? `(Publicado hasta ${maxFechaFmt})` : ''}</span>
+              <span>
+                📅 AGENDA AÚN NO PUBLICADA{" "}
+                {maxFechaFmt ? `(Publicado hasta ${maxFechaFmt})` : ""}
+              </span>
               <ExternalLink className="w-2.5 h-2.5 text-indigo-400/80 group-hover:text-indigo-100 shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
@@ -374,7 +465,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       }
 
       // 2. Caso: Fuera de temporada / vacaciones
-      if (estadoCartelera === 'fuera_temporada') {
+      if (estadoCartelera === "fuera_temporada") {
         return (
           <div className="flex flex-col gap-0.5 mt-0.5">
             <a
@@ -395,7 +486,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       }
 
       // 3. Caso: Cartelera confirmada publicada y fecha disponible ("Sándwich")
-      if (isAvailableForCampaign || estadoCartelera === 'publicada_libre') {
+      if (isAvailableForCampaign || estadoCartelera === "publicada_libre") {
         return (
           <div className="flex flex-col gap-0.5 mt-0.5">
             <a
@@ -403,11 +494,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || 'Buscar en Google'})`}
+              title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || "Buscar en Google"})`}
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-emerald-950 border border-emerald-500/80 text-emerald-300 hover:bg-emerald-900/90 hover:border-emerald-400 transition-colors shadow-2xs group cursor-pointer"
             >
               <CalendarCheck className="w-3 h-3 text-emerald-400 shrink-0" />
-              <span>🎯 Campaña: ✅ DISPONIBLE ({matchingDatesInCampaign.join(', ')})</span>
+              <span>
+                🎯 Campaña: ✅ DISPONIBLE ({matchingDatesInCampaign.join(", ")})
+              </span>
               <ExternalLink className="w-2.5 h-2.5 text-emerald-400/80 group-hover:text-emerald-100 shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
@@ -421,11 +514,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || 'Buscar en Google'})`}
+              title={`Clic para verificar la programación oficial en la web de ${lead.nombre_sala} (${lead.website || "Buscar en Google"})`}
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-bold bg-rose-950/90 border border-rose-500/80 text-rose-300 hover:bg-rose-900/90 hover:border-rose-400 transition-colors shadow-2xs group cursor-pointer"
             >
               <AlertCircle className="w-3 h-3 text-rose-400 shrink-0" />
-              <span>🎯 Campaña: ❌ NO DISPONIBLE (Ocupada en fechas de campaña)</span>
+              <span>
+                🎯 Campaña: ❌ NO DISPONIBLE (Ocupada en fechas de campaña)
+              </span>
               <ExternalLink className="w-2.5 h-2.5 text-rose-400/80 group-hover:text-rose-100 shrink-0 ml-0.5" />
             </a>
             {renderSourcePills()}
@@ -436,7 +531,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
     // Modo estándar (sin campaña activa)
     const freeDates = lead.fechas_libres_detectadas || [];
-    if (lead.datos_fechas_encontrados === false || (!freeDates.length && !(lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0))) {
+    if (
+      lead.datos_fechas_encontrados === false ||
+      (!freeDates.length &&
+        !(lead.fechas_ocupadas && lead.fechas_ocupadas.length > 0))
+    ) {
       return lead.nombre_sala ? (
         <div className="flex flex-col gap-0.5 mt-0.5">
           <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-sans font-medium text-amber-400/90 bg-amber-950/40 border border-amber-800/40">
@@ -453,7 +552,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         <div className="flex flex-col gap-0.5 mt-0.5">
           <span
             className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-sans font-semibold bg-sky-950/90 border border-sky-600/80 text-sky-300 shadow-2xs cursor-pointer hover:bg-sky-900 transition-colors"
-            title={`Fechas libres detectadas por radar: ${freeDates.join(', ')}`}
+            title={`Fechas libres detectadas por radar: ${freeDates.join(", ")}`}
             onClick={(e) => {
               e.stopPropagation();
               onSelectLead(lead);
@@ -479,14 +578,19 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   useEffect(() => {
     if (headerCheckboxRef.current) {
-      headerCheckboxRef.current.indeterminate = isSomeSelected && !isAllSelected;
+      headerCheckboxRef.current.indeterminate =
+        isSomeSelected && !isAllSelected;
     }
   }, [isSomeSelected, isAllSelected]);
 
   const filteredLeads =
-    mediaTypeFilter === 'todos' || !setMediaTypeFilter ? leads : leads.filter((l) => l.genero?.toLowerCase() === mediaTypeFilter);
+    mediaTypeFilter === "todos" || !setMediaTypeFilter
+      ? leads
+      : leads.filter((l) => l.genero?.toLowerCase() === mediaTypeFilter);
 
-  const [leadForImageChange, setLeadForImageChange] = useState<Lead | null>(null);
+  const [leadForImageChange, setLeadForImageChange] = useState<Lead | null>(
+    null,
+  );
   const [isScanningBatchDates, setIsScanningBatchDates] = useState(false);
   const [batchScanResult, setBatchScanResult] = useState<string | null>(null);
   const { emailValidities } = useEmailValidation();
@@ -496,11 +600,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       setIsScanningBatchDates(true);
       setBatchScanResult(null);
 
-      const targetIds = selectedLeadIds.length > 0 ? selectedLeadIds : filteredLeads.map((l) => l.id);
+      const targetIds =
+        selectedLeadIds.length > 0
+          ? selectedLeadIds
+          : filteredLeads.map((l) => l.id);
 
-      const res = await fetch('/api/leads/detect-all-dates', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/leads/detect-all-dates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ leadIds: targetIds }),
       });
 
@@ -509,12 +616,16 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         data.updatedLeads.forEach((updated: Lead) => {
           onUpdateLead(updated.id, updated);
         });
-        setBatchScanResult(`✅ Escaneados ${data.processedCount} recintos. ¡${data.totalFreeDates} fechas libres detectadas en total!`);
+        setBatchScanResult(
+          `✅ Escaneados ${data.processedCount} recintos. ¡${data.totalFreeDates} fechas libres detectadas en total!`,
+        );
       } else {
-        setBatchScanResult(`⚠️ ${data.error || 'No se pudieron detectar fechas en lote'}`);
+        setBatchScanResult(
+          `⚠️ ${data.error || "No se pudieron detectar fechas en lote"}`,
+        );
       }
     } catch (err: any) {
-      setBatchScanResult(`❌ Error: ${err?.message || 'Error de conexión'}`);
+      setBatchScanResult(`❌ Error: ${err?.message || "Error de conexión"}`);
     } finally {
       setIsScanningBatchDates(false);
     }
@@ -522,52 +633,62 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   const handleQuickApprovePitch = (e: React.MouseEvent, lead: Lead) => {
     e.stopPropagation();
-    onUpdateLead(lead.id, { estado: 'aprobado' });
+    onUpdateLead(lead.id, { estado: "aprobado" });
   };
 
   const cleanPhone = (phone?: string) => {
-    if (!phone) return '';
-    return phone.replace(/\D/g, '');
+    if (!phone) return "";
+    return phone.replace(/\D/g, "");
   };
 
   const renderTipoBadge = (tipoRaw?: string) => {
-    const t = (tipoRaw || 'sala').toLowerCase().trim();
-    if (t === 'festival') {
+    const t = (tipoRaw || "sala").toLowerCase().trim();
+    if (t === "festival") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-purple-950/80 text-purple-300 border border-purple-800/60 shrink-0">
           🎪 Festival
         </span>
       );
     }
-    if (t === 'discoteca' || t === 'club') {
+    if (t === "discoteca" || t === "club") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-pink-950/80 text-pink-300 border border-pink-800/60 shrink-0">
           🪩 Club
         </span>
       );
     }
-    if (t === 'teatro' || t === 'auditorio') {
+    if (t === "teatro" || t === "auditorio") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-amber-950/80 text-amber-300 border border-amber-800/60 shrink-0">
           🎭 Teatro
         </span>
       );
     }
-    if (t === 'ayuntamiento') {
+    if (t === "ayuntamiento") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-blue-950/80 text-blue-300 border border-blue-800/60 shrink-0">
           🏛️ Ayto
         </span>
       );
     }
-    if (t === 'medio' || t === 'prensa' || t === 'radio' || t === 'televisión') {
+    if (
+      t === "medio" ||
+      t === "prensa" ||
+      t === "radio" ||
+      t === "televisión"
+    ) {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-sky-950/80 text-sky-300 border border-sky-800/60 shrink-0">
           📻 Medio
         </span>
       );
     }
-    if (t === 'agencia' || t === 'manager' || t === 'promotor' || t === 'sello') {
+    if (
+      t === "agencia" ||
+      t === "manager" ||
+      t === "promotor" ||
+      t === "sello"
+    ) {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md font-sans font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 shrink-0">
           💼 Agencia
@@ -583,7 +704,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   const renderTemperatureBadge = (lead: Lead) => {
     const temp = lead.temperatura_lead;
-    if (temp === 'muy_caliente' || lead.ultimo_sentimiento === 'muy_positivo') {
+    if (temp === "muy_caliente" || lead.ultimo_sentimiento === "muy_positivo") {
       return (
         <span
           className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0 animate-pulse shadow-xs"
@@ -594,7 +715,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </span>
       );
     }
-    if (temp === 'caliente' || (lead.ultimo_sentimiento_score && lead.ultimo_sentimiento_score >= 0.4)) {
+    if (
+      temp === "caliente" ||
+      (lead.ultimo_sentimiento_score && lead.ultimo_sentimiento_score >= 0.4)
+    ) {
       return (
         <span
           className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 shadow-xs"
@@ -605,7 +729,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </span>
       );
     }
-    if (temp === 'tibio') {
+    if (temp === "tibio") {
       return (
         <span
           className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-sky-500/15 text-sky-300 border border-sky-500/30 shrink-0"
@@ -615,7 +739,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </span>
       );
     }
-    if (temp === 'frio' || temp === 'congelado') {
+    if (temp === "frio" || temp === "congelado") {
       return (
         <span
           className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-zinc-800 text-zinc-400 border border-zinc-700 shrink-0"
@@ -632,35 +756,35 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     const intent = lead.ultima_intencion;
     if (!intent) return null;
 
-    if (intent === 'confirmar_fecha' || intent === 'proponer_fechas') {
+    if (intent === "confirmar_fecha" || intent === "proponer_fechas") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
           📅 Pide Fechas
         </span>
       );
     }
-    if (intent === 'pedir_cache') {
+    if (intent === "pedir_cache") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30">
           💰 Negociación Caché
         </span>
       );
     }
-    if (intent === 'pedir_info_tecnica') {
+    if (intent === "pedir_info_tecnica") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-300 border border-purple-500/30">
           🎛️ Pide Rider
         </span>
       );
     }
-    if (intent === 'rechazo_programacion_llena') {
+    if (intent === "rechazo_programacion_llena") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30">
           ⏳ Prog. Llena
         </span>
       );
     }
-    if (intent === 'derivar_contacto') {
+    if (intent === "derivar_contacto") {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
           📋 Deriva Contacto
@@ -674,8 +798,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     return (
       <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)] my-4">
         <Sparkles className="w-8 h-8 text-[var(--acc-ink)] mx-auto mb-2 opacity-60" />
-        <p className="text-[var(--ink-2)] font-bold text-sm">No se encontraron medios o espacios</p>
-        <p className="text-[var(--ink-2)] text-xs mt-1">Prueba a cambiar los filtros o los términos de búsqueda.</p>
+        <p className="text-[var(--ink-2)] font-bold text-sm">
+          No se encontraron medios o espacios
+        </p>
+        <p className="text-[var(--ink-2)] text-xs mt-1">
+          Prueba a cambiar los filtros o los términos de búsqueda.
+        </p>
       </div>
     );
   }
@@ -684,26 +812,28 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     <div className="w-full">
       {/* Top Filter Tabs & Selection Bar if applicable */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        {sectionTab === 'medios' && setMediaTypeFilter && (
+        {sectionTab === "medios" && setMediaTypeFilter && (
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            {['todos', 'televisión', 'radio', 'redes', 'managements'].map((type) => (
-              <button
-                key={type}
-                onClick={() => setMediaTypeFilter(type as any)}
-                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold capitalize transition-colors cursor-pointer ${
-                  mediaTypeFilter === type
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                {type}
-              </button>
-            ))}
+            {["todos", "televisión", "radio", "redes", "managements"].map(
+              (type) => (
+                <button
+                  key={type}
+                  onClick={() => setMediaTypeFilter(type as any)}
+                  className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold capitalize transition-colors cursor-pointer ${
+                    mediaTypeFilter === type
+                      ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+                  }`}
+                >
+                  {type}
+                </button>
+              ),
+            )}
           </div>
         )}
 
         {/* Quick select buttons in Grid view */}
-        {viewMode === 'grid' && onToggleSelectLead && (
+        {viewMode === "grid" && onToggleSelectLead && (
           <div className="flex items-center gap-2 text-xs font-sans ml-auto">
             <button
               type="button"
@@ -747,8 +877,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               )}
               <span>
                 {isScanningBatchDates
-                  ? 'Escaneando carteleras...'
-                  : `📡 Radar Fechas Libres (${selectedLeadIds.length > 0 ? selectedLeadIds.length : 'Campaña'})`}
+                  ? "Escaneando carteleras..."
+                  : `📡 Radar Fechas Libres (${selectedLeadIds.length > 0 ? selectedLeadIds.length : "Campaña"})`}
               </span>
             </button>
           </div>
@@ -768,40 +898,51 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </div>
       )}
 
-      {viewMode === 'grid' ? (
+      {viewMode === "grid" ? (
         <div
           className={`grid gap-4 pb-10 transition-all duration-300 ${
             selectedLead
-              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
-              : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
           }`}
         >
           {filteredLeads.map((lead, idx) => {
             const isDetailOpen = selectedLead?.id === lead.id;
             const isChecked = selectedLeadIds.includes(lead.id);
             const rawMovil =
-              (lead.telefono_movil || '').trim() ||
-              (!lead.telefono_fijo && lead.telefono && /^(?:\+?34\s*)?[67]/.test(lead.telefono.trim()) ? lead.telefono.trim() : '');
+              (lead.telefono_movil || "").trim() ||
+              (!lead.telefono_fijo &&
+              lead.telefono &&
+              /^(?:\+?34\s*)?[67]/.test(lead.telefono.trim())
+                ? lead.telefono.trim()
+                : "");
             const rawFijo =
-              (lead.telefono_fijo || '').trim() ||
-              (!lead.telefono_movil && lead.telefono && /^(?:\+?34\s*)?[89]/.test(lead.telefono.trim()) ? lead.telefono.trim() : '');
+              (lead.telefono_fijo || "").trim() ||
+              (!lead.telefono_movil &&
+              lead.telefono &&
+              /^(?:\+?34\s*)?[89]/.test(lead.telefono.trim())
+                ? lead.telefono.trim()
+                : "");
             const hasMovil = Boolean(rawMovil && rawMovil.length >= 6);
             const hasFijo = Boolean(rawFijo && rawFijo.length >= 6);
             // WhatsApp sólo disponible si se dispone de teléfono móvil
             const phoneForWhatsApp = hasMovil ? cleanPhone(rawMovil) : null;
             const phoneForCall = rawMovil || rawFijo || lead.telefono;
-            const leadKey = lead.id ? `lead-grid-${lead.id}` : `lead-grid-${idx}`;
+            const leadKey = lead.id
+              ? `lead-grid-${lead.id}`
+              : `lead-grid-${idx}`;
 
             // Check if there is high-value intelligence on this lead
             const hasIntelligence = Boolean(
               lead.ultimo_sentimiento_score !== undefined ||
               lead.temperatura_lead ||
               lead.ultima_intencion ||
-              (lead.fechas_propuestas_sala && lead.fechas_propuestas_sala.length > 0) ||
+              (lead.fechas_propuestas_sala &&
+                lead.fechas_propuestas_sala.length > 0) ||
               lead.condiciones_economicas_detectadas ||
               lead.ultimo_analisis_resumen ||
               lead.estrategia_playbook ||
-              lead.ultimo_mensaje_recibido
+              lead.ultimo_mensaje_recibido,
             );
 
             return (
@@ -810,10 +951,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 onClick={() => onSelectLead(lead)}
                 className={`p-4 rounded-[var(--r-l)] transition-all cursor-pointer flex flex-col justify-between gap-3 relative group ${
                   isChecked
-                    ? 'bg-[var(--surface)] ring-2 ring-[var(--acc)]/25'
+                    ? "bg-[var(--surface)] ring-2 ring-[var(--acc)]/25"
                     : isDetailOpen
-                      ? 'bg-[var(--sunken)] ring-1 ring-purple-400/30'
-                      : 'bg-[var(--bg)] hover:bg-[var(--sunken)] hover:border-[var(--hair)]700'
+                      ? "bg-[var(--sunken)] ring-1 ring-purple-400/30"
+                      : "bg-[var(--bg)] hover:bg-[var(--sunken)]"
                 }`}
               >
                 {/* Header info */}
@@ -826,13 +967,17 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         onToggleSelectLead(lead.id, e);
                       }}
                       className="shrink-0 pt-0.5 cursor-pointer"
-                      title={isChecked ? 'Deseleccionar sala' : 'Seleccionar sala para acciones masivas'}
+                      title={
+                        isChecked
+                          ? "Deseleccionar sala"
+                          : "Seleccionar sala para acciones masivas"
+                      }
                     >
                       <div
                         className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
                           isChecked
-                            ? 'bg-[var(--acc)] text-[var(--ink)]'
-                            : 'border-[var(--hair)]600 group-hover:border-[var(--hair)]400 bg-[var(--bg)]/80 hover:'
+                            ? "bg-[var(--acc)] text-[var(--ink)]"
+                            : "bg-[var(--bg)]/80 group-hover:bg-[var(--sunken)]"
                         }`}
                       >
                         {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
@@ -859,18 +1004,23 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         >
                           {lead.nombre_sala}
                         </h4>
-                        <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
+                        <VerifiedBadge
+                          isVerified={isLeadVerificado(lead)}
+                          size="sm"
+                        />
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
                         <FavoriteButton
                           isFavorite={!!lead.es_favorito}
-                          onToggle={(newVal) => onUpdateLead(lead.id, { es_favorito: newVal })}
+                          onToggle={(newVal) =>
+                            onUpdateLead(lead.id, { es_favorito: newVal })
+                          }
                           size="sm"
                         />
                         <span
                           className={`inline-flex items-center text-[10px] px-2 py-0.5 rounded-full font-sans font-medium shrink-0 ${getStatusBadgeClass(
-                            lead.estado
+                            lead.estado,
                           )}`}
                         >
                           {getStatusLabel(lead.estado)}
@@ -880,7 +1030,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                     <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans text-[var(--ink-2)] font-medium mt-1">
                       {renderTipoBadge(lead.tipo)}
-                      <span className="text-[var(--ink)] font-semibold">{lead.ciudad || 'España'}</span>
+                      <span className="text-[var(--ink)] font-semibold">
+                        {lead.ciudad || "España"}
+                      </span>
                       {lead.ciudad && onFilterByRouteCity && (
                         <button
                           type="button"
@@ -895,35 +1047,55 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         </button>
                       )}
                       <span>•</span>
-                      <span className={lead.roster ? 'text-[var(--acc)]/70 font-semibold' : ''}>
+                      <span
+                        className={
+                          lead.roster
+                            ? "text-[var(--acc)]/70 font-semibold"
+                            : ""
+                        }
+                      >
                         {lead.roster
                           ? `Róster: ${lead.roster}`
-                          : ['agencia', 'manager', 'productora', 'sello'].includes(String(lead.tipo || '').toLowerCase())
-                            ? 'Agencia / Booking'
+                          : [
+                                "agencia",
+                                "manager",
+                                "productora",
+                                "sello",
+                              ].includes(String(lead.tipo || "").toLowerCase())
+                            ? "Agencia / Booking"
                             : lead.aforo
                               ? `${lead.aforo} pax`
-                              : 'Aforo n/d'}
+                              : "Aforo n/d"}
                       </span>
                       {lead.financial_break_even?.entradas_break_even ? (
                         <span
                           className={`inline-flex items-center gap-1 text-[10px] font-sans font-semibold px-1.5 py-0.2 rounded ${
-                            lead.financial_break_even.entradas_break_even / (lead.aforo || 250) <= 0.4
-                              ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
-                              : lead.financial_break_even.entradas_break_even / (lead.aforo || 250) <= 0.7
-                                ? 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
-                                : 'bg-rose-950/60 text-rose-300 border border-rose-500/30'
+                            lead.financial_break_even.entradas_break_even /
+                              (lead.aforo || 250) <=
+                            0.4
+                              ? "bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"
+                              : lead.financial_break_even.entradas_break_even /
+                                    (lead.aforo || 250) <=
+                                  0.7
+                                ? "bg-amber-950/60 text-amber-300 border border-amber-500/30"
+                                : "bg-rose-950/60 text-rose-300 border border-rose-500/30"
                           }`}
                           title={`Break-Even: Cubre gastos vendiendo ${lead.financial_break_even.entradas_break_even} entradas (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
                         >
-                          🎯 B-E: {lead.financial_break_even.entradas_break_even}
+                          🎯 B-E:{" "}
+                          {lead.financial_break_even.entradas_break_even}
                         </span>
                       ) : null}
                       <span>•</span>
-                      <span className="text-[var(--ink-2)]">{lead.genero || 'Variado'}</span>
+                      <span className="text-[var(--ink-2)]">
+                        {lead.genero || "Variado"}
+                      </span>
                     </div>
 
                     {/* Temperatura & Intención Directas */}
-                    {(lead.temperatura_lead || lead.ultima_intencion || lead.ultimo_sentimiento_score !== undefined) && (
+                    {(lead.temperatura_lead ||
+                      lead.ultima_intencion ||
+                      lead.ultimo_sentimiento_score !== undefined) && (
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         {renderTemperatureBadge(lead)}
                         {renderIntentBadge(lead)}
@@ -931,10 +1103,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <span
                             className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
                               lead.ultimo_sentimiento_score >= 0.4
-                                ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+                                ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
                                 : lead.ultimo_sentimiento_score <= -0.3
-                                  ? 'text-rose-400 bg-rose-500/10 border-rose-500/30'
-                                  : 'text-zinc-400 bg-zinc-800 border-zinc-700'
+                                  ? "text-rose-400 bg-rose-500/10 border-rose-500/30"
+                                  : "text-zinc-400 bg-zinc-800 border-zinc-700"
                             }`}
                           >
                             {lead.ultimo_sentimiento_score > 0
@@ -951,34 +1123,46 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 {hasIntelligence && (
                   <div className="bg-black/50 p-2.5 rounded-xl border border-zinc-800/80 space-y-2 text-xs">
                     {/* Entidades Detectadas: Fechas y Economía */}
-                    {((lead.fechas_propuestas_sala && lead.fechas_propuestas_sala.length > 0) ||
+                    {((lead.fechas_propuestas_sala &&
+                      lead.fechas_propuestas_sala.length > 0) ||
                       lead.condiciones_economicas_detectadas) && (
                       <div className="flex flex-wrap items-center gap-1.5 pb-1 border-b border-zinc-800/70">
-                        {lead.fechas_propuestas_sala && lead.fechas_propuestas_sala.length > 0 && (
-                          <span
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30 text-[10px] font-mono font-semibold"
-                            title={`Fechas propuestas por la sala: ${lead.fechas_propuestas_sala.join(', ')}`}
-                          >
-                            <Calendar className="w-3 h-3 text-sky-400 shrink-0" />
-                            <span>{lead.fechas_propuestas_sala.slice(0, 2).join(', ')}</span>
-                          </span>
-                        )}
+                        {lead.fechas_propuestas_sala &&
+                          lead.fechas_propuestas_sala.length > 0 && (
+                            <span
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30 text-[10px] font-mono font-semibold"
+                              title={`Fechas propuestas por la sala: ${lead.fechas_propuestas_sala.join(", ")}`}
+                            >
+                              <Calendar className="w-3 h-3 text-sky-400 shrink-0" />
+                              <span>
+                                {lead.fechas_propuestas_sala
+                                  .slice(0, 2)
+                                  .join(", ")}
+                              </span>
+                            </span>
+                          )}
                         {lead.condiciones_economicas_detectadas?.cifra && (
                           <span
                             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-semibold"
-                            title={`Condiciones económicas: ${lead.condiciones_economicas_detectadas.tipo || ''} ${lead.condiciones_economicas_detectadas.detalles || ''}`}
+                            title={`Condiciones económicas: ${lead.condiciones_economicas_detectadas.tipo || ""} ${lead.condiciones_economicas_detectadas.detalles || ""}`}
                           >
                             <Coins className="w-3 h-3 text-emerald-400 shrink-0" />
-                            <span>{lead.condiciones_economicas_detectadas.cifra}</span>
+                            <span>
+                              {lead.condiciones_economicas_detectadas.cifra}
+                            </span>
                           </span>
                         )}
                       </div>
                     )}
 
                     {/* Resumen Ejecutivo / Último Mensaje */}
-                    {(lead.ultimo_analisis_resumen || lead.ultimo_mensaje_recibido) && (
+                    {(lead.ultimo_analisis_resumen ||
+                      lead.ultimo_mensaje_recibido) && (
                       <p className="text-[11px] text-zinc-300 line-clamp-2 leading-relaxed italic">
-                        "{lead.ultimo_analisis_resumen || lead.ultimo_mensaje_recibido}"
+                        "
+                        {lead.ultimo_analisis_resumen ||
+                          lead.ultimo_mensaje_recibido}
+                        "
                       </p>
                     )}
 
@@ -1010,7 +1194,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 {/* Quality Badges, Delivery Status & Phone Indicators */}
                 <div className="flex flex-wrap items-center gap-1.5 text-xs">
                   <EmailDeliveryTicks lead={lead} size="sm" showLabel={true} />
-                  <LeadHealthBadge lead={lead} showDescription={true} size="sm" />
+                  <LeadHealthBadge
+                    lead={lead}
+                    showDescription={true}
+                    size="sm"
+                  />
                   <ReliabilityBadge item={lead} size="sm" />
 
                   {/* Icono de Teléfono Móvil disponible */}
@@ -1039,7 +1227,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   {lead.instagram ? (
                     <a
                       href={
-                        lead.instagram.startsWith('http') ? lead.instagram : `https://instagram.com/${lead.instagram.replace(/^@/, '')}`
+                        lead.instagram.startsWith("http")
+                          ? lead.instagram
+                          : `https://instagram.com/${lead.instagram.replace(/^@/, "")}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"
@@ -1048,7 +1238,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       title={`Instagram: ${lead.instagram}`}
                     >
                       <Instagram className="w-3 h-3 text-pink-400 shrink-0" />
-                      <span className="hidden xs:inline">{lead.instagram.startsWith('@') ? lead.instagram : `@${lead.instagram}`}</span>
+                      <span className="hidden xs:inline">
+                        {lead.instagram.startsWith("@")
+                          ? lead.instagram
+                          : `@${lead.instagram}`}
+                      </span>
                     </a>
                   ) : null}
 
@@ -1073,7 +1267,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         title={`Enviar WhatsApp directo al móvil (${rawMovil})`}
                       >
                         <MessageCircle className="w-4 h-4 text-[var(--ok)]" />
-                        <span className="hidden xs:inline text-[11px]">WhatsApp</span>
+                        <span className="hidden xs:inline text-[11px]">
+                          WhatsApp
+                        </span>
                       </a>
                     ) : null}
 
@@ -1081,7 +1277,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     {lead.instagram ? (
                       <a
                         href={
-                          lead.instagram.startsWith('http') ? lead.instagram : `https://instagram.com/${lead.instagram.replace(/^@/, '')}`
+                          lead.instagram.startsWith("http")
+                            ? lead.instagram
+                            : `https://instagram.com/${lead.instagram.replace(/^@/, "")}`
                         }
                         target="_blank"
                         rel="noopener noreferrer"
@@ -1090,7 +1288,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         title={`Abrir Instagram (${lead.instagram})`}
                       >
                         <Instagram className="w-4 h-4 text-pink-400" />
-                        <span className="hidden xs:inline text-[11px]">Instagram</span>
+                        <span className="hidden xs:inline text-[11px]">
+                          Instagram
+                        </span>
                       </a>
                     ) : null}
 
@@ -1109,12 +1309,15 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         }
                       >
                         <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
-                        <span className="hidden xs:inline text-[11px]">Llamar</span>
+                        <span className="hidden xs:inline text-[11px]">
+                          Llamar
+                        </span>
                       </a>
                     ) : null}
 
                     {/* Direct Pitch Approval Button if pending */}
-                    {(lead.estado === 'pendiente_aprobacion' || lead.estado === 'nuevo') && (
+                    {(lead.estado === "pendiente_aprobacion" ||
+                      lead.estado === "nuevo") && (
                       <button
                         type="button"
                         onClick={(e) => handleQuickApprovePitch(e, lead)}
@@ -1132,14 +1335,22 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          const nudgeText = generateFollowupTemplate(lead, effectiveBandName || 'Bakandeya');
-                          onSelectLead(lead, { tab: 'emails', pitchDraft: nudgeText });
+                          const nudgeText = generateFollowupTemplate(
+                            lead,
+                            effectiveBandName || "Bakandeya",
+                          );
+                          onSelectLead(lead, {
+                            tab: "emails",
+                            pitchDraft: nudgeText,
+                          });
                         }}
                         className="px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-xl font-bold text-xs flex items-center gap-1 transition-all cursor-pointer min-h-[38px] shadow-xs"
                         title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                       >
                         <Clock className="w-3.5 h-3.5 text-amber-400" />
-                        <span className="text-[11px]">Nudge ({getDaysSinceContact(lead)}d)</span>
+                        <span className="text-[11px]">
+                          Nudge ({getDaysSinceContact(lead)}d)
+                        </span>
                       </button>
                     )}
                   </div>
@@ -1153,12 +1364,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       }}
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
                         isDetailOpen
-                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--ink-3)]/60'
+                          ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                          : "bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--ink-3)]/60"
                       }`}
                     >
                       <Eye className="w-3.5 h-3.5" />
-                      <span>{hasIntelligence ? 'Copiloto' : 'Ficha'}</span>
+                      <span>{hasIntelligence ? "Copiloto" : "Ficha"}</span>
                     </button>
                     {onDeleteLead && (
                       <button
@@ -1193,26 +1404,54 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         type="checkbox"
                         ref={headerCheckboxRef}
                         checked={isAllSelected}
-                        onChange={isAllSelected ? onDeselectAll : onSelectAllFiltered}
+                        onChange={
+                          isAllSelected ? onDeselectAll : onSelectAllFiltered
+                        }
                         className="w-4 h-4 rounded-[var(--r-s)] text-[var(--acc)] focus:ring-[var(--acc)]/40 bg-[var(--sunken)] cursor-pointer accent-[var(--acc)]"
-                        title={isAllSelected ? 'Deseleccionar todos' : 'Seleccionar todos los resultados'}
+                        title={
+                          isAllSelected
+                            ? "Deseleccionar todos"
+                            : "Seleccionar todos los resultados"
+                        }
                       />
                     </div>
                   </th>
                 )}
 
-                <th className="py-2.5 px-2 w-8 text-center whitespace-nowrap">Fav</th>
-                <th className="py-2.5 px-3 min-w-[190px] whitespace-nowrap">
-                  {sectionTab === 'medios' ? 'Medio / Contacto' : sectionTab === 'grupos' ? 'Banda / Management' : 'Espacio / Nombre'}
+                <th className="py-2.5 px-2 w-8 text-center whitespace-nowrap">
+                  Fav
                 </th>
-                <th className="py-2.5 px-2.5 min-w-[80px] whitespace-nowrap">Tipo</th>
-                <th className="py-2.5 px-2.5 min-w-[100px] whitespace-nowrap">Fiabilidad</th>
-                <th className="py-2.5 px-2.5 min-w-[110px] whitespace-nowrap">Salud / Temp</th>
-                <th className="py-2.5 px-3 min-w-[100px] whitespace-nowrap">Ciudad</th>
-                <th className="py-2.5 px-2.5 min-w-[70px] whitespace-nowrap">{sectionTab === 'grupos' ? 'Róster / Aforo' : 'Aforo'}</th>
-                <th className="py-2.5 px-3 min-w-[110px] whitespace-nowrap">Estado</th>
-                <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">Contacto / Directo</th>
-                <th className="py-2.5 px-3 min-w-[130px] text-right whitespace-nowrap">Acciones Rápidas</th>
+                <th className="py-2.5 px-3 min-w-[190px] whitespace-nowrap">
+                  {sectionTab === "medios"
+                    ? "Medio / Contacto"
+                    : sectionTab === "grupos"
+                      ? "Banda / Management"
+                      : "Espacio / Nombre"}
+                </th>
+                <th className="py-2.5 px-2.5 min-w-[80px] whitespace-nowrap">
+                  Tipo
+                </th>
+                <th className="py-2.5 px-2.5 min-w-[100px] whitespace-nowrap">
+                  Fiabilidad
+                </th>
+                <th className="py-2.5 px-2.5 min-w-[110px] whitespace-nowrap">
+                  Salud / Temp
+                </th>
+                <th className="py-2.5 px-3 min-w-[100px] whitespace-nowrap">
+                  Ciudad
+                </th>
+                <th className="py-2.5 px-2.5 min-w-[70px] whitespace-nowrap">
+                  {sectionTab === "grupos" ? "Róster / Aforo" : "Aforo"}
+                </th>
+                <th className="py-2.5 px-3 min-w-[110px] whitespace-nowrap">
+                  Estado
+                </th>
+                <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">
+                  Contacto / Directo
+                </th>
+                <th className="py-2.5 px-3 min-w-[130px] text-right whitespace-nowrap">
+                  Acciones Rápidas
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--hair)] text-xs align-middle">
@@ -1220,24 +1459,38 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 const isDetailOpen = selectedLead?.id === lead.id;
                 const isChecked = selectedLeadIds.includes(lead.id);
                 const rawMovil =
-                  (lead.telefono_movil || '').trim() ||
-                  (!lead.telefono_fijo && lead.telefono && /^(?:\+?34\s*)?[67]/.test(lead.telefono.trim()) ? lead.telefono.trim() : '');
+                  (lead.telefono_movil || "").trim() ||
+                  (!lead.telefono_fijo &&
+                  lead.telefono &&
+                  /^(?:\+?34\s*)?[67]/.test(lead.telefono.trim())
+                    ? lead.telefono.trim()
+                    : "");
                 const rawFijo =
-                  (lead.telefono_fijo || '').trim() ||
-                  (!lead.telefono_movil && lead.telefono && /^(?:\+?34\s*)?[89]/.test(lead.telefono.trim()) ? lead.telefono.trim() : '');
+                  (lead.telefono_fijo || "").trim() ||
+                  (!lead.telefono_movil &&
+                  lead.telefono &&
+                  /^(?:\+?34\s*)?[89]/.test(lead.telefono.trim())
+                    ? lead.telefono.trim()
+                    : "");
                 const hasMovil = Boolean(rawMovil && rawMovil.length >= 6);
                 const hasFijo = Boolean(rawFijo && rawFijo.length >= 6);
                 // WhatsApp sólo disponible si se dispone de teléfono móvil
                 const phoneForWhatsApp = hasMovil ? cleanPhone(rawMovil) : null;
                 const phoneForCall = rawMovil || rawFijo || lead.telefono;
-                const leadKey = lead.id ? `lead-row-${lead.id}` : `lead-row-${idx}`;
+                const leadKey = lead.id
+                  ? `lead-row-${lead.id}`
+                  : `lead-row-${idx}`;
 
                 return (
                   <tr
                     key={leadKey}
                     onClick={() => onSelectLead(lead)}
                     className={`transition-colors cursor-pointer ${
-                      isChecked ? 'bg-[var(--acc-soft)]' : isDetailOpen ? 'bg-[var(--sunken)]' : 'hover:bg-[var(--sunken)]'
+                      isChecked
+                        ? "bg-[var(--acc-soft)]"
+                        : isDetailOpen
+                          ? "bg-[var(--sunken)]"
+                          : "hover:bg-[var(--sunken)]"
                     }`}
                   >
                     {/* Row Select Checkbox */}
@@ -1259,16 +1512,21 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               onToggleSelectLead(lead.id, e);
                             }}
                             className="w-4 h-4 rounded-[var(--r-s)] text-[var(--acc)] focus:ring-[var(--acc)]/40 bg-[var(--sunken)] cursor-pointer accent-[var(--acc)]"
-                            title={isChecked ? 'Deseleccionar' : 'Seleccionar'}
+                            title={isChecked ? "Deseleccionar" : "Seleccionar"}
                           />
                         </div>
                       </td>
                     )}
 
-                    <td className="py-1.5 px-2 text-center align-middle" onClick={(e) => e.stopPropagation()}>
+                    <td
+                      className="py-1.5 px-2 text-center align-middle"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <FavoriteButton
                         isFavorite={!!lead.es_favorito}
-                        onToggle={(newVal) => onUpdateLead(lead.id, { es_favorito: newVal })}
+                        onToggle={(newVal) =>
+                          onUpdateLead(lead.id, { es_favorito: newVal })
+                        }
                         size="sm"
                       />
                     </td>
@@ -1293,16 +1551,21 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             >
                               {lead.nombre_sala}
                             </span>
-                            <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
+                            <VerifiedBadge
+                              isVerified={isLeadVerificado(lead)}
+                              size="sm"
+                            />
                           </div>
                           <span className="text-[10px] text-[var(--ink-2)] font-sans font-normal truncate block">
-                            {lead.genero || 'Sin género'}
+                            {lead.genero || "Sin género"}
                           </span>
                         </div>
                       </div>
                     </td>
 
-                    <td className="py-1.5 px-2.5 min-w-[80px] whitespace-nowrap align-middle">{renderTipoBadge(lead.tipo)}</td>
+                    <td className="py-1.5 px-2.5 min-w-[80px] whitespace-nowrap align-middle">
+                      {renderTipoBadge(lead.tipo)}
+                    </td>
 
                     <td className="py-1.5 px-2.5 min-w-[100px] whitespace-nowrap align-middle">
                       <ReliabilityBadge item={lead} size="sm" />
@@ -1310,7 +1573,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                     <td className="py-1.5 px-2.5 min-w-[110px] whitespace-nowrap align-middle">
                       <div className="flex items-center gap-1 flex-wrap">
-                        <LeadHealthBadge lead={lead} showDescription={false} size="sm" />
+                        <LeadHealthBadge
+                          lead={lead}
+                          showDescription={false}
+                          size="sm"
+                        />
                         {renderTemperatureBadge(lead)}
                         {renderIntentBadge(lead)}
                       </div>
@@ -1318,7 +1585,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
                     <td className="py-1.5 px-3 min-w-[100px] text-zinc-300 align-middle">
                       <div className="flex items-center gap-1 leading-snug">
-                        <span className="font-semibold text-xs text-zinc-200 block truncate">{lead.ciudad || 'España'}</span>
+                        <span className="font-semibold text-xs text-zinc-200 block truncate">
+                          {lead.ciudad || "España"}
+                        </span>
                         {lead.ciudad && onFilterByRouteCity && (
                           <button
                             type="button"
@@ -1337,8 +1606,18 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[90px] text-[var(--ink-2)] align-middle">
-                      <span className={lead.roster ? 'text-[var(--acc-ink)] font-semibold' : 'text-[var(--ink)]'}>
-                        {lead.roster ? `Róster: ${lead.roster}` : lead.aforo ? `${lead.aforo} pax` : 'n/d'}
+                      <span
+                        className={
+                          lead.roster
+                            ? "text-[var(--acc-ink)] font-semibold"
+                            : "text-[var(--ink)]"
+                        }
+                      >
+                        {lead.roster
+                          ? `Róster: ${lead.roster}`
+                          : lead.aforo
+                            ? `${lead.aforo} pax`
+                            : "n/d"}
                       </span>
                     </td>
 
@@ -1346,12 +1625,16 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <div className="flex items-center gap-1.5">
                         <span
                           className={`inline-flex items-center text-[10px] px-2 py-0.5 rounded-full font-sans font-medium ${getStatusBadgeClass(
-                            lead.estado
+                            lead.estado,
                           )}`}
                         >
                           {getStatusLabel(lead.estado)}
                         </span>
-                        <EmailDeliveryTicks lead={lead} size="sm" showLabel={false} />
+                        <EmailDeliveryTicks
+                          lead={lead}
+                          size="sm"
+                          showLabel={false}
+                        />
                       </div>
                     </td>
 
@@ -1362,7 +1645,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <div className="flex items-center gap-1">
                             {(() => {
                               const bounced = isBouncedLead(lead.notas);
-                              const invalid = getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid';
+                              const invalid =
+                                getEmailStatus(
+                                  lead.id,
+                                  lead.email_contacto,
+                                  emailValidities,
+                                ) === "invalid";
                               const broken = bounced || invalid;
                               return (
                                 <>
@@ -1370,14 +1658,22 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                     href={`mailto:${lead.email_contacto}`}
                                     onClick={(e) => e.stopPropagation()}
                                     className={`font-normal truncate max-w-[130px] text-xs inline-block ${
-                                      broken ? 'text-red-400 hover:text-red-300 line-through' : 'text-sky-400 hover:text-sky-300'
+                                      broken
+                                        ? "text-red-400 hover:text-red-300 line-through"
+                                        : "text-sky-400 hover:text-sky-300"
                                     }`}
                                     title={lead.email_contacto}
                                   >
                                     {lead.email_contacto}
                                   </a>
                                   {broken && (
-                                    <div title={bounced ? 'Email rebotado' : 'Email inválido'}>
+                                    <div
+                                      title={
+                                        bounced
+                                          ? "Email rebotado"
+                                          : "Email inválido"
+                                      }
+                                    >
                                       <AlertCircle className="w-3 h-3 text-red-400 shrink-0" />
                                     </div>
                                   )}
@@ -1386,27 +1682,39 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             })()}
                           </div>
                         ) : (
-                          <span className="text-zinc-600 italic text-[10px]">Sin email</span>
+                          <span className="text-zinc-600 italic text-[10px]">
+                            Sin email
+                          </span>
                         )}
                         {(hasMovil || hasFijo || lead.instagram) && (
                           <div className="flex items-center gap-1.5 mt-0.5 text-[10px]">
                             {hasMovil ? (
-                              <span className="inline-flex items-center gap-0.5 text-emerald-400" title={`Móvil: ${rawMovil}`}>
+                              <span
+                                className="inline-flex items-center gap-0.5 text-emerald-400"
+                                title={`Móvil: ${rawMovil}`}
+                              >
                                 <Smartphone className="w-2.5 h-2.5 shrink-0" />
-                                <span className="truncate max-w-[75px]">{rawMovil}</span>
+                                <span className="truncate max-w-[75px]">
+                                  {rawMovil}
+                                </span>
                               </span>
                             ) : hasFijo ? (
-                              <span className="inline-flex items-center gap-0.5 text-sky-400" title={`Fijo: ${rawFijo}`}>
+                              <span
+                                className="inline-flex items-center gap-0.5 text-sky-400"
+                                title={`Fijo: ${rawFijo}`}
+                              >
                                 <Phone className="w-2.5 h-2.5 shrink-0" />
-                                <span className="truncate max-w-[75px]">{rawFijo}</span>
+                                <span className="truncate max-w-[75px]">
+                                  {rawFijo}
+                                </span>
                               </span>
                             ) : null}
                             {lead.instagram ? (
                               <a
                                 href={
-                                  lead.instagram.startsWith('http')
+                                  lead.instagram.startsWith("http")
                                     ? lead.instagram
-                                    : `https://instagram.com/${lead.instagram.replace(/^@/, '')}`
+                                    : `https://instagram.com/${lead.instagram.replace(/^@/, "")}`
                                 }
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -1415,7 +1723,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                 title={`Instagram: ${lead.instagram}`}
                               >
                                 <Instagram className="w-2.5 h-2.5 shrink-0" />
-                                <span className="truncate max-w-[65px]">{lead.instagram.replace(/^@/, '')}</span>
+                                <span className="truncate max-w-[65px]">
+                                  {lead.instagram.replace(/^@/, "")}
+                                </span>
                               </a>
                             ) : null}
                           </div>
@@ -1447,9 +1757,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         {lead.instagram ? (
                           <a
                             href={
-                              lead.instagram.startsWith('http')
+                              lead.instagram.startsWith("http")
                                 ? lead.instagram
-                                : `https://instagram.com/${lead.instagram.replace(/^@/, '')}`
+                                : `https://instagram.com/${lead.instagram.replace(/^@/, "")}`
                             }
                             target="_blank"
                             rel="noopener noreferrer"
@@ -1478,7 +1788,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           </a>
                         ) : null}
 
-                        {(lead.estado === 'pendiente_aprobacion' || lead.estado === 'nuevo') && (
+                        {(lead.estado === "pendiente_aprobacion" ||
+                          lead.estado === "nuevo") && (
                           <button
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
@@ -1495,8 +1806,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              const nudgeText = generateFollowupTemplate(lead, effectiveBandName || 'Bakandeya');
-                              onSelectLead(lead, { tab: 'emails', pitchDraft: nudgeText });
+                              const nudgeText = generateFollowupTemplate(
+                                lead,
+                                effectiveBandName || "Bakandeya",
+                              );
+                              onSelectLead(lead, {
+                                tab: "emails",
+                                pitchDraft: nudgeText,
+                              });
                             }}
                             className="px-1.5 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded text-[9px] font-bold transition-all cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
                             title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
@@ -1514,8 +1831,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           }}
                           className={`p-1.5 rounded-[var(--r-s)] transition-colors inline-flex items-center ${
                             isDetailOpen
-                              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                              : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]'
+                              ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                              : "bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]"
                           }`}
                           title="Abrir ficha"
                         >

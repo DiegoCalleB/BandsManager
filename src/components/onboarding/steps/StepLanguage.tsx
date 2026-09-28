@@ -140,7 +140,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
               }}
               className={`relative p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
                 isSelected
-                  ? "bg-gradient-to-br from-[var(--acc)]/20 via-[var(--acc)]/20 to-[var(--surface)]/90 ring-2 ring-[var(--acc)]/30 scale-[1.01]"
+                  ? "bg-gradient-to-br from-[var(--acc)]/20 via-amber-950/20 to-[var(--surface)]/90 ring-2 ring-[var(--acc)]/30 scale-[1.01]"
                   : "bg-[var(--surface)]/90 hover:bg-[var(--surface)]"
               }`}
             >
@@ -177,7 +177,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
                     isSelected
                       ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
-                      : "border-[var(--hair)] bg-[var(--surface)]/80 text-transparent"
+                      : "ring-1 ring-[var(--hair)] bg-[var(--surface)]/80 text-transparent"
                   }`}
                 >
                   <Check className="w-3.5 h-3.5 stroke-[3]" />

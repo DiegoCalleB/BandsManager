@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { X, Download, FileSpreadsheet, FileCode, Filter, Layers, CheckSquare } from 'lucide-react';
-import { Lead } from '../../types';
+import React, { useState } from "react";
+import {
+  X,
+  Download,
+  FileSpreadsheet,
+  FileCode,
+  Filter,
+  Layers,
+  CheckSquare,
+} from "lucide-react";
+import { Lead } from "../../types";
 
 interface ExportLeadsModalProps {
   isOpen: boolean;
@@ -17,10 +25,12 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
   allLeads,
   filteredLeads,
   selectedLeadIds = [],
-  bandName = 'Banda',
+  bandName = "Banda",
 }) => {
-  const [exportScope, setExportScope] = useState<'filtered' | 'all' | 'selected'>('filtered');
-  const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv');
+  const [exportScope, setExportScope] = useState<
+    "filtered" | "all" | "selected"
+  >("filtered");
+  const [exportFormat, setExportFormat] = useState<"csv" | "json">("csv");
   const [includeNotes, setIncludeNotes] = useState(true);
   const [includePitch, setIncludePitch] = useState(true);
 
@@ -29,10 +39,10 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
   const selectedLeads = allLeads.filter((l) => selectedLeadIds.includes(l.id));
 
   const getTargetLeads = () => {
-    if (exportScope === 'selected' && selectedLeads.length > 0) {
+    if (exportScope === "selected" && selectedLeads.length > 0) {
       return selectedLeads;
     }
-    if (exportScope === 'all') {
+    if (exportScope === "all") {
       return allLeads;
     }
     return filteredLeads;
@@ -40,13 +50,13 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
   const cleanCsvCell = (val: any) => {
     if (val === undefined || val === null) return '""';
-    const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, '');
+    const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, "");
     return `"${str}"`;
   };
 
   const downloadBlob = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
@@ -58,43 +68,43 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
   const handleExport = () => {
     const leadsToExport = getTargetLeads();
     if (leadsToExport.length === 0) {
-      alert('No hay contactos para exportar con la selección actual.');
+      alert("No hay contactos para exportar con la selección actual.");
       return;
     }
 
-    const cleanBandName = bandName.replace(/[^a-zA-Z0-9_-]/g, '_') || 'Banda';
+    const cleanBandName = bandName.replace(/[^a-zA-Z0-9_-]/g, "_") || "Banda";
     const dateStr = new Date().toISOString().slice(0, 10);
     const filename = `${cleanBandName}_Leads_${exportScope}_${dateStr}.${exportFormat}`;
 
-    if (exportFormat === 'json') {
+    if (exportFormat === "json") {
       const jsonContent = JSON.stringify(leadsToExport, null, 2);
       const blob = new Blob([jsonContent], {
-        type: 'application/json;charset=utf-8;',
+        type: "application/json;charset=utf-8;",
       });
       downloadBlob(blob, filename);
     } else {
       // CSV format with UTF-8 BOM (\uFEFF) for Excel compatibility on Windows
       const headers = [
-        'ID',
-        'Nombre / Sala',
-        'Ciudad',
-        'Región / Provincia',
-        'Dirección',
-        'Aforo',
-        'Tipo',
-        'Estado CRM',
-        'Email Contacto',
-        'Teléfono Móvil (WhatsApp)',
-        'Teléfono Fijo',
-        'Teléfono General',
-        'Web',
-        'Instagram',
-        'Género / Estilo',
-        'Fuente',
+        "ID",
+        "Nombre / Sala",
+        "Ciudad",
+        "Región / Provincia",
+        "Dirección",
+        "Aforo",
+        "Tipo",
+        "Estado CRM",
+        "Email Contacto",
+        "Teléfono Móvil (WhatsApp)",
+        "Teléfono Fijo",
+        "Teléfono General",
+        "Web",
+        "Instagram",
+        "Género / Estilo",
+        "Fuente",
       ];
 
-      if (includePitch) headers.push('Pitch Generado');
-      if (includeNotes) headers.push('Notas / Historial');
+      if (includePitch) headers.push("Pitch Generado");
+      if (includeNotes) headers.push("Notas / Historial");
 
       const rows = leadsToExport.map((l) => {
         const row = [
@@ -119,11 +129,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
         if (includePitch) row.push(cleanCsvCell(l.pitch_generado));
         if (includeNotes) row.push(cleanCsvCell(l.notas));
 
-        return row.join(',');
+        return row.join(",");
       });
 
-      const csvString = '\uFEFF' + [headers.join(','), ...rows].join('\n');
-      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const csvString = "\uFEFF" + [headers.join(","), ...rows].join("\n");
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
       downloadBlob(blob, filename);
     }
 
@@ -142,8 +152,12 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[var(--ink)]">Exportar Leads de Booking</h3>
-              <p className="text-xs text-[var(--ink-2)]">Descarga tu base de contactos en Excel o JSON</p>
+              <h3 className="text-base font-bold text-[var(--ink)]">
+                Exportar Leads de Booking
+              </h3>
+              <p className="text-xs text-[var(--ink-2)]">
+                Descarga tu base de contactos en Excel o JSON
+              </p>
             </div>
           </div>
           <button
@@ -156,28 +170,35 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 1. Scope selection */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">1. ¿Qué contactos quieres exportar?</label>
+          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
+            1. ¿Qué contactos quieres exportar?
+          </label>
           <div className="grid grid-cols-1 gap-2">
             {/* Filtered */}
             <button
               type="button"
-              onClick={() => setExportScope('filtered')}
+              onClick={() => setExportScope("filtered")}
               className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
-                exportScope === 'filtered'
-                  ? 'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
-                  : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+                exportScope === "filtered"
+                  ? "bg-[var(--acc)]/20  text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
               }`}
             >
-              <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'filtered' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
+              <Filter
+                className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === "filtered" ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+              />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold">Contactos a la vista con filtro actual</span>
+                  <span className="text-xs font-bold">
+                    Contactos a la vista con filtro actual
+                  </span>
                   <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     {filteredLeads.length} contactos
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                  Exporta únicamente las salas o medios que cumplen la búsqueda y los filtros aplicados en este momento.
+                  Exporta únicamente las salas o medios que cumplen la búsqueda
+                  y los filtros aplicados en este momento.
                 </p>
               </div>
             </button>
@@ -185,23 +206,28 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             {/* All */}
             <button
               type="button"
-              onClick={() => setExportScope('all')}
+              onClick={() => setExportScope("all")}
               className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
-                exportScope === 'all'
-                  ? 'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
-                  : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+                exportScope === "all"
+                  ? "bg-[var(--acc)]/20  text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
               }`}
             >
-              <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'all' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
+              <Layers
+                className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === "all" ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+              />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold">Todos los contactos del CRM</span>
+                  <span className="text-xs font-bold">
+                    Todos los contactos del CRM
+                  </span>
                   <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
                     {allLeads.length} contactos
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                  Exporta toda la base de datos de salas, festivales, medios y contactos de la banda activa.
+                  Exporta toda la base de datos de salas, festivales, medios y
+                  contactos de la banda activa.
                 </p>
               </div>
             </button>
@@ -210,25 +236,28 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
             {selectedLeadIds.length > 0 && (
               <button
                 type="button"
-                onClick={() => setExportScope('selected')}
+                onClick={() => setExportScope("selected")}
                 className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
-                  exportScope === 'selected'
-                    ? 'bg-[var(--acc)]/20 /60 text-[var(--ink)]'
-                    : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+                  exportScope === "selected"
+                    ? "bg-[var(--acc)]/20  text-[var(--ink)]"
+                    : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
                 }`}
               >
                 <CheckSquare
-                  className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'selected' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`}
+                  className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === "selected" ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold">Solo contactos seleccionados</span>
+                    <span className="text-xs font-bold">
+                      Solo contactos seleccionados
+                    </span>
                     <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
                       {selectedLeads.length} seleccionados
                     </span>
                   </div>
                   <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                    Exporta únicamente las casillas que has marcado explícitamente en la lista.
+                    Exporta únicamente las casillas que has marcado
+                    explícitamente en la lista.
                   </p>
                 </div>
               </button>
@@ -238,46 +267,54 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 2. Format selection */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">2. Formato de descarga</label>
+          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
+            2. Formato de descarga
+          </label>
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              onClick={() => setExportFormat('csv')}
+              onClick={() => setExportFormat("csv")}
               className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
-                exportFormat === 'csv'
-                  ? 'bg-[var(--ok)]/20/60 text-[var(--ink)] font-bold'
-                  : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+                exportFormat === "csv"
+                  ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
               }`}
             >
               <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
               <div>
                 <span className="text-xs block">Excel / CSV (.csv)</span>
-                <span className="text-[10px] text-[var(--ink-2)] font-normal">Compatible UTF-8 Windows</span>
+                <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                  Compatible UTF-8 Windows
+                </span>
               </div>
             </button>
 
             <button
               type="button"
-              onClick={() => setExportFormat('json')}
+              onClick={() => setExportFormat("json")}
               className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
-                exportFormat === 'json'
-                  ? 'bg-[var(--acc)]/20/60 text-[var(--tentative)]/40 font-bold'
-                  : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
+                exportFormat === "json"
+                  ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40 font-bold"
+                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
               }`}
             >
               <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
               <div>
                 <span className="text-xs block">JSON Datos (.json)</span>
-                <span className="text-[10px] text-[var(--ink-2)] font-normal">Objeto raw estructurado</span>
+                <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                  Objeto raw estructurado
+                </span>
               </div>
             </button>
           </div>
         </div>
 
         {/* 3. CSV Options */}
-        {exportFormat === 'csv' && (
+        {exportFormat === "csv" && (
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80800 space-y-2">
-            <span className="text-[11px] font-bold text-[var(--ink-2)] block">Campos adicionales en CSV:</span>
+            <span className="text-[11px] font-bold text-[var(--ink-2)] block">
+              Campos adicionales en CSV:
+            </span>
             <div className="flex items-center gap-4 text-xs">
               <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)]">
                 <input
@@ -319,7 +356,8 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
           >
             <Download className="w-4 h-4" />
             <span>
-              Descargar {targetCount} {targetCount === 1 ? 'contacto' : 'contactos'}
+              Descargar {targetCount}{" "}
+              {targetCount === 1 ? "contacto" : "contactos"}
             </span>
           </button>
         </div>

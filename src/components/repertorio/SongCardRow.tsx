@@ -144,7 +144,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
         isDragging
           ? "opacity-30 scale-[0.98]"
           : isDragOver
-            ? "border-[var(--ok)] ring-2 ring-emerald-500/50 bg-[var(--ok)]/10"
+            ? "ring-2 ring-emerald-500/50 bg-[var(--ok)]/10"
             : isPlayingCurrent
               ? "bg-[var(--ok)]/10 text-[var(--ink)] ring-1 ring-emerald-500/20"
               : isSelected

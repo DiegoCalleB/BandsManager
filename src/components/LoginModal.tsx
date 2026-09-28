@@ -643,7 +643,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[var(--acc)]/12 rounded-full blur-3xl pointer-events-none" />
 
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
-                    <div className="p-1.5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--acc)]/45 via-[var(--surface)]/60 to-[var(--surface)]/90 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
+                    <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[var(--acc)]/45 via-[var(--surface)]/60 to-[var(--surface)]/90 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
                       {videoLoadFailed || skipVideo ? (
                         <img
                           src={LOGIN_POSTER}

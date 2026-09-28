@@ -568,8 +568,8 @@ export default function Merchan({
                     onClick={() => setSelectedAlbumIndex(idx)}
                     className={`shrink-0 w-20 h-20 rounded-[var(--r-s)] bg-cover bg-center transition-all snap-start cursor-pointer ${
                       selectedAlbumIndex === idx
-                        ? "border-[var(--acc)]/20"
-                        : "border-transparent opacity-50 hover:opacity-100"
+                        ? "ring-2 ring-[var(--acc)]"
+                        : "opacity-50 hover:opacity-100"
                     }`}
                     url={album.url}
                   />
@@ -625,7 +625,7 @@ export default function Merchan({
                   <button
                     key={c.id}
                     onClick={() => setShirtColor(c.id)}
-                    className={`w-8 h-8 rounded-full transition-transform hover:scale-110 ${shirtColor === c.id ? "border-[var(--acc)] scale-110" : "border-transparent"}`}
+                    className={`w-8 h-8 rounded-full transition-transform hover:scale-110 ${shirtColor === c.id ? "ring-2 ring-[var(--acc)] scale-110" : ""}`}
                     style={{ backgroundColor: c.id }}
                     title={c.name}
                   />

@@ -532,7 +532,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                             onDeleteFan(fan.id);
                           }
                         }}
-                        className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert)]/10 rounded-[var(--r-s)] hover:border-[var(--alert)]/30 transition opacity-60 group-hover:opacity-100"
+                        className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] bg-[var(--surface)] hover:bg-[var(--alert)]/10 rounded-[var(--r-s)] transition opacity-60 group-hover:opacity-100"
                         title="Eliminar Fan"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

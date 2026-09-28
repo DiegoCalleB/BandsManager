@@ -846,7 +846,7 @@ export function ExcelImportModal({
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleFileDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full max-w-2xl p-10700 hover:border-[var(--ok)]/70 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
+                  className="w-full max-w-2xl p-10 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
                 >
                   <input
                     ref={fileInputRef}
@@ -1380,7 +1380,7 @@ export function ExcelImportModal({
 
                 {/* IMPORT OPTIONS CARDS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 hover:border-[var(--ok)]/40 transition-all cursor-pointer">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 hover:bg-[var(--ok-soft)] transition-all cursor-pointer">
                     <input
                       type="checkbox"
                       checked={updateDuplicates}
@@ -1398,7 +1398,7 @@ export function ExcelImportModal({
                     </div>
                   </label>
 
-                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:border-[var(--acc)]/60 transition-all cursor-pointer">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 transition-all cursor-pointer">
                     <input
                       type="checkbox"
                       checked={enrichMissingWithAi}
@@ -1419,7 +1419,7 @@ export function ExcelImportModal({
                 </div>
 
                 {/* PREVIEW TABLE */}
-                <div className="border-[var(--hair)] rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 max-h-[380px] overflow-y-auto">
+                <div className="rounded-[var(--r-m)] overflow-hidden bg-[var(--bg)]/80 max-h-[380px] overflow-y-auto">
                   <table className="w-full text-left text-xs">
                     <thead className="sticky top-0 bg-[var(--bg)]/95 text-[var(--ink-2)] z-10 font-bold">
                       <tr>

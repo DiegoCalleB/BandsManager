@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from 'lucide-react';
-import { apiFetch } from '../../utils/api';
-import type { TemplateCategory } from './TemplateConfigSection';
+import React, { useEffect, useState, useCallback } from "react";
+import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
+import { apiFetch } from "../../utils/api";
+import type { TemplateCategory } from "./TemplateConfigSection";
 
 interface ThreadMessage {
-  rol: 'banda' | 'sala';
+  rol: "banda" | "sala";
   texto: string;
   orden: number;
 }
@@ -13,7 +13,7 @@ interface ExampleThread {
   id: string;
   titulo: string;
   mensajes: ThreadMessage[];
-  resultado: 'positiva' | 'negativa' | 'neutral';
+  resultado: "positiva" | "negativa" | "neutral";
   created_at: string;
 }
 
@@ -25,32 +25,39 @@ interface ExampleThreadsSectionProps {
 }
 
 const RESULTADO_LABEL: Record<string, string> = {
-  positiva: '✅ Salió bien',
-  negativa: '❌ No prosperó',
-  neutral: '➖ Neutro',
+  positiva: "✅ Salió bien",
+  negativa: "❌ No prosperó",
+  neutral: "➖ Neutro",
 };
 
-export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSectionProps) {
+export function ExampleThreadsSection({
+  category,
+  textSub,
+}: ExampleThreadsSectionProps) {
   const [threads, setThreads] = useState<ExampleThread[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [titulo, setTitulo] = useState('');
-  const [resultado, setResultado] = useState<'positiva' | 'negativa' | 'neutral'>('positiva');
+  const [titulo, setTitulo] = useState("");
+  const [resultado, setResultado] = useState<
+    "positiva" | "negativa" | "neutral"
+  >("positiva");
   const [mensajes, setMensajes] = useState<ThreadMessage[]>([
-    { rol: 'banda', texto: '', orden: 0 },
-    { rol: 'sala', texto: '', orden: 1 },
+    { rol: "banda", texto: "", orden: 0 },
+    { rol: "sala", texto: "", orden: 1 },
   ]);
   const [error, setError] = useState<string | null>(null);
 
   const loadThreads = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await apiFetch(`/api/example-threads?category=${encodeURIComponent(category)}`);
+      const res = await apiFetch(
+        `/api/example-threads?category=${encodeURIComponent(category)}`,
+      );
       if (res.success) setThreads(res.threads || []);
     } catch (err) {
-      console.warn('No se pudieron cargar los hilos de ejemplo:', err);
+      console.warn("No se pudieron cargar los hilos de ejemplo:", err);
     } finally {
       setIsLoading(false);
     }
@@ -64,11 +71,11 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
 
   const resetForm = () => {
     setEditingId(null);
-    setTitulo('');
-    setResultado('positiva');
+    setTitulo("");
+    setResultado("positiva");
     setMensajes([
-      { rol: 'banda', texto: '', orden: 0 },
-      { rol: 'sala', texto: '', orden: 1 },
+      { rol: "banda", texto: "", orden: 0 },
+      { rol: "sala", texto: "", orden: 1 },
     ]);
   };
 
@@ -76,7 +83,11 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
     setEditingId(thread.id);
     setTitulo(thread.titulo);
     setResultado(thread.resultado);
-    setMensajes(thread.mensajes.length > 0 ? thread.mensajes : [{ rol: 'banda', texto: '', orden: 0 }]);
+    setMensajes(
+      thread.mensajes.length > 0
+        ? thread.mensajes
+        : [{ rol: "banda", texto: "", orden: 0 }],
+    );
     setError(null);
     setShowForm(true);
   };
@@ -94,46 +105,64 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
   const handleAddMessageRow = () => {
     setMensajes((prev) => {
       const ultimoRol = prev[prev.length - 1]?.rol;
-      const nuevoRol: 'banda' | 'sala' = ultimoRol === 'banda' ? 'sala' : 'banda';
-      return [...prev, { rol: nuevoRol, texto: '', orden: prev.length }];
+      const nuevoRol: "banda" | "sala" =
+        ultimoRol === "banda" ? "sala" : "banda";
+      return [...prev, { rol: nuevoRol, texto: "", orden: prev.length }];
     });
   };
 
   const handleRemoveMessageRow = (idx: number) => {
-    setMensajes((prev) => prev.filter((_, i) => i !== idx).map((m, i) => ({ ...m, orden: i })));
+    setMensajes((prev) =>
+      prev.filter((_, i) => i !== idx).map((m, i) => ({ ...m, orden: i })),
+    );
   };
 
-  const handleMessageChange = (idx: number, field: 'rol' | 'texto', value: string) => {
-    setMensajes((prev) => prev.map((m, i) => (i === idx ? { ...m, [field]: value } : m)));
+  const handleMessageChange = (
+    idx: number,
+    field: "rol" | "texto",
+    value: string,
+  ) => {
+    setMensajes((prev) =>
+      prev.map((m, i) => (i === idx ? { ...m, [field]: value } : m)),
+    );
   };
 
   const handleSave = async () => {
     setError(null);
     const mensajesConTexto = mensajes.filter((m) => m.texto.trim());
     if (mensajesConTexto.length === 0) {
-      setError('Añade al menos un mensaje con texto.');
+      setError("Añade al menos un mensaje con texto.");
       return;
     }
     setIsSaving(true);
     try {
       const res = editingId
         ? await apiFetch(`/api/example-threads/${editingId}`, {
-            method: 'PUT',
-            body: JSON.stringify({ titulo, mensajes: mensajesConTexto, resultado }),
+            method: "PUT",
+            body: JSON.stringify({
+              titulo,
+              mensajes: mensajesConTexto,
+              resultado,
+            }),
           })
-        : await apiFetch('/api/example-threads', {
-            method: 'POST',
-            body: JSON.stringify({ category, titulo, mensajes: mensajesConTexto, resultado }),
+        : await apiFetch("/api/example-threads", {
+            method: "POST",
+            body: JSON.stringify({
+              category,
+              titulo,
+              mensajes: mensajesConTexto,
+              resultado,
+            }),
           });
       if (res.success) {
         resetForm();
         setShowForm(false);
         await loadThreads();
       } else {
-        setError(res.error || 'No se pudo guardar el hilo.');
+        setError(res.error || "No se pudo guardar el hilo.");
       }
     } catch (err: any) {
-      setError(err.message || 'Error al guardar el hilo.');
+      setError(err.message || "Error al guardar el hilo.");
     } finally {
       setIsSaving(false);
     }
@@ -141,10 +170,10 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
 
   const handleDelete = async (id: string) => {
     try {
-      await apiFetch(`/api/example-threads/${id}`, { method: 'DELETE' });
+      await apiFetch(`/api/example-threads/${id}`, { method: "DELETE" });
       setThreads((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
-      console.warn('No se pudo borrar el hilo:', err);
+      console.warn("No se pudo borrar el hilo:", err);
     }
   };
 
@@ -152,20 +181,23 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
     <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/5">
       <div className="flex items-center justify-between">
         <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
-          <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos de Email Reales de Ejemplo
+          <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos
+          de Email Reales de Ejemplo
         </label>
         <button
           type="button"
           onClick={handleToggleForm}
           className="text-[9px] font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
         >
-          <Plus className="w-3 h-3" /> {showForm ? 'Cancelar' : 'Pegar un hilo'}
+          <Plus className="w-3 h-3" /> {showForm ? "Cancelar" : "Pegar un hilo"}
         </button>
       </div>
 
       <p className="text-[9px] text-[var(--acc)]/70 font-sans leading-tight">
-        Pega conversaciones reales (nuestro mensaje + la respuesta de la sala/medio, y si la hubo, nuestra respuesta a esa respuesta) para
-        esta categoría. Se usan como ejemplo real tanto al redactar el primer contacto como al generar respuestas a negociaciones.
+        Pega conversaciones reales (nuestro mensaje + la respuesta de la
+        sala/medio, y si la hubo, nuestra respuesta a esa respuesta) para esta
+        categoría. Se usan como ejemplo real tanto al redactar el primer
+        contacto como al generar respuestas a negociaciones.
       </p>
 
       {isLoading ? (
@@ -178,13 +210,16 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
             <div
               key={t.id}
               onClick={() => handleEdit(t)}
-              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] cursor-pointer hover:border-[var(--acc)]/40 transition-colors"
+              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] cursor-pointer hover:bg-[var(--acc-soft)] transition-colors"
               title="Abrir para ver o editar este hilo"
             >
               <div className="min-w-0">
-                <span className="font-bold text-[var(--ink-2)]">{t.titulo || 'Sin título'}</span>
+                <span className="font-bold text-[var(--ink-2)]">
+                  {t.titulo || "Sin título"}
+                </span>
                 <span className="text-[var(--ink-2)] ml-2">
-                  {t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}
+                  {t.mensajes.length} mensaje(s) ·{" "}
+                  {RESULTADO_LABEL[t.resultado] || t.resultado}
                 </span>
               </div>
               <div className="flex items-center gap-1 shrink-0">
@@ -215,25 +250,33 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
           ))}
         </div>
       ) : (
-        <div className="text-[10px] text-[var(--acc)]/50 italic">Todavía no hay hilos de ejemplo guardados para esta categoría.</div>
+        <div className="text-[10px] text-[var(--acc)]/50 italic">
+          Todavía no hay hilos de ejemplo guardados para esta categoría.
+        </div>
       )}
 
       {showForm && (
         <div className="space-y-2.5 pt-2/20">
-          {editingId && <div className="text-[9px] text-[var(--acc)] font-sans font-bold">Editando hilo guardado</div>}
+          {editingId && (
+            <div className="text-[9px] text-[var(--acc)] font-sans font-bold">
+              Editando hilo guardado
+            </div>
+          )}
           <input
             type="text"
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
-            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${"bg-[var(--surface)] text-[var(--ink)]"}`}
           />
 
           {mensajes.map((m, idx) => (
             <div key={idx} className="flex gap-2 items-start">
               <select
                 value={m.rol}
-                onChange={(e) => handleMessageChange(idx, 'rol', e.target.value)}
+                onChange={(e) =>
+                  handleMessageChange(idx, "rol", e.target.value)
+                }
                 className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--surface)] text-[var(--ink)] shrink-0"
               >
                 <option value="banda">Banda</option>
@@ -242,9 +285,15 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
               <textarea
                 rows={2}
                 value={m.texto}
-                onChange={(e) => handleMessageChange(idx, 'texto', e.target.value)}
-                placeholder={m.rol === 'banda' ? 'Lo que escribimos nosotros...' : 'Lo que respondió la sala...'}
-                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                onChange={(e) =>
+                  handleMessageChange(idx, "texto", e.target.value)
+                }
+                placeholder={
+                  m.rol === "banda"
+                    ? "Lo que escribimos nosotros..."
+                    : "Lo que respondió la sala..."
+                }
+                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               />
               {mensajes.length > 1 && (
                 <button
@@ -267,20 +316,26 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-[9px] text-[var(--ink-2)] font-sans">Resultado:</span>
-            {(['positiva', 'neutral', 'negativa'] as const).map((r) => (
+            <span className="text-[9px] text-[var(--ink-2)] font-sans">
+              Resultado:
+            </span>
+            {(["positiva", "neutral", "negativa"] as const).map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setResultado(r)}
-                className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ? 'bg-[var(--acc)]/30 text-[var(--acc)] font-bold' : 'bg-[var(--surface)] text-[var(--ink-2)]'}`}
+                className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ? "bg-[var(--acc)]/30 text-[var(--acc)] font-bold" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
               >
                 {RESULTADO_LABEL[r]}
               </button>
             ))}
           </div>
 
-          {error && <div className="text-[9px] text-[var(--alert)] font-sans">{error}</div>}
+          {error && (
+            <div className="text-[9px] text-[var(--alert)] font-sans">
+              {error}
+            </div>
+          )}
 
           <button
             type="button"
@@ -288,8 +343,18 @@ export function ExampleThreadsSection({ category, textSub }: ExampleThreadsSecti
             disabled={isSaving}
             className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
           >
-            {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-            <span>{isSaving ? 'Guardando...' : editingId ? 'Guardar cambios' : 'Guardar hilo de ejemplo'}</span>
+            {isSaving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Plus className="w-3.5 h-3.5" />
+            )}
+            <span>
+              {isSaving
+                ? "Guardando..."
+                : editingId
+                  ? "Guardar cambios"
+                  : "Guardar hilo de ejemplo"}
+            </span>
           </button>
         </div>
       )}

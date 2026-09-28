@@ -1,5 +1,13 @@
-import React, { useRef } from 'react';
-import { Layers, Upload, FileText, CheckCircle2, Loader2, Trash2, Check } from 'lucide-react';
+import React, { useRef } from "react";
+import {
+  Layers,
+  Upload,
+  FileText,
+  CheckCircle2,
+  Loader2,
+  Trash2,
+  Check,
+} from "lucide-react";
 
 interface StepRiderProps {
   riderTecnicoText: string;
@@ -44,17 +52,22 @@ export const StepRider: React.FC<StepRiderProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Layers className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Rider Técnico, Stage Plot & Requerimientos</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Rider Técnico, Stage Plot & Requerimientos
+        </h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
-        Facilita el trabajo de los técnicos de sonido de salas y festivales para que todo suene perfecto desde la prueba de sonido.
+        Facilita el trabajo de los técnicos de sonido de salas y festivales para
+        que todo suene perfecto desde la prueba de sonido.
       </p>
 
       {/* Quick Specs Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">Canales de Mesa Mínimos</label>
+          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+            Canales de Mesa Mínimos
+          </label>
           <input
             type="number"
             min={4}
@@ -70,29 +83,37 @@ export const StepRider: React.FC<StepRiderProps> = ({
           onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             llevaMicrofoniaPropia
-              ? 'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
-              : 'bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+              ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+              : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">Microfonía Propia</span>
-            {llevaMicrofoniaPropia && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
+            {llevaMicrofoniaPropia && (
+              <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
+            )}
           </div>
-          <span className="text-[10px] text-[var(--ink-2)] block mt-1">Llevamos set propio de micros</span>
+          <span className="text-[10px] text-[var(--ink-2)] block mt-1">
+            Llevamos set propio de micros
+          </span>
         </button>
 
         <button
           type="button"
           onClick={() => setLlevaInEars(!llevaInEars)}
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
-            llevaInEars ? 'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70' : 'bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+            llevaInEars
+              ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+              : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">Monitoraje In-Ears</span>
             {llevaInEars && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
           </div>
-          <span className="text-[10px] text-[var(--ink-2)] block mt-1">Sistema propio de monitores</span>
+          <span className="text-[10px] text-[var(--ink-2)] block mt-1">
+            Sistema propio de monitores
+          </span>
         </button>
 
         <button
@@ -100,15 +121,19 @@ export const StepRider: React.FC<StepRiderProps> = ({
           onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             necesitaBacklineBateria
-              ? 'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70'
-              : 'bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]'
+              ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+              : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">Backline Sala</span>
-            {necesitaBacklineBateria && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
+            {necesitaBacklineBateria && (
+              <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
+            )}
           </div>
-          <span className="text-[10px] text-[var(--ink-2)] block mt-1">Batería básica aportada por sala</span>
+          <span className="text-[10px] text-[var(--ink-2)] block mt-1">
+            Batería básica aportada por sala
+          </span>
         </button>
       </div>
 
@@ -118,15 +143,25 @@ export const StepRider: React.FC<StepRiderProps> = ({
           Documento PDF de Rider Técnico / Plano de Escenario (Stage Plot)
         </label>
 
-        <input type="file" ref={fileInputRef} onChange={onRiderUpload} accept=".pdf,image/*" className="hidden" />
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={onRiderUpload}
+          accept=".pdf,image/*"
+          className="hidden"
+        />
 
         {riderPdfUrl ? (
           <div className="flex items-center justify-between p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10">
             <div className="flex items-center gap-3">
               <FileText className="w-6 h-6 text-[var(--ok)]" />
               <div>
-                <span className="text-xs font-semibold text-[var(--ink-2)] block">{riderPdfName || 'Rider_Tecnico_Oficial.pdf'}</span>
-                <span className="text-[10px] text-[var(--ok)]/80">Documento listo en el EPK interactivo</span>
+                <span className="text-xs font-semibold text-[var(--ink-2)] block">
+                  {riderPdfName || "Rider_Tecnico_Oficial.pdf"}
+                </span>
+                <span className="text-[10px] text-[var(--ok)]/80">
+                  Documento listo en el EPK interactivo
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -140,8 +175,8 @@ export const StepRider: React.FC<StepRiderProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  setRiderPdfUrl('');
-                  setRiderPdfName('');
+                  setRiderPdfUrl("");
+                  setRiderPdfName("");
                 }}
                 className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--alert)]"
               >
@@ -155,11 +190,16 @@ export const StepRider: React.FC<StepRiderProps> = ({
             className="border-2 hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
           >
             <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
-            <span className="text-xs font-medium text-[var(--ink-2)] block">Subir PDF de Rider Técnico o imagen de Stage Plot</span>
-            <span className="text-[10px] text-[var(--ink-2)]">PDF, JPG o PNG hasta 20 MB</span>
+            <span className="text-xs font-medium text-[var(--ink-2)] block">
+              Subir PDF de Rider Técnico o imagen de Stage Plot
+            </span>
+            <span className="text-[10px] text-[var(--ink-2)]">
+              PDF, JPG o PNG hasta 20 MB
+            </span>
             {isUploadingRider && (
               <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[var(--acc)]">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Subiendo rider...
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Subiendo
+                rider...
               </div>
             )}
           </div>
