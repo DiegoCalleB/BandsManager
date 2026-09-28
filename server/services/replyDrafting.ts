@@ -12,6 +12,7 @@ import { dbGetAutonomyConfig } from "../db/autonomy.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
 import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
+import { getBandOperationalContext, evaluateIncomingTactics, type TacticalEvaluation } from "./agentIntelligence.js";
 
 // Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
 // (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
@@ -190,7 +191,7 @@ export async function generarBorradorRespuesta(
   // (detectPitchLanguage, según el país del lead), para que un lead italiano/francés/etc. no
   // caiga siempre en "neutral" solo porque las keywords fueran únicamente en español.
   const leadLanguage = detectPitchLanguage(lead);
-  const responseType = detectResponseType(incomingMessage, leadLanguage.code);
+  let responseType = detectResponseType(incomingMessage, leadLanguage.code);
   console.log(`[Contestador] Tipo de respuesta detectado: ${responseType} (idioma: ${leadLanguage.code})`);
 
   // Analizar o reutilizar análisis de sentimiento
@@ -255,6 +256,40 @@ export async function generarBorradorRespuesta(
     console.warn("Notice cargando ejemplos de respuesta RAG para el Contestador:", err);
   }
 
+  // [AGENT INTELLIGENCE]: Obtener contexto operativo en tiempo real (Agenda / Gira / Conflictos de fecha)
+  let operationalContextPrompt = "";
+  try {
+    const opContext = await getBandOperationalContext(bandId, lead?.ciudad);
+    operationalContextPrompt = opContext.resumenTacticoParaPrompt;
+  } catch (err) {
+    console.warn("[Contestador] Notice cargando contexto operativo de agenda:", err);
+  }
+
+  // [TACTICAL EVALUATION]: Evaluación estructurada de intenciones y ofertas económicas
+  let tacticalEval: TacticalEvaluation | null = null;
+  try {
+    tacticalEval = await evaluateIncomingTactics(incomingMessage, {
+      name: lead?.nombre_sala,
+      city: lead?.ciudad,
+      tipo: lead?.tipo
+    });
+    if (tacticalEval) {
+      if (tacticalEval.intencion_sala === "contraoferta_precio" && responseType !== "price_negotiation") {
+        responseType = "price_negotiation";
+      }
+      operationalContextPrompt += `
+═════════════════════════════════════════════════════════════════════
+🎯 DIAGNÓSTICO TÁCTICO DE ÉLITE (IA AGÉNTICA):
+═════════════════════════════════════════════════════════════════════
+- Intención real detectada: ${tacticalEval.intencion_sala} (${tacticalEval.resumen_intencion})
+- Nivel de interés: ${tacticalEval.nivel_interes.toUpperCase()}
+${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de la sala: ${tacticalEval.propuesta_economica_sala_eur}€\n` : ""}${tacticalEval.fechas_mencionadas.length > 0 ? `- Fechas/ventanas mencionadas en el mensaje: ${tacticalEval.fechas_mencionadas.join(", ")}\n` : ""}- Acción táctica recomendada: ${tacticalEval.accion_estrategica_recomendada}
+`;
+    }
+  } catch (err) {
+    console.warn("[Contestador] Notice en evaluación táctica:", err);
+  }
+
   const systemPrompt = buildReplySystemPrompt(
     bandDna,
     lead,
@@ -266,7 +301,8 @@ export async function generarBorradorRespuesta(
     feedbackDetails,
     autonomyConfig?.minCacheByType,
     autonomyConfig?.negotiationStartCacheByType,
-    sentimentAnalysis
+    sentimentAnalysis,
+    operationalContextPrompt
   );
   const prompt = `Redacta la respuesta al mensaje entrante indicado en las instrucciones del sistema. Devuelve ÚNICAMENTE el cuerpo del email, sin asunto.`;
 

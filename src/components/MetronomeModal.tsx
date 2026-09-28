@@ -117,8 +117,7 @@ export function MetronomeModal({
   const scheduler = () => {
     if (!audioCtxRef.current) return;
 
-    const lookahead = 0.1; // 100ms lookahead
-    const scheduleAheadTime = 0.1;
+    const scheduleAheadTime = 0.15;
 
     while (nextNoteTimeRef.current < audioCtxRef.current.currentTime + scheduleAheadTime) {
       scheduleClick(currentBeatRef.current, nextNoteTimeRef.current);
@@ -151,7 +150,7 @@ export function MetronomeModal({
       nextNoteTimeRef.current = audioCtxRef.current.currentTime + 0.05;
 
       // Start interval timer
-      timerWorkerRef.current = window.setInterval(scheduler, 25);
+      timerWorkerRef.current = window.setInterval(scheduler, 50);
       setIsPlaying(true);
     } else {
       if (timerWorkerRef.current) {
@@ -163,15 +162,20 @@ export function MetronomeModal({
     }
   };
 
-  // Stop metronome on modal close
+  // Stop metronome on modal close & suspend AudioContext to conserve battery
   useEffect(() => {
-    if (!isOpen && isPlaying) {
-      if (timerWorkerRef.current) {
-        clearInterval(timerWorkerRef.current);
-        timerWorkerRef.current = null;
+    if (!isOpen) {
+      if (isPlaying) {
+        if (timerWorkerRef.current) {
+          clearInterval(timerWorkerRef.current);
+          timerWorkerRef.current = null;
+        }
+        setIsPlaying(false);
+        setCurrentBeat(0);
       }
-      setIsPlaying(false);
-      setCurrentBeat(0);
+      if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
+        audioCtxRef.current.suspend().catch(() => {});
+      }
     }
   }, [isOpen]);
 

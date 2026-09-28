@@ -455,7 +455,10 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !== '')).map((url, idx) => (
+              {(config.bandPhotos || [])
+                .map(item => (typeof item === 'string' ? item : (item as any)?.url || ''))
+                .filter(url => typeof url === 'string' && url.trim() !== '')
+                .map((url, idx) => (
                 <div
                   key={url + idx}
                   className="group relative aspect-video rounded-xl overflow-hidden border border-slate-800 bg-slate-950"

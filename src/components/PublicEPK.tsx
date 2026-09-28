@@ -143,10 +143,13 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const videoPrincipal = videos.find(v => v.destacado) || videos[0] || null;
   const videosSecundarios = videos.filter(v => v !== videoPrincipal);
   const miembros = (config.miembros || []).filter(m => m?.nombre || m?.fotoUrl);
+  const normalizedBandPhotos = (config.bandPhotos || [])
+    .map(p => (typeof p === 'string' ? p : (p as any)?.url || ''))
+    .filter(u => typeof u === 'string' && u.trim() !== '');
   // Foto de portada del hero: la primera de la Galería de Imagen & Prensa, si existe. Es lo
   // que hace que esto lea como la web real de una banda en directo y no como una tarjeta de
   // dashboard - sin foto real, cae al degradado de siempre.
-  const fotoPortada = (config.bandPhotos || []).find(p => p && p !== displayLogo) || null;
+  const fotoPortada = normalizedBandPhotos.find(p => p && p !== displayLogo) || null;
   // Contenido escrito por la banda, resuelto al idioma elegido. Si falta la traducción de un
   // campo concreto, ese campo cae al español: una traducción a medias se lee mezclada, que es
   // mucho mejor que dejar huecos en blanco en un dossier de contratación.
@@ -507,7 +510,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   };
 
   const renderGaleria = () => {
-    const validPhotos = (config.bandPhotos || []).filter(Boolean);
+    const validPhotos = (config.bandPhotos || [])
+      .map(p => (typeof p === 'string' ? p : (p as any)?.url || ''))
+      .filter(u => typeof u === 'string' && u.trim() !== '');
     if (validPhotos.length === 0) return null;
     return (
       <section key="galeria" className="mb-16 space-y-6 print:mb-8">

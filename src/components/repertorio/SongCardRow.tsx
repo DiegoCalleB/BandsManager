@@ -314,31 +314,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           )}
         </div>
 
-        {/* Right Section: Direct Quick Actions + Overflow ⋯ Menu */}
+        {/* Right Section: Streamlined Quick Action + Overflow ⋯ Menu */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-1.5" onClick={(e) => e.stopPropagation()}>
-          {/* 1. Direct Acordes / Chords Button */}
-          {onOpenChords && (
-            <button
-              type="button"
-              onClick={onOpenChords}
-              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-medium items-center gap-1.5 transition-all cursor-pointer border ${
-                isStitchLight
-                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
-                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/25'
-              }`}
-              title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-xs">Acordes</span>
-            </button>
-          )}
-
-          {/* 2. Direct Studio Button */}
-          {onOpenStudio && (
+          {/* 1. Primary Direct Button: Studio (or Acordes if no studio) */}
+          {onOpenStudio ? (
             <button
               type="button"
               onClick={onOpenStudio}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border ${
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
                 ideasCount > 0
                   ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border-amber-500/40 shadow-xs'
                   : isStitchLight
@@ -355,68 +338,23 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 </span>
               )}
             </button>
-          )}
-
-          {/* 2b. Direct Iris Stem Separator Button */}
-          {(onOpenIris || onOpenStudio) && (
+          ) : onOpenChords ? (
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onOpenIris) onOpenIris();
-                else if (onOpenStudio) onOpenStudio();
-              }}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                hasIrisStems(song)
-                  ? 'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border-amber-500/40 shadow-xs'
-                  : isStitchLight
-                  ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200'
-                  : 'bg-neutral-900 hover:bg-neutral-800 text-amber-300 border-amber-500/30'
-              }`}
-              title={hasIrisStems(song) ? 'Ver pistas e instrumentos separados con Iris' : 'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />
-              <span className="hidden sm:inline text-xs font-mono">Iris</span>
-            </button>
-          )}
-
-          {/* 3. Direct Member Notes Button */}
-          {onOpenMemberNotes && (
-            <button
-              type="button"
-              onClick={onOpenMemberNotes}
-              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-medium items-center gap-1.5 transition-all cursor-pointer border ${
-                hasMemberNotes
-                  ? 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border-amber-500/30 shadow-xs'
-                  : isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-                  : 'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-200 border-neutral-700/70'
-              }`}
-              title="Ver y editar notas específicas por miembro de la banda"
-            >
-              <Users className={`w-3.5 h-3.5 ${hasMemberNotes ? 'text-amber-400' : 'text-zinc-400'}`} />
-              <span className="hidden md:inline text-xs">Notas</span>
-            </button>
-          )}
-
-          {/* 4. Direct Edit Song Button */}
-          {onEditSong && (
-            <button
-              type="button"
-              onClick={onEditSong}
-              className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-lg text-xs font-medium items-center gap-1.5 transition-all cursor-pointer border ${
+              onClick={onOpenChords}
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
                 isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
-                  : 'bg-neutral-800/80 hover:bg-neutral-700 text-zinc-400 hover:text-zinc-100 border-neutral-700/70'
+                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
+                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/25'
               }`}
-              title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
+              title="Ver cifrado de acordes, armonía y letra"
             >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline text-xs">Editar</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span className="hidden xs:inline text-xs">Acordes</span>
             </button>
-          )}
+          ) : null}
 
-          {/* Reorder Buttons (alternative to drag & drop for accessibility) */}
+          {/* Reorder Buttons (alternative to drag & drop) */}
           {showReorder && (
             <div className="hidden sm:flex flex-col">
               <button
@@ -445,14 +383,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={() => setShowMenu((prev) => !prev)}
-              className={`p-1.5 rounded-lg transition-all cursor-pointer border ${
+              className={`p-1.5 rounded-xl transition-all cursor-pointer border ${
                 showMenu
                   ? 'bg-slate-700 text-white border-slate-600'
                   : isStitchLight
                   ? 'text-slate-600 hover:bg-slate-100 border-transparent hover:border-slate-200'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/80 border-transparent'
+                  : 'text-slate-400 hover:text-slate-100 hover:bg-neutral-800 border-transparent'
               }`}
-              title="Más opciones del tema"
+              title="Opciones de la canción"
               aria-label="Más opciones"
             >
               <MoreVertical className="w-4 h-4" />
@@ -461,42 +399,46 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             {/* Menu Popover */}
             {showMenu && (
               <div
-                className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-xl p-1.5 shadow-2xl border text-xs backdrop-blur-md ${
+                className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-2xl p-1.5 shadow-2xl border text-xs backdrop-blur-md ${
                   isStitchLight
                     ? 'bg-white border-slate-200 text-slate-800 divide-y divide-slate-100'
-                    : 'bg-slate-900/95 border-slate-700/80 text-slate-200 divide-y divide-slate-800/60'
+                    : 'bg-[#1a1a1e] border-neutral-800 text-zinc-200 divide-y divide-neutral-800'
                 }`}
               >
                 <div className="py-1 space-y-0.5">
-                  {/* Acordes / Notas / Editar: solo en móvil, en escritorio ya son botones directos */}
+                  {/* Acordes */}
                   {onOpenChords && (
                     <button
                       type="button"
                       onClick={() => { setShowMenu(false); onOpenChords(); }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-emerald-500/15 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>Ver Acordes</span>
+                      <span>Ver Acordes y Letra</span>
                     </button>
                   )}
-                  {onOpenMemberNotes && (
-                    <button
-                      type="button"
-                      onClick={() => { setShowMenu(false); onOpenMemberNotes(); }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
-                    >
-                      <Users className="w-3.5 h-3.5" />
-                      <span>Notas por Miembro</span>
-                    </button>
-                  )}
+
+                  {/* Editar Canción */}
                   {onEditSong && (
                     <button
                       type="button"
                       onClick={() => { setShowMenu(false); onEditSong(); }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-zinc-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 text-zinc-200 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
-                      <Edit3 className="w-3.5 h-3.5" />
+                      <Edit3 className="w-3.5 h-3.5 text-zinc-400" />
                       <span>Editar Canción</span>
+                    </button>
+                  )}
+
+                  {/* Member Notes */}
+                  {onOpenMemberNotes && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowMenu(false); onOpenMemberNotes(); }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-amber-500/15 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                    >
+                      <Users className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Notas por Miembro</span>
                     </button>
                   )}
 
@@ -508,7 +450,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onOpenStudio();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-500/20 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-indigo-500/15 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <Headphones className="w-3.5 h-3.5 text-indigo-400" />
                       <span>Abrir Studio / Grabadora</span>
@@ -524,10 +466,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         if (onOpenIris) onOpenIris();
                         else if (onOpenStudio) onOpenStudio();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-amber-500/15 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris Separadas' : '✨ Procesar con Iris (IA Stems)'}</span>
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris' : '✨ Separar Stems con Iris'}</span>
                     </button>
                   )}
 
@@ -539,7 +481,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onShareSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-emerald-500/15 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       <span>Compartir por WhatsApp</span>
@@ -553,7 +495,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       target="_blank"
                       rel="noreferrer"
                       onClick={() => setShowMenu(false)}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
                       <span>Partitura / Enlace</span>
@@ -570,7 +512,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                             setShowMenu(false);
                             onMoveUp();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                          className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                         >
                           <ArrowUp className="w-3.5 h-3.5 text-neutral-400" />
                           <span>Mover arriba</span>
@@ -583,7 +525,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                             setShowMenu(false);
                             onMoveDown();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                          className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-white/5 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                         >
                           <ArrowDown className="w-3.5 h-3.5 text-neutral-400" />
                           <span>Mover abajo</span>
@@ -602,7 +544,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onDeleteSong();
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-500/20 text-rose-400 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-rose-500/15 text-rose-400 transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Eliminar Canción</span>

@@ -93,7 +93,69 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 }) => {
   const headerCheckboxRef = useRef<HTMLInputElement>(null);
 
-  const renderLeadDatesInfo = (lead: Lead) => {
+  const renderLeadDatesInfo = (lead: Lead, isTable: boolean = false) => {
+    // En la vista de tabla, evitar bloques gigantes de texto. Solo mostrar badges si hay datos reales
+    if (isTable) {
+      const targetDate = (lead as any).fecha_posible_evento || 
+        (lead.fechas_propuestas_sala && lead.fechas_propuestas_sala[0]) || 
+        (lead.fechas_libres_detectadas && lead.fechas_libres_detectadas[0]) ||
+        (lead as any).fechas_libres_campana?.[0] ||
+        (lead as any).fechas_propuestas?.[0] ||
+        (lead as any).fechas_disponibles?.[0];
+      const conflict = checkBandDateConflict(targetDate, concerts, lead.ciudad);
+      const hist = getCityTourHistory(lead.ciudad, concerts);
+      const freeDates = lead.fechas_libres_detectadas || [];
+      const campaignFreeDates = (lead as any).fechas_libres_campana || [];
+      const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
+
+      const badges: React.ReactNode[] = [];
+
+      if (conflict.status === 'conflicto_directo') {
+        badges.push(
+          <span key="conf" className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-rose-950/80 text-rose-300 font-bold border border-rose-500/40" title={conflict.mensaje}>
+            🔴 Conflicto
+          </span>
+        );
+      } else if (conflict.status === 'cercano_compatible') {
+        badges.push(
+          <span key="compat" className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-emerald-950/80 text-emerald-300 font-bold border border-emerald-500/40" title={conflict.mensaje}>
+            🚗 Enlace 2x1
+          </span>
+        );
+      }
+
+      if (campaignIsActive && campaignFreeDates.length > 0) {
+        badges.push(
+          <span key="camp" className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-sky-950/80 text-sky-300 font-semibold border border-sky-500/40" title={`Fechas campaña: ${campaignFreeDates.join(', ')}`}>
+            🎯 {campaignFreeDates.length} d.
+          </span>
+        );
+      } else if (freeDates.length > 0) {
+        badges.push(
+          <span key="free" className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-sky-950/80 text-sky-300 font-semibold border border-sky-500/40" title={`Fechas libres detectadas: ${freeDates.join(', ')}`}>
+            <CalendarCheck className="w-2.5 h-2.5 text-sky-400 shrink-0" />
+            <span>{freeDates.length} lib.</span>
+          </span>
+        );
+      }
+
+      if (hist && hist.totalConciertos > 0) {
+        badges.push(
+          <span key="hist" className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8.5px] bg-amber-950/60 text-amber-300 border border-amber-600/30" title={hist.resumenTexto}>
+            🏛️ {hist.totalConciertos} prev.
+          </span>
+        );
+      }
+
+      if (badges.length === 0) return null;
+
+      return (
+        <div className="flex items-center gap-1 mt-0.5 flex-wrap">
+          {badges}
+        </div>
+      );
+    }
+
     const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true);
     
     // Status indicators de fuentes de radar
@@ -1012,34 +1074,34 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 
                 {/* Select All Checkbox Header */}
                 {onToggleSelectLead && (
-                  <th className="py-3.5 px-3 w-10 text-center whitespace-nowrap">
+                  <th className="py-2.5 px-2.5 w-10 text-center whitespace-nowrap">
                     <div className="flex items-center justify-center">
                       <input
                         type="checkbox"
                         ref={headerCheckboxRef}
                         checked={isAllSelected}
                         onChange={isAllSelected ? onDeselectAll : onSelectAllFiltered}
-                        className="w-4 h-4 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
+                        className="w-3.5 h-3.5 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
                         title={isAllSelected ? "Deseleccionar todos" : "Seleccionar todos los resultados"}
                       />
                     </div>
                   </th>
                 )}
 
-                <th className="py-3.5 px-3 w-10 text-center whitespace-nowrap">Fav</th>
-                <th className="py-3.5 px-4 min-w-[200px] whitespace-nowrap">
+                <th className="py-2.5 px-2 w-8 text-center whitespace-nowrap">Fav</th>
+                <th className="py-2.5 px-3 min-w-[190px] whitespace-nowrap">
                   {sectionTab === 'medios' ? 'Medio / Contacto' : sectionTab === 'grupos' ? 'Banda / Management' : 'Espacio / Nombre'}
                 </th>
-                <th className="py-3.5 px-3 min-w-[100px] whitespace-nowrap">Tipo</th>
-                <th className="py-3.5 px-4 min-w-[120px] whitespace-nowrap">Fiabilidad</th>
-                <th className="py-3.5 px-4 min-w-[120px] whitespace-nowrap">Salud / Temp</th>
-                <th className="py-3.5 px-4 min-w-[110px] whitespace-nowrap">Ciudad</th>
-                <th className="py-3.5 px-4 min-w-[90px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 min-w-[80px] whitespace-nowrap">Tipo</th>
+                <th className="py-2.5 px-2.5 min-w-[100px] whitespace-nowrap">Fiabilidad</th>
+                <th className="py-2.5 px-2.5 min-w-[110px] whitespace-nowrap">Salud / Temp</th>
+                <th className="py-2.5 px-3 min-w-[100px] whitespace-nowrap">Ciudad</th>
+                <th className="py-2.5 px-2.5 min-w-[70px] whitespace-nowrap">
                   {sectionTab === 'grupos' ? 'Róster / Aforo' : 'Aforo'}
                 </th>
-                <th className="py-3.5 px-4 min-w-[140px] whitespace-nowrap">Estado</th>
-                <th className="py-3.5 px-4 min-w-[180px] whitespace-nowrap">Contacto / Directo</th>
-                <th className="py-3.5 px-4 min-w-[160px] text-right whitespace-nowrap">Acciones Rápidas</th>
+                <th className="py-2.5 px-3 min-w-[110px] whitespace-nowrap">Estado</th>
+                <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">Contacto / Directo</th>
+                <th className="py-2.5 px-3 min-w-[130px] text-right whitespace-nowrap">Acciones Rápidas</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/60 text-xs font-mono align-middle">
@@ -1072,7 +1134,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     {/* Row Select Checkbox */}
                     {onToggleSelectLead && (
                       <td 
-                        className="py-3.5 px-3 text-center align-middle" 
+                        className="py-1.5 px-2.5 text-center align-middle" 
                         onClick={(e) => {
                           e.stopPropagation();
                           onToggleSelectLead(lead.id, e);
@@ -1087,14 +1149,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               onToggleSelectLead(lead.id, e);
                             }}
-                            className="w-4 h-4 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
+                            className="w-3.5 h-3.5 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
                             title={isChecked ? "Deseleccionar" : "Seleccionar"}
                           />
                         </div>
                       </td>
                     )}
 
-                    <td className="py-3.5 px-3 text-center align-middle" onClick={(e) => e.stopPropagation()}>
+                    <td className="py-1.5 px-2 text-center align-middle" onClick={(e) => e.stopPropagation()}>
                       <FavoriteButton 
                         isFavorite={!!lead.es_favorito}
                         onToggle={(newVal) => onUpdateLead(lead.id, { es_favorito: newVal })}
@@ -1102,8 +1164,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       />
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[200px] align-middle">
-                      <div className="flex items-center gap-2.5 min-w-0">
+                    <td className="py-1.5 px-3 min-w-[190px] align-middle">
+                      <div className="flex items-center gap-2 min-w-0">
                         {/* Interactive Avatar Container Table View */}
                         <LeadAvatar
                           lead={lead}
@@ -1113,9 +1175,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             setLeadForImageChange(lead);
                           }}
                         />
-                        <div className="min-w-0 flex-1">
+                        <div className="min-w-0 flex-1 leading-tight">
                           <div className="flex items-center gap-1.5">
-                            <span className="truncate font-bold text-xs sm:text-sm text-zinc-100 block max-w-[160px] notranslate" translate="no" title={lead.nombre_sala}>
+                            <span className="truncate font-bold text-xs text-zinc-100 block max-w-[160px] notranslate" translate="no" title={lead.nombre_sala}>
                               {lead.nombre_sala}
                             </span>
                             <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
@@ -1127,27 +1189,25 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-3 min-w-[100px] whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-2.5 min-w-[80px] whitespace-nowrap align-middle">
                       {renderTipoBadge(lead.tipo)}
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[120px] whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-2.5 min-w-[100px] whitespace-nowrap align-middle">
                       <ReliabilityBadge item={lead} size="sm" />
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[130px] whitespace-nowrap align-middle">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5">
-                          <LeadHealthBadge lead={lead} showDescription={false} size="sm" />
-                          {renderTemperatureBadge(lead)}
-                        </div>
+                    <td className="py-1.5 px-2.5 min-w-[110px] whitespace-nowrap align-middle">
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <LeadHealthBadge lead={lead} showDescription={false} size="sm" />
+                        {renderTemperatureBadge(lead)}
                         {renderIntentBadge(lead)}
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[110px] text-zinc-300 align-middle">
-                      <div className="flex items-center gap-1">
-                        <span className="font-semibold block">{lead.ciudad || 'España'}</span>
+                    <td className="py-1.5 px-3 min-w-[100px] text-zinc-300 align-middle">
+                      <div className="flex items-center gap-1 leading-snug">
+                        <span className="font-semibold text-xs text-zinc-200 block truncate">{lead.ciudad || 'España'}</span>
                         {lead.ciudad && onFilterByRouteCity && (
                           <button
                             type="button"
@@ -1155,39 +1215,23 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               onFilterByRouteCity(lead.ciudad!);
                             }}
-                            className="p-1 rounded hover:bg-zinc-800 text-zinc-500 hover:text-sky-300 transition-colors cursor-pointer shrink-0"
+                            className="p-0.5 rounded hover:bg-zinc-800 text-zinc-500 hover:text-sky-300 transition-colors cursor-pointer shrink-0"
                             title={`Filtrar salas para fin de semana doble desde ${lead.ciudad} (< 2.5h de ruta)`}
                           >
                             <Compass className="w-3 h-3" />
                           </button>
                         )}
                       </div>
-                      {renderLeadDatesInfo(lead)}
+                      {renderLeadDatesInfo(lead, true)}
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[90px] text-zinc-300 align-middle">
-                      <div className="flex flex-col">
-                        <span className={lead.roster ? 'text-amber-300 font-semibold' : 'text-zinc-200'}>
-                          {lead.roster ? `Róster: ${lead.roster}` : (lead.aforo ? `${lead.aforo} pax` : 'n/d')}
-                        </span>
-                        {lead.financial_break_even?.entradas_break_even ? (
-                          <span
-                            className={`inline-flex items-center gap-1 text-[10px] font-sans font-semibold px-1.5 py-0.2 rounded mt-0.5 w-fit ${
-                              (lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) <= 0.4
-                                ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
-                                : (lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) <= 0.7
-                                ? 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
-                                : 'bg-rose-950/60 text-rose-300 border border-rose-500/30'
-                            }`}
-                            title={`Punto de Equilibrio: ${lead.financial_break_even.entradas_break_even} entradas necesarias para cubrir costes (${Math.round((lead.financial_break_even.entradas_break_even / (lead.aforo || 250)) * 100)}% del aforo)`}
-                          >
-                            🎯 B-E: {lead.financial_break_even.entradas_break_even}
-                          </span>
-                        ) : null}
-                      </div>
+                    <td className="py-1.5 px-2.5 min-w-[70px] text-zinc-300 align-middle">
+                      <span className={`text-xs ${lead.roster ? 'text-amber-300 font-semibold' : 'text-zinc-200'}`}>
+                        {lead.roster ? `Róster: ${lead.roster}` : (lead.aforo ? `${lead.aforo} pax` : 'n/d')}
+                      </span>
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[140px] whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-3 min-w-[110px] whitespace-nowrap align-middle">
                       <div className="flex items-center gap-1.5">
                         <span
                           className={`inline-flex items-center text-[10px] px-2 py-0.5 rounded-full font-sans font-medium ${getStatusBadgeClass(
@@ -1201,85 +1245,74 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </td>
 
                     {/* Direct Contact Column */}
-                    <td className="py-3.5 px-4 min-w-[180px] align-middle">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          {lead.email_contacto ? (
-                            <>
-                              {(() => {
-                                const bounced = isBouncedLead(lead.notas);
-                                const invalid = getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid';
-                                const broken = bounced || invalid;
-                                return (
-                                  <>
-                                    <a
-                                      href={`mailto:${lead.email_contacto}`}
-                                      onClick={(e) => e.stopPropagation()}
-                                      className={`font-normal truncate max-w-[140px] inline-block ${
-                                        broken
-                                          ? 'text-red-400 hover:text-red-300 line-through'
-                                          : 'text-sky-400 hover:text-sky-300'
-                                      }`}
-                                      title={lead.email_contacto}
-                                    >
-                                      {lead.email_contacto}
-                                    </a>
-                                    {broken && (
-                                      <div title={bounced ? 'Email rebotado - el destinatario no existe' : 'Email inválido - no se puede contactar'}>
-                                        <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
-                                      </div>
-                                    )}
-                                  </>
-                                );
-                              })()}
-                            </>
-                          ) : (
-                            <span className="text-zinc-600 italic text-[11px]">Sin email</span>
-                          )}
-                        </div>
-                        {/* Teléfono Móvil con icono Smartphone */}
-                        {hasMovil ? (
-                          <div className="flex items-center gap-1.5 text-emerald-400 font-medium text-[11px]" title={`Móvil (WhatsApp disponible): ${rawMovil}`}>
-                            <Smartphone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span className="truncate">{rawMovil}</span>
+                    <td className="py-1.5 px-3 min-w-[150px] align-middle">
+                      <div className="flex flex-col justify-center leading-tight">
+                        {lead.email_contacto ? (
+                          <div className="flex items-center gap-1">
+                            {(() => {
+                              const bounced = isBouncedLead(lead.notas);
+                              const invalid = getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid';
+                              const broken = bounced || invalid;
+                              return (
+                                <>
+                                  <a
+                                    href={`mailto:${lead.email_contacto}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className={`font-normal truncate max-w-[130px] text-xs inline-block ${
+                                      broken
+                                        ? 'text-red-400 hover:text-red-300 line-through'
+                                        : 'text-sky-400 hover:text-sky-300'
+                                    }`}
+                                    title={lead.email_contacto}
+                                  >
+                                    {lead.email_contacto}
+                                  </a>
+                                  {broken && (
+                                    <div title={bounced ? 'Email rebotado' : 'Email inválido'}>
+                                      <AlertCircle className="w-3 h-3 text-red-400 shrink-0" />
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            })()}
                           </div>
-                        ) : null}
-
-                        {/* Teléfono Fijo con icono Phone */}
-                        {hasFijo ? (
-                          <div className="flex items-center gap-1.5 text-sky-400 font-medium text-[11px]" title={`Teléfono fijo de sala: ${rawFijo}`}>
-                            <Phone className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                            <span className="truncate">{rawFijo}</span>
+                        ) : (
+                          <span className="text-zinc-600 italic text-[10px]">Sin email</span>
+                        )}
+                        {(hasMovil || hasFijo || lead.instagram) && (
+                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px]">
+                            {hasMovil ? (
+                              <span className="inline-flex items-center gap-0.5 text-emerald-400" title={`Móvil: ${rawMovil}`}>
+                                <Smartphone className="w-2.5 h-2.5 shrink-0" />
+                                <span className="truncate max-w-[75px]">{rawMovil}</span>
+                              </span>
+                            ) : hasFijo ? (
+                              <span className="inline-flex items-center gap-0.5 text-sky-400" title={`Fijo: ${rawFijo}`}>
+                                <Phone className="w-2.5 h-2.5 shrink-0" />
+                                <span className="truncate max-w-[75px]">{rawFijo}</span>
+                              </span>
+                            ) : null}
+                            {lead.instagram ? (
+                              <a
+                                href={lead.instagram.startsWith('http') ? lead.instagram : `https://instagram.com/${lead.instagram.replace(/^@/, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-0.5 text-pink-400 hover:text-pink-300"
+                                title={`Instagram: ${lead.instagram}`}
+                              >
+                                <Instagram className="w-2.5 h-2.5 shrink-0" />
+                                <span className="truncate max-w-[65px]">{lead.instagram.replace(/^@/, '')}</span>
+                              </a>
+                            ) : null}
                           </div>
-                        ) : null}
-
-                        {!hasMovil && !hasFijo && lead.telefono ? (
-                          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px]" title={`Teléfono: ${lead.telefono}`}>
-                            <PhoneCall className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                            <span className="truncate">{lead.telefono}</span>
-                          </div>
-                        ) : null}
-
-                        {/* Instagram con icono Instagram */}
-                        {lead.instagram ? (
-                          <a
-                            href={lead.instagram.startsWith('http') ? lead.instagram : `https://instagram.com/${lead.instagram.replace(/^@/, '')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex items-center gap-1.5 text-pink-400 hover:text-pink-300 font-medium text-[11px] transition-colors"
-                            title={`Instagram: ${lead.instagram}`}
-                          >
-                            <Instagram className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-                            <span className="truncate">{lead.instagram.startsWith('@') ? lead.instagram : `@${lead.instagram}`}</span>
-                          </a>
-                        ) : null}
+                        )}
                       </div>
                     </td>
 
                     {/* Direct Quick Action Buttons in Table View */}
-                    <td className="py-3.5 px-4 min-w-[160px] text-right whitespace-nowrap align-middle">
-                      <div className="flex items-center justify-end gap-1.5">
+                    <td className="py-1.5 px-3 min-w-[130px] text-right whitespace-nowrap align-middle">
+                      <div className="flex items-center justify-end gap-1">
                         {/* WhatsApp: SOLO si tiene teléfono móvil */}
                         {hasMovil && phoneForWhatsApp ? (
                           <a
@@ -1290,7 +1323,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               openWhatsAppChat(rawMovil);
                             }}
-                            className="p-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 rounded-lg transition-colors inline-flex items-center"
+                            className="p-1 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 rounded transition-colors inline-flex items-center"
                             title={`WhatsApp directo al móvil (${rawMovil})`}
                           >
                             <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
@@ -1304,7 +1337,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-pink-950/80 hover:bg-pink-900 border border-pink-700/60 text-pink-300 rounded-lg transition-colors inline-flex items-center"
+                            className="p-1 bg-pink-950/80 hover:bg-pink-900 border border-pink-700/60 text-pink-300 rounded transition-colors inline-flex items-center"
                             title={`Abrir perfil de Instagram (${lead.instagram})`}
                           >
                             <Instagram className="w-3.5 h-3.5 text-pink-400" />
@@ -1315,7 +1348,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <a
                             href={`tel:${phoneForCall}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-sky-950/80 hover:bg-sky-900 border border-sky-700/60 text-sky-300 rounded-lg transition-colors inline-flex items-center"
+                            className="p-1 bg-sky-950/80 hover:bg-sky-900 border border-sky-700/60 text-sky-300 rounded transition-colors inline-flex items-center"
                             title={
                               hasMovil && hasFijo 
                                 ? `Llamar (Móvil: ${rawMovil} / Fijo: ${rawFijo})` 
@@ -1332,7 +1365,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <button
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
-                            className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-lg text-[10px] font-bold transition-all cursor-pointer inline-flex items-center gap-1"
+                            className="px-1.5 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded text-[9px] font-bold transition-all cursor-pointer inline-flex items-center gap-0.5"
                             title="Aprobar pitch directamente"
                           >
                             <CheckCircle2 className="w-3 h-3 text-amber-400" />
@@ -1348,7 +1381,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               const nudgeText = generateFollowupTemplate(lead, effectiveBandName || 'Bakandeya');
                               onSelectLead(lead, { tab: 'emails', pitchDraft: nudgeText });
                             }}
-                            className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-lg text-[10px] font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                            className="px-1.5 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded text-[9px] font-bold transition-all cursor-pointer inline-flex items-center gap-0.5 shadow-xs"
                             title={`Han pasado ${getDaysSinceContact(lead)} días sin respuesta. Cargar recordatorio de seguimiento`}
                           >
                             <Clock className="w-3 h-3 text-amber-400" />

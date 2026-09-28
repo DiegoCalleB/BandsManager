@@ -197,11 +197,85 @@ const VERTICE_REGISTERED_BAND = {
   notas: "Banda principal asignada a usuario Admin"
 };
 
+export const MASTER_OF_PROMPTS_BAND_ID = "band-master-of-prompts";
+
+export const MASTER_OF_PROMPTS_REGISTERED_BAND = {
+  id: "reg-master-of-prompts",
+  band_id: MASTER_OF_PROMPTS_BAND_ID,
+  user_id: "user-mouredev",
+  fecha_registro: "2026-01-01T10:00:00.000Z",
+  nombre_banda: "Master of Prompts",
+  email: "mouredev@gmail.com",
+  plan: "cabeza_de_cartel",
+  contacto_nombre: "Brais Moure",
+  estilo_musical: "Thrash Metal Galaico / Heavy Dev / AI Metal",
+  localizacion: "A Coruña (Galicia, España)",
+  telefono: "+34 688 101 010",
+  instagram: "@mouredev",
+  spotify_youtube: "https://youtube.com/@mouredev",
+  aforo_promedio: 1500,
+  estado_cuenta: "activo",
+  logoUrl: "/images/logo_master_of_prompts.svg",
+  logo_url: "/images/logo_master_of_prompts.svg",
+  imagen_url: "/images/logo_master_of_prompts.svg",
+  notas: "Banda seria estilo Metallica con temática de ingeniería de software e Inteligencia Artificial."
+};
+
+export const HERDEIROS_BAND_ID = "band-os-herdeiros-do-codigo";
+
+export const HERDEIROS_REGISTERED_BAND = {
+  id: "reg-os-herdeiros-do-codigo",
+  band_id: HERDEIROS_BAND_ID,
+  user_id: "user-mouredev",
+  fecha_registro: "2026-01-01T10:00:00.000Z",
+  nombre_banda: "Os Herdeiros do Código",
+  email: "mouredev@gmail.com",
+  plan: "cabeza_de_cartel",
+  contacto_nombre: "Brais Moure",
+  estilo_musical: "Rock Bravú / Punk-Rock Galaico",
+  localizacion: "A Coruña (Galicia, España)",
+  telefono: "+34 688 101 010",
+  instagram: "@mouredev",
+  aforo_promedio: 400,
+  estado_cuenta: "activo",
+  logoUrl: "/images/logo_herdeiros_do_codigo.svg",
+  logo_url: "/images/logo_herdeiros_do_codigo.svg",
+  notas: "Banda rock bravú galaica de Brais Moure"
+};
+
+export const MASTER_OF_PROMPTS_EPK_CONFIG = {
+  biografia: "Master of Prompts es una apisonadora de Thrash Metal clásico forjada en A Coruña (Galicia). Con una estética implacable inspirada en la era dorada de Metallica (1986), afinaciones en Mi estándar y un virtuosismo rítmico a 210 BPM en downpicking estricto, la banda combina la potencia del metal pesado con líricas de ingeniería de software, arquitectura de compiladores y la rebelión de los modelos de inteligencia artificial.",
+  logoUrl: "/images/logo_master_of_prompts.svg",
+  bandPhotos: [
+    "/images/logo_master_of_prompts.svg"
+  ],
+  riderTecnico: "- 2 Cabezales Mesa Boogie Dual Rectifier a válvulas con pantallas 4x12 Celestion V30\n- 1 Cabezal Ampeg SVT-CL a válvulas con pantalla 8x10 para bajo + Línea DI Radial J48\n- Batería acústica profesional (Tama Starclassic / Pearl Masters) con DOBLE BOMBO de 22\", 3 toms y 2 goliaths\n- Micrófonos vocales dinámicos Shure Beta 58A con pie reforzado y cableado Klotz\n- 4 Envíos estéreo de monitores inalámbricos In-Ear (Sennheiser G4 IEM)\n- PA mínima requerida: 6000W RMS estéreo para salas y festivales",
+  enlacesRedes: {
+    spotify: "https://open.spotify.com/artist/mouredev",
+    youtube: "https://youtube.com/@mouredev",
+    instagram: "https://instagram.com/mouredev",
+    tiktok: "https://tiktok.com/@mouredev",
+    website: "https://moure.dev",
+    whatsapp: "+34688101010"
+  },
+  contactoBooking: {
+    nombre: "Brais Moure (Management & Booking)",
+    email: "mouredev@gmail.com",
+    telefono: "+34 688 101 010"
+  },
+  temasDestacadosIds: ["mop-song-1", "mop-song-2", "mop-song-3"],
+  incentivoFans: {
+    mensajeAgradecimiento: "¡Grazas por apoiar a Master of Prompts no concerto! Aquí tes a descarga do noso directo en formato FLAC de alta resolución.",
+    enlaceDescarga: "https://moure.dev/master-of-prompts-live.flac",
+    codigoDescuento: "PROMPT-METAL"
+  }
+};
+
 export function ensureBakandeyaBandId(state: any): boolean {
   let changed = false;
 
   if (!state.registeredBands || !Array.isArray(state.registeredBands)) {
-    state.registeredBands = [BAKANDEYA_REGISTERED_BAND, VERTICE_REGISTERED_BAND];
+    state.registeredBands = [BAKANDEYA_REGISTERED_BAND, VERTICE_REGISTERED_BAND, HERDEIROS_REGISTERED_BAND, MASTER_OF_PROMPTS_REGISTERED_BAND];
     changed = true;
   } else {
     const existingBakandeya = state.registeredBands.find(
@@ -225,6 +299,31 @@ export function ensureBakandeyaBandId(state: any): boolean {
       existingVertice.band_id = "band-vertice";
       changed = true;
     }
+
+    const existingHerdeiros = state.registeredBands.find(
+      (b: any) => (b.band_id || '').replace(/^(band|reg)-/, '') === 'os-herdeiros-do-codigo'
+    );
+    if (!existingHerdeiros) {
+      state.registeredBands.push(HERDEIROS_REGISTERED_BAND);
+      changed = true;
+    }
+
+    const existingMop = state.registeredBands.find(
+      (b: any) => (b.band_id || '').replace(/^(band|reg)-/, '') === 'master-of-prompts'
+    );
+    if (!existingMop) {
+      state.registeredBands.push(MASTER_OF_PROMPTS_REGISTERED_BAND);
+      changed = true;
+    }
+  }
+
+  // Pre-cargar EPK de Master of Prompts
+  if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
+  if (!state.epkConfigsByBand['band-master-of-prompts']) {
+    state.epkConfigsByBand['band-master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
+    state.epkConfigsByBand['master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
+    state.epkConfigsByBand['reg-master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
+    changed = true;
   }
 
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
@@ -248,6 +347,35 @@ export function ensureBakandeyaBandId(state: any): boolean {
           u.band_id = 'band-vertice';
           u.bandName = 'Vértice';
           u.main_band_id = 'band-vertice';
+          changed = true;
+        }
+      } else if (
+        u.id === 'user-mouredev' ||
+        u.username?.toLowerCase() === 'mouredev' ||
+        u.username?.toLowerCase() === 'braismouredev' ||
+        u.email?.toLowerCase().includes('mouredev') ||
+        u.email?.toLowerCase().includes('braismouredev')
+      ) {
+        const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
+        if (cleanCurrent === 'master-of-prompts') {
+          if (u.band_id !== 'band-master-of-prompts' || u.bandName !== 'Master of Prompts' || u.instrument !== 'Batería') {
+            u.band_id = 'band-master-of-prompts';
+            u.bandName = 'Master of Prompts';
+            u.instrument = 'Batería';
+            changed = true;
+          }
+        } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
+          if (u.band_id !== 'band-os-herdeiros-do-codigo' || u.bandName !== 'Os Herdeiros do Código' || u.instrument !== 'Batería') {
+            u.band_id = 'band-os-herdeiros-do-codigo';
+            u.bandName = 'Os Herdeiros do Código';
+            u.instrument = 'Batería';
+            changed = true;
+          }
+        } else {
+          u.band_id = 'band-os-herdeiros-do-codigo';
+          u.bandName = 'Os Herdeiros do Código';
+          u.main_band_id = 'band-os-herdeiros-do-codigo';
+          u.instrument = 'Batería';
           changed = true;
         }
       } else if (initialSeedUserIds.has(u.id)) {
@@ -311,6 +439,15 @@ export function ensureBakandeyaBandId(state: any): boolean {
     state.userBands = [];
     changed = true;
   }
+
+  // Purge any accidental Bakandeya link for user-mouredev
+  const beforeLen = state.userBands.length;
+  state.userBands = state.userBands.filter((ub: any) => {
+    const isMoure = ub.user_id === 'user-mouredev' || (ub.email && String(ub.email).toLowerCase().includes('mouredev'));
+    const isBak = (ub.band_id || '').replace(/^(band|reg)-/, '') === 'bakandeya';
+    return !(isMoure && isBak);
+  });
+  if (state.userBands.length !== beforeLen) changed = true;
 
   // Ensure all current users have their active bands in userBands. Un usuario sin band_id
   // todavía (cuenta nueva sin banda asignada) no tiene banda activa que registrar aquí: antes se

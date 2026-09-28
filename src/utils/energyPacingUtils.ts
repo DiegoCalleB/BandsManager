@@ -73,6 +73,12 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     }
   }
 
+  // Normalización defensiva: si el valor viene en escala 0-100 (ej. 40, 75, 95), se convierte a escala 1-20
+  if (score > 20) {
+    score = Math.round(score / 5);
+  }
+  score = Math.max(1, Math.min(20, score));
+
   if (score <= 8) {
     return {
       category: 'balada',

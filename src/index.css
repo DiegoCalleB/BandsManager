@@ -289,8 +289,36 @@ iframe.goog-te-banner-frame {
   .animate-donate-cta-glow,
   .animate-donate-cta-glow-delayed,
   .animate-donate-sheen,
-  .animate-donate-sheen-delayed {
-    animation: none;
+  .animate-donate-sheen-delayed,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+  }
+}
+
+/* =========================================================================
+   OPTIMIZACIÓN MÓVIL Y AHORRO DE BATERÍA (TFM HIGH-EFFICIENCY GPU PROFILES)
+   =========================================================================
+   En dispositivos móviles táctiles (iOS/Android), backdrop-filter con blur
+   fuerza a la GPU móvil a renderizar múltiples pasadas de desenfoque gaussiano
+   por frame, sobrecalentando el terminal y agotando la batería.
+   Sustituimos el blur en GPU por un fondo opaco de alto contraste.
+*/
+@media (hover: none) and (pointer: coarse) {
+  /* Desactivar composición de shader de desenfoque en tiempo real en móviles */
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(12, 14, 18, 0.96) !important;
+  }
+
+  /* Desacelerar o relajar animaciones infinitas para permitir CPU C-States / Deep Sleep */
+  .animate-pulse {
+    animation-duration: 3.5s !important;
+  }
+
+  .animate-ping {
+    animation-duration: 3s !important;
   }
 }
 

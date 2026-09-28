@@ -355,8 +355,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {miembros.map(m => (
-              <div key={m.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3.5 space-y-2.5">
+            {miembros.map((m, idx) => (
+              <div key={m.id || `miembro-${idx}-${m.nombre || ''}`} className="rounded-xl border border-slate-800 bg-slate-950 p-3.5 space-y-2.5">
                 <div className="flex items-start gap-3">
                   <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
                     <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center relative">

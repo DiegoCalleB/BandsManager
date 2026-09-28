@@ -126,12 +126,14 @@ function truncateTitleToWidth(
  */
 function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   const segments: NoteSegment[] = [];
-  if (input.memberNote) segments.push({ text: input.memberNote, className: 'note-member' });
-  if (input.showSetlistNotes && input.setlistNote) {
-    segments.push({ text: `*** ${input.setlistNote} ***`, className: 'note-cue' });
+  if (input.memberNote && input.memberNote.trim()) {
+    segments.push({ text: input.memberNote.trim(), className: 'note-member' });
   }
-  if (input.showSetlistNotes && input.generalNote) {
-    segments.push({ text: `[General: ${input.generalNote}]`, className: 'note-general' });
+  if (input.showSetlistNotes && input.setlistNote && input.setlistNote.trim()) {
+    segments.push({ text: `*** ${input.setlistNote.trim()} ***`, className: 'note-cue' });
+  } else if (input.showSetlistNotes && input.generalNote && input.generalNote.trim()) {
+    // Solo mostrar nota general si NO hay nota/cue de setlist para no saturar con líneas duplicadas
+    segments.push({ text: `[${input.generalNote.trim()}]`, className: 'note-general' });
   }
 
   const numberWidth = input.numberText

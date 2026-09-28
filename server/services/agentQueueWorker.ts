@@ -6,6 +6,7 @@ import {
   completeAgentJob,
   failAgentJob,
   pruneOldJobs,
+  onAgentJobEnqueued,
   AgentJob
 } from "./agentQueueService.js";
 import { runLectorAgent } from "./lectorAgent.js";
@@ -17,7 +18,9 @@ import { captureError } from "../utils/errorTracking.js";
 import { bandHasEmailConfigured } from "./agentScheduler.js";
 
 const WORKER_ID = `worker_${process.pid}_${Math.random().toString(36).substring(2, 6)}`;
-const POLL_INTERVAL_MS = 3000; // Sondeo cada 3 segundos cuando no hay trabajos
+// En reposo, duerme por defecto 24 horas (o configurable con AGENT_WORKER_POLL_MS).
+// Cuando se encola un trabajo, onAgentJobEnqueued() despierta al worker inmediatamente.
+const POLL_INTERVAL_MS = Number(process.env.AGENT_WORKER_POLL_MS) || (24 * 60 * 60 * 1000);
 let isWorkerRunning = false;
 let workerLoopTimeout: NodeJS.Timeout | null = null;
 
@@ -138,10 +141,26 @@ async function workerLoop(): Promise<void> {
     console.warn(`[AgentQueueWorker] Error en el loop del worker:`, err);
   }
 
-  // Si no hay trabajos o hubo un error transitorio, esperar al siguiente intervalo
+  // Si no hay trabajos o hubo un error transitorio, esperar al siguiente intervalo (24h en reposo)
   if (isWorkerRunning) {
     workerLoopTimeout = setTimeout(workerLoop, POLL_INTERVAL_MS);
   }
+}
+
+/**
+ * Despierta inmediatamente al worker si estaba en reposo para procesar un nuevo trabajo recibido.
+ */
+export function wakeWorker(): void {
+  if (!isWorkerRunning) return;
+  if (workerLoopTimeout) {
+    clearTimeout(workerLoopTimeout);
+    workerLoopTimeout = null;
+  }
+  setImmediate(() => {
+    workerLoop().catch((err) => {
+      console.warn("[AgentQueueWorker] Error tras despertar worker:", err);
+    });
+  });
 }
 
 /**
@@ -150,26 +169,31 @@ async function workerLoop(): Promise<void> {
 export function startAgentQueueWorker(): void {
   if (isWorkerRunning) return;
   isWorkerRunning = true;
-  console.log(`[AgentQueueWorker] Iniciado worker ${WORKER_ID} - monitoreando cola agent_jobs_queue...`);
+  console.log(`[AgentQueueWorker] Iniciado worker ${WORKER_ID} - cola reactiva basada en eventos (sondeo reposo: ${Math.round(POLL_INTERVAL_MS / (60 * 60 * 1000))}h).`);
 
-  // Tarea secundaria periódica para reconciliar estados antiguos (stems/predicciones)
+  // Conectar con el publicador: despertar al worker en cuanto entre cualquier trabajo
+  onAgentJobEnqueued(() => {
+    wakeWorker();
+  });
+
+  // Tarea secundaria periódica para reconciliar estados antiguos (stems/predicciones) cada 24 horas
   setInterval(() => {
     reconcileStaleStemPredictions(5).catch((e) => {
       console.warn("[AgentQueueWorker] Error en reconciliación periódica de stems:", e);
     });
-  }, 10 * 60 * 1000);
+  }, 24 * 60 * 60 * 1000);
 
-  // Tarea de mantenimiento: Poda automática de tareas antiguas (Auto-Vacuum / Retention) cada 6 horas
+  // Tarea de mantenimiento: Poda automática de tareas antiguas (Auto-Vacuum / Retention) cada 24 horas
   setInterval(() => {
     pruneOldJobs(7, 30).catch((e) => {
       console.warn("[AgentQueueWorker] Error en poda automática periódica:", e);
     });
-  }, 6 * 60 * 60 * 1000);
+  }, 24 * 60 * 60 * 1000);
 
-  // Ejecución inicial de poda ligera al arrancar
+  // Ejecución inicial diferida de poda ligera al arrancar
   setTimeout(() => {
     pruneOldJobs(7, 30).catch(() => {});
-  }, 15000);
+  }, 30000);
 
   workerLoop();
 }

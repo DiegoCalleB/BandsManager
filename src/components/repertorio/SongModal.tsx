@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 import { formatSongTitle } from '../../utils/formatSongTitle';
@@ -52,8 +52,21 @@ export function SongModal({
   const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl || '');
   const [audioFileName, setAudioFileName] = useState<string>('');
 
+  // Determine if advanced section should start open (e.g. if editing a song with extra data)
+  const hasAdvancedData = Boolean(
+    editingSong?.genero ||
+    editingSong?.cantantePrincipal ||
+    (editingSong?.afinacion && editingSong.afinacion !== 'E Standard') ||
+    editingSong?.enlaceAcordes ||
+    editingSong?.notasInternas ||
+    editingSong?.notasRepertorio ||
+    (editingSong?.notasMiembros && Object.values(editingSong.notasMiembros).some(v => v && v.trim().length > 0))
+  );
+
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(hasAdvancedData);
+
   // Member notes state
-  const [showMemberNotesSection, setShowMemberNotesSection] = useState<boolean>(true);
+  const [showMemberNotesSection, setShowMemberNotesSection] = useState<boolean>(hasAdvancedData);
   const [memberNotesState, setMemberNotesState] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     resolvedMembers.forEach(m => {
@@ -64,8 +77,6 @@ export function SongModal({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
-  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
   if (!isOpen) return null;
 
   const handleMemberNoteChange = (name: string, text: string) => {
@@ -92,424 +103,457 @@ export function SongModal({
         const secs = totalSecs % 60;
         setMinutos(mins);
         setSegundos(secs);
-        setDetectedDurationMsg(`✓ Duración detectada del audio: ${mins}m ${secs}s`);
+        setDetectedDurationMsg(`✓ Duración detectada: ${mins}m ${secs}s`);
       }
     };
   };
 
   const finalAlbumValue = selectedAlbum === '__CUSTOM__' ? customAlbumInput : selectedAlbum;
 
-  // La energía se almacena como número (1-20). Mapeamos el valor guardado al tramo
-  // más cercano de los cuatro que ofrece el selector.
   const energiaDefault = (() => {
     const raw = Number(editingSong?.energia);
     if (!editingSong || !Number.isFinite(raw) || raw <= 0) return '18';
-    if (raw <= 8) return '6';
-    if (raw <= 14) return '12';
-    if (raw <= 18) return '18';
+    const normalized = raw > 20 ? Math.round(raw / 5) : raw;
+    if (normalized <= 8) return '6';
+    if (normalized <= 14) return '12';
+    if (normalized <= 18) return '18';
     return '20';
   })();
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border border-neutral-800 ${colors.card}`}>
-        <div className="flex justify-between items-center pb-3 border-b border-white/10">
-          <div className="flex items-center gap-2">
-            <Music className="w-5 h-5 text-[#1db954]" />
-            <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
-              {editingSong ? 'Editar Canción' : 'Añadir Nueva Canción al Catálogo'}
-            </h3>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+        <div className={`w-full max-w-lg p-5 sm:p-6 rounded-3xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
+          isStitchLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#16161a] border-neutral-800 text-zinc-100'
+        }`}>
+          {/* Header */}
+          <div className="flex justify-between items-center pb-3.5 border-b border-white/10">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <Music className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold tracking-tight">
+                  {editingSong ? 'Editar Canción' : 'Añadir Nueva Canción'}
+                </h3>
+                <p className="text-[11px] text-zinc-400 font-normal">
+                  {editingSong ? 'Modifica los datos del tema en tu repertorio' : 'Añade un tema rápido a tu catálogo'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-zinc-400 hover:text-white p-1.5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-          <button onClick={onClose} className="text-neutral-400 hover:text-white cursor-pointer p-1">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
 
-        <form onSubmit={onSave} className="space-y-3 text-[10px] font-mono flex flex-col flex-1 overflow-hidden pt-3">
-          <input type="hidden" name="audioPrincipalUrl" value={audioFileName ? '' : audioFileUrl} />
-          <input type="hidden" name="albumDisco" value={finalAlbumValue} />
+          <form onSubmit={onSave} className="space-y-4 text-xs font-sans flex flex-col flex-1 overflow-hidden pt-4">
+            <input type="hidden" name="audioPrincipalUrl" value={audioFileName ? '' : audioFileUrl} />
+            <input type="hidden" name="albumDisco" value={finalAlbumValue} />
 
-          <div className="space-y-3 overflow-y-auto pr-1 flex-1 pb-2">
-            {/* Audio File Upload Box with Auto Duration Detection */}
-            <div className={`p-3 rounded-xl border border-dashed transition-all ${
-              isStitchLight ? 'bg-slate-50 border-slate-300' : 'bg-neutral-900/90 border-neutral-700'
-            }`}>
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Upload className="w-4 h-4 text-[#1db954]" />
-                  <span className="font-bold text-xs text-white">Subir Fichero de Audio (mp3, wav, m4a)</span>
+            <div className="space-y-4 overflow-y-auto pr-1 flex-1 pb-2">
+              {/* Audio Upload Area (Compact & Clean) */}
+              <div className={`p-3 rounded-2xl border transition-all ${
+                isStitchLight 
+                  ? 'bg-slate-50 border-slate-200 hover:border-emerald-300' 
+                  : 'bg-neutral-900/80 border-neutral-800 hover:border-neutral-700'
+              }`}>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                      <Upload className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-semibold text-xs block text-zinc-200">Audio Demo (mp3, wav, m4a)</span>
+                      <span className="text-[10px] text-zinc-400 truncate block">
+                        {audioFileName || (audioFileUrl ? 'Audio subido previamente' : 'Opcional — autodetección de duración')}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3 py-1.5 text-xs rounded-xl bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold cursor-pointer transition-all active:scale-95 shrink-0 shadow-xs"
+                  >
+                    Examinar...
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-2.5 py-1 text-[10px] rounded-lg bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold cursor-pointer transition-transform active:scale-95"
-                >
-                  Examinar...
-                </button>
-              </div>
-              <input
-                ref={fileInputRef}
-                name="audioFile"
-                type="file"
-                accept="audio/*"
-                onChange={handleAudioFileChange}
-                className="hidden"
-              />
-              {audioFileName && (
-                <div className="mt-2 text-xs text-zinc-300 flex items-center gap-1.5 font-sans">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#1db954]" />
-                  <span className="truncate">Archivo: {audioFileName}</span>
-                </div>
-              )}
-              {detectedDurationMsg && (
-                <div className="mt-1 text-[11px] font-bold text-[#1db954]">
-                  {detectedDurationMsg}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-neutral-400">Título de la Canción *</label>
-                <span className="text-[10px] text-indigo-400 font-medium">✨ Formato Nombres Propios automático</span>
-              </div>
-              <input
-                name="titulo"
-                type="text"
-                required
-                defaultValue={editingSong ? formatSongTitle(editingSong.titulo) : ''}
-                onBlur={(e) => {
-                  if (e.target.value) {
-                    e.target.value = formatSongTitle(e.target.value);
-                  }
-                }}
-                className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
-                  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                }`}
-                placeholder="ej. Brisa y Cacharros"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-neutral-400 mb-1">
-                  Tonalidad / Clave
-                  {editingSong?.tonalidadDetectadaEn && (
-                    <span className="ml-1.5 text-[10px] font-normal text-indigo-400/80" title="Detectado automáticamente por Iris desde el audio — corrígelo si no coincide">
-                      · detectado con Iris
-                    </span>
-                  )}
-                </label>
                 <input
-                  name="tonalidad"
-                  type="text"
-                  defaultValue={editingSong?.tonalidad || ''}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                  placeholder="ej. Lam / Am"
+                  ref={fileInputRef}
+                  name="audioFile"
+                  type="file"
+                  accept="audio/*"
+                  onChange={handleAudioFileChange}
+                  className="hidden"
                 />
-              </div>
-
-              <div>
-                <label className="block text-neutral-400 mb-1">
-                  BPM / Tempo
-                  {editingSong?.bpmDetectadoEn && (
-                    <span className="ml-1.5 text-[10px] font-normal text-indigo-400/80" title="Detectado automáticamente por Iris desde el audio — corrígelo si no coincide">
-                      · detectado con Iris
-                    </span>
-                  )}
-                </label>
-                <input
-                  name="bpm"
-                  type="number"
-                  defaultValue={editingSong?.bpm || 120}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                  placeholder="ej. 128"
-                />
-              </div>
-
-              <div>
-                <label className="block text-neutral-400 mb-1">Duración (Min:Seg)</label>
-                <div className="flex gap-1 items-center">
-                  <input
-                    name="duracionMin"
-                    type="number"
-                    min="0"
-                    value={minutos}
-                    onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
-                    className={`w-1/2 p-2 rounded-lg focus:outline-none border border-neutral-800 text-center font-bold text-[#1db954] ${
-                      isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                    }`}
-                    placeholder="Min"
-                  />
-                  <span className="text-neutral-500 font-bold">:</span>
-                  <input
-                    name="duracionSeg"
-                    type="number"
-                    min="0"
-                    max="59"
-                    value={segundos}
-                    onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
-                    className={`w-1/2 p-2 rounded-lg focus:outline-none border border-neutral-800 text-center font-bold text-[#1db954] ${
-                      isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                    }`}
-                    placeholder="Seg"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-neutral-400 mb-1 flex items-center gap-1">
-                  <Disc3 className="w-3 h-3 text-[#1db954]" />
-                  <span>Álbum / Disco</span>
-                </label>
-                <select
-                  value={selectedAlbum}
-                  onChange={(e) => setSelectedAlbum(e.target.value)}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 cursor-pointer font-bold ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-[#1db954]'
-                  }`}
-                >
-                  <option value="">Sin Disco (Single)</option>
-                  {albumsList.filter(a => a && a !== 'todos' && a !== 'Singles / Sin Disco').map((alb) => (
-                    <option key={alb} value={alb}>💿 {alb}</option>
-                  ))}
-                  <option value="__CUSTOM__">+ Nuevo Álbum (Escribir nombre)...</option>
-                </select>
-
-                {selectedAlbum === '__CUSTOM__' && (
-                  <input
-                    type="text"
-                    value={customAlbumInput}
-                    onChange={(e) => setCustomAlbumInput(e.target.value)}
-                    placeholder="Escribe el nombre del nuevo disco..."
-                    className={`w-full mt-1.5 p-2 rounded-lg focus:outline-none border border-[#1db954]/50 ${
-                      isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                    }`}
-                  />
+                {audioFileName && (
+                  <div className="mt-2 text-xs text-emerald-400 flex items-center gap-1.5 font-medium bg-emerald-500/10 p-2 rounded-xl border border-emerald-500/20">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{audioFileName}</span>
+                  </div>
+                )}
+                {detectedDurationMsg && (
+                  <div className="mt-1.5 text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" />
+                    <span>{detectedDurationMsg}</span>
+                  </div>
                 )}
               </div>
 
+              {/* Title Field (Main Essential Field) */}
               <div>
-                <label className="block text-neutral-400 mb-1">Género / Estilo</label>
+                <label className="block text-zinc-300 font-semibold mb-1">
+                  Título de la Canción <span className="text-emerald-400">*</span>
+                </label>
                 <input
-                  name="genero"
+                  name="titulo"
                   type="text"
-                  defaultValue={editingSong?.genero || ''}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
+                  required
+                  defaultValue={editingSong ? formatSongTitle(editingSong.titulo) : ''}
+                  onBlur={(e) => {
+                    if (e.target.value) {
+                      e.target.value = formatSongTitle(e.target.value);
+                    }
+                  }}
+                  className={`w-full px-3.5 py-2.5 rounded-xl focus:outline-none border font-medium text-sm transition-colors ${
+                    isStitchLight
+                      ? 'bg-white text-slate-900 border-slate-300 focus:border-emerald-500'
+                      : 'bg-neutral-900 text-white border-neutral-800 focus:border-emerald-500/50'
                   }`}
-                  placeholder="ej. Rock Rumba"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-neutral-400 mb-1">Tipo de Tema</label>
-                <select
-                  name="tipo"
-                  defaultValue={editingSong?.tipo || 'propio'}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                >
-                  <option value="propio">Propio / Original</option>
-                  <option value="cover">Cover / Versión</option>
-                  <option value="instrumental">Instrumental / Intro</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-neutral-400 mb-1">Estado de Madurez</label>
-                <select
-                  name="estadoTema"
-                  defaultValue={editingSong?.estadoTema || 'listo'}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                >
-                  <option value="listo">⚡ Listo para Directo</option>
-                  <option value="ensayando">🎸 En Ensayo / Montaje</option>
-                  <option value="componiendo">💡 Idea / En Composición</option>
-                  <option value="descartado">📦 Descartada / Archivo</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-neutral-400 mb-1">Energía / Intensidad</label>
-                {/* La energía se guarda como número (1-20) en la BD, así que el selector
-                    emite números en vez de etiquetas de texto. */}
-                <select
-                  name="energia"
-                  defaultValue={energiaDefault}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                >
-                  <option value="20">💣 Explosiva / Clímax (Hit)</option>
-                  <option value="18">🔥 Alta (Traca / Caña)</option>
-                  <option value="12">🎵 Media (Groove / Ritmo)</option>
-                  <option value="6">🌙 Balada / Acústica</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-neutral-400 mb-1">Voz Principal</label>
-                <input
-                  name="cantantePrincipal"
-                  type="text"
-                  defaultValue={editingSong?.cantantePrincipal || ''}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                  placeholder="ej. Voz Principal"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-neutral-400 mb-1">Afinación Instrumentos</label>
-                <input
-                  name="afinacion"
-                  type="text"
-                  defaultValue={editingSong?.afinacion || 'E Standard'}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                  placeholder="ej. Drop D, Eb Standard"
+                  placeholder="ej. Brisa y Cacharros"
                 />
               </div>
 
-              <div>
-                <label className="block text-neutral-400 mb-1">Enlace a Partitura / Acordes</label>
-                <input
-                  name="enlaceAcordes"
-                  type="url"
-                  defaultValue={editingSong?.enlaceAcordes || ''}
-                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
-                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                  }`}
-                  placeholder="https://drive.google.com/..."
-                />
-              </div>
-            </div>
+              {/* Album & Duration Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-zinc-300 font-semibold mb-1 flex items-center gap-1.5">
+                    <Disc3 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Álbum / Disco</span>
+                  </label>
+                  <select
+                    value={selectedAlbum}
+                    onChange={(e) => setSelectedAlbum(e.target.value)}
+                    className={`w-full px-3 py-2 rounded-xl focus:outline-none border cursor-pointer font-medium ${
+                      isStitchLight
+                        ? 'bg-white text-slate-900 border-slate-300'
+                        : 'bg-neutral-900 text-zinc-200 border-neutral-800'
+                    }`}
+                  >
+                    <option value="">Single (Sin disco)</option>
+                    {albumsList.filter(a => a && a !== 'todos' && a !== 'Singles / Sin Disco').map((alb) => (
+                      <option key={alb} value={alb}>💿 {alb}</option>
+                    ))}
+                    <option value="__CUSTOM__">+ Crear Nuevo Álbum...</option>
+                  </select>
 
-            <div>
-              <label className="block text-neutral-400 mb-1">Notas Internas / Ejecución</label>
-              <textarea
-                name="notasInternas"
-                rows={2}
-                defaultValue={editingSong?.notasInternas || ''}
-                className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
-                  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-                }`}
-                placeholder="ej. Intro solo con viento, estribillo fuerte..."
-              />
-            </div>
-
-            {/* Notas para Repertorio por Miembro de la Banda */}
-            <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
-            
-            <div className={`rounded-xl border transition-all overflow-hidden ${
-              isStitchLight ? 'bg-slate-50 border-slate-300' : 'bg-neutral-900/90 border-neutral-800'
-            }`}>
-              <button
-                type="button"
-                onClick={() => setShowMemberNotesSection(p => !p)}
-                className={`w-full p-3 flex items-center justify-between font-mono text-xs font-bold uppercase transition-colors cursor-pointer ${
-                  isStitchLight ? 'hover:bg-slate-100 text-slate-900' : 'hover:bg-neutral-800 text-[#1db954]'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  <span>Notas para Repertorio por Miembro ({resolvedMembers.length})</span>
-                </div>
-                {showMemberNotesSection ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-
-              {showMemberNotesSection && (
-                <div className="p-3 pt-0 space-y-3 border-t border-white/5">
-                  <p className="text-[10px] text-neutral-400 font-sans mt-2">
-                    Añade notas personalizadas para cada músico. Se imprimirán bajo esta canción en la hoja individual de cada miembro:
-                  </p>
-
-                  <div>
-                    <label className="block text-neutral-400 text-[10px] mb-1 font-mono">
-                      📌 Nota General de Repertorio
-                    </label>
+                  {selectedAlbum === '__CUSTOM__' && (
                     <input
-                      name="notasRepertorio"
                       type="text"
-                      defaultValue={editingSong?.notasRepertorio || ''}
-                      placeholder="ej. Entrar directos sin intro..."
-                      className={`w-full p-2 rounded-lg focus:outline-none border text-xs ${
-                        isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+                      value={customAlbumInput}
+                      onChange={(e) => setCustomAlbumInput(e.target.value)}
+                      placeholder="Nombre del nuevo disco..."
+                      className={`w-full mt-2 px-3 py-2 rounded-xl focus:outline-none border border-emerald-500/50 ${
+                        isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                       }`}
                     />
-                  </div>
+                  )}
+                </div>
 
-                  <div className="space-y-2.5 pt-1">
-                    {resolvedMembers.map((member) => {
-                      const memberKey = member.name.toLowerCase();
-                      return (
-                        <div key={member.id || member.name} className="space-y-1">
-                          <div className="flex items-center justify-between text-[11px]">
-                            <span className="font-bold text-white flex items-center gap-1.5">
-                              <span
-                                className="w-2 h-2 rounded-full inline-block"
-                                style={{ backgroundColor: member.avatarColor || '#6366f1' }}
-                              />
-                              {member.name}
-                              <span className="text-neutral-400 font-normal">({member.instrument})</span>
-                            </span>
-                          </div>
-                          <input
-                            type="text"
-                            value={memberNotesState[memberKey] || ''}
-                            onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
-                            placeholder={`Notas específicas para ${member.name} (${member.instrument})...`}
-                            className={`w-full p-2 rounded-lg focus:outline-none border text-xs ${
-                              isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
-                            }`}
-                          />
-                        </div>
-                      );
-                    })}
+                <div>
+                  <label className="block text-zinc-300 font-semibold mb-1">Duración (Min : Seg)</label>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      name="duracionMin"
+                      type="number"
+                      min="0"
+                      value={minutos}
+                      onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
+                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-emerald-400 ${
+                        isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                      }`}
+                      placeholder="3"
+                    />
+                    <span className="text-zinc-500 font-bold">:</span>
+                    <input
+                      name="duracionSeg"
+                      type="number"
+                      min="0"
+                      max="59"
+                      value={segundos}
+                      onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
+                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-emerald-400 ${
+                        isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                      }`}
+                      placeholder="30"
+                    />
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
 
-          <div className="pt-3 border-t border-neutral-800 flex justify-end gap-2 shrink-0 bg-transparent">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-3 py-2 rounded-xl text-xs text-neutral-300 hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] text-black transition-transform active:scale-95 cursor-pointer shadow-lg"
-            >
-              Guardar Canción
-            </button>
-          </div>
-        </form>
+              {/* Music Essentials Row (Key, BPM, Energy) */}
+              <div className="grid grid-cols-3 gap-2.5">
+                <div>
+                  <label className="block text-zinc-400 text-[11px] font-semibold mb-1">Tonalidad</label>
+                  <input
+                    name="tonalidad"
+                    type="text"
+                    defaultValue={editingSong?.tonalidad || ''}
+                    className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                      isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                    }`}
+                    placeholder="ej. Am"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-zinc-400 text-[11px] font-semibold mb-1">BPM</label>
+                  <input
+                    name="bpm"
+                    type="number"
+                    defaultValue={editingSong?.bpm || 120}
+                    className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                      isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                    }`}
+                    placeholder="120"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-zinc-400 text-[11px] font-semibold mb-1">Energía</label>
+                  <select
+                    name="energia"
+                    defaultValue={energiaDefault}
+                    className={`w-full px-2 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
+                      isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                    }`}
+                  >
+                    <option value="20">💣 Explosiva</option>
+                    <option value="18">🔥 Alta</option>
+                    <option value="12">🎵 Media</option>
+                    <option value="6">🌙 Balada</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Collapsible Accordion: Advanced Options & Notes */}
+              <div className={`rounded-2xl border transition-all overflow-hidden ${
+                isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'
+              }`}>
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedOptions(prev => !prev)}
+                  className={`w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors cursor-pointer ${
+                    isStitchLight ? 'hover:bg-slate-100 text-slate-800' : 'hover:bg-neutral-800/80 text-zinc-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="font-semibold">Opciones avanzadas y notas</span>
+                    <span className="text-[10px] text-zinc-400 font-normal">
+                      (Género, afinación, partitura, notas por miembro)
+                    </span>
+                  </div>
+                  {showAdvancedOptions ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+                </button>
+
+                {showAdvancedOptions && (
+                  <div className="p-3.5 pt-1 space-y-3 border-t border-white/5">
+                    {/* Style & Type */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-zinc-400 text-[11px] mb-1">Género / Estilo</label>
+                        <input
+                          name="genero"
+                          type="text"
+                          defaultValue={editingSong?.genero || ''}
+                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          }`}
+                          placeholder="ej. Rock, Rumba"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-zinc-400 text-[11px] mb-1">Tipo de Tema</label>
+                        <select
+                          name="tipo"
+                          defaultValue={editingSong?.tipo || 'propio'}
+                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
+                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          }`}
+                        >
+                          <option value="propio">Propio / Original</option>
+                          <option value="cover">Cover / Versión</option>
+                          <option value="instrumental">Instrumental / Intro</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Maturity & Voice */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-zinc-400 text-[11px] mb-1">Estado de Madurez</label>
+                        <select
+                          name="estadoTema"
+                          defaultValue={editingSong?.estadoTema || 'listo'}
+                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
+                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          }`}
+                        >
+                          <option value="listo">⚡ Listo para Directo</option>
+                          <option value="ensayando">🎸 En Ensayo</option>
+                          <option value="componiendo">💡 En Composición</option>
+                          <option value="descartado">📦 Archivo</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-zinc-400 text-[11px] mb-1">Voz Principal</label>
+                        <input
+                          name="cantantePrincipal"
+                          type="text"
+                          defaultValue={editingSong?.cantantePrincipal || ''}
+                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          }`}
+                          placeholder="Cantante"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Tuning & Sheet Music Link */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-zinc-400 text-[11px] mb-1">Afinación</label>
+                        <input
+                          name="afinacion"
+                          type="text"
+                          defaultValue={editingSong?.afinacion || 'E Standard'}
+                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          }`}
+                          placeholder="E Standard"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-zinc-400 text-[11px] mb-1">Enlace a Partitura / Drive</label>
+                        <input
+                          name="enlaceAcordes"
+                          type="url"
+                          defaultValue={editingSong?.enlaceAcordes || ''}
+                          className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
+                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          }`}
+                          placeholder="https://drive.google.com/..."
+                        />
+                      </div>
+                    </div>
+
+                    {/* Internal Notes */}
+                    <div>
+                      <label className="block text-zinc-400 text-[11px] mb-1">Notas Internas de Ejecución</label>
+                      <textarea
+                        name="notasInternas"
+                        rows={2}
+                        defaultValue={editingSong?.notasInternas || ''}
+                        className={`w-full p-2.5 rounded-xl focus:outline-none border text-xs ${
+                          isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                        }`}
+                        placeholder="ej. Entrar directos tras el solo de batería..."
+                      />
+                    </div>
+
+                    {/* Member Notes Section */}
+                    <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
+                    
+                    <div className="pt-2 border-t border-white/5 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                          <Users className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Notas por Miembro de la Banda ({resolvedMembers.length})</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setShowMemberNotesSection(p => !p)}
+                          className="text-[10px] text-zinc-400 hover:text-white cursor-pointer"
+                        >
+                          {showMemberNotesSection ? 'Ocultar' : 'Mostrar'}
+                        </button>
+                      </div>
+
+                      {showMemberNotesSection && (
+                        <div className="space-y-2 pt-1">
+                          <div>
+                            <label className="block text-zinc-400 text-[10px] mb-1">
+                              📌 Nota General para todo el grupo
+                            </label>
+                            <input
+                              name="notasRepertorio"
+                              type="text"
+                              defaultValue={editingSong?.notasRepertorio || ''}
+                              placeholder="ej. Parón en seco antes del último coro"
+                              className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
+                                isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+                              }`}
+                            />
+                          </div>
+
+                          {resolvedMembers.map((member) => {
+                            const memberKey = member.name.toLowerCase();
+                            return (
+                              <div key={member.id || member.name} className="space-y-0.5">
+                                <span className="text-[10px] font-medium text-zinc-300 flex items-center gap-1">
+                                  <span
+                                    className="w-1.5 h-1.5 rounded-full inline-block"
+                                    style={{ backgroundColor: member.avatarColor || '#6366f1' }}
+                                  />
+                                  {member.name} <span className="text-zinc-500 font-normal">({member.instrument})</span>
+                                </span>
+                                <input
+                                  type="text"
+                                  value={memberNotesState[memberKey] || ''}
+                                  onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
+                                  placeholder={`Notas para ${member.name}...`}
+                                  className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
+                                    isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+                                  }`}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Actions Bar */}
+            <div className="pt-3 border-t border-white/10 flex justify-end gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 transition-colors font-semibold cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition-all active:scale-95 cursor-pointer shadow-md"
+              >
+                Guardar Canción
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
     </ModalPortal>
   );
 }
+
 

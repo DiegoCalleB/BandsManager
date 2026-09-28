@@ -343,7 +343,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     const ctx = metronomeCtxRef.current;
     if (!ctx) return;
     const secPerBeat = 60 / (song.bpm || 120) / speed;
-    const lookaheadSec = 0.1;
+    const lookaheadSec = 0.15;
     while (metronomeNextClickTimeRef.current < ctx.currentTime + lookaheadSec) {
       const accent = metronomeBeatCounterRef.current % 4 === 0;
       scheduleMetronomeClick(ctx, metronomeNextClickTimeRef.current, accent);
@@ -359,7 +359,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     if (metronomeOn && isPlaying) {
       resyncMetronomeAt(currentTime);
       if (metronomeTimerRef.current) window.clearInterval(metronomeTimerRef.current);
-      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 25);
+      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 50);
     } else if (metronomeTimerRef.current) {
       window.clearInterval(metronomeTimerRef.current);
       metronomeTimerRef.current = null;

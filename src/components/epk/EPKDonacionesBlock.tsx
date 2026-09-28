@@ -488,8 +488,8 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         </p>
                         {miembros
                           .filter(m => (m.rol || '').trim() || (m.bio || '').trim())
-                          .map(m => (
-                            <div key={m.id} className="bg-slate-900/60 border border-slate-800 rounded-lg p-3 space-y-2">
+                          .map((m, idx) => (
+                            <div key={m.id || `miembro-${idx}-${m.nombre || ''}`} className="bg-slate-900/60 border border-slate-800 rounded-lg p-3 space-y-2">
                               <p className="text-xs font-bold text-white">{m.nombre || 'Sin nombre'}</p>
                               {(m.rol || '').trim() && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

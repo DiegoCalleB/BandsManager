@@ -122,8 +122,8 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
                   >
                     <option value="">-- Seleccionar tema del repertorio o usar personalizado --</option>
-                    {songs.map(song => (
-                      <option key={song.id} value={song.id}>
+                    {songs.map((song, idx) => (
+                      <option key={song.id || `song-${idx}`} value={song.id}>
                         {song.titulo} {song.duracion ? `(${song.duracion})` : ''}{' '}
                         {song.audioPrincipalUrl ? '🎵 (Con audio subido)' : ''}
                       </option>
@@ -262,9 +262,9 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             </div>
           )}
           <div className="space-y-3">
-            {videos.map(v => (
+            {videos.map((v, idx) => (
               <div
-                key={v.id}
+                key={v.id || `video-${idx}-${v.url || ''}`}
                 className={`rounded-xl border p-3 space-y-2 ${
                   v.destacado ? 'border-amber-500/60 bg-amber-500/5' : 'border-slate-800 bg-slate-950'
                 }`}

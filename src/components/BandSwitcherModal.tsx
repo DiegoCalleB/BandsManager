@@ -259,7 +259,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         setShowCreateBandModal(false);
         setCreateBandStep(1);
         setNewBandName('');
+        setNewBandLeaderName('');
         setNewBandStyle('');
+        setNewBandLocation('España');
         
         if (onRefreshData) await onRefreshData();
         setTimeout(() => {
@@ -532,7 +534,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         )}
 
         {/* Band Cards Grid (Sleek Profile Switcher) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-5 justify-center items-stretch max-h-[55vh] overflow-y-auto p-2 no-scrollbar">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 justify-center items-stretch max-h-[55vh] overflow-y-auto p-2 no-scrollbar">
           {uniqueBands
             .filter((band) => !searchQuery || band.bandName.toLowerCase().includes(searchQuery.toLowerCase()))
             .map((band, index, array) => {
@@ -552,7 +554,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(band.band_id, e)}
                   onClick={() => !switchingBandId && !isSettingMain && !isLeavingThis && handleSelectBand(band.band_id)}
-                  className={`group relative flex flex-col items-center justify-between p-3 sm:p-5 rounded-2xl border overflow-hidden transition-all duration-300 cursor-pointer select-none ${
+                  className={`group relative flex flex-col items-center p-3 sm:p-4 rounded-2xl border min-h-[175px] transition-all duration-300 cursor-pointer select-none ${
                     isDragged ? 'opacity-30 scale-95 border-dashed border-amber-500' : ''
                   } ${
                     isActive
@@ -560,10 +562,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       : 'bg-[#181716] border-[#2b2927] hover:border-amber-500/70 hover:bg-[#1e1d1b] hover:shadow-lg'
                   } ${switchingBandId && !isSwitching ? 'opacity-40 grayscale pointer-events-none' : ''}`}
                 >
-                  {/* Top Bar on Card: Star (Principal) + Reorder arrows on left, Delete Trash on top-right */}
-                  <div className="w-full flex items-center justify-between gap-1 z-20 mb-1 shrink-0">
+                  {/* Top Bar on Card: Star (Principal) + Reorder arrows on left, Settings + Delete on right */}
+                  <div className="w-full flex items-center justify-between gap-1 z-20 mb-2 shrink-0">
                     {/* Left: Star (Principal) + Reorder arrows */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 shrink-0">
                       {/* Star Button (Principal) */}
                       <button
                         type="button"
@@ -607,7 +609,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
 
                     {/* Top Right: Manage Team (Gear) + Delete Button (Trash) */}
-                    <div className="flex items-center gap-0.5 sm:gap-1 z-30 shrink-0">
+                    <div className="flex items-center gap-1 z-30 shrink-0">
                       {onOpenBandManagement && (
                         <button
                           type="button"
@@ -643,8 +645,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Central Logo Avatar (Display only - no file picker) */}
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-neutral-950 border border-[#333130] group-hover:border-amber-400/60 transition-all flex items-center justify-center p-2 shadow-inner my-2 shrink-0">
+                  {/* Central Logo Avatar with Quick Upload Hover */}
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-neutral-950 border border-[#333130] group-hover:border-amber-400/60 transition-all flex items-center justify-center p-2 shadow-inner my-1 shrink-0 group/avatar">
                     {band.logoUrl && !failedLogos.has(band.band_id) ? (
                       <img
                         src={band.logoUrl}
@@ -655,33 +657,58 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       />
                     ) : (
                       <div className="w-full h-full rounded-xl bg-gradient-to-br from-amber-500/15 to-orange-600/15 flex flex-col items-center justify-center text-amber-400 gap-1">
-                        <Guitar className="w-8 h-8 opacity-80" />
-                        <span className="text-xs font-black font-mono text-zinc-300">
+                        <Guitar className="w-6 h-6 sm:w-7 sm:h-7 opacity-80" />
+                        <span className="text-[10px] font-black font-mono text-zinc-300">
                           {band.bandName.slice(0, 2).toUpperCase()}
                         </span>
                       </div>
                     )}
 
+                    {/* Quick Logo Upload Button on Hover */}
+                    <label
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute inset-0 bg-black/70 backdrop-blur-xs opacity-0 group-hover/avatar:opacity-100 flex flex-col items-center justify-center text-amber-300 transition-opacity cursor-pointer z-20 gap-0.5"
+                      title="Haz clic para cambiar el logotipo de esta banda"
+                    >
+                      <Upload className="w-4 h-4 text-amber-400 animate-bounce" />
+                      <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-amber-200">
+                        {uploadingBandId === band.band_id ? 'Subiendo...' : 'Logo'}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={uploadingBandId === band.band_id}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleUploadLogo(band.band_id, file);
+                          }
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+
                     {/* Loading Spinner Overlay */}
-                    {(isSwitching || isSettingMain || isLeavingThis) && (
+                    {(isSwitching || isSettingMain || isLeavingThis || uploadingBandId === band.band_id) && (
                       <div className="absolute inset-0 bg-black/85 backdrop-blur-xs flex flex-col items-center justify-center text-amber-400 gap-1 z-30">
-                        <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+                        <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
                         <span className="text-[9px] font-mono text-amber-300 uppercase font-bold">
-                          {isSettingMain ? 'Guardando' : isLeavingThis ? 'Eliminando' : 'Cambiando'}
+                          {uploadingBandId === band.band_id ? 'Subiendo' : isSettingMain ? 'Guardando' : isLeavingThis ? 'Eliminando' : 'Cambiando'}
                         </span>
                       </div>
                     )}
                   </div>
 
                   {/* Band Title */}
-                  <div className="w-full text-center mt-1">
-                    <h3 className="text-sm font-bold font-display tracking-wide uppercase text-white group-hover:text-amber-300 transition-colors truncate px-1" title={band.bandName}>
+                  <div className="w-full text-center mt-2 shrink-0">
+                    <h3 className="text-xs sm:text-sm font-bold font-display tracking-wide uppercase text-white group-hover:text-amber-300 transition-colors truncate px-1" title={band.bandName}>
                       {band.bandName}
                     </h3>
                   </div>
 
-                  {/* Plan Badge (Static in beta/promo mode) */}
-                  <div className="mt-1 flex items-center justify-center">
+                  {/* Plan Badge */}
+                  <div className="mt-1 flex items-center justify-center shrink-0">
                     {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' || band.plan === 'promo_plus' ? (
                       <span
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shadow-xs"
@@ -719,8 +746,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     )}
                   </div>
 
-                  {/* Active Status Badge (Only when active) */}
-                  <div className="mt-1.5 flex items-center justify-center h-5">
+                  {/* Active Status Badge */}
+                  <div className="mt-1.5 flex items-center justify-center h-5 shrink-0">
                     {isActive && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-xs">
                         <Check className="w-2.5 h-2.5 stroke-[3]" />

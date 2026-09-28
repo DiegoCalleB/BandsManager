@@ -891,6 +891,7 @@ export interface User {
   main_band_id?: string;
   band_order?: string[];
   email?: string;
+  secondary_email?: string;
   instrument?: string;
   avatarColor?: string;
   createdAt: string;

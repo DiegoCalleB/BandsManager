@@ -477,7 +477,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   // --- Formación de la banda (miembros con foto) ---
-  const miembros: BandMember[] = config.miembros || [];
+  const miembros: BandMember[] = (config.miembros || []).map((m, idx) => ({
+    ...m,
+    id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`
+  }));
 
   const actualizarMiembros = (nuevos: BandMember[]) => setConfig({ ...config, miembros: nuevos });
 
@@ -506,7 +509,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   // --- Vídeos de directo ---
-  const videos: EPKVideo[] = config.videos || [];
+  const videos: EPKVideo[] = (config.videos || []).map((v, idx) => ({
+    ...v,
+    id: v.id || `v-${idx + 1}-${(v.titulo || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`
+  }));
 
   const actualizarVideos = (nuevos: EPKVideo[]) => setConfig({ ...config, videos: nuevos });
 

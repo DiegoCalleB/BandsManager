@@ -55,7 +55,9 @@ export async function dbGetEpkConfig(bandId: string) {
     dossierDocumentUrl: data.dossier_document_url,
     dossierDocumentName: data.dossier_document_name,
     dossierTextoExtra: data.dossier_texto_extra,
-    bandPhotos: data.band_photos || [],
+    bandPhotos: (Array.isArray(data.band_photos) ? data.band_photos : [])
+      .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
+      .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
     miembros: data.miembros || [],
     videos: data.videos || [],
     datosContratacion: data.datos_contratacion || {},
@@ -190,7 +192,9 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
     dossier_document_url: (config.dossierDocumentUrl !== undefined ? config.dossierDocumentUrl : (config.dossier_document_url !== undefined ? config.dossier_document_url : existing?.dossierDocumentUrl)) || "",
     dossier_document_name: (config.dossierDocumentName !== undefined ? config.dossierDocumentName : (config.dossier_document_name !== undefined ? config.dossier_document_name : existing?.dossierDocumentName)) || "",
     dossier_texto_extra: (config.dossierTextoExtra !== undefined ? config.dossierTextoExtra : (config.dossier_texto_extra !== undefined ? config.dossier_texto_extra : existing?.dossierTextoExtra)) || "",
-    band_photos: (config.bandPhotos !== undefined ? config.bandPhotos : (config.band_photos !== undefined ? config.band_photos : existing?.bandPhotos)) || [],
+    band_photos: ((config.bandPhotos !== undefined ? config.bandPhotos : (config.band_photos !== undefined ? config.band_photos : existing?.bandPhotos)) || [])
+      .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
+      .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
     miembros: (config.miembros !== undefined ? config.miembros : existing?.miembros) || [],
     videos: (config.videos !== undefined ? config.videos : existing?.videos) || [],
     datos_contratacion: (config.datosContratacion !== undefined ? config.datosContratacion : (config.datos_contratacion !== undefined ? config.datos_contratacion : existing?.datosContratacion)) || {},

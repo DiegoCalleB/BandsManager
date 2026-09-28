@@ -198,7 +198,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [logoUrl, setLogoUrl] = useState(epkConfig?.logoUrl || bandLogoUrl || '');
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
-  // Sincronizar datos de la banda cuando se abre el modal o cambia la banda/epkConfig
+  // Sincronizar y reiniciar datos de la banda cuando se abre el modal o cambia la banda/epkConfig
   useEffect(() => {
     if (isOpen) {
       const cleanActive = (activeBandId || '').replace(/^(band|reg)-/, '').toLowerCase();
@@ -212,79 +212,106 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       if (resolvedName) {
         setLocalBandName(resolvedName);
         setSpotifyQuery(resolvedName);
-        if (!contactoBookingNombre || contactoBookingNombre === 'Booking & Management' || contactoBookingNombre === 'Contacto' || contactoBookingNombre === 'Tú (Líder)' || contactoBookingNombre === 'Banda') {
-          setContactoBookingNombre(resolvedName);
-        }
+      } else {
+        setLocalBandName('');
+        setSpotifyQuery('');
       }
 
-      if (epkConfig) {
-        if (epkConfig.genero) setGenre(epkConfig.genero);
-        if (epkConfig.idioma) setLanguage(epkConfig.idioma);
-        if (epkConfig.fontStyle || epkConfig.tipografia) setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
-        if (epkConfig.datosContratacion?.ciudadBase) setCity(epkConfig.datosContratacion.ciudadBase);
-        if (epkConfig.logoUrl) setLogoUrl(epkConfig.logoUrl);
-        if (epkConfig.fraseImpacto) setSlogan(epkConfig.fraseImpacto);
+      // Reiniciar logo explícitamente: si la banda actual no tiene logo, NO heredar el logo de la última banda creada
+      setLogoUrl(epkConfig?.logoUrl || bandLogoUrl || '');
 
-        // Bio: no cargar la biografía de Bakandeya si estamos en otra banda
-        if (epkConfig.biografia) {
-          if (isBakandeyaBand || !epkConfig.biografia.toLowerCase().includes('bakandeya')) {
-            setBio(epkConfig.biografia);
-          } else {
-            setBio('');
-          }
+      // Reiniciar miembros explícitamente:
+      const defaultLeaderMember: WizardMemberItem = {
+        id: 'leader',
+        name: currentUser?.name || currentUser?.username || 'Tú (Líder)',
+        role: currentUser?.instrument || 'Voz / Guitarra',
+        email: currentUser?.email || '',
+        instagram: '',
+        isLeader: true,
+      };
+
+      if (epkConfig?.miembros && Array.isArray(epkConfig.miembros) && epkConfig.miembros.length > 0) {
+        const tieneBakandeya = !isBakandeyaBand && epkConfig.miembros.some(m => String(m.nombre || '').toLowerCase().includes('filgue') || String(m.nombre || '').toLowerCase().includes('bakandeya'));
+        if (!tieneBakandeya) {
+          setMembers(epkConfig.miembros.map((m, idx) => ({
+            id: m.id || `m_${idx}_${Date.now()}`,
+            name: m.nombre,
+            role: m.rol || 'Músico',
+            email: '',
+            instagram: m.instagram || '',
+            isLeader: idx === 0,
+          })));
+        } else {
+          setMembers([defaultLeaderMember]);
+        }
+      } else {
+        // Para una nueva banda sin miembros configurados en su epkConfig, resetear siempre al líder actual,
+        // evitando arrastrar el nombre del primer miembro o de la banda previa
+        setMembers([defaultLeaderMember]);
+      }
+
+      setNewMemberName('');
+      setNewMemberRole('');
+      setNewMemberEmail('');
+      setNewMemberInstagram('');
+
+      setGenre(epkConfig?.genero || 'Indie Rock');
+      setLanguage(epkConfig?.idioma || 'Español');
+      setFontStyle(epkConfig?.fontStyle || epkConfig?.tipografia || 'anton');
+      setCity(epkConfig?.datosContratacion?.ciudadBase || 'Madrid, España');
+      setSlogan(epkConfig?.fraseImpacto || '');
+      setFormato(epkConfig?.datosContratacion?.formatos || 'Banda completa en directo');
+      setNumMusicos(epkConfig?.datosContratacion?.numMusicos || 4);
+      setDuracionDirecto(epkConfig?.datosContratacion?.duracionDirecto || '60 min');
+
+      if (epkConfig?.biografia) {
+        if (isBakandeyaBand || !epkConfig.biografia.toLowerCase().includes('bakandeya')) {
+          setBio(epkConfig.biografia);
         } else {
           setBio('');
         }
-
-        // Miembros: no cargar la alineación de Bakandeya si estamos en otra banda
-        if (epkConfig.miembros && Array.isArray(epkConfig.miembros) && epkConfig.miembros.length > 0) {
-          const tieneBakandeya = !isBakandeyaBand && epkConfig.miembros.some(m => String(m.nombre || '').toLowerCase().includes('filgue') || String(m.nombre || '').toLowerCase().includes('bakandeya'));
-          if (!tieneBakandeya) {
-            setMembers(epkConfig.miembros.map((m, idx) => ({
-              id: m.id || `m_${idx}_${Date.now()}`,
-              name: m.nombre,
-              role: m.rol || 'Músico',
-              email: '',
-              instagram: m.instagram || '',
-              isLeader: idx === 0,
-            })));
-          }
-        }
-
-        if (epkConfig.enlacesRedes) {
-          setSocialLinks({
-            instagram: epkConfig.enlacesRedes.instagram || '',
-            spotify: epkConfig.enlacesRedes.spotify || '',
-            youtube: epkConfig.enlacesRedes.youtube || '',
-            tiktok: epkConfig.enlacesRedes.tiktok || '',
-            website: epkConfig.enlacesRedes.website || '',
-            whatsapp: epkConfig.enlacesRedes.whatsapp || '',
-          });
-        }
-        if (epkConfig.videos) setVideos(epkConfig.videos);
-        if ((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra) {
-          setRiderTecnicoText((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || '');
-        }
-        if ((epkConfig as any)?.riderPdfUrl) setRiderPdfUrl((epkConfig as any).riderPdfUrl);
-        if ((epkConfig as any)?.riderPdfName) setRiderPdfName((epkConfig as any).riderPdfName);
-        if (epkConfig.bandPhotos || (epkConfig as any)?.fotos) {
-          setPhotos(epkConfig.bandPhotos || (epkConfig as any)?.fotos || []);
-        }
-        if ((epkConfig as any)?.resenasPrensa?.citas && Array.isArray((epkConfig as any).resenasPrensa.citas)) {
-          setPressQuotes((epkConfig as any).resenasPrensa.citas);
-        } else if (!isBakandeyaBand) {
-          setPressQuotes([]);
-        }
-        if (epkConfig.contactoBooking) {
-          if (epkConfig.contactoBooking.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') && epkConfig.contactoBooking.nombre.toLowerCase() !== 'banda') {
-            setContactoBookingNombre(epkConfig.contactoBooking.nombre);
-          }
-          if (epkConfig.contactoBooking.email) setContactoBookingEmail(epkConfig.contactoBooking.email);
-          if (epkConfig.contactoBooking.telefono) setContactoBookingTelefono(epkConfig.contactoBooking.telefono);
-        }
+      } else {
+        setBio('');
       }
+
+      setSocialLinks({
+        instagram: epkConfig?.enlacesRedes?.instagram || '',
+        spotify: epkConfig?.enlacesRedes?.spotify || '',
+        youtube: epkConfig?.enlacesRedes?.youtube || '',
+        tiktok: epkConfig?.enlacesRedes?.tiktok || '',
+        website: epkConfig?.enlacesRedes?.website || '',
+        whatsapp: epkConfig?.enlacesRedes?.whatsapp || '',
+      });
+
+      setVideos(epkConfig?.videos || []);
+      setNewVideoUrl('');
+      setNewVideoTitle('');
+
+      setRiderTecnicoText((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || '');
+      setRiderPdfUrl((epkConfig as any)?.riderPdfUrl || '');
+      setRiderPdfName((epkConfig as any)?.riderPdfName || '');
+      setCanalesMesa((epkConfig as any)?.canalesMesa || 12);
+      setLlevaMicrofoniaPropia(Boolean((epkConfig as any)?.llevaMicrofoniaPropia));
+      setLlevaInEars(Boolean((epkConfig as any)?.llevaInEars));
+      setNecesitaBacklineBateria(Boolean((epkConfig as any)?.necesitaBacklineBateria));
+
+      setPhotos(epkConfig?.bandPhotos || (epkConfig as any)?.fotos || []);
+      setPressQuotes(!isBakandeyaBand && Array.isArray((epkConfig as any)?.resenasPrensa?.citas) ? (epkConfig as any).resenasPrensa.citas : []);
+
+      const bookingName = (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') && epkConfig.contactoBooking.nombre.toLowerCase() !== 'banda')
+        ? epkConfig.contactoBooking.nombre
+        : (resolvedName || currentUser?.name || currentUser?.username || 'Tú (Líder)');
+      setContactoBookingNombre(bookingName);
+      setContactoBookingEmail(epkConfig?.contactoBooking?.email || currentUser?.email || '');
+      setContactoBookingTelefono(epkConfig?.contactoBooking?.telefono || '');
+
+      setSpotifyAlbums([]);
+      setSelectedSpotifyTracks(new Set());
+      setUploadedSongs([]);
+      setManualSongs([]);
+      setCreatedSetlistName(null);
     }
-  }, [isOpen, activeBandId, bandName, currentUser, epkConfig]);
+  }, [isOpen, activeBandId, bandName, bandLogoUrl, currentUser, epkConfig]);
 
   // --- Step 2: Bio & Formato ---
   const [slogan, setSlogan] = useState(epkConfig?.fraseImpacto || '');

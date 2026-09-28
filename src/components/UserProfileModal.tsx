@@ -223,6 +223,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
        setSuccessMsg(`¡Proyecto "${createBandName.trim()}" creado y configurado con éxito!`);
        setShowCreateBandSection(false);
        setCreateBandName('');
+       setCreateBandLeaderName(currentUser.name || currentUser.username || '');
        setCreateBandStyle('');
        if (onRefreshData) await onRefreshData();
      } else {

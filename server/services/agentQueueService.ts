@@ -35,6 +35,27 @@ export interface AgentJob {
 // Fallback en memoria si Supabase no está disponible o para entorno offline
 const memoryQueue: Map<string, AgentJob> = new Map();
 
+type JobEnqueuedListener = () => void;
+const jobListeners: Set<JobEnqueuedListener> = new Set();
+
+/**
+ * Registra un oyente para ser notificado inmediatamente cuando entra un nuevo trabajo en cola (arquitectura push).
+ */
+export function onAgentJobEnqueued(listener: JobEnqueuedListener): () => void {
+  jobListeners.add(listener);
+  return () => { jobListeners.delete(listener); };
+}
+
+function notifyJobEnqueued(): void {
+  for (const listener of jobListeners) {
+    try {
+      listener();
+    } catch (e) {
+      console.warn("[AgentQueueService] Error en listener de job encolado:", e);
+    }
+  }
+}
+
 /**
  * Encola un nuevo trabajo de agente.
  * Previene duplicados idénticos en estado 'pending' o 'processing' creados recientemente.
@@ -63,6 +84,7 @@ export async function enqueueAgentJob(params: {
         .limit(1);
 
       if (existing && existing.length > 0) {
+        notifyJobEnqueued();
         return existing[0].id;
       }
 
@@ -81,6 +103,7 @@ export async function enqueueAgentJob(params: {
 
       const { error } = await sb.from("agent_jobs_queue").insert(newJob);
       if (!error) {
+        notifyJobEnqueued();
         return jobId;
       }
       console.warn("[AgentQueueService] Error insertando en Supabase, utilizando fallback en memoria:", error.message);
@@ -103,6 +126,7 @@ export async function enqueueAgentJob(params: {
     updated_at: new Date().toISOString()
   };
   memoryQueue.set(jobId, memJob);
+  notifyJobEnqueued();
   return jobId;
 }
 

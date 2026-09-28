@@ -52,28 +52,30 @@ const FansLanding = safeLazy(() => import('./components/FansLanding'));
 const PublicMusiciansLanding = safeLazy(() => import('./components/PublicMusiciansLanding').then(m => ({ default: m.PublicMusiciansLanding })));
 const PublicEPK = safeLazy(() => import('./components/PublicEPK').then(m => ({ default: m.PublicEPK })));
 const Planes = safeLazy(() => import('./components/Planes'));
-import { LoginModal } from './components/LoginModal';
-import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
-import { UserManagementModal } from './components/UserManagementModal';
-import { UserProfileModal } from './components/UserProfileModal';
 import { AiSupportWidget } from './components/dashboard/AiUsageSupportWidget';
-import { FontSelectorModal } from './components/FontSelectorModal';
-import { MetronomeModal } from './components/MetronomeModal';
-import { TunerModal } from './components/TunerModal';
-import { BandSwitcherModal } from './components/BandSwitcherModal';
-import { PlanLimitModal } from './components/PlanLimitModal';
 import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
-import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
+
+const LoginModal = safeLazy(() => import('./components/LoginModal').then(m => ({ default: m.LoginModal })));
+const SimplePromoLoginModal = safeLazy(() => import('./components/SimplePromoLoginModal').then(m => ({ default: m.SimplePromoLoginModal })));
+const UserManagementModal = safeLazy(() => import('./components/UserManagementModal').then(m => ({ default: m.UserManagementModal })));
+const UserProfileModal = safeLazy(() => import('./components/UserProfileModal').then(m => ({ default: m.UserProfileModal })));
+const FontSelectorModal = safeLazy(() => import('./components/FontSelectorModal').then(m => ({ default: m.FontSelectorModal })));
+const MetronomeModal = safeLazy(() => import('./components/MetronomeModal').then(m => ({ default: m.MetronomeModal })));
+const TunerModal = safeLazy(() => import('./components/TunerModal').then(m => ({ default: m.TunerModal })));
+const BandSwitcherModal = safeLazy(() => import('./components/BandSwitcherModal').then(m => ({ default: m.BandSwitcherModal })));
+const PlanLimitModal = safeLazy(() => import('./components/PlanLimitModal').then(m => ({ default: m.PlanLimitModal })));
+const CampaignManagerModal = safeLazy(() => import('./components/campaign/CampaignManagerModal').then(m => ({ default: m.CampaignManagerModal })));
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
 import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, MIN_MODULES_FOR_GROUPED_NAV, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
-import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
-import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { useBrowserPushNotifications } from './hooks/useBrowserPushNotifications';
 import { NotificationCenterBell } from './components/notifications/NotificationCenterBell';
-import { NotificationSettingsModal } from './components/notifications/NotificationSettingsModal';
+
+const MusicianOnboardingModal = safeLazy(() => import('./components/onboarding/MusicianOnboardingModal').then(m => ({ default: m.MusicianOnboardingModal })));
+const OnboardingWizardModal = safeLazy(() => import('./components/onboarding/OnboardingWizardModal').then(m => ({ default: m.OnboardingWizardModal })));
+const NotificationSettingsModal = safeLazy(() => import('./components/notifications/NotificationSettingsModal').then(m => ({ default: m.NotificationSettingsModal })));
 import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
 import {
@@ -168,7 +170,7 @@ export default function App() {
   const currentActiveBandName = activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name || 'Mi Banda';
   const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
     ? epkConfig.logoUrl
-    : (activeBandFromList?.logo_url || activeBandFromList?.imagen_url || (currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url || '');
+    : (activeBandFromList?.logo_url || activeBandFromList?.imagen_url || '');
 
   const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
     if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
@@ -692,17 +694,21 @@ export default function App() {
  // LoginModal completo (con la parrilla de 4 planes) se conserva intacto para cuando se
  // quiera reabrir el registro público con todos los planes — basta con volver a poner
  // esta constante a false.
- const USE_SIMPLE_LOGIN = true;
- if (!isLoggedIn) {
- return USE_SIMPLE_LOGIN ? (
- <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
- ) : (
- <LoginModal
- onLoginSuccess={handleLoginSuccess}
- isStitchLight={isStitchLight}
- />
- );
- }
+  const USE_SIMPLE_LOGIN = true;
+  if (!isLoggedIn) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[#0d0c0c] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+        {USE_SIMPLE_LOGIN ? (
+          <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
+        ) : (
+          <LoginModal
+            onLoginSuccess={handleLoginSuccess}
+            isStitchLight={isStitchLight}
+          />
+        )}
+      </Suspense>
+    );
+  }
 
  return (
  <div 
@@ -1718,6 +1724,7 @@ export default function App() {
  </div>
  </main>
 
+  <Suspense fallback={null}>
  {/* User Management Modal for Band Leader */}
  {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
  <UserManagementModal
@@ -1910,6 +1917,7 @@ export default function App() {
 
   {/* Musician First-Time Onboarding Modal ("Elige tu misión") */}
   <MusicianOnboardingModal
+    key={`musician-onboarding-${cleanActiveBandId || 'default'}`}
     isOpen={showOnboardingModal && !showProfileWizardModal}
     onClose={() => {
       setShowOnboardingModal(false);
@@ -1926,6 +1934,7 @@ export default function App() {
 
   {/* Comprehensive Band Profile Setup Wizard */}
   <OnboardingWizardModal
+    key={`profile-wizard-${cleanActiveBandId || 'default'}`}
     isOpen={showProfileWizardModal && isLoggedIn}
     onClose={() => {
       setShowProfileWizardModal(false);
@@ -1951,6 +1960,7 @@ export default function App() {
     bandLogoUrl={currentActiveBandLogo}
     bandPlan={currentActiveBandPlan}
   />
+  </Suspense>
 
  </div>
  );

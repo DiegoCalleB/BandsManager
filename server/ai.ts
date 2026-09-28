@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
 
-export const GEMINI_MODEL = "gemini-3.7-flash";
+export const GEMINI_MODEL = "gemini-2.5-flash";
 
 // Ninguna llamada a un proveedor de IA tenía timeout, mientras el resto del repo sí usa el
 // patrón (server/routes/bands.ts, server/routes/leads/enrichment.ts). Una petición colgada
@@ -11,17 +11,20 @@ export const TIMEOUT_IA_MS = 60_000;
 export const TIMEOUT_IA_LARGO_MS = 300_000;
 
 export const FALLBACK_MODELS = [
-  "gemini-3.8-flash",
-  "gemini-3.7-flash",
-  "gemini-3.6-flash",
-  "gemini-flash-latest",
-  "gemini-3.1-flash-lite",
-  "gemini-3.1-pro-preview"
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash-8b",
+  "gemini-1.5-flash"
 ];
 
 let cachedClient: { key: string; client: GoogleGenAI } | null = null;
 
 export function getAiClient(): GoogleGenAI | null {
+  // INTERRUPTOR DE SEGURIDAD CONTRA COBROS (Cost Safety Killswitch)
+  if (process.env.DISABLE_GEMINI === "true" || process.env.PAUSE_AI_CALLS === "true") {
+    console.warn("[Cost Safety] Llamadas a Gemini deshabilitadas preventivamente por variable de entorno.");
+    return null;
+  }
   const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
     return null;

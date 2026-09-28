@@ -10,6 +10,8 @@ export interface PitchLengthAssessment {
   status: "optimal" | "acceptable" | "too_long" | "too_short";
   feedback: string;
   wordCount: number;
+  minRecommended?: number;
+  maxRecommended?: number;
 }
 
 export interface PitchQualityIssue {
@@ -24,6 +26,7 @@ export interface PitchQualityAudit {
   antiAiScore: number; // 0 a 100
   badge: "excelente" | "bueno" | "revisable";
   wordCount: number;
+  isReadyForDispatch?: boolean;
   lengthAssessment: PitchLengthAssessment;
   bannedWordsFound: Array<{ word: string; suggestion?: string }>;
   emDashesFound: number;
@@ -155,14 +158,23 @@ export function auditPitchQuality(pitch: string, category?: string): PitchQualit
     issues.push({ code: "EMPTY_PITCH", severity: "error", message: "Pitch vacío." });
   } else if (wordCount < 40) {
     lengthStatus = "too_short";
-    lengthFeedback = `Texto corto (${wordCount} palabras).`;
+    lengthFeedback = `Texto muy corto (${wordCount} palabras).`;
     scoreDeductions += 15;
-    issues.push({ code: "TOO_SHORT", severity: "warning", message: "Pitch muy breve." });
+    issues.push({ code: "TOO_SHORT", severity: "warning", message: `Pitch breve (${wordCount} palabras, recomendado: ${range.min}-${range.max}).` });
+  } else if (wordCount < range.min) {
+    lengthStatus = "acceptable";
+    lengthFeedback = `Texto conciso (${wordCount} palabras, rango recomendado: ${range.min}-${range.max}).`;
   } else if (wordCount > 210) {
     lengthStatus = "too_long";
-    lengthFeedback = `Texto extenso (${wordCount} palabras).`;
+    lengthFeedback = `Texto excesivo (${wordCount} palabras, máximo recomendado: ${range.max}).`;
     scoreDeductions += 15;
-    issues.push({ code: "TOO_LONG", severity: "warning", message: "Excede 210 palabras." });
+    issues.push({ code: "TOO_LONG", severity: "warning", message: `Excede ${range.max} palabras (${wordCount} palabras).` });
+  } else if (wordCount > range.max) {
+    lengthStatus = "too_long";
+    lengthFeedback = `Texto extenso (${wordCount} palabras, máximo recomendado: ${range.max}).`;
+    issues.push({ code: "TOO_LONG", severity: "warning", message: `Excede ${range.max} palabras (${wordCount} palabras).` });
+  } else {
+    lengthStatus = "optimal";
   }
 
   // 2. Detección de palabras prohibidas
@@ -232,15 +244,19 @@ export function auditPitchQuality(pitch: string, category?: string): PitchQualit
 
   const antiAiScore = Math.max(0, Math.min(100, 100 - scoreDeductions));
   const badge = antiAiScore >= 85 ? "excelente" : antiAiScore >= 70 ? "bueno" : "revisable";
+  const isReadyForDispatch = issues.filter(i => i.severity === "error").length === 0 && antiAiScore >= 70;
 
   return {
     antiAiScore,
     badge,
     wordCount,
+    isReadyForDispatch,
     lengthAssessment: {
       status: lengthStatus,
       feedback: lengthFeedback,
-      wordCount
+      wordCount,
+      minRecommended: range.min,
+      maxRecommended: range.max
     },
     bannedWordsFound,
     emDashesFound: totalDashes,

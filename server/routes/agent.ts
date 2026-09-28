@@ -17,6 +17,7 @@ import { normalizeVenueName } from "./leads/places.js";
 import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../services/venueIntelligenceService.js";
 import { dbGetRegisteredBands, dbGetLeads, dbGetBandEmailAccount, dbGetBandGmailOAuth } from "../db.js";
 import { computeAgentFunnel, type FunnelBandInput } from "../utils/agentFunnel.js";
+import { getBandOperationalContext, evaluateIncomingTactics } from "../services/agentIntelligence.js";
 
 const router = express.Router();
 
@@ -750,6 +751,36 @@ router.post("/internal/agents/responder-hilo", requireCronOrAuth, async (req, re
   } catch (err: any) {
     console.error("Error en responder-hilo interno:", err);
     return res.status(500).json({ success: false, error: err.message || "Error interno" });
+  }
+});
+
+// POST /api/agents/test-intel - Diagnóstico en vivo de Inteligencia Agéntica (Contexto Operativo + Tactical Evaluation)
+router.post("/agents/test-intel", requireAuth, async (req, res) => {
+  try {
+    const targetBandId = getTargetBandId(req);
+    const { incomingMessage, leadCiudad, venueName, venueTipo } = req.body || {};
+
+    const [opContext, tacticalEval] = await Promise.all([
+      getBandOperationalContext(targetBandId, leadCiudad),
+      incomingMessage
+        ? evaluateIncomingTactics(incomingMessage, { name: venueName, city: leadCiudad, tipo: venueTipo })
+        : null
+    ]);
+
+    return res.json({
+      success: true,
+      bandId: targetBandId,
+      operationalContext: {
+        conciertosProximos: opContext.conciertosProximos,
+        conflictosMiembrosOtrasBandas: opContext.conflictosMiembrosOtrasBandas,
+        ciudadesEnRuta: opContext.ciudadesEnRuta,
+        promptInjected: opContext.resumenTacticoParaPrompt
+      },
+      tacticalEvaluation: tacticalEval
+    });
+  } catch (err: any) {
+    console.error("Error en test-intel:", err);
+    return res.status(500).json({ success: false, error: err.message });
   }
 });
 

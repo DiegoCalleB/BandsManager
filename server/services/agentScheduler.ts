@@ -10,7 +10,9 @@ import { startAgentQueueWorker, stopAgentQueueWorker } from "./agentQueueWorker.
 import { captureError } from "../utils/errorTracking.js";
 import { isGmailRateLimited } from "./gmailApiClient.js";
 
-const TICK_MS = 60 * 1000;
+// Planificador periódico: por defecto 1 vez al día (24 horas) para optimizar consultas y costos en Supabase.
+// Puede modificarse mediante la variable de entorno AGENT_SCHEDULER_INTERVAL_MS.
+const TICK_MS = Number(process.env.AGENT_SCHEDULER_INTERVAL_MS) || (24 * 60 * 60 * 1000);
 let schedulerHandle: NodeJS.Timeout | null = null;
 let tickEnCurso = false;
 
@@ -135,7 +137,7 @@ async function tick() {
         await enqueueAgentJob({
           bandId,
           agentType: "lector_inbox_check",
-          payload: { trigger: "60s_poll" }
+          payload: { trigger: "scheduled_daily_poll" }
         });
       }
     }
@@ -146,19 +148,21 @@ async function tick() {
   }
 }
 
+/**
+ * Permite disparar manualmente el tick del planificador bajo demanda (ej. desde UI de administración).
+ */
+export async function triggerManualSchedulerTick(): Promise<void> {
+  await tick();
+}
+
 export function startAgentScheduler(): void {
   if (schedulerHandle) return;
-  console.log("[AgentScheduler] Iniciado Scheduler & Worker Engine.");
+  console.log(`[AgentScheduler] Iniciado Scheduler & Worker Engine (Frecuencia de sondeo: cada ${Math.round(TICK_MS / (60 * 60 * 1000))} horas).`);
 
   // Arrancar el worker de consumo de colas
   startAgentQueueWorker();
 
-  // Arrancar el scheduler productor
-  tick().catch((e) => {
-    console.error("[AgentScheduler] Error en el primer tick del productor:", e);
-    captureError(e, { fase: "primer tick" });
-  });
-
+  // El planificador se programa periódicamente a su intervalo normal (24h por defecto)
   schedulerHandle = setInterval(() => {
     tick().catch((e) => {
       console.error("[AgentScheduler] Error en tick del productor:", e);

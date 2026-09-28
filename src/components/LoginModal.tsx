@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { User as UserType } from '../types';
 import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
@@ -182,6 +182,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       setLoading(false);
     }
   };
+
 
   // --- Login Submit (Original Logic preserved) ---
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -607,13 +608,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"
-                  className="w-full pl-11 pr-11 py-3.5 bg-[#17171f]/90 border border-neutral-800/90 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/20 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
+                  className="w-full pl-11 pr-12 py-3.5 bg-[#17171f]/90 border border-neutral-800/90 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/20 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
                   required
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  onPointerDown={(e) => e.preventDefault()}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                  className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -663,6 +668,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 )}
               </button>
             </form>
+
 
             <div className="relative mt-5 mb-1">
               <div className="absolute inset-0 flex items-center">
@@ -804,13 +810,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       value={resetNewPassword}
                       onChange={(e) => setResetNewPassword(e.target.value)}
                       placeholder="Nueva contraseña (mín. 6 caracteres)"
-                      className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+                      className="w-full pl-11 pr-12 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => setShowResetNewPassword(!showResetNewPassword)}
-                      className="absolute right-4 text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer"
+                      onClick={() => setShowResetNewPassword((prev) => !prev)}
+                      onPointerDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      tabIndex={-1}
+                      aria-label={showResetNewPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -943,13 +953,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     value={regPassword}
                     onChange={(e) => setRegPassword(e.target.value)}
                     placeholder="Contraseña"
-                    className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+                    className="w-full pl-11 pr-12 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
                     required
                   />
                   <button
                     type="button"
-                    onClick={() => setShowRegPassword(!showRegPassword)}
-                    className="absolute right-4 text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer"
+                    onClick={() => setShowRegPassword((prev) => !prev)}
+                    onPointerDown={(e) => e.preventDefault()}
+                    onMouseDown={(e) => e.preventDefault()}
+                    tabIndex={-1}
+                    aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                    className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                   >
                     {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -1120,13 +1134,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       value={activatePassword}
                       onChange={(e) => setActivatePassword(e.target.value)}
                       placeholder="Crea tu contraseña"
-                      className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+                      className="w-full pl-11 pr-12 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => setShowActivatePassword(!showActivatePassword)}
-                      className="absolute right-4 text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer"
+                      onClick={() => setShowActivatePassword((prev) => !prev)}
+                      onPointerDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      tabIndex={-1}
+                      aria-label={showActivatePassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showActivatePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>

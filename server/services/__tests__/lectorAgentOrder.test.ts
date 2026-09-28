@@ -31,6 +31,7 @@ const dbUpsertLeadMock = vi.fn();
 const dbLeadMessageExistsMock = vi.fn();
 const dbCreateLeadMessageMock = vi.fn();
 const dbGetLeadMessagesMock = vi.fn();
+const dbGetAutonomyConfigMock = vi.fn().mockResolvedValue(null);
 const getSupabaseMock = vi.fn();
 vi.mock('../../db.js', () => ({
   dbGetLeads: (...args: any[]) => dbGetLeadsMock(...args),
@@ -38,6 +39,7 @@ vi.mock('../../db.js', () => ({
   dbLeadMessageExists: (...args: any[]) => dbLeadMessageExistsMock(...args),
   dbCreateLeadMessage: (...args: any[]) => dbCreateLeadMessageMock(...args),
   dbGetLeadMessages: (...args: any[]) => dbGetLeadMessagesMock(...args),
+  dbGetAutonomyConfig: (...args: any[]) => dbGetAutonomyConfigMock(...args),
   getSupabase: (...args: any[]) => getSupabaseMock(...args)
 }));
 

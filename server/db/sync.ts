@@ -18,7 +18,9 @@ import { dbGetCampaigns } from "./campaigns.js";
 import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 
 const bandStateCache = new Map<string, { timestamp: number; result: any }>();
-const BAND_CACHE_TTL_MS = 10_000; // 10s TTL cache for fast reads
+// TTL de caché en memoria para lecturas pasivas: 30 minutos por defecto (o configurable por BAND_CACHE_TTL_MS).
+// Cualquier mutación (crear lead, evento, etc.) invalida inmediatamente la clave con invalidateBandStateCache().
+const BAND_CACHE_TTL_MS = Number(process.env.BAND_CACHE_TTL_MS) || (30 * 60 * 1000);
 
 export function invalidateBandStateCache(bandId?: string) {
   if (bandId) {

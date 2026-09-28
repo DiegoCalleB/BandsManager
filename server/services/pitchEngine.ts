@@ -23,6 +23,7 @@ import { findCorridorForCity } from "../../src/utils/tourRouting.js";
 import { findSemanticallySimilarPitches, checkNegativePatternSimilarity } from "./pitchVectorStore.js";
 import { evaluateAndRefinePitch } from "./pitchJudge.js";
 import { fetchVenueLiveContext, fetchBandSpotifyTraction } from "./venueIntelligenceService.js";
+import { getBandOperationalContext } from "./agentIntelligence.js";
 
 export interface PitchContextResult {
   bandDna: BandDnaProfile;
@@ -250,6 +251,16 @@ export class PitchEngine {
 
     const range = getRecommendedWordRange(lead?.tipo);
     feedbackDetails.push(`Extensión recomendada para esta categoría (${lead?.tipo || "sala"}): ${range.optimal}.`);
+
+    // 4.1 Inyectar Contexto Operativo en Tiempo Real (Agenda y Rutas)
+    try {
+      const opContext = await getBandOperationalContext(userBandId, lead?.ciudad);
+      if (opContext.resumenTacticoParaPrompt) {
+        feedbackDetails.push(opContext.resumenTacticoParaPrompt);
+      }
+    } catch (err) {
+      console.warn("[PitchEngine] Operational context notice:", err);
+    }
 
     // 5. Inteligencia de mercado en vivo (Serper: cartelera/ciclo real; Spotify: tracción)
     try {

@@ -1,6 +1,7 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { ShowItemModal } from "./repertorio/ShowItemModal";
 import { api } from '../services/api';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -2477,11 +2478,13 @@ export default function RepertorioSetlists({
  const printWindow = window.open('', '_blank');
  if (!printWindow) return;
 
+ const bandDisplayName = currentUser?.bandName || 'BANDMANAGER';
+
  printWindow.document.write(`
  <!DOCTYPE html>
  <html>
  <head>
- <title>SETLIST BAKANDEYA - ${activeSetlist.nombre}</title>
+ <title>SETLIST ${bandDisplayName.toUpperCase()} - ${activeSetlist.nombre}</title>
  <style>
  body { 
  font-family: system-ui, -apple-system, sans-serif; 
@@ -2490,28 +2493,28 @@ export default function RepertorioSetlists({
  color: #fff; 
  }
  .header { 
- -bottom: 4px solid #f2ca50; 
+ border-bottom: 4px solid #f2ca50; 
  padding-bottom: 15px; 
  margin-bottom: 25px; 
  display: flex; 
  justify-content: space-between; 
  align-items: center; 
  }
- h1 { font-size: 32px; text-transform: uppercase; margin: 0; color: #f2ca50; letter-spacing: 2px; }
- .meta { font-size: 16px; font-family: monospace; color: #aaa; }
- .set-table { width: 100%; -collapse: collapse; }
+ h1 { font-size: 28px; text-transform: uppercase; margin: 0; color: #f2ca50; letter-spacing: 2px; }
+ .meta { font-size: 15px; font-family: monospace; color: #aaa; margin-top: 4px; }
+ .set-table { width: 100%; border-collapse: collapse; }
  .set-table th { 
  text-align: left; 
  padding: 10px; 
- -bottom: 2px solid #444; 
- font-size: 14px; 
+ border-bottom: 2px solid #444; 
+ font-size: 13px; 
  text-transform: uppercase; 
  color: #888; 
  }
  .set-table td { 
- padding: 14px 10px; 
+ padding: 12px 10px; 
  border-bottom: 1px solid #222; 
- font-size: 22px; 
+ font-size: 20px; 
  font-weight: bold; 
  }
  .num { color: #f2ca50; width: 40px; font-family: monospace; }
@@ -2521,23 +2524,33 @@ export default function RepertorioSetlists({
  color: #10b981; 
  padding: 4px 10px; 
  border-radius: 6px; 
- font-size: 18px; 
+ font-size: 17px; 
  font-family: monospace; 
  }
  .bpm { color: #888; font-size: 16px; font-family: monospace; }
- .chapa { color: #f59e0b; font-style: italic; font-size: 18px; }
- .bis { color: #ec4899; text-transform: uppercase; font-size: 20px; text-align: center; }
- .note { display: block; font-size: 13px; color: #aaa; font-weight: normal; margin-top: 4px; font-style: italic; }
- .footer { margin-top: 30px; font-size: 12px; font-family: monospace; color: #666; text-align: center; }
+ .note { display: block; font-size: 12px; color: #fcd34d; font-weight: normal; margin-top: 4px; font-family: monospace; }
+ .member-note {
+ display: inline-block;
+ background: #18181b;
+ border: 1px solid #3f3f46;
+ color: #e4e4e7;
+ font-size: 11px;
+ padding: 2px 7px;
+ border-radius: 4px;
+ font-family: monospace;
+ margin-right: 6px;
+ margin-top: 4px;
+ }
+ .footer { margin-top: 30px; font-size: 12px; font-family: monospace; color: #666; text-align: center; border-top: 1px solid #222; padding-top: 15px; }
  </style>
  </head>
  <body>
  <div class="header">
  <div>
- <h1>BAKANDEYA — SETLIST</h1>
+ <h1>${bandDisplayName.toUpperCase()} — HOJA DE ESCENARIO</h1>
  <div class="meta">${activeSetlist.nombre} (${activeSetlistMetrics.formattedTime} • ${activeSetlistMetrics.songCount} Temas)</div>
  </div>
- <div style="font-size:20px; font-weight:bold; color:#10b981; font-family:monospace;">
+ <div style="font-size:18px; font-weight:bold; color:#10b981; font-family:monospace; text-align:right;">
  AVG BPM: ${activeSetlistMetrics.avgBpm}
  </div>
  </div>
@@ -2546,8 +2559,8 @@ export default function RepertorioSetlists({
  <thead>
  <tr>
  <th style="width:40px;">#</th>
- <th>TÍTULO DEL TEMA</th>
- <th style="width:100px;">TONO</th>
+ <th>TÍTULO DEL TEMA & CUES</th>
+ <th style="width:90px;">TONO</th>
  <th style="width:80px;">BPM</th>
  <th style="width:80px;">TIEMPO</th>
  </tr>
@@ -2557,23 +2570,34 @@ export default function RepertorioSetlists({
  if (it.tipoItem === 'cancion' && it.songId) {
  const s = songs.find(x => x.id === it.songId);
  if (!s) return '';
+ const memberNotes = Array.isArray(s.notasPorMiembro) ? s.notasPorMiembro : [];
  return `
  <tr>
  <td class="num">${idx + 1}</td>
  <td>
- ${s.titulo}
- ${it.notaTema ? `<span class="note">⚠️ ${it.notaTema}</span>` : ''}
+ <div style="font-size: 20px; color: #fff;">${s.titulo}</div>
+ ${it.notaTema ? `<span class="note">💡 <b>CUE:</b> ${it.notaTema}</span>` : ''}
+ ${memberNotes.length > 0 ? `
+ <div style="margin-top: 4px;">
+ ${memberNotes.map(m => `
+ <span class="member-note">
+ <b style="color: #f2ca50;">[${m.instrument || m.memberName}]:</b> ${m.nota}
+ </span>
+ `).join('')}
+ </div>
+ ` : ''}
+ ${s.notasRepertorio ? `<span class="note" style="color: #93c5fd;">📝 ${s.notasRepertorio}</span>` : ''}
  </td>
- <td><span class="key-badge">${s.tonalidad}</span></td>
+ <td><span class="key-badge">${it.tonalidadDeseada || s.tonalidad}</span></td>
  <td class="bpm">${s.bpm}</td>
  <td style="font-family:monospace; font-size:16px; color:#aaa;">${s.duracion}</td>
  </tr>
  `;
  } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
  return `
- <tr style="background:#1e1e1e; border-top: 3px solid #f2ca50; border-bottom: 2px solid #f2ca50;">
- <td colspan="5" style="color:#f2ca50; font-size:20px; font-weight:900; letter-spacing:1px; text-transform:uppercase; padding: 12px 10px;">
- ⚡ ${it.tituloCustom || 'BLOQUE DEL SHOW'}
+ <tr style="background:#18181b; border-top: 3px solid #f2ca50; border-bottom: 2px solid #f2ca50;">
+ <td colspan="5" style="color:#f2ca50; font-size:18px; font-weight:900; letter-spacing:1px; text-transform:uppercase; padding: 12px 10px;">
+ ${it.tituloCustom || '⚡ BLOQUE DEL SHOW'}
  </td>
  </tr>
  `;
@@ -2581,16 +2605,16 @@ export default function RepertorioSetlists({
  const typeInfo = SHOW_ITEM_TYPES[it.tipoItem] || { label: 'Evento', icon: '📌' };
  const durText = formatItemDuration(it);
  return `
- <tr style="background:#121212; border-left: 4px solid #38bdf8;">
+ <tr style="background:#0f172a; border-left: 4px solid #38bdf8;">
  <td class="num" style="color:#38bdf8;">•</td>
- <td colspan="3" style="color:#e0f2fe; font-size:18px; font-weight:bold;">
- <span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:13px; font-family:monospace; margin-right:8px;">
+ <td colspan="3" style="color:#e0f2fe; font-size:16px; font-weight:bold;">
+ <span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:12px; font-family:monospace; margin-right:8px;">
  ${typeInfo.icon} ${typeInfo.label.toUpperCase()}
  </span>
  ${it.tituloCustom || 'Evento del Show'}
- ${it.notaTema ? `<span class="note" style="color:#94a3b8;">📋 CUE: ${it.notaTema}</span>` : ''}
+ ${it.notaTema ? `<span class="note" style="color:#94a3b8; font-size:12px;">📋 CUE: ${it.notaTema}</span>` : ''}
  </td>
- <td style="font-family:monospace; font-size:16px; color:#f2ca50; text-align:right;">${durText}</td>
+ <td style="font-family:monospace; font-size:15px; color:#f2ca50; text-align:right;">${durText}</td>
  </tr>
  `;
  }
@@ -2599,7 +2623,7 @@ export default function RepertorioSetlists({
  </table>
 
  <div class="footer">
- Hoja de Escenario Impresa • Bakandeya Repertoire Manager
+ Hoja de Escenario Impresa • ${bandDisplayName} • Repertoire Manager
  </div>
 
  <script>
@@ -3846,7 +3870,8 @@ export default function RepertorioSetlists({
     // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
     // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
     const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
-    return (song.notasRepertorio || it.notaTema || userNote) ? (
+    const hasMemberNotes = Array.isArray(song.notasPorMiembro) && song.notasPorMiembro.length > 0;
+    return (song.notasRepertorio || it.notaTema || userNote || hasMemberNotes) ? (
       <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1" onClick={(e) => e.stopPropagation()}>
         {song.notasRepertorio && (
           <div className="text-amber-600/80 truncate" title={song.notasRepertorio}>
@@ -3861,6 +3886,18 @@ export default function RepertorioSetlists({
         {it.notaTema && (
           <div className="text-emerald-600/80 truncate" title={it.notaTema}>
             💡 {it.notaTema}
+          </div>
+        )}
+        {hasMemberNotes && (
+          <div className="flex flex-wrap gap-1.5 pt-0.5">
+            {song.notasPorMiembro!.map((m, mIdx) => (
+              <span
+                key={m.userId || m.memberName || mIdx}
+                className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded text-[9px]"
+              >
+                <b className="text-amber-400">[{m.instrument || m.memberName}]:</b> {m.nota}
+              </span>
+            ))}
           </div>
         )}
       </div>
@@ -4523,231 +4560,14 @@ export default function RepertorioSetlists({
   />
 
   {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
-  {showShowItemModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-  <div className={`w-full max-w-lg p-6 rounded-2xl space-y-4 shadow-2xl ${colors.card} border border-sky-500/30`}>
-  <div className="flex justify-between items-center pb-3 border-b border-neutral-800">
-  <div className="flex items-center gap-2">
-  <span className="p-2 bg-sky-500/20 text-sky-400 rounded-xl">⚡</span>
-  <div>
-  <h3 className={`text-sm font-extrabold font-mono uppercase ${colors.text}`}>
-  {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
-  </h3>
-  <p className="text-[10px] text-neutral-400 font-sans">
-  Organiza momentos del directo (beatbox, presentaciones, bloque de temas, pausas).
-  </p>
-  </div>
-  </div>
-  <button 
-  onClick={() => { setShowShowItemModal(false); setEditingShowItem(null); }} 
-  className="text-neutral-400 hover:text-white p-1 rounded-lg hover:bg-neutral-800 cursor-pointer"
-  >
-  <X className="w-5 h-5" />
-  </button>
-  </div>
-
-  <form onSubmit={(e) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const formData = new FormData(form);
-  const tipo = formData.get('tipoItem') as SetlistItem['tipoItem'];
-  const titulo = formData.get('tituloCustom') as string;
-  const min = parseInt(formData.get('minutos') as string, 10) || 0;
-  const seg = parseInt(formData.get('segundos') as string, 10) || 0;
-  const totalSeg = min * 60 + seg;
-  const notas = formData.get('notaTema') as string;
-
-  handleSaveShowItem({
-  tipoItem: tipo,
-  tituloCustom: titulo,
-  duracionEstimadaMinutos: Math.ceil(totalSeg / 60),
-  duracionEstimadaSegundos: totalSeg,
-  notaTema: notas
-  });
-  }} className="space-y-4 text-xs font-mono">
-
-  <div>
-  <label className="block text-neutral-300 font-bold mb-1">Categoría del Evento *</label>
-  <select
-  name="tipoItem"
-  defaultValue={editingShowItem?.tipoItem || 'presentacion'}
-  className={`w-full p-2.5 rounded-xl border border-neutral-800 focus:outline-none cursor-pointer ${
-  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-  }`}
-  onChange={(e) => {
-  const val = e.target.value as keyof typeof SHOW_ITEM_TYPES;
-  const titleInput = (e.target.form?.elements.namedItem('tituloCustom') as HTMLInputElement);
-  if (titleInput && (!titleInput.value || Object.values(SHOW_ITEM_TYPES).some(t => t.label === titleInput.value))) {
-  if (SHOW_ITEM_TYPES[val]) {
-  titleInput.value = SHOW_ITEM_TYPES[val].label;
-  }
-  }
-  }}
-  >
-  {Object.entries(SHOW_ITEM_TYPES).map(([key, config]) => (
-  <option key={key} value={key}>
-  {config.icon} {config.label}
-  </option>
-  ))}
-  </select>
-  </div>
-
-  <div>
-  <label className="block text-neutral-300 font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
-  <input
-  name="tituloCustom"
-  type="text"
-  required
-  defaultValue={editingShowItem?.tituloCustom || 'Presentación de la Banda'}
-  placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
-  className={`w-full p-2.5 rounded-xl border border-neutral-800 focus:outline-none ${
-  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-  }`}
+  <ShowItemModal
+    isOpen={showShowItemModal}
+    onClose={() => setShowShowItemModal(false)}
+    colors={colors}
+    editingShowItem={editingShowItem}
+    setEditingShowItem={setEditingShowItem}
+    handleSaveShowItem={handleSaveShowItem}
   />
-  </div>
-
-  <div className="p-3 bg-black/40 rounded-xl border border-neutral-800 space-y-2">
-  <label className="block text-amber-400 font-bold text-[11px] flex items-center gap-1.5">
-  <Clock className="w-3.5 h-3.5" />
-  Tiempo Asignado al Evento (Minutos y Segundos) *
-  </label>
-  <div className="grid grid-cols-2 gap-3">
-  <div>
-  <span className="text-[10px] text-neutral-400 block mb-1">Minutos:</span>
-  <input
-  name="minutos"
-  type="number"
-  min="0"
-  max="60"
-  defaultValue={editingShowItem?.duracionEstimadaSegundos ? Math.floor(editingShowItem.duracionEstimadaSegundos / 60) : (editingShowItem?.duracionEstimadaMinutos || 2)}
-  className={`w-full p-2 rounded-lg border border-neutral-800 text-center font-bold text-sm ${
-  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-  }`}
-  />
-  </div>
-  <div>
-  <span className="text-[10px] text-neutral-400 block mb-1">Segundos:</span>
-  <input
-  name="segundos"
-  type="number"
-  min="0"
-  max="59"
-  defaultValue={editingShowItem?.duracionEstimadaSegundos ? (editingShowItem.duracionEstimadaSegundos % 60) : 0}
-  className={`w-full p-2 rounded-lg border border-neutral-800 text-center font-bold text-sm ${
-  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-  }`}
-  />
-  </div>
-  </div>
-  <p className="text-[9px] text-neutral-400 italic">
-  Este tiempo se suma automáticamente a la duración total del concierto.
-  </p>
-  </div>
-
-  <div>
-  <label className="block text-neutral-300 font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
-  <textarea
-  name="notaTema"
-  rows={2}
-  defaultValue={editingShowItem?.notaTema || ''}
-  placeholder="Ej: Foco cenital sobre guitarra solista, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
-  className={`w-full p-2.5 rounded-xl border border-neutral-800 focus:outline-none ${
-  isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
-  }`}
-  />
-  </div>
-
-  <div className="p-3 bg-black/40 rounded-xl border border-sky-500/30 space-y-3">
-  <div className="flex items-center justify-between">
-    <label className="block text-sky-400 font-bold text-[11px] flex items-center gap-1.5">
-      <Mic className="w-3.5 h-3.5" />
-      Audio de la Presentación / Chapa / Ensayo
-    </label>
-    {showItemAudioUrl && (
-      <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold flex items-center gap-1">
-        <Check className="w-3 h-3" /> Audio Guardado
-      </span>
-    )}
-  </div>
-
-  <div className="flex flex-wrap items-center gap-2">
-    {isRecordingShowItem ? (
-      <button
-        type="button"
-        onClick={handleStopRecordingShowItem}
-        className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 animate-pulse cursor-pointer shadow-lg"
-      >
-        <Square className="w-3.5 h-3.5 fill-current" />
-        <span>Detener Grabación ({recordingShowItemSecs}s)</span>
-      </button>
-    ) : (
-      <button
-        type="button"
-        onClick={handleStartRecordingShowItem}
-        className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md"
-      >
-        <Mic className="w-3.5 h-3.5" />
-        <span>{showItemAudioUrl ? 'Regrabar Voz' : 'Grabar Voz'}</span>
-      </button>
-    )}
-
-    <label className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer border border-neutral-700">
-      <Upload className="w-3.5 h-3.5 text-sky-400" />
-      <span>Subir MP3 / WAV</span>
-      <input
-        type="file"
-        accept="audio/*"
-        onChange={handleShowItemAudioFileUpload}
-        className="hidden"
-      />
-    </label>
-
-    {showItemAudioUrl && (
-      <button
-        type="button"
-        onClick={() => {
-          setShowItemAudioUrl('');
-          setRecordingShowItemSecs(0);
-        }}
-        className="p-1.5 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 cursor-pointer"
-        title="Eliminar Audio"
-      >
-        <Trash2 className="w-3.5 h-3.5" />
-      </button>
-    )}
-  </div>
-
-  {showItemAudioUrl && (
-    <div className="pt-1">
-      <audio src={showItemAudioUrl} controls onError={(e) => e.preventDefault()} className="w-full h-8 accent-sky-500" />
-    </div>
-  )}
-
-  <p className="text-[9px] text-neutral-400 italic">
-    Graba o sube la charla o performance para medir la duración exacta e incluirla en el reproductor del concierto.
-  </p>
-  </div>
-
-  <div className="pt-2 flex justify-end gap-2">
-  <button
-  type="button"
-  onClick={() => { setShowShowItemModal(false); setEditingShowItem(null); }}
-  className="px-3 py-2 rounded-xl text-neutral-400 hover:bg-neutral-800 text-xs font-mono cursor-pointer"
-  >
-  Cancelar
-  </button>
-  <button
-  type="submit"
-  className="px-4 py-2 rounded-xl bg-sky-500 text-white font-bold hover:bg-sky-400 shadow-lg text-xs font-mono cursor-pointer flex items-center gap-1.5"
-  >
-  <span>Guardar en Setlist</span>
-  </button>
-  </div>
-  </form>
-  </div>
-  </div>
-  )}
-
 
       {/* PDF Preview Modal */}
       <PdfExportModal

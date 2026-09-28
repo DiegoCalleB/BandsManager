@@ -2932,8 +2932,8 @@ export default function ReelsCenter({
 
  </div>
 
- {/* 🎬 MODO CINE / PREVISUALIZADOR EXPANDIDO */}
- {isExpandedPreview && (
+  {/* 🎬 MODO CINE / PREVISUALIZADOR EXPANDIDO */}
+  {isExpandedPreview && (
  <div 
  id="theater-mode-modal"
  onClick={() => setIsExpandedPreview(false)}
@@ -4023,7 +4023,8 @@ export default function ReelsCenter({
 
  </div>
  </div>
- )}
+
+    )}
 
   {/* Modal de Tono de Expresión de la banda activa */}
   <BandToneModal

@@ -178,7 +178,10 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
     const truncated = cleanText.substring(0, 2048);
 
     // Intentar primero con text-embedding-004 y luego gemini-embedding-2-preview
-    const modelsToTry = ["gemini-embedding-001", "gemini-embedding-2-preview", "text-embedding-004"];
+    if (process.env.DISABLE_GEMINI === "true" || process.env.PAUSE_AI_CALLS === "true") {
+      return generateDeterministicFallbackEmbedding(cleanText);
+    }
+    const modelsToTry = ["text-embedding-004"];
     let values: number[] | null = null;
 
     for (const modelName of modelsToTry) {
