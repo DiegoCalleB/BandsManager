@@ -82,14 +82,8 @@ import {
   Tag,
 } from 'lucide-react';
 import { EventWeatherCard } from './calendar/EventWeatherCard';
-import {
-  CalendarWeatherBadge,
-  AnimatedWeatherIcon,
-} from './calendar/AnimatedWeatherIcon';
-import {
-  getCachedEventWeatherAlerts,
-  WeatherAlert,
-} from '../services/weatherService';
+import { CalendarWeatherBadge, AnimatedWeatherIcon } from './calendar/AnimatedWeatherIcon';
+import { getCachedEventWeatherAlerts, WeatherAlert } from '../services/weatherService';
 import QRCode from 'react-qr-code';
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
@@ -162,10 +156,7 @@ interface CalendarViewProps {
     ui_preferences?: any;
   };
   isPromoPlan?: boolean;
-  onShowNotification?: (
-    message: string,
-    type?: 'success' | 'error' | 'info'
-  ) => void;
+  onShowNotification?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 interface RunOfShowItem {
@@ -181,9 +172,7 @@ interface GearItem {
   checked: boolean;
 }
 
-export const getDetailedDateInfo = (
-  dateInput: string | Date | undefined | null
-) => {
+export const getDetailedDateInfo = (dateInput: string | Date | undefined | null) => {
   if (!dateInput) return null;
   let d: Date;
   if (typeof dateInput === 'string') {
@@ -198,26 +187,11 @@ export const getDetailedDateInfo = (
       d = new Date(dateInput);
     }
   } else {
-    d = new Date(
-      dateInput.getFullYear(),
-      dateInput.getMonth(),
-      dateInput.getDate(),
-      12,
-      0,
-      0
-    );
+    d = new Date(dateInput.getFullYear(), dateInput.getMonth(), dateInput.getDate(), 12, 0, 0);
   }
   if (isNaN(d.getTime())) return null;
 
-  const dayNamesLong = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-  ];
+  const dayNamesLong = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const dayNamesShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
   const monthNamesLong = [
     'Enero',
@@ -233,20 +207,7 @@ export const getDetailedDateInfo = (
     'Noviembre',
     'Diciembre',
   ];
-  const monthNamesShort = [
-    'ENE',
-    'FEB',
-    'MAR',
-    'ABR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AGO',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DIC',
-  ];
+  const monthNamesShort = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
 
   const dayOfWeek = dayNamesLong[d.getDay()];
   const dayOfWeekShort = dayNamesShort[d.getDay()];
@@ -259,9 +220,7 @@ export const getDetailedDateInfo = (
   const today = new Date();
   today.setHours(12, 0, 0, 0);
   const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
-  const diffDays = Math.round(
-    (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
   let relativeLabel = '';
   let relativeBadgeClass = '';
@@ -337,32 +296,20 @@ export default function CalendarView({
     (normalizePlan(currentUser?.plan) === 'promo' ||
       Boolean(
         availableBands.find(
-          (b) =>
-            (b.band_id === currentBandId || (b as any).id === currentBandId) &&
-            normalizePlan((b as any).plan) === 'promo'
+          (b) => (b.band_id === currentBandId || (b as any).id === currentBandId) && normalizePlan((b as any).plan) === 'promo'
         )
       ));
-  const {
-    isOpen: isTutorialOpen,
-    openTutorial,
-    closeTutorial,
-  } = useModuleTutorial('calendario');
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('calendario');
   const realToday = new Date();
-  const [viewDate, setViewDate] = useState<Date>(
-    () => new Date(realToday.getFullYear(), realToday.getMonth(), 1)
-  );
+  const [viewDate, setViewDate] = useState<Date>(() => new Date(realToday.getFullYear(), realToday.getMonth(), 1));
   const [selectedDate, setSelectedDate] = useState<Date>(() => realToday);
   // Cuando un día tiene varios eventos (2 conciertos, o concierto + ensayo), este id dice cuál se
   // ve en el panel de detalle. Sin esto, el panel siempre mostraba el primero del array y el resto
   // era invisible salvo el pequeño acceso directo de"editar ficha" en las chapas del día.
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [copiedQrId, setCopiedQrId] = useState<string | null>(null);
-  const [copiedEventModalId, setCopiedEventModalId] = useState<string | null>(
-    null
-  );
-  const [deletingEventConfirmId, setDeletingEventConfirmId] = useState<
-    string | null
-  >(null);
+  const [copiedEventModalId, setCopiedEventModalId] = useState<string | null>(null);
+  const [deletingEventConfirmId, setDeletingEventConfirmId] = useState<string | null>(null);
 
   // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
   const [filterBandMode, setFilterBandMode] = useState<'active' | 'all'>('all');
@@ -388,10 +335,7 @@ export default function CalendarView({
 
   // Build list of all user's assigned bands with logo resolution
   const effectiveBandsList = React.useMemo(() => {
-    const map = new Map<
-      string,
-      { band_id: string; bandName: string; logoUrl?: string }
-    >();
+    const map = new Map<string, { band_id: string; bandName: string; logoUrl?: string }>();
 
     let customLogos: Record<string, string> = {};
     try {
@@ -412,9 +356,7 @@ export default function CalendarView({
       }
       if (
         !resolvedLogo &&
-        (cleanKey === 'bakandeya' ||
-          name?.toLowerCase().includes('bakandeya') ||
-          id.toLowerCase().includes('bakandeya'))
+        (cleanKey === 'bakandeya' || name?.toLowerCase().includes('bakandeya') || id.toLowerCase().includes('bakandeya'))
       ) {
         resolvedLogo = '/logo_bakandeya_bueno_sin_fondo.png';
       }
@@ -465,15 +407,7 @@ export default function CalendarView({
     });
 
     return Array.from(map.values());
-  }, [
-    activeBandId,
-    activeBandName,
-    currentBandLogo,
-    availableBands,
-    concerts,
-    rehearsals,
-    isSameBandId,
-  ]);
+  }, [activeBandId, activeBandName, currentBandLogo, availableBands, concerts, rehearsals, isSameBandId]);
 
   // Helper to accurately derive the band name for any concert or rehearsal event
   const getEventBandName = React.useCallback(
@@ -481,9 +415,7 @@ export default function CalendarView({
       if (!e) return activeBandName || 'Tu Banda';
       if (e.bandName) return e.bandName;
       if (e.band_id) {
-        const found = effectiveBandsList.find((b) =>
-          isSameBandId(b.band_id, e.band_id)
-        );
+        const found = effectiveBandsList.find((b) => isSameBandId(b.band_id, e.band_id));
         if (found?.bandName) return found.bandName;
         if (isSameBandId(e.band_id, 'band-bakandeya')) return 'Bakandeya';
         if (isSameBandId(e.band_id, 'band-repercusion')) return 'Repercusion';
@@ -508,8 +440,7 @@ export default function CalendarView({
     rehearsals.some((r) => r.band_id && !isSameBandId(r.band_id, activeBandId));
 
   // Form state for selected band when creating rehearsal/concert
-  const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] =
-    useState(activeBandId);
+  const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] = useState(activeBandId);
   const [showSyncModal, setShowSyncModal] = useState(false);
   const [syncScope, setSyncScope] = useState<'all' | 'active'>('all');
   const [copiedFeed, setCopiedFeed] = useState(false);
@@ -519,10 +450,7 @@ export default function CalendarView({
   const [errorFeed, setErrorFeed] = useState<string | null>(null);
 
   const bandasDelFeed = React.useMemo(
-    () =>
-      syncScope === 'all' && effectiveBandsList.length > 1
-        ? effectiveBandsList.map((b) => b.band_id).join(',')
-        : activeBandId || '',
+    () => (syncScope === 'all' && effectiveBandsList.length > 1 ? effectiveBandsList.map((b) => b.band_id).join(',') : activeBandId || ''),
     [syncScope, effectiveBandsList, activeBandId]
   );
 
@@ -535,25 +463,17 @@ export default function CalendarView({
       .then((res) => {
         if (cancelado) return;
         if (res.path) setRutaFeed(res.path);
-        else
-          setErrorFeed(
-            res.error || 'No se pudo generar el enlace del calendario.'
-          );
+        else setErrorFeed(res.error || 'No se pudo generar el enlace del calendario.');
       })
       .catch((err: any) => {
-        if (!cancelado)
-          setErrorFeed(
-            err?.message || 'No se pudo generar el enlace del calendario.'
-          );
+        if (!cancelado) setErrorFeed(err?.message || 'No se pudo generar el enlace del calendario.');
       });
     return () => {
       cancelado = true;
     };
   }, [showSyncModal, bandasDelFeed]);
 
-  const urlFeedAbsoluta = rutaFeed
-    ? `${window.location.origin}${rutaFeed}`
-    : '';
+  const urlFeedAbsoluta = rutaFeed ? `${window.location.origin}${rutaFeed}` : '';
 
   // Effective band members list for Convocatoria filtered by target band of the event
   // Antes esto era la formación real de Bakandeya (Diego, Filgue, Batería, Teclados) y se usaba
@@ -607,17 +527,13 @@ export default function CalendarView({
   }, [bandUsers, selectedBandIdForNewEvent, activeBandId, defaultMembers]);
 
   // Convocatoria form state
-  const [convocatoriaTipo, setConvocatoriaTipo] = useState<
-    'completa' | 'parcial'
-  >('completa');
+  const [convocatoriaTipo, setConvocatoriaTipo] = useState<'completa' | 'parcial'>('completa');
   const [convocadosIds, setConvocadosIds] = useState<string[]>([]);
 
   // Event Reminder Modal State
   const [showReminderModal, setShowReminderModal] = useState(false);
   const [reminderSending, setReminderSending] = useState(false);
-  const [reminderSuccessMsg, setReminderSuccessMsg] = useState<string | null>(
-    null
-  );
+  const [reminderSuccessMsg, setReminderSuccessMsg] = useState<string | null>(null);
   const [reminderErrorMsg, setReminderErrorMsg] = useState<string | null>(null);
   const [reminderNotes, setReminderNotes] = useState('');
   const [reminderSendEmail, setReminderSendEmail] = useState(true);
@@ -631,19 +547,11 @@ export default function CalendarView({
     setReminderSuccessMsg(null);
     setReminderErrorMsg(null);
 
-    const eventType = selectedConcert
-      ? 'concierto'
-      : selectedRehearsal?.tipo_evento === 'reunion'
-        ? 'reunion'
-        : 'ensayo';
-    const eventTitle = selectedConcert
-      ? selectedConcert.sala
-      : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento';
+    const eventType = selectedConcert ? 'concierto' : selectedRehearsal?.tipo_evento === 'reunion' ? 'reunion' : 'ensayo';
+    const eventTitle = selectedConcert ? selectedConcert.sala : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento';
     const eventDate = `${selectedDate.getDate()} de ${monthNames[selectedDate.getMonth()]}, ${selectedDate.getFullYear()}`;
     const eventTime = selectedRehearsal?.hora || '';
-    const eventLocation = selectedConcert
-      ? `${selectedConcert.sala}, ${selectedConcert.ciudad}`
-      : selectedRehearsal?.lugar || '';
+    const eventLocation = selectedConcert ? `${selectedConcert.sala}, ${selectedConcert.ciudad}` : selectedRehearsal?.lugar || '';
 
     const recipientEmails = effectiveBandMembers
       .map((m: any) => m.email)
@@ -702,29 +610,16 @@ export default function CalendarView({
       }
 
       if (pushSent || emailSent) {
-        const messages = [
-          pushSent ? pushMsg : null,
-          emailSent ? emailMsg : null,
-        ]
-          .filter(Boolean)
-          .join('y');
+        const messages = [pushSent ? pushMsg : null, emailSent ? emailMsg : null].filter(Boolean).join('y');
         setReminderSuccessMsg(`¡Recordatorio enviado con éxito! (${messages})`);
-        onShowNotification?.(
-          '🔔 Recordatorio enviado correctamente',
-          'success'
-        );
+        onShowNotification?.('🔔 Recordatorio enviado correctamente', 'success');
         setTimeout(() => {
           setShowReminderModal(false);
           setReminderSuccessMsg(null);
           setReminderNotes('');
         }, 2200);
       } else {
-        const errDetails = [
-          reminderSendPush ? pushMsg : null,
-          reminderSendEmail ? emailMsg : null,
-        ]
-          .filter(Boolean)
-          .join('.');
+        const errDetails = [reminderSendPush ? pushMsg : null, reminderSendEmail ? emailMsg : null].filter(Boolean).join('.');
         setReminderErrorMsg(`No se pudo enviar el recordatorio: ${errDetails}`);
       }
     } catch (err: any) {
@@ -738,11 +633,7 @@ export default function CalendarView({
   // Filter helper by Convocatoria (Banda Completa vs Convocatoria Parcial)
   const matchesConvocatoria = React.useCallback(
     (evt: Concert | Rehearsal) => {
-      if (
-        evt.convocatoria_tipo === 'parcial' &&
-        evt.convocados_ids &&
-        evt.convocados_ids.length > 0
-      ) {
+      if (evt.convocatoria_tipo === 'parcial' && evt.convocados_ids && evt.convocados_ids.length > 0) {
         if (currentUser) {
           const uId = currentUser.id;
           const uEmail = (currentUser.email || '').toLowerCase().trim();
@@ -755,8 +646,7 @@ export default function CalendarView({
             const cleanEvtId = id.toLowerCase().trim();
             if (uEmail && cleanEvtId === uEmail) return true;
             if (uUsername && cleanEvtId === uUsername) return true;
-            if (uId && (cleanEvtId.includes(uId) || uId.includes(cleanEvtId)))
-              return true;
+            if (uId && (cleanEvtId.includes(uId) || uId.includes(cleanEvtId))) return true;
             return false;
           });
 
@@ -779,13 +669,7 @@ export default function CalendarView({
       });
     }
     return list.filter(matchesConvocatoria);
-  }, [
-    concerts,
-    filterBandMode,
-    activeBandId,
-    matchesConvocatoria,
-    isSameBandId,
-  ]);
+  }, [concerts, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts
@@ -814,13 +698,7 @@ export default function CalendarView({
       });
     }
     return list.filter(matchesConvocatoria);
-  }, [
-    rehearsals,
-    filterBandMode,
-    activeBandId,
-    matchesConvocatoria,
-    isSameBandId,
-  ]);
+  }, [rehearsals, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
 
   // Handle initial selected date / event ID passed as props
   useEffect(() => {
@@ -864,17 +742,10 @@ export default function CalendarView({
     mobile: CalendarMonthsView;
     desktop: CalendarMonthsView;
   }>(() => getAllDevicePreferences());
-  const [selectedConfigDevice, setSelectedConfigDevice] = useState<DeviceType>(
-    () => detectDeviceType()
-  );
-  const [twoMonthsMode, setTwoMonthsMode] = useState<boolean>(() =>
-    isTwoMonthsDefault()
-  );
-  const [calendarViewMode, setCalendarViewMode] = useState<
-    '1m' | '2m' | 'week' | 'agenda'
-  >(() => (isTwoMonthsDefault() ? '2m' : '1m'));
-  const [showViewConfigPopover, setShowViewConfigPopover] =
-    useState<boolean>(false);
+  const [selectedConfigDevice, setSelectedConfigDevice] = useState<DeviceType>(() => detectDeviceType());
+  const [twoMonthsMode, setTwoMonthsMode] = useState<boolean>(() => isTwoMonthsDefault());
+  const [calendarViewMode, setCalendarViewMode] = useState<'1m' | '2m' | 'week' | 'agenda'>(() => (isTwoMonthsDefault() ? '2m' : '1m'));
+  const [showViewConfigPopover, setShowViewConfigPopover] = useState<boolean>(false);
   const [configToast, setConfigToast] = useState<string | null>(null);
   const [isSavingPref, setIsSavingPref] = useState<boolean>(false);
   const viewConfigRef = useRef<HTMLDivElement>(null);
@@ -888,9 +759,7 @@ export default function CalendarView({
       const curDev = detectDeviceType();
       const is2m = updated[curDev] === '2';
       setTwoMonthsMode(is2m);
-      setCalendarViewMode((prev) =>
-        prev === 'week' || prev === 'agenda' ? prev : is2m ? '2m' : '1m'
-      );
+      setCalendarViewMode((prev) => (prev === 'week' || prev === 'agenda' ? prev : is2m ? '2m' : '1m'));
     }
   }, [currentUser]);
 
@@ -898,10 +767,7 @@ export default function CalendarView({
   useEffect(() => {
     if (!showViewConfigPopover) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        viewConfigRef.current &&
-        !viewConfigRef.current.contains(e.target as Node)
-      ) {
+      if (viewConfigRef.current && !viewConfigRef.current.contains(e.target as Node)) {
         setShowViewConfigPopover(false);
       }
     };
@@ -916,10 +782,7 @@ export default function CalendarView({
     };
   }, [showViewConfigPopover]);
 
-  const handleSetDefaultMonthsForDevice = async (
-    mode: CalendarMonthsView,
-    targetDevice: DeviceType
-  ) => {
+  const handleSetDefaultMonthsForDevice = async (mode: CalendarMonthsView, targetDevice: DeviceType) => {
     setIsSavingPref(true);
     setDevicePrefs((prev) => ({ ...prev, [targetDevice]: mode }));
 
@@ -928,11 +791,7 @@ export default function CalendarView({
       setCalendarViewMode(mode === '2' ? '2m' : '1m');
     }
 
-    const isCloudSaved = await setCalendarDefaultMonths(
-      mode,
-      targetDevice,
-      true
-    );
+    const isCloudSaved = await setCalendarDefaultMonths(mode, targetDevice, true);
     setIsSavingPref(false);
 
     const devLabel = targetDevice === 'mobile' ? 'móviles' : 'ordenadores';
@@ -948,18 +807,10 @@ export default function CalendarView({
     }, 2200);
   };
 
-  const [activeTab, setActiveTab] = useState<
-    | 'runofshow'
-    | 'tecnica'
-    | 'contactos'
-    | 'merchan'
-    | 'cierre'
-    | 'gear'
-    | 'roadbook'
-  >('runofshow');
-  const [modalActiveTab, setModalActiveTab] = useState<
-    'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'cierre'
-  >('resumen');
+  const [activeTab, setActiveTab] = useState<'runofshow' | 'tecnica' | 'contactos' | 'merchan' | 'cierre' | 'gear' | 'roadbook'>(
+    'runofshow'
+  );
+  const [modalActiveTab, setModalActiveTab] = useState<'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'cierre'>('resumen');
 
   // Roadbooks state per event date
   interface RoadbookInfo {
@@ -996,20 +847,15 @@ export default function CalendarView({
 
   // Form states for adding Cierre Item
   const [newCierreItemText, setNewCierreItemText] = useState('');
-  const [newCierreItemCat, setNewCierreItemCat] = useState<
-    'escenario' | 'camerino' | 'furgoneta'
-  >('escenario');
+  const [newCierreItemCat, setNewCierreItemCat] = useState<'escenario' | 'camerino' | 'furgoneta'>('escenario');
 
   // Form states for Merch Control
   const [showAddMerchForm, setShowAddMerchForm] = useState(false);
   const [newMerchNombre, setNewMerchNombre] = useState('');
-  const [newMerchCategoria, setNewMerchCategoria] = useState<
-    'camisetas' | 'vinilos' | 'musica' | 'accesorios' | 'otro'
-  >('camisetas');
+  const [newMerchCategoria, setNewMerchCategoria] = useState<'camisetas' | 'vinilos' | 'musica' | 'accesorios' | 'otro'>('camisetas');
   const [newMerchTalla, setNewMerchTalla] = useState('');
   const [newMerchPrecio, setNewMerchPrecio] = useState<string>('20');
-  const [newMerchStockInicial, setNewMerchStockInicial] =
-    useState<string>('15');
+  const [newMerchStockInicial, setNewMerchStockInicial] = useState<string>('15');
   const [merchCopiedToast, setMerchCopiedToast] = useState(false);
 
   const getDefaultRoadbook = (concert?: Concert | null): RoadbookInfo => {
@@ -1021,8 +867,7 @@ export default function CalendarView({
       tecnicoSonido: 'Carlos (FOH / Sonido)',
       hotelNombre: 'Hotel de Gira',
       hotelDireccion: ciudadNombre,
-      cateringInfo:
-        'Cena caliente tras prueba de sonido + aguas, fruta y toallas en camerino',
+      cateringInfo: 'Cena caliente tras prueba de sonido + aguas, fruta y toallas en camerino',
       inputList:
         '1. Bombo (Beta 52)\n2. Caja Top (SM57)\n3. Hi-Hat (KM184)\n4. Bajo (D.I. Radial J48)\n5. Guitarra 1 (e906)\n6. Guitarra 2 (SM57)\n7. Teclado L/R (2x D.I.)\n8. Trompeta (Clip DPA)\n9. Saxo (Clip DPA)\n10. Voz Principal (Beta 58)\n11. Coro Gtr (SM58)\n12. Coro Teclado (SM58)',
       horaLlegada: '17:00',
@@ -1030,18 +875,13 @@ export default function CalendarView({
       horaAperturaPuertas: '20:30',
       horaShow: concert?.fecha ? '21:30' : '21:30',
       horaCierreToque: '01:00',
-      paEspecificaciones:
-        'Sistema Line Array estéreo homogéneo (D&B / L-Acoustics / Meyer) con subwoofers dedicados y presión adecuada.',
-      monitoresTipo:
-        'In-Ears estéreo de la banda (traemos transmisores propios) + 2 cuñas de refuerzo en frontal de escenario.',
-      canalesMonitores:
-        '4 envíos auxiliares independientes XLR a rack de IEMs.',
+      paEspecificaciones: 'Sistema Line Array estéreo homogéneo (D&B / L-Acoustics / Meyer) con subwoofers dedicados y presión adecuada.',
+      monitoresTipo: 'In-Ears estéreo de la banda (traemos transmisores propios) + 2 cuñas de refuerzo en frontal de escenario.',
+      canalesMonitores: '4 envíos auxiliares independientes XLR a rack de IEMs.',
       backlineInfo:
         'Sala aporta: Batería básica (bombo, toms, pie hihat, 3 pies plato). Banda trae: Caja, platos, pedal bombo, amplificadores de guitarra/bajo y pedaleras.',
-      potenciaElectrica:
-        '2 tomas Schuko 220V / 16A limpias en frontal y trasera de escenario.',
-      notasTecnicas:
-        'Muelle de carga lateral disponible desde las 16:30. Acceso a prueba de sonido puntual.',
+      potenciaElectrica: '2 tomas Schuko 220V / 16A limpias en frontal y trasera de escenario.',
+      notasTecnicas: 'Muelle de carga lateral disponible desde las 16:30. Acceso a prueba de sonido puntual.',
       contactosClave: [
         {
           id: 'ct-1',
@@ -1049,8 +889,7 @@ export default function CalendarView({
           rol: 'Promotor / Sala',
           telefono: '+34 654 321 987',
           email: 'produccion@conciertos.es',
-          notas:
-            'Contacto principal para accesos, llaves camerino y cobro de taquilla/caché.',
+          notas: 'Contacto principal para accesos, llaves camerino y cobro de taquilla/caché.',
         },
         {
           id: 'ct-2',
@@ -1058,8 +897,7 @@ export default function CalendarView({
           rol: 'Técnico de Sonido (P.A.)',
           telefono: '+34 612 345 678',
           email: 'sonido@salaslive.com',
-          notas:
-            'A cargo de la mesa de mezclas en sala y chequeo de líneas de microfonía.',
+          notas: 'A cargo de la mesa de mezclas en sala y chequeo de líneas de microfonía.',
         },
         {
           id: 'ct-3',
@@ -1067,8 +905,7 @@ export default function CalendarView({
           rol: 'Producción / Camerinos',
           telefono: '+34 699 112 233',
           email: 'camerinos@venues.com',
-          notas:
-            'Catering, toallas, acreditaciones y acceso a furgoneta de carga.',
+          notas: 'Catering, toallas, acreditaciones y acceso a furgoneta de carga.',
         },
       ],
       cierreMaterial: [
@@ -1202,15 +1039,12 @@ export default function CalendarView({
         fondoCajaInicial: 50,
         ingresosEfectivo: 480,
         ingresosBizum: 460,
-        notas:
-          'Mesa de merchandising bien ubicada junto al acceso principal. Gran tirón de vinilos y camisetas tras el show.',
+        notas: 'Mesa de merchandising bien ubicada junto al acceso principal. Gran tirón de vinilos y camisetas tras el show.',
       },
     };
   };
 
-  const [allRoadbooks, setAllRoadbooks] = useState<
-    Record<string, RoadbookInfo>
-  >(() => {
+  const [allRoadbooks, setAllRoadbooks] = useState<Record<string, RoadbookInfo>>(() => {
     try {
       const saved = localStorage.getItem('bakandeya_roadbooks');
       return saved
@@ -1222,8 +1056,7 @@ export default function CalendarView({
               tecnicoSonido: 'Carlos (FOH Bakandeya)',
               hotelNombre: 'Hotel Playa de Barbate ****',
               hotelDireccion: 'Avenida del Mar, 12, 11160 Barbate',
-              cateringInfo:
-                'Cena tras prueba de sonido (21:00). 2 menús vegetarianos.',
+              cateringInfo: 'Cena tras prueba de sonido (21:00). 2 menús vegetarianos.',
               inputList:
                 '1. Bombo (Beta 52)\n2. Caja Top (SM57)\n3. Bajo (DI Radial)\n4. Gtr L (e609)\n5. Teclado L/R\n6. Tpt (Clip)\n7. Voz Ppal (Beta 58)\n8. Coros (SM58)',
             },
@@ -1240,37 +1073,23 @@ export default function CalendarView({
     // For persistence: use API with band_id validation instead.
   };
 
-  const getCurrentRoadbook = (
-    dateKey: string,
-    concert?: Concert | null
-  ): RoadbookInfo => {
+  const getCurrentRoadbook = (dateKey: string, concert?: Concert | null): RoadbookInfo => {
     const existing = allRoadbooks[dateKey];
     const def = getDefaultRoadbook(concert);
     if (!existing) return def;
     return {
       ...def,
       ...existing,
-      contactosClave:
-        existing.contactosClave && existing.contactosClave.length > 0
-          ? existing.contactosClave
-          : def.contactosClave,
-      cierreMaterial:
-        existing.cierreMaterial && existing.cierreMaterial.length > 0
-          ? existing.cierreMaterial
-          : def.cierreMaterial,
+      contactosClave: existing.contactosClave && existing.contactosClave.length > 0 ? existing.contactosClave : def.contactosClave,
+      cierreMaterial: existing.cierreMaterial && existing.cierreMaterial.length > 0 ? existing.cierreMaterial : def.cierreMaterial,
       merchControl:
-        existing.merchControl &&
-        existing.merchControl.items &&
-        existing.merchControl.items.length > 0
+        existing.merchControl && existing.merchControl.items && existing.merchControl.items.length > 0
           ? existing.merchControl
           : def.merchControl,
     };
   };
 
-  const updateRoadbookField = (
-    dateKey: string,
-    partial: Partial<RoadbookInfo>
-  ) => {
+  const updateRoadbookField = (dateKey: string, partial: Partial<RoadbookInfo>) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
     const updated: RoadbookInfo = { ...current, ...partial };
     saveRoadbook(dateKey, updated);
@@ -1299,9 +1118,7 @@ export default function CalendarView({
 
   const handleToggleCierreItem = (itemId: string, dateKey: string) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.cierreMaterial || []).map((item) =>
-      item.id === itemId ? { ...item, checked: !item.checked } : item
-    );
+    const updatedList = (current.cierreMaterial || []).map((item) => (item.id === itemId ? { ...item, checked: !item.checked } : item));
     updateRoadbookField(dateKey, { cierreMaterial: updatedList });
   };
 
@@ -1332,9 +1149,7 @@ export default function CalendarView({
 
   const handleDeleteCierreItem = (itemId: string, dateKey: string) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.cierreMaterial || []).filter(
-      (item) => item.id !== itemId
-    );
+    const updatedList = (current.cierreMaterial || []).filter((item) => item.id !== itemId);
     updateRoadbookField(dateKey, { cierreMaterial: updatedList });
   };
 
@@ -1362,36 +1177,22 @@ export default function CalendarView({
 
   const handleDeleteKeyContact = (contactId: string, dateKey: string) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.contactosClave || []).filter(
-      (c) => c.id !== contactId
-    );
+    const updatedList = (current.contactosClave || []).filter((c) => c.id !== contactId);
     updateRoadbookField(dateKey, { contactosClave: updatedList });
   };
 
-  const openWhatsAppContact = (
-    contact: KeyContactItem,
-    eventDateStr: string,
-    venueName: string
-  ) => {
+  const openWhatsAppContact = (contact: KeyContactItem, eventDateStr: string, venueName: string) => {
     const cleanPhone = contact.telefono.replace(/[^0-9]/g, '');
-    const bandName =
-      getBandIdentity(selectedConcert?.band_id).name || 'la banda';
+    const bandName = getBandIdentity(selectedConcert?.band_id).name || 'la banda';
     const msg = `¡Hola ${contact.nombre}! Te escribo de parte de ${bandName} con respecto al concierto en ${venueName} el día ${eventDateStr}. ¿Cómo estás? Quería consultar unos detalles de producción.`;
     const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handleUpdateMerchItem = (
-    dateKey: string,
-    itemId: string,
-    updates: Partial<MerchBoloItem>
-  ) => {
+  const handleUpdateMerchItem = (dateKey: string, itemId: string, updates: Partial<MerchBoloItem>) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch =
-      current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-    const updatedItems = merch.items.map((item) =>
-      item.id === itemId ? { ...item, ...updates } : item
-    );
+    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+    const updatedItems = merch.items.map((item) => (item.id === itemId ? { ...item, ...updates } : item));
     updateRoadbookField(dateKey, {
       merchControl: {
         ...merch,
@@ -1404,8 +1205,7 @@ export default function CalendarView({
     if (e) e.preventDefault();
     if (!newMerchNombre.trim()) return;
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch =
-      current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
     const precio = Math.max(0, parseFloat(newMerchPrecio) || 0);
     const stockIni = Math.max(0, parseInt(newMerchStockInicial, 10) || 0);
     const newItem: MerchBoloItem = {
@@ -1430,8 +1230,7 @@ export default function CalendarView({
 
   const handleDeleteMerchItem = (dateKey: string, itemId: string) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch =
-      current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
     const updatedItems = merch.items.filter((item) => item.id !== itemId);
     updateRoadbookField(dateKey, {
       merchControl: {
@@ -1441,13 +1240,9 @@ export default function CalendarView({
     });
   };
 
-  const handleUpdateMerchTotals = (
-    dateKey: string,
-    updates: Partial<MerchControlBolo>
-  ) => {
+  const handleUpdateMerchTotals = (dateKey: string, updates: Partial<MerchControlBolo>) => {
     const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch =
-      current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
     updateRoadbookField(dateKey, {
       merchControl: {
         ...merch,
@@ -1456,13 +1251,8 @@ export default function CalendarView({
     });
   };
 
-  const handleCopyMerchSummary = (
-    roadbook: RoadbookInfo,
-    dateKey: string,
-    concert?: Concert | null
-  ) => {
-    const merch =
-      roadbook.merchControl || getDefaultRoadbook(concert).merchControl!;
+  const handleCopyMerchSummary = (roadbook: RoadbookInfo, dateKey: string, concert?: Concert | null) => {
+    const merch = roadbook.merchControl || getDefaultRoadbook(concert).merchControl!;
     const sala = concert?.sala || 'Sala de Conciertos';
     const ciudad = concert?.ciudad || '';
 
@@ -1471,10 +1261,7 @@ export default function CalendarView({
     const desgloseItems: string[] = [];
 
     merch.items.forEach((item) => {
-      const vendidas = Math.max(
-        0,
-        (item.stockInicial || 0) - (item.stockFinal || 0)
-      );
+      const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
       if (vendidas > 0) {
         const subtotal = vendidas * (item.precioUnitario || 0);
         totalVendidas += vendidas;
@@ -1485,8 +1272,7 @@ export default function CalendarView({
       }
     });
 
-    const totalCobrado =
-      (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
+    const totalCobrado = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
     const diferencia = totalCobrado - totalVentaTeorica;
 
     const texto = [
@@ -1500,15 +1286,11 @@ export default function CalendarView({
       `💵 Efectivo recaudado: ${(merch.ingresosEfectivo || 0).toFixed(2)} €`,
       `📱 Bizum / TPV: ${(merch.ingresosBizum || 0).toFixed(2)} €`,
       `🏷️ Total Cobrado Real: ${totalCobrado.toFixed(2)} €`,
-      merch.fondoCajaInicial
-        ? `🪙 Fondo de caja inicial: ${merch.fondoCajaInicial.toFixed(2)} €`
-        : null,
+      merch.fondoCajaInicial ? `🪙 Fondo de caja inicial: ${merch.fondoCajaInicial.toFixed(2)} €` : null,
       `⚖️ Cuadre de caja: ${diferencia === 0 ? '✓ ¡CAJA CUADRADA EXACTA! ' : diferencia > 0 ? `+${diferencia.toFixed(2)} € (Superávit / Propinas)` : `${diferencia.toFixed(2)} € (Descuadre por verificar)`}`,
       ``,
       `📋 *DETALLE POR ARTÍCULO:*`,
-      ...(desgloseItems.length > 0
-        ? desgloseItems
-        : ['(Sin ventas registradas todavía)']),
+      ...(desgloseItems.length > 0 ? desgloseItems : ['(Sin ventas registradas todavía)']),
       merch.notas ? `\n📝 *Notas:* ${merch.notas}` : '',
     ]
       .filter(Boolean)
@@ -1520,9 +1302,7 @@ export default function CalendarView({
   };
 
   // Creation Modals state
-  const [showCreateModal, setShowCreateModal] = useState<
-    'rehearsal' | 'concert' | 'reunion' | null
-  >(null);
+  const [showCreateModal, setShowCreateModal] = useState<'rehearsal' | 'concert' | 'reunion' | null>(null);
   const [showAddEventDropdown, setShowAddEventDropdown] = useState(false);
 
   // Form fields for new Reunion
@@ -1533,9 +1313,7 @@ export default function CalendarView({
   const [reuNotas, setReuNotas] = useState(
     '1. Repasar próximas fechas y logística.\n2. Presupuestos y gastos.\n3. Nuevos temas del repertorio.'
   );
-  const [reuEstado, setReuEstado] = useState<
-    'programado' | 'completado' | 'cancelado'
-  >('programado');
+  const [reuEstado, setReuEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
 
   // Reset convocatoria state when opening modal
   useEffect(() => {
@@ -1554,12 +1332,8 @@ export default function CalendarView({
   // Form fields for new Rehearsal
   const [rehTime, setRehTime] = useState('18:00 - 21:00');
   const [rehLugar, setRehLugar] = useState('Locales de Ensayo');
-  const [rehNotas, setRehNotas] = useState(
-    'Ensayo general de repertorio directo'
-  );
-  const [rehEstado, setRehEstado] = useState<
-    'programado' | 'completado' | 'cancelado'
-  >('programado');
+  const [rehNotas, setRehNotas] = useState('Ensayo general de repertorio directo');
+  const [rehEstado, setRehEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
   const [rehSetlistId, setRehSetlistId] = useState<string>('');
 
   // Form fields for new Concert
@@ -1569,15 +1343,9 @@ export default function CalendarView({
   const [concCache, setConcCache] = useState('1200');
   const [concAforo, setConcAforo] = useState('300');
   const [concContrato, setConcContrato] = useState(true);
-  const [concEstadoPago, setConcEstadoPago] = useState<
-    'pendiente' | 'pagado' | 'anticipo'
-  >('pendiente');
-  const [concTipo, setConcTipo] = useState<'propio' | 'festival' | 'privado'>(
-    'propio'
-  );
-  const [concNotas, setConcNotas] = useState(
-    'Concierto agendado desde el calendario'
-  );
+  const [concEstadoPago, setConcEstadoPago] = useState<'pendiente' | 'pagado' | 'anticipo'>('pendiente');
+  const [concTipo, setConcTipo] = useState<'propio' | 'festival' | 'privado'>('propio');
+  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
   const [concIdioma, setConcIdioma] = useState('');
   const [concSetlistId, setConcSetlistId] = useState<string>('');
   const [concIsPosible, setConcIsPosible] = useState(false);
@@ -1591,9 +1359,7 @@ export default function CalendarView({
     let isMounted = true;
     const loadData = async () => {
       try {
-        const token =
-          localStorage.getItem('bakandeya_token') ||
-          localStorage.getItem('token');
+        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
         const headers = {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -1630,12 +1396,8 @@ export default function CalendarView({
   }, []);
 
   // Estado para la vista de directo / modo escenario desde el calendario
-  const [activeStageSetlist, setActiveStageSetlist] = useState<any | null>(
-    null
-  );
-  const [activeStageInitialMode, setActiveStageInitialMode] = useState<
-    'directo' | 'ensayo'
-  >('directo');
+  const [activeStageSetlist, setActiveStageSetlist] = useState<any | null>(null);
+  const [activeStageInitialMode, setActiveStageInitialMode] = useState<'directo' | 'ensayo'>('directo');
 
   // Estado y lógica para la vista a Pantalla Completa del Calendario
   const [isCalendarFullscreen, setIsCalendarFullscreen] = useState(false);
@@ -1643,10 +1405,7 @@ export default function CalendarView({
 
   const toggleCalendarFullscreen = React.useCallback(() => {
     if (!isCalendarFullscreen) {
-      if (
-        calendarContainerRef.current &&
-        calendarContainerRef.current.requestFullscreen
-      ) {
+      if (calendarContainerRef.current && calendarContainerRef.current.requestFullscreen) {
         calendarContainerRef.current.requestFullscreen().catch(() => {});
       }
       setIsCalendarFullscreen(true);
@@ -1663,17 +1422,14 @@ export default function CalendarView({
       setIsCalendarFullscreen(!!document.fullscreenElement);
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () =>
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
   // Ficha Modal Emergente y Navegación Cronológica: lista unificada de conciertos + ensayos
   // de la banda activa, ordenada por fecha, para poder pasar de uno a otro con < / > sin
   // tener que volver al calendario y buscar el siguiente a mano.
   const [showEventFichaModal, setShowEventFichaModal] = useState(false);
-  const [modalWeatherAlerts, setModalWeatherAlerts] = useState<WeatherAlert[]>(
-    []
-  );
+  const [modalWeatherAlerts, setModalWeatherAlerts] = useState<WeatherAlert[]>([]);
 
   // Usa filteredConcerts/filteredRehearsals (no activeBandConcerts/activeBandRehearsals): esas
   // dos ya respetan el toggle"Todos / banda activa" y la convocatoria con el que se pintan el
@@ -1701,35 +1457,27 @@ export default function CalendarView({
         data: r,
       })),
     ];
-    combined.sort(
-      (a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
-    );
+    combined.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
     return combined;
   }, [filteredConcerts, filteredRehearsals]);
 
-  const handleSelectEvent = React.useCallback(
-    (evt: { id: string; fecha: string }) => {
-      const dateStr = evt.fecha.split('T')[0];
-      const parts = dateStr.split('-');
-      if (parts.length === 3) {
-        const y = parseInt(parts[0], 10);
-        const m = parseInt(parts[1], 10) - 1;
-        const d = parseInt(parts[2], 10);
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-          setSelectedDate(new Date(y, m, d));
-        }
+  const handleSelectEvent = React.useCallback((evt: { id: string; fecha: string }) => {
+    const dateStr = evt.fecha.split('T')[0];
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        setSelectedDate(new Date(y, m, d));
       }
-      setSelectedEventId(evt.id);
-      setShowEventFichaModal(true);
-    },
-    []
-  );
+    }
+    setSelectedEventId(evt.id);
+    setShowEventFichaModal(true);
+  }, []);
 
   const activeChronoIndex = React.useMemo(
-    () =>
-      selectedEventId
-        ? allChronologicalEvents.findIndex((e) => e.id === selectedEventId)
-        : -1,
+    () => (selectedEventId ? allChronologicalEvents.findIndex((e) => e.id === selectedEventId) : -1),
     [allChronologicalEvents, selectedEventId]
   );
 
@@ -1757,8 +1505,7 @@ export default function CalendarView({
   }, []);
 
   const handleModalTouchMove = React.useCallback((e: React.TouchEvent) => {
-    if (modalTouchStartX.current === null || modalTouchStartY.current === null)
-      return;
+    if (modalTouchStartX.current === null || modalTouchStartY.current === null) return;
     const diffX = e.touches[0].clientX - modalTouchStartX.current;
     const diffY = e.touches[0].clientY - modalTouchStartY.current;
     if (Math.abs(diffX) > Math.abs(diffY)) {
@@ -1852,18 +1599,13 @@ export default function CalendarView({
       entradasLugarFisico: editDraft.entradasLugarFisico?.trim() || undefined,
     });
     setViewingConcert(null);
-    setSyncSuccessMessage(
-      `¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`
-    );
+    setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
     setTimeout(() => setSyncSuccessMessage(''), 5000);
   };
 
   // Ficha del ensayo: ver / editar un ensayo ya creado
-  const [viewingRehearsal, setViewingRehearsal] = useState<Rehearsal | null>(
-    null
-  );
-  const [editRehearsalDraft, setEditRehearsalDraft] =
-    useState<Rehearsal | null>(null);
+  const [viewingRehearsal, setViewingRehearsal] = useState<Rehearsal | null>(null);
+  const [editRehearsalDraft, setEditRehearsalDraft] = useState<Rehearsal | null>(null);
 
   useEffect(() => {
     setEditRehearsalDraft(viewingRehearsal ? { ...viewingRehearsal } : null);
@@ -1876,9 +1618,7 @@ export default function CalendarView({
     onUpdateRehearsal(viewingRehearsal.id, {
       fecha: editRehearsalDraft.fecha,
       hora: editRehearsalDraft.hora?.trim() || '',
-      lugar:
-        editRehearsalDraft.lugar?.trim() ||
-        (isReu ? 'Online' : 'Local de Ensayo'),
+      lugar: editRehearsalDraft.lugar?.trim() || (isReu ? 'Online' : 'Local de Ensayo'),
       tipo_evento: editRehearsalDraft.tipo_evento || 'ensayo',
       asunto: editRehearsalDraft.asunto?.trim() || undefined,
       enlace_reunion: editRehearsalDraft.enlace_reunion?.trim() || undefined,
@@ -1917,15 +1657,7 @@ export default function CalendarView({
     'Diciembre',
   ];
 
-  const fullWeekdays = [
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-    'Domingo',
-  ];
+  const fullWeekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
   const getWeekDays = (baseDate: Date) => {
     const curr = new Date(baseDate);
@@ -1950,17 +1682,13 @@ export default function CalendarView({
   const getCampaignsForDate = React.useCallback(
     (dateStr: string): BookingCampaign[] => {
       if (!campaigns || campaigns.length === 0) return [];
-      return campaigns.filter(
-        (c) => Array.isArray(c.targetDates) && c.targetDates.includes(dateStr)
-      );
+      return campaigns.filter((c) => Array.isArray(c.targetDates) && c.targetDates.includes(dateStr));
     },
     [campaigns]
   );
 
   // Upcoming events filter state:'todos' |'conciertos' |'ensayos' |'campañas'
-  const [upcomingFilter, setUpcomingFilter] = useState<
-    'todos' | 'conciertos' | 'ensayos' | 'campañas'
-  >('todos');
+  const [upcomingFilter, setUpcomingFilter] = useState<'todos' | 'conciertos' | 'ensayos' | 'campañas'>('todos');
 
   // Upcoming events starting from today (filters out past dates)
   const upcomingCalendarEvents = React.useMemo(() => {
@@ -1987,9 +1715,7 @@ export default function CalendarView({
       if (parts.length !== 3) return;
       const day = parts[2];
       const monthIdx = parseInt(parts[1], 10) - 1;
-      const month = monthNames[monthIdx]
-        ? monthNames[monthIdx].slice(0, 3).toUpperCase()
-        : 'ENE';
+      const month = monthNames[monthIdx] ? monthNames[monthIdx].slice(0, 3).toUpperCase() : 'ENE';
 
       list.push({
         id: c.id,
@@ -2014,19 +1740,13 @@ export default function CalendarView({
       if (parts.length !== 3) return;
       const day = parts[2];
       const monthIdx = parseInt(parts[1], 10) - 1;
-      const month = monthNames[monthIdx]
-        ? monthNames[monthIdx].slice(0, 3).toUpperCase()
-        : 'ENE';
+      const month = monthNames[monthIdx] ? monthNames[monthIdx].slice(0, 3).toUpperCase() : 'ENE';
       const isReu = r.tipo_evento === 'reunion';
 
       list.push({
         id: r.id,
         type: (isReu ? 'reunion' : 'ensayo') as any,
-        title: isReu
-          ? r.asunto || 'Reunión de Banda'
-          : r.lugar
-            ? `Ensayo en ${r.lugar}`
-            : 'Ensayo General',
+        title: isReu ? r.asunto || 'Reunión de Banda' : r.lugar ? `Ensayo en ${r.lugar}` : 'Ensayo General',
         fecha: r.fecha,
         day,
         month,
@@ -2034,20 +1754,12 @@ export default function CalendarView({
         ciudad: undefined,
         direccion: undefined,
         locationQuery: isReu
-          ? r.lugar &&
-            !r.lugar.toLowerCase().includes('online') &&
-            !r.lugar.toLowerCase().includes('http')
+          ? r.lugar && !r.lugar.toLowerCase().includes('online') && !r.lugar.toLowerCase().includes('http')
             ? r.lugar
             : undefined
           : `${r.lugar || 'Local de Ensayo'}, Madrid`,
         bandName: getEventBandName(r),
-        badge: isReu
-          ? r.estado === 'completado'
-            ? 'Realizada'
-            : 'Convocada'
-          : r.estado === 'completado'
-            ? 'Completado'
-            : 'Programado',
+        badge: isReu ? (r.estado === 'completado' ? 'Realizada' : 'Convocada') : r.estado === 'completado' ? 'Completado' : 'Programado',
       });
     });
 
@@ -2055,18 +1767,14 @@ export default function CalendarView({
     (campaigns || []).forEach((camp) => {
       (camp.targetDates || []).forEach((tDate) => {
         if (tDate < todayStr) return;
-        const alreadyHasConcert = filteredConcerts.some(
-          (c) => c.fecha === tDate
-        );
+        const alreadyHasConcert = filteredConcerts.some((c) => c.fecha === tDate);
         if (alreadyHasConcert) return;
 
         const parts = tDate.split('-');
         if (parts.length !== 3) return;
         const day = parts[2];
         const monthIdx = parseInt(parts[1], 10) - 1;
-        const month = monthNames[monthIdx]
-          ? monthNames[monthIdx].slice(0, 3).toUpperCase()
-          : 'ENE';
+        const month = monthNames[monthIdx] ? monthNames[monthIdx].slice(0, 3).toUpperCase() : 'ENE';
 
         list.push({
           id: `camp-date-${camp.id}-${tDate}`,
@@ -2088,19 +1796,10 @@ export default function CalendarView({
 
     list.sort((a, b) => a.fecha.localeCompare(b.fecha));
     return list;
-  }, [
-    filteredConcerts,
-    filteredRehearsals,
-    campaigns,
-    todayStr,
-    activeBandName,
-    monthNames,
-  ]);
+  }, [filteredConcerts, filteredRehearsals, campaigns, todayStr, activeBandName, monthNames]);
 
   // Estado para dirección de deslizamiento y desplazamiento visual
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(
-    null
-  );
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   const [dragOffset, setDragOffset] = useState<number>(0);
 
   const touchStartX = useRef<number | null>(null);
@@ -2131,9 +1830,7 @@ export default function CalendarView({
         return new Date(nextD.getFullYear(), nextD.getMonth(), 1);
       });
     } else {
-      setViewDate(
-        (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
-      );
+      setViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
     }
   };
 
@@ -2151,19 +1848,13 @@ export default function CalendarView({
         return new Date(nextD.getFullYear(), nextD.getMonth(), 1);
       });
     } else {
-      setViewDate(
-        (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1)
-      );
+      setViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
     }
   };
 
   const handleGoToday = () => {
     const now = new Date();
-    const currentMonthDate = new Date(
-      viewDate.getFullYear(),
-      viewDate.getMonth(),
-      1
-    );
+    const currentMonthDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
     const targetDate = new Date(now.getFullYear(), now.getMonth(), 1);
     if (targetDate.getTime() > currentMonthDate.getTime()) {
       setSlideDirection('left');
@@ -2185,12 +1876,7 @@ export default function CalendarView({
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (
-      !isSwipingTouch.current ||
-      touchStartX.current === null ||
-      touchStartY.current === null
-    )
-      return;
+    if (!isSwipingTouch.current || touchStartX.current === null || touchStartY.current === null) return;
     const diffX = e.touches[0].clientX - touchStartX.current;
     const diffY = e.touches[0].clientY - touchStartY.current;
 
@@ -2201,8 +1887,7 @@ export default function CalendarView({
       }
       touchDeltaX.current = diffX;
       // Resistencia elástica para feedback táctil en tiempo real
-      const dampened =
-        Math.sign(diffX) * Math.min(50, Math.pow(Math.abs(diffX), 0.85));
+      const dampened = Math.sign(diffX) * Math.min(50, Math.pow(Math.abs(diffX), 0.85));
       setDragOffset(dampened);
     }
   };
@@ -2248,12 +1933,7 @@ export default function CalendarView({
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (
-      !isMouseDown.current ||
-      mouseStartX.current === null ||
-      mouseStartY.current === null
-    )
-      return;
+    if (!isMouseDown.current || mouseStartX.current === null || mouseStartY.current === null) return;
     const diffX = e.clientX - mouseStartX.current;
     const diffY = e.clientY - mouseStartY.current;
 
@@ -2263,8 +1943,7 @@ export default function CalendarView({
 
     if (Math.abs(diffX) > Math.abs(diffY)) {
       mouseDeltaX.current = diffX;
-      const dampened =
-        Math.sign(diffX) * Math.min(50, Math.pow(Math.abs(diffX), 0.85));
+      const dampened = Math.sign(diffX) * Math.min(50, Math.pow(Math.abs(diffX), 0.85));
       setDragOffset(dampened);
     }
   };
@@ -2300,10 +1979,7 @@ export default function CalendarView({
 
   // Desplazamiento horizontal para trackpads / mousewheel horizontal
   const handleWheel = (e: React.WheelEvent) => {
-    if (
-      Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5 &&
-      Math.abs(e.deltaX) > 30
-    ) {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5 && Math.abs(e.deltaX) > 30) {
       const now = Date.now();
       if (now - lastWheelTime.current > 450) {
         lastWheelTime.current = now;
@@ -2324,40 +2000,30 @@ export default function CalendarView({
   const handleSaveNewRehearsal = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
-    const targetBand = effectiveBandsList.find(
-      (b) => b.band_id === selectedBandIdForNewEvent
-    ) || { band_id: activeBandId, bandName: activeBandName };
-    const selectedMembers = effectiveBandMembers.filter((m) =>
-      convocadosIds.includes(m.id)
-    );
+    const targetBand = effectiveBandsList.find((b) => b.band_id === selectedBandIdForNewEvent) || {
+      band_id: activeBandId,
+      bandName: activeBandName,
+    };
+    const selectedMembers = effectiveBandMembers.filter((m) => convocadosIds.includes(m.id));
     const newRehearsal: Rehearsal = {
       id: `reh-${Date.now()}`,
       fecha: formattedDate,
       hora: rehTime.trim() || '18:00 - 21:00',
       lugar: rehLugar.trim() || 'Locales de Ensayo',
-      asistentes:
-        convocatoriaTipo === 'completa'
-          ? ['Banda Completa']
-          : selectedMembers.map((m) => m.name),
+      asistentes: convocatoriaTipo === 'completa' ? ['Banda Completa'] : selectedMembers.map((m) => m.name),
       notas: rehNotas.trim() || 'Ensayo general',
       estado: rehEstado,
       band_id: targetBand.band_id,
       bandName: targetBand.bandName,
       convocatoria_tipo: convocatoriaTipo,
-      convocados_ids:
-        convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
-      convocados_nombres:
-        convocatoriaTipo === 'parcial'
-          ? selectedMembers.map((m) => m.name)
-          : undefined,
+      convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
+      convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map((m) => m.name) : undefined,
       setlistId: rehSetlistId || undefined,
     };
 
     if (onAddRehearsal) {
       onAddRehearsal(newRehearsal);
-      setSyncSuccessMessage(
-        `¡Ensayo de ${targetBand.bandName} creado para el ${formattedDate}!`
-      );
+      setSyncSuccessMessage(`¡Ensayo de ${targetBand.bandName} creado para el ${formattedDate}!`);
       setTimeout(() => setSyncSuccessMessage(''), 5000);
     }
     setShowCreateModal(null);
@@ -2366,12 +2032,11 @@ export default function CalendarView({
   const handleSaveNewReunion = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
-    const targetBand = effectiveBandsList.find(
-      (b) => b.band_id === selectedBandIdForNewEvent
-    ) || { band_id: activeBandId, bandName: activeBandName };
-    const selectedMembers = effectiveBandMembers.filter((m) =>
-      convocadosIds.includes(m.id)
-    );
+    const targetBand = effectiveBandsList.find((b) => b.band_id === selectedBandIdForNewEvent) || {
+      band_id: activeBandId,
+      bandName: activeBandName,
+    };
+    const selectedMembers = effectiveBandMembers.filter((m) => convocadosIds.includes(m.id));
     const newReunion: Rehearsal = {
       id: `reu-${Date.now()}`,
       fecha: formattedDate,
@@ -2380,28 +2045,19 @@ export default function CalendarView({
       tipo_evento: 'reunion',
       asunto: reuAsunto.trim() || 'Reunión de Banda',
       enlace_reunion: reuEnlace.trim() || undefined,
-      asistentes:
-        convocatoriaTipo === 'completa'
-          ? ['Banda Completa']
-          : selectedMembers.map((m) => m.name),
+      asistentes: convocatoriaTipo === 'completa' ? ['Banda Completa'] : selectedMembers.map((m) => m.name),
       notas: reuNotas.trim() || 'Orden del día',
       estado: reuEstado,
       band_id: targetBand.band_id,
       bandName: targetBand.bandName,
       convocatoria_tipo: convocatoriaTipo,
-      convocados_ids:
-        convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
-      convocados_nombres:
-        convocatoriaTipo === 'parcial'
-          ? selectedMembers.map((m) => m.name)
-          : undefined,
+      convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
+      convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map((m) => m.name) : undefined,
     };
 
     if (onAddRehearsal) {
       onAddRehearsal(newReunion);
-      setSyncSuccessMessage(
-        `¡Reunión de ${targetBand.bandName} convocada para el ${formattedDate}!`
-      );
+      setSyncSuccessMessage(`¡Reunión de ${targetBand.bandName} convocada para el ${formattedDate}!`);
       setTimeout(() => setSyncSuccessMessage(''), 5000);
     }
     setShowCreateModal(null);
@@ -2410,12 +2066,11 @@ export default function CalendarView({
   const handleSaveNewConcert = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
-    const targetBand = effectiveBandsList.find(
-      (b) => b.band_id === selectedBandIdForNewEvent
-    ) || { band_id: activeBandId, bandName: activeBandName };
-    const selectedMembers = effectiveBandMembers.filter((m) =>
-      convocadosIds.includes(m.id)
-    );
+    const targetBand = effectiveBandsList.find((b) => b.band_id === selectedBandIdForNewEvent) || {
+      band_id: activeBandId,
+      bandName: activeBandName,
+    };
+    const selectedMembers = effectiveBandMembers.filter((m) => convocadosIds.includes(m.id));
     const newConcert: Concert = {
       id: `conc-${Date.now()}`,
       fecha: formattedDate,
@@ -2432,12 +2087,8 @@ export default function CalendarView({
       band_id: targetBand.band_id,
       bandName: targetBand.bandName,
       convocatoria_tipo: convocatoriaTipo,
-      convocados_ids:
-        convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
-      convocados_nombres:
-        convocatoriaTipo === 'parcial'
-          ? selectedMembers.map((m) => m.name)
-          : undefined,
+      convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
+      convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map((m) => m.name) : undefined,
       idioma: concIdioma || undefined,
       setlistId: concSetlistId || undefined,
     };
@@ -2463,15 +2114,11 @@ export default function CalendarView({
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.success) {
-        setSyncSuccessMessage(
-          data.message || 'Conciertos sincronizados con éxito.'
-        );
+        setSyncSuccessMessage(data.message || 'Conciertos sincronizados con éxito.');
         // clear after 6 seconds
         setTimeout(() => setSyncSuccessMessage(''), 6000);
       } else {
-        setSyncErrorMessage(
-          data.error || 'Error al intentar sincronizar los conciertos.'
-        );
+        setSyncErrorMessage(data.error || 'Error al intentar sincronizar los conciertos.');
       }
     } catch (error) {
       console.error('Error synchronizing concerts:', error);
@@ -2492,15 +2139,10 @@ export default function CalendarView({
     if (showEventFichaModal) return;
     setSelectedEventId((prev) => {
       if (!prev) return null;
-      if (initialSelectedEventId && prev === initialSelectedEventId)
-        return prev;
+      if (initialSelectedEventId && prev === initialSelectedEventId) return prev;
       const belongsToNewDate =
-        filteredConcerts.some(
-          (c) => c.id === prev && c.fecha === selectedDateKey
-        ) ||
-        filteredRehearsals.some(
-          (r) => r.id === prev && r.fecha === selectedDateKey
-        );
+        filteredConcerts.some((c) => c.id === prev && c.fecha === selectedDateKey) ||
+        filteredRehearsals.some((r) => r.id === prev && r.fecha === selectedDateKey);
       return belongsToNewDate ? prev : null;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2596,11 +2238,8 @@ export default function CalendarView({
     ],
   };
 
-  const [allRunOfShow, setAllRunOfShow] = useState<
-    Record<string, RunOfShowItem[]>
-  >(defaultInitialRunOfShow);
-  const [allGear, setAllGear] =
-    useState<Record<string, GearItem[]>>(defaultInitialGear);
+  const [allRunOfShow, setAllRunOfShow] = useState<Record<string, RunOfShowItem[]>>(defaultInitialRunOfShow);
+  const [allGear, setAllGear] = useState<Record<string, GearItem[]>>(defaultInitialGear);
 
   // Fetch server logistics state on mount
   useEffect(() => {
@@ -2612,27 +2251,18 @@ export default function CalendarView({
     fetch(`/api/logistics?band_id=${encodeURIComponent(currentBandId)}`, {
       headers,
     })
-      .then((res) =>
-        res.ok && res.headers.get('content-type')?.includes('application/json')
-          ? res.json().catch(() => null)
-          : null
-      )
+      .then((res) => (res.ok && res.headers.get('content-type')?.includes('application/json') ? res.json().catch(() => null) : null))
       .then((data) => {
         if (data) {
           if (data.runOfShow && Object.keys(data.runOfShow).length > 0) {
             setAllRunOfShow((prev) => ({ ...prev, ...data.runOfShow }));
           }
-          if (
-            data.gearChecklists &&
-            Object.keys(data.gearChecklists).length > 0
-          ) {
+          if (data.gearChecklists && Object.keys(data.gearChecklists).length > 0) {
             setAllGear((prev) => ({ ...prev, ...data.gearChecklists }));
           }
         }
       })
-      .catch((err) =>
-        console.warn('Notice: using local logistics state:', err)
-      );
+      .catch((err) => console.warn('Notice: using local logistics state:', err));
   }, [currentBandId]);
 
   // Sync helpers to post server state
@@ -2701,9 +2331,7 @@ export default function CalendarView({
   const handleToggleRunOfShow = (id: string) => {
     setAllRunOfShow((prev) => {
       const dayList = prev[selectedDateKey] || currentRunOfShow;
-      const updatedList = dayList.map((item) =>
-        item.id === id ? { ...item, done: !item.done } : item
-      );
+      const updatedList = dayList.map((item) => (item.id === id ? { ...item, done: !item.done } : item));
       saveRunOfShowToServer(selectedDateKey, updatedList);
       return {
         ...prev,
@@ -2751,9 +2379,7 @@ export default function CalendarView({
   const handleToggleGear = (id: string) => {
     setAllGear((prev) => {
       const dayList = prev[selectedDateKey] || currentGear;
-      const updatedList = dayList.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      );
+      const updatedList = dayList.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item));
       saveGearToServer(selectedDateKey, updatedList);
       return {
         ...prev,
@@ -2800,12 +2426,8 @@ export default function CalendarView({
 
   // Helper function to get events for any date string"YYYY-MM-DD"
   const getEventsForDateStr = (formattedDate: string) => {
-    const dayConcerts = filteredConcerts.filter(
-      (c) => c.fecha === formattedDate
-    );
-    const dayRehearsals = filteredRehearsals.filter(
-      (r) => r.fecha === formattedDate
-    );
+    const dayConcerts = filteredConcerts.filter((c) => c.fecha === formattedDate);
+    const dayRehearsals = filteredRehearsals.filter((r) => r.fecha === formattedDate);
     return { concerts: dayConcerts, rehearsals: dayRehearsals };
   };
 
@@ -2825,14 +2447,9 @@ export default function CalendarView({
       label: `Concierto: ${c.sala}`,
     })),
     ...selectedEvents.rehearsals.map((r) => ({
-      kind: (r.tipo_evento === 'reunion' ? 'reunion' : 'rehearsal') as
-        | 'reunion'
-        | 'rehearsal',
+      kind: (r.tipo_evento === 'reunion' ? 'reunion' : 'rehearsal') as 'reunion' | 'rehearsal',
       id: r.id,
-      label:
-        r.tipo_evento === 'reunion'
-          ? `Reunión: ${r.asunto || r.lugar}`
-          : `Ensayo: ${r.lugar.split(',')[0]}`,
+      label: r.tipo_evento === 'reunion' ? `Reunión: ${r.asunto || r.lugar}` : `Ensayo: ${r.lugar.split(',')[0]}`,
     })),
   ];
   const hasMultipleDayEvents = dayEventsList.length > 1;
@@ -2840,23 +2457,15 @@ export default function CalendarView({
   // El evento activo es el que se eligió explícitamente (chip del selector, o deep-link por
   // initialSelectedEventId) si sigue existiendo hoy; si no hay elección o no encaja, el primero
   // del día, igual que el comportamiento de siempre cuando solo hay un evento.
-  const activeDayEventId =
-    selectedEventId && dayEventsList.some((e) => e.id === selectedEventId)
-      ? selectedEventId
-      : dayEventsList[0]?.id;
+  const activeDayEventId = selectedEventId && dayEventsList.some((e) => e.id === selectedEventId) ? selectedEventId : dayEventsList[0]?.id;
 
-  const selectedConcert = selectedEvents.concerts.find(
-    (c) => c.id === activeDayEventId
-  );
-  const selectedRehearsal = selectedEvents.rehearsals.find(
-    (r) => r.id === activeDayEventId
-  );
+  const selectedConcert = selectedEvents.concerts.find((c) => c.id === activeDayEventId);
+  const selectedRehearsal = selectedEvents.rehearsals.find((r) => r.id === activeDayEventId);
 
   const currentRehearsal = selectedRehearsal;
   const isGeneralRehearsal =
     currentRehearsal &&
-    (currentRehearsal.notas.toLowerCase().includes('general') ||
-      currentRehearsal.lugar.toLowerCase().includes('general'));
+    (currentRehearsal.notas.toLowerCase().includes('general') || currentRehearsal.lugar.toLowerCase().includes('general'));
   const rehearsalTypeLabel = isGeneralRehearsal ? 'Ensayo General' : 'Ensayo';
 
   const isReunion = selectedRehearsal?.tipo_evento === 'reunion';
@@ -2868,11 +2477,8 @@ export default function CalendarView({
         : `${rehearsalTypeLabel}: ${selectedRehearsal.lugar.split(',')[0]}`
       : `Día Libre`;
 
-  const currentSetlistId =
-    selectedConcert?.setlistId || selectedRehearsal?.setlistId;
-  const assignedSetlist = availableSetlists.find(
-    (s: any) => s.id === currentSetlistId
-  );
+  const currentSetlistId = selectedConcert?.setlistId || selectedRehearsal?.setlistId;
+  const assignedSetlist = availableSetlists.find((s: any) => s.id === currentSetlistId);
 
   const selectedEventDetails = selectedConcert
     ? {
@@ -2882,19 +2488,13 @@ export default function CalendarView({
         direccion: selectedConcert.direccion,
         fee: `${selectedConcert.cache} € (Caché Pactado)`,
         notes: selectedConcert.notas,
-        locationQuery:
-          selectedConcert.direccion ||
-          `${selectedConcert.sala}, ${selectedConcert.ciudad}`,
+        locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`,
         entradasUrl: selectedConcert.entradasUrl,
         entradasLugarFisico: selectedConcert.entradasLugarFisico,
       }
     : selectedRehearsal
       ? {
-          type: isReunion
-            ? 'reunion'
-            : isGeneralRehearsal
-              ? 'rehearsal_general'
-              : 'rehearsal',
+          type: isReunion ? 'reunion' : isGeneralRehearsal ? 'rehearsal_general' : 'rehearsal',
           time: selectedRehearsal.hora,
           lugar: selectedRehearsal.lugar,
           asunto: selectedRehearsal.asunto,
@@ -2904,8 +2504,7 @@ export default function CalendarView({
           notes: selectedRehearsal.notas,
           locationQuery:
             isReunion &&
-            (selectedRehearsal.lugar.toLowerCase().includes('online') ||
-              selectedRehearsal.lugar.toLowerCase().includes('http'))
+            (selectedRehearsal.lugar.toLowerCase().includes('online') || selectedRehearsal.lugar.toLowerCase().includes('http'))
               ? undefined
               : selectedRehearsal.lugar,
         }
@@ -2915,14 +2514,12 @@ export default function CalendarView({
           lugar: 'Sin evento agendado',
           direccion: undefined,
           fee: '--',
-          notes:
-            'Día de descanso de la banda para composing o ensayos individuales.',
+          notes: 'Día de descanso de la banda para composing o ensayos individuales.',
           locationQuery: undefined,
         };
 
   const isLightTheme =
-    (typeof document !== 'undefined' &&
-      document.documentElement.dataset.theme === 'light') ||
+    (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') ||
     colors.name?.toLowerCase().includes('light') ||
     colors.bg.includes('f8fafc') ||
     colors.bg.includes('white') ||
@@ -2996,28 +2593,13 @@ export default function CalendarView({
         .toLowerCase();
       const cleanName = (name || '').trim().toLowerCase();
 
-      const found = effectiveBandsList.find((b) =>
-        isSameBandId(b.band_id, bandId)
-      );
-      let logoUrl =
-        found?.logoUrl ||
-        (found as any)?.logo_url ||
-        (found as any)?.imagen_url ||
-        (found as any)?.avatar_url ||
-        '';
+      const found = effectiveBandsList.find((b) => isSameBandId(b.band_id, bandId));
+      let logoUrl = found?.logoUrl || (found as any)?.logo_url || (found as any)?.imagen_url || (found as any)?.avatar_url || '';
 
       if (!logoUrl && availableBands && availableBands.length > 0) {
-        const match = availableBands.find(
-          (b: any) =>
-            isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId)
-        );
+        const match = availableBands.find((b: any) => isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId));
         if (match) {
-          logoUrl =
-            (match as any).logoUrl ||
-            (match as any).logo_url ||
-            (match as any).imagen_url ||
-            (match as any).avatar_url ||
-            '';
+          logoUrl = (match as any).logoUrl || (match as any).logo_url || (match as any).imagen_url || (match as any).avatar_url || '';
         }
       }
 
@@ -3031,29 +2613,16 @@ export default function CalendarView({
         } catch {}
       }
 
-      if (
-        !logoUrl &&
-        (isSameBandId(activeBandId, bandId) ||
-          cleanName === activeBandName?.trim().toLowerCase())
-      ) {
+      if (!logoUrl && (isSameBandId(activeBandId, bandId) || cleanName === activeBandName?.trim().toLowerCase())) {
         logoUrl = currentBandLogo || '';
       }
 
-      if (
-        !logoUrl &&
-        (cleanId === 'bakandeya' ||
-          cleanName.includes('bakandeya') ||
-          cleanId === '' ||
-          !bandId)
-      ) {
+      if (!logoUrl && (cleanId === 'bakandeya' || cleanName.includes('bakandeya') || cleanId === '' || !bandId)) {
         logoUrl = '/logo_bakandeya_bueno_sin_fondo.png';
       }
 
       const words = name.trim().split(/\s+/).filter(Boolean);
-      const initials =
-        words.length >= 2
-          ? (words[0][0] + words[1][0]).toUpperCase()
-          : name.slice(0, 2).toUpperCase();
+      const initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : name.slice(0, 2).toUpperCase();
 
       let hash = 0;
       const str = bandId || name || 'band';
@@ -3064,23 +2633,12 @@ export default function CalendarView({
 
       return { name, initials, logoUrl, palette };
     },
-    [
-      effectiveBandsList,
-      getEventBandName,
-      isSameBandId,
-      availableBands,
-      activeBandId,
-      activeBandName,
-      currentBandLogo,
-    ]
+    [effectiveBandsList, getEventBandName, isSameBandId, availableBands, activeBandId, activeBandName, currentBandLogo]
   );
 
   const getEventShareText = React.useCallback(
     (event: Concert | Rehearsal, isConcert: boolean) => {
-      const bandInfo = getBandIdentity(
-        event.band_id,
-        (event as any).bandName || (event as any).band_name
-      );
+      const bandInfo = getBandIdentity(event.band_id, (event as any).bandName || (event as any).band_name);
       const dateObj = new Date(event.fecha);
       const dateFormatted = !isNaN(dateObj.getTime())
         ? `${dateObj.getDate()} de ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`
@@ -3093,8 +2651,7 @@ export default function CalendarView({
         msg += `📅 *Fecha:* ${dateFormatted}\n`;
         msg += `⏰ *Hora Show:* 21:30h (Prueba de sonido: 18:30h)\n`;
         if (c.direccion) msg += `📍 *Dirección:* ${c.direccion}\n`;
-        if (c.cache && !isPromoPlan)
-          msg += `💰 *Caché acordado:* ${c.cache} €\n`;
+        if (c.cache && !isPromoPlan) msg += `💰 *Caché acordado:* ${c.cache} €\n`;
         if (c.giraNombre) msg += `🚐 *Gira:* ${c.giraNombre}\n`;
         if (c.entradasUrl) msg += `🎟️ *Venta de entradas:* ${c.entradasUrl}\n`;
         if (c.notas) msg += `📝 *Notas / Rider:* ${c.notas}\n`;
@@ -3137,28 +2694,18 @@ export default function CalendarView({
       navigator.clipboard.writeText(msg);
       setCopiedEventModalId(event.id);
       setTimeout(() => setCopiedEventModalId(null), 2500);
-      if (onShowNotification)
-        onShowNotification(
-          'Ficha del evento copiada al portapapeles',
-          'success'
-        );
+      if (onShowNotification) onShowNotification('Ficha del evento copiada al portapapeles', 'success');
     },
     [getEventShareText, onShowNotification]
   );
 
   const handleNotifyBandMembers = React.useCallback(
     (event: Concert | Rehearsal, isConcert: boolean) => {
-      const title = isConcert
-        ? `Concierto en ${(event as Concert).sala}`
-        : `Ensayo en ${(event as Rehearsal).lugar}`;
+      const title = isConcert ? `Concierto en ${(event as Concert).sala}` : `Ensayo en ${(event as Rehearsal).lugar}`;
       const body = `Convocatoria: ${event.fecha} a las ${isConcert ? '21:30' : (event as Rehearsal).hora}`;
       triggerNativeMobileNotification(title, { body });
       setShowReminderModal(true);
-      if (onShowNotification)
-        onShowNotification(
-          'Convocatoria enviada a los músicos de la banda',
-          'success'
-        );
+      if (onShowNotification) onShowNotification('Convocatoria enviada a los músicos de la banda', 'success');
     },
     [onShowNotification]
   );
@@ -3173,18 +2720,13 @@ export default function CalendarView({
       setDeletingEventConfirmId(null);
       setShowEventFichaModal(false);
       setSelectedEventId(null);
-      if (onShowNotification)
-        onShowNotification('Evento eliminado del calendario', 'info');
+      if (onShowNotification) onShowNotification('Evento eliminado del calendario', 'info');
     },
     [onDeleteConcert, onDeleteRehearsal, onShowNotification]
   );
 
   // Render month grid function
-  const renderMonthGrid = (
-    year: number,
-    month: number,
-    showMonthHeader: boolean = false
-  ) => {
+  const renderMonthGrid = (year: number, month: number, showMonthHeader: boolean = false) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const startOffset = (new Date(year, month, 1).getDay() + 6) % 7;
 
@@ -3196,19 +2738,12 @@ export default function CalendarView({
       cells.push({ empty: false, day: d });
     }
 
-    const isThisRealMonth =
-      realToday.getFullYear() === year && realToday.getMonth() === month;
+    const isThisRealMonth = realToday.getFullYear() === year && realToday.getMonth() === month;
 
     return (
-      <div
-        key={`month-grid-${year}-${month}`}
-        data-modulo="sala"
-        className="flex-1 min-w-[280px]"
-      >
+      <div key={`month-grid-${year}-${month}`} data-modulo="sala" className="flex-1 min-w-[280px]">
         {showMonthHeader && (
-          <div
-            className={`text-center font-bold font-display tracking-wider text-[10px] mb-3 pb-1 ${'text-[var(--acc)]'}`}
-          >
+          <div className={`text-center font-bold font-display tracking-wider text-[10px] mb-3 pb-1 ${'text-[var(--acc)]'}`}>
             {monthNames[month]} {year}
           </div>
         )}
@@ -3228,53 +2763,36 @@ export default function CalendarView({
         <div className="grid grid-cols-7 gap-1.5">
           {cells.map((cell, index) => {
             if (cell.empty) {
-              return (
-                <div
-                  key={`empty-${year}-${month}-${index}`}
-                  className="aspect-square bg-transparent rounded-[var(--r-s)]"
-                />
-              );
+              return <div key={`empty-${year}-${month}-${index}`} className="aspect-square bg-transparent rounded-[var(--r-s)]" />;
             }
 
             const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(cell.day).padStart(2, '0')}`;
-            const { concerts: dayConcerts, rehearsals: dayRehearsals } =
-              getEventsForDateStr(formattedDate);
+            const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(formattedDate);
             const dayCampaigns = getCampaignsForDate(formattedDate);
             const hasConcert = dayConcerts.length > 0;
             const hasRehearsal = dayRehearsals.length > 0;
             const hasCampaign = dayCampaigns.length > 0;
-            const activeDateCampaign =
-              dayCampaigns.find((c) => c.isActive) || dayCampaigns[0];
-            const dayEvents: Array<Concert | Rehearsal> = [
-              ...dayConcerts,
-              ...dayRehearsals,
-            ];
-            const dayWeatherAlerts = dayConcerts.flatMap((c) =>
-              getCachedEventWeatherAlerts(c.ciudad, formattedDate)
-            );
+            const activeDateCampaign = dayCampaigns.find((c) => c.isActive) || dayCampaigns[0];
+            const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
+            const dayWeatherAlerts = dayConcerts.flatMap((c) => getCachedEventWeatherAlerts(c.ciudad, formattedDate));
             const primaryAlert = dayWeatherAlerts[0];
 
             const isSelected =
-              selectedDate.getFullYear() === year &&
-              selectedDate.getMonth() === month &&
-              selectedDate.getDate() === cell.day;
+              selectedDate.getFullYear() === year && selectedDate.getMonth() === month && selectedDate.getDate() === cell.day;
 
             const isToday = isThisRealMonth && cell.day === realToday.getDate();
 
             // Stylish logic for non-selected vs event vs selected days
             let borderAndBgClass = '';
             if (isSelected) {
-              borderAndBgClass =
-                'bg-[var(--acc)] text-[var(--on-acc)] font-black scale-[1.05] z-20';
+              borderAndBgClass = 'bg-[var(--acc)] text-[var(--on-acc)] font-black scale-[1.05] z-20';
             } else if (isToday) {
-              borderAndBgClass =
-                'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold /80 hover: z-10';
+              borderAndBgClass = 'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold /80 hover: z-10';
             } else if (hasConcert && hasRehearsal) {
               borderAndBgClass =
                 'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 hover: hover:shadow-md hover:shadow-amber-0/10 text-[var(--ink)]';
             } else if (hasConcert) {
-              borderAndBgClass =
-                'bg-[var(--acc-soft)] hover: hover:shadow-md hover:shadow-amber-0/10 text-[var(--ink)]';
+              borderAndBgClass = 'bg-[var(--acc-soft)] hover: hover:shadow-md hover:shadow-amber-0/10 text-[var(--ink)]';
             } else if (hasRehearsal) {
               borderAndBgClass =
                 'bg-[var(--ok-soft)] hover:border-[var(--ok)] hover:shadow-md hover:shadow-[var(--ok)]/10 text-[var(--ink)]';
@@ -3282,8 +2800,7 @@ export default function CalendarView({
               borderAndBgClass =
                 'bg-[var(--tentative)]/10 hover:border-[var(--tentative)]/80 hover:shadow-md hover:shadow-[var(--tentative)]/20 text-[var(--tentative)]/60';
             } else {
-              borderAndBgClass =
-                'bg-[var(--surface)] hover:border-[var(--acc)] hover:bg-[var(--bg)] text-[var(--ink)]';
+              borderAndBgClass = 'bg-[var(--surface)] hover:border-[var(--acc)] hover:bg-[var(--bg)] text-[var(--ink)]';
             }
 
             return (
@@ -3304,26 +2821,17 @@ export default function CalendarView({
                     {cell.day}
                   </span>
                   <div className="flex items-center gap-1">
-                    {primaryAlert && (
-                      <CalendarWeatherBadge alert={primaryAlert} compact />
-                    )}
-                    {isToday && !isSelected && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 shrink-0 animate-ping" />
-                    )}
+                    {primaryAlert && <CalendarWeatherBadge alert={primaryAlert} compact />}
+                    {isToday && !isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 shrink-0 animate-ping" />}
                   </div>
                 </div>
 
                 {/* Mini Badges / Event Indicators con texto claro y legible */}
                 <div className="w-full space-y-0.5 sm:space-y-1 overflow-hidden">
                   {dayConcerts.slice(0, 2).map((c) => {
-                    const bandInfo = getBandIdentity(
-                      c.band_id,
-                      (c as any).bandName || (c as any).band_name
-                    );
+                    const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
                     const venueLabel = c.sala || c.ciudad || 'Concierto';
-                    const isPosible = Boolean(
-                      c.is_posible || (c as any).isPosible
-                    );
+                    const isPosible = Boolean(c.is_posible || (c as any).isPosible);
                     return (
                       <div
                         key={c.id}
@@ -3340,63 +2848,44 @@ export default function CalendarView({
                         }`}
                         title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
-                        <span className="shrink-0 text-[8.5px] leading-none">
-                          {isPosible ? '🎯' : '🎸'}
-                        </span>
-                        <span className="truncate font-extrabold tracking-tight">
-                          {venueLabel}
-                        </span>
+                        <span className="shrink-0 text-[8.5px] leading-none">{isPosible ? '🎯' : '🎸'}</span>
+                        <span className="truncate font-extrabold tracking-tight">{venueLabel}</span>
                         {c.ciudad && c.sala && (
-                          <span className="hidden md:inline opacity-75 text-[8px] shrink-0 font-normal">
-                            · {c.ciudad}
-                          </span>
+                          <span className="hidden md:inline opacity-75 text-[8px] shrink-0 font-normal">· {c.ciudad}</span>
                         )}
                       </div>
                     );
                   })}
-                  {dayRehearsals
-                    .slice(0, dayConcerts.length > 0 ? 1 : 2)
-                    .map((r) => {
-                      const isReu = r.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(
-                        r.band_id,
-                        (r as any).bandName || (r as any).band_name
-                      );
-                      const rehearsalLabel = isReu
-                        ? r.asunto || 'Reunión'
-                        : r.lugar
-                            .split(',')[0]
-                            .replace(/Rehearsal|Studios/gi, '')
-                            .trim() || 'Ensayo';
-                      return (
-                        <div
-                          key={r.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectEvent(r);
-                          }}
-                          className={`text-[8px] sm:text-[9.5px] font-sans font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
-                            isSelected
-                              ? 'bg-[var(--bg)]/25 text-[var(--acc-ink)] font-black'
-                              : isReu
-                                ? 'bg-[var(--tentative)]/25 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/35 hover:text-[var(--ink)]'
-                                : 'bg-[var(--ok)]/25 text-[var(--ink)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)]'
-                          }`}
-                          title={
-                            isReu
-                              ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}`
-                              : `Ensayo [${bandInfo.name}]: ${r.lugar}`
-                          }
-                        >
-                          <span className="shrink-0 text-[8.5px] leading-none">
-                            {isReu ? '🤝' : '🥁'}
-                          </span>
-                          <span className="truncate font-extrabold tracking-tight">
-                            {rehearsalLabel}
-                          </span>
-                        </div>
-                      );
-                    })}
+                  {dayRehearsals.slice(0, dayConcerts.length > 0 ? 1 : 2).map((r) => {
+                    const isReu = r.tipo_evento === 'reunion';
+                    const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
+                    const rehearsalLabel = isReu
+                      ? r.asunto || 'Reunión'
+                      : r.lugar
+                          .split(',')[0]
+                          .replace(/Rehearsal|Studios/gi, '')
+                          .trim() || 'Ensayo';
+                    return (
+                      <div
+                        key={r.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectEvent(r);
+                        }}
+                        className={`text-[8px] sm:text-[9.5px] font-sans font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
+                          isSelected
+                            ? 'bg-[var(--bg)]/25 text-[var(--acc-ink)] font-black'
+                            : isReu
+                              ? 'bg-[var(--tentative)]/25 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/35 hover:text-[var(--ink)]'
+                              : 'bg-[var(--ok)]/25 text-[var(--ink)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)]'
+                        }`}
+                        title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
+                      >
+                        <span className="shrink-0 text-[8.5px] leading-none">{isReu ? '🤝' : '🥁'}</span>
+                        <span className="truncate font-extrabold tracking-tight">{rehearsalLabel}</span>
+                      </div>
+                    );
+                  })}
                   {dayEvents.length > (dayConcerts.length > 0 ? 2 : 2) && (
                     <div className="text-[7.5px] sm:text-[8.5px] font-sans text-center font-bold text-[var(--acc)]/70 opacity-90">
                       +{dayEvents.length - 2} más
@@ -3422,8 +2911,7 @@ export default function CalendarView({
             const isToday = realToday.toDateString() === d.toDateString();
             const isSelected = selectedDate.toDateString() === d.toDateString();
             const dayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-            const { concerts: cList, rehearsals: rList } =
-              getEventsForDateStr(dayStr);
+            const { concerts: cList, rehearsals: rList } = getEventsForDateStr(dayStr);
             const totalEvents = cList.length + rList.length;
 
             return (
@@ -3438,18 +2926,12 @@ export default function CalendarView({
                       : 'bg-[var(--surface)] text-[var(--ink-2)] hover:border-[var(--acc)]'
                 }`}
               >
-                <span className="text-[10px] font-sans tracking-wider opacity-80">
-                  {fullWeekdays[idx].slice(0, 3)}
-                </span>
-                <span className="text-sm sm:text-base font-bold font-sans my-0.5">
-                  {d.getDate()}
-                </span>
+                <span className="text-[10px] font-sans tracking-wider opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
+                <span className="text-sm sm:text-base font-bold font-sans my-0.5">{d.getDate()}</span>
                 {totalEvents > 0 && (
                   <span
                     className={`text-[9px] px-1.5 py-0.2 rounded-full font-sans font-bold ${
-                      isSelected
-                        ? 'bg-[var(--sunken)] text-inherit'
-                        : 'bg-[var(--acc)]/20 text-[var(--acc)]'
+                      isSelected ? 'bg-[var(--sunken)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc)]'
                     }`}
                   >
                     {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}
@@ -3465,11 +2947,9 @@ export default function CalendarView({
           <div className="grid grid-cols-7 gap-2 min-w-[700px] lg:min-w-0 min-h-[420px]">
             {weekDays.map((d, idx) => {
               const isToday = realToday.toDateString() === d.toDateString();
-              const isSelected =
-                selectedDate.toDateString() === d.toDateString();
+              const isSelected = selectedDate.toDateString() === d.toDateString();
               const dayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-              const { concerts: dayConcerts, rehearsals: dayRehearsals } =
-                getEventsForDateStr(dayStr);
+              const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(dayStr);
               const campaigns = getCampaignsForDate(dayStr);
 
               return (
@@ -3495,17 +2975,10 @@ export default function CalendarView({
                         const dIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
                         const cCity = dayConcerts.find((c) => c.ciudad)?.ciudad;
                         if (!cCity) return null;
-                        const wAlerts = getCachedEventWeatherAlerts(
-                          cCity,
-                          dIso
-                        );
-                        return wAlerts[0] ? (
-                          <CalendarWeatherBadge alert={wAlerts[0]} compact />
-                        ) : null;
+                        const wAlerts = getCachedEventWeatherAlerts(cCity, dIso);
+                        return wAlerts[0] ? <CalendarWeatherBadge alert={wAlerts[0]} compact /> : null;
                       })()}
-                      {isToday && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 animate-ping shrink-0" />
-                      )}
+                      {isToday && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 animate-ping shrink-0" />}
                     </div>
                     <button
                       onClick={(e) => {
@@ -3523,14 +2996,9 @@ export default function CalendarView({
                   {/* Lista de eventos del día */}
                   <div className="flex-1 flex flex-col gap-1.5 overflow-y-auto max-h-[360px]">
                     {dayConcerts.map((c) => {
-                      const bandInfo = getBandIdentity(
-                        c.band_id,
-                        (c as any).bandName || (c as any).band_name
-                      );
+                      const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
                       const isEvtSelected = selectedEventId === c.id;
-                      const isPosible = Boolean(
-                        c.is_posible || (c as any).isPosible
-                      );
+                      const isPosible = Boolean(c.is_posible || (c as any).isPosible);
                       return (
                         <div
                           key={c.id}
@@ -3555,17 +3023,9 @@ export default function CalendarView({
                                 alt={bandInfo.name}
                                 className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 ${isPosible ? 'border-[var(--acc)]/60' : '/60'}`}
                                 onError={(e) => {
-                                  (
-                                    e.currentTarget as HTMLElement
-                                  ).style.display = 'none';
-                                  const fb =
-                                    e.currentTarget.parentElement?.querySelector(
-                                      '.fallback-initials'
-                                    );
-                                  if (fb)
-                                    (fb as HTMLElement).classList.remove(
-                                      'hidden'
-                                    );
+                                  (e.currentTarget as HTMLElement).style.display = 'none';
+                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
                                 }}
                               />
                             ) : null}
@@ -3590,27 +3050,11 @@ export default function CalendarView({
                             <span>{isPosible ? '🎯' : '🎸'}</span>
                             <span className="truncate">{c.sala}</span>
                           </div>
-                          {c.ciudad && (
-                            <div className="text-[10px] text-[var(--acc)]/70/80 truncate">
-                              📍 {c.ciudad}
-                            </div>
-                          )}
-                          <HolidayDateWarning
-                            date={c.fecha}
-                            city={c.ciudad}
-                            compact
-                            className="mt-1"
-                          />
-                          {((c as any).hora ||
-                            (c.fecha.includes('T')
-                              ? c.fecha.split('T')[1].slice(0, 5)
-                              : '')) && (
+                          {c.ciudad && <div className="text-[10px] text-[var(--acc)]/70/80 truncate">📍 {c.ciudad}</div>}
+                          <HolidayDateWarning date={c.fecha} city={c.ciudad} compact className="mt-1" />
+                          {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
                             <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">
-                              🕒{' '}
-                              {(c as any).hora ||
-                                (c.fecha.includes('T')
-                                  ? c.fecha.split('T')[1].slice(0, 5)
-                                  : '')}
+                              🕒 {(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
                             </div>
                           )}
                         </div>
@@ -3619,10 +3063,7 @@ export default function CalendarView({
 
                     {dayRehearsals.map((r) => {
                       const isReu = r.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(
-                        r.band_id,
-                        (r as any).bandName || (r as any).band_name
-                      );
+                      const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
                       const isEvtSelected = selectedEventId === r.id;
                       return (
                         <div
@@ -3648,17 +3089,9 @@ export default function CalendarView({
                                 alt={bandInfo.name}
                                 className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 ${isReu ? 'border-[var(--acc)]/60' : 'border-[var(--ok)]/60'}`}
                                 onError={(e) => {
-                                  (
-                                    e.currentTarget as HTMLElement
-                                  ).style.display = 'none';
-                                  const fb =
-                                    e.currentTarget.parentElement?.querySelector(
-                                      '.fallback-initials'
-                                    );
-                                  if (fb)
-                                    (fb as HTMLElement).classList.remove(
-                                      'hidden'
-                                    );
+                                  (e.currentTarget as HTMLElement).style.display = 'none';
+                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
                                 }}
                               />
                             ) : null}
@@ -3676,15 +3109,9 @@ export default function CalendarView({
                           </div>
                           <div className="text-[11px] font-bold text-[var(--ink)] truncate flex items-center gap-1">
                             <span>{isReu ? '🤝' : '🥁'}</span>
-                            <span className="truncate">
-                              {isReu ? r.asunto || 'Reunión' : r.lugar}
-                            </span>
+                            <span className="truncate">{isReu ? r.asunto || 'Reunión' : r.lugar}</span>
                           </div>
-                          {r.hora && (
-                            <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">
-                              🕒 {r.hora}
-                            </div>
-                          )}
+                          {r.hora && <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">🕒 {r.hora}</div>}
                         </div>
                       );
                     })}
@@ -3697,13 +3124,11 @@ export default function CalendarView({
                       </div>
                     ))}
 
-                    {dayConcerts.length === 0 &&
-                      dayRehearsals.length === 0 &&
-                      campaigns.length === 0 && (
-                        <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded /60 text-[var(--ink-2)]">
-                          <span className="text-[10px]">Sin eventos</span>
-                        </div>
-                      )}
+                    {dayConcerts.length === 0 && dayRehearsals.length === 0 && campaigns.length === 0 && (
+                      <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded /60 text-[var(--ink-2)]">
+                        <span className="text-[10px]">Sin eventos</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -3780,17 +3205,9 @@ export default function CalendarView({
 
         {dateKeys.length === 0 ? (
           <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)]">
-            <PublicoSilhouette
-              opacity={0.12}
-              size="medium"
-              className="mx-auto mb-4"
-            />
-            <p className="text-sm font-bold text-[var(--ink)]">
-              El calendario está vacío
-            </p>
-            <p className="text-xs text-[var(--ink-2)] mt-2">
-              Usa el botón"Añadir Evento" o cambia de mes para ver otras fechas
-            </p>
+            <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto mb-4" />
+            <p className="text-sm font-bold text-[var(--ink)]">El calendario está vacío</p>
+            <p className="text-xs text-[var(--ink-2)] mt-2">Usa el botón"Añadir Evento" o cambia de mes para ver otras fechas</p>
           </div>
         ) : (
           <div className="flex flex-col gap-3">
@@ -3798,8 +3215,7 @@ export default function CalendarView({
               const items = groupedByDate[dateStr];
               const d = new Date(dateStr + 'T12:00:00');
               const isToday = realToday.toDateString() === d.toDateString();
-              const isSelected =
-                selectedDate.toDateString() === d.toDateString();
+              const isSelected = selectedDate.toDateString() === d.toDateString();
               const dayName = fullWeekdays[(d.getDay() + 6) % 7];
 
               return (
@@ -3817,9 +3233,7 @@ export default function CalendarView({
                     <div className="flex items-center gap-2">
                       <span
                         className={`text-xs font-sans font-bold px-2 py-0.5 rounded ${
-                          isToday
-                            ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black'
-                            : 'bg-[var(--surface)] text-[var(--ink-2)]'
+                          isToday ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black' : 'bg-[var(--surface)] text-[var(--ink-2)]'
                         }`}
                       >
                         {dayName}, {d.getDate()} de {monthNames[d.getMonth()]}
@@ -3849,10 +3263,7 @@ export default function CalendarView({
                       const c = isConcert ? (evt as Concert) : null;
                       const r = !isConcert ? (evt as Rehearsal) : null;
                       const isReu = r?.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(
-                        evt.band_id,
-                        (evt as any).bandName || (evt as any).band_name
-                      );
+                      const bandInfo = getBandIdentity(evt.band_id, (evt as any).bandName || (evt as any).band_name);
                       const isEvtSelected = selectedEventId === evt.id;
 
                       return (
@@ -3877,17 +3288,9 @@ export default function CalendarView({
                                 alt={bandInfo.name}
                                 className="w-8 h-8 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-020"
                                 onError={(e) => {
-                                  (
-                                    e.currentTarget as HTMLElement
-                                  ).style.display = 'none';
-                                  const fb =
-                                    e.currentTarget.parentElement?.querySelector(
-                                      '.fallback-initials'
-                                    );
-                                  if (fb)
-                                    (fb as HTMLElement).classList.remove(
-                                      'hidden'
-                                    );
+                                  (e.currentTarget as HTMLElement).style.display = 'none';
+                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
                                 }}
                               />
                             ) : null}
@@ -3908,15 +3311,9 @@ export default function CalendarView({
                                         : 'bg-[var(--ok)]/20 text-[var(--ink-2)]/40'
                                   }`}
                                 >
-                                  {isConcert
-                                    ? '🎸 Concierto'
-                                    : isReu
-                                      ? '🤝 Reunión'
-                                      : '🥁 Ensayo'}
+                                  {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
                                 </span>
-                                <span className="text-xs font-bold text-[var(--ink)] truncate">
-                                  {bandInfo.name}
-                                </span>
+                                <span className="text-xs font-bold text-[var(--ink)] truncate">{bandInfo.name}</span>
                               </div>
                               <div className="text-xs text-[var(--ink-2)] font-medium truncate mt-0.5 flex items-center gap-1.5 flex-wrap">
                                 <span>
@@ -3929,13 +3326,8 @@ export default function CalendarView({
                                 {isConcert &&
                                   c?.ciudad &&
                                   (() => {
-                                    const alerts = getCachedEventWeatherAlerts(
-                                      c.ciudad,
-                                      dateStr
-                                    );
-                                    return alerts[0] ? (
-                                      <CalendarWeatherBadge alert={alerts[0]} />
-                                    ) : null;
+                                    const alerts = getCachedEventWeatherAlerts(c.ciudad, dateStr);
+                                    return alerts[0] ? <CalendarWeatherBadge alert={alerts[0]} /> : null;
                                   })()}
                               </div>
                             </div>
@@ -3943,17 +3335,11 @@ export default function CalendarView({
 
                           <div className="flex items-center gap-3 shrink-0">
                             {((evt as any).hora ||
-                              ((evt as any).fecha?.includes('T')
-                                ? (evt as any).fecha.split('T')[1].slice(0, 5)
-                                : '')) && (
+                              ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')) && (
                               <span className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1">
                                 <Clock className="w-3 h-3 text-[var(--ink-2)]" />
                                 {(evt as any).hora ||
-                                  ((evt as any).fecha?.includes('T')
-                                    ? (evt as any).fecha
-                                        .split('T')[1]
-                                        .slice(0, 5)
-                                    : '')}
+                                  ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')}
                               </span>
                             )}
                             <ChevronRight className="w-4 h-4 text-[var(--ink-2)]" />
@@ -3975,24 +3361,18 @@ export default function CalendarView({
     <div
       ref={calendarContainerRef}
       className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${'text-[var(--ink)] bg-[var(--sunken)]'} font-sans items-stretch w-full max-w-full overflow-x-hidden ${
-        isCalendarFullscreen
-          ? 'fixed inset-0 z-[9999] p-4 sm:p-6 overflow-y-auto'
-          : ''
+        isCalendarFullscreen ? 'fixed inset-0 z-[9999] p-4 sm:p-6 overflow-y-auto' : ''
       }`}
     >
       {/* LEFT: MONTH GRID CALENDAR (2/3 width) */}
-      <div
-        className={`${colors.card} p-6 flex flex-col justify-between lg:col-span-2`}
-      >
+      <div className={`${colors.card} p-6 flex flex-col justify-between lg:col-span-2`}>
         <div>
           {/* Header */}
           <div className={`pb-4 mb-4 ${''}`}>
             {/* Top title & Action buttons */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0">
-                <h4
-                  className={`text-[10px] font-sans tracking-widest ${'text-[var(--acc)]'}`}
-                >
+                <h4 className={`text-[10px] font-sans tracking-widest ${'text-[var(--acc)]'}`}>
                   Calendario de Directos, Ensayos y Reuniones
                 </h4>
                 <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
@@ -4000,42 +3380,28 @@ export default function CalendarView({
                     className="shrink-0 px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1"
                     title="Eventos visibles vs Total"
                   >
-                    <Calendar className="w-3 h-3" />{' '}
-                    {filteredConcerts.length + filteredRehearsals.length}/
+                    <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/
                     {concerts.length + rehearsals.length}
                   </span>
                   <span
                     className="shrink-0 px-2 py-0.5 rounded-full bg-[var(--ok)]/15 text-[var(--ok)] flex items-center gap-1"
                     title="Directos y conciertos públicos"
                   >
-                    <Mic className="w-3 h-3 text-[var(--ok)]" />{' '}
-                    {filteredConcerts.length} directos
+                    <Mic className="w-3 h-3 text-[var(--ok)]" /> {filteredConcerts.length} directos
                   </span>
                   <span
                     className="shrink-0 px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center gap-1"
                     title="Ensayos de banda"
                   >
                     <DoorClosed className="w-3 h-3 text-[var(--tentative)]" />{' '}
-                    {
-                      filteredRehearsals.filter(
-                        (r) => r.tipo_evento !== 'reunion'
-                      ).length
-                    }{' '}
-                    ensayos
+                    {filteredRehearsals.filter((r) => r.tipo_evento !== 'reunion').length} ensayos
                   </span>
-                  {filteredRehearsals.filter((r) => r.tipo_evento === 'reunion')
-                    .length > 0 && (
+                  {filteredRehearsals.filter((r) => r.tipo_evento === 'reunion').length > 0 && (
                     <span
                       className="shrink-0 px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)] flex items-center gap-1"
                       title="Reuniones de coordinación"
                     >
-                      <span>🤝</span>{' '}
-                      {
-                        filteredRehearsals.filter(
-                          (r) => r.tipo_evento === 'reunion'
-                        ).length
-                      }{' '}
-                      reuniones
+                      <span>🤝</span> {filteredRehearsals.filter((r) => r.tipo_evento === 'reunion').length} reuniones
                     </span>
                   )}
                 </div>
@@ -4043,19 +3409,13 @@ export default function CalendarView({
 
               {/* Action buttons */}
               <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
-                <ModuleTutorialTrigger
-                  moduleId="calendario"
-                  onClick={openTutorial}
-                  label="Guía rápida"
-                />
+                <ModuleTutorialTrigger moduleId="calendario" onClick={openTutorial} label="Guía rápida" />
 
                 {/* Unified Add Event Button (Prevents button clutter) */}
                 <div className="relative inline-block text-left">
                   <button
                     id="create-event-unified-btn"
-                    onClick={() =>
-                      setShowAddEventDropdown(!showAddEventDropdown)
-                    }
+                    onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
                     className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all cursor-pointer active:scale-95 ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold'}`}
                     title="Añadir Concierto, Ensayo o Reunión"
                   >
@@ -4066,10 +3426,7 @@ export default function CalendarView({
 
                   {showAddEventDropdown && (
                     <>
-                      <div
-                        className="fixed inset-0 z-40"
-                        onClick={() => setShowAddEventDropdown(false)}
-                      />
+                      <div className="fixed inset-0 z-40" onClick={() => setShowAddEventDropdown(false)} />
                       <div
                         className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 ${'bg-[var(--surface)]/95 text-[var(--ink)]'}`}
                       >
@@ -4170,16 +3527,12 @@ export default function CalendarView({
                 </button>
               </div>
 
-              <h2
-                className={`text-base sm:text-lg lg:text-xl font-bold font-display tracking-wider truncate min-w-0 ${textTitle}`}
-              >
+              <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display tracking-wider truncate min-w-0 ${textTitle}`}>
                 {calendarViewMode === '2m' ? (
                   <>
                     {monthNames[currentMonth]} - {monthNames[nextMonth]}{' '}
                     <span className="text-[var(--acc)] font-sans text-base">
-                      {currentYear === nextMonthYear
-                        ? currentYear
-                        : `${currentYear}/${nextMonthYear}`}
+                      {currentYear === nextMonthYear ? currentYear : `${currentYear}/${nextMonthYear}`}
                     </span>
                   </>
                 ) : calendarViewMode === 'week' ? (
@@ -4189,13 +3542,9 @@ export default function CalendarView({
                     const last = week[6];
                     return (
                       <>
-                        Semana {first.getDate()}{' '}
-                        {monthNames[first.getMonth()].slice(0, 3)} -{' '}
-                        {last.getDate()}{' '}
+                        Semana {first.getDate()} {monthNames[first.getMonth()].slice(0, 3)} - {last.getDate()}{' '}
                         {monthNames[last.getMonth()].slice(0, 3)}{' '}
-                        <span className="text-[var(--acc)] font-sans text-base">
-                          {last.getFullYear()}
-                        </span>
+                        <span className="text-[var(--acc)] font-sans text-base">{last.getFullYear()}</span>
                       </>
                     );
                   })()
@@ -4208,10 +3557,7 @@ export default function CalendarView({
                   </>
                 ) : (
                   <>
-                    {monthNames[currentMonth]}{' '}
-                    <span className="text-[var(--acc)] font-sans text-base">
-                      {currentYear}
-                    </span>
+                    {monthNames[currentMonth]} <span className="text-[var(--acc)] font-sans text-base">{currentYear}</span>
                   </>
                 )}
               </h2>
@@ -4220,13 +3566,8 @@ export default function CalendarView({
             {/* Right: View Switchers + Band Filter */}
             <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-between lg:justify-end shrink-0">
               {/* Vistas estilo Google Calendar: 1M | 2M | Semana | Agenda + Configuración */}
-              <div
-                className="relative inline-flex items-center shrink-0"
-                ref={viewConfigRef}
-              >
-                <div
-                  className={`flex items-center rounded-[var(--r-s)] p-0.5 ${'bg-[var(--sunken)]'}`}
-                >
+              <div className="relative inline-flex items-center shrink-0" ref={viewConfigRef}>
+                <div className={`flex items-center rounded-[var(--r-s)] p-0.5 ${'bg-[var(--sunken)]'}`}>
                   <button
                     id="calendar-view-1m-btn"
                     onClick={() => {
@@ -4234,9 +3575,7 @@ export default function CalendarView({
                       setTwoMonthsMode(false);
                     }}
                     title={
-                      devicePrefs[currentDeviceType] === '1'
-                        ? 'Ver 1 mes (predeterminado al iniciar en este dispositivo)'
-                        : 'Ver 1 mes'
+                      devicePrefs[currentDeviceType] === '1' ? 'Ver 1 mes (predeterminado al iniciar en este dispositivo)' : 'Ver 1 mes'
                     }
                     className={`px-2 py-0.5 text-[10px] font-sans font-bold rounded transition-all cursor-pointer ${
                       calendarViewMode === '1m'
@@ -4253,9 +3592,7 @@ export default function CalendarView({
                       setTwoMonthsMode(true);
                     }}
                     title={
-                      devicePrefs[currentDeviceType] === '2'
-                        ? 'Ver 2 meses (predeterminado al iniciar en este dispositivo)'
-                        : 'Ver 2 meses'
+                      devicePrefs[currentDeviceType] === '2' ? 'Ver 2 meses (predeterminado al iniciar en este dispositivo)' : 'Ver 2 meses'
                     }
                     className={`px-2 py-0.5 text-[10px] font-sans font-bold rounded transition-all cursor-pointer ${
                       calendarViewMode === '2m'
@@ -4296,9 +3633,7 @@ export default function CalendarView({
                     onClick={() => setShowViewConfigPopover((prev) => !prev)}
                     title="Configurar vista por defecto (1M o 2M) diferenciada por tipo de dispositivo y sincronizada en Supabase"
                     className={`px-1.5 py-0.5 text-[10px] rounded transition-all cursor-pointer flex items-center justify-center relative ${
-                      showViewConfigPopover
-                        ? 'bg-[var(--surface)]/80 text-[var(--acc)]'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                      showViewConfigPopover ? 'bg-[var(--surface)]/80 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
                     <Settings className="w-3 h-3" />
@@ -4315,25 +3650,15 @@ export default function CalendarView({
                 <button
                   id="calendar-fullscreen-btn"
                   onClick={toggleCalendarFullscreen}
-                  title={
-                    isCalendarFullscreen
-                      ? 'Salir de pantalla completa (Esc)'
-                      : 'Ver el calendario a pantalla completa'
-                  }
+                  title={isCalendarFullscreen ? 'Salir de pantalla completa (Esc)' : 'Ver el calendario a pantalla completa'}
                   className={`px-2 py-1 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
                     isCalendarFullscreen
                       ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black'
                       : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--acc)]/70 /30'
                   }`}
                 >
-                  {isCalendarFullscreen ? (
-                    <Minimize2 className="w-3.5 h-3.5" />
-                  ) : (
-                    <Maximize2 className="w-3.5 h-3.5" />
-                  )}
-                  <span className="hidden sm:inline">
-                    {isCalendarFullscreen ? 'Salir' : 'Pantalla Completa'}
-                  </span>
+                  {isCalendarFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+                  <span className="hidden sm:inline">{isCalendarFullscreen ? 'Salir' : 'Pantalla Completa'}</span>
                 </button>
 
                 {/* Popover desplegable de configuración de vista por defecto por dispositivo */}
@@ -4347,14 +3672,8 @@ export default function CalendarView({
                           <Settings className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <h4 className="text-xs font-bold font-display tracking-wider">
-                            Vista por defecto
-                          </h4>
-                          <p
-                            className={`text-[10px] font-sans ${'text-[var(--ink-2)]'}`}
-                          >
-                            Diferenciada por dispositivo · Supabase
-                          </p>
+                          <h4 className="text-xs font-bold font-display tracking-wider">Vista por defecto</h4>
+                          <p className={`text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>Diferenciada por dispositivo · Supabase</p>
                         </div>
                       </div>
                       <button
@@ -4367,9 +3686,7 @@ export default function CalendarView({
                     </div>
 
                     {/* Selector de dispositivo (Móvil vs Escritorio) */}
-                    <div
-                      className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 mb-3 ${'bg-[var(--sunken)]'}`}
-                    >
+                    <div className={`p-1 rounded-[var(--r-m)] flex items-center gap-1 mb-3 ${'bg-[var(--sunken)]'}`}>
                       <button
                         onClick={() => setSelectedConfigDevice('mobile')}
                         className={`flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
@@ -4380,14 +3697,9 @@ export default function CalendarView({
                       >
                         <Smartphone className="w-3.5 h-3.5" />
                         <span>Móvil</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--sunken)]">
-                          {devicePrefs.mobile}M
-                        </span>
+                        <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--sunken)]">{devicePrefs.mobile}M</span>
                         {currentDeviceType === 'mobile' && (
-                          <span
-                            className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"
-                            title="Dispositivo actual"
-                          />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" title="Dispositivo actual" />
                         )}
                       </button>
                       <button
@@ -4400,29 +3712,17 @@ export default function CalendarView({
                       >
                         <Monitor className="w-3.5 h-3.5" />
                         <span>Ordenador</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--sunken)]">
-                          {devicePrefs.desktop}M
-                        </span>
+                        <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--sunken)]">{devicePrefs.desktop}M</span>
                         {currentDeviceType === 'desktop' && (
-                          <span
-                            className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"
-                            title="Dispositivo actual"
-                          />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" title="Dispositivo actual" />
                         )}
                       </button>
                     </div>
 
                     <div className="mb-2">
-                      <span
-                        className={`text-[10px] font-sans block ${'text-[var(--ink-2)]'}`}
-                      >
+                      <span className={`text-[10px] font-sans block ${'text-[var(--ink-2)]'}`}>
                         Al entrar desde un{' '}
-                        <strong>
-                          {selectedConfigDevice === 'mobile'
-                            ? 'móvil o pantalla estrecha'
-                            : 'ordenador o pantalla ancha'}
-                        </strong>
-                        :
+                        <strong>{selectedConfigDevice === 'mobile' ? 'móvil o pantalla estrecha' : 'ordenador o pantalla ancha'}</strong>:
                       </span>
                     </div>
 
@@ -4430,12 +3730,7 @@ export default function CalendarView({
                       {/* Opción 1: 1 Mes */}
                       <button
                         disabled={isSavingPref}
-                        onClick={() =>
-                          handleSetDefaultMonthsForDevice(
-                            '1',
-                            selectedConfigDevice
-                          )
-                        }
+                        onClick={() => handleSetDefaultMonthsForDevice('1', selectedConfigDevice)}
                         className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start justify-between gap-3 ${
                           devicePrefs[selectedConfigDevice] === '1'
                             ? 'bg-[var(--acc)]/10 text-[var(--ink)]'
@@ -4444,9 +3739,7 @@ export default function CalendarView({
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-xs font-sans">
-                              1 Mes
-                            </span>
+                            <span className="font-bold text-xs font-sans">1 Mes</span>
                             <span
                               className={`text-[9px] font-sans px-1.5 py-0.2 rounded font-semibold ${
                                 devicePrefs[selectedConfigDevice] === '1'
@@ -4454,32 +3747,20 @@ export default function CalendarView({
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                               }`}
                             >
-                              {devicePrefs[selectedConfigDevice] === '1'
-                                ? 'Predeterminado'
-                                : 'Recomendado móvil'}
+                              {devicePrefs[selectedConfigDevice] === '1' ? 'Predeterminado' : 'Recomendado móvil'}
                             </span>
                           </div>
-                          <p
-                            className={`text-[10px] mt-1 leading-snug ${'text-[var(--ink-2)]'}`}
-                          >
-                            Vista limpia y despejada de 1 mes (por defecto en
-                            dispositivos móviles).
+                          <p className={`text-[10px] mt-1 leading-snug ${'text-[var(--ink-2)]'}`}>
+                            Vista limpia y despejada de 1 mes (por defecto en dispositivos móviles).
                           </p>
                         </div>
-                        {devicePrefs[selectedConfigDevice] === '1' && (
-                          <Check className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
-                        )}
+                        {devicePrefs[selectedConfigDevice] === '1' && <Check className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />}
                       </button>
 
                       {/* Opción 2: 2 Meses */}
                       <button
                         disabled={isSavingPref}
-                        onClick={() =>
-                          handleSetDefaultMonthsForDevice(
-                            '2',
-                            selectedConfigDevice
-                          )
-                        }
+                        onClick={() => handleSetDefaultMonthsForDevice('2', selectedConfigDevice)}
                         className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start justify-between gap-3 ${
                           devicePrefs[selectedConfigDevice] === '2'
                             ? 'bg-[var(--acc)]/10 text-[var(--ink)]'
@@ -4488,9 +3769,7 @@ export default function CalendarView({
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-xs font-sans">
-                              2 Meses
-                            </span>
+                            <span className="font-bold text-xs font-sans">2 Meses</span>
                             <span
                               className={`text-[9px] font-sans px-1.5 py-0.2 rounded font-semibold ${
                                 devicePrefs[selectedConfigDevice] === '2'
@@ -4498,21 +3777,14 @@ export default function CalendarView({
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                               }`}
                             >
-                              {devicePrefs[selectedConfigDevice] === '2'
-                                ? 'Predeterminado'
-                                : 'Recomendado ordenador'}
+                              {devicePrefs[selectedConfigDevice] === '2' ? 'Predeterminado' : 'Recomendado ordenador'}
                             </span>
                           </div>
-                          <p
-                            className={`text-[10px] mt-1 leading-snug ${'text-[var(--ink-2)]'}`}
-                          >
-                            Vista bimestral extendida (por defecto al entrar
-                            desde ordenador o pantalla grande).
+                          <p className={`text-[10px] mt-1 leading-snug ${'text-[var(--ink-2)]'}`}>
+                            Vista bimestral extendida (por defecto al entrar desde ordenador o pantalla grande).
                           </p>
                         </div>
-                        {devicePrefs[selectedConfigDevice] === '2' && (
-                          <Check className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
-                        )}
+                        {devicePrefs[selectedConfigDevice] === '2' && <Check className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />}
                       </button>
                     </div>
 
@@ -4524,18 +3796,13 @@ export default function CalendarView({
                       </div>
                     )}
 
-                    <div
-                      className={`mt-3 pt-2.510 flex items-center justify-between text-[10px] font-sans ${'text-[var(--ink-2)]'}`}
-                    >
+                    <div className={`mt-3 pt-2.510 flex items-center justify-between text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>
                       <span className="flex items-center gap-1.5">
                         <Cloud className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span>Sincronizado con Supabase</span>
                       </span>
                       <span className="font-bold text-[var(--acc)]">
-                        {selectedConfigDevice === 'mobile'
-                          ? 'Móvil'
-                          : 'Ordenador'}
-                        : {devicePrefs[selectedConfigDevice]}M
+                        {selectedConfigDevice === 'mobile' ? 'Móvil' : 'Ordenador'}: {devicePrefs[selectedConfigDevice]}M
                       </span>
                     </div>
                   </div>
@@ -4545,9 +3812,7 @@ export default function CalendarView({
 
             {/* Band Filter Mode Segment Toggle */}
             {isMultiBandUser && (
-              <div
-                className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 shrink-0 ${'bg-[var(--sunken)]'}`}
-              >
+              <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 shrink-0 ${'bg-[var(--sunken)]'}`}>
                 <button
                   id="calendar-view-all-bands-btn"
                   onClick={() => setFilterBandMode('all')}
@@ -4562,15 +3827,10 @@ export default function CalendarView({
                   <span className="truncate">Todas las bandas</span>
                   <span
                     className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-sans font-extrabold shrink-0 ${
-                      filterBandMode === 'all'
-                        ? 'bg-[var(--sunken)] text-[var(--ink)]'
-                        : 'bg-[var(--sunken)]/50 text-[var(--ink-2)]'
+                      filterBandMode === 'all' ? 'bg-[var(--sunken)] text-[var(--ink)]' : 'bg-[var(--sunken)]/50 text-[var(--ink-2)]'
                     }`}
                   >
-                    <span
-                      className="inline-flex items-center gap-0.5 text-[var(--ok)]"
-                      title={`${concerts.length} directos totales`}
-                    >
+                    <span className="inline-flex items-center gap-0.5 text-[var(--ok)]" title={`${concerts.length} directos totales`}>
                       <Mic className="w-2.5 h-2.5" />
                       {concerts.length}
                     </span>
@@ -4596,20 +3856,13 @@ export default function CalendarView({
                   title={`Filtrar solo ${activeBandName}`}
                 >
                   <Music className="w-3 h-3 shrink-0" />
-                  <span className="truncate max-w-[90px] sm:max-w-none">
-                    {activeBandName}
-                  </span>
+                  <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
                   <span
                     className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-sans font-extrabold shrink-0 ${
-                      filterBandMode === 'active'
-                        ? 'bg-[var(--sunken)] text-[var(--ink)]'
-                        : 'bg-[var(--sunken)]/50 text-[var(--ink-2)]'
+                      filterBandMode === 'active' ? 'bg-[var(--sunken)] text-[var(--ink)]' : 'bg-[var(--sunken)]/50 text-[var(--ink-2)]'
                     }`}
                   >
-                    <span
-                      className="inline-flex items-center gap-0.5 text-[var(--ok)]"
-                      title={`${activeBandConcerts.length} directos`}
-                    >
+                    <span className="inline-flex items-center gap-0.5 text-[var(--ok)]" title={`${activeBandConcerts.length} directos`}>
                       <Mic className="w-2.5 h-2.5" />
                       {activeBandConcerts.length}
                     </span>
@@ -4632,13 +3885,8 @@ export default function CalendarView({
         {syncSuccessMessage && (
           <div className="mb-4 p-2 px-3 rounded-[var(--r-s)] text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 bg-[var(--surface)]/15 text-[var(--ok)]">
             <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
-            <span className="flex-1 font-sans text-[10px]">
-              {syncSuccessMessage}
-            </span>
-            <button
-              onClick={() => setSyncSuccessMessage('')}
-              className="text-[10px] hover:opacity-80 font-bold px-1 font-sans"
-            >
+            <span className="flex-1 font-sans text-[10px]">{syncSuccessMessage}</span>
+            <button onClick={() => setSyncSuccessMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">
               ×
             </button>
           </div>
@@ -4648,13 +3896,8 @@ export default function CalendarView({
             className={`mb-4 p-2 px-3 rounded-[var(--r-s)] text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-250 ${'bg-[var(--alert)]/15 text-[var(--alert)]'}`}
           >
             <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
-            <span className="flex-1 font-sans text-[10px]">
-              {syncErrorMessage}
-            </span>
-            <button
-              onClick={() => setSyncErrorMessage('')}
-              className="text-[10px] hover:opacity-80 font-bold px-1 font-sans"
-            >
+            <span className="flex-1 font-sans text-[10px]">{syncErrorMessage}</span>
+            <button onClick={() => setSyncErrorMessage('')} className="text-[10px] hover:opacity-80 font-bold px-1 font-sans">
               ×
             </button>
           </div>
@@ -4679,8 +3922,7 @@ export default function CalendarView({
               custom={slideDirection}
               variants={{
                 enter: (direction: 'left' | 'right' | null) => ({
-                  x:
-                    direction === 'left' ? 30 : direction === 'right' ? -30 : 0,
+                  x: direction === 'left' ? 30 : direction === 'right' ? -30 : 0,
                   opacity: 0.85,
                 }),
                 center: {
@@ -4688,8 +3930,7 @@ export default function CalendarView({
                   opacity: 1,
                 },
                 exit: (direction: 'left' | 'right' | null) => ({
-                  x:
-                    direction === 'left' ? -30 : direction === 'right' ? 30 : 0,
+                  x: direction === 'left' ? -30 : direction === 'right' ? 30 : 0,
                   opacity: 0.85,
                 }),
               }}
@@ -4697,11 +3938,7 @@ export default function CalendarView({
               animate="center"
               exit="exit"
               transition={{ duration: 0.18, ease: 'easeOut' }}
-              style={
-                dragOffset !== 0
-                  ? { transform: `translateX(${dragOffset}px)` }
-                  : undefined
-              }
+              style={dragOffset !== 0 ? { transform: `translateX(${dragOffset}px)` } : undefined}
               className={`flex flex-col ${calendarViewMode === '2m' ? 'xl:flex-row gap-6' : 'gap-4'} transition-transform duration-75`}
             >
               {calendarViewMode === 'week' ? (
@@ -4710,13 +3947,8 @@ export default function CalendarView({
                 renderAgendaView()
               ) : (
                 <>
-                  {renderMonthGrid(
-                    currentYear,
-                    currentMonth,
-                    calendarViewMode === '2m'
-                  )}
-                  {calendarViewMode === '2m' &&
-                    renderMonthGrid(nextMonthYear, nextMonth, true)}
+                  {renderMonthGrid(currentYear, currentMonth, calendarViewMode === '2m')}
+                  {calendarViewMode === '2m' && renderMonthGrid(nextMonthYear, nextMonth, true)}
                 </>
               )}
             </motion.div>
@@ -4733,18 +3965,12 @@ export default function CalendarView({
               <div
                 className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-black shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--acc)]/70'}`}
               >
-                <span className="text-sm leading-none">
-                  {selectedDate.getDate()}
-                </span>
-                <span className="text-[8px] tracking-wider mt-0.5 opacity-80">
-                  {monthNames[selectedDate.getMonth()]?.slice(0, 3)}
-                </span>
+                <span className="text-sm leading-none">{selectedDate.getDate()}</span>
+                <span className="text-[8px] tracking-wider mt-0.5 opacity-80">{monthNames[selectedDate.getMonth()]?.slice(0, 3)}</span>
               </div>
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h4
-                    className={`text-sm sm:text-base font-bold font-display capitalize ${textTitle}`}
-                  >
+                  <h4 className={`text-sm sm:text-base font-bold font-display capitalize ${textTitle}`}>
                     {selectedDate.toLocaleDateString('es-ES', {
                       weekday: 'long',
                       day: 'numeric',
@@ -4754,8 +3980,7 @@ export default function CalendarView({
                   </h4>
                   {dayEventsList.length > 0 && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
-                      {dayEventsList.length}{' '}
-                      {dayEventsList.length === 1 ? 'evento' : 'eventos'}
+                      {dayEventsList.length} {dayEventsList.length === 1 ? 'evento' : 'eventos'}
                     </span>
                   )}
                 </div>
@@ -4796,14 +4021,10 @@ export default function CalendarView({
           {dayEventsList.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8">
               <PublicoSilhouette opacity={0.12} size="small" />
-              <p className={`text-xs font-medium ${textSub} mt-4`}>
-                Ningún evento programado
-              </p>
+              <p className={`text-xs font-medium ${textSub} mt-4`}>Ningún evento programado</p>
               <p className={`text-[10px] ${textMuted} mt-2 max-w-xs`}>
-                Pulsa{' '}
-                <span className="text-[var(--acc)] font-bold">+ Concierto</span>{' '}
-                o <span className="text-[var(--ok)] font-bold">+ Ensayo</span>{' '}
-                para agendar.
+                Pulsa <span className="text-[var(--acc)] font-bold">+ Concierto</span> o{' '}
+                <span className="text-[var(--ok)] font-bold">+ Ensayo</span> para agendar.
               </p>
             </div>
           ) : (
@@ -4811,9 +4032,7 @@ export default function CalendarView({
               {/* Selector de eventos si el día tiene más de uno */}
               {hasMultipleDayEvents && (
                 <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-2">
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] shrink-0 mr-1">
-                    Ver evento:
-                  </span>
+                  <span className="text-[10px] font-sans text-[var(--ink-2)] shrink-0 mr-1">Ver evento:</span>
                   {dayEventsList.map((evt) => {
                     const isActive = evt.id === activeDayEventId;
                     return (
@@ -4841,8 +4060,7 @@ export default function CalendarView({
                 (() => {
                   const bandInfo = getBandIdentity(
                     selectedConcert.band_id,
-                    (selectedConcert as any).bandName ||
-                      (selectedConcert as any).band_name
+                    (selectedConcert as any).bandName || (selectedConcert as any).band_name
                   );
                   return (
                     <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] space-y-2.5">
@@ -4857,9 +4075,7 @@ export default function CalendarView({
                             </span>
                             {selectedConcert.cache ? (
                               <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black text-[var(--acc)]/70 bg-[var(--acc)]/10">
-                                💰{' '}
-                                {selectedConcert.cache.toLocaleString('es-ES')}{' '}
-                                €
+                                💰 {selectedConcert.cache.toLocaleString('es-ES')} €
                               </span>
                             ) : null}
                             <span
@@ -4878,20 +4094,14 @@ export default function CalendarView({
                                   : 'Pendiente cobro'}
                             </span>
                           </div>
-                          <h3
-                            className={`text-base sm:text-lg font-bold font-display ${textTitle} flex items-center gap-1.5 flex-wrap`}
-                          >
+                          <h3 className={`text-base sm:text-lg font-bold font-display ${textTitle} flex items-center gap-1.5 flex-wrap`}>
                             <span>{selectedConcert.sala}</span>
                             {selectedConcert.ciudad && (
-                              <span className="text-[var(--acc)] font-normal text-sm sm:text-base">
-                                ({selectedConcert.ciudad})
-                              </span>
+                              <span className="text-[var(--acc)] font-normal text-sm sm:text-base">({selectedConcert.ciudad})</span>
                             )}
                           </h3>
                           {selectedConcert.direccion && (
-                            <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">
-                              📍 {selectedConcert.direccion}
-                            </p>
+                            <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">📍 {selectedConcert.direccion}</p>
                           )}
                         </div>
 
@@ -4951,16 +4161,11 @@ export default function CalendarView({
                       <div className="flex items-center gap-3 text-[10px] font-sans text-[var(--ink)] flex-wrap pt-1 /20">
                         {selectedConcert.aforo_total ? (
                           <span className="flex items-center gap-1">
-                            <span>👥</span> Aforo:{' '}
-                            {selectedConcert.aforo_vendido || 0} /{' '}
-                            {selectedConcert.aforo_total}
+                            <span>👥</span> Aforo: {selectedConcert.aforo_vendido || 0} / {selectedConcert.aforo_total}
                           </span>
                         ) : null}
                         <span className="flex items-center gap-1">
-                          <span>📄</span>{' '}
-                          {selectedConcert.contrato_firmado
-                            ? 'Contrato firmado'
-                            : 'Contrato pendiente'}
+                          <span>📄</span> {selectedConcert.contrato_firmado ? 'Contrato firmado' : 'Contrato pendiente'}
                         </span>
                         {selectedConcert.tipo && (
                           <span className="flex items-center gap-1 opacity-80">
@@ -4992,12 +4197,10 @@ export default function CalendarView({
                           <Edit className="w-3 h-3 text-[var(--acc)]" />
                           <span>Editar Concierto</span>
                         </button>
-                        {(selectedConcert.direccion ||
-                          selectedConcert.sala) && (
+                        {(selectedConcert.direccion || selectedConcert.sala) && (
                           <a
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                              selectedConcert.direccion ||
-                                `${selectedConcert.sala}, ${selectedConcert.ciudad}`
+                              selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -5018,15 +4221,12 @@ export default function CalendarView({
                   const isReu = selectedRehearsal.tipo_evento === 'reunion';
                   const bandInfo = getBandIdentity(
                     selectedRehearsal.band_id,
-                    (selectedRehearsal as any).bandName ||
-                      (selectedRehearsal as any).band_name
+                    (selectedRehearsal as any).bandName || (selectedRehearsal as any).band_name
                   );
                   return (
                     <div
                       className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${
-                        isReu
-                          ? 'bg-[var(--tentative)]/10/40'
-                          : 'bg-[var(--ok-soft)]/40'
+                        isReu ? 'bg-[var(--tentative)]/10/40' : 'bg-[var(--ok-soft)]/40'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -5034,9 +4234,7 @@ export default function CalendarView({
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span
                               className={`px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider ${
-                                isReu
-                                  ? 'bg-[var(--tentative)] text-[var(--ink)]'
-                                  : 'bg-[var(--ok)] text-[var(--ink)]'
+                                isReu ? 'bg-[var(--tentative)] text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--ink)]'
                               }`}
                             >
                               {isReu ? '🤝 Reunión' : '🥁 Ensayo'}
@@ -5050,12 +4248,8 @@ export default function CalendarView({
                               </span>
                             )}
                           </div>
-                          <h3
-                            className={`text-base sm:text-lg font-bold font-display ${textTitle}`}
-                          >
-                            {isReu
-                              ? selectedRehearsal.asunto || 'Reunión de Banda'
-                              : selectedRehearsal.lugar}
+                          <h3 className={`text-base sm:text-lg font-bold font-display ${textTitle}`}>
+                            {isReu ? selectedRehearsal.asunto || 'Reunión de Banda' : selectedRehearsal.lugar}
                           </h3>
                           {isReu && selectedRehearsal.enlace_reunion && (
                             <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 truncate">
@@ -5063,9 +4257,7 @@ export default function CalendarView({
                             </p>
                           )}
                           {!isReu && selectedRehearsal.notas && (
-                            <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 line-clamp-2">
-                              📝 {selectedRehearsal.notas}
-                            </p>
+                            <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 line-clamp-2">📝 {selectedRehearsal.notas}</p>
                           )}
                         </div>
 
@@ -5090,10 +4282,7 @@ export default function CalendarView({
                         let list: string[] = [];
                         if (Array.isArray(raw)) {
                           list = raw;
-                        } else if (
-                          typeof raw === 'string' &&
-                          (raw as string).trim()
-                        ) {
+                        } else if (typeof raw === 'string' && (raw as string).trim()) {
                           const s = (raw as string).trim();
                           if (s.startsWith('[') && s.endsWith(']')) {
                             try {
@@ -5111,14 +4300,9 @@ export default function CalendarView({
                         if (list.length === 0) return null;
                         return (
                           <div className="flex items-center gap-2 text-[10px] font-sans text-[var(--ink)] flex-wrap pt-110">
-                            <span className="text-[var(--ink-2)]">
-                              Convocados:
-                            </span>
+                            <span className="text-[var(--ink-2)]">Convocados:</span>
                             {list.map((a, i) => (
-                              <span
-                                key={i}
-                                className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]"
-                              >
+                              <span key={i} className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">
                                 {typeof a === 'string' ? a : String(a)}
                               </span>
                             ))}
@@ -5158,9 +4342,7 @@ export default function CalendarView({
         </div>
 
         {/* Legend */}
-        <div
-          className={`flex flex-wrap gap-4 text-[10px] font-sans pt-4 mt-6 ${'text-[var(--ink-2)]'}`}
-        >
+        <div className={`flex flex-wrap gap-4 text-[10px] font-sans pt-4 mt-6 ${'text-[var(--ink-2)]'}`}>
           <div className="flex items-center gap-1.5">
             <span className={`w-2 h-2 rounded-full ${'bg-[var(--acc)]'}`} />
             <span>Concierto</span>
@@ -5181,9 +4363,7 @@ export default function CalendarView({
       </div>
 
       {/* RIGHT: LOGISTICS & CHECKLISTS SIDEBAR (1/3 width) */}
-      <div
-        className={`${colors.card} p-5 flex flex-col justify-between lg:col-span-1`}
-      >
+      <div className={`${colors.card} p-5 flex flex-col justify-between lg:col-span-1`}>
         {selectedEventDetails.type === 'free' ? (
           <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
             {getCampaignsForDate(selectedDateKey).length > 0 ? (
@@ -5198,9 +4378,7 @@ export default function CalendarView({
                         🎯 Fecha Objetivo de Campaña
                       </span>
                       <p className="text-[11px] font-sans text-[var(--ink-2)] font-bold mt-0.5">
-                        {selectedDate.getDate()} de{' '}
-                        {monthNames[selectedDate.getMonth()]},{' '}
-                        {selectedDate.getFullYear()}
+                        {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                       </p>
                     </div>
                   </div>
@@ -5246,9 +4424,7 @@ export default function CalendarView({
                       {onNavigate && (
                         <button
                           type="button"
-                          onClick={() =>
-                            onNavigate('booking', { campaignFilter: camp.id })
-                          }
+                          onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
                           className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-sans font-bold bg-[var(--tentative)]/80/30 hover:bg-[var(--tentative)]/80/50 text-[var(--tentative)]/80 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                         >
                           <Building2 className="w-3 h-3 text-[var(--tentative)]/80" />
@@ -5261,9 +4437,7 @@ export default function CalendarView({
                         onClick={() => {
                           setConcCiudad(camp.targetCities?.[0] || 'Madrid');
                           setConcAforo(String(camp.minCapacity || 250));
-                          setConcNotas(
-                            `Concierto agendado para la campaña"${camp.name}".`
-                          );
+                          setConcNotas(`Concierto agendado para la campaña"${camp.name}".`);
                           setShowCreateModal('concert');
                         }}
                         className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-sans font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
@@ -5277,27 +4451,16 @@ export default function CalendarView({
               </div>
             ) : (
               <>
-                <div
-                  className={`p-3 rounded-full ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}
-                >
+                <div className={`p-3 rounded-full ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div>
-                  <p
-                    className={`text-xs font-sans font-bold tracking-wider ${'text-[var(--ink-2)]'}`}
-                  >
-                    {selectedDate.getDate()} de{' '}
-                    {monthNames[selectedDate.getMonth()]},{' '}
-                    {selectedDate.getFullYear()}
+                  <p className={`text-xs font-sans font-bold tracking-wider ${'text-[var(--ink-2)]'}`}>
+                    {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                   </p>
-                  <h4
-                    className={`text-sm font-bold font-display mt-1 ${textTitle}`}
-                  >
-                    Día sin eventos agendados
-                  </h4>
+                  <h4 className={`text-sm font-bold font-display mt-1 ${textTitle}`}>Día sin eventos agendados</h4>
                   <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
-                    Selecciona un día con concierto en el calendario para ver su
-                    logística y ubicación GPS.
+                    Selecciona un día con concierto en el calendario para ver su logística y ubicación GPS.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
@@ -5323,13 +4486,9 @@ export default function CalendarView({
             )}
 
             {/* Quick GPS & Upcoming Events List */}
-            <div
-              className={`w-full text-left mt-4 pt-3 space-y-2.5 ${'border-t'}`}
-            >
+            <div className={`w-full text-left mt-4 pt-3 space-y-2.5 ${'border-t'}`}>
               <div className="flex items-center justify-between gap-1 flex-wrap">
-                <div
-                  className={`flex items-center gap-1.5 text-xs font-sans font-bold tracking-wider ${'text-[var(--acc)]'}`}
-                >
+                <div className={`flex items-center gap-1.5 text-xs font-sans font-bold tracking-wider ${'text-[var(--acc)]'}`}>
                   <MapPin className="w-3.5 h-3.5" />
                   <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
                 </div>
@@ -5358,28 +4517,18 @@ export default function CalendarView({
 
               <div className="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
                 {upcomingCalendarEvents.filter((evt) => {
-                  if (upcomingFilter === 'conciertos')
-                    return evt.type === 'concierto';
-                  if (upcomingFilter === 'ensayos')
-                    return evt.type === 'ensayo';
-                  if (upcomingFilter === 'campañas')
-                    return evt.type === 'campaña';
+                  if (upcomingFilter === 'conciertos') return evt.type === 'concierto';
+                  if (upcomingFilter === 'ensayos') return evt.type === 'ensayo';
+                  if (upcomingFilter === 'campañas') return evt.type === 'campaña';
                   return true;
                 }).length === 0 ? (
-                  <p
-                    className={`text-[10px] italic text-center py-4 ${textMuted}`}
-                  >
-                    No hay próximas fechas con el filtro seleccionado.
-                  </p>
+                  <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay próximas fechas con el filtro seleccionado.</p>
                 ) : (
                   upcomingCalendarEvents
                     .filter((evt) => {
-                      if (upcomingFilter === 'conciertos')
-                        return evt.type === 'concierto';
-                      if (upcomingFilter === 'ensayos')
-                        return evt.type === 'ensayo';
-                      if (upcomingFilter === 'campañas')
-                        return evt.type === 'campaña';
+                      if (upcomingFilter === 'conciertos') return evt.type === 'concierto';
+                      if (upcomingFilter === 'ensayos') return evt.type === 'ensayo';
+                      if (upcomingFilter === 'campañas') return evt.type === 'campaña';
                       return true;
                     })
                     .map((evt) => (
@@ -5389,20 +4538,8 @@ export default function CalendarView({
                           if (evt.fecha) {
                             const p = evt.fecha.split('-');
                             if (p.length === 3) {
-                              setSelectedDate(
-                                new Date(
-                                  parseInt(p[0], 10),
-                                  parseInt(p[1], 10) - 1,
-                                  parseInt(p[2], 10)
-                                )
-                              );
-                              setViewDate(
-                                new Date(
-                                  parseInt(p[0], 10),
-                                  parseInt(p[1], 10) - 1,
-                                  1
-                                )
-                              );
+                              setSelectedDate(new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10)));
+                              setViewDate(new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, 1));
                             }
                           }
                         }}
@@ -5422,18 +4559,14 @@ export default function CalendarView({
                         >
                           <span
                             className={`text-base font-sans font-black leading-none ${
-                              evt.type === 'campaña'
-                                ? 'text-[var(--tentative)]/80'
-                                : 'text-[var(--acc)]'
+                              evt.type === 'campaña' ? 'text-[var(--tentative)]/80' : 'text-[var(--acc)]'
                             }`}
                           >
                             {evt.day}
                           </span>
                           <span
                             className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${
-                              evt.type === 'campaña'
-                                ? 'text-[var(--tentative)]/80'
-                                : 'text-[var(--acc)]/70'
+                              evt.type === 'campaña' ? 'text-[var(--tentative)]/80' : 'text-[var(--acc)]/70'
                             }`}
                           >
                             {evt.month}
@@ -5451,9 +4584,7 @@ export default function CalendarView({
                                     : 'bg-[var(--ok-soft)] text-[var(--ink)]'
                               }`}
                             >
-                              {evt.type === 'campaña'
-                                ? '🎯 Posible Bolo'
-                                : evt.type}
+                              {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
                             </span>
                             {evt.bandName && (
                               <span
@@ -5464,16 +4595,8 @@ export default function CalendarView({
                               </span>
                             )}
                           </div>
-                          <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] mt-1 truncate">
-                            {evt.title}
-                          </div>
-                          {evt.direccion && (
-                            <p
-                              className={`text-[10px] font-sans ${textSub} mt-0.5`}
-                            >
-                              📍 {evt.direccion}
-                            </p>
-                          )}
+                          <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] mt-1 truncate">{evt.title}</div>
+                          {evt.direccion && <p className={`text-[10px] font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>}
                           {evt.type !== 'campaña' ? (
                             <div className="mt-1 flex justify-center">
                               <DirectionsCard
@@ -5483,9 +4606,7 @@ export default function CalendarView({
                               />
                             </div>
                           ) : (
-                            <p className="text-[10px] font-sans text-[var(--ink-2)]/80 mt-0.5">
-                              {evt.salaOrLugar}
-                            </p>
+                            <p className="text-[10px] font-sans text-[var(--ink-2)]/80 mt-0.5">{evt.salaOrLugar}</p>
                           )}
                         </div>
                       </div>
@@ -5495,53 +4616,31 @@ export default function CalendarView({
             </div>
           </div>
         ) : (
-          <div
-            id="calendar-event-detail-sidebar"
-            className="concert-detail-view"
-          >
+          <div id="calendar-event-detail-sidebar" className="concert-detail-view">
             {/* Day details */}
-            <div
-              className={`pb-4 mb-4 flex items-center gap-3 ${'border-[var(--hair)]'}`}
-            >
+            <div className={`pb-4 mb-4 flex items-center gap-3 ${'border-[var(--hair)]'}`}>
               <div
                 className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
               >
-                <span
-                  className={`text-base font-sans font-black leading-none ${'text-[var(--acc)]'}`}
-                >
-                  {selectedDate.getDate()}
-                </span>
-                <span
-                  className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${'text-[var(--acc)]/70'}`}
-                >
-                  {monthNames[selectedDate.getMonth()]
-                    ?.slice(0, 3)
-                    .toUpperCase()}
+                <span className={`text-base font-sans font-black leading-none ${'text-[var(--acc)]'}`}>{selectedDate.getDate()}</span>
+                <span className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${'text-[var(--acc)]/70'}`}>
+                  {monthNames[selectedDate.getMonth()]?.slice(0, 3).toUpperCase()}
                 </span>
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <div
-                    className={`text-[10px] font-sans tracking-widest font-bold ${'text-[var(--acc)]'}`}
-                  >
+                  <div className={`text-[10px] font-sans tracking-widest font-bold ${'text-[var(--acc)]'}`}>
                     Logística de Ensayos y Conciertos
                   </div>
                   {(selectedConcert || selectedRehearsal) && (
                     <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
-                      🎸 Banda:{' '}
-                      {getEventBandName(selectedConcert || selectedRehearsal)}
+                      🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
                     </span>
                   )}
                 </div>
-                <h3
-                  className={`text-lg font-bold font-display tracking-wide mt-0.5 ${textTitle}`}
-                >
-                  {selectedEventTitle}
-                </h3>
+                <h3 className={`text-lg font-bold font-display tracking-wide mt-0.5 ${textTitle}`}>{selectedEventTitle}</h3>
                 <p className={`text-[10px] font-sans mt-0.5 ${textSub}`}>
-                  {selectedDate.getDate()} de{' '}
-                  {monthNames[selectedDate.getMonth()]},{' '}
-                  {selectedDate.getFullYear()}
+                  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                 </p>
               </div>
               <div className="flex flex-col gap-1.5 shrink-0 self-start">
@@ -5595,11 +4694,7 @@ export default function CalendarView({
                   <button
                     type="button"
                     onClick={() => {
-                      if (
-                        window.confirm(
-                          `¿Eliminar el concierto en ${selectedConcert.sala}? Esta acción no se puede deshacer.`
-                        )
-                      ) {
+                      if (window.confirm(`¿Eliminar el concierto en ${selectedConcert.sala}? Esta acción no se puede deshacer.`)) {
                         setSelectedEventId(null);
                         onDeleteConcert(selectedConcert.id);
                       }
@@ -5613,11 +4708,7 @@ export default function CalendarView({
                   <button
                     type="button"
                     onClick={() => {
-                      if (
-                        window.confirm(
-                          `¿Eliminar este ensayo en ${selectedRehearsal.lugar}? Esta acción no se puede deshacer.`
-                        )
-                      ) {
+                      if (window.confirm(`¿Eliminar este ensayo en ${selectedRehearsal.lugar}? Esta acción no se puede deshacer.`)) {
                         setSelectedEventId(null);
                         onDeleteRehearsal(selectedRehearsal.id);
                       }
@@ -5657,9 +4748,7 @@ export default function CalendarView({
             )}
 
             {/* Previsión Meteorológica Rápida en Panel Lateral */}
-            {(selectedConcert?.ciudad ||
-              (selectedRehearsal?.lugar &&
-                selectedRehearsal.lugar.length > 2)) && (
+            {(selectedConcert?.ciudad || (selectedRehearsal?.lugar && selectedRehearsal.lugar.length > 2)) && (
               <div className="mb-4">
                 <EventWeatherCard
                   city={
@@ -5670,71 +4759,48 @@ export default function CalendarView({
                     ''
                   }
                   dateStr={selectedDateKey}
-                  timeStr={
-                    selectedConcert
-                      ? '21:30'
-                      : selectedRehearsal?.hora || '18:00'
-                  }
+                  timeStr={selectedConcert ? '21:30' : selectedRehearsal?.hora || '18:00'}
                 />
               </div>
             )}
 
             {/* Core Info */}
-            <div
-              className={`space-y-3 mb-6 rounded-[var(--r-s)] p-3 ${'bg-[var(--surface)]'}`}
-            >
+            <div className={`space-y-3 mb-6 rounded-[var(--r-s)] p-3 ${'bg-[var(--surface)]'}`}>
               <div className="flex items-center gap-2 text-[10px]">
                 <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
                 <span className={`font-sans ${textSub}`}>Hora:</span>
-                <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>
-                  {selectedEventDetails.time}
-                </span>
+                <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
               </div>
               <div className="flex items-start gap-2 text-[10px]">
-                <MapPin
-                  className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`}
-                />
+                <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
                 <div className="flex-1">
                   <span className={`font-sans ${textSub}`}>Lugar:</span>
-                  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>
-                    {selectedEventDetails.lugar}
-                  </p>
+                  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
                   {selectedEventDetails.direccion && (
-                    <p
-                      className={`text-[10px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}
-                    >
-                      <span className="font-semibold font-sans">
-                        Dirección:
-                      </span>{' '}
-                      {selectedEventDetails.direccion}
+                    <p className={`text-[10px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
+                      <span className="font-semibold font-sans">Dirección:</span> {selectedEventDetails.direccion}
                     </p>
                   )}
                 </div>
               </div>
-              {selectedEventDetails.locationQuery &&
-                selectedEventDetails.type !== 'free' && (
-                  <div className="pt-3 mt-2.5 flex justify-center">
-                    <DirectionsCard
-                      query={selectedEventDetails.locationQuery}
-                      locationName={selectedEventDetails.lugar}
-                      address={selectedEventDetails.direccion}
-                    />
-                  </div>
-                )}
+              {selectedEventDetails.locationQuery && selectedEventDetails.type !== 'free' && (
+                <div className="pt-3 mt-2.5 flex justify-center">
+                  <DirectionsCard
+                    query={selectedEventDetails.locationQuery}
+                    locationName={selectedEventDetails.lugar}
+                    address={selectedEventDetails.direccion}
+                  />
+                </div>
+              )}
               {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-                <div
-                  className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'text-[var(--ink-2)]'}`}
-                >
+                <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'text-[var(--ink-2)]'}`}>
                   <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                   <span className={`font-sans ${textSub}`}>Compensación:</span>
-                  <span className="text-[var(--ok)] font-bold font-sans">
-                    {selectedEventDetails.fee}
-                  </span>
+                  <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
                 </div>
               )}
               {selectedEventDetails.type === 'concert' &&
-                (selectedEventDetails.entradasUrl ||
-                  selectedEventDetails.entradasLugarFisico) && (
+                (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
                   <div className="flex flex-col gap-1.5 pt-2 mt-1 /40">
                     {selectedEventDetails.entradasUrl && (
                       <a
@@ -5749,12 +4815,8 @@ export default function CalendarView({
                     {selectedEventDetails.entradasLugarFisico && (
                       <div className="flex items-center gap-2 text-[10px]">
                         <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className={`font-sans ${textSub}`}>
-                          También en:
-                        </span>
-                        <span className="font-semibold font-sans">
-                          {selectedEventDetails.entradasLugarFisico}
-                        </span>
+                        <span className={`font-sans ${textSub}`}>También en:</span>
+                        <span className="font-semibold font-sans">{selectedEventDetails.entradasLugarFisico}</span>
                       </div>
                     )}
                   </div>
@@ -5765,20 +4827,12 @@ export default function CalendarView({
                 (() => {
                   const g = selectedConcert.gastosDetalle;
                   const totalG = g
-                    ? (g.gasolina || 0) +
-                      (g.dietas || 0) +
-                      (g.alquilerVehiculo || 0) +
-                      (g.alojamiento || 0) +
-                      (g.otros || 0)
+                    ? (g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)
                     : selectedConcert.gastosEstimadosTipicos || 150;
                   const net = (selectedConcert.cache || 0) - totalG;
                   return (
-                    <div
-                      className={`flex items-center justify-between text-[10px] pt-1.5 mt-1`}
-                    >
-                      <span className={`font-sans ${textSub}`}>
-                        Rentabilidad neta:
-                      </span>
+                    <div className={`flex items-center justify-between text-[10px] pt-1.5 mt-1`}>
+                      <span className={`font-sans ${textSub}`}>Rentabilidad neta:</span>
                       <span
                         className={`font-bold font-sans px-2 py-0.5 rounded-full ${
                           net < 0
@@ -5794,9 +4848,7 @@ export default function CalendarView({
                   );
                 })()}
               {selectedEventDetails.notes && (
-                <div
-                  className={`text-[10px] font-sans italic pt-2 leading-relaxed ${'text-[var(--ink-2)] text-[var(--ink-2)]'}`}
-                >
+                <div className={`text-[10px] font-sans italic pt-2 leading-relaxed ${'text-[var(--ink-2)] text-[var(--ink-2)]'}`}>
                   &ldquo;{selectedEventDetails.notes}&rdquo;
                 </div>
               )}
@@ -5805,58 +4857,37 @@ export default function CalendarView({
                 <div className="flex items-center gap-2 text-[10px] pt-2 /60 mt-2">
                   <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
                   <span className={`font-sans ${textSub}`}>Gira:</span>
-                  <span className="font-bold font-sans text-[var(--acc)]">
-                    🚐 {selectedConcert.giraNombre}
+                  <span className="font-bold font-sans text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
+                </div>
+              )}
+
+              {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
+                <div className="flex items-center gap-2 text-[10px] pt-2 /60 mt-2">
+                  <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
+                  <span className={`font-sans ${textSub}`}>Convocatoria:</span>
+                  <span className="font-bold font-sans text-[var(--ink-2)]">
+                    {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
+                      ? 'Banda Completa'
+                      : `Parcial (${(() => {
+                          const raw: any = selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres;
+                          if (Array.isArray(raw)) return raw.join(',') || 'Seleccionados';
+                          if (typeof raw === 'string' && raw.trim()) return raw.trim();
+                          return 'Seleccionados';
+                        })()})`}
                   </span>
                 </div>
               )}
 
-              {!isPromoPlan &&
-                (selectedConcert?.convocatoria_tipo ||
-                  selectedRehearsal?.convocatoria_tipo) && (
-                  <div className="flex items-center gap-2 text-[10px] pt-2 /60 mt-2">
-                    <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
-                    <span className={`font-sans ${textSub}`}>
-                      Convocatoria:
-                    </span>
-                    <span className="font-bold font-sans text-[var(--ink-2)]">
-                      {(selectedConcert?.convocatoria_tipo ||
-                        selectedRehearsal?.convocatoria_tipo) === 'completa'
-                        ? 'Banda Completa'
-                        : `Parcial (${(() => {
-                            const raw: any =
-                              selectedConcert?.convocados_nombres ||
-                              selectedRehearsal?.convocados_nombres;
-                            if (Array.isArray(raw))
-                              return raw.join(',') || 'Seleccionados';
-                            if (typeof raw === 'string' && raw.trim())
-                              return raw.trim();
-                            return 'Seleccionados';
-                          })()})`}
-                    </span>
-                  </div>
-                )}
-
               {/* WIDGET QR DEL CONCIERTO (ACCESO RÁPIDO & CONFIGURACIÓN) */}
               {selectedConcert &&
                 (() => {
-                  const host =
-                    typeof window !== 'undefined'
-                      ? window.location.origin
-                      : 'https://bandmanager.io';
-                  const cleanCity = (selectedConcert.ciudad || '')
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]/g, '');
+                  const host = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
+                  const cleanCity = (selectedConcert.ciudad || '').toLowerCase().replace(/[^a-z0-9]/g, '');
                   const cleanSala = (selectedConcert.sala || '')
                     .toLowerCase()
                     .replace(/\s+/g, '-')
                     .replace(/[^a-z0-9-]/g, '');
-                  const bandCode = (
-                    selectedConcert.band_id ||
-                    currentBandId ||
-                    activeBandId ||
-                    ''
-                  ).replace(/^(band|reg)-/, '');
+                  const bandCode = (selectedConcert.band_id || currentBandId || activeBandId || '').replace(/^(band|reg)-/, '');
                   const defaultUrl = `${host}/unete${cleanCity || cleanSala ? `/${cleanCity}-${cleanSala}` : ''}${bandCode ? `?band=${encodeURIComponent(bandCode)}` : ''}`;
                   const targetQrUrl = selectedConcert.customQrUrl || defaultUrl;
 
@@ -5884,9 +4915,7 @@ export default function CalendarView({
                         )}
                       </div>
 
-                      <div
-                        className={`p-2 rounded-[var(--r-m)] flex items-center gap-2.5 ${'bg-[var(--surface)]'}`}
-                      >
+                      <div className={`p-2 rounded-[var(--r-m)] flex items-center gap-2.5 ${'bg-[var(--surface)]'}`}>
                         <div
                           onClick={() =>
                             onNavigate?.('fans', {
@@ -5927,9 +4956,7 @@ export default function CalendarView({
                               {copiedQrId === selectedConcert.id ? (
                                 <>
                                   <Check className="w-2.5 h-2.5 text-[var(--ok)]" />
-                                  <span className="text-[var(--ok)]">
-                                    ¡Copiado!
-                                  </span>
+                                  <span className="text-[var(--ok)]">¡Copiado!</span>
                                 </>
                               ) : (
                                 <>
@@ -5957,13 +4984,9 @@ export default function CalendarView({
                     </span>
                   </div>
 
-                  <div
-                    className={`p-2.5 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]/80/20'}`}
-                  >
+                  <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]/80/20'}`}>
                     {selectedRehearsal.asunto && (
-                      <div className="text-[11px] font-semibold text-[var(--tentative)]/80">
-                        📌 {selectedRehearsal.asunto}
-                      </div>
+                      <div className="text-[11px] font-semibold text-[var(--tentative)]/80">📌 {selectedRehearsal.asunto}</div>
                     )}
                     <div className="text-[10px] text-[var(--ink)] flex items-center gap-1.5">
                       <span>📍 {selectedRehearsal.lugar}</span>
@@ -5992,71 +5015,63 @@ export default function CalendarView({
               )}
 
               {/* REPERTORIO / SETLIST ASIGNADO */}
-              {(!isPromoPlan ||
-                hasModuleAccess(currentUser?.plan, 'repertorio')) &&
-                (selectedConcert || selectedRehearsal) && (
-                  <div className={` pt-2.5 mt-2.5 ${'text-[var(--ink-2)]'}`}>
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--acc)]">
-                        <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
-                        <span>Repertorio Asignado:</span>
-                      </div>
-                      {assignedSetlist && (
-                        <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
-                          {assignedSetlist.items?.length || 0} canciones/ítems
-                        </span>
-                      )}
+              {(!isPromoPlan || hasModuleAccess(currentUser?.plan, 'repertorio')) && (selectedConcert || selectedRehearsal) && (
+                <div className={` pt-2.5 mt-2.5 ${'text-[var(--ink-2)]'}`}>
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--acc)]">
+                      <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
+                      <span>Repertorio Asignado:</span>
                     </div>
-
-                    <select
-                      value={currentSetlistId || ''}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (selectedConcert) {
-                          onUpdateConcert(selectedConcert.id, {
-                            setlistId: val,
-                          });
-                        } else if (selectedRehearsal) {
-                          onUpdateRehearsal(selectedRehearsal.id, {
-                            setlistId: val,
-                          });
-                        }
-                      }}
-                      className={`w-full text-[10px] font-sans p-1.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer ${'bg-[var(--surface)] text-[var(--acc)] font-bold'}`}
-                    >
-                      <option value="">-- Sin repertorio asignado --</option>
-                      {availableSetlists.map((s: any) => (
-                        <option key={s.id} value={s.id}>
-                          {s.nombre} ({s.tipoFormato})
-                        </option>
-                      ))}
-                    </select>
-
                     {assignedSetlist && (
-                      <div className="mt-2.5 flex items-center gap-2">
-                        <button
-                          type="button"
-                          id="calendar-launch-stage-mode-btn"
-                          onClick={() => {
-                            setActiveStageInitialMode(
-                              selectedConcert ? 'directo' : 'ensayo'
-                            );
-                            setActiveStageSetlist(assignedSetlist);
-                          }}
-                          className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-                          title="Lanzar Modo Escenario / Vista de Directo para este evento"
-                        >
-                          <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
-                          <span>
-                            {selectedConcert
-                              ? 'Lanzar Modo Escenario'
-                              : 'Lanzar Modo Ensayo'}
-                          </span>
-                        </button>
-                      </div>
+                      <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
+                        {assignedSetlist.items?.length || 0} canciones/ítems
+                      </span>
                     )}
                   </div>
-                )}
+
+                  <select
+                    value={currentSetlistId || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (selectedConcert) {
+                        onUpdateConcert(selectedConcert.id, {
+                          setlistId: val,
+                        });
+                      } else if (selectedRehearsal) {
+                        onUpdateRehearsal(selectedRehearsal.id, {
+                          setlistId: val,
+                        });
+                      }
+                    }}
+                    className={`w-full text-[10px] font-sans p-1.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer ${'bg-[var(--surface)] text-[var(--acc)] font-bold'}`}
+                  >
+                    <option value="">-- Sin repertorio asignado --</option>
+                    {availableSetlists.map((s: any) => (
+                      <option key={s.id} value={s.id}>
+                        {s.nombre} ({s.tipoFormato})
+                      </option>
+                    ))}
+                  </select>
+
+                  {assignedSetlist && (
+                    <div className="mt-2.5 flex items-center gap-2">
+                      <button
+                        type="button"
+                        id="calendar-launch-stage-mode-btn"
+                        onClick={() => {
+                          setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
+                          setActiveStageSetlist(assignedSetlist);
+                        }}
+                        className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                        title="Lanzar Modo Escenario / Vista de Directo para este evento"
+                      >
+                        <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
+                        <span>{selectedConcert ? 'Lanzar Modo Escenario' : 'Lanzar Modo Ensayo'}</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Subtabs for Checklist */}
@@ -6100,9 +5115,7 @@ export default function CalendarView({
                 id="calendar-subtab-merchan"
                 onClick={() => setActiveTab('merchan')}
                 className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
-                  activeTab === 'merchan'
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  activeTab === 'merchan' ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >
                 <Shirt className="w-2.5 h-2.5" />
@@ -6124,9 +5137,7 @@ export default function CalendarView({
                 id="calendar-subtab-roadbook"
                 onClick={() => setActiveTab('roadbook')}
                 className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
-                  activeTab === 'roadbook'
-                    ? 'bg-[var(--ok)]/20 text-[var(--ok)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  activeTab === 'roadbook' ? 'bg-[var(--ok)]/20 text-[var(--ok)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >
                 Ruta
@@ -6135,9 +5146,7 @@ export default function CalendarView({
                 id="calendar-subtab-gear"
                 onClick={() => setActiveTab('gear')}
                 className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
-                  activeTab === 'gear'
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc)]/80 font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  activeTab === 'gear' ? 'bg-[var(--acc)]/20 text-[var(--acc)]/80 font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >
                 Cacharros
@@ -6161,23 +5170,13 @@ export default function CalendarView({
 
                   return (
                     <div className="space-y-3">
-                      <div
-                        className={`p-3 rounded-[var(--r-s)] space-y-2 ${'bg-[var(--bg)]'}`}
-                      >
+                      <div className={`p-3 rounded-[var(--r-s)] space-y-2 ${'bg-[var(--bg)]'}`}>
                         <div className="flex items-center justify-between">
-                          <span
-                            className={`text-[10px] font-sans font-bold ${'text-[var(--ok)]'}`}
-                          >
-                            📞 Contacto Producción & Hotel
-                          </span>
+                          <span className={`text-[10px] font-sans font-bold ${'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-[10px]">
                           <div>
-                            <label
-                              className={`block text-[10px] font-sans ${textSub}`}
-                            >
-                              Promotor / Sala
-                            </label>
+                            <label className={`block text-[10px] font-sans ${textSub}`}>Promotor / Sala</label>
                             <input
                               type="text"
                               value={currentRb.contactoPromotor}
@@ -6191,11 +5190,7 @@ export default function CalendarView({
                             />
                           </div>
                           <div>
-                            <label
-                              className={`block text-[10px] font-sans ${textSub}`}
-                            >
-                              Teléfono
-                            </label>
+                            <label className={`block text-[10px] font-sans ${textSub}`}>Teléfono</label>
                             <input
                               type="text"
                               value={currentRb.telefonoPromotor}
@@ -6211,11 +5206,7 @@ export default function CalendarView({
                         </div>
 
                         <div>
-                          <label
-                            className={`block text-[10px] font-sans ${textSub}`}
-                          >
-                            Hotel Alojamientos
-                          </label>
+                          <label className={`block text-[10px] font-sans ${textSub}`}>Hotel Alojamientos</label>
                           <input
                             type="text"
                             value={currentRb.hotelNombre}
@@ -6230,11 +5221,7 @@ export default function CalendarView({
                         </div>
 
                         <div>
-                          <label
-                            className={`block text-[10px] font-sans ${textSub}`}
-                          >
-                            Catering & Menús
-                          </label>
+                          <label className={`block text-[10px] font-sans ${textSub}`}>Catering & Menús</label>
                           <input
                             type="text"
                             value={currentRb.cateringInfo}
@@ -6249,14 +5236,8 @@ export default function CalendarView({
                         </div>
                       </div>
 
-                      <div
-                        className={`p-3 rounded-[var(--r-s)] space-y-1.5 ${'bg-[var(--bg)]'}`}
-                      >
-                        <span
-                          className={`text-[10px] font-sans font-bold ${'text-[var(--acc)]'}`}
-                        >
-                          🎸 Input List / Rider de Canales
-                        </span>
+                      <div className={`p-3 rounded-[var(--r-s)] space-y-1.5 ${'bg-[var(--bg)]'}`}>
+                        <span className={`text-[10px] font-sans font-bold ${'text-[var(--acc)]'}`}>🎸 Input List / Rider de Canales</span>
                         <textarea
                           rows={4}
                           value={currentRb.inputList}
@@ -6273,8 +5254,7 @@ export default function CalendarView({
                       <button
                         type="button"
                         onClick={() => {
-                          const currentRbData =
-                            allRoadbooks[selectedDateKey] || currentRb;
+                          const currentRbData = allRoadbooks[selectedDateKey] || currentRb;
                           const printWindow = window.open('', '_blank');
                           if (!printWindow) return;
                           printWindow.document.write(`
@@ -6389,15 +5369,10 @@ export default function CalendarView({
             ) : activeTab === 'tecnica' ? (
               <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
                 {(() => {
-                  const currentRb = getCurrentRoadbook(
-                    selectedDateKey,
-                    selectedConcert
-                  );
+                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                   return (
                     <div className="space-y-2.5">
-                      <div
-                        className={`p-2.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]/40'}`}
-                      >
+                      <div className={`p-2.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]/40'}`}>
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold flex items-center gap-1 text-[var(--ink-2)] font-sans text-[10px]">
                             <Wrench className="w-3 h-3" /> 1. Logística Técnica
@@ -6414,59 +5389,27 @@ export default function CalendarView({
                           </button>
                         </div>
                         <div className="grid grid-cols-2 gap-1.5 text-[9px]">
-                          <div
-                            className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}
-                          >
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">
-                              Prueba de Sonido
-                            </span>
-                            <span className="font-bold text-[var(--acc)]">
-                              {currentRb.horaPruebaSonido || '18:00'}
-                            </span>
+                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
+                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Prueba de Sonido</span>
+                            <span className="font-bold text-[var(--acc)]">{currentRb.horaPruebaSonido || '18:00'}</span>
                           </div>
-                          <div
-                            className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}
-                          >
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">
-                              Horario Show
-                            </span>
-                            <span className="font-bold text-[var(--ok)]">
-                              {currentRb.horaShow || '21:30'}
-                            </span>
+                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
+                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Horario Show</span>
+                            <span className="font-bold text-[var(--ok)]">{currentRb.horaShow || '21:30'}</span>
                           </div>
-                          <div
-                            className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}
-                          >
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">
-                              Técnico Sonido FOH
-                            </span>
-                            <span className="font-medium truncate">
-                              {currentRb.tecnicoSonido || 'Propio / Sala'}
-                            </span>
+                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
+                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Técnico Sonido FOH</span>
+                            <span className="font-medium truncate">{currentRb.tecnicoSonido || 'Propio / Sala'}</span>
                           </div>
-                          <div
-                            className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}
-                          >
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">
-                              Sistema P.A.
-                            </span>
-                            <span className="font-medium truncate">
-                              {currentRb.paEspecificaciones
-                                ? 'Especificado'
-                                : 'Estándar Sala'}
-                            </span>
+                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
+                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Sistema P.A.</span>
+                            <span className="font-medium truncate">{currentRb.paEspecificaciones ? 'Especificado' : 'Estándar Sala'}</span>
                           </div>
                         </div>
                         {currentRb.backlineInfo && (
-                          <div
-                            className={`mt-2 p-1.5 rounded text-[9px] ${'bg-[var(--surface)]'}`}
-                          >
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">
-                              Backline & Rider
-                            </span>
-                            <p className="line-clamp-2 text-[var(--ink)]">
-                              {currentRb.backlineInfo}
-                            </p>
+                          <div className={`mt-2 p-1.5 rounded text-[9px] ${'bg-[var(--surface)]'}`}>
+                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Backline & Rider</span>
+                            <p className="line-clamp-2 text-[var(--ink)]">{currentRb.backlineInfo}</p>
                           </div>
                         )}
                       </div>
@@ -6488,17 +5431,13 @@ export default function CalendarView({
             ) : activeTab === 'contactos' ? (
               <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
                 {(() => {
-                  const currentRb = getCurrentRoadbook(
-                    selectedDateKey,
-                    selectedConcert
-                  );
+                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                   const contacts = currentRb.contactosClave || [];
                   return (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-sans font-bold text-[var(--ok)] text-[10px] flex items-center gap-1">
-                          <Users className="w-3 h-3" /> 2. Contactos Clave (
-                          {contacts.length})
+                          <Users className="w-3 h-3" /> 2. Contactos Clave ({contacts.length})
                         </span>
                         <button
                           type="button"
@@ -6512,11 +5451,7 @@ export default function CalendarView({
                         </button>
                       </div>
                       {contacts.length === 0 ? (
-                        <p
-                          className={`text-[10px] italic text-center py-3 ${textMuted}`}
-                        >
-                          No hay contactos clave agregados.
-                        </p>
+                        <p className={`text-[10px] italic text-center py-3 ${textMuted}`}>No hay contactos clave agregados.</p>
                       ) : (
                         <div className="space-y-1.5">
                           {contacts.map((c) => (
@@ -6525,13 +5460,9 @@ export default function CalendarView({
                               className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${'bg-[var(--surface)]'}`}
                             >
                               <div className="min-w-0">
-                                <div className="font-bold truncate text-[10px]">
-                                  {c.nombre}
-                                </div>
+                                <div className="font-bold truncate text-[10px]">{c.nombre}</div>
                                 <div className="text-[9px] text-[var(--ink-2)] font-sans flex items-center gap-1">
-                                  <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px]">
-                                    {c.rol}
-                                  </span>
+                                  <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px]">{c.rol}</span>
                                   <span>{c.telefono}</span>
                                 </div>
                               </div>
@@ -6579,40 +5510,24 @@ export default function CalendarView({
             ) : activeTab === 'merchan' ? (
               <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
                 {(() => {
-                  const currentRb = getCurrentRoadbook(
-                    selectedDateKey,
-                    selectedConcert
-                  );
-                  const merch =
-                    currentRb.merchControl ||
-                    getDefaultRoadbook(selectedConcert).merchControl!;
+                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
+                  const merch = currentRb.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
                   const items = merch.items || [];
-                  const totalInicial = items.reduce(
-                    (acc, i) => acc + (i.stockInicial || 0),
-                    0
-                  );
-                  const totalFinal = items.reduce(
-                    (acc, i) => acc + (i.stockFinal || 0),
-                    0
-                  );
+                  const totalInicial = items.reduce((acc, i) => acc + (i.stockInicial || 0), 0);
+                  const totalFinal = items.reduce((acc, i) => acc + (i.stockFinal || 0), 0);
                   const totalVendidas = Math.max(0, totalInicial - totalFinal);
                   const totalTeorico = items.reduce(
-                    (acc, i) =>
-                      acc +
-                      Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) *
-                        (i.precioUnitario || 0),
+                    (acc, i) => acc + Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) * (i.precioUnitario || 0),
                     0
                   );
-                  const totalCobrado =
-                    (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
+                  const totalCobrado = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
                   const cuadreDiff = totalCobrado - totalTeorico;
 
                   return (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-sans font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
-                          <Shirt className="w-3 h-3" /> 3. Merch (
-                          {totalVendidas}/{totalInicial} uds)
+                          <Shirt className="w-3 h-3" /> 3. Merch ({totalVendidas}/{totalInicial} uds)
                         </span>
                         <span className="text-[9px] font-sans font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
                           {totalTeorico.toFixed(0)}€ ventas
@@ -6625,26 +5540,19 @@ export default function CalendarView({
                           <span className="text-[var(--ok)]/80 text-[8px] flex items-center gap-0.5">
                             <Banknote className="w-2.5 h-2.5" /> Efectivo
                           </span>
-                          <span className="font-bold text-[var(--ink-2)] text-[11px]">
-                            {(merch.ingresosEfectivo || 0).toFixed(0)}€
-                          </span>
+                          <span className="font-bold text-[var(--ink-2)] text-[11px]">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
                         </div>
                         <div className="p-1.5 rounded bg-[var(--ink-3)]/10 flex flex-col">
                           <span className="text-[var(--ink-2)]/80 text-[8px] flex items-center gap-0.5">
                             <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
                           </span>
-                          <span className="font-bold text-[var(--ink-3)] text-[11px]">
-                            {(merch.ingresosBizum || 0).toFixed(0)}€
-                          </span>
+                          <span className="font-bold text-[var(--ink-3)] text-[11px]">{(merch.ingresosBizum || 0).toFixed(0)}€</span>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between text-[8.5px] font-sans px-1 py-0.5 rounded bg-[var(--surface)]/60">
                         <span className="text-[var(--ink-2)]">
-                          Total cobrado:{' '}
-                          <strong className="text-[var(--ink)]">
-                            {totalCobrado.toFixed(0)}€
-                          </strong>
+                          Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong>
                         </span>
                         <span
                           className={`font-bold ${cuadreDiff === 0 ? 'text-[var(--ok)]' : cuadreDiff > 0 ? 'text-[var(--ink-2)]' : 'text-[var(--acc)]'}`}
@@ -6660,10 +5568,7 @@ export default function CalendarView({
                       {/* Stock furgoneta vs fin */}
                       <div className="space-y-1">
                         {items.slice(0, 4).map((item) => {
-                          const vendidas = Math.max(
-                            0,
-                            (item.stockInicial || 0) - (item.stockFinal || 0)
-                          );
+                          const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
                           return (
                             <div
                               key={item.id}
@@ -6671,21 +5576,15 @@ export default function CalendarView({
                             >
                               <div className="truncate pr-2">
                                 <p className="font-medium truncate text-[9.5px]">
-                                  {item.nombre}{' '}
-                                  {item.talla ? `(${item.talla})` : ''}
+                                  {item.nombre} {item.talla ? `(${item.talla})` : ''}
                                 </p>
                                 <p className="text-[8px] text-[var(--ink-2)] font-sans">
-                                  {item.stockInicial} furgón ➔ {item.stockFinal}{' '}
-                                  quedan
+                                  {item.stockInicial} furgón ➔ {item.stockFinal} quedan
                                 </p>
                               </div>
                               <div className="text-right shrink-0">
-                                <span className="text-[9px] font-sans font-bold text-[var(--acc)]">
-                                  {vendidas} vend.
-                                </span>
-                                <p className="text-[8px] font-sans text-[var(--ink-2)]">
-                                  {(vendidas * item.precioUnitario).toFixed(0)}€
-                                </p>
+                                <span className="text-[9px] font-sans font-bold text-[var(--acc)]">{vendidas} vend.</span>
+                                <p className="text-[8px] font-sans text-[var(--ink-2)]">{(vendidas * item.precioUnitario).toFixed(0)}€</p>
                               </div>
                             </div>
                           );
@@ -6716,22 +5615,15 @@ export default function CalendarView({
             ) : activeTab === 'cierre' ? (
               <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
                 {(() => {
-                  const currentRb = getCurrentRoadbook(
-                    selectedDateKey,
-                    selectedConcert
-                  );
+                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                   const items = currentRb.cierreMaterial || [];
                   const checkedCount = items.filter((i) => i.checked).length;
-                  const progress =
-                    items.length > 0
-                      ? Math.round((checkedCount / items.length) * 100)
-                      : 0;
+                  const progress = items.length > 0 ? Math.round((checkedCount / items.length) * 100) : 0;
                   return (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-sans font-bold text-[var(--tentative)] text-[10px] flex items-center gap-1">
-                          <ShieldCheck className="w-3 h-3" /> 5. Cierre Material
-                          ({checkedCount}/{items.length})
+                          <ShieldCheck className="w-3 h-3" /> 5. Cierre Material ({checkedCount}/{items.length})
                         </span>
                         <span
                           className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80'}`}
@@ -6749,9 +5641,7 @@ export default function CalendarView({
                         {items.map((item) => (
                           <div
                             key={item.id}
-                            onClick={() =>
-                              handleToggleCierreItem(item.id, selectedDateKey)
-                            }
+                            onClick={() => handleToggleCierreItem(item.id, selectedDateKey)}
                             className={`p-1.5 rounded flex items-center gap-2 cursor-pointer transition-colors ${
                               item.checked
                                 ? 'bg-[var(--ok-soft)]/70 text-[var(--ink-2)] line-through'
@@ -6764,9 +5654,7 @@ export default function CalendarView({
                               onChange={() => {}}
                               className="rounded text-[var(--tentative)] h-3 w-3 cursor-pointer"
                             />
-                            <span className="flex-1 truncate text-[9.5px]">
-                              {item.item}
-                            </span>
+                            <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
                             <span className="text-[8px] font-sans px-1 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] shrink-0">
                               {item.categoria}
                             </span>
@@ -6793,10 +5681,7 @@ export default function CalendarView({
                 {/* Form to add new item */}
                 <div className="mb-3">
                   {activeTab === 'runofshow' ? (
-                    <form
-                      onSubmit={handleAddRunOfShow}
-                      className="flex gap-1.5 items-center"
-                    >
+                    <form onSubmit={handleAddRunOfShow} className="flex gap-1.5 items-center">
                       <input
                         type="text"
                         placeholder="17:30"
@@ -6820,10 +5705,7 @@ export default function CalendarView({
                       </button>
                     </form>
                   ) : (
-                    <form
-                      onSubmit={handleAddGear}
-                      className="flex gap-1.5 items-center"
-                    >
+                    <form onSubmit={handleAddGear} className="flex gap-1.5 items-center">
                       <input
                         type="text"
                         placeholder="Añadir instrumento, cable o cacharro de directo..."
@@ -6846,11 +5728,7 @@ export default function CalendarView({
                 <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
                   {activeTab === 'runofshow' ? (
                     currentRunOfShow.length === 0 ? (
-                      <p
-                        className={`text-[10px] italic text-center py-4 ${textMuted}`}
-                      >
-                        No hay horarios registrados para este día.
-                      </p>
+                      <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay horarios registrados para este día.</p>
                     ) : (
                       currentRunOfShow.map((item) => {
                         const isItemDone = item.done;
@@ -6866,16 +5744,12 @@ export default function CalendarView({
                           >
                             <span
                               className={`font-sans text-[10px] font-bold shrink-0 ${
-                                isItemDone
-                                  ? 'text-[var(--ink-2)]'
-                                  : 'text-[var(--acc)]'
+                                isItemDone ? 'text-[var(--ink-2)]' : 'text-[var(--acc)]'
                               }`}
                             >
                               {item.time}
                             </span>
-                            <p className="text-[10px] font-sans leading-normal flex-1">
-                              {item.activity}
-                            </p>
+                            <p className="text-[10px] font-sans leading-normal flex-1">{item.activity}</p>
                             <button
                               type="button"
                               onClick={(e) => handleDeleteRunOfShow(item.id, e)}
@@ -6889,11 +5763,7 @@ export default function CalendarView({
                       })
                     )
                   ) : currentGear.length === 0 ? (
-                    <p
-                      className={`text-[10px] italic text-center py-4 ${textMuted}`}
-                    >
-                      No hay material registrado para este día.
-                    </p>
+                    <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay material registrado para este día.</p>
                   ) : (
                     currentGear.map((item) => {
                       const isChecked = item.checked;
@@ -6913,9 +5783,7 @@ export default function CalendarView({
                             onChange={() => {}} // handled by div click
                             className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${'-[#99907c]/40 text-[var(--acc)] bg-[var(--surface)]'}`}
                           />
-                          <p className="text-[10px] font-sans leading-normal flex-1">
-                            {item.label}
-                          </p>
+                          <p className="text-[10px] font-sans leading-normal flex-1">{item.label}</p>
                           <button
                             type="button"
                             onClick={(e) => handleDeleteGear(item.id, e)}
@@ -6935,9 +5803,7 @@ export default function CalendarView({
         )}
 
         {/* Footer info */}
-        <div
-          className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-sans ${'text-[var(--ink-2)] text-[var(--ink-2)]'}`}
-        >
+        <div className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-sans ${'text-[var(--ink-2)] text-[var(--ink-2)]'}`}>
           <span>Huso Horario: Madrid (UTC+2)</span>
           <span className="text-[var(--ok)]">● Sincronizado</span>
         </div>
@@ -7039,16 +5905,12 @@ export default function CalendarView({
                 <div>
                   <h3 className="font-bold text-base font-display">
                     {showCreateModal === 'concert' &&
-                      (concIsPosible
-                        ? 'Crear Concierto Posible (Bolo Tentativo)'
-                        : 'Crear Nuevo Concierto')}
+                      (concIsPosible ? 'Crear Concierto Posible (Bolo Tentativo)' : 'Crear Nuevo Concierto')}
                     {showCreateModal === 'rehearsal' && 'Crear Nuevo Ensayo'}
                     {showCreateModal === 'reunion' && 'Crear Nueva Reunión'}
                   </h3>
                   <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                    Fecha: {selectedDate.getDate()} de{' '}
-                    {monthNames[selectedDate.getMonth()]},{' '}
-                    {selectedDate.getFullYear()}
+                    Fecha: {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                   </p>
                 </div>
               </div>
@@ -7072,9 +5934,7 @@ export default function CalendarView({
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Horario
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario</label>
                       <input
                         type="text"
                         value={reuHora}
@@ -7085,9 +5945,7 @@ export default function CalendarView({
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Lugar / Plataforma
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Plataforma</label>
                       <input
                         type="text"
                         value={reuLugar}
@@ -7115,14 +5973,10 @@ export default function CalendarView({
 
                   {isMultiBandUser && (
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Banda del Evento
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
                       <select
                         value={selectedBandIdForNewEvent}
-                        onChange={(e) =>
-                          setSelectedBandIdForNewEvent(e.target.value)
-                        }
+                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                         className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                       >
                         {effectiveBandsList.map((b) => (
@@ -7146,56 +6000,37 @@ export default function CalendarView({
                         const val = e.target.value as 'completa' | 'parcial';
                         setConvocatoriaTipo(val);
                         if (val === 'completa') {
-                          setConvocadosIds(
-                            effectiveBandMembers.map((m) => m.id)
-                          );
+                          setConvocadosIds(effectiveBandMembers.map((m) => m.id));
                         }
                       }}
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     >
-                      <option value="completa">
-                        Toda la Banda (Todos los miembros convocados)
-                      </option>
-                      <option value="parcial">
-                        Convocatoria Parcial (Seleccionar miembros)
-                      </option>
+                      <option value="completa">Toda la Banda (Todos los miembros convocados)</option>
+                      <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
                     </select>
 
                     {convocatoriaTipo === 'parcial' && (
-                      <div
-                        className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}
-                      >
-                        <span className="font-sans font-bold block text-[var(--ink-2)]">
-                          Selecciona miembros convocados:
-                        </span>
+                      <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}>
+                        <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
                         <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
                           {effectiveBandMembers.map((member) => {
                             const isChecked = convocadosIds.includes(member.id);
                             return (
-                              <label
-                                key={member.id}
-                                className="flex items-center gap-2 cursor-pointer select-none font-sans"
-                              >
+                              <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
                                 <input
                                   type="checkbox"
                                   checked={isChecked}
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      setConvocadosIds((prev) => [
-                                        ...prev,
-                                        member.id,
-                                      ]);
+                                      setConvocadosIds((prev) => [...prev, member.id]);
                                     } else {
-                                      setConvocadosIds((prev) =>
-                                        prev.filter((id) => id !== member.id)
-                                      );
+                                      setConvocadosIds((prev) => prev.filter((id) => id !== member.id));
                                     }
                                   }}
                                   className="rounded text-[var(--tentative)] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
                                 />
                                 <span>
-                                  {member.name}{' '}
-                                  {member.role === 'leader' ? '(Líder)' : ''}
+                                  {member.name} {member.role === 'leader' ? '(Líder)' : ''}
                                 </span>
                               </label>
                             );
@@ -7206,9 +6041,7 @@ export default function CalendarView({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Orden del Día / Notas
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Orden del Día / Notas</label>
                     <textarea
                       value={rehNotas}
                       onChange={(e) => setRehNotas(e.target.value)}
@@ -7240,9 +6073,7 @@ export default function CalendarView({
               {showCreateModal === 'rehearsal' && (
                 <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Horario del Ensayo
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario del Ensayo</label>
                     <input
                       type="text"
                       value={rehTime}
@@ -7254,9 +6085,7 @@ export default function CalendarView({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Lugar / Local
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Local</label>
                     <input
                       type="text"
                       value={rehLugar}
@@ -7269,14 +6098,10 @@ export default function CalendarView({
 
                   {isMultiBandUser && (
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Banda del Evento
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
                       <select
                         value={selectedBandIdForNewEvent}
-                        onChange={(e) =>
-                          setSelectedBandIdForNewEvent(e.target.value)
-                        }
+                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                         className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                       >
                         {effectiveBandsList.map((b) => (
@@ -7300,73 +6125,51 @@ export default function CalendarView({
                         const val = e.target.value as 'completa' | 'parcial';
                         setConvocatoriaTipo(val);
                         if (val === 'completa') {
-                          setConvocadosIds(
-                            effectiveBandMembers.map((m) => m.id)
-                          );
+                          setConvocadosIds(effectiveBandMembers.map((m) => m.id));
                         }
                       }}
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     >
-                      <option value="completa">
-                        Banda Completa (Todos los miembros convocados)
-                      </option>
-                      <option value="parcial">
-                        Convocatoria Parcial (Seleccionar miembros)
-                      </option>
+                      <option value="completa">Banda Completa (Todos los miembros convocados)</option>
+                      <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
                     </select>
 
                     {convocatoriaTipo === 'parcial' && (
-                      <div
-                        className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}
-                      >
-                        <span className="font-sans font-bold block text-[var(--ink-2)]">
-                          Selecciona miembros convocados:
-                        </span>
+                      <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}>
+                        <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
                         <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
                           {effectiveBandMembers.map((member) => {
                             const isChecked = convocadosIds.includes(member.id);
                             return (
-                              <label
-                                key={member.id}
-                                className="flex items-center gap-2 cursor-pointer select-none font-sans"
-                              >
+                              <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
                                 <input
                                   type="checkbox"
                                   checked={isChecked}
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      setConvocadosIds((prev) => [
-                                        ...prev,
-                                        member.id,
-                                      ]);
+                                      setConvocadosIds((prev) => [...prev, member.id]);
                                     } else {
-                                      setConvocadosIds((prev) =>
-                                        prev.filter((id) => id !== member.id)
-                                      );
+                                      setConvocadosIds((prev) => prev.filter((id) => id !== member.id));
                                     }
                                   }}
                                   className="rounded text-[var(--acc)] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
                                 />
                                 <span>
-                                  {member.name}{' '}
-                                  {member.role === 'leader' ? '(Líder)' : ''}
+                                  {member.name} {member.role === 'leader' ? '(Líder)' : ''}
                                 </span>
                               </label>
                             );
                           })}
                         </div>
                         <p className="text-[9px] text-[var(--acc)] font-sans italic mt-1">
-                          * Este ensayo solo aparecerá en el calendario de los
-                          miembros convocados.
+                          * Este ensayo solo aparecerá en el calendario de los miembros convocados.
                         </p>
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Estado
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado</label>
                     <select
                       value={rehEstado}
                       onChange={(e) => setRehEstado(e.target.value as any)}
@@ -7386,10 +6189,7 @@ export default function CalendarView({
                       </span>
                       {rehSetlistId && (
                         <span className="text-[9px] font-sans text-[var(--ok)]">
-                          {availableSetlists.find(
-                            (s: any) => s.id === rehSetlistId
-                          )?.items?.length || 0}{' '}
-                          temas
+                          {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
                         </span>
                       )}
                     </label>
@@ -7401,25 +6201,15 @@ export default function CalendarView({
                       <option value="">-- Sin repertorio asignado --</option>
                       {availableSetlists.map((s: any) => (
                         <option key={s.id} value={s.id}>
-                          {s.nombre}{' '}
-                          {s.tipoFormato
-                            ? `(${s.tipoFormato.replace('_', '')})`
-                            : ''}{' '}
-                          •{' '}
-                          {s.items?.filter((i: any) => i.tipoItem === 'cancion')
-                            ?.length ??
-                            s.items?.length ??
-                            0}{' '}
-                          temas
+                          {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
+                          {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
                         </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Notas / Objetivo del Ensayo
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
                     <textarea
                       value={rehNotas}
                       onChange={(e) => setRehNotas(e.target.value)}
@@ -7452,9 +6242,7 @@ export default function CalendarView({
                 <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Ciudad
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
                       <input
                         type="text"
                         value={concCiudad}
@@ -7465,9 +6253,7 @@ export default function CalendarView({
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Sala / Recinto
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sala / Recinto</label>
                       <input
                         type="text"
                         value={concSala}
@@ -7480,9 +6266,7 @@ export default function CalendarView({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Dirección Exacta
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Dirección Exacta</label>
                     <input
                       type="text"
                       value={concDireccion}
@@ -7497,9 +6281,7 @@ export default function CalendarView({
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Caché (€)
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Caché (€)</label>
                       <input
                         type="number"
                         value={concCache}
@@ -7509,14 +6291,10 @@ export default function CalendarView({
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Estado de Pago
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado de Pago</label>
                       <select
                         value={concEstadoPago}
-                        onChange={(e) =>
-                          setConcEstadoPago(e.target.value as any)
-                        }
+                        onChange={(e) => setConcEstadoPago(e.target.value as any)}
                         className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                       >
                         <option value="pendiente">Pendiente</option>
@@ -7528,14 +6306,10 @@ export default function CalendarView({
 
                   {isMultiBandUser && (
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Banda del Evento
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
                       <select
                         value={selectedBandIdForNewEvent}
-                        onChange={(e) =>
-                          setSelectedBandIdForNewEvent(e.target.value)
-                        }
+                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
                         className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                       >
                         {effectiveBandsList.map((b) => (
@@ -7555,10 +6329,7 @@ export default function CalendarView({
                       </span>
                       {concSetlistId && (
                         <span className="text-[9px] font-sans text-[var(--ok)]">
-                          {availableSetlists.find(
-                            (s: any) => s.id === concSetlistId
-                          )?.items?.length || 0}{' '}
-                          temas
+                          {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
                         </span>
                       )}
                     </label>
@@ -7570,16 +6341,8 @@ export default function CalendarView({
                       <option value="">-- Sin repertorio asignado --</option>
                       {availableSetlists.map((s: any) => (
                         <option key={s.id} value={s.id}>
-                          {s.nombre}{' '}
-                          {s.tipoFormato
-                            ? `(${s.tipoFormato.replace('_', '')})`
-                            : ''}{' '}
-                          •{' '}
-                          {s.items?.filter((i: any) => i.tipoItem === 'cancion')
-                            ?.length ??
-                            s.items?.length ??
-                            0}{' '}
-                          temas
+                          {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
+                          {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
                         </option>
                       ))}
                     </select>
@@ -7651,9 +6414,7 @@ export default function CalendarView({
                   <Sparkles className="w-5 h-5" />
                 </span>
                 <div>
-                  <h3 className="font-bold text-base font-display">
-                    Ficha del Concierto
-                  </h3>
+                  <h3 className="font-bold text-base font-display">Ficha del Concierto</h3>
                   <p className="text-[10px] font-sans text-[var(--ink-2)]">
                     {viewingConcert.sala} · {viewingConcert.ciudad}
                   </p>
@@ -7663,33 +6424,21 @@ export default function CalendarView({
               <form onSubmit={handleSaveConcertEdit} className="space-y-3.5">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Ciudad
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
                     <input
                       type="text"
                       value={editDraft.ciudad}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev ? { ...prev, ciudad: e.target.value } : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, ciudad: e.target.value } : prev))}
                       required
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Sala / Evento
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sala / Evento</label>
                     <input
                       type="text"
                       value={editDraft.sala}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev ? { ...prev, sala: e.target.value } : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
                       required
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
@@ -7697,62 +6446,34 @@ export default function CalendarView({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Fecha
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Fecha</label>
                   <input
                     type="date"
                     value={editDraft.fecha}
-                    onChange={(e) =>
-                      setEditDraft((prev) =>
-                        prev ? { ...prev, fecha: e.target.value } : prev
-                      )
-                    }
+                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
                     required
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   />
                 </div>
 
-                <div
-                  className={
-                    isPromoPlan
-                      ? 'grid grid-cols-1 gap-3'
-                      : 'grid grid-cols-2 gap-3'
-                  }
-                >
+                <div className={isPromoPlan ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-2 gap-3'}>
                   {!isPromoPlan && (
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                        Caché (€)
-                      </label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Caché (€)</label>
                       <input
                         type="number"
                         value={editDraft.cache}
-                        onChange={(e) =>
-                          setEditDraft((prev) =>
-                            prev
-                              ? { ...prev, cache: Number(e.target.value) }
-                              : prev
-                          )
-                        }
+                        onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, cache: Number(e.target.value) } : prev))}
                         className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                       />
                     </div>
                   )}
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Aforo Máximo
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Aforo Máximo</label>
                     <input
                       type="number"
                       value={editDraft.aforo_total}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev
-                            ? { ...prev, aforo_total: Number(e.target.value) }
-                            : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, aforo_total: Number(e.target.value) } : prev))}
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
@@ -7760,35 +6481,21 @@ export default function CalendarView({
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Dirección de la Sala
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Dirección de la Sala</label>
                     <input
                       type="text"
                       value={editDraft.direccion || ''}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev ? { ...prev, direccion: e.target.value } : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, direccion: e.target.value } : prev))}
                       placeholder="ej. C/ San Vicente 34"
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Entradas Vendidas
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Entradas Vendidas</label>
                     <input
                       type="number"
                       value={editDraft.aforo_vendido || 0}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev
-                            ? { ...prev, aforo_vendido: Number(e.target.value) }
-                            : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, aforo_vendido: Number(e.target.value) } : prev))}
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
@@ -7803,29 +6510,17 @@ export default function CalendarView({
                     <input
                       type="url"
                       value={editDraft.entradasUrl || ''}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev ? { ...prev, entradasUrl: e.target.value } : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, entradasUrl: e.target.value } : prev))}
                       placeholder="https://taquilla.com/tu-concierto"
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Punto de Venta Físico
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Punto de Venta Físico</label>
                     <input
                       type="text"
                       value={editDraft.entradasLugarFisico || ''}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev
-                            ? { ...prev, entradasLugarFisico: e.target.value }
-                            : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, entradasLugarFisico: e.target.value } : prev))}
                       placeholder="ej. Potential Hardcore, Vallecas"
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
@@ -7834,16 +6529,10 @@ export default function CalendarView({
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Tipo de Evento
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Tipo de Evento</label>
                     <select
                       value={editDraft.tipo}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev ? { ...prev, tipo: e.target.value as any } : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, tipo: e.target.value as any } : prev))}
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     >
                       <option value="propio">Concierto Propio</option>
@@ -7852,18 +6541,10 @@ export default function CalendarView({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                      Estado de Pago
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado de Pago</label>
                     <select
                       value={editDraft.estado_pago}
-                      onChange={(e) =>
-                        setEditDraft((prev) =>
-                          prev
-                            ? { ...prev, estado_pago: e.target.value as any }
-                            : prev
-                        )
-                      }
+                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     >
                       <option value="pendiente">Pendiente</option>
@@ -7874,26 +6555,18 @@ export default function CalendarView({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Idioma del formulario"Únete" (QR de fans)
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Idioma del formulario"Únete" (QR de fans)</label>
                   <select
                     value={editDraft.idioma || ''}
-                    onChange={(e) =>
-                      setEditDraft((prev) =>
-                        prev ? { ...prev, idioma: e.target.value } : prev
-                      )
-                    }
+                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, idioma: e.target.value } : prev))}
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   >
                     <option value="">Español (por defecto)</option>
-                    {FAN_FORM_LANGUAGES.filter((l) => l.code !== 'es').map(
-                      (l) => (
-                        <option key={l.code} value={l.code}>
-                          {l.flag} {l.label}
-                        </option>
-                      )
-                    )}
+                    {FAN_FORM_LANGUAGES.filter((l) => l.code !== 'es').map((l) => (
+                      <option key={l.code} value={l.code}>
+                        {l.flag} {l.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -7902,19 +6575,10 @@ export default function CalendarView({
                     type="checkbox"
                     id="editContrato"
                     checked={editDraft.contrato_firmado}
-                    onChange={(e) =>
-                      setEditDraft((prev) =>
-                        prev
-                          ? { ...prev, contrato_firmado: e.target.checked }
-                          : prev
-                      )
-                    }
+                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, contrato_firmado: e.target.checked } : prev))}
                     className="rounded text-[var(--acc)] focus:ring-0 w-4 h-4 cursor-pointer"
                   />
-                  <label
-                    htmlFor="editContrato"
-                    className="text-[10px] font-sans cursor-pointer select-none"
-                  >
+                  <label htmlFor="editContrato" className="text-[10px] font-sans cursor-pointer select-none">
                     Contrato firmado y verificado
                   </label>
                 </div>
@@ -7923,14 +6587,8 @@ export default function CalendarView({
                   <input
                     type="checkbox"
                     id="editIsPosibleCheck"
-                    checked={Boolean(
-                      editDraft.is_posible ?? (editDraft as any).isPosible
-                    )}
-                    onChange={(e) =>
-                      setEditDraft((prev) =>
-                        prev ? { ...prev, is_posible: e.target.checked } : prev
-                      )
-                    }
+                    checked={Boolean(editDraft.is_posible ?? (editDraft as any).isPosible)}
+                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, is_posible: e.target.checked } : prev))}
                     className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
                   />
                   <label
@@ -7949,53 +6607,30 @@ export default function CalendarView({
                     </span>
                     {editDraft.setlistId && (
                       <span className="text-[9px] font-sans text-[var(--ok)]">
-                        {availableSetlists.find(
-                          (s: any) => s.id === editDraft.setlistId
-                        )?.items?.length || 0}{' '}
-                        temas
+                        {availableSetlists.find((s: any) => s.id === editDraft.setlistId)?.items?.length || 0} temas
                       </span>
                     )}
                   </label>
                   <select
                     value={editDraft.setlistId || ''}
-                    onChange={(e) =>
-                      setEditDraft((prev) =>
-                        prev
-                          ? { ...prev, setlistId: e.target.value || undefined }
-                          : prev
-                      )
-                    }
+                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, setlistId: e.target.value || undefined } : prev))}
                     className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   >
                     <option value="">-- Sin repertorio asignado --</option>
                     {availableSetlists.map((s: any) => (
                       <option key={s.id} value={s.id}>
-                        {s.nombre}{' '}
-                        {s.tipoFormato
-                          ? `(${s.tipoFormato.replace('_', '')})`
-                          : ''}{' '}
-                        •{' '}
-                        {s.items?.filter((i: any) => i.tipoItem === 'cancion')
-                          ?.length ??
-                          s.items?.length ??
-                          0}{' '}
-                        temas
+                        {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
+                        {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Notas / Cláusulas Técnicas
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Cláusulas Técnicas</label>
                   <textarea
                     value={editDraft.notas}
-                    onChange={(e) =>
-                      setEditDraft((prev) =>
-                        prev ? { ...prev, notas: e.target.value } : prev
-                      )
-                    }
+                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                     rows={2}
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   />
@@ -8043,17 +6678,11 @@ export default function CalendarView({
                       : 'bg-[var(--surface)]/15 text-[var(--ok)]'
                   }`}
                 >
-                  {editRehearsalDraft.tipo_evento === 'reunion' ? (
-                    <Handshake className="w-5 h-5" />
-                  ) : (
-                    <Calendar className="w-5 h-5" />
-                  )}
+                  {editRehearsalDraft.tipo_evento === 'reunion' ? <Handshake className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
                 </span>
                 <div>
                   <h3 className="font-bold text-base font-display">
-                    {editRehearsalDraft.tipo_evento === 'reunion'
-                      ? 'Ficha de la Reunión'
-                      : 'Ficha del Ensayo'}
+                    {editRehearsalDraft.tipo_evento === 'reunion' ? 'Ficha de la Reunión' : 'Ficha del Ensayo'}
                   </h3>
                   <p className="text-[10px] font-sans text-[var(--ink-2)]">
                     {editRehearsalDraft.lugar} · {editRehearsalDraft.fecha}
@@ -8064,17 +6693,11 @@ export default function CalendarView({
               <form onSubmit={handleSaveRehearsalEdit} className="space-y-3.5">
                 {editRehearsalDraft.tipo_evento === 'reunion' && (
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold">
-                      Asunto / Objetivo
-                    </label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold">Asunto / Objetivo</label>
                     <input
                       type="text"
                       value={editRehearsalDraft.asunto || ''}
-                      onChange={(e) =>
-                        setEditRehearsalDraft((prev) =>
-                          prev ? { ...prev, asunto: e.target.value } : prev
-                        )
-                      }
+                      onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, asunto: e.target.value } : prev))}
                       placeholder="ej. Coordinación de gira y reparto de tareas"
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
@@ -8090,13 +6713,7 @@ export default function CalendarView({
                     <input
                       type="url"
                       value={editRehearsalDraft.enlace_reunion || ''}
-                      onChange={(e) =>
-                        setEditRehearsalDraft((prev) =>
-                          prev
-                            ? { ...prev, enlace_reunion: e.target.value }
-                            : prev
-                        )
-                      }
+                      onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, enlace_reunion: e.target.value } : prev))}
                       placeholder="https://meet.google.com/xxx o Zoom"
                       className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
@@ -8104,17 +6721,11 @@ export default function CalendarView({
                 )}
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Horario
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario</label>
                   <input
                     type="text"
                     value={editRehearsalDraft.hora}
-                    onChange={(e) =>
-                      setEditRehearsalDraft((prev) =>
-                        prev ? { ...prev, hora: e.target.value } : prev
-                      )
-                    }
+                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, hora: e.target.value } : prev))}
                     placeholder="ej. 18:00 - 21:00"
                     required
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
@@ -8122,17 +6733,11 @@ export default function CalendarView({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Lugar / Local de Ensayo
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Local de Ensayo</label>
                   <input
                     type="text"
                     value={editRehearsalDraft.lugar}
-                    onChange={(e) =>
-                      setEditRehearsalDraft((prev) =>
-                        prev ? { ...prev, lugar: e.target.value } : prev
-                      )
-                    }
+                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, lugar: e.target.value } : prev))}
                     placeholder="ej. Rock Palace, Local 4"
                     required
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
@@ -8140,16 +6745,10 @@ export default function CalendarView({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Estado del Ensayo
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado del Ensayo</label>
                   <select
                     value={editRehearsalDraft.estado || 'programado'}
-                    onChange={(e) =>
-                      setEditRehearsalDraft((prev) =>
-                        prev ? { ...prev, estado: e.target.value as any } : prev
-                      )
-                    }
+                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   >
                     <option value="programado">Programado</option>
@@ -8173,41 +6772,26 @@ export default function CalendarView({
                           ? {
                               ...prev,
                               convocatoria_tipo: val,
-                              convocados_ids:
-                                val === 'completa'
-                                  ? effectiveBandMembers.map((m) => m.id)
-                                  : prev.convocados_ids || [],
+                              convocados_ids: val === 'completa' ? effectiveBandMembers.map((m) => m.id) : prev.convocados_ids || [],
                             }
                           : prev
                       );
                     }}
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   >
-                    <option value="completa">
-                      Banda Completa (Todos convocados)
-                    </option>
-                    <option value="parcial">
-                      Convocatoria Parcial (Seleccionar miembros)
-                    </option>
+                    <option value="completa">Banda Completa (Todos convocados)</option>
+                    <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
                   </select>
 
                   {editRehearsalDraft.convocatoria_tipo === 'parcial' && (
-                    <div
-                      className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}
-                    >
-                      <span className="font-sans font-bold block text-[var(--ink-2)]">
-                        Selecciona miembros convocados:
-                      </span>
+                    <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}>
+                      <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
                       <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
                         {effectiveBandMembers.map((member) => {
-                          const currentIds =
-                            editRehearsalDraft.convocados_ids || [];
+                          const currentIds = editRehearsalDraft.convocados_ids || [];
                           const isChecked = currentIds.includes(member.id);
                           return (
-                            <label
-                              key={member.id}
-                              className="flex items-center gap-2 cursor-pointer select-none font-sans"
-                            >
+                            <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
                               <input
                                 type="checkbox"
                                 checked={isChecked}
@@ -8217,10 +6801,7 @@ export default function CalendarView({
                                       prev
                                         ? {
                                             ...prev,
-                                            convocados_ids: [
-                                              ...(prev.convocados_ids || []),
-                                              member.id,
-                                            ],
+                                            convocados_ids: [...(prev.convocados_ids || []), member.id],
                                           }
                                         : prev
                                     );
@@ -8229,9 +6810,7 @@ export default function CalendarView({
                                       prev
                                         ? {
                                             ...prev,
-                                            convocados_ids: (
-                                              prev.convocados_ids || []
-                                            ).filter((id) => id !== member.id),
+                                            convocados_ids: (prev.convocados_ids || []).filter((id) => id !== member.id),
                                           }
                                         : prev
                                     );
@@ -8240,8 +6819,7 @@ export default function CalendarView({
                                 className="rounded text-[var(--acc)] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
                               />
                               <span>
-                                {member.name}{' '}
-                                {member.role === 'leader' ? '(Líder)' : ''}
+                                {member.name} {member.role === 'leader' ? '(Líder)' : ''}
                               </span>
                             </label>
                           );
@@ -8259,53 +6837,30 @@ export default function CalendarView({
                     </span>
                     {editRehearsalDraft.setlistId && (
                       <span className="text-[9px] font-sans text-[var(--ok)]">
-                        {availableSetlists.find(
-                          (s: any) => s.id === editRehearsalDraft.setlistId
-                        )?.items?.length || 0}{' '}
-                        temas
+                        {availableSetlists.find((s: any) => s.id === editRehearsalDraft.setlistId)?.items?.length || 0} temas
                       </span>
                     )}
                   </label>
                   <select
                     value={editRehearsalDraft.setlistId || ''}
-                    onChange={(e) =>
-                      setEditRehearsalDraft((prev) =>
-                        prev
-                          ? { ...prev, setlistId: e.target.value || undefined }
-                          : prev
-                      )
-                    }
+                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, setlistId: e.target.value || undefined } : prev))}
                     className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   >
                     <option value="">-- Sin repertorio asignado --</option>
                     {availableSetlists.map((s: any) => (
                       <option key={s.id} value={s.id}>
-                        {s.nombre}{' '}
-                        {s.tipoFormato
-                          ? `(${s.tipoFormato.replace('_', '')})`
-                          : ''}{' '}
-                        •{' '}
-                        {s.items?.filter((i: any) => i.tipoItem === 'cancion')
-                          ?.length ??
-                          s.items?.length ??
-                          0}{' '}
-                        temas
+                        {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
+                        {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                    Notas / Objetivo del Ensayo
-                  </label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
                   <textarea
                     value={editRehearsalDraft.notas}
-                    onChange={(e) =>
-                      setEditRehearsalDraft((prev) =>
-                        prev ? { ...prev, notas: e.target.value } : prev
-                      )
-                    }
+                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
                     rows={3}
                     placeholder="ej. Repasar repertorio del concierto del fin de semana."
                     className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
@@ -8337,9 +6892,7 @@ export default function CalendarView({
       {showSyncModal && (
         <ModalPortal>
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
-            <div
-              className={`relative w-full max-w-xl rounded-[var(--r-l)] p-6 ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-            >
+            <div className={`relative w-full max-w-xl rounded-[var(--r-l)] p-6 ${'bg-[var(--surface)] text-[var(--ink)]'}`}>
               <div className="flex items-start justify-between gap-4 mb-4 pb-310">
                 <div className="flex items-center gap-3">
                   <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
@@ -8350,8 +6903,7 @@ export default function CalendarView({
                       Sincronización Automática en Tiempo Real
                     </h3>
                     <p className="text-xs text-[var(--ink-2)]">
-                      Conciertos y ensayos siempre actualizados en tu móvil sin
-                      descargar archivos cada vez
+                      Conciertos y ensayos siempre actualizados en tu móvil sin descargar archivos cada vez
                     </p>
                   </div>
                 </div>
@@ -8364,20 +6916,15 @@ export default function CalendarView({
               </div>
 
               <div className="space-y-4 text-xs">
-                <div
-                  className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)] text-[var(--ink)]'}`}
-                >
+                <div className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)] text-[var(--ink)]'}`}>
                   <p className="font-semibold mb-1 flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-[var(--acc)] shrink-0" />
                     ¿Cómo funciona la sincronización automática?
                   </p>
                   <p className="text-[11px] opacity-90 leading-relaxed">
-                    Al suscribirte mediante la URL en vivo (feed webcal), tu app
-                    de calendario (Google Calendar, Apple Calendar en iPhone/Mac
-                    o Outlook) consultará automáticamente a BandManager. Cuando
-                    crees o actualices un bolo o ensayo en BandManager,
-                    aparecerá en tu calendario personal sin que tengas que
-                    volver a descargar nada.
+                    Al suscribirte mediante la URL en vivo (feed webcal), tu app de calendario (Google Calendar, Apple Calendar en
+                    iPhone/Mac o Outlook) consultará automáticamente a BandManager. Cuando crees o actualices un bolo o ensayo en
+                    BandManager, aparecerá en tu calendario personal sin que tengas que volver a descargar nada.
                   </p>
                 </div>
 
@@ -8400,9 +6947,7 @@ export default function CalendarView({
                           <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Todas mis Bandas</span>
                         </div>
-                        <p className="text-[10px] opacity-75 leading-tight">
-                          {effectiveBandsList.map((b) => b.bandName).join('+')}
-                        </p>
+                        <p className="text-[10px] opacity-75 leading-tight">{effectiveBandsList.map((b) => b.bandName).join('+')}</p>
                       </button>
 
                       <button
@@ -8418,9 +6963,7 @@ export default function CalendarView({
                           <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Solo {activeBandName}</span>
                         </div>
-                        <p className="text-[10px] opacity-75 leading-tight">
-                          Únicamente eventos de {activeBandName}
-                        </p>
+                        <p className="text-[10px] opacity-75 leading-tight">Únicamente eventos de {activeBandName}</p>
                       </button>
                     </div>
                   </div>
@@ -8434,9 +6977,7 @@ export default function CalendarView({
                     <input
                       type="text"
                       readOnly
-                      value={
-                        errorFeed || urlFeedAbsoluta || 'Generando enlace...'
-                      }
+                      value={errorFeed || urlFeedAbsoluta || 'Generando enlace...'}
                       className={`flex-1 px-3 py-2 text-xs font-sans rounded-[var(--r-s)] outline-none select-all ${'bg-[var(--surface)] text-[var(--acc)]/70'}`}
                     />
                     <button
@@ -8447,16 +6988,10 @@ export default function CalendarView({
                         setTimeout(() => setCopiedFeed(false), 2500);
                       }}
                       className={`px-3 py-2 rounded-[var(--r-s)] font-sans font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
-                        copiedFeed
-                          ? 'bg-[var(--ok)]/80 text-[var(--ink)]'
-                          : 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]'
+                        copiedFeed ? 'bg-[var(--ok)]/80 text-[var(--ink)]' : 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]'
                       }`}
                     >
-                      {copiedFeed ? (
-                        <Check className="w-4 h-4" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
+                      {copiedFeed ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       <span>{copiedFeed ? '¡Copiado!' : 'Copiar URL'}</span>
                     </button>
                   </div>
@@ -8474,11 +7009,7 @@ export default function CalendarView({
                   </a>
 
                   <a
-                    href={
-                      rutaFeed
-                        ? `webcal://${window.location.host}${rutaFeed}`
-                        : undefined
-                    }
+                    href={rutaFeed ? `webcal://${window.location.host}${rutaFeed}` : undefined}
                     className="flex items-center justify-center gap-2 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold transition-all active:scale-95"
                   >
                     <Radio className="w-4 h-4 text-[var(--ok)]" />
@@ -8487,24 +7018,16 @@ export default function CalendarView({
                 </div>
 
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/605 space-y-1.5 text-[11px] text-[var(--ink)]">
-                  <p className="font-bold text-[var(--ink-2)]">
-                    Pasos en Google Calendar (1 minuto):
-                  </p>
+                  <p className="font-bold text-[var(--ink-2)]">Pasos en Google Calendar (1 minuto):</p>
                   <ol className="list-decimal list-inside space-y-1 text-[var(--ink-2)]">
                     <li>
-                      Haz clic en el botón azul{' '}
-                      <strong>"Añadir a Google Calendar"</strong> de arriba.
+                      Haz clic en el botón azul <strong>"Añadir a Google Calendar"</strong> de arriba.
                     </li>
                     <li>
-                      Si lo añades manualmente: ve a{' '}
-                      <em>"Otros calendarios" (+)</em> ➔{' '}
-                      <strong>"Desde URL"</strong> en Google Calendar.
+                      Si lo añades manualmente: ve a <em>"Otros calendarios" (+)</em> ➔ <strong>"Desde URL"</strong> en Google Calendar.
                     </li>
                     <li>Pega la URL de suscripción y confirma.</li>
-                    <li>
-                      ¡Listo! Google Calendar sincronizará los cambios
-                      automáticamente.
-                    </li>
+                    <li>¡Listo! Google Calendar sincronizará los cambios automáticamente.</li>
                   </ol>
                 </div>
               </div>
@@ -8534,24 +7057,18 @@ export default function CalendarView({
       {showReminderModal && (
         <ModalPortal>
           <div className="fixed inset-0 bg-[var(--scrim)]/80 z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div
-              className={`max-w-md w-full rounded-[var(--r-l)] p-5 relative ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-            >
+            <div className={`max-w-md w-full rounded-[var(--r-l)] p-5 relative ${'bg-[var(--surface)] text-[var(--ink)]'}`}>
               <div className="flex items-center justify-between pb-3">
                 <div className="flex items-center gap-2">
                   <div className="p-2 rounded-[var(--r-m)] bg-[var(--ink-3)]/10 text-[var(--ink-2)]">
                     <Bell className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm">
-                      Enviar Recordatorio a la Banda
-                    </h3>
+                    <h3 className="font-bold text-sm">Enviar Recordatorio a la Banda</h3>
                     <p className="text-[10px] text-[var(--ink-2)] font-sans truncate max-w-[200px]">
                       {selectedConcert
                         ? `Concierto: ${selectedConcert.sala}`
-                        : selectedRehearsal?.asunto ||
-                          selectedRehearsal?.lugar ||
-                          'Evento'}
+                        : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento'}
                     </p>
                   </div>
                 </div>
@@ -8577,23 +7094,15 @@ export default function CalendarView({
                 )}
 
                 <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--bg)]'}`}>
-                  <div className="font-sans text-[10px] text-[var(--ink-2)] font-bold mb-1 tracking-wider">
-                    Detalles del Evento
-                  </div>
+                  <div className="font-sans text-[10px] text-[var(--ink-2)] font-bold mb-1 tracking-wider">Detalles del Evento</div>
                   <p className="font-semibold">
                     {selectedConcert
                       ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})`
-                      : selectedRehearsal?.asunto ||
-                        selectedRehearsal?.lugar ||
-                        'Ensayo/Reunión'}
+                      : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Ensayo/Reunión'}
                   </p>
                   <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
-                    📅 {selectedDate.getDate()} de{' '}
-                    {monthNames[selectedDate.getMonth()]},{' '}
-                    {selectedDate.getFullYear()}
-                    {selectedRehearsal?.hora
-                      ? ` a las ${selectedRehearsal.hora}`
-                      : ''}
+                    📅 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+                    {selectedRehearsal?.hora ? ` a las ${selectedRehearsal.hora}` : ''}
                   </p>
                 </div>
 
@@ -8603,10 +7112,7 @@ export default function CalendarView({
                   </label>
                   <div className="flex flex-wrap gap-1 font-sans text-[10px]">
                     {effectiveBandMembers.map((m: any, idx: number) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-0.5 rounded-md bg-[var(--ink-3)]/10 text-[var(--ink-3)]"
-                      >
+                      <span key={idx} className="px-2 py-0.5 rounded-md bg-[var(--ink-3)]/10 text-[var(--ink-3)]">
                         👤 {m.name} {m.email ? `(${m.email})` : ''}
                       </span>
                     ))}
@@ -8699,39 +7205,23 @@ export default function CalendarView({
         (() => {
           const modalEvent = selectedConcert || selectedRehearsal;
           const isConcert = !!selectedConcert;
-          const modalBandInfo = getBandIdentity(
-            modalEvent?.band_id,
-            (modalEvent as any)?.bandName || (modalEvent as any)?.band_name
-          );
+          const modalBandInfo = getBandIdentity(modalEvent?.band_id, (modalEvent as any)?.bandName || (modalEvent as any)?.band_name);
           const modalPosLabel =
             allChronologicalEvents.length > 0
               ? `${activeChronoIndex >= 0 ? activeChronoIndex + 1 : 1} de ${allChronologicalEvents.length}`
               : '';
           const eventCity =
             selectedConcert?.ciudad ||
-            (selectedRehearsal?.lugar?.includes(',')
-              ? selectedRehearsal.lugar.split(',').pop()?.trim()
-              : '') ||
-            (selectedRehearsal &&
-            !selectedRehearsal.lugar?.toLowerCase().includes('online')
-              ? selectedRehearsal.lugar
-              : '') ||
+            (selectedRehearsal?.lugar?.includes(',') ? selectedRehearsal.lugar.split(',').pop()?.trim() : '') ||
+            (selectedRehearsal && !selectedRehearsal.lugar?.toLowerCase().includes('online') ? selectedRehearsal.lugar : '') ||
             '';
           const eventDateStr = modalEvent ? modalEvent.fecha.split('T')[0] : '';
-          const eventTimeStr = selectedConcert
-            ? '21:30'
-            : selectedRehearsal?.hora || '20:00';
+          const eventTimeStr = selectedConcert ? '21:30' : selectedRehearsal?.hora || '20:00';
           const isConfirmingDelete = deletingEventConfirmId === modalEvent?.id;
           const modalRoadbookKey = eventDateStr || selectedDateKey;
-          const modalRoadbook = getCurrentRoadbook(
-            modalRoadbookKey,
-            selectedConcert
-          );
+          const modalRoadbook = getCurrentRoadbook(modalRoadbookKey, selectedConcert);
           return (
-            <ModalPortal
-              isOpen={showEventFichaModal}
-              onClose={() => setShowEventFichaModal(false)}
-            >
+            <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
               <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 animate-in fade-in duration-200">
                 <div
                   onTouchStart={handleModalTouchStart}
@@ -8746,10 +7236,7 @@ export default function CalendarView({
                     <button
                       type="button"
                       onClick={() => goToAdjacentEvent(-1)}
-                      disabled={
-                        allChronologicalEvents.length === 0 ||
-                        activeChronoIndex <= 0
-                      }
+                      disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
                       className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                       title="Evento anterior (←)"
                     >
@@ -8758,16 +7245,8 @@ export default function CalendarView({
                     </button>
 
                     <div className="flex flex-col items-center min-w-0">
-                      <span className="text-[9px] font-sans tracking-widest text-[var(--acc)]/80 font-bold">
-                        Ficha de Evento
-                      </span>
-                      {modalPosLabel && (
-                        <span
-                          className={`text-[10px] font-sans font-bold ${'text-[var(--ink-2)]'}`}
-                        >
-                          {modalPosLabel}
-                        </span>
-                      )}
+                      <span className="text-[9px] font-sans tracking-widest text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
+                      {modalPosLabel && <span className={`text-[10px] font-sans font-bold ${'text-[var(--ink-2)]'}`}>{modalPosLabel}</span>}
                     </div>
 
                     <div className="flex items-center gap-1.5">
@@ -8806,14 +7285,9 @@ export default function CalendarView({
                             alt={modalBandInfo.name}
                             className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0"
                             onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display =
-                                'none';
-                              const fb =
-                                e.currentTarget.parentElement?.querySelector(
-                                  '.fallback-initials-modal'
-                                );
-                              if (fb)
-                                (fb as HTMLElement).classList.remove('hidden');
+                              (e.currentTarget as HTMLElement).style.display = 'none';
+                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
+                              if (fb) (fb as HTMLElement).classList.remove('hidden');
                             }}
                           />
                         ) : null}
@@ -8826,25 +7300,16 @@ export default function CalendarView({
                           <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 inline-flex items-center gap-1">
                             🎸 {modalBandInfo.name}
                           </span>
-                          <h3
-                            className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}
-                          >
+                          <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>
                             {selectedEventTitle}
                           </h3>
-                          <p
-                            className={`text-[11px] font-sans mt-0.5 ${textSub}`}
-                          >
-                            {selectedDate.getDate()} de{' '}
-                            {monthNames[selectedDate.getMonth()]},{' '}
-                            {selectedDate.getFullYear()}
+                          <p className={`text-[11px] font-sans mt-0.5 ${textSub}`}>
+                            {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                           </p>
                           {modalWeatherAlerts.length > 0 && (
                             <div className="flex flex-wrap items-center gap-1.5 mt-2">
                               {modalWeatherAlerts.map((alert) => (
-                                <CalendarWeatherBadge
-                                  key={alert.id}
-                                  alert={alert}
-                                />
+                                <CalendarWeatherBadge key={alert.id} alert={alert} />
                               ))}
                             </div>
                           )}
@@ -8858,10 +7323,8 @@ export default function CalendarView({
                             type="button"
                             onClick={() => {
                               setShowEventFichaModal(false);
-                              if (selectedConcert)
-                                setViewingConcert(selectedConcert);
-                              if (selectedRehearsal)
-                                setViewingRehearsal(selectedRehearsal);
+                              if (selectedConcert) setViewingConcert(selectedConcert);
+                              if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
                             }}
                             className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80 flex items-center gap-1"
                             title="Editar todos los campos de este evento"
@@ -8871,9 +7334,7 @@ export default function CalendarView({
 
                           <button
                             type="button"
-                            onClick={() =>
-                              handleShareEventWhatsApp(modalEvent, isConcert)
-                            }
+                            onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
                             className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--ok-soft)]/40 text-[var(--ink-2)] hover:bg-[var(--ok-soft)] flex items-center gap-1"
                             title="Compartir convocatoria por WhatsApp"
                           >
@@ -8883,9 +7344,7 @@ export default function CalendarView({
 
                           <button
                             type="button"
-                            onClick={() =>
-                              handleNotifyBandMembers(modalEvent, isConcert)
-                            }
+                            onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
                             className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)]/40 text-[var(--ink-3)] hover:bg-[var(--surface)]/70 flex items-center gap-1"
                             title="Enviar recordatorio / notificación push a los músicos"
                           >
@@ -8895,9 +7354,7 @@ export default function CalendarView({
 
                           <button
                             type="button"
-                            onClick={() =>
-                              handleCopyEventFicha(modalEvent, isConcert)
-                            }
+                            onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
                             className={`px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
                               copiedEventModalId === modalEvent.id
                                 ? 'bg-[var(--ok)] text-[var(--ink)]'
@@ -8905,23 +7362,13 @@ export default function CalendarView({
                             }`}
                             title="Copiar texto de convocatoria al portapapeles"
                           >
-                            {copiedEventModalId === modalEvent.id ? (
-                              <Check className="w-3.5 h-3.5" />
-                            ) : (
-                              <Copy className="w-3.5 h-3.5" />
-                            )}
-                            <span className="hidden xs:inline">
-                              {copiedEventModalId === modalEvent.id
-                                ? 'Copiado'
-                                : 'Copiar'}
-                            </span>
+                            {copiedEventModalId === modalEvent.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                            <span className="hidden xs:inline">{copiedEventModalId === modalEvent.id ? 'Copiado' : 'Copiar'}</span>
                           </button>
 
                           <button
                             type="button"
-                            onClick={() =>
-                              setDeletingEventConfirmId(modalEvent.id)
-                            }
+                            onClick={() => setDeletingEventConfirmId(modalEvent.id)}
                             className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert-soft)]/40 text-[var(--ink-2)] hover:bg-[var(--alert-soft)] flex items-center gap-1"
                             title="Eliminar este evento del calendario"
                           >
@@ -8939,12 +7386,10 @@ export default function CalendarView({
                           <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0" />
                           <div>
                             <p className="text-xs font-sans font-bold text-[var(--ink)]">
-                              ¿Confirmas que deseas eliminar este{' '}
-                              {isConcert ? 'concierto' : 'ensayo'}?
+                              ¿Confirmas que deseas eliminar este {isConcert ? 'concierto' : 'ensayo'}?
                             </p>
                             <p className="text-[10px] text-[var(--ink-2)]/80 font-sans">
-                              Esta acción es definitiva y retirará el evento del
-                              calendario y agenda de la banda.
+                              Esta acción es definitiva y retirará el evento del calendario y agenda de la banda.
                             </p>
                           </div>
                         </div>
@@ -8958,12 +7403,7 @@ export default function CalendarView({
                           </button>
                           <button
                             type="button"
-                            onClick={() =>
-                              handleDeleteEventFromModal(
-                                modalEvent.id,
-                                isConcert
-                              )
-                            }
+                            onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
                             className="px-3.5 py-1.5 text-xs font-sans font-bold rounded-[var(--r-s)] bg-[var(--alert)]/80 hover:bg-[var(--alert)]/60 text-[var(--ink)] transition-colors cursor-pointer"
                           >
                             Sí, Eliminar Definitivamente
@@ -8978,16 +7418,12 @@ export default function CalendarView({
                         city={eventCity}
                         dateStr={eventDateStr}
                         timeStr={eventTimeStr}
-                        onAlertsDetected={(alerts) =>
-                          setModalWeatherAlerts(alerts)
-                        }
+                        onAlertsDetected={(alerts) => setModalWeatherAlerts(alerts)}
                       />
                     )}
 
                     {/* Pestañas de Navegación de la Ficha */}
-                    <div
-                      className={`flex items-center gap-1.5 pb-2.5 overflow-x-auto ${''}`}
-                    >
+                    <div className={`flex items-center gap-1.5 pb-2.5 overflow-x-auto ${''}`}>
                       <button
                         type="button"
                         onClick={() => setModalActiveTab('resumen')}
@@ -9022,12 +7458,11 @@ export default function CalendarView({
                       >
                         <Phone className="w-3.5 h-3.5" />
                         <span>2. Contactos Clave</span>
-                        {modalRoadbook.contactosClave &&
-                          modalRoadbook.contactosClave.length > 0 && (
-                            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
-                              {modalRoadbook.contactosClave.length}
-                            </span>
-                          )}
+                        {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
+                          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
+                            {modalRoadbook.contactosClave.length}
+                          </span>
+                        )}
                       </button>
                       <button
                         type="button"
@@ -9040,13 +7475,11 @@ export default function CalendarView({
                       >
                         <Shirt className="w-3.5 h-3.5" />
                         <span>3. Control Merchandising</span>
-                        {modalRoadbook.merchControl &&
-                          modalRoadbook.merchControl.items &&
-                          modalRoadbook.merchControl.items.length > 0 && (
-                            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
-                              {modalRoadbook.merchControl.items.length}
-                            </span>
-                          )}
+                        {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
+                          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
+                            {modalRoadbook.merchControl.items.length}
+                          </span>
+                        )}
                       </button>
                       <button
                         type="button"
@@ -9059,97 +7492,59 @@ export default function CalendarView({
                       >
                         <ShieldCheck className="w-3.5 h-3.5" />
                         <span>5. Cierre Material</span>
-                        {modalRoadbook.cierreMaterial &&
-                          modalRoadbook.cierreMaterial.length > 0 && (
-                            <span
-                              className={`px-1.5 py-0.2 rounded-full text-[10px] font-sans ${
-                                modalRoadbook.cierreMaterial.every(
-                                  (i) => i.checked
-                                )
-                                  ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
-                                  : 'bg-[var(--sunken)]'
-                              }`}
-                            >
-                              {
-                                modalRoadbook.cierreMaterial.filter(
-                                  (i) => i.checked
-                                ).length
-                              }
-                              /{modalRoadbook.cierreMaterial.length}
-                            </span>
-                          )}
+                        {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
+                          <span
+                            className={`px-1.5 py-0.2 rounded-full text-[10px] font-sans ${
+                              modalRoadbook.cierreMaterial.every((i) => i.checked)
+                                ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
+                                : 'bg-[var(--sunken)]'
+                            }`}
+                          >
+                            {modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/{modalRoadbook.cierreMaterial.length}
+                          </span>
+                        )}
                       </button>
                     </div>
 
                     {/* TAB 1: RESUMEN GENERAL & DETALLES */}
                     {modalActiveTab === 'resumen' && (
                       <div className="space-y-4">
-                        <div
-                          className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--bg)]'}`}
-                        >
+                        <div className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--bg)]'}`}>
                           <div className="flex items-center gap-2 text-[11px]">
-                            <Clock
-                              className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`}
-                            />
-                            <span className={`font-sans ${textSub}`}>
-                              Hora:
-                            </span>
-                            <span
-                              className={`font-bold font-sans ${'text-[var(--acc)]'}`}
-                            >
-                              {selectedEventDetails.time}
-                            </span>
+                            <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
+                            <span className={`font-sans ${textSub}`}>Hora:</span>
+                            <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
                           </div>
                           <div className="flex items-start gap-2 text-[11px]">
-                            <MapPin
-                              className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`}
-                            />
+                            <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
                             <div className="flex-1 min-w-0">
-                              <span className={`font-sans ${textSub}`}>
-                                Lugar:
-                              </span>
-                              <p
-                                className={`font-medium font-sans mt-0.5 ${textTitle}`}
-                              >
-                                {selectedEventDetails.lugar}
-                              </p>
+                              <span className={`font-sans ${textSub}`}>Lugar:</span>
+                              <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
                               {selectedEventDetails.direccion && (
-                                <p
-                                  className={`text-[11px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}
-                                >
-                                  <span className="font-semibold font-sans">
-                                    Dirección:
-                                  </span>{' '}
-                                  {selectedEventDetails.direccion}
+                                <p className={`text-[11px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
+                                  <span className="font-semibold font-sans">Dirección:</span> {selectedEventDetails.direccion}
                                 </p>
                               )}
                             </div>
                           </div>
-                          {selectedEventDetails.locationQuery &&
-                            selectedEventDetails.type !== 'free' && (
-                              <div className="pt-2 flex justify-center">
-                                <DirectionsCard
-                                  query={selectedEventDetails.locationQuery}
-                                  locationName={selectedEventDetails.lugar}
-                                  address={selectedEventDetails.direccion}
-                                />
-                              </div>
-                            )}
-                          {!isPromoPlan &&
-                            selectedEventDetails.type === 'concert' && (
-                              <div className="flex items-center gap-2 text-[11px] pt-2">
-                                <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                                <span className={`font-sans ${textSub}`}>
-                                  Compensación:
-                                </span>
-                                <span className="text-[var(--ok)] font-bold font-sans">
-                                  {selectedEventDetails.fee}
-                                </span>
-                              </div>
-                            )}
+                          {selectedEventDetails.locationQuery && selectedEventDetails.type !== 'free' && (
+                            <div className="pt-2 flex justify-center">
+                              <DirectionsCard
+                                query={selectedEventDetails.locationQuery}
+                                locationName={selectedEventDetails.lugar}
+                                address={selectedEventDetails.direccion}
+                              />
+                            </div>
+                          )}
+                          {!isPromoPlan && selectedEventDetails.type === 'concert' && (
+                            <div className="flex items-center gap-2 text-[11px] pt-2">
+                              <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
+                              <span className={`font-sans ${textSub}`}>Compensación:</span>
+                              <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
+                            </div>
+                          )}
                           {selectedEventDetails.type === 'concert' &&
-                            (selectedEventDetails.entradasUrl ||
-                              selectedEventDetails.entradasLugarFisico) && (
+                            (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
                               <div className="flex flex-col gap-1.5 pt-2">
                                 {selectedEventDetails.entradasUrl && (
                                   <a
@@ -9158,19 +7553,14 @@ export default function CalendarView({
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
                                   >
-                                    <Ticket className="w-3.5 h-3.5" /> Comprar
-                                    Entradas
+                                    <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                                   </a>
                                 )}
                                 {selectedEventDetails.entradasLugarFisico && (
                                   <div className="flex items-center gap-2 text-[11px]">
                                     <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                                    <span className={`font-sans ${textSub}`}>
-                                      También en:
-                                    </span>
-                                    <span className="font-semibold font-sans">
-                                      {selectedEventDetails.entradasLugarFisico}
-                                    </span>
+                                    <span className={`font-sans ${textSub}`}>También en:</span>
+                                    <span className="font-semibold font-sans">{selectedEventDetails.entradasLugarFisico}</span>
                                   </div>
                                 )}
                               </div>
@@ -9178,49 +7568,28 @@ export default function CalendarView({
                           {selectedConcert?.giraNombre && (
                             <div className="flex items-center gap-2 text-[11px] pt-2">
                               <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                              <span className={`font-sans ${textSub}`}>
-                                Gira:
-                              </span>
-                              <span className="font-bold font-sans text-[var(--acc)]">
-                                🚐 {selectedConcert.giraNombre}
+                              <span className={`font-sans ${textSub}`}>Gira:</span>
+                              <span className="font-bold font-sans text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
+                            </div>
+                          )}
+                          {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
+                            <div className="flex items-center gap-2 text-[11px] pt-2">
+                              <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
+                              <span className={`font-sans ${textSub}`}>Convocatoria:</span>
+                              <span className="font-bold font-sans text-[var(--ink-2)]">
+                                {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
+                                  ? 'Banda Completa'
+                                  : `Parcial (${(() => {
+                                      const raw: any = selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres;
+                                      if (Array.isArray(raw)) return raw.join(',') || 'Seleccionados';
+                                      if (typeof raw === 'string' && raw.trim()) return raw.trim();
+                                      return 'Seleccionados';
+                                    })()})`}
                               </span>
                             </div>
                           )}
-                          {!isPromoPlan &&
-                            (selectedConcert?.convocatoria_tipo ||
-                              selectedRehearsal?.convocatoria_tipo) && (
-                              <div className="flex items-center gap-2 text-[11px] pt-2">
-                                <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
-                                <span className={`font-sans ${textSub}`}>
-                                  Convocatoria:
-                                </span>
-                                <span className="font-bold font-sans text-[var(--ink-2)]">
-                                  {(selectedConcert?.convocatoria_tipo ||
-                                    selectedRehearsal?.convocatoria_tipo) ===
-                                  'completa'
-                                    ? 'Banda Completa'
-                                    : `Parcial (${(() => {
-                                        const raw: any =
-                                          selectedConcert?.convocados_nombres ||
-                                          selectedRehearsal?.convocados_nombres;
-                                        if (Array.isArray(raw))
-                                          return (
-                                            raw.join(',') || 'Seleccionados'
-                                          );
-                                        if (
-                                          typeof raw === 'string' &&
-                                          raw.trim()
-                                        )
-                                          return raw.trim();
-                                        return 'Seleccionados';
-                                      })()})`}
-                                </span>
-                              </div>
-                            )}
                           {selectedEventDetails.notes && (
-                            <div
-                              className={`text-[11px] font-sans italic pt-2 /40 leading-relaxed ${'text-[var(--ink-2)]'}`}
-                            >
+                            <div className={`text-[11px] font-sans italic pt-2 /40 leading-relaxed ${'text-[var(--ink-2)]'}`}>
                               &ldquo;{selectedEventDetails.notes}&rdquo;
                             </div>
                           )}
@@ -9255,8 +7624,7 @@ export default function CalendarView({
                               <span>2. Contactos Clave</span>
                             </div>
                             <p className={`text-[11px] font-sans ${textSub}`}>
-                              {modalRoadbook.contactosClave &&
-                              modalRoadbook.contactosClave.length > 0
+                              {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0
                                 ? `${modalRoadbook.contactosClave.length} contactos (WhatsApp directo)`
                                 : 'Añadir contactos de sala y técnicos'}
                             </p>
@@ -9274,9 +7642,7 @@ export default function CalendarView({
                               <span>3. Control Merchandising</span>
                             </div>
                             <p className={`text-[11px] font-sans ${textSub}`}>
-                              {modalRoadbook.merchControl &&
-                              modalRoadbook.merchControl.items &&
-                              modalRoadbook.merchControl.items.length > 0
+                              {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0
                                 ? `${modalRoadbook.merchControl.items.length} productos | ${(modalRoadbook.merchControl.ingresosEfectivo || 0) + (modalRoadbook.merchControl.ingresosBizum || 0)}€ arqueo`
                                 : 'Stock furgón vs final, Bizum y efectivo'}
                             </p>
@@ -9314,32 +7680,20 @@ export default function CalendarView({
                             <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--ink)]">
                               Sección 1
                             </span>
-                            <h3
-                              className={`text-sm font-sans font-bold ${textTitle}`}
-                            >
-                              Logística Técnica, Horarios & Rider
-                            </h3>
+                            <h3 className={`text-sm font-sans font-bold ${textTitle}`}>Logística Técnica, Horarios & Rider</h3>
                           </div>
-                          <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                            Guardado automático local
-                          </span>
+                          <span className="text-[10px] font-sans text-[var(--ink-2)]">Guardado automático local</span>
                         </div>
 
                         {/* Horarios de Producción */}
-                        <div
-                          className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}
-                        >
+                        <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}>
                           <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
                             <span>Cronograma de Producción del Día</span>
                           </h4>
                           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
-                                Llegada / Descarga
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
                               <input
                                 type="text"
                                 value={modalRoadbook.horaLlegada || '17:00'}
@@ -9353,17 +7707,10 @@ export default function CalendarView({
                               />
                             </div>
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
-                                Prueba Sonido
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
                               <input
                                 type="text"
-                                value={
-                                  modalRoadbook.horaPruebaSonido ||
-                                  '18:00 - 19:30'
-                                }
+                                value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
                                 onChange={(e) =>
                                   updateRoadbookField(modalRoadbookKey, {
                                     horaPruebaSonido: e.target.value,
@@ -9374,16 +7721,10 @@ export default function CalendarView({
                               />
                             </div>
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
-                                Apertura Puertas
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
                               <input
                                 type="text"
-                                value={
-                                  modalRoadbook.horaAperturaPuertas || '20:30'
-                                }
+                                value={modalRoadbook.horaAperturaPuertas || '20:30'}
                                 onChange={(e) =>
                                   updateRoadbookField(modalRoadbookKey, {
                                     horaAperturaPuertas: e.target.value,
@@ -9394,11 +7735,7 @@ export default function CalendarView({
                               />
                             </div>
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 text-[var(--acc)]`}
-                              >
-                                Show / Directo
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
                               <input
                                 type="text"
                                 value={modalRoadbook.horaShow || '21:30'}
@@ -9412,11 +7749,7 @@ export default function CalendarView({
                               />
                             </div>
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
-                                Toque de Queda
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Toque de Queda</label>
                               <input
                                 type="text"
                                 value={modalRoadbook.horaCierreToque || '01:00'}
@@ -9433,18 +7766,14 @@ export default function CalendarView({
                         </div>
 
                         {/* Sonido P.A. & Monitores */}
-                        <div
-                          className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}
-                        >
+                        <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}>
                           <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                             <Wrench className="w-3.5 h-3.5" />
                             <span>Sistema de Sonido (P.A. & Monitoreo)</span>
                           </h4>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
                                 Especificaciones P.A. de Sala
                               </label>
                               <textarea
@@ -9460,11 +7789,7 @@ export default function CalendarView({
                               />
                             </div>
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
-                                Monitoreo (In-Ears / Cuñas)
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Monitoreo (In-Ears / Cuñas)</label>
                               <textarea
                                 rows={2}
                                 value={modalRoadbook.monitoresTipo || ''}
@@ -9479,11 +7804,7 @@ export default function CalendarView({
                             </div>
                           </div>
                           <div>
-                            <label
-                              className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                            >
-                              Canales de Envíos Auxiliares
-                            </label>
+                            <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Canales de Envíos Auxiliares</label>
                             <input
                               type="text"
                               value={modalRoadbook.canalesMonitores || ''}
@@ -9499,22 +7820,14 @@ export default function CalendarView({
                         </div>
 
                         {/* Backline y Electricidad */}
-                        <div
-                          className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}
-                        >
+                        <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}>
                           <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                             <Truck className="w-3.5 h-3.5" />
-                            <span>
-                              Backline Aportado vs Traído & Toma Eléctrica
-                            </span>
+                            <span>Backline Aportado vs Traído & Toma Eléctrica</span>
                           </h4>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
-                                Backline (Sala vs Banda)
-                              </label>
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Backline (Sala vs Banda)</label>
                               <textarea
                                 rows={3}
                                 value={modalRoadbook.backlineInfo || ''}
@@ -9528,9 +7841,7 @@ export default function CalendarView({
                               />
                             </div>
                             <div>
-                              <label
-                                className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}
-                              >
+                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
                                 Potencia y Tomas Eléctricas en Escenario
                               </label>
                               <textarea
@@ -9549,23 +7860,14 @@ export default function CalendarView({
                         </div>
 
                         {/* Input List / Rider de Canales */}
-                        <div
-                          className={`p-4 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--surface)]'}`}
-                        >
+                        <div className={`p-4 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--surface)]'}`}>
                           <div className="flex items-center justify-between">
                             <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                               <span>🎛️</span>
-                              <span>
-                                Input List / Lista de Canales de Microfonía
-                              </span>
+                              <span>Input List / Lista de Canales de Microfonía</span>
                             </h4>
                             <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                              {
-                                (modalRoadbook.inputList || '')
-                                  .split('\n')
-                                  .filter(Boolean).length
-                              }{' '}
-                              canales especificados
+                              {(modalRoadbook.inputList || '').split('\n').filter(Boolean).length} canales especificados
                             </span>
                           </div>
                           <textarea
@@ -9582,12 +7884,8 @@ export default function CalendarView({
                         </div>
 
                         {/* Notas de Producción y Carga */}
-                        <div
-                          className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}
-                        >
-                          <label
-                            className={`block text-[10px] font-sans font-bold ${textSub}`}
-                          >
+                        <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
+                          <label className={`block text-[10px] font-sans font-bold ${textSub}`}>
                             Notas de Acceso, Muelle de Carga & Observaciones
                           </label>
                           <textarea
@@ -9613,17 +7911,11 @@ export default function CalendarView({
                             <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--ok)] text-[var(--ink)]">
                               Sección 2
                             </span>
-                            <h3
-                              className={`text-sm font-sans font-bold ${textTitle}`}
-                            >
-                              Directorio de Contactos Clave de Producción
-                            </h3>
+                            <h3 className={`text-sm font-sans font-bold ${textTitle}`}>Directorio de Contactos Clave de Producción</h3>
                           </div>
                           <button
                             type="button"
-                            onClick={() =>
-                              setShowAddContactForm(!showAddContactForm)
-                            }
+                            onClick={() => setShowAddContactForm(!showAddContactForm)}
                             className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                           >
                             <span>+</span> Añadir Contacto
@@ -9633,65 +7925,37 @@ export default function CalendarView({
                         {/* Formulario de Nuevo Contacto */}
                         {showAddContactForm && (
                           <form
-                            onSubmit={(e) =>
-                              handleAddKeyContact(modalRoadbookKey, e)
-                            }
+                            onSubmit={(e) => handleAddKeyContact(modalRoadbookKey, e)}
                             className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in ${'bg-[var(--ok-soft)]/40'}`}
                           >
-                            <h4 className="text-xs font-sans font-bold text-[var(--ok)]">
-                              Nuevo Contacto Clave
-                            </h4>
+                            <h4 className="text-xs font-sans font-bold text-[var(--ok)]">Nuevo Contacto Clave</h4>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                               <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">
-                                  Nombre y Apellidos *
-                                </label>
+                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Nombre y Apellidos *</label>
                                 <input
                                   type="text"
                                   required
                                   value={newContactNombre}
-                                  onChange={(e) =>
-                                    setNewContactNombre(e.target.value)
-                                  }
+                                  onChange={(e) => setNewContactNombre(e.target.value)}
                                   placeholder="Ej: Manuel Producción"
                                   className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                 />
                               </div>
                               <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">
-                                  Rol / Cargo
-                                </label>
+                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Rol / Cargo</label>
                                 <select
                                   value={newContactRol}
-                                  onChange={(e) =>
-                                    setNewContactRol(e.target.value)
-                                  }
+                                  onChange={(e) => setNewContactRol(e.target.value)}
                                   className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                 >
-                                  <option value="Promotor / Sala">
-                                    Promotor / Sala
-                                  </option>
-                                  <option value="Técnico de Sonido (P.A.)">
-                                    Técnico de Sonido (P.A.)
-                                  </option>
-                                  <option value="Técnico de Monitores">
-                                    Técnico de Monitores
-                                  </option>
-                                  <option value="Técnico de Iluminación">
-                                    Técnico de Iluminación
-                                  </option>
-                                  <option value="Producción / Camerinos">
-                                    Producción / Camerinos
-                                  </option>
-                                  <option value="Hotel / Alojamiento">
-                                    Hotel / Alojamiento
-                                  </option>
-                                  <option value="Seguridad / Acceso">
-                                    Seguridad / Acceso
-                                  </option>
-                                  <option value="Road Manager">
-                                    Road Manager
-                                  </option>
+                                  <option value="Promotor / Sala">Promotor / Sala</option>
+                                  <option value="Técnico de Sonido (P.A.)">Técnico de Sonido (P.A.)</option>
+                                  <option value="Técnico de Monitores">Técnico de Monitores</option>
+                                  <option value="Técnico de Iluminación">Técnico de Iluminación</option>
+                                  <option value="Producción / Camerinos">Producción / Camerinos</option>
+                                  <option value="Hotel / Alojamiento">Hotel / Alojamiento</option>
+                                  <option value="Seguridad / Acceso">Seguridad / Acceso</option>
+                                  <option value="Road Manager">Road Manager</option>
                                 </select>
                               </div>
                               <div>
@@ -9702,38 +7966,28 @@ export default function CalendarView({
                                   type="tel"
                                   required
                                   value={newContactTelefono}
-                                  onChange={(e) =>
-                                    setNewContactTelefono(e.target.value)
-                                  }
+                                  onChange={(e) => setNewContactTelefono(e.target.value)}
                                   placeholder="+34 600 000 000"
                                   className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                 />
                               </div>
                               <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">
-                                  Email
-                                </label>
+                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Email</label>
                                 <input
                                   type="email"
                                   value={newContactEmail}
-                                  onChange={(e) =>
-                                    setNewContactEmail(e.target.value)
-                                  }
+                                  onChange={(e) => setNewContactEmail(e.target.value)}
                                   placeholder="produccion@sala.com"
                                   className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                 />
                               </div>
                             </div>
                             <div>
-                              <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">
-                                Notas u observaciones
-                              </label>
+                              <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Notas u observaciones</label>
                               <input
                                 type="text"
                                 value={newContactNotas}
-                                onChange={(e) =>
-                                  setNewContactNotas(e.target.value)
-                                }
+                                onChange={(e) => setNewContactNotas(e.target.value)}
                                 placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
                                 className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                               />
@@ -9760,90 +8014,63 @@ export default function CalendarView({
                         <div className="space-y-2.5">
                           {(modalRoadbook.contactosClave || []).length === 0 ? (
                             <div className="text-center py-6 text-[var(--ink-2)] font-sans text-xs">
-                              No hay contactos clave registrados para este
-                              concierto.
+                              No hay contactos clave registrados para este concierto.
                               <p className="text-[10px] mt-1 text-[var(--ok)]">
-                                Pulsa en &ldquo;+ Añadir Contacto&rdquo; para
-                                registrar promotor, técnico de sonido o
-                                producción.
+                                Pulsa en &ldquo;+ Añadir Contacto&rdquo; para registrar promotor, técnico de sonido o producción.
                               </p>
                             </div>
                           ) : (
-                            (modalRoadbook.contactosClave || []).map(
-                              (contact) => (
-                                <div
-                                  key={contact.id}
-                                  className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${'bg-[var(--surface)] hover:border-[var(--ok)]/40'}`}
-                                >
-                                  <div className="min-w-0 flex-1">
-                                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                                      <span className="text-xs font-sans font-bold text-[var(--ink)]">
-                                        {contact.nombre}
-                                      </span>
-                                      <span className="px-2 py-0.5 rounded-md text-[9px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
-                                        {contact.rol}
-                                      </span>
-                                    </div>
-                                    <p className="text-xs font-sans text-[var(--ink)]">
-                                      📞 {contact.telefono}
-                                      {contact.email && (
-                                        <span className="ml-2 text-[var(--ink-2)]">
-                                          ✉️ {contact.email}
-                                        </span>
-                                      )}
-                                    </p>
-                                    {contact.notas && (
-                                      <p className="text-[11px] font-sans text-[var(--ink-2)] mt-1 italic">
-                                        &ldquo;{contact.notas}&rdquo;
-                                      </p>
-                                    )}
+                            (modalRoadbook.contactosClave || []).map((contact) => (
+                              <div
+                                key={contact.id}
+                                className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${'bg-[var(--surface)] hover:border-[var(--ok)]/40'}`}
+                              >
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                                    <span className="text-xs font-sans font-bold text-[var(--ink)]">{contact.nombre}</span>
+                                    <span className="px-2 py-0.5 rounded-md text-[9px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                                      {contact.rol}
+                                    </span>
                                   </div>
-
-                                  {/* Botones de acción rápida: WhatsApp directo, llamada, eliminar */}
-                                  <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        openWhatsAppContact(
-                                          contact,
-                                          eventDateStr,
-                                          selectedEventDetails.lugar ||
-                                            'la sala'
-                                        )
-                                      }
-                                      className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
-                                      title="Abrir WhatsApp directo con mensaje predefinido"
-                                    >
-                                      <MessageSquare className="w-3.5 h-3.5" />
-                                      <span>WhatsApp</span>
-                                    </button>
-                                    <a
-                                      href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
-                                      className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold text-[var(--ink-2)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
-                                      title="Llamar directamente por teléfono"
-                                    >
-                                      <Phone className="w-3.5 h-3.5" />
-                                      <span className="hidden sm:inline">
-                                        Llamar
-                                      </span>
-                                    </a>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleDeleteKeyContact(
-                                          contact.id,
-                                          modalRoadbookKey
-                                        )
-                                      }
-                                      className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert-soft)] transition-colors cursor-pointer"
-                                      title="Eliminar este contacto"
-                                    >
-                                      <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
-                                  </div>
+                                  <p className="text-xs font-sans text-[var(--ink)]">
+                                    📞 {contact.telefono}
+                                    {contact.email && <span className="ml-2 text-[var(--ink-2)]">✉️ {contact.email}</span>}
+                                  </p>
+                                  {contact.notas && (
+                                    <p className="text-[11px] font-sans text-[var(--ink-2)] mt-1 italic">&ldquo;{contact.notas}&rdquo;</p>
+                                  )}
                                 </div>
-                              )
-                            )
+
+                                {/* Botones de acción rápida: WhatsApp directo, llamada, eliminar */}
+                                <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
+                                  <button
+                                    type="button"
+                                    onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
+                                    className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                                    title="Abrir WhatsApp directo con mensaje predefinido"
+                                  >
+                                    <MessageSquare className="w-3.5 h-3.5" />
+                                    <span>WhatsApp</span>
+                                  </button>
+                                  <a
+                                    href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
+                                    className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold text-[var(--ink-2)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
+                                    title="Llamar directamente por teléfono"
+                                  >
+                                    <Phone className="w-3.5 h-3.5" />
+                                    <span className="hidden sm:inline">Llamar</span>
+                                  </a>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteKeyContact(contact.id, modalRoadbookKey)}
+                                    className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert-soft)] transition-colors cursor-pointer"
+                                    title="Eliminar este contacto"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))
                           )}
                         </div>
                       </div>
@@ -9852,41 +8079,18 @@ export default function CalendarView({
                     {/* TAB 3: 3. CONTROL DE MERCHANDISING POR BOLO */}
                     {modalActiveTab === 'merchan' &&
                       (() => {
-                        const merch =
-                          modalRoadbook.merchControl ||
-                          getDefaultRoadbook(selectedConcert).merchControl!;
+                        const merch = modalRoadbook.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
                         const items = merch.items || [];
-                        const totalInicial = items.reduce(
-                          (acc, i) => acc + (i.stockInicial || 0),
-                          0
-                        );
-                        const totalFinal = items.reduce(
-                          (acc, i) => acc + (i.stockFinal || 0),
-                          0
-                        );
-                        const totalVendidas = Math.max(
-                          0,
-                          totalInicial - totalFinal
-                        );
+                        const totalInicial = items.reduce((acc, i) => acc + (i.stockInicial || 0), 0);
+                        const totalFinal = items.reduce((acc, i) => acc + (i.stockFinal || 0), 0);
+                        const totalVendidas = Math.max(0, totalInicial - totalFinal);
                         const totalVentaTeorica = items.reduce(
-                          (acc, i) =>
-                            acc +
-                            Math.max(
-                              0,
-                              (i.stockInicial || 0) - (i.stockFinal || 0)
-                            ) *
-                              (i.precioUnitario || 0),
+                          (acc, i) => acc + Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) * (i.precioUnitario || 0),
                           0
                         );
-                        const totalCobradoReal =
-                          (merch.ingresosEfectivo || 0) +
-                          (merch.ingresosBizum || 0);
-                        const diferenciaCuadre =
-                          totalCobradoReal - totalVentaTeorica;
-                        const porcentajeVendido =
-                          totalInicial > 0
-                            ? Math.round((totalVendidas / totalInicial) * 100)
-                            : 0;
+                        const totalCobradoReal = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
+                        const diferenciaCuadre = totalCobradoReal - totalVentaTeorica;
+                        const porcentajeVendido = totalInicial > 0 ? Math.round((totalVendidas / totalInicial) * 100) : 0;
 
                         const categoriaIcons: Record<
                           string,
@@ -9909,8 +8113,7 @@ export default function CalendarView({
                           musica: {
                             icon: <Music className="w-3.5 h-3.5" />,
                             label: 'Música (CD/Tape)',
-                            color:
-                              'text-[var(--tentative)] bg-[var(--tentative)]/15/30',
+                            color: 'text-[var(--tentative)] bg-[var(--tentative)]/15/30',
                           },
                           accesorios: {
                             icon: <Tag className="w-3.5 h-3.5" />,
@@ -9920,8 +8123,7 @@ export default function CalendarView({
                           otro: {
                             icon: <ShoppingBag className="w-3.5 h-3.5" />,
                             label: 'Otro',
-                            color:
-                              'text-[var(--alert)] bg-[var(--alert)]/15/30',
+                            color: 'text-[var(--alert)] bg-[var(--alert)]/15/30',
                           },
                         };
 
@@ -9934,56 +8136,29 @@ export default function CalendarView({
                                   Sección 3
                                 </span>
                                 <div>
-                                  <h3
-                                    className={`text-sm font-sans font-bold ${textTitle}`}
-                                  >
-                                    Control de Merchandising por Bolo
-                                  </h3>
-                                  <p
-                                    className={`text-[11px] font-sans ${textSub}`}
-                                  >
-                                    Inventario que sube a la furgoneta vs. stock
-                                    final de noche, arqueo de Efectivo y Bizum
+                                  <h3 className={`text-sm font-sans font-bold ${textTitle}`}>Control de Merchandising por Bolo</h3>
+                                  <p className={`text-[11px] font-sans ${textSub}`}>
+                                    Inventario que sube a la furgoneta vs. stock final de noche, arqueo de Efectivo y Bizum
                                   </p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-1.5">
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    handleCopyMerchSummary(
-                                      modalRoadbook,
-                                      modalRoadbookKey,
-                                      selectedConcert
-                                    )
-                                  }
+                                  onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
                                   className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
                                   title="Copiar arqueo y balance para WhatsApp"
                                 >
-                                  {merchCopiedToast ? (
-                                    <Check className="w-3.5 h-3.5 text-[var(--ok)]" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                  <span>
-                                    {merchCopiedToast
-                                      ? '¡Copiado! '
-                                      : 'Copiar Arqueo (WhatsApp)'}
-                                  </span>
+                                  {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
+                                  <span>{merchCopiedToast ? '¡Copiado! ' : 'Copiar Arqueo (WhatsApp)'}</span>
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    setShowAddMerchForm(!showAddMerchForm)
-                                  }
+                                  onClick={() => setShowAddMerchForm(!showAddMerchForm)}
                                   className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
                                 >
                                   <Plus className="w-3.5 h-3.5" />
-                                  <span>
-                                    {showAddMerchForm
-                                      ? 'Cerrar'
-                                      : '+ Añadir Producto'}
-                                  </span>
+                                  <span>{showAddMerchForm ? 'Cerrar' : '+ Añadir Producto'}</span>
                                 </button>
                               </div>
                             </div>
@@ -9997,117 +8172,68 @@ export default function CalendarView({
                               >
                                 <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
                                 <span>
-                                  ¡Resumen de arqueo y ventas copiado al
-                                  portapapeles con formato WhatsApp para el
-                                  grupo de la banda!
+                                  ¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!
                                 </span>
                               </motion.div>
                             )}
 
                             {/* KPI Grid: Cuadre y Métricas Principales */}
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                              <div
-                                className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
-                              >
+                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
                                 <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Truck className="w-3 h-3 text-[var(--ink-2)]" />{' '}
-                                  Sube a Furgón
+                                  <Truck className="w-3 h-3 text-[var(--ink-2)]" /> Sube a Furgón
                                 </span>
                                 <div className="mt-1 flex items-baseline gap-1">
-                                  <span
-                                    className={`text-lg font-bold font-sans ${textTitle}`}
-                                  >
-                                    {totalInicial}
-                                  </span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">
-                                    uds
-                                  </span>
+                                  <span className={`text-lg font-bold font-sans ${textTitle}`}>{totalInicial}</span>
+                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">uds</span>
                                 </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">
-                                  Inventario de salida
-                                </p>
+                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Inventario de salida</p>
                               </div>
 
-                              <div
-                                className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
-                              >
+                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
                                 <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <ShoppingBag className="w-3 h-3 text-[var(--acc)]" />{' '}
-                                  Stock Final
+                                  <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock Final
                                 </span>
                                 <div className="mt-1 flex items-baseline gap-1">
-                                  <span
-                                    className={`text-lg font-bold font-sans ${textTitle}`}
-                                  >
-                                    {totalFinal}
-                                  </span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">
-                                    uds
-                                  </span>
+                                  <span className={`text-lg font-bold font-sans ${textTitle}`}>{totalFinal}</span>
+                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">uds</span>
                                 </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">
-                                  Quedan en furgoneta
-                                </p>
+                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Quedan en furgoneta</p>
                               </div>
 
-                              <div
-                                className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
-                              >
+                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
                                 <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Zap className="w-3 h-3 text-[var(--ok)]" />{' '}
-                                  Vendidas
+                                  <Zap className="w-3 h-3 text-[var(--ok)]" /> Vendidas
                                 </span>
                                 <div className="mt-1 flex items-baseline gap-1">
-                                  <span className="text-lg font-bold font-sans text-[var(--ok)]">
-                                    {totalVendidas}
-                                  </span>
-                                  <span className="text-[10px] text-[var(--ok)]/70 font-sans font-bold">
-                                    ({porcentajeVendido}%)
-                                  </span>
+                                  <span className="text-lg font-bold font-sans text-[var(--ok)]">{totalVendidas}</span>
+                                  <span className="text-[10px] text-[var(--ok)]/70 font-sans font-bold">({porcentajeVendido}%)</span>
                                 </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">
-                                  Salidas del bolo
-                                </p>
+                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Salidas del bolo</p>
                               </div>
 
-                              <div
-                                className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
-                              >
+                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
                                 <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Calculator className="w-3 h-3 text-[var(--tentative)]" />{' '}
-                                  Venta Teórica
+                                  <Calculator className="w-3 h-3 text-[var(--tentative)]" /> Venta Teórica
                                 </span>
                                 <div className="mt-1 flex items-baseline gap-1">
                                   <span className="text-lg font-bold font-sans text-[var(--tentative)]">
                                     {totalVentaTeorica.toFixed(2)}
                                   </span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">
-                                    €
-                                  </span>
+                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">€</span>
                                 </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">
-                                  Según inventario
-                                </p>
+                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Según inventario</p>
                               </div>
 
-                              <div
-                                className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
-                              >
+                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
                                 <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Coins className="w-3 h-3 text-[var(--ok)]" />{' '}
-                                  Cobrado Real
+                                  <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado Real
                                 </span>
                                 <div className="mt-1 flex items-baseline gap-1">
-                                  <span className="text-lg font-bold font-sans text-[var(--ok)]">
-                                    {totalCobradoReal.toFixed(2)}
-                                  </span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">
-                                    €
-                                  </span>
+                                  <span className="text-lg font-bold font-sans text-[var(--ok)]">{totalCobradoReal.toFixed(2)}</span>
+                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">€</span>
                                 </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">
-                                  Efectivo + Bizum
-                                </p>
+                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Efectivo + Bizum</p>
                               </div>
 
                               <div
@@ -10120,8 +8246,7 @@ export default function CalendarView({
                                 }`}
                               >
                                 <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <ShieldCheck className="w-3 h-3" /> Cuadre
-                                  Caja
+                                  <ShieldCheck className="w-3 h-3" /> Cuadre Caja
                                 </span>
                                 <div className="mt-1 flex items-baseline gap-1">
                                   <span
@@ -10139,9 +8264,7 @@ export default function CalendarView({
                                         ? `+${diferenciaCuadre.toFixed(2)}`
                                         : diferenciaCuadre.toFixed(2)}
                                   </span>
-                                  <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                                    €
-                                  </span>
+                                  <span className="text-[10px] font-sans text-[var(--ink-2)]">€</span>
                                 </div>
                                 <p
                                   className={`text-[9px] font-sans font-bold ${
@@ -10168,16 +8291,12 @@ export default function CalendarView({
                                   initial={{ opacity: 0, height: 0 }}
                                   animate={{ opacity: 1, height: 'auto' }}
                                   exit={{ opacity: 0, height: 0 }}
-                                  onSubmit={(e) =>
-                                    handleAddMerchItem(modalRoadbookKey, e)
-                                  }
+                                  onSubmit={(e) => handleAddMerchItem(modalRoadbookKey, e)}
                                   className={`p-3.5 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--acc-soft)] /30'}`}
                                 >
                                   <div className="flex items-center justify-between">
                                     <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                                      <Plus className="w-3.5 h-3.5" /> Nuevo
-                                      Artículo de Merchandising para este
-                                      Concierto
+                                      <Plus className="w-3.5 h-3.5" /> Nuevo Artículo de Merchandising para este Concierto
                                     </span>
                                     <button
                                       type="button"
@@ -10190,104 +8309,62 @@ export default function CalendarView({
 
                                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-sans">
                                     <div className="md:col-span-2">
-                                      <label
-                                        className={`block text-[10px] mb-1 ${textSub}`}
-                                      >
-                                        Nombre del Producto *
-                                      </label>
+                                      <label className={`block text-[10px] mb-1 ${textSub}`}>Nombre del Producto *</label>
                                       <input
                                         type="text"
                                         required
                                         placeholder="Ej: Camiseta Gira Oficial, Vinilo LP..."
                                         value={newMerchNombre}
-                                        onChange={(e) =>
-                                          setNewMerchNombre(e.target.value)
-                                        }
+                                        onChange={(e) => setNewMerchNombre(e.target.value)}
                                         className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] outline-none text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                       />
                                     </div>
 
                                     <div>
-                                      <label
-                                        className={`block text-[10px] mb-1 ${textSub}`}
-                                      >
-                                        Categoría
-                                      </label>
+                                      <label className={`block text-[10px] mb-1 ${textSub}`}>Categoría</label>
                                       <select
                                         value={newMerchCategoria}
-                                        onChange={(e) =>
-                                          setNewMerchCategoria(
-                                            e.target.value as any
-                                          )
-                                        }
+                                        onChange={(e) => setNewMerchCategoria(e.target.value as any)}
                                         className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                       >
-                                        <option value="camisetas">
-                                          👕 Camisetas
-                                        </option>
-                                        <option value="vinilos">
-                                          💿 Vinilos
-                                        </option>
-                                        <option value="musica">
-                                          🎵 Música (CD/Tape)
-                                        </option>
-                                        <option value="accesorios">
-                                          🎸 Púas / Accesorios
-                                        </option>
+                                        <option value="camisetas">👕 Camisetas</option>
+                                        <option value="vinilos">💿 Vinilos</option>
+                                        <option value="musica">🎵 Música (CD/Tape)</option>
+                                        <option value="accesorios">🎸 Púas / Accesorios</option>
                                         <option value="otro">🏷️ Otro</option>
                                       </select>
                                     </div>
 
                                     <div>
-                                      <label
-                                        className={`block text-[10px] mb-1 ${textSub}`}
-                                      >
-                                        Talla / Versión
-                                      </label>
+                                      <label className={`block text-[10px] mb-1 ${textSub}`}>Talla / Versión</label>
                                       <input
                                         type="text"
                                         placeholder="Ej: M, L, XL, 12'', Pack..."
                                         value={newMerchTalla}
-                                        onChange={(e) =>
-                                          setNewMerchTalla(e.target.value)
-                                        }
+                                        onChange={(e) => setNewMerchTalla(e.target.value)}
                                         className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] outline-none text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                       />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-1.5">
                                       <div>
-                                        <label
-                                          className={`block text-[10px] mb-1 ${textSub}`}
-                                        >
-                                          Precio (€)
-                                        </label>
+                                        <label className={`block text-[10px] mb-1 ${textSub}`}>Precio (€)</label>
                                         <input
                                           type="number"
                                           step="0.5"
                                           min="0"
                                           value={newMerchPrecio}
-                                          onChange={(e) =>
-                                            setNewMerchPrecio(e.target.value)
-                                          }
+                                          onChange={(e) => setNewMerchPrecio(e.target.value)}
                                           className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                         />
                                       </div>
                                       <div>
-                                        <label
-                                          className={`block text-[10px] mb-1 ${textSub}`}
-                                        >
-                                          Furgón (uds)
-                                        </label>
+                                        <label className={`block text-[10px] mb-1 ${textSub}`}>Furgón (uds)</label>
                                         <input
                                           type="number"
                                           min="0"
                                           value={newMerchStockInicial}
-                                          onChange={(e) =>
-                                            setNewMerchStockInicial(
-                                              e.target.value
-                                            )
-                                          }
+                                          onChange={(e) => setNewMerchStockInicial(e.target.value)}
                                           className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                         />
                                       </div>
@@ -10308,29 +8385,20 @@ export default function CalendarView({
                             </AnimatePresence>
 
                             {/* Tabla de Artículos: Sube a Furgoneta vs Stock Final Noche */}
-                            <div
-                              className={`rounded-[var(--r-m)] overflow-hidden ${'bg-[var(--surface)]'}`}
-                            >
+                            <div className={`rounded-[var(--r-m)] overflow-hidden ${'bg-[var(--surface)]'}`}>
                               <div className="p-3 /80 flex items-center justify-between flex-wrap gap-2">
                                 <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
-                                  <Shirt className="w-4 h-4" /> Inventario de
-                                  Merchandising ({items.length} productos)
+                                  <Shirt className="w-4 h-4" /> Inventario de Merchandising ({items.length} productos)
                                 </span>
-                                <span
-                                  className={`text-[11px] font-sans ${textSub}`}
-                                >
-                                  Ajusta las unidades al subir a la furgoneta y
-                                  al terminar el bolo
+                                <span className={`text-[11px] font-sans ${textSub}`}>
+                                  Ajusta las unidades al subir a la furgoneta y al terminar el bolo
                                 </span>
                               </div>
 
                               {items.length === 0 ? (
                                 <div className="p-8 text-center space-y-2">
                                   <Shirt className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
-                                  <p className={`text-xs font-sans ${textSub}`}>
-                                    Aún no has registrado productos para este
-                                    bolo.
-                                  </p>
+                                  <p className={`text-xs font-sans ${textSub}`}>Aún no has registrado productos para este bolo.</p>
                                   <button
                                     type="button"
                                     onClick={() => setShowAddMerchForm(true)}
@@ -10343,22 +8411,10 @@ export default function CalendarView({
                               ) : (
                                 <div className="divide-y divide-[var(--hair)]800/60">
                                   {items.map((item) => {
-                                    const vendidas = Math.max(
-                                      0,
-                                      (item.stockInicial || 0) -
-                                        (item.stockFinal || 0)
-                                    );
-                                    const subtotal =
-                                      vendidas * (item.precioUnitario || 0);
-                                    const catConfig =
-                                      categoriaIcons[item.categoria] ||
-                                      categoriaIcons.otro;
-                                    const pctVendido =
-                                      item.stockInicial > 0
-                                        ? Math.round(
-                                            (vendidas / item.stockInicial) * 100
-                                          )
-                                        : 0;
+                                    const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
+                                    const subtotal = vendidas * (item.precioUnitario || 0);
+                                    const catConfig = categoriaIcons[item.categoria] || categoriaIcons.otro;
+                                    const pctVendido = item.stockInicial > 0 ? Math.round((vendidas / item.stockInicial) * 100) : 0;
 
                                     return (
                                       <div
@@ -10367,18 +8423,10 @@ export default function CalendarView({
                                       >
                                         {/* Datos del producto */}
                                         <div className="flex items-center gap-2.5 min-w-[220px]">
-                                          <div
-                                            className={`p-2 rounded-[var(--r-s)] shrink-0 ${catConfig.color}`}
-                                          >
-                                            {catConfig.icon}
-                                          </div>
+                                          <div className={`p-2 rounded-[var(--r-s)] shrink-0 ${catConfig.color}`}>{catConfig.icon}</div>
                                           <div className="min-w-0">
                                             <div className="flex items-center gap-1.5 flex-wrap">
-                                              <h4
-                                                className={`text-xs font-bold font-sans ${textTitle}`}
-                                              >
-                                                {item.nombre}
-                                              </h4>
+                                              <h4 className={`text-xs font-bold font-sans ${textTitle}`}>{item.nombre}</h4>
                                               {item.talla && (
                                                 <span className="px-1.5 py-0.2 rounded text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink)]">
                                                   {item.talla}
@@ -10387,10 +8435,7 @@ export default function CalendarView({
                                             </div>
                                             <div className="flex items-center gap-2 mt-0.5 text-[10px] font-sans text-[var(--ink-2)]">
                                               <span>
-                                                Precio:{' '}
-                                                <strong className="text-[var(--acc)]">
-                                                  {item.precioUnitario}€
-                                                </strong>
+                                                Precio: <strong className="text-[var(--acc)]">{item.precioUnitario}€</strong>
                                               </span>
                                               <span>•</span>
                                               <span>{catConfig.label}</span>
@@ -10401,28 +8446,17 @@ export default function CalendarView({
                                         {/* Controles de Stock Inicial (Sube a Furgoneta) y Stock Final */}
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 items-center flex-1 max-w-lg">
                                           {/* Sube a Furgoneta */}
-                                          <div
-                                            className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}
-                                          >
+                                          <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
                                             <span className="block text-[9px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
-                                              <Truck className="w-2.5 h-2.5 text-[var(--ink-2)]" />{' '}
-                                              Sube Furgón
+                                              <Truck className="w-2.5 h-2.5 text-[var(--ink-2)]" /> Sube Furgón
                                             </span>
                                             <div className="flex items-center gap-1">
                                               <button
                                                 type="button"
                                                 onClick={() =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    {
-                                                      stockInicial: Math.max(
-                                                        0,
-                                                        (item.stockInicial ||
-                                                          0) - 1
-                                                      ),
-                                                    }
-                                                  )
+                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                                    stockInicial: Math.max(0, (item.stockInicial || 0) - 1),
+                                                  })
                                                 }
                                                 className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
                                               >
@@ -10433,34 +8467,18 @@ export default function CalendarView({
                                                 min="0"
                                                 value={item.stockInicial}
                                                 onChange={(e) =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    {
-                                                      stockInicial: Math.max(
-                                                        0,
-                                                        parseInt(
-                                                          e.target.value,
-                                                          10
-                                                        ) || 0
-                                                      ),
-                                                    }
-                                                  )
+                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                                    stockInicial: Math.max(0, parseInt(e.target.value, 10) || 0),
+                                                  })
                                                 }
                                                 className={`w-12 text-center text-xs font-sans font-bold py-0.5 rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                               />
                                               <button
                                                 type="button"
                                                 onClick={() =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    {
-                                                      stockInicial:
-                                                        (item.stockInicial ||
-                                                          0) + 1,
-                                                    }
-                                                  )
+                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                                    stockInicial: (item.stockInicial || 0) + 1,
+                                                  })
                                                 }
                                                 className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
                                               >
@@ -10470,23 +8488,14 @@ export default function CalendarView({
                                           </div>
 
                                           {/* Stock Final (Fin de Noche) */}
-                                          <div
-                                            className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}
-                                          >
+                                          <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
                                             <div className="flex items-center justify-between mb-1">
                                               <span className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                                <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" />{' '}
-                                                Stock Final
+                                                <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" /> Stock Final
                                               </span>
                                               <button
                                                 type="button"
-                                                onClick={() =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    { stockFinal: 0 }
-                                                  )
-                                                }
+                                                onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
                                                 className="text-[8px] font-sans px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
                                                 title="Marcar como agotado tras el concierto"
                                               >
@@ -10497,17 +8506,9 @@ export default function CalendarView({
                                               <button
                                                 type="button"
                                                 onClick={() =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    {
-                                                      stockFinal: Math.max(
-                                                        0,
-                                                        (item.stockFinal || 0) -
-                                                          1
-                                                      ),
-                                                    }
-                                                  )
+                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                                    stockFinal: Math.max(0, (item.stockFinal || 0) - 1),
+                                                  })
                                                 }
                                                 className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
                                               >
@@ -10518,34 +8519,18 @@ export default function CalendarView({
                                                 min="0"
                                                 value={item.stockFinal}
                                                 onChange={(e) =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    {
-                                                      stockFinal: Math.max(
-                                                        0,
-                                                        parseInt(
-                                                          e.target.value,
-                                                          10
-                                                        ) || 0
-                                                      ),
-                                                    }
-                                                  )
+                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                                    stockFinal: Math.max(0, parseInt(e.target.value, 10) || 0),
+                                                  })
                                                 }
                                                 className={`w-12 text-center text-xs font-sans font-bold py-0.5 rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                               />
                                               <button
                                                 type="button"
                                                 onClick={() =>
-                                                  handleUpdateMerchItem(
-                                                    modalRoadbookKey,
-                                                    item.id,
-                                                    {
-                                                      stockFinal:
-                                                        (item.stockFinal || 0) +
-                                                        1,
-                                                    }
-                                                  )
+                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                                    stockFinal: (item.stockFinal || 0) + 1,
+                                                  })
                                                 }
                                                 className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
                                               >
@@ -10557,9 +8542,7 @@ export default function CalendarView({
                                           {/* Resumen Ventas del Artículo */}
                                           <div className="col-span-2 sm:col-span-1 flex flex-col items-end justify-center pr-2">
                                             <div className="text-right">
-                                              <span className="text-xs font-sans font-black text-[var(--acc)]">
-                                                {vendidas} vendidas
-                                              </span>
+                                              <span className="text-xs font-sans font-black text-[var(--acc)]">{vendidas} vendidas</span>
                                               <span className="block text-xs font-sans font-bold text-[var(--ok)]">
                                                 {subtotal.toFixed(2)} €
                                               </span>
@@ -10579,12 +8562,7 @@ export default function CalendarView({
                                         <div className="flex items-center justify-end">
                                           <button
                                             type="button"
-                                            onClick={() =>
-                                              handleDeleteMerchItem(
-                                                modalRoadbookKey,
-                                                item.id
-                                              )
-                                            }
+                                            onClick={() => handleDeleteMerchItem(modalRoadbookKey, item.id)}
                                             className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert-soft)] transition-colors cursor-pointer"
                                             title="Eliminar este artículo del bolo"
                                           >
@@ -10599,32 +8577,24 @@ export default function CalendarView({
                             </div>
 
                             {/* Módulo de Arqueo de Caja y Cobros (Efectivo & Bizum) */}
-                            <div
-                              className={`p-4 rounded-[var(--r-m)] space-y-4 ${'bg-[var(--bg)]'}`}
-                            >
+                            <div className={`p-4 rounded-[var(--r-m)] space-y-4 ${'bg-[var(--bg)]'}`}>
                               <div className="flex items-center justify-between pb-2">
                                 <span className="text-xs font-sans font-bold tracking-wider text-[var(--ok)] flex items-center gap-1.5">
-                                  <Coins className="w-4 h-4" /> Arqueo de Caja y
-                                  Métodos de Cobro
+                                  <Coins className="w-4 h-4" /> Arqueo de Caja y Métodos de Cobro
                                 </span>
                                 <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                                  Introduce los importes reales cobrados durante
-                                  la noche
+                                  Introduce los importes reales cobrados durante la noche
                                 </span>
                               </div>
 
                               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 {/* Efectivo Recaudado */}
-                                <div
-                                  className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/30'}`}
-                                >
+                                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/30'}`}>
                                   <div className="flex items-center gap-1.5 text-[var(--ok)] font-sans font-bold text-xs mb-1">
                                     <Banknote className="w-4 h-4" />
                                     <span>Efectivo en Caja (€)</span>
                                   </div>
-                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">
-                                    Billetes y monedas cobrados en el bolo
-                                  </p>
+                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">Billetes y monedas cobrados en el bolo</p>
                                   <div className="flex items-center gap-1.5">
                                     <input
                                       type="number"
@@ -10632,35 +8602,23 @@ export default function CalendarView({
                                       min="0"
                                       value={merch.ingresosEfectivo ?? 0}
                                       onChange={(e) =>
-                                        handleUpdateMerchTotals(
-                                          modalRoadbookKey,
-                                          {
-                                            ingresosEfectivo: Math.max(
-                                              0,
-                                              parseFloat(e.target.value) || 0
-                                            ),
-                                          }
-                                        )
+                                        handleUpdateMerchTotals(modalRoadbookKey, {
+                                          ingresosEfectivo: Math.max(0, parseFloat(e.target.value) || 0),
+                                        })
                                       }
                                       className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                     />
-                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">
-                                      €
-                                    </span>
+                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
                                   </div>
                                 </div>
 
                                 {/* Bizum / TPV Recaudado */}
-                                <div
-                                  className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/30'}`}
-                                >
+                                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/30'}`}>
                                   <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-sans font-bold text-xs mb-1">
                                     <Smartphone className="w-4 h-4" />
                                     <span>Bizum / TPV (€)</span>
                                   </div>
-                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">
-                                    Pagos por móvil y datáfono del bolo
-                                  </p>
+                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">Pagos por móvil y datáfono del bolo</p>
                                   <div className="flex items-center gap-1.5">
                                     <input
                                       type="number"
@@ -10668,28 +8626,18 @@ export default function CalendarView({
                                       min="0"
                                       value={merch.ingresosBizum ?? 0}
                                       onChange={(e) =>
-                                        handleUpdateMerchTotals(
-                                          modalRoadbookKey,
-                                          {
-                                            ingresosBizum: Math.max(
-                                              0,
-                                              parseFloat(e.target.value) || 0
-                                            ),
-                                          }
-                                        )
+                                        handleUpdateMerchTotals(modalRoadbookKey, {
+                                          ingresosBizum: Math.max(0, parseFloat(e.target.value) || 0),
+                                        })
                                       }
                                       className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                     />
-                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">
-                                      €
-                                    </span>
+                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
                                   </div>
                                 </div>
 
                                 {/* Fondo de Caja Inicial */}
-                                <div
-                                  className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
-                                >
+                                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
                                   <div className="flex items-center gap-1.5 text-[var(--acc)] font-sans font-bold text-xs mb-1">
                                     <Coins className="w-4 h-4" />
                                     <span>Fondo de Caja (€)</span>
@@ -10704,21 +8652,13 @@ export default function CalendarView({
                                       min="0"
                                       value={merch.fondoCajaInicial ?? 0}
                                       onChange={(e) =>
-                                        handleUpdateMerchTotals(
-                                          modalRoadbookKey,
-                                          {
-                                            fondoCajaInicial: Math.max(
-                                              0,
-                                              parseFloat(e.target.value) || 0
-                                            ),
-                                          }
-                                        )
+                                        handleUpdateMerchTotals(modalRoadbookKey, {
+                                          fondoCajaInicial: Math.max(0, parseFloat(e.target.value) || 0),
+                                        })
                                       }
                                       className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                                     />
-                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">
-                                      €
-                                    </span>
+                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
                                   </div>
                                 </div>
                               </div>
@@ -10732,25 +8672,13 @@ export default function CalendarView({
                                     Resumen del Dinero Recaudado en el Puesto:
                                   </span>
                                   <p className="text-[11px] font-sans text-[var(--ink-2)]">
-                                    💵{' '}
-                                    {(merch.ingresosEfectivo || 0).toFixed(2)}€
-                                    Efectivo + 📱{' '}
-                                    {(merch.ingresosBizum || 0).toFixed(2)}€
-                                    Bizum ={' '}
-                                    <strong className="text-[var(--ok)]">
-                                      {totalCobradoReal.toFixed(2)}€ Total
-                                      Ventas
-                                    </strong>
+                                    💵 {(merch.ingresosEfectivo || 0).toFixed(2)}€ Efectivo + 📱 {(merch.ingresosBizum || 0).toFixed(2)}€
+                                    Bizum = <strong className="text-[var(--ok)]">{totalCobradoReal.toFixed(2)}€ Total Ventas</strong>
                                   </p>
                                   {merch.fondoCajaInicial ? (
                                     <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                                      (Efectivo físico total a retirar del cajón
-                                      incluyendo fondo de caja:{' '}
-                                      {(
-                                        (merch.ingresosEfectivo || 0) +
-                                        (merch.fondoCajaInicial || 0)
-                                      ).toFixed(2)}{' '}
-                                      €)
+                                      (Efectivo físico total a retirar del cajón incluyendo fondo de caja:{' '}
+                                      {((merch.ingresosEfectivo || 0) + (merch.fondoCajaInicial || 0)).toFixed(2)} €)
                                     </p>
                                   ) : null}
                                 </div>
@@ -10773,18 +8701,12 @@ export default function CalendarView({
                                     ) : diferenciaCuadre > 0 ? (
                                       <>
                                         <Sparkles className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                                        <span>
-                                          +{diferenciaCuadre.toFixed(2)} €
-                                          (Superávit / Donaciones)
-                                        </span>
+                                        <span>+{diferenciaCuadre.toFixed(2)} € (Superávit / Donaciones)</span>
                                       </>
                                     ) : (
                                       <>
                                         <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
-                                        <span>
-                                          {diferenciaCuadre.toFixed(2)} €
-                                          (Descuadre por revisar)
-                                        </span>
+                                        <span>{diferenciaCuadre.toFixed(2)} € (Descuadre por revisar)</span>
                                       </>
                                     )}
                                   </span>
@@ -10794,8 +8716,7 @@ export default function CalendarView({
                               {/* Observaciones y Notas del Puesto de Merch */}
                               <div>
                                 <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                                  Notas del Puesto de Merchandising /
-                                  Incidencias
+                                  Notas del Puesto de Merchandising / Incidencias
                                 </label>
                                 <textarea
                                   rows={2}
@@ -10822,34 +8743,21 @@ export default function CalendarView({
                             <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--tentative)] text-[var(--ink)]">
                               Sección 5
                             </span>
-                            <h3
-                              className={`text-sm font-sans font-bold ${textTitle}`}
-                            >
-                              Checklist de Cierre de Material & Carga de
-                              Furgoneta
+                            <h3 className={`text-sm font-sans font-bold ${textTitle}`}>
+                              Checklist de Cierre de Material & Carga de Furgoneta
                             </h3>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <button
                               type="button"
-                              onClick={() =>
-                                handleToggleAllCierreItems(
-                                  modalRoadbookKey,
-                                  true
-                                )
-                              }
+                              onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
                               className="px-2 py-1 rounded text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
                             >
                               ✓ Marcar Todo
                             </button>
                             <button
                               type="button"
-                              onClick={() =>
-                                handleToggleAllCierreItems(
-                                  modalRoadbookKey,
-                                  false
-                                )
-                              }
+                              onClick={() => handleToggleAllCierreItems(modalRoadbookKey, false)}
                               className="px-2 py-1 rounded text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
                             >
                               ↺ Desmarcar
@@ -10860,42 +8768,23 @@ export default function CalendarView({
                         {/* Barra de Progreso y Banner de Estado */}
                         {(() => {
                           const items = modalRoadbook.cierreMaterial || [];
-                          const checkedCount = items.filter(
-                            (i) => i.checked
-                          ).length;
+                          const checkedCount = items.filter((i) => i.checked).length;
                           const totalCount = items.length;
-                          const pct =
-                            totalCount > 0
-                              ? Math.round((checkedCount / totalCount) * 100)
-                              : 0;
-                          const isCompleted =
-                            totalCount > 0 && checkedCount === totalCount;
+                          const pct = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+                          const isCompleted = totalCount > 0 && checkedCount === totalCount;
 
                           return (
                             <div className="space-y-2">
                               <div className="flex items-center justify-between text-xs font-sans font-bold">
                                 <span className="text-[var(--tentative)]/80">
-                                  {checkedCount} de {totalCount} elementos
-                                  verificados
+                                  {checkedCount} de {totalCount} elementos verificados
                                 </span>
-                                <span
-                                  className={
-                                    isCompleted
-                                      ? 'text-[var(--ok)]'
-                                      : 'text-[var(--acc)]'
-                                  }
-                                >
-                                  {pct}%
-                                </span>
+                                <span className={isCompleted ? 'text-[var(--ok)]' : 'text-[var(--acc)]'}>{pct}%</span>
                               </div>
                               <div className="w-full h-2.5 rounded-full bg-[var(--surface)]/80 overflow-hidden">
                                 <div
                                   className={`h-full transition-all duration-300 ${
-                                    isCompleted
-                                      ? 'bg-[var(--ok)]'
-                                      : pct > 50
-                                        ? 'bg-[var(--tentative)]'
-                                        : 'bg-[var(--acc)]'
+                                    isCompleted ? 'bg-[var(--ok)]' : pct > 50 ? 'bg-[var(--tentative)]' : 'bg-[var(--acc)]'
                                   }`}
                                   style={{ width: `${pct}%` }}
                                 />
@@ -10905,18 +8794,15 @@ export default function CalendarView({
                                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] text-xs font-sans flex items-center gap-2">
                                   <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
                                   <span>
-                                    ¡TODO EL MATERIAL VERIFICADO! Escenario y
-                                    camerinos despejados. Furgoneta cerrada y
-                                    lista para partir.
+                                    ¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.
                                   </span>
                                 </div>
                               ) : (
                                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-xs font-sans flex items-center gap-2">
                                   <ShieldCheck className="w-4 h-4 text-[var(--tentative)] shrink-0" />
                                   <span>
-                                    Verifica uno a uno antes de cerrar la
-                                    furgoneta para garantizar cero olvidos de
-                                    cables, instrumentos o ropa.
+                                    Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o
+                                    ropa.
                                   </span>
                                 </div>
                               )}
@@ -10925,100 +8811,71 @@ export default function CalendarView({
                         })()}
 
                         {/* Listado clasificado por categoría */}
-                        {['escenario', 'camerino', 'furgoneta'].map(
-                          (catKey) => {
-                            const catLabel =
-                              catKey === 'escenario'
-                                ? '🎸 Escenario (Backline & Sonido)'
-                                : catKey === 'camerino'
-                                  ? '👕 Camerino (Ropa, Móviles & Merch)'
-                                  : '🚐 Furgoneta & Vehículo (Estiba & Cierre)';
-                            const catItems = (
-                              modalRoadbook.cierreMaterial || []
-                            ).filter((i) => i.categoria === catKey);
-                            if (catItems.length === 0) return null;
+                        {['escenario', 'camerino', 'furgoneta'].map((catKey) => {
+                          const catLabel =
+                            catKey === 'escenario'
+                              ? '🎸 Escenario (Backline & Sonido)'
+                              : catKey === 'camerino'
+                                ? '👕 Camerino (Ropa, Móviles & Merch)'
+                                : '🚐 Furgoneta & Vehículo (Estiba & Cierre)';
+                          const catItems = (modalRoadbook.cierreMaterial || []).filter((i) => i.categoria === catKey);
+                          if (catItems.length === 0) return null;
 
-                            return (
-                              <div
-                                key={catKey}
-                                className={`p-3.5 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80">
-                                    {catLabel}
-                                  </h4>
-                                  <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                                    {catItems.filter((i) => i.checked).length}/
-                                    {catItems.length}
-                                  </span>
-                                </div>
-                                <div className="space-y-1.5">
-                                  {catItems.map((item) => (
-                                    <div
-                                      key={item.id}
-                                      onClick={() =>
-                                        handleToggleCierreItem(
-                                          item.id,
-                                          modalRoadbookKey
-                                        )
-                                      }
-                                      className={`p-2.5 rounded-[var(--r-s)] transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
-                                        item.checked
-                                          ? 'bg-[var(--ok-soft)]/40 text-[var(--ink-2)] line-through'
-                                          : 'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
-                                      }`}
-                                    >
-                                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                                        <input
-                                          type="checkbox"
-                                          checked={item.checked}
-                                          onChange={() =>
-                                            handleToggleCierreItem(
-                                              item.id,
-                                              modalRoadbookKey
-                                            )
-                                          }
-                                          onClick={(e) => e.stopPropagation()}
-                                          className="w-4 h-4 rounded text-[var(--tentative)] focus:ring-[var(--tentative)] cursor-pointer"
-                                        />
-                                        <span className="text-xs font-sans font-medium">
-                                          {item.item}
-                                        </span>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleDeleteCierreItem(
-                                            item.id,
-                                            modalRoadbookKey
-                                          );
-                                        }}
-                                        className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors cursor-pointer"
-                                        title="Eliminar este ítem"
-                                      >
-                                        <Trash2 className="w-3 h-3" />
-                                      </button>
-                                    </div>
-                                  ))}
-                                </div>
+                          return (
+                            <div key={catKey} className={`p-3.5 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80">{catLabel}</h4>
+                                <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                                  {catItems.filter((i) => i.checked).length}/{catItems.length}
+                                </span>
                               </div>
-                            );
-                          }
-                        )}
+                              <div className="space-y-1.5">
+                                {catItems.map((item) => (
+                                  <div
+                                    key={item.id}
+                                    onClick={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
+                                    className={`p-2.5 rounded-[var(--r-s)] transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
+                                      item.checked
+                                        ? 'bg-[var(--ok-soft)]/40 text-[var(--ink-2)] line-through'
+                                        : 'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                      <input
+                                        type="checkbox"
+                                        checked={item.checked}
+                                        onChange={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="w-4 h-4 rounded text-[var(--tentative)] focus:ring-[var(--tentative)] cursor-pointer"
+                                      />
+                                      <span className="text-xs font-sans font-medium">{item.item}</span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteCierreItem(item.id, modalRoadbookKey);
+                                      }}
+                                      className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors cursor-pointer"
+                                      title="Eliminar este ítem"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
 
                         {/* Formulario para añadir ítem al checklist */}
                         <form
-                          onSubmit={(e) =>
-                            handleAddCierreItem(modalRoadbookKey, e)
-                          }
+                          onSubmit={(e) => handleAddCierreItem(modalRoadbookKey, e)}
                           className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 flex-wrap ${'bg-[var(--surface)]'}`}
                         >
                           <select
                             value={newCierreItemCat}
-                            onChange={(e) =>
-                              setNewCierreItemCat(e.target.value as any)
-                            }
+                            onChange={(e) => setNewCierreItemCat(e.target.value as any)}
                             className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                           >
                             <option value="escenario">🎸 Escenario</option>
@@ -11028,9 +8885,7 @@ export default function CalendarView({
                           <input
                             type="text"
                             value={newCierreItemText}
-                            onChange={(e) =>
-                              setNewCierreItemText(e.target.value)
-                            }
+                            onChange={(e) => setNewCierreItemText(e.target.value)}
                             placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)..."
                             className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                           />
@@ -11052,11 +8907,7 @@ export default function CalendarView({
         })()}
 
       {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal
-        moduleId="calendario"
-        isOpen={isTutorialOpen}
-        onClose={closeTutorial}
-      />
+      <ModuleTutorialModal moduleId="calendario" isOpen={isTutorialOpen} onClose={closeTutorial} />
 
       {/* Vista de Directo / Modo Escenario asociado a la fecha del calendario */}
       {activeStageSetlist && (

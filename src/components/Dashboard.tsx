@@ -30,16 +30,8 @@ import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
 import { NeedsAttentionBanner } from './dashboard/NeedsAttentionBanner';
 import { ConvocarEnsayoModal } from './ensayos/ConvocarEnsayoModal';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
-import {
-  autoDetectVenueAddress,
-  normalizeStatus,
-  normalizeType,
-} from '../utils/bookingUtils';
-import {
-  leadStatusDotColor,
-  leadStatusBadgeClass,
-  leadStatusLabel,
-} from '../utils/leadStatusPresentation';
+import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
 import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
 import {
   Search,
@@ -123,26 +115,13 @@ interface DashboardProps {
 const isMedio = (l?: Lead | null) => {
   if (!l || !l.tipo) return false;
   const s = String(l.tipo).trim().toLowerCase();
-  return (
-    s.includes('medio') ||
-    s.includes('radio') ||
-    s.includes('prensa') ||
-    s.includes('tv') ||
-    s.includes('podc')
-  );
+  return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
 };
 
 const isManagement = (l?: Lead | null) => {
   if (!l || !l.tipo) return false;
   const s = String(l.tipo).trim().toLowerCase();
-  return [
-    'agencia',
-    'manager',
-    'productora',
-    'sello',
-    'promotora',
-    'management',
-  ].some((t) => s.includes(t));
+  return ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some((t) => s.includes(t));
 };
 
 export default function Dashboard({
@@ -180,9 +159,7 @@ export default function Dashboard({
   const [syncLoading, setSyncLoading] = useState(false);
 
   // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
-  const [agendaFilterMode, setAgendaFilterMode] = useState<'active' | 'all'>(
-    'all'
-  );
+  const [agendaFilterMode, setAgendaFilterMode] = useState<'active' | 'all'>('all');
 
   const isPromo =
     isPromoPlanProp ??
@@ -193,8 +170,7 @@ export default function Dashboard({
         availableBands.find(
           (b) =>
             (b.band_id === currentBandId || (b as any).id === currentBandId) &&
-            (normalizePlan((b as any).plan) === 'promo' ||
-              normalizePlan((b as any).plan) === 'promo_plus')
+            (normalizePlan((b as any).plan) === 'promo' || normalizePlan((b as any).plan) === 'promo_plus')
         )
       ));
 
@@ -234,10 +210,7 @@ export default function Dashboard({
     let isMounted = true;
     const loadRepertorioData = async () => {
       try {
-        const [songsRes, setlistsRes] = await Promise.all([
-          api.getSongs(),
-          api.getSetlists(),
-        ]);
+        const [songsRes, setlistsRes] = await Promise.all([api.getSongs(), api.getSetlists()]);
 
         if (isMounted) {
           if (songsRes?.songs && Array.isArray(songsRes.songs)) {
@@ -324,9 +297,7 @@ export default function Dashboard({
       if (resData.success && resData.data) {
         setScrapedData(resData.data);
       } else {
-        throw new Error(
-          resData.error || 'No se pudieron extraer datos de contacto.'
-        );
+        throw new Error(resData.error || 'No se pudieron extraer datos de contacto.');
       }
     } catch (err: any) {
       clearInterval(interval);
@@ -336,20 +307,13 @@ export default function Dashboard({
     }
   };
 
-  const getScrapedVal = (field: any) =>
-    typeof field === 'object' && field !== null ? field.valor : field;
-  const getScrapedConf = (field: any) =>
-    typeof field === 'object' && field !== null
-      ? field.confianza || 'baja'
-      : 'alta';
+  const getScrapedVal = (field: any) => (typeof field === 'object' && field !== null ? field.valor : field);
+  const getScrapedConf = (field: any) => (typeof field === 'object' && field !== null ? field.confianza || 'baja' : 'alta');
 
   const handleApplyScrapedData = (lead: Lead) => {
     if (!scrapedData) return;
     const today = new Date().toISOString().split('T')[0];
-    const sourceSummary =
-      typeof scrapedData.source_info === 'string'
-        ? scrapedData.source_info
-        : 'Scout Scraper Grounding';
+    const sourceSummary = typeof scrapedData.source_info === 'string' ? scrapedData.source_info : 'Scout Scraper Grounding';
     const updatedNotes = `*** [${today}] Datos enriquecidos vía Scout Scraper. ${sourceSummary} ***\n${lead.notas || ''}`;
 
     const emailVal = getScrapedVal(scrapedData.email_contacto);
@@ -368,14 +332,10 @@ export default function Dashboard({
       website: webVal || lead.website,
       instagram: instaVal || lead.instagram,
       contacto_nombre: contactoVal || lead.contacto_nombre,
-      aforo:
-        aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : lead.aforo,
+      aforo: aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : lead.aforo,
       region: regionVal || lead.region,
       genero: generoVal || lead.genero,
-      contexto_extra:
-        contextoVal && typeof contextoVal === 'string' && contextoVal.trim()
-          ? contextoVal.trim()
-          : lead.contexto_extra,
+      contexto_extra: contextoVal && typeof contextoVal === 'string' && contextoVal.trim() ? contextoVal.trim() : lead.contexto_extra,
       notas: updatedNotes,
     };
 
@@ -420,26 +380,20 @@ export default function Dashboard({
   };
 
   // Unique cities and genres for filters
-  const cities = Array.from(new Set(leads.map((l) => l.ciudad))).filter(
-    Boolean
-  );
-  const genres = Array.from(new Set(leads.map((l) => l.genero))).filter(
-    Boolean
-  );
+  const cities = Array.from(new Set(leads.map((l) => l.ciudad))).filter(Boolean);
+  const genres = Array.from(new Set(leads.map((l) => l.genero))).filter(Boolean);
 
   // Filter leads for search/scraper table
   const filteredLeads = leads.filter((lead) => {
     const matchesSearch =
-      lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase());
+      lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) || lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCity = cityFilter === 'todos' || lead.ciudad === cityFilter;
     const matchesGenre = genreFilter === 'todos' || lead.genero === genreFilter;
     return matchesSearch && matchesCity && matchesGenre;
   });
 
   const isLightTheme =
-    (typeof document !== 'undefined' &&
-      document.documentElement.dataset.theme === 'light') ||
+    (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') ||
     colors.name?.toLowerCase().includes('light') ||
     colors.bg.includes('f8fafc') ||
     colors.bg.includes('white') ||
@@ -454,26 +408,14 @@ export default function Dashboard({
   const isMedio = (l: Lead) => {
     if (!l.tipo) return false;
     const s = String(l.tipo).trim().toLowerCase();
-    return (
-      s.includes('medio') ||
-      s.includes('radio') ||
-      s.includes('prensa') ||
-      s.includes('tv') ||
-      s.includes('podc')
-    );
+    return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
   };
 
   const pendingApprovalCount = leads.filter(
-    (l) =>
-      l.estado === 'pendiente_aprobacion' ||
-      (l.pitch_generado && l.estado === 'nuevo')
+    (l) => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo')
   ).length;
-  const sentCount = leads.filter(
-    (l) => l.estado === 'esperando_respuesta'
-  ).length;
-  const interestedCount = leads.filter(
-    (l) => l.estado === 'interesado' || l.estado === 'negociando'
-  ).length;
+  const sentCount = leads.filter((l) => l.estado === 'esperando_respuesta').length;
+  const interestedCount = leads.filter((l) => l.estado === 'interesado' || l.estado === 'negociando').length;
   const approvedCount = leads.filter((l) => l.estado === 'aprobado').length;
   const mediosCount = leads.filter((l) => isMedio(l)).length;
 
@@ -514,15 +456,8 @@ export default function Dashboard({
   const getEventBandName = (bandId?: string, explicitBandName?: string) => {
     if (explicitBandName) return explicitBandName;
     if (!bandId || isSameBandId(bandId, activeBandId)) return activeBandName;
-    const match = (availableBands || []).find(
-      (b) =>
-        isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId)
-    );
-    return (
-      match?.bandName ||
-      match?.name ||
-      (isSameBandId(bandId, 'band-bakandeya') ? 'Bakandeya' : 'Banda')
-    );
+    const match = (availableBands || []).find((b) => isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId));
+    return match?.bandName || match?.name || (isSameBandId(bandId, 'band-bakandeya') ? 'Bakandeya' : 'Banda');
   };
 
   const hasMultipleBands =
@@ -551,23 +486,8 @@ export default function Dashboard({
     if (c.fecha && c.fecha < todayStr) return;
     const parts = c.fecha ? c.fecha.split('-') : [];
     const day = parts[2] || '15';
-    const monthNames = [
-      'ENE',
-      'FEB',
-      'MAR',
-      'ABR',
-      'MAY',
-      'JUN',
-      'JUL',
-      'AGO',
-      'SEP',
-      'OCT',
-      'NOV',
-      'DIC',
-    ];
-    const month = parts[1]
-      ? monthNames[parseInt(parts[1], 10) - 1] || 'AGO'
-      : 'AGO';
+    const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const month = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] || 'AGO' : 'AGO';
 
     upcomingEvents.push({
       id: c.id,
@@ -594,23 +514,8 @@ export default function Dashboard({
     if (r.fecha && r.fecha < todayStr) return;
     const parts = r.fecha ? r.fecha.split('-') : [];
     const day = parts[2] || '10';
-    const monthNames = [
-      'ENE',
-      'FEB',
-      'MAR',
-      'ABR',
-      'MAY',
-      'JUN',
-      'JUL',
-      'AGO',
-      'SEP',
-      'OCT',
-      'NOV',
-      'DIC',
-    ];
-    const month = parts[1]
-      ? monthNames[parseInt(parts[1], 10) - 1] || 'AGO'
-      : 'AGO';
+    const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const month = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] || 'AGO' : 'AGO';
 
     upcomingEvents.push({
       id: r.id,
@@ -635,14 +540,8 @@ export default function Dashboard({
   upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
 
   // Calculate urgent leads that need response or approval
-  const urgentRepliesNeeded = leads.filter(
-    (l) => l.estado === 'interesado' || l.estado === 'negociando'
-  );
-  const urgentApprovalsNeeded = leads.filter(
-    (l) =>
-      l.estado === 'pendiente_aprobacion' ||
-      (l.pitch_generado && l.estado === 'nuevo')
-  );
+  const urgentRepliesNeeded = leads.filter((l) => l.estado === 'interesado' || l.estado === 'negociando');
+  const urgentApprovalsNeeded = leads.filter((l) => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo'));
 
   // Plan Promo (fase beta, festivales): el dashboard completo enseña CRM, caché, agentes IA,
   // reels y upsells de plan por todas partes — demasiadas cosas para intentar taparlas una a
@@ -654,20 +553,14 @@ export default function Dashboard({
     const maxPromoFans = 250;
 
     return (
-      <div
-        className={`space-y-6 ${'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}
-      >
+      <div className={`space-y-6 ${'text-[var(--ink)]'} font-sans w-full max-w-full overflow-x-hidden`}>
         <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">
-              Dashboard
-            </h1>
+            <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">Dashboard</h1>
             <p className="text-sm font-sans text-[var(--ink-2)] tracking-widest">
               Panel de {activeBandName}
               {agendaFilterMode === 'all' && hasMultipleBands && (
-                <span className="ml-2 text-[var(--acc)] lowercase font-normal">
-                  (vista global de todas tus bandas)
-                </span>
+                <span className="ml-2 text-[var(--acc)] lowercase font-normal">(vista global de todas tus bandas)</span>
               )}
             </p>
           </div>
@@ -730,9 +623,7 @@ export default function Dashboard({
 
             <div className="flex items-center gap-2.5 flex-wrap">
               {/* Band Filter Mode Toggle */}
-              <div
-                className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 ${'bg-[var(--sunken)]'}`}
-              >
+              <div className={`flex items-center rounded-[var(--r-m)] p-1 gap-1 ${'bg-[var(--sunken)]'}`}>
                 <button
                   id="dashboard-promo-agenda-all-bands-btn"
                   onClick={() => setAgendaFilterMode('all')}
@@ -745,9 +636,7 @@ export default function Dashboard({
                 >
                   <Users className="w-3 h-3 shrink-0" />
                   <span>Todas</span>
-                  <span className="ml-1 text-[9px] font-sans opacity-80">
-                    ({concerts.length + rehearsals.length})
-                  </span>
+                  <span className="ml-1 text-[9px] font-sans opacity-80">({concerts.length + rehearsals.length})</span>
                 </button>
 
                 <button
@@ -761,12 +650,8 @@ export default function Dashboard({
                   title={`Ver solo eventos de ${activeBandName}`}
                 >
                   <Music className="w-3 h-3 shrink-0" />
-                  <span className="truncate max-w-[90px] sm:max-w-none">
-                    {activeBandName}
-                  </span>
-                  <span className="ml-1 text-[9px] font-sans opacity-80">
-                    ({activeBandConcerts.length + activeBandRehearsals.length})
-                  </span>
+                  <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
+                  <span className="ml-1 text-[9px] font-sans opacity-80">({activeBandConcerts.length + activeBandRehearsals.length})</span>
                 </button>
               </div>
 
@@ -797,40 +682,29 @@ export default function Dashboard({
                 >
                   <div className="flex items-start gap-3.5">
                     <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0">
-                      <span className="text-lg font-sans font-black leading-none text-[var(--acc)]">
-                        {item.day}
-                      </span>
-                      <span className="text-[10px] font-sans font-extrabold tracking-widest text-[var(--acc)]/70 mt-0.5">
-                        {item.month}
-                      </span>
+                      <span className="text-lg font-sans font-black leading-none text-[var(--acc)]">{item.day}</span>
+                      <span className="text-[10px] font-sans font-extrabold tracking-widest text-[var(--acc)]/70 mt-0.5">{item.month}</span>
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded font-sans font-bold tracking-wider ${
-                            item.type === 'concierto'
-                              ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
-                              : 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
+                            item.type === 'concierto' ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70' : 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
                           }`}
                         >
                           {item.type}
                         </span>
-                        {(agendaFilterMode === 'all' || hasMultipleBands) &&
-                          item.bandName && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded font-sans font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70/90 truncate max-w-[120px] flex items-center gap-1">
-                              <Music className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
-                              <span className="truncate">{item.bandName}</span>
-                            </span>
-                          )}
-                        <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                          • {item.badge}
-                        </span>
+                        {(agendaFilterMode === 'all' || hasMultipleBands) && item.bandName && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded font-sans font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70/90 truncate max-w-[120px] flex items-center gap-1">
+                            <Music className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
+                            <span className="truncate">{item.bandName}</span>
+                          </span>
+                        )}
+                        <span className="text-[10px] font-sans text-[var(--ink-2)]">• {item.badge}</span>
                       </div>
 
-                      <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-[var(--ink-2)] truncate">
-                        {item.title}
-                      </h4>
+                      <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-[var(--ink-2)] truncate">{item.title}</h4>
 
                       <p className="text-xs font-semibold mt-1 flex items-center gap-1 text-[var(--ink-2)] truncate">
                         <MapPin className="w-3.5 h-3.5 text-[var(--alert)] shrink-0" />
@@ -848,18 +722,11 @@ export default function Dashboard({
             </div>
           ) : (
             <div className="p-8 rounded-[var(--r-m)] bg-[var(--surface)] text-center space-y-4">
-              <PublicoSilhouette
-                opacity={0.12}
-                size="large"
-                className="mx-auto"
-              />
+              <PublicoSilhouette opacity={0.12} size="large" className="mx-auto" />
               <div>
-                <p className="text-sm font-bold text-[var(--ink)] font-display">
-                  La sala está vacía
-                </p>
+                <p className="text-sm font-bold text-[var(--ink)] font-display">La sala está vacía</p>
                 <p className="text-xs font-sans text-[var(--ink-2)] mt-0.5">
-                  Vamos a llenarla. Programa tu primer bolo o ensayo desde el
-                  calendario.
+                  Vamos a llenarla. Programa tu primer bolo o ensayo desde el calendario.
                 </p>
               </div>
               <button
@@ -885,12 +752,8 @@ export default function Dashboard({
                     <QrCode className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
-                      Captura QR & Fans
-                    </h3>
-                    <p className="text-[11px] font-sans text-[var(--ink-2)]">
-                      QRs para directos, flyers y captación de audiencia
-                    </p>
+                    <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">Captura QR & Fans</h3>
+                    <p className="text-[11px] font-sans text-[var(--ink-2)]">QRs para directos, flyers y captación de audiencia</p>
                   </div>
                 </div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
@@ -898,8 +761,7 @@ export default function Dashboard({
                 </span>
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-3 leading-relaxed">
-                Genera códigos QR de alta resolución (SVG y PNG 4K) y flyers
-                imprimibles listos para proyectar o colocar en salas y
+                Genera códigos QR de alta resolución (SVG y PNG 4K) y flyers imprimibles listos para proyectar o colocar en salas y
                 festivales.
               </p>
             </div>
@@ -925,12 +787,8 @@ export default function Dashboard({
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">
-                      Dossier (EPK) Digital
-                    </h3>
-                    <p className="text-[11px] font-sans text-[var(--ink-2)]">
-                      Prensa, rider técnico, vídeos y bio online
-                    </p>
+                    <h3 className="text-sm font-bold font-display tracking-wider text-[var(--ink-2)]">Dossier (EPK) Digital</h3>
+                    <p className="text-[11px] font-sans text-[var(--ink-2)]">Prensa, rider técnico, vídeos y bio online</p>
                   </div>
                 </div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--tentative)]/10 text-[var(--tentative)]/80">
@@ -938,8 +796,8 @@ export default function Dashboard({
                 </span>
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-3 leading-relaxed">
-                Tu carta de presentación oficial para festivales, promotores y
-                medios. Personalizable y accesible desde cualquier dispositivo.
+                Tu carta de presentación oficial para festivales, promotores y medios. Personalizable y accesible desde cualquier
+                dispositivo.
               </p>
             </div>
 
@@ -972,17 +830,12 @@ export default function Dashboard({
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">
-            Panel
-          </h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">Panel</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <p className="text-xs text-[var(--ink-2)] font-medium">
-              {activeBandName}
-            </p>
+            <p className="text-xs text-[var(--ink-2)] font-medium">{activeBandName}</p>
             <span className="text-[var(--ink-2)] hidden sm:inline">•</span>
             <span className="text-xs text-[var(--ink-2)] tabular-nums">
-              {leads.length} contactos en CRM · {upcomingEvents.length} fechas
-              agendadas
+              {leads.length} contactos en CRM · {upcomingEvents.length} fechas agendadas
             </span>
           </div>
         </div>
@@ -999,10 +852,7 @@ export default function Dashboard({
             </button>
             {showQuickAddMenu && (
               <>
-                <div
-                  className="fixed inset-0 z-30"
-                  onClick={() => setShowQuickAddMenu(false)}
-                />
+                <div className="fixed inset-0 z-30" onClick={() => setShowQuickAddMenu(false)} />
                 <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
                   <button
                     type="button"
@@ -1012,8 +862,7 @@ export default function Dashboard({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" />{' '}
-                    Lead rápido
+                    <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" /> Lead rápido
                   </button>
                   <button
                     type="button"
@@ -1023,8 +872,7 @@ export default function Dashboard({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--sunken)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" />{' '}
-                    Ensayo rápido
+                    <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-3)]" /> Ensayo rápido
                   </button>
                 </div>
               </>
@@ -1043,11 +891,7 @@ export default function Dashboard({
 
       {/* Solo se pinta si hay algo realmente esperando demasiado — no es un widget del catálogo
  a propósito, es una alerta, no contenido que se pueda ordenar o quitar. */}
-      <NeedsAttentionBanner
-        concerts={concerts}
-        leads={leads}
-        onNavigate={onNavigate}
-      />
+      <NeedsAttentionBanner concerts={concerts} leads={leads} onNavigate={onNavigate} />
 
       {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD (incluye Resumen Ejecutivo como widget más) */}
       <DashboardWidgetGrid
@@ -1085,11 +929,7 @@ export default function Dashboard({
       />
 
       {/* MODAL: PLANTILLAS Y EJEMPLOS REALES DE EMAIL */}
-      <EmailTemplatesModal
-        isOpen={isEmailTemplatesOpen}
-        onClose={() => setIsEmailTemplatesOpen(false)}
-        bandName={activeBandName}
-      />
+      <EmailTemplatesModal isOpen={isEmailTemplatesOpen} onClose={() => setIsEmailTemplatesOpen(false)} bandName={activeBandName} />
 
       {/* MODAL: AGREGAR NUEVA SALA */}
       <AddLeadModal
@@ -1140,18 +980,9 @@ export default function Dashboard({
           selectedLead={selectedLead}
           onClose={() => setSelectedLead(null)}
           onUpdateLead={onUpdateLead}
-          getStatusBadgeClass={(status) =>
-            leadStatusBadgeClass(normalizeStatus(status))
-          }
-          getStatusLabel={(status) =>
-            leadStatusLabel(
-              normalizeStatus(status),
-              String(status).toUpperCase()
-            )
-          }
-          getStatusDotColor={(status) =>
-            leadStatusDotColor(normalizeStatus(status))
-          }
+          getStatusBadgeClass={(status) => leadStatusBadgeClass(normalizeStatus(status))}
+          getStatusLabel={(status) => leadStatusLabel(normalizeStatus(status), String(status).toUpperCase())}
+          getStatusDotColor={(status) => leadStatusDotColor(normalizeStatus(status))}
           normalizeStatus={normalizeStatus}
           normalizeType={normalizeType}
           autoDetectVenueAddress={autoDetectVenueAddress}

@@ -44,20 +44,15 @@ export function CalendarWidget({
   onChangeFilterType,
   isEditMode = false,
 }: CalendarWidgetProps) {
-  const [internalViewMode, setInternalViewMode] =
-    useState<CalendarWidgetViewMode>(initialViewMode);
-  const [internalFilterType, setInternalFilterType] = useState<
-    'all' | 'concierto' | 'ensayo'
-  >(initialFilterType);
+  const [internalViewMode, setInternalViewMode] = useState<CalendarWidgetViewMode>(initialViewMode);
+  const [internalFilterType, setInternalFilterType] = useState<'all' | 'concierto' | 'ensayo'>(initialFilterType);
 
   // State for mini_month view mode navigation
   const [currentMonthDate, setCurrentMonthDate] = useState<Date>(new Date());
   const [selectedDayStr, setSelectedDayStr] = useState<string | null>(null);
 
   const viewMode = onChangeViewMode ? initialViewMode : internalViewMode;
-  const filterType = onChangeFilterType
-    ? initialFilterType
-    : internalFilterType;
+  const filterType = onChangeFilterType ? initialFilterType : internalFilterType;
 
   const handleSetViewMode = (mode: CalendarWidgetViewMode) => {
     if (onChangeViewMode) onChangeViewMode(mode);
@@ -77,9 +72,7 @@ export function CalendarWidget({
         const bId = (c.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
         const bName = (c.bandName || '').trim().toLowerCase();
         const activeName = (activeBandName || '').trim().toLowerCase();
-        return (
-          bId === 'bakandeya' || (bName && activeName && bName === activeName)
-        );
+        return bId === 'bakandeya' || (bName && activeName && bName === activeName);
       });
     }
     return concerts;
@@ -92,9 +85,7 @@ export function CalendarWidget({
         const rId = (r.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
         const rName = (r.bandName || '').trim().toLowerCase();
         const activeName = (activeBandName || '').trim().toLowerCase();
-        return (
-          rId === 'bakandeya' || (rName && activeName && rName === activeName)
-        );
+        return rId === 'bakandeya' || (rName && activeName && rName === activeName);
       });
     }
     return rehearsals;
@@ -116,20 +107,7 @@ export function CalendarWidget({
     details?: string;
   }> = [];
 
-  const monthNames = [
-    'ENE',
-    'FEB',
-    'MAR',
-    'ABR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AGO',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DIC',
-  ];
+  const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
 
   if (filterType === 'all' || filterType === 'concierto') {
     displayConcerts.forEach((c) => {
@@ -146,8 +124,7 @@ export function CalendarWidget({
         day,
         month,
         time: (c as any).hora || undefined,
-        location:
-          [c.sala, c.ciudad].filter(Boolean).join('•') || 'Por determinar',
+        location: [c.sala, c.ciudad].filter(Boolean).join('•') || 'Por determinar',
         badge: c.contrato_firmado ? 'Contrato Firmado' : 'Programado',
         bandName: (c as any).bandName || activeBandName,
         details: c.cache ? `Caché: ${c.cache}€` : undefined,
@@ -213,13 +190,9 @@ export function CalendarWidget({
             <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-[var(--ink)] flex items-center gap-2">
-              Agenda
-            </h3>
+            <h3 className="text-base font-semibold text-[var(--ink)] flex items-center gap-2">Agenda</h3>
             <p className="text-xs text-[var(--ink-2)]">
-              {agendaFilterMode === 'all'
-                ? 'Eventos de todas las bandas'
-                : `Eventos de ${activeBandName}`}
+              {agendaFilterMode === 'all' ? 'Eventos de todas las bandas' : `Eventos de ${activeBandName}`}
             </p>
           </div>
         </div>
@@ -232,9 +205,7 @@ export function CalendarWidget({
               type="button"
               onClick={() => handleSetViewMode('list')}
               className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
-                viewMode === 'list'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === 'list' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Vista Lista Próximos"
             >
@@ -245,9 +216,7 @@ export function CalendarWidget({
               type="button"
               onClick={() => handleSetViewMode('mini_month')}
               className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
-                viewMode === 'mini_month'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === 'mini_month' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Vista Mensual Compacta"
             >
@@ -258,9 +227,7 @@ export function CalendarWidget({
               type="button"
               onClick={() => handleSetViewMode('weekly_grid')}
               className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
-                viewMode === 'weekly_grid'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === 'weekly_grid' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Vista Agenda Semanal"
             >
@@ -273,28 +240,16 @@ export function CalendarWidget({
           {onSetAgendaFilterMode && (
             <button
               type="button"
-              onClick={() =>
-                onSetAgendaFilterMode(
-                  agendaFilterMode === 'all' ? 'active' : 'all'
-                )
-              }
+              onClick={() => onSetAgendaFilterMode(agendaFilterMode === 'all' ? 'active' : 'all')}
               className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
                 agendaFilterMode === 'all'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
                   : 'bg-[var(--sunken)] text-[var(--ink-2)] font-medium'
               }`}
-              title={
-                agendaFilterMode === 'all'
-                  ? 'Ver solo eventos de la banda activa'
-                  : 'Ver eventos de todas las bandas'
-              }
+              title={agendaFilterMode === 'all' ? 'Ver solo eventos de la banda activa' : 'Ver eventos de todas las bandas'}
             >
               <Users className="w-3 h-3" />
-              <span>
-                {agendaFilterMode === 'all'
-                  ? 'Todas las bandas'
-                  : activeBandName || 'Banda activa'}
-              </span>
+              <span>{agendaFilterMode === 'all' ? 'Todas las bandas' : activeBandName || 'Banda activa'}</span>
             </button>
           )}
 
@@ -367,35 +322,23 @@ export function CalendarWidget({
                   className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-110 transition-[filter,transform] flex items-start gap-3 cursor-pointer hover:scale-[1.01]"
                 >
                   <div className="w-11 h-11 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center shrink-0">
-                    <span className="text-base font-bold leading-none text-[var(--acc-ink)] tabular-nums">
-                      {item.day}
-                    </span>
-                    <span className="text-[9px] font-semibold tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
-                      {item.month}
-                    </span>
+                    <span className="text-base font-bold leading-none text-[var(--acc-ink)] tabular-nums">{item.day}</span>
+                    <span className="text-[9px] font-semibold tracking-wide text-[var(--acc-ink)]/80 mt-0.5">{item.month}</span>
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span
                         className={`text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tracking-wide ${
-                          item.type === 'concierto'
-                            ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                            : 'bg-[var(--ok-soft)] text-[var(--ok)]'
+                          item.type === 'concierto' ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'bg-[var(--ok-soft)] text-[var(--ok)]'
                         }`}
                       >
                         {item.type}
                       </span>
-                      {item.bandName && (
-                        <span className="text-[9px] text-[var(--acc-ink)]/70 truncate max-w-[100px]">
-                          {item.bandName}
-                        </span>
-                      )}
+                      {item.bandName && <span className="text-[9px] text-[var(--acc-ink)]/70 truncate max-w-[100px]">{item.bandName}</span>}
                     </div>
 
-                    <h4 className="text-sm font-semibold mt-1 text-[var(--ink)] truncate">
-                      {item.title}
-                    </h4>
+                    <h4 className="text-sm font-semibold mt-1 text-[var(--ink)] truncate">{item.title}</h4>
 
                     <p className="text-xs text-[var(--ink-2)] truncate mt-0.5 flex items-center gap-1">
                       <MapPin className="w-3 h-3 shrink-0" />
@@ -408,12 +351,8 @@ export function CalendarWidget({
           ) : (
             <div className="p-8 text-center bg-[var(--sunken)] rounded-[var(--r-m)]">
               <Calendar className="w-8 h-8 text-[var(--ink-2)] mx-auto mb-2 opacity-60" />
-              <p className="text-sm font-semibold text-[var(--ink-2)]">
-                Todavía no hay nada en la agenda
-              </p>
-              <p className="text-xs text-[var(--ink-2)] mt-1">
-                Añade un bolo o un ensayo y aquí aparece lo próximo.
-              </p>
+              <p className="text-sm font-semibold text-[var(--ink-2)]">Todavía no hay nada en la agenda</p>
+              <p className="text-xs text-[var(--ink-2)] mt-1">Añade un bolo o un ensayo y aquí aparece lo próximo.</p>
             </div>
           )}
         </>
@@ -431,9 +370,7 @@ export function CalendarWidget({
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm font-bold capitalize text-[var(--ink-2)]">
-              {fullMonthName}
-            </span>
+            <span className="text-sm font-bold capitalize text-[var(--ink-2)]">{fullMonthName}</span>
             <button
               type="button"
               onClick={() => setCurrentMonthDate(new Date(year, month + 1, 1))}
@@ -446,10 +383,7 @@ export function CalendarWidget({
           {/* Grid of days */}
           <div className="grid grid-cols-7 gap-1 text-center text-xs">
             {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((d) => (
-              <div
-                key={d}
-                className="text-[10px] text-[var(--ink-3)] font-bold py-1"
-              >
+              <div key={d} className="text-[10px] text-[var(--ink-3)] font-bold py-1">
                 {d}
               </div>
             ))}
@@ -476,11 +410,7 @@ export function CalendarWidget({
                 <button
                   type="button"
                   key={dateKey}
-                  onClick={() =>
-                    setSelectedDayStr(
-                      dateKey === selectedDayStr ? null : dateKey
-                    )
-                  }
+                  onClick={() => setSelectedDayStr(dateKey === selectedDayStr ? null : dateKey)}
                   className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
                     isSelected
                       ? 'bg-[var(--acc)]/20 text-[var(--ink)] font-bold'
@@ -495,18 +425,8 @@ export function CalendarWidget({
 
                   {/* Indicators for events */}
                   <div className="flex items-center gap-0.5 mt-1">
-                    {hasConcert && (
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60"
-                        title="Concierto"
-                      />
-                    )}
-                    {hasRehearsal && (
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"
-                        title="Ensayo"
-                      />
-                    )}
+                    {hasConcert && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" title="Concierto" />}
+                    {hasRehearsal && <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" title="Ensayo" />}
                   </div>
                 </button>
               );
@@ -517,14 +437,8 @@ export function CalendarWidget({
           {selectedDayStr && (
             <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] text-xs font-sans space-y-2">
               <div className="flex items-center justify-between text-[var(--ink-2)] pb-1.5">
-                <span className="font-bold text-[var(--acc)]/70">
-                  Eventos para {selectedDayStr}:
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setSelectedDayStr(null)}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                >
+                <span className="font-bold text-[var(--acc)]/70">Eventos para {selectedDayStr}:</span>
+                <button type="button" onClick={() => setSelectedDayStr(null)} className="text-[var(--ink-2)] hover:text-[var(--ink-2)]">
                   ✕
                 </button>
               </div>
@@ -544,27 +458,19 @@ export function CalendarWidget({
                     <div>
                       <span
                         className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
-                          evt.type === 'concierto'
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
-                            : 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
+                          evt.type === 'concierto' ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70' : 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
                         }`}
                       >
                         {evt.type}
                       </span>
-                      <p className="font-bold text-[var(--ink-2)] mt-1">
-                        {evt.title}
-                      </p>
-                      <p className="text-[var(--ink-2)] text-[11px]">
-                        {evt.location}
-                      </p>
+                      <p className="font-bold text-[var(--ink-2)] mt-1">{evt.title}</p>
+                      <p className="text-[var(--ink-2)] text-[11px]">{evt.location}</p>
                     </div>
                     <ArrowRight className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                   </div>
                 ))
               ) : (
-                <p className="text-[var(--ink-2)] italic">
-                  No hay eventos programados para este día.
-                </p>
+                <p className="text-[var(--ink-2)] italic">No hay eventos programados para este día.</p>
               )}
             </div>
           )}
@@ -574,9 +480,7 @@ export function CalendarWidget({
       {/* VISTA 3: AGENDA SEMANAL COMPACTA */}
       {viewMode === 'weekly_grid' && (
         <div className="space-y-3">
-          <p className="text-xs font-sans text-[var(--ink-2)]">
-            Próximos 7 días de actividad programada:
-          </p>
+          <p className="text-xs font-sans text-[var(--ink-2)]">Próximos 7 días de actividad programada:</p>
           <div className="grid grid-cols-1 sm:grid-cols-7 gap-2">
             {Array.from({ length: 7 }).map((_, idx) => {
               const date = new Date();
@@ -592,18 +496,12 @@ export function CalendarWidget({
                 <div
                   key={dateStr}
                   className={`p-2.5 rounded-[var(--r-m)] text-xs flex flex-col justify-between min-h-[90px] transition-all ${
-                    dayEvts.length > 0
-                      ? 'bg-[var(--surface)]'
-                      : 'bg-[var(--sunken)]/50'
+                    dayEvts.length > 0 ? 'bg-[var(--surface)]' : 'bg-[var(--sunken)]/50'
                   }`}
                 >
                   <div className="flex items-center justify-between pb-1">
-                    <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">
-                      {dayName}
-                    </span>
-                    <span className="font-bold text-[var(--acc)]">
-                      {dayNum}
-                    </span>
+                    <span className="uppercase text-[10px] text-[var(--ink-2)] font-bold">{dayName}</span>
+                    <span className="font-bold text-[var(--acc)]">{dayNum}</span>
                   </div>
 
                   <div className="mt-1 space-y-1">
@@ -618,20 +516,14 @@ export function CalendarWidget({
                           })
                         }
                         className={`text-[9px] p-1 rounded font-bold truncate cursor-pointer ${
-                          e.type === 'concierto'
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
-                            : 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
+                          e.type === 'concierto' ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70' : 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
                         }`}
                         title={`${e.type.toUpperCase()}: ${e.title}`}
                       >
                         {e.title}
                       </div>
                     ))}
-                    {dayEvts.length === 0 && (
-                      <span className="text-[10px] text-[var(--ink-2)] block text-center py-2">
-                        Libre
-                      </span>
-                    )}
+                    {dayEvts.length === 0 && <span className="text-[10px] text-[var(--ink-2)] block text-center py-2">Libre</span>}
                   </div>
                 </div>
               );

@@ -16,14 +16,7 @@ import {
 import { ThemeColors } from '../../types';
 import { ExampleThreadsSection } from './ExampleThreadsSection';
 
-export type TemplateCategory =
-  | 'salas'
-  | 'festivales'
-  | 'discotecas'
-  | 'medios'
-  | 'grupos'
-  | 'managements'
-  | 'ayuntamientos';
+export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 export interface ActiveTemplateData {
   title: string;
@@ -83,43 +76,31 @@ export function TemplateConfigSection({
   const [internalToneRating, setInternalToneRating] = useState(0);
   const [internalContentRating, setInternalContentRating] = useState(0);
 
-  const customInstruction =
-    customInstructionProp !== undefined
-      ? customInstructionProp
-      : internalInstruction;
-  const setCustomInstruction =
-    onCustomInstructionChange || setInternalInstruction;
+  const customInstruction = customInstructionProp !== undefined ? customInstructionProp : internalInstruction;
+  const setCustomInstruction = onCustomInstructionChange || setInternalInstruction;
 
-  const toneRating =
-    toneRatingProp !== undefined ? toneRatingProp : internalToneRating;
+  const toneRating = toneRatingProp !== undefined ? toneRatingProp : internalToneRating;
   const setToneRating = onToneRatingChange || setInternalToneRating;
 
-  const contentRating =
-    contentRatingProp !== undefined ? contentRatingProp : internalContentRating;
+  const contentRating = contentRatingProp !== undefined ? contentRatingProp : internalContentRating;
   const setContentRating = onContentRatingChange || setInternalContentRating;
   return (
     <div className={`${colors.card} p-5 space-y-6`}>
-      <div
-        className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${''}`}
-      >
+      <div className={`pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${''}`}>
         <div>
-          <h3
-            className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}
-          >
+          <h3 className={`text-sm font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
             <Settings className={`w-4 h-4 ${'text-[var(--acc)]'}`} />
             {''}
             Configuración de Plantillas y Pautas AI por Categoría (Redactor)
           </h3>
           <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
-            Personaliza el correo por defecto y las pautas de IA diferenciadas
-            para Salas, Festivales, Discotecas, Medios, Grupos y Managements.
+            Personaliza el correo por defecto y las pautas de IA diferenciadas para Salas, Festivales, Discotecas, Medios, Grupos y
+            Managements.
           </p>
         </div>
 
         {/* Template Tab Selector (7 Categories) */}
-        <div
-          className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--surface)]'}`}
-        >
+        <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--surface)]'}`}>
           {[
             { id: 'salas', label: '🏛️ Salas', icon: Building2 },
             { id: 'festivales', label: '🎪 Festivales', icon: Tent },
@@ -138,9 +119,7 @@ export function TemplateConfigSection({
                 id={`template-tab-${tab.id}`}
                 onClick={() => onSelectTemplateTab(tab.id as TemplateCategory)}
                 className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  isActive ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >
                 <IconComp className="w-3.5 h-3.5" />
@@ -179,11 +158,7 @@ export function TemplateConfigSection({
           )}
 
           <div className="space-y-1.5">
-            <label
-              className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}
-            >
-              Asunto del Email por Defecto
-            </label>
+            <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>Asunto del Email por Defecto</label>
             <input
               id="template-subject"
               type="text"
@@ -194,9 +169,7 @@ export function TemplateConfigSection({
           </div>
 
           <div className="space-y-1.5">
-            <label
-              className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}
-            >
+            <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>
               Cuerpo de la Plantilla de Correo de Presentación
             </label>
             <textarea
@@ -210,11 +183,8 @@ export function TemplateConfigSection({
           </div>
 
           <div className="space-y-1.5">
-            <label
-              className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}
-            >
-              <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de
-              Redacción Subjetiva)
+            <label className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
+              <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
             </label>
             <textarea
               id="template-guidelines"
@@ -230,8 +200,7 @@ export function TemplateConfigSection({
           <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
             <div className="flex items-center justify-between">
               <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" />{' '}
-                Evaluación y Entrenamiento de la Plantilla
+                <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
               </label>
               {(toneRating > 0 || contentRating > 0 || customInstruction) && (
                 <button
@@ -253,9 +222,7 @@ export function TemplateConfigSection({
               {/* Tono y Estilo */}
               <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-[var(--ink)]">
-                    Tono y Estilo
-                  </span>
+                  <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
                   <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
                     {toneRating > 0 ? `${toneRating}/5` : 'Sin calificar'}
                   </span>
@@ -265,13 +232,9 @@ export function TemplateConfigSection({
                     <button
                       key={`template-tone-${star}`}
                       type="button"
-                      onClick={() =>
-                        setToneRating(toneRating === star ? 0 : star)
-                      }
+                      onClick={() => setToneRating(toneRating === star ? 0 : star)}
                       className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                        toneRating >= star
-                          ? 'text-[var(--acc)]'
-                          : 'text-[var(--ink-2)]'
+                        toneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                       }`}
                       title={`Calificar tono y estilo: ${star}/5`}
                     >
@@ -284,9 +247,7 @@ export function TemplateConfigSection({
               {/* Contenido y Estructura */}
               <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-[var(--ink)]">
-                    Contenido y Estructura
-                  </span>
+                  <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
                   <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
                     {contentRating > 0 ? `${contentRating}/5` : 'Sin calificar'}
                   </span>
@@ -296,13 +257,9 @@ export function TemplateConfigSection({
                     <button
                       key={`template-content-${star}`}
                       type="button"
-                      onClick={() =>
-                        setContentRating(contentRating === star ? 0 : star)
-                      }
+                      onClick={() => setContentRating(contentRating === star ? 0 : star)}
                       className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                        contentRating >= star
-                          ? 'text-[var(--acc)]'
-                          : 'text-[var(--ink-2)]'
+                        contentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                       }`}
                       title={`Calificar contenido y estructura: ${star}/5`}
                     >
@@ -316,8 +273,7 @@ export function TemplateConfigSection({
             {/* Comentario / Instrucción */}
             <div className="space-y-1 pt-1">
               <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" />{' '}
-                Comentario o Corrección Directa
+                <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
               </label>
               <textarea
                 id="template-custom-instruction-standalone"
@@ -330,9 +286,8 @@ export function TemplateConfigSection({
             </div>
 
             <div className="text-[9px] text-[var(--acc)]/70/80 font-sans leading-tight">
-              💡 Califica con estrellas el tono y el contenido e introduce
-              comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la
-              IA aplicará tus valoraciones para optimizar la plantilla.
+              💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>,
+              la IA aplicará tus valoraciones para optimizar la plantilla.
             </div>
           </div>
 
@@ -346,14 +301,8 @@ export function TemplateConfigSection({
                 disabled={isOptimizingTemplate}
                 className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
-                <Sparkles
-                  className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`}
-                />
-                <span>
-                  {isOptimizingTemplate
-                    ? 'Regenerando con IA...'
-                    : '✨ Regenerar Plantilla con IA y Aprendizaje'}
-                </span>
+                <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+                <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
               </button>
             )}
             <button
@@ -362,9 +311,7 @@ export function TemplateConfigSection({
               disabled={isTestingPrompt}
               className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
             >
-              <RefreshCw
-                className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`}
-              />
+              <RefreshCw className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
               <span>Probar Prompt</span>
             </button>
             <button
@@ -378,27 +325,17 @@ export function TemplateConfigSection({
         </div>
 
         {/* Test / Prompt Output side */}
-        <div
-          className={`border rounded-[var(--r-m)] p-4 flex flex-col justify-between ${'bg-[var(--surface)]'}`}
-        >
+        <div className={`border rounded-[var(--r-m)] p-4 flex flex-col justify-between ${'bg-[var(--surface)]'}`}>
           <div className="space-y-3">
             <div className={`flex items-center gap-2 pb-2 ${''}`}>
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`}
-              />
-              <h4
-                className={`text-[10px] font-sans tracking-widest ${textSub}`}
-              >
-                Sandbox de Simulación de Redacción AI
-              </h4>
+              <span className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`} />
+              <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
             </div>
 
             <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
-              Cuando el agente de Supabase <strong>"Redactor"</strong> corre,
-              lee estas plantillas y pautas, las mezcla con los detalles del
+              Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y pautas, las mezcla con los detalles del
               contacto capturado por el{''}
-              <strong>"Scout"</strong> (aforo, ubicación, género, redes) y
-              genera un borrador adaptado para que lo revises en esta misma
+              <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado para que lo revises en esta misma
               pantalla.
             </div>
 
@@ -414,13 +351,11 @@ export function TemplateConfigSection({
                 <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5 font-sans">
-                      <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" />{' '}
-                      Valorar esta plantilla / resultado
+                      <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
                     </span>
                     {(toneRating > 0 || contentRating > 0) && (
                       <span className="text-[9px] text-[var(--acc)] font-sans">
-                        Tono: {toneRating || '-'}/5 | Contenido:{' '}
-                        {contentRating || '-'}/5
+                        Tono: {toneRating || '-'}/5 | Contenido: {contentRating || '-'}/5
                       </span>
                     )}
                   </div>
@@ -429,9 +364,7 @@ export function TemplateConfigSection({
                     {/* Tono */}
                     <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-[var(--ink)]">
-                          Tono y Estilo
-                        </span>
+                        <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
                         <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
                           {toneRating > 0 ? `${toneRating}/5` : '⭐'}
                         </span>
@@ -441,13 +374,9 @@ export function TemplateConfigSection({
                           <button
                             key={`template-sandbox-tone-${star}`}
                             type="button"
-                            onClick={() =>
-                              setToneRating(toneRating === star ? 0 : star)
-                            }
+                            onClick={() => setToneRating(toneRating === star ? 0 : star)}
                             className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                              toneRating >= star
-                                ? 'text-[var(--acc)]'
-                                : 'text-[var(--ink-2)]'
+                              toneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                             }`}
                             title={`Calificar tono: ${star}/5`}
                           >
@@ -460,9 +389,7 @@ export function TemplateConfigSection({
                     {/* Contenido */}
                     <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-[var(--ink)]">
-                          Contenido y Estructura
-                        </span>
+                        <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
                         <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
                           {contentRating > 0 ? `${contentRating}/5` : '⭐'}
                         </span>
@@ -472,15 +399,9 @@ export function TemplateConfigSection({
                           <button
                             key={`template-sandbox-content-${star}`}
                             type="button"
-                            onClick={() =>
-                              setContentRating(
-                                contentRating === star ? 0 : star
-                              )
-                            }
+                            onClick={() => setContentRating(contentRating === star ? 0 : star)}
                             className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                              contentRating >= star
-                                ? 'text-[var(--acc)]'
-                                : 'text-[var(--ink-2)]'
+                              contentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                             }`}
                             title={`Calificar contenido: ${star}/5`}
                           >
@@ -498,32 +419,22 @@ export function TemplateConfigSection({
                       disabled={isOptimizingTemplate}
                       className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     >
-                      <Sparkles
-                        className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`}
-                      />
-                      <span>
-                        Re-generar plantilla usando estas valoraciones ✨
-                      </span>
+                      <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+                      <span>Re-generar plantilla usando estas valoraciones ✨</span>
                     </button>
                   )}
                 </div>
               </div>
             ) : (
-              <div
-                className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${'text-[var(--ink-2)]'}`}
-              >
-                Haz clic en"Probar Prompt" a la izquierda para simular el
-                resultado de generación del Redactor AI basado en tus
-                directrices actuales.
+              <div className={`border-dashed rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>
+                Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus directrices
+                actuales.
               </div>
             )}
           </div>
 
-          <div
-            className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}
-          >
-            Módulo de Modelado AI de Bakandeya Systems v2.4. Multi-Modelo:
-            Gemini 3.7 Flash & DeepSeek V3.
+          <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
+            Módulo de Modelado AI de Bakandeya Systems v2.4. Multi-Modelo: Gemini 3.7 Flash & DeepSeek V3.
           </div>
         </div>
       </div>

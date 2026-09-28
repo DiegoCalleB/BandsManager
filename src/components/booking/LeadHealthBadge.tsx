@@ -25,10 +25,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
   if (lead.historial_contacto && lead.historial_contacto.length > 0) {
     for (const log of lead.historial_contacto) {
       const logD = new Date(log.fecha);
-      if (
-        !isNaN(logD.getTime()) &&
-        (!lastActivityDate || logD > lastActivityDate)
-      ) {
+      if (!isNaN(logD.getTime()) && (!lastActivityDate || logD > lastActivityDate)) {
         lastActivityDate = logD;
       }
     }
@@ -36,31 +33,19 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
 
   let daysSinceLastActivity: number | null = null;
   if (lastActivityDate) {
-    daysSinceLastActivity = Math.max(
-      0,
-      Math.floor(
-        (now.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24)
-      )
-    );
+    daysSinceLastActivity = Math.max(0, Math.floor((now.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24)));
   }
 
   let daysSincePitch: number | null = null;
   if (lead.fecha_envio) {
     const pitchD = new Date(lead.fecha_envio);
     if (!isNaN(pitchD.getTime())) {
-      daysSincePitch = Math.max(
-        0,
-        Math.floor((now.getTime() - pitchD.getTime()) / (1000 * 60 * 60 * 24))
-      );
+      daysSincePitch = Math.max(0, Math.floor((now.getTime() - pitchD.getTime()) / (1000 * 60 * 60 * 24)));
     }
   }
 
   // 1. 🔥 Lead Caliente: Sala que respondió o tuvo contacto en los últimos 3 días O en negociación / interesado activo
-  if (
-    (daysSinceLastActivity !== null && daysSinceLastActivity <= 3) ||
-    lead.estado === 'interesado' ||
-    lead.estado === 'negociando'
-  ) {
+  if ((daysSinceLastActivity !== null && daysSinceLastActivity <= 3) || lead.estado === 'interesado' || lead.estado === 'negociando') {
     const desc =
       daysSinceLastActivity !== null
         ? daysSinceLastActivity === 0
@@ -77,12 +62,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
   }
 
   // 2. ⏳ Seguimiento Necesario: Más de 7 días sin respuesta tras enviar el pitch
-  if (
-    lead.estado === 'esperando_respuesta' ||
-    (lead.fecha_envio &&
-      !lead.fecha_ultima_respuesta &&
-      lead.estado !== 'no_interesado')
-  ) {
+  if (lead.estado === 'esperando_respuesta' || (lead.fecha_envio && !lead.fecha_ultima_respuesta && lead.estado !== 'no_interesado')) {
     const days = daysSincePitch ?? daysSinceLastActivity ?? 7;
     if (days >= 7) {
       return {
@@ -96,10 +76,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
   }
 
   // 3. 🧊 Lead Frío: Más de 14 días sin interacción registrada / sin respuesta
-  if (
-    (daysSinceLastActivity !== null && daysSinceLastActivity >= 14) ||
-    (daysSincePitch !== null && daysSincePitch >= 14)
-  ) {
+  if ((daysSinceLastActivity !== null && daysSinceLastActivity >= 14) || (daysSincePitch !== null && daysSincePitch >= 14)) {
     const days = daysSinceLastActivity ?? daysSincePitch ?? 14;
     return {
       type: 'frio',
@@ -126,11 +103,7 @@ interface LeadHealthBadgeProps {
   size?: 'sm' | 'md';
 }
 
-export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
-  lead,
-  showDescription = false,
-  size = 'md',
-}) => {
+export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({ lead, showDescription = false, size = 'md' }) => {
   const health = getLeadHealth(lead);
 
   return (
@@ -141,11 +114,7 @@ export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({
       >
         <span>{health.label}</span>
       </span>
-      {showDescription && (
-        <span className="text-[10px] text-[var(--ink-2)] font-sans tracking-tight pl-1">
-          {health.description}
-        </span>
-      )}
+      {showDescription && <span className="text-[10px] text-[var(--ink-2)] font-sans tracking-tight pl-1">{health.description}</span>}
     </div>
   );
 };

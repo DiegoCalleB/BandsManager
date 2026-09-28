@@ -98,13 +98,7 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
 export interface ModuleWidgetMeta {
   type: WidgetType;
   title: string;
-  category:
-    | 'Calendario & Agenda'
-    | 'Booking & CRM'
-    | 'Música & Repertorio'
-    | 'Negocio & Finanzas'
-    | 'Público & Redes'
-    | 'Promoción & IA';
+  category: 'Calendario & Agenda' | 'Booking & CRM' | 'Música & Repertorio' | 'Negocio & Finanzas' | 'Público & Redes' | 'Promoción & IA';
   description: string;
   defaultWSpan: 3 | 4 | 6 | 8 | 12;
   defaultHSpan?: 'compact' | 'normal' | 'tall';
@@ -117,8 +111,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'calendar',
     title: 'Agenda & Calendario',
     category: 'Calendario & Agenda',
-    description:
-      'Próximas fechas, vista mensual en miniatura y agenda semanal de conciertos y ensayos.',
+    description: 'Próximas fechas, vista mensual en miniatura y agenda semanal de conciertos y ensayos.',
     defaultWSpan: 12,
     defaultHSpan: 'normal',
     iconName: 'Calendar',
@@ -128,8 +121,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'executive_summary',
     title: 'Resumen Ejecutivo',
     category: 'Calendario & Agenda',
-    description:
-      'Los 4 números que se miran antes que nada: próximo show, caché por cobrar, leads esperando respuesta y próximo ensayo.',
+    description: 'Los 4 números que se miran antes que nada: próximo show, caché por cobrar, leads esperando respuesta y próximo ensayo.',
     defaultWSpan: 12,
     defaultHSpan: 'compact',
     iconName: 'Sparkles',
@@ -139,8 +131,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'repertorio_energy',
     title: 'Gráfico de Energía de Repertorio',
     category: 'Música & Repertorio',
-    description:
-      'Curva de energía por canción (pacing) de tus setlists para planificar la intensidad del directo.',
+    description: 'Curva de energía por canción (pacing) de tus setlists para planificar la intensidad del directo.',
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'Zap',
@@ -150,8 +141,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'crm_pipeline',
     title: 'Borradores & Acciones de Booking',
     category: 'Booking & CRM',
-    description:
-      'Leads urgentes por responder, borradores redactados por la IA y salas interesadas.',
+    description: 'Leads urgentes por responder, borradores redactados por la IA y salas interesadas.',
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'Building2',
@@ -161,8 +151,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'booking_funnel_chart',
     title: 'Gráfico Embudo de Booking',
     category: 'Booking & CRM',
-    description:
-      'Porcentaje de conversión de contactos a fechas confirmadas y estado de negociaciones.',
+    description: 'Porcentaje de conversión de contactos a fechas confirmadas y estado de negociaciones.',
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'TrendingUp',
@@ -172,8 +161,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'finances_chart',
     title: 'Gráfico Financiero & Caché',
     category: 'Negocio & Finanzas',
-    description:
-      'Evolución de ingresos, gastos y caché promedio negociado por concierto.',
+    description: 'Evolución de ingresos, gastos y caché promedio negociado por concierto.',
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'DollarSign',
@@ -183,8 +171,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'social_fans_chart',
     title: 'Gráfico Captación Fans & QR',
     category: 'Público & Redes',
-    description:
-      'Evolución temporal del registro de seguidores y escaneos de código QR en directo.',
+    description: 'Evolución temporal del registro de seguidores y escaneos de código QR en directo.',
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'Users',
@@ -194,8 +181,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'repertorio_summary',
     title: 'Resumen Canciones & Setlists',
     category: 'Música & Repertorio',
-    description:
-      'Catálogo de temas, estado de ensayo por músico y accesos a listas.',
+    description: 'Catálogo de temas, estado de ensayo por músico y accesos a listas.',
     defaultWSpan: 4,
     defaultHSpan: 'normal',
     iconName: 'Music',
@@ -205,8 +191,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'finances_summary',
     title: 'Balance Contable Compacto',
     category: 'Negocio & Finanzas',
-    description:
-      'Resumen rápido de entradas, gastos y recaudación total de conciertos.',
+    description: 'Resumen rápido de entradas, gastos y recaudación total de conciertos.',
     defaultWSpan: 4,
     defaultHSpan: 'compact',
     iconName: 'DollarSign',
@@ -216,8 +201,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'social_fans',
     title: 'Resumen Redes & Fans',
     category: 'Público & Redes',
-    description:
-      'Métricas de crecimiento en redes sociales, QR de fans y registros.',
+    description: 'Métricas de crecimiento en redes sociales, QR de fans y registros.',
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'Users',
@@ -227,8 +211,7 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     type: 'ai_agent_status',
     title: 'Agente Mánager IA',
     category: 'Promoción & IA',
-    description:
-      'Resumen de propuestas agénticas creadas, créditos y autónomo activo.',
+    description: 'Resumen de propuestas agénticas creadas, créditos y autónomo activo.',
     defaultWSpan: 4,
     defaultHSpan: 'compact',
     iconName: 'Bot',

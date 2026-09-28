@@ -77,12 +77,7 @@ const CATEGORY_OPTIONS: { id: LeadType; label: string; icon: string }[] = [
   { id: 'medio', label: 'Medio / Radio', icon: '📻' },
 ];
 
-export function ExcelImportModal({
-  isOpen,
-  onClose,
-  onSuccess,
-  existingLeads,
-}: ExcelImportModalProps) {
+export function ExcelImportModal({ isOpen, onClose, onSuccess, existingLeads }: ExcelImportModalProps) {
   // Step state: 1 = Upload, 2 = Map Columns, 3 = Preview & Validate, 4 = Result / Enriching
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [fileName, setFileName] = useState<string>('');
@@ -112,8 +107,7 @@ export function ExcelImportModal({
   // Parsed and validated rows
   const [parsedRows, setParsedRows] = useState<ParsedRow[]>([]);
   const [updateDuplicates, setUpdateDuplicates] = useState<boolean>(true);
-  const [enrichMissingWithAi, setEnrichMissingWithAi] =
-    useState<boolean>(false);
+  const [enrichMissingWithAi, setEnrichMissingWithAi] = useState<boolean>(false);
   const [defaultCategory, setDefaultCategory] = useState<LeadType>('sala');
 
   // Loading & statuses
@@ -121,8 +115,7 @@ export function ExcelImportModal({
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const [importStatusMsg, setImportStatusMsg] = useState<string>('');
   const [searchPreview, setSearchPreview] = useState<string>('');
-  const [filterDuplicatesOnly, setFilterDuplicatesOnly] =
-    useState<boolean>(false);
+  const [filterDuplicatesOnly, setFilterDuplicatesOnly] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -179,19 +172,12 @@ export function ExcelImportModal({
         newMapping.ciudad = h;
       } else if (
         !newMapping.region &&
-        (c.includes('region') ||
-          c.includes('provincia') ||
-          c.includes('comunidad') ||
-          c.includes('ccaa') ||
-          c.includes('state'))
+        (c.includes('region') || c.includes('provincia') || c.includes('comunidad') || c.includes('ccaa') || c.includes('state'))
       ) {
         newMapping.region = h;
       } else if (
         !newMapping.email_contacto &&
-        (c.includes('email') ||
-          c.includes('mail') ||
-          c.includes('correo') ||
-          c.includes('e-mail'))
+        (c.includes('email') || c.includes('mail') || c.includes('correo') || c.includes('e-mail'))
       ) {
         newMapping.email_contacto = h;
       } else if (
@@ -204,39 +190,21 @@ export function ExcelImportModal({
           c.includes('celular'))
       ) {
         newMapping.telefono = h;
-      } else if (
-        !newMapping.instagram &&
-        (c.includes('instagram') ||
-          c.includes('ig') ||
-          c.includes('redes') ||
-          c.includes('social'))
-      ) {
+      } else if (!newMapping.instagram && (c.includes('instagram') || c.includes('ig') || c.includes('redes') || c.includes('social'))) {
         newMapping.instagram = h;
       } else if (
         !newMapping.website &&
-        (c.includes('web') ||
-          c.includes('sitio') ||
-          c.includes('url') ||
-          c.includes('link') ||
-          c.includes('pagina'))
+        (c.includes('web') || c.includes('sitio') || c.includes('url') || c.includes('link') || c.includes('pagina'))
       ) {
         newMapping.website = h;
       } else if (
         !newMapping.aforo &&
-        (c.includes('aforo') ||
-          c.includes('capacidad') ||
-          c.includes('capacity') ||
-          c.includes('personas') ||
-          c.includes('pax'))
+        (c.includes('aforo') || c.includes('capacidad') || c.includes('capacity') || c.includes('personas') || c.includes('pax'))
       ) {
         newMapping.aforo = h;
       } else if (
         !newMapping.tipo &&
-        (c.includes('tipo') ||
-          c.includes('categoria') ||
-          c.includes('type') ||
-          c.includes('clase') ||
-          c.includes('rubro'))
+        (c.includes('tipo') || c.includes('categoria') || c.includes('type') || c.includes('clase') || c.includes('rubro'))
       ) {
         newMapping.tipo = h;
       } else if (
@@ -251,28 +219,17 @@ export function ExcelImportModal({
         newMapping.contacto_nombre = h;
       } else if (
         !newMapping.genero &&
-        (c.includes('genero') ||
-          c.includes('estilo') ||
-          c.includes('estilos') ||
-          c.includes('musica') ||
-          c.includes('genre'))
+        (c.includes('genero') || c.includes('estilo') || c.includes('estilos') || c.includes('musica') || c.includes('genre'))
       ) {
         newMapping.genero = h;
       } else if (
         !newMapping.direccion &&
-        (c.includes('direccion') ||
-          c.includes('calle') ||
-          c.includes('address') ||
-          c.includes('ubicacion'))
+        (c.includes('direccion') || c.includes('calle') || c.includes('address') || c.includes('ubicacion'))
       ) {
         newMapping.direccion = h;
       } else if (
         !newMapping.notas &&
-        (c.includes('nota') ||
-          c.includes('comentario') ||
-          c.includes('observacion') ||
-          c.includes('historial') ||
-          c.includes('info'))
+        (c.includes('nota') || c.includes('comentario') || c.includes('observacion') || c.includes('historial') || c.includes('info'))
       ) {
         newMapping.notas = h;
       }
@@ -298,9 +255,7 @@ export function ExcelImportModal({
       }
     } catch (err: any) {
       console.error('Error al leer archivo Excel:', err);
-      alert(
-        'Error al leer el archivo. Asegúrate de que es un archivo .xlsx, .xls o .csv válido.'
-      );
+      alert('Error al leer el archivo. Asegúrate de que es un archivo .xlsx, .xls o .csv válido.');
     } finally {
       setIsProcessingFile(false);
     }
@@ -348,9 +303,7 @@ export function ExcelImportModal({
   // Build parsed rows from raw rows and column mapping
   const buildParsedRows = () => {
     if (!mapping.nombre_sala) {
-      alert(
-        'Debes asignar al menos la columna correspondiente al"Nombre de la Sala / Contacto / Banda".'
-      );
+      alert('Debes asignar al menos la columna correspondiente al"Nombre de la Sala / Contacto / Banda".');
       return;
     }
 
@@ -364,27 +317,13 @@ export function ExcelImportModal({
     const parsed: ParsedRow[] = rawRows
       .map((row, idx) => {
         const name = String(row[mapping.nombre_sala] || '').trim();
-        const city = mapping.ciudad
-          ? String(row[mapping.ciudad] || '').trim()
-          : 'España';
-        const region = mapping.region
-          ? String(row[mapping.region] || '').trim()
-          : 'España';
-        const address = mapping.direccion
-          ? String(row[mapping.direccion] || '').trim()
-          : '';
-        const email = mapping.email_contacto
-          ? String(row[mapping.email_contacto] || '').trim()
-          : '';
-        const phone = mapping.telefono
-          ? String(row[mapping.telefono] || '').trim()
-          : '';
-        const rawIg = mapping.instagram
-          ? String(row[mapping.instagram] || '').trim()
-          : '';
-        const rawWeb = mapping.website
-          ? String(row[mapping.website] || '').trim()
-          : '';
+        const city = mapping.ciudad ? String(row[mapping.ciudad] || '').trim() : 'España';
+        const region = mapping.region ? String(row[mapping.region] || '').trim() : 'España';
+        const address = mapping.direccion ? String(row[mapping.direccion] || '').trim() : '';
+        const email = mapping.email_contacto ? String(row[mapping.email_contacto] || '').trim() : '';
+        const phone = mapping.telefono ? String(row[mapping.telefono] || '').trim() : '';
+        const rawIg = mapping.instagram ? String(row[mapping.instagram] || '').trim() : '';
+        const rawWeb = mapping.website ? String(row[mapping.website] || '').trim() : '';
 
         const cleanField = (val: string) => {
           const lower = val.toLowerCase();
@@ -398,22 +337,15 @@ export function ExcelImportModal({
             lower === 'null'
           )
             return '';
-          if (val.includes('\n') || (val.includes('') && !val.includes('http')))
-            return '';
+          if (val.includes('\n') || (val.includes('') && !val.includes('http'))) return '';
           return val;
         };
 
         const ig = cleanField(rawIg);
         const web = cleanField(rawWeb);
-        const contact = mapping.contacto_nombre
-          ? String(row[mapping.contacto_nombre] || '').trim()
-          : '';
-        const genre = mapping.genero
-          ? String(row[mapping.genero] || '').trim()
-          : 'Música en Directo / Variado';
-        const notes = mapping.notas
-          ? String(row[mapping.notas] || '').trim()
-          : '';
+        const contact = mapping.contacto_nombre ? String(row[mapping.contacto_nombre] || '').trim() : '';
+        const genre = mapping.genero ? String(row[mapping.genero] || '').trim() : 'Música en Directo / Variado';
+        const notes = mapping.notas ? String(row[mapping.notas] || '').trim() : '';
 
         const rawAforo = mapping.aforo ? row[mapping.aforo] : null;
         let aforo = 0;
@@ -434,21 +366,10 @@ export function ExcelImportModal({
             rawTipo.includes('cultura')
           )
             resolvedType = 'ayuntamiento';
-          else if (rawTipo.includes('discoteca') || rawTipo.includes('club'))
-            resolvedType = 'discoteca';
+          else if (rawTipo.includes('discoteca') || rawTipo.includes('club')) resolvedType = 'discoteca';
           else if (rawTipo.includes('teatro')) resolvedType = 'sala';
-          else if (
-            rawTipo.includes('festival') ||
-            rawTipo.includes('feria') ||
-            rawTipo.includes('ciclo')
-          )
-            resolvedType = 'festival';
-          else if (
-            rawTipo.includes('grupo') ||
-            rawTipo.includes('banda') ||
-            rawTipo.includes('artista')
-          )
-            resolvedType = 'grupo';
+          else if (rawTipo.includes('festival') || rawTipo.includes('feria') || rawTipo.includes('ciclo')) resolvedType = 'festival';
+          else if (rawTipo.includes('grupo') || rawTipo.includes('banda') || rawTipo.includes('artista')) resolvedType = 'grupo';
           else if (
             rawTipo.includes('agencia') ||
             rawTipo.includes('management') ||
@@ -456,24 +377,13 @@ export function ExcelImportModal({
             rawTipo.includes('promotor')
           )
             resolvedType = 'agencia';
-          else if (
-            rawTipo.includes('sello') ||
-            rawTipo.includes('discografica')
-          )
-            resolvedType = 'sello';
-          else if (
-            rawTipo.includes('medio') ||
-            rawTipo.includes('prensa') ||
-            rawTipo.includes('radio') ||
-            rawTipo.includes('podcast')
-          )
+          else if (rawTipo.includes('sello') || rawTipo.includes('discografica')) resolvedType = 'sello';
+          else if (rawTipo.includes('medio') || rawTipo.includes('prensa') || rawTipo.includes('radio') || rawTipo.includes('podcast'))
             resolvedType = 'medio';
           else resolvedType = 'sala';
         }
 
-        const isDup =
-          existingMap.has(`${name.toLowerCase()}|${city.toLowerCase()}`) ||
-          existingMap.has(name.toLowerCase());
+        const isDup = existingMap.has(`${name.toLowerCase()}|${city.toLowerCase()}`) || existingMap.has(name.toLowerCase());
 
         return {
           id: `row-${idx}`,
@@ -506,9 +416,7 @@ export function ExcelImportModal({
   };
 
   const handleRowTypeChange = (rowId: string, newType: LeadType) => {
-    setParsedRows((prev) =>
-      prev.map((r) => (r.id === rowId ? { ...r, tipo: newType } : r))
-    );
+    setParsedRows((prev) => prev.map((r) => (r.id === rowId ? { ...r, tipo: newType } : r)));
   };
 
   const handleRowDelete = (rowId: string) => {
@@ -533,8 +441,7 @@ export function ExcelImportModal({
         Notas: 'Disponen de equipo de sonido completo y técnico de PA.',
       },
       {
-        'Nombre Sala / Contacto':
-          'Ayuntamiento de Alcorcón - Concejalía de Fiestas',
+        'Nombre Sala / Contacto': 'Ayuntamiento de Alcorcón - Concejalía de Fiestas',
         Ciudad: 'Alcorcón',
         Región: 'Madrid',
         Dirección: 'Plaza de España 1',
@@ -546,8 +453,7 @@ export function ExcelImportModal({
         'Sitio Web': 'https://ayto-alcorcon.es',
         'Contacto / Responsable': 'Concejal de Festejos',
         'Estilo / Género': 'Fiestas Patronales / Conciertos',
-        Notas:
-          'Conciertos de fiestas patronales en septiembre en el recinto ferial.',
+        Notas: 'Conciertos de fiestas patronales en septiembre en el recinto ferial.',
       },
       {
         'Nombre Sala / Contacto': 'Arde Bogotá',
@@ -597,9 +503,7 @@ export function ExcelImportModal({
 
     try {
       setIsImporting(true);
-      setImportStatusMsg(
-        `Guardando ${selectedRows.length} contactos en Supabase...`
-      );
+      setImportStatusMsg(`Guardando ${selectedRows.length} contactos en Supabase...`);
 
       const leadsPayload = selectedRows.map((r) => ({
         nombre_sala: r.nombre_sala,
@@ -630,18 +534,10 @@ export function ExcelImportModal({
 
       if (res.success) {
         // Enriquecer con IA si se solicitó
-        if (
-          enrichMissingWithAi &&
-          Array.isArray(res.leads) &&
-          res.leads.length > 0
-        ) {
-          const leadsToEnrich = res.leads.filter(
-            (l: Lead) => !l.email_contacto || l.email_contacto.trim() === ''
-          );
+        if (enrichMissingWithAi && Array.isArray(res.leads) && res.leads.length > 0) {
+          const leadsToEnrich = res.leads.filter((l: Lead) => !l.email_contacto || l.email_contacto.trim() === '');
           if (leadsToEnrich.length > 0) {
-            setImportStatusMsg(
-              `⚡ Enriqueciendo ${leadsToEnrich.length} contactos sin email con el Agente de IA...`
-            );
+            setImportStatusMsg(`⚡ Enriqueciendo ${leadsToEnrich.length} contactos sin email con el Agente de IA...`);
             try {
               await apiFetch('/api/leads/extract-emails', {
                 method: 'POST',
@@ -655,10 +551,7 @@ export function ExcelImportModal({
                 }),
               });
             } catch (enrichErr) {
-              console.warn(
-                'Error en enriquecimiento post-importación:',
-                enrichErr
-              );
+              console.warn('Error en enriquecimiento post-importación:', enrichErr);
             }
           }
         }
@@ -706,16 +599,13 @@ export function ExcelImportModal({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base sm:text-lg font-bold font-display">
-                    Importar Listado de Salas, Ayuntamientos o Bandas
-                  </h3>
+                  <h3 className="text-base sm:text-lg font-bold font-display">Importar Listado de Salas, Ayuntamientos o Bandas</h3>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
                     Excel / CSV
                   </span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)]">
-                  Sube tu propio listado, mapea las columnas, clasifícalas y
-                  enriquécelas automáticamente en Supabase.
+                  Sube tu propio listado, mapea las columnas, clasifícalas y enriquécelas automáticamente en Supabase.
                 </p>
               </div>
             </div>
@@ -748,15 +638,7 @@ export function ExcelImportModal({
               >
                 {step > 1 ? <Check className="w-3 h-3" /> : '1'}
               </div>
-              <span
-                className={
-                  step === 1
-                    ? 'font-bold text-[var(--ink-2)]'
-                    : 'text-[var(--ink-2)]'
-                }
-              >
-                1. Subir archivo
-              </span>
+              <span className={step === 1 ? 'font-bold text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}>1. Subir archivo</span>
             </div>
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
@@ -765,15 +647,7 @@ export function ExcelImportModal({
               >
                 {step > 2 ? <Check className="w-3 h-3" /> : '2'}
               </div>
-              <span
-                className={
-                  step === 2
-                    ? 'font-bold text-[var(--ink-2)]'
-                    : 'text-[var(--ink-2)]'
-                }
-              >
-                2. Mapear columnas
-              </span>
+              <span className={step === 2 ? 'font-bold text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}>2. Mapear columnas</span>
             </div>
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
@@ -782,15 +656,7 @@ export function ExcelImportModal({
               >
                 3
               </div>
-              <span
-                className={
-                  step === 3
-                    ? 'font-bold text-[var(--ink-2)]'
-                    : 'text-[var(--ink-2)]'
-                }
-              >
-                3. Validar y Guardar
-              </span>
+              <span className={step === 3 ? 'font-bold text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}>3. Validar y Guardar</span>
             </div>
           </div>
 
@@ -805,13 +671,7 @@ export function ExcelImportModal({
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full max-w-2xl p-10700 hover:border-[var(--ok)]/70 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
                 >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".xlsx, .xls, .csv"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
+                  <input ref={fileInputRef} type="file" accept=".xlsx, .xls, .csv" onChange={handleFileChange} className="hidden" />
                   <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-all group-hover:scale-110">
                     <Upload className="w-8 h-8" />
                   </div>
@@ -819,18 +679,12 @@ export function ExcelImportModal({
                     Haz clic para seleccionar o arrastra tu archivo Excel / CSV
                   </h4>
                   <p className="text-xs text-[var(--ink-2)] mt-1 max-w-md">
-                    Soporta formatos{' '}
-                    <strong className="text-[var(--ink)]">
-                      .xlsx, .xls y .csv
-                    </strong>{' '}
-                    de cualquier hoja de cálculo que use tu banda.
+                    Soporta formatos <strong className="text-[var(--ink)]">.xlsx, .xls y .csv</strong> de cualquier hoja de cálculo que use
+                    tu banda.
                   </p>
                   <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]700">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
-                    <span>
-                      Detección automática de salas, ciudades, teléfonos, emails
-                      y aforos
-                    </span>
+                    <span>Detección automática de salas, ciudades, teléfonos, emails y aforos</span>
                   </div>
                 </div>
 
@@ -839,12 +693,9 @@ export function ExcelImportModal({
                   <div className="flex items-center gap-3">
                     <Info className="w-5 h-5 text-[var(--acc)] shrink-0" />
                     <div className="text-xs text-[var(--ink-2)]">
-                      <p className="font-semibold text-[var(--ink)]">
-                        ¿No tienes claro el formato?
-                      </p>
+                      <p className="font-semibold text-[var(--ink)]">¿No tienes claro el formato?</p>
                       <p className="text-[var(--ink-2)]">
-                        Descarga nuestra plantilla oficial optimizada con
-                        ejemplos de salas, festivales y ayuntamientos.
+                        Descarga nuestra plantilla oficial optimizada con ejemplos de salas, festivales y ayuntamientos.
                       </p>
                     </div>
                   </div>
@@ -867,14 +718,10 @@ export function ExcelImportModal({
                   <div>
                     <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
-                      Archivo cargado:{' '}
-                      <span className="text-[var(--ok)] font-sans">
-                        {fileName}
-                      </span>
+                      Archivo cargado: <span className="text-[var(--ok)] font-sans">{fileName}</span>
                     </h4>
                     <p className="text-xs text-[var(--ink-2)]">
-                      Se han detectado {rawRows.length} filas. Revisa la
-                      correspondencia de columnas antes de importar.
+                      Se han detectado {rawRows.length} filas. Revisa la correspondencia de columnas antes de importar.
                     </p>
                   </div>
 
@@ -900,9 +747,7 @@ export function ExcelImportModal({
                 <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-2 text-xs text-[var(--ink)]">
                     <Building2 className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                    <span>
-                      Categoría por defecto si el Excel no especifica tipo:
-                    </span>
+                    <span>Categoría por defecto si el Excel no especifica tipo:</span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {CATEGORY_OPTIONS.map((cat) => (
@@ -929,9 +774,7 @@ export function ExcelImportModal({
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
                       <span>Nombre Sala / Contacto / Banda *</span>
-                      <span className="text-[10px] text-[var(--ok)] font-sans">
-                        Requerido
-                      </span>
+                      <span className="text-[10px] text-[var(--ok)] font-sans">Requerido</span>
                     </label>
                     <select
                       value={mapping.nombre_sala}
@@ -954,9 +797,7 @@ export function ExcelImportModal({
 
                   {/* Ciudad */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Ciudad / Población
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Ciudad / Población</label>
                     <select
                       value={mapping.ciudad}
                       onChange={(e) =>
@@ -978,9 +819,7 @@ export function ExcelImportModal({
 
                   {/* Email */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Email de Contacto
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Email de Contacto</label>
                     <select
                       value={mapping.email_contacto}
                       onChange={(e) =>
@@ -1002,9 +841,7 @@ export function ExcelImportModal({
 
                   {/* Teléfono */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Teléfono / WhatsApp
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Teléfono / WhatsApp</label>
                     <select
                       value={mapping.telefono}
                       onChange={(e) =>
@@ -1026,9 +863,7 @@ export function ExcelImportModal({
 
                   {/* Aforo */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Aforo / Capacidad
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Aforo / Capacidad</label>
                     <select
                       value={mapping.aforo}
                       onChange={(e) =>
@@ -1039,9 +874,7 @@ export function ExcelImportModal({
                       }
                       className="w-full px-3 py-2 text-xs rounded-[var(--r-s)] bg-[var(--bg)]800 text-[var(--ink)] focus:outline-none"
                     >
-                      <option value="">
-                        -- No asignar (Usar por defecto) --
-                      </option>
+                      <option value="">-- No asignar (Usar por defecto) --</option>
                       {rawHeaders.map((h) => (
                         <option key={h} value={h}>
                           {h}
@@ -1052,9 +885,7 @@ export function ExcelImportModal({
 
                   {/* Instagram */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Instagram / Redes
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Instagram / Redes</label>
                     <select
                       value={mapping.instagram}
                       onChange={(e) =>
@@ -1076,9 +907,7 @@ export function ExcelImportModal({
 
                   {/* Website */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Sitio Web / Link
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Sitio Web / Link</label>
                     <select
                       value={mapping.website}
                       onChange={(e) =>
@@ -1100,9 +929,7 @@ export function ExcelImportModal({
 
                   {/* Tipo / Categoría */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Tipo de Entidad (Columna)
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Tipo de Entidad (Columna)</label>
                     <select
                       value={mapping.tipo}
                       onChange={(e) =>
@@ -1124,9 +951,7 @@ export function ExcelImportModal({
 
                   {/* Contacto Nombre */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Persona de Contacto / Booker
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Persona de Contacto / Booker</label>
                     <select
                       value={mapping.contacto_nombre}
                       onChange={(e) =>
@@ -1148,9 +973,7 @@ export function ExcelImportModal({
 
                   {/* Género / Estilo */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Género / Estilo Musical
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Género / Estilo Musical</label>
                     <select
                       value={mapping.genero}
                       onChange={(e) =>
@@ -1172,9 +995,7 @@ export function ExcelImportModal({
 
                   {/* Dirección */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Dirección Física
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Dirección Física</label>
                     <select
                       value={mapping.direccion}
                       onChange={(e) =>
@@ -1196,9 +1017,7 @@ export function ExcelImportModal({
 
                   {/* Notas / Observaciones */}
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 space-y-1.5">
-                    <label className="text-xs font-bold text-[var(--ink-2)]">
-                      Notas / Comentarios
-                    </label>
+                    <label className="text-xs font-bold text-[var(--ink-2)]">Notas / Comentarios</label>
                     <select
                       value={mapping.notas}
                       onChange={(e) =>
@@ -1253,9 +1072,7 @@ export function ExcelImportModal({
                     {duplicatesCount > 0 && (
                       <button
                         type="button"
-                        onClick={() =>
-                          setFilterDuplicatesOnly(!filterDuplicatesOnly)
-                        }
+                        onClick={() => setFilterDuplicatesOnly(!filterDuplicatesOnly)}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                           filterDuplicatesOnly
                             ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
@@ -1294,12 +1111,9 @@ export function ExcelImportModal({
                       className="mt-0.5 rounded text-[var(--ok)] focus:ring-0"
                     />
                     <div className="text-xs">
-                      <p className="font-bold text-[var(--ink)]">
-                        Fusionar y actualizar contactos duplicados
-                      </p>
+                      <p className="font-bold text-[var(--ink)]">Fusionar y actualizar contactos duplicados</p>
                       <p className="text-[var(--ink-2)]">
-                        Si la sala ya existe, rellena los emails, teléfonos o
-                        datos que falten sin borrar tus notas previas.
+                        Si la sala ya existe, rellena los emails, teléfonos o datos que falten sin borrar tus notas previas.
                       </p>
                     </div>
                   </label>
@@ -1317,8 +1131,7 @@ export function ExcelImportModal({
                         Enriquecer contactos sin email con IA
                       </p>
                       <p className="text-[var(--ink-2)]">
-                        Activa el Agente Scout tras guardar para investigar webs
-                        oficiales y rellenar emails verificados.
+                        Activa el Agente Scout tras guardar para investigar webs oficiales y rellenar emails verificados.
                       </p>
                     </div>
                   </label>
@@ -1332,13 +1145,8 @@ export function ExcelImportModal({
                         <th className="p-2.5 w-8">
                           <input
                             type="checkbox"
-                            checked={
-                              parsedRows.length > 0 &&
-                              parsedRows.every((r) => r.selected)
-                            }
-                            onChange={(e) =>
-                              handleToggleSelectAll(e.target.checked)
-                            }
+                            checked={parsedRows.length > 0 && parsedRows.every((r) => r.selected)}
+                            onChange={(e) => handleToggleSelectAll(e.target.checked)}
                             className="rounded text-[var(--ok)]"
                           />
                         </th>
@@ -1364,13 +1172,7 @@ export function ExcelImportModal({
                               type="checkbox"
                               checked={row.selected}
                               onChange={() => {
-                                setParsedRows((prev) =>
-                                  prev.map((r) =>
-                                    r.id === row.id
-                                      ? { ...r, selected: !r.selected }
-                                      : r
-                                  )
-                                );
+                                setParsedRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, selected: !r.selected } : r)));
                               }}
                               className="rounded text-[var(--ok)] cursor-pointer"
                             />
@@ -1385,18 +1187,11 @@ export function ExcelImportModal({
                               )}
                             </div>
                           </td>
-                          <td className="p-2.5 text-[var(--ink-2)]">
-                            {row.ciudad}
-                          </td>
+                          <td className="p-2.5 text-[var(--ink-2)]">{row.ciudad}</td>
                           <td className="p-2.5">
                             <select
                               value={row.tipo}
-                              onChange={(e) =>
-                                handleRowTypeChange(
-                                  row.id,
-                                  e.target.value as LeadType
-                                )
-                              }
+                              onChange={(e) => handleRowTypeChange(row.id, e.target.value as LeadType)}
                               className="px-2 py-1 rounded bg-[var(--bg)]800 text-[var(--ink)] text-[11px] focus:outline-none cursor-pointer"
                             >
                               {CATEGORY_OPTIONS.map((c) => (
@@ -1408,21 +1203,13 @@ export function ExcelImportModal({
                           </td>
                           <td className="p-2.5">
                             {row.email_contacto ? (
-                              <span className="text-[var(--ink-2)] font-sans">
-                                {row.email_contacto}
-                              </span>
+                              <span className="text-[var(--ink-2)] font-sans">{row.email_contacto}</span>
                             ) : (
-                              <span className="text-[var(--ink-2)] italic">
-                                Sin correo
-                              </span>
+                              <span className="text-[var(--ink-2)] italic">Sin correo</span>
                             )}
                           </td>
-                          <td className="p-2.5 text-[var(--ink-2)]">
-                            {row.telefono || row.instagram || '-'}
-                          </td>
-                          <td className="p-2.5 font-sans text-[var(--ink-2)]">
-                            {row.aforo > 0 ? `${row.aforo} pax` : '-'}
-                          </td>
+                          <td className="p-2.5 text-[var(--ink-2)]">{row.telefono || row.instagram || '-'}</td>
+                          <td className="p-2.5 font-sans text-[var(--ink-2)]">{row.aforo > 0 ? `${row.aforo} pax` : '-'}</td>
                           <td className="p-2.5 text-right">
                             <button
                               type="button"
@@ -1470,11 +1257,7 @@ export function ExcelImportModal({
             </div>
 
             <div className="flex items-center gap-3">
-              {importStatusMsg && (
-                <span className="text-xs text-[var(--acc)]/70 font-medium">
-                  {importStatusMsg}
-                </span>
-              )}
+              {importStatusMsg && <span className="text-xs text-[var(--acc)]/70 font-medium">{importStatusMsg}</span>}
 
               {step === 2 && (
                 <button
@@ -1502,9 +1285,7 @@ export function ExcelImportModal({
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>
-                        Confirmar e Importar {selectedCount} Contactos
-                      </span>
+                      <span>Confirmar e Importar {selectedCount} Contactos</span>
                     </>
                   )}
                 </button>

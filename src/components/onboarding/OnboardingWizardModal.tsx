@@ -19,14 +19,7 @@ import {
   Check,
   SkipForward,
 } from 'lucide-react';
-import {
-  EPKConfig,
-  EPKVideo,
-  Song,
-  Concert,
-  Rehearsal,
-  User,
-} from '../../types';
+import { EPKConfig, EPKVideo, Song, Concert, Rehearsal, User } from '../../types';
 import { api } from '../../services/api';
 import { apiFetch } from '../../utils/api';
 import { uploadFileToServer } from '../../utils/audioStorage';
@@ -34,14 +27,7 @@ import { ModalPortal } from '../common/ModalPortal';
 import { normalizePlan } from '../../utils/planPermissions';
 import { markOnboardingCompleted } from '../../utils/userPreferences';
 
-import {
-  SpotifyAlbum,
-  QuickEventItem,
-  ManualSongItem,
-  PressQuoteItem,
-  WizardMemberItem,
-  WizardStepDef,
-} from './types';
+import { SpotifyAlbum, QuickEventItem, ManualSongItem, PressQuoteItem, WizardMemberItem, WizardStepDef } from './types';
 
 import { StepLanguage } from './steps/StepLanguage';
 import { StepIdentity } from './steps/StepIdentity';
@@ -90,17 +76,7 @@ const COMMON_GENRES = [
   'Autor / Indie',
 ];
 
-const COMMON_LANGUAGES = [
-  'Español',
-  'Inglés',
-  'Català',
-  'Euskera',
-  'Galego',
-  'Francés',
-  'Italiano',
-  'Bilingüe / Mixto',
-  'Instrumental',
-];
+const COMMON_LANGUAGES = ['Español', 'Inglés', 'Català', 'Euskera', 'Galego', 'Francés', 'Italiano', 'Bilingüe / Mixto', 'Instrumental'];
 
 export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   isOpen,
@@ -120,9 +96,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const userPlanId = normalizePlan(bandPlan || currentUser?.plan);
   const isPromoPlan = userPlanId === 'promo' || userPlanId === 'promo_plus';
   const hasBookingAccess = !isPromoPlan; // only non-promo plans have booking CRM
-  const hasAiAgentAccess = ['local', 'de_gira', 'cabeza_de_cartel'].includes(
-    userPlanId
-  );
+  const hasAiAgentAccess = ['local', 'de_gira', 'cabeza_de_cartel'].includes(userPlanId);
 
   // Dynamic step list based on user plan (Paso 1 prioritario: Idioma)
   const activeSteps: WizardStepDef[] = [
@@ -230,52 +204,35 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       title: 'Captación de Fans, Regalo & Pagos',
       shortTitle: 'Fans & Pagos',
       iconName: 'Heart',
-      description:
-        'QR para conciertos, lead magnet descargable y métodos de pago',
+      description: 'QR para conciertos, lead magnet descargable y métodos de pago',
     },
   ];
 
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
   const isCelebrationStep = currentStepIndex >= activeSteps.length;
-  const currentStepDef = !isCelebrationStep
-    ? activeSteps[currentStepIndex]
-    : null;
+  const currentStepDef = !isCelebrationStep ? activeSteps[currentStepIndex] : null;
 
   // Active Band ID
   const activeBandId = bandId || currentUser?.band_id || 'band_default';
 
   // --- Step 1: Identidad & Idioma ---
-  const [localBandName, setLocalBandName] = useState(
-    bandName || currentUser?.bandName || ''
-  );
+  const [localBandName, setLocalBandName] = useState(bandName || currentUser?.bandName || '');
   const [genre, setGenre] = useState(epkConfig?.genero || 'Indie Rock');
   const [language, setLanguage] = useState(epkConfig?.idioma || 'Español');
-  const [fontStyle, setFontStyle] = useState(
-    epkConfig?.fontStyle || epkConfig?.tipografia || 'anton'
-  );
-  const [city, setCity] = useState(
-    epkConfig?.datosContratacion?.ciudadBase || 'Madrid, España'
-  );
-  const [logoUrl, setLogoUrl] = useState(
-    epkConfig?.logoUrl || bandLogoUrl || ''
-  );
+  const [fontStyle, setFontStyle] = useState(epkConfig?.fontStyle || epkConfig?.tipografia || 'anton');
+  const [city, setCity] = useState(epkConfig?.datosContratacion?.ciudadBase || 'Madrid, España');
+  const [logoUrl, setLogoUrl] = useState(epkConfig?.logoUrl || bandLogoUrl || '');
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
   // Sincronizar datos de la banda cuando se abre el modal o cambia la banda/epkConfig
   useEffect(() => {
     if (isOpen) {
-      const cleanActive = (activeBandId || '')
-        .replace(/^(band|reg)-/, '')
-        .toLowerCase();
+      const cleanActive = (activeBandId || '').replace(/^(band|reg)-/, '').toLowerCase();
       const isBakandeyaBand = cleanActive === 'bakandeya';
 
       const resolvedName =
-        (bandName && bandName !== 'Banda' && bandName !== 'BAKANDEYA'
-          ? bandName
-          : '') ||
-        (currentUser?.bandName && currentUser.bandName !== 'Banda'
-          ? currentUser.bandName
-          : '') ||
+        (bandName && bandName !== 'Banda' && bandName !== 'BAKANDEYA' ? bandName : '') ||
+        (currentUser?.bandName && currentUser.bandName !== 'Banda' ? currentUser.bandName : '') ||
         (epkConfig?.contactoBooking?.nombre &&
         !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') &&
         epkConfig.contactoBooking.nombre.toLowerCase() !== 'banda'
@@ -300,19 +257,14 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       if (epkConfig) {
         if (epkConfig.genero) setGenre(epkConfig.genero);
         if (epkConfig.idioma) setLanguage(epkConfig.idioma);
-        if (epkConfig.fontStyle || epkConfig.tipografia)
-          setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
-        if (epkConfig.datosContratacion?.ciudadBase)
-          setCity(epkConfig.datosContratacion.ciudadBase);
+        if (epkConfig.fontStyle || epkConfig.tipografia) setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
+        if (epkConfig.datosContratacion?.ciudadBase) setCity(epkConfig.datosContratacion.ciudadBase);
         if (epkConfig.logoUrl) setLogoUrl(epkConfig.logoUrl);
         if (epkConfig.fraseImpacto) setSlogan(epkConfig.fraseImpacto);
 
         // Bio: no cargar la biografía de Bakandeya si estamos en otra banda
         if (epkConfig.biografia) {
-          if (
-            isBakandeyaBand ||
-            !epkConfig.biografia.toLowerCase().includes('bakandeya')
-          ) {
+          if (isBakandeyaBand || !epkConfig.biografia.toLowerCase().includes('bakandeya')) {
             setBio(epkConfig.biografia);
           } else {
             setBio('');
@@ -322,11 +274,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         }
 
         // Miembros: no cargar la alineación de Bakandeya si estamos en otra banda
-        if (
-          epkConfig.miembros &&
-          Array.isArray(epkConfig.miembros) &&
-          epkConfig.miembros.length > 0
-        ) {
+        if (epkConfig.miembros && Array.isArray(epkConfig.miembros) && epkConfig.miembros.length > 0) {
           const tieneBakandeya =
             !isBakandeyaBand &&
             epkConfig.miembros.some(
@@ -364,23 +312,14 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         }
         if (epkConfig.videos) setVideos(epkConfig.videos);
         if ((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra) {
-          setRiderTecnicoText(
-            (epkConfig as any)?.riderTecnico ||
-              epkConfig?.dossierTextoExtra ||
-              ''
-          );
+          setRiderTecnicoText((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || '');
         }
-        if ((epkConfig as any)?.riderPdfUrl)
-          setRiderPdfUrl((epkConfig as any).riderPdfUrl);
-        if ((epkConfig as any)?.riderPdfName)
-          setRiderPdfName((epkConfig as any).riderPdfName);
+        if ((epkConfig as any)?.riderPdfUrl) setRiderPdfUrl((epkConfig as any).riderPdfUrl);
+        if ((epkConfig as any)?.riderPdfName) setRiderPdfName((epkConfig as any).riderPdfName);
         if (epkConfig.bandPhotos || (epkConfig as any)?.fotos) {
           setPhotos(epkConfig.bandPhotos || (epkConfig as any)?.fotos || []);
         }
-        if (
-          (epkConfig as any)?.resenasPrensa?.citas &&
-          Array.isArray((epkConfig as any).resenasPrensa.citas)
-        ) {
+        if ((epkConfig as any)?.resenasPrensa?.citas && Array.isArray((epkConfig as any).resenasPrensa.citas)) {
           setPressQuotes((epkConfig as any).resenasPrensa.citas);
         } else if (!isBakandeyaBand) {
           setPressQuotes([]);
@@ -388,17 +327,13 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         if (epkConfig.contactoBooking) {
           if (
             epkConfig.contactoBooking.nombre &&
-            !epkConfig.contactoBooking.nombre
-              .toLowerCase()
-              .includes('bakandeya') &&
+            !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') &&
             epkConfig.contactoBooking.nombre.toLowerCase() !== 'banda'
           ) {
             setContactoBookingNombre(epkConfig.contactoBooking.nombre);
           }
-          if (epkConfig.contactoBooking.email)
-            setContactoBookingEmail(epkConfig.contactoBooking.email);
-          if (epkConfig.contactoBooking.telefono)
-            setContactoBookingTelefono(epkConfig.contactoBooking.telefono);
+          if (epkConfig.contactoBooking.email) setContactoBookingEmail(epkConfig.contactoBooking.email);
+          if (epkConfig.contactoBooking.telefono) setContactoBookingTelefono(epkConfig.contactoBooking.telefono);
         }
       }
     }
@@ -407,15 +342,9 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   // --- Step 2: Bio & Formato ---
   const [slogan, setSlogan] = useState(epkConfig?.fraseImpacto || '');
   const [bio, setBio] = useState(epkConfig?.biografia || '');
-  const [formato, setFormato] = useState(
-    epkConfig?.datosContratacion?.formatos || 'Banda completa en directo'
-  );
-  const [numMusicos, setNumMusicos] = useState(
-    epkConfig?.datosContratacion?.numMusicos || 4
-  );
-  const [duracionDirecto, setDuracionDirecto] = useState(
-    epkConfig?.datosContratacion?.duracionDirecto || '60 min'
-  );
+  const [formato, setFormato] = useState(epkConfig?.datosContratacion?.formatos || 'Banda completa en directo');
+  const [numMusicos, setNumMusicos] = useState(epkConfig?.datosContratacion?.numMusicos || 4);
+  const [duracionDirecto, setDuracionDirecto] = useState(epkConfig?.datosContratacion?.duracionDirecto || '60 min');
 
   // --- Step 3: Miembros ---
   const [members, setMembers] = useState<WizardMemberItem[]>(() => {
@@ -454,33 +383,21 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
     website: epkConfig?.enlacesRedes?.website || '',
     whatsapp: epkConfig?.enlacesRedes?.whatsapp || '',
   });
-  const [merchStoreUrl, setMerchStoreUrl] = useState(
-    (epkConfig as any)?.tiendaMerchUrl || ''
-  );
-  const [merchHighlight, setMerchHighlight] = useState(
-    (epkConfig as any)?.merchDestacado || ''
-  );
+  const [merchStoreUrl, setMerchStoreUrl] = useState((epkConfig as any)?.tiendaMerchUrl || '');
+  const [merchHighlight, setMerchHighlight] = useState((epkConfig as any)?.merchDestacado || '');
 
   // --- Step 5: Vídeos ---
   const [videos, setVideos] = useState<EPKVideo[]>(epkConfig?.videos || []);
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const [newVideoTitle, setNewVideoTitle] = useState('');
-  const [newVideoType, setNewVideoType] = useState<
-    'videoclip' | 'directo' | 'entrevista' | 'acustico'
-  >('videoclip');
+  const [newVideoType, setNewVideoType] = useState<'videoclip' | 'directo' | 'entrevista' | 'acustico'>('videoclip');
 
   // --- Step 6: Música & Setlist ---
-  const [musicSubTab, setMusicSubTab] = useState<
-    'spotify' | 'upload' | 'manual'
-  >('spotify');
-  const [spotifyQuery, setSpotifyQuery] = useState(
-    bandName || currentUser?.bandName || ''
-  );
+  const [musicSubTab, setMusicSubTab] = useState<'spotify' | 'upload' | 'manual'>('spotify');
+  const [spotifyQuery, setSpotifyQuery] = useState(bandName || currentUser?.bandName || '');
   const [isSearchingSpotify, setIsSearchingSpotify] = useState(false);
   const [spotifyAlbums, setSpotifyAlbums] = useState<SpotifyAlbum[]>([]);
-  const [selectedSpotifyTracks, setSelectedSpotifyTracks] = useState<
-    Set<string>
-  >(new Set());
+  const [selectedSpotifyTracks, setSelectedSpotifyTracks] = useState<Set<string>>(new Set());
   const [isImportingSpotify, setIsImportingSpotify] = useState(false);
   const [uploadedSongs, setUploadedSongs] = useState<Song[]>([]);
   const [isUploadingAudio, setIsUploadingAudio] = useState(false);
@@ -489,90 +406,48 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [newManualTonalidad, setNewManualTonalidad] = useState('');
   const [newManualBpm, setNewManualBpm] = useState(120);
   const [newManualDuracion, setNewManualDuracion] = useState('3:30');
-  const [createdSetlistName, setCreatedSetlistName] = useState<string | null>(
-    null
-  );
+  const [createdSetlistName, setCreatedSetlistName] = useState<string | null>(null);
   const [isCreatingSetlist, setIsCreatingSetlist] = useState(false);
 
   // --- Step 7: Rider Técnico ---
-  const [riderTecnicoText, setRiderTecnicoText] = useState(
-    (epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || ''
-  );
-  const [riderPdfUrl, setRiderPdfUrl] = useState(
-    (epkConfig as any)?.riderPdfUrl || ''
-  );
-  const [riderPdfName, setRiderPdfName] = useState(
-    (epkConfig as any)?.riderPdfName || ''
-  );
+  const [riderTecnicoText, setRiderTecnicoText] = useState((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || '');
+  const [riderPdfUrl, setRiderPdfUrl] = useState((epkConfig as any)?.riderPdfUrl || '');
+  const [riderPdfName, setRiderPdfName] = useState((epkConfig as any)?.riderPdfName || '');
   const [isUploadingRider, setIsUploadingRider] = useState(false);
-  const [canalesMesa, setCanalesMesa] = useState(
-    (epkConfig as any)?.canalesMesa || 12
-  );
-  const [llevaMicrofoniaPropia, setLlevaMicrofoniaPropia] = useState(
-    Boolean((epkConfig as any)?.llevaMicrofoniaPropia)
-  );
-  const [llevaInEars, setLlevaInEars] = useState(
-    Boolean((epkConfig as any)?.llevaInEars)
-  );
-  const [necesitaBacklineBateria, setNecesitaBacklineBateria] = useState(
-    Boolean((epkConfig as any)?.necesitaBacklineBateria)
-  );
+  const [canalesMesa, setCanalesMesa] = useState((epkConfig as any)?.canalesMesa || 12);
+  const [llevaMicrofoniaPropia, setLlevaMicrofoniaPropia] = useState(Boolean((epkConfig as any)?.llevaMicrofoniaPropia));
+  const [llevaInEars, setLlevaInEars] = useState(Boolean((epkConfig as any)?.llevaInEars));
+  const [necesitaBacklineBateria, setNecesitaBacklineBateria] = useState(Boolean((epkConfig as any)?.necesitaBacklineBateria));
 
   // --- Step 8: Prensa & Social Proof ---
   const [pressQuotes, setPressQuotes] = useState<PressQuoteItem[]>(() => {
-    if (
-      (epkConfig as any)?.resenasPrensa?.citas &&
-      Array.isArray((epkConfig as any).resenasPrensa.citas)
-    ) {
+    if ((epkConfig as any)?.resenasPrensa?.citas && Array.isArray((epkConfig as any).resenasPrensa.citas)) {
       return (epkConfig as any).resenasPrensa.citas;
     }
     return [
       {
         id: 'q1',
-        texto:
-          'Una propuesta arrolladora en directo con una frescura instrumental encomiable.',
+        texto: 'Una propuesta arrolladora en directo con una frescura instrumental encomiable.',
         medio: 'MondoSonoro',
       },
     ];
   });
   const [newQuoteText, setNewQuoteText] = useState('');
   const [newQuoteMedia, setNewQuoteMedia] = useState('');
-  const [festivalesDestacados, setFestivalesDestacados] = useState(
-    (epkConfig as any)?.festivalesDestacados || ''
-  );
-  const [cifrasOyentes, setCifrasOyentes] = useState(
-    (epkConfig as any)?.cifrasClave?.oyentes || ''
-  );
-  const [cifrasDirectos, setCifrasDirectos] = useState(
-    (epkConfig as any)?.cifrasClave?.directos || ''
-  );
-  const [cifrasComunidad, setCifrasComunidad] = useState(
-    (epkConfig as any)?.cifrasClave?.comunidad || ''
-  );
+  const [festivalesDestacados, setFestivalesDestacados] = useState((epkConfig as any)?.festivalesDestacados || '');
+  const [cifrasOyentes, setCifrasOyentes] = useState((epkConfig as any)?.cifrasClave?.oyentes || '');
+  const [cifrasDirectos, setCifrasDirectos] = useState((epkConfig as any)?.cifrasClave?.directos || '');
+  const [cifrasComunidad, setCifrasComunidad] = useState((epkConfig as any)?.cifrasClave?.comunidad || '');
 
   // --- Step 9: Caché & Condiciones (Only if hasBookingAccess) ---
-  const [cacheAcustico, setCacheAcustico] = useState(
-    (epkConfig as any)?.datosContratacion?.cacheMinimo || 400
-  );
-  const [cacheSala, setCacheSala] = useState(
-    (epkConfig as any)?.datosContratacion?.cacheMaximo || 850
-  );
-  const [cacheFestival, setCacheFestival] = useState(
-    (epkConfig as any)?.cacheFestival || 1800
-  );
-  const [condicionesKm, setCondicionesKm] = useState(
-    (epkConfig as any)?.condicionesKm || '0,25 €/km a partir de 100 km'
-  );
+  const [cacheAcustico, setCacheAcustico] = useState((epkConfig as any)?.datosContratacion?.cacheMinimo || 400);
+  const [cacheSala, setCacheSala] = useState((epkConfig as any)?.datosContratacion?.cacheMaximo || 850);
+  const [cacheFestival, setCacheFestival] = useState((epkConfig as any)?.cacheFestival || 1800);
+  const [condicionesKm, setCondicionesKm] = useState((epkConfig as any)?.condicionesKm || '0,25 €/km a partir de 100 km');
   const [requiereAlojamiento, setRequiereAlojamiento] = useState(true);
-  const [contactoBookingNombre, setContactoBookingNombre] = useState(
-    epkConfig?.contactoBooking?.nombre || currentUser?.name || ''
-  );
-  const [contactoBookingEmail, setContactoBookingEmail] = useState(
-    epkConfig?.contactoBooking?.email || currentUser?.email || ''
-  );
-  const [contactoBookingTelefono, setContactoBookingTelefono] = useState(
-    epkConfig?.contactoBooking?.telefono || ''
-  );
+  const [contactoBookingNombre, setContactoBookingNombre] = useState(epkConfig?.contactoBooking?.nombre || currentUser?.name || '');
+  const [contactoBookingEmail, setContactoBookingEmail] = useState(epkConfig?.contactoBooking?.email || currentUser?.email || '');
+  const [contactoBookingTelefono, setContactoBookingTelefono] = useState(epkConfig?.contactoBooking?.telefono || '');
 
   // --- Step 10: Agente IA & Email (Only if hasAiAgentAccess) ---
   const [signatureName, setSignatureName] = useState(currentUser?.name || '');
@@ -583,9 +458,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   // --- Step 11: Eventos & Agenda ---
   const [events, setEvents] = useState<QuickEventItem[]>([]);
   const [newEventTitle, setNewEventTitle] = useState('');
-  const [newEventType, setNewEventType] = useState<
-    'concierto' | 'festival' | 'ensayo' | 'privado'
-  >('concierto');
+  const [newEventType, setNewEventType] = useState<'concierto' | 'festival' | 'ensayo' | 'privado'>('concierto');
   const [newEventDate, setNewEventDate] = useState('');
   const [newEventTime, setNewEventTime] = useState('21:00');
   const [newEventCity, setNewEventCity] = useState(city || 'Madrid');
@@ -593,52 +466,28 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [newEventTicketUrl, setNewEventTicketUrl] = useState('');
 
   // --- Step 12: Fotos EPK ---
-  const [photos, setPhotos] = useState<string[]>(
-    epkConfig?.bandPhotos || (epkConfig as any)?.fotos || []
-  );
+  const [photos, setPhotos] = useState<string[]>(epkConfig?.bandPhotos || (epkConfig as any)?.fotos || []);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
 
   // --- Step 13: Fans & Pagos ---
   const [fanCallToAction, setFanCallToAction] = useState(
-    epkConfig?.incentivoFans?.fraseGancho ||
-      '¡Únete al club y descarga nuestra maqueta inédita en MP3!'
+    epkConfig?.incentivoFans?.fraseGancho || '¡Únete al club y descarga nuestra maqueta inédita en MP3!'
   );
   const [fanWelcomeMessage, setFanWelcomeMessage] = useState(
-    epkConfig?.incentivoFans?.mensajeAgradecimiento ||
-      '¡Gracias por apoyarnos en el concierto!'
+    epkConfig?.incentivoFans?.mensajeAgradecimiento || '¡Gracias por apoyarnos en el concierto!'
   );
   const [fanRewardDescription, setFanRewardDescription] = useState(
     epkConfig?.incentivoFans?.premioTexto || 'Tema inédito en acústico (MP3)'
   );
-  const [fanRewardLink, setFanRewardLink] = useState(
-    epkConfig?.incentivoFans?.enlaceDescarga || ''
-  );
+  const [fanRewardLink, setFanRewardLink] = useState(epkConfig?.incentivoFans?.enlaceDescarga || '');
   const [leadMagnetFileName, setLeadMagnetFileName] = useState('');
   const [isUploadingLeadMagnet, setIsUploadingLeadMagnet] = useState(false);
-  const [discountCode, setDiscountCode] = useState(
-    epkConfig?.incentivoFans?.codigoDescuento || ''
-  );
-  const [bizumNumber, setBizumNumber] = useState(
-    epkConfig?.donacionRevolut?.bizumTelefono ||
-      epkConfig?.enlacesRedes?.bizum ||
-      ''
-  );
-  const [revolutTag, setRevolutTag] = useState(
-    epkConfig?.donacionRevolut?.revolutTag ||
-      epkConfig?.enlacesRedes?.revolut ||
-      ''
-  );
-  const [paypalEmail, setPaypalEmail] = useState(
-    epkConfig?.donacionRevolut?.paypalUser ||
-      epkConfig?.enlacesRedes?.paypal ||
-      ''
-  );
-  const [ibanNumber, setIbanNumber] = useState(
-    epkConfig?.donacionRevolut?.ibanCuenta ||
-      epkConfig?.enlacesRedes?.iban ||
-      ''
-  );
+  const [discountCode, setDiscountCode] = useState(epkConfig?.incentivoFans?.codigoDescuento || '');
+  const [bizumNumber, setBizumNumber] = useState(epkConfig?.donacionRevolut?.bizumTelefono || epkConfig?.enlacesRedes?.bizum || '');
+  const [revolutTag, setRevolutTag] = useState(epkConfig?.donacionRevolut?.revolutTag || epkConfig?.enlacesRedes?.revolut || '');
+  const [paypalEmail, setPaypalEmail] = useState(epkConfig?.donacionRevolut?.paypalUser || epkConfig?.enlacesRedes?.paypal || '');
+  const [ibanNumber, setIbanNumber] = useState(epkConfig?.donacionRevolut?.ibanCuenta || epkConfig?.enlacesRedes?.iban || '');
 
   // --- Total Songs Count Calculation ---
   const totalImportedSongsCount = uploadedSongs.length + manualSongs.length;
@@ -728,9 +577,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
     if (!spotifyQuery.trim()) return;
     setIsSearchingSpotify(true);
     try {
-      const res = await apiFetch<any>(
-        `/api/spotify/search?query=${encodeURIComponent(spotifyQuery)}`
-      );
+      const res = await apiFetch<any>(`/api/spotify/search?query=${encodeURIComponent(spotifyQuery)}`);
       if (res && res.albums) {
         setSpotifyAlbums(res.albums);
       } else if (res && res.tracks) {
@@ -764,9 +611,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
           albumType: 'album',
           releaseYear: '2025',
           totalTracks: 4,
-          coverUrl:
-            logoUrl ||
-            'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400',
+          coverUrl: logoUrl || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400',
           spotifyUrl: `https://open.spotify.com/artist/search`,
           tracks: [
             {
@@ -867,9 +712,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   };
 
   // Audio Upload
-  const handleAudioFileUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleAudioFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     setIsUploadingAudio(true);
@@ -880,9 +723,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
           bandId: activeBandId,
           category: 'audio',
         });
-        const cleanName = file.name
-          .replace(/\.[^/.]+$/, '')
-          .replace(/[_-]/g, '');
+        const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, '');
         const newSong: Song = {
           id: `aud_${Date.now()}_${i}`,
           titulo: cleanName,
@@ -1129,9 +970,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   };
 
   // Lead Magnet Upload
-  const handleLeadMagnetUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleLeadMagnetUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setIsUploadingLeadMagnet(true);
@@ -1153,12 +992,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
   // Save full configuration
   const handleSaveConfiguration = async () => {
-    const finalBandName = (
-      localBandName ||
-      bandName ||
-      currentUser?.bandName ||
-      ''
-    ).trim();
+    const finalBandName = (localBandName || bandName || currentUser?.bandName || '').trim();
     const updatedEpk: Partial<EPKConfig> = {
       ...epkConfig,
       bandId: activeBandId,
@@ -1208,9 +1042,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       },
       donacionRevolut: {
         ...epkConfig?.donacionRevolut,
-        habilitado: Boolean(
-          bizumNumber || revolutTag || paypalEmail || ibanNumber
-        ),
+        habilitado: Boolean(bizumNumber || revolutTag || paypalEmail || ibanNumber),
         bizumTelefono: bizumNumber,
         revolutTag,
         paypalUser: paypalEmail,
@@ -1275,11 +1107,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   };
 
   const handleFinishWizard = () => {
-    markOnboardingCompleted(
-      activeBandId,
-      { wizard: true, onboarding: true },
-      true
-    ).catch(() => {});
+    markOnboardingCompleted(activeBandId, { wizard: true, onboarding: true }, true).catch(() => {});
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
     }
@@ -1297,8 +1125,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold tracking-wider">
-                  Configuración Inicial · Plan{' '}
-                  {userPlanId.toUpperCase().replace('_', '')}
+                  Configuración Inicial · Plan {userPlanId.toUpperCase().replace('_', '')}
                 </span>
                 {!isCelebrationStep && (
                   <span className="text-xs text-[var(--ink-2)]">
@@ -1340,11 +1167,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                           : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                     }`}
                   >
-                    {isPassed ? (
-                      <Check className="w-3 h-3" />
-                    ) : (
-                      <span className="text-[10px] opacity-80">{idx + 1}.</span>
-                    )}
+                    {isPassed ? <Check className="w-3 h-3" /> : <span className="text-[10px] opacity-80">{idx + 1}.</span>}
                     <span>{step.shortTitle}</span>
                   </button>
                 );
@@ -1356,11 +1179,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
           <div className="p-5 sm:p-6 overflow-y-auto flex-1 custom-scrollbar">
             {/* Step 1: Idioma */}
             {currentStepDef?.key === 'language' && (
-              <StepLanguage
-                language={language}
-                setLanguage={setLanguage}
-                onContinue={handleNextStep}
-              />
+              <StepLanguage language={language} setLanguage={setLanguage} onContinue={handleNextStep} />
             )}
 
             {/* Step 2: Identidad */}
@@ -1655,11 +1474,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     <ArrowLeft className="w-3.5 h-3.5" /> Anterior
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="text-xs text-[var(--ink-2)] hover:text-[var(--ink-2)]"
-                  >
+                  <button type="button" onClick={onClose} className="text-xs text-[var(--ink-2)] hover:text-[var(--ink-2)]">
                     Configurar más tarde
                   </button>
                 )}

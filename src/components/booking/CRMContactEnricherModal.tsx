@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
-import {
-  X,
-  Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  Loader2,
-  Globe,
-  Mail,
-  Phone,
-  Instagram,
-} from 'lucide-react';
+import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 
@@ -21,9 +11,7 @@ interface CRMContactEnricherModalProps {
   onUpdateLead?: (id: string, updatedFields: Partial<Lead>) => void;
 }
 
-export const CRMContactEnricherModal: React.FC<
-  CRMContactEnricherModalProps
-> = ({ isOpen, onClose, leads, onUpdateLead }) => {
+export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = ({ isOpen, onClose, leads, onUpdateLead }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedCount, setProcessedCount] = useState(0);
   const [enrichedResults, setEnrichedResults] = useState<
@@ -39,9 +27,7 @@ export const CRMContactEnricherModal: React.FC<
 
   if (!isOpen) return null;
 
-  const incompleteLeads = leads.filter(
-    (l) => !l.email_contacto || !l.telefono || !l.instagram
-  );
+  const incompleteLeads = leads.filter((l) => !l.email_contacto || !l.telefono || !l.instagram);
 
   const handleStartEnrichment = async () => {
     setIsProcessing(true);
@@ -58,9 +44,7 @@ export const CRMContactEnricherModal: React.FC<
     try {
       for (let i = 0; i < Math.min(incompleteLeads.length, 10); i++) {
         const lead = incompleteLeads[i];
-        setStatusMessage(
-          `Buscando datos de contacto para ${lead.nombre_sala}...`
-        );
+        setStatusMessage(`Buscando datos de contacto para ${lead.nombre_sala}...`);
 
         try {
           const res = await apiFetch(`/api/leads/${lead.id}/enrich`, {
@@ -90,9 +74,7 @@ export const CRMContactEnricherModal: React.FC<
       }
 
       setEnrichedResults(enrichedList);
-      setStatusMessage(
-        `Enriquecimiento finalizado. Se han procesado ${enrichedList.length} contactos.`
-      );
+      setStatusMessage(`Enriquecimiento finalizado. Se han procesado ${enrichedList.length} contactos.`);
     } catch (e: any) {
       setStatusMessage('Hubo un error durante el proceso de enriquecimiento.');
     } finally {
@@ -112,12 +94,8 @@ export const CRMContactEnricherModal: React.FC<
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold">
-                  Enriquecer Contactos de Booking
-                </h2>
-                <p className="text-xs text-[var(--ink-2)]">
-                  Búsqueda automática de emails, teléfonos e Instagram
-                </p>
+                <h2 className="text-base font-bold">Enriquecer Contactos de Booking</h2>
+                <p className="text-xs text-[var(--ink-2)]">Búsqueda automática de emails, teléfonos e Instagram</p>
               </div>
             </div>
             <button
@@ -132,16 +110,11 @@ export const CRMContactEnricherModal: React.FC<
           <div className="my-5 space-y-4 text-xs">
             <div className={`p-4 rounded-[var(--r-m)] ${'bg-[var(--bg)]'}`}>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-[var(--ink)]">
-                  Salas con información incompleta:
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">
-                  {incompleteLeads.length}
-                </span>
+                <span className="font-semibold text-[var(--ink)]">Salas con información incompleta:</span>
+                <span className="px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">{incompleteLeads.length}</span>
               </div>
               <p className="text-[var(--ink-2)] leading-relaxed">
-                El asistente escaneará páginas web oficiales y directorios
-                públicos para completar correos de booking y teléfonos de los
+                El asistente escaneará páginas web oficiales y directorios públicos para completar correos de booking y teléfonos de los
                 promotores.
               </p>
             </div>
@@ -159,34 +132,24 @@ export const CRMContactEnricherModal: React.FC<
 
             {enrichedResults.length > 0 && (
               <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
-                <span className="text-[11px] font-semibold text-[var(--ink-2)] tracking-wider">
-                  Contactos actualizados:
-                </span>
+                <span className="text-[11px] font-semibold text-[var(--ink-2)] tracking-wider">Contactos actualizados:</span>
                 {enrichedResults.map((r, i) => (
-                  <div
-                    key={i}
-                    className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1"
-                  >
-                    <span className="font-bold text-[var(--ink-2)]">
-                      {r.name}
-                    </span>
+                  <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1">
+                    <span className="font-bold text-[var(--ink-2)]">{r.name}</span>
                     <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
                       {r.email && (
                         <span className="flex items-center gap-1">
-                          <Mail className="w-3 h-3 text-[var(--ok)]" />{' '}
-                          {r.email}
+                          <Mail className="w-3 h-3 text-[var(--ok)]" /> {r.email}
                         </span>
                       )}
                       {r.phone && (
                         <span className="flex items-center gap-1">
-                          <Phone className="w-3 h-3 text-[var(--acc)]" />{' '}
-                          {r.phone}
+                          <Phone className="w-3 h-3 text-[var(--acc)]" /> {r.phone}
                         </span>
                       )}
                       {r.instagram && (
                         <span className="flex items-center gap-1">
-                          <Instagram className="w-3 h-3 text-[var(--alert)]" />{' '}
-                          {r.instagram}
+                          <Instagram className="w-3 h-3 text-[var(--alert)]" /> {r.instagram}
                         </span>
                       )}
                     </div>
@@ -214,8 +177,7 @@ export const CRMContactEnricherModal: React.FC<
               {isProcessing ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Enriqueciendo ({processedCount}/
-                  {Math.min(incompleteLeads.length, 10)})
+                  Enriqueciendo ({processedCount}/{Math.min(incompleteLeads.length, 10)})
                 </>
               ) : (
                 <>

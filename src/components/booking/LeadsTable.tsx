@@ -20,11 +20,7 @@ import {
 } from 'lucide-react';
 import { ChangeLeadImageModal } from './ChangeLeadImageModal';
 import { LeadAvatar } from './LeadAvatar';
-import {
-  useEmailValidation,
-  getEmailStatus,
-  isBouncedLead,
-} from '../../hooks/useEmailValidation';
+import { useEmailValidation, getEmailStatus, isBouncedLead } from '../../hooks/useEmailValidation';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -39,9 +35,7 @@ interface LeadsTableProps {
   normalizeType: (type?: string) => string;
   sectionTab?: 'salas' | 'medios' | 'grupos';
   mediaTypeFilter?: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos';
-  setMediaTypeFilter?: (
-    type: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos'
-  ) => void;
+  setMediaTypeFilter?: (type: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos') => void;
   selectedLeadIds?: string[];
   onToggleSelectLead?: (id: string, e?: React.MouseEvent) => void;
   onSelectAllFiltered?: () => void;
@@ -75,19 +69,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   useEffect(() => {
     if (headerCheckboxRef.current) {
-      headerCheckboxRef.current.indeterminate =
-        isSomeSelected && !isAllSelected;
+      headerCheckboxRef.current.indeterminate = isSomeSelected && !isAllSelected;
     }
   }, [isSomeSelected, isAllSelected]);
 
   const filteredLeads =
-    mediaTypeFilter === 'todos' || !setMediaTypeFilter
-      ? leads
-      : leads.filter((l) => l.genero?.toLowerCase() === mediaTypeFilter);
+    mediaTypeFilter === 'todos' || !setMediaTypeFilter ? leads : leads.filter((l) => l.genero?.toLowerCase() === mediaTypeFilter);
 
-  const [leadForImageChange, setLeadForImageChange] = useState<Lead | null>(
-    null
-  );
+  const [leadForImageChange, setLeadForImageChange] = useState<Lead | null>(null);
   const { emailValidities } = useEmailValidation();
 
   const handleQuickApprovePitch = (e: React.MouseEvent, lead: Lead) => {
@@ -104,12 +93,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     return (
       <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)] my-4">
         <Sparkles className="w-8 h-8 text-[var(--acc-ink)] mx-auto mb-2 opacity-60" />
-        <p className="text-[var(--ink-2)] font-bold text-sm">
-          No se encontraron medios o espacios
-        </p>
-        <p className="text-[var(--ink-2)] text-xs mt-1">
-          Prueba a cambiar los filtros o los términos de búsqueda.
-        </p>
+        <p className="text-[var(--ink-2)] font-bold text-sm">No se encontraron medios o espacios</p>
+        <p className="text-[var(--ink-2)] text-xs mt-1">Prueba a cambiar los filtros o los términos de búsqueda.</p>
       </div>
     );
   }
@@ -120,21 +105,19 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         {sectionTab === 'medios' && setMediaTypeFilter && (
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            {['todos', 'televisión', 'radio', 'redes', 'managements'].map(
-              (type) => (
-                <button
-                  key={type}
-                  onClick={() => setMediaTypeFilter(type as any)}
-                  className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold capitalize transition-colors cursor-pointer ${
-                    mediaTypeFilter === type
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                      : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                  }`}
-                >
-                  {type}
-                </button>
-              )
-            )}
+            {['todos', 'televisión', 'radio', 'redes', 'managements'].map((type) => (
+              <button
+                key={type}
+                onClick={() => setMediaTypeFilter(type as any)}
+                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold capitalize transition-colors cursor-pointer ${
+                  mediaTypeFilter === type
+                    ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                }`}
+              >
+                {type}
+              </button>
+            ))}
           </div>
         )}
 
@@ -184,9 +167,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             const isDetailOpen = selectedLead?.id === lead.id;
             const isChecked = selectedLeadIds.includes(lead.id);
             const phoneClean = cleanPhone(lead.telefono);
-            const leadKey = lead.id
-              ? `lead-grid-${lead.id}`
-              : `lead-grid-${idx}`;
+            const leadKey = lead.id ? `lead-grid-${lead.id}` : `lead-grid-${idx}`;
 
             return (
               <div
@@ -210,11 +191,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         onToggleSelectLead(lead.id, e);
                       }}
                       className="shrink-0 pt-0.5 cursor-pointer"
-                      title={
-                        isChecked
-                          ? 'Deseleccionar sala'
-                          : 'Seleccionar sala para acciones masivas'
-                      }
+                      title={isChecked ? 'Deseleccionar sala' : 'Seleccionar sala para acciones masivas'}
                     >
                       <div
                         className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
@@ -247,18 +224,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         >
                           {lead.nombre_sala}
                         </h4>
-                        <VerifiedBadge
-                          isVerified={isLeadVerificado(lead)}
-                          size="sm"
-                        />
+                        <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
                         <FavoriteButton
                           isFavorite={!!lead.es_favorito}
-                          onToggle={(newVal) =>
-                            onUpdateLead(lead.id, { es_favorito: newVal })
-                          }
+                          onToggle={(newVal) => onUpdateLead(lead.id, { es_favorito: newVal })}
                           size="sm"
                         />
                         <span
@@ -272,43 +244,24 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans text-[var(--ink-2)] font-medium mt-1">
-                      <span className="text-[var(--ink)] font-semibold">
-                        {lead.ciudad || 'España'}
-                      </span>
+                      <span className="text-[var(--ink)] font-semibold">{lead.ciudad || 'España'}</span>
                       <span>•</span>
-                      <span
-                        className={
-                          lead.roster
-                            ? 'text-[var(--acc)]/70 font-semibold'
-                            : ''
-                        }
-                      >
+                      <span className={lead.roster ? 'text-[var(--acc)]/70 font-semibold' : ''}>
                         {lead.roster
                           ? `Róster: ${lead.roster}`
-                          : [
-                                'agencia',
-                                'manager',
-                                'productora',
-                                'sello',
-                              ].includes(String(lead.tipo || '').toLowerCase())
+                          : ['agencia', 'manager', 'productora', 'sello'].includes(String(lead.tipo || '').toLowerCase())
                             ? 'Agencia / Booking'
                             : lead.aforo
                               ? `${lead.aforo} pax`
                               : 'Aforo n/d'}
                       </span>
                       <span>•</span>
-                      <span className="text-[var(--ink-2)]">
-                        {lead.genero || 'Variado'}
-                      </span>
+                      <span className="text-[var(--ink-2)]">{lead.genero || 'Variado'}</span>
                     </div>
 
                     {/* Quality Badges */}
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <LeadHealthBadge
-                        lead={lead}
-                        showDescription={true}
-                        size="sm"
-                      />
+                      <LeadHealthBadge lead={lead} showDescription={true} size="sm" />
                       <ReliabilityBadge item={lead} size="sm" />
                     </div>
                   </div>
@@ -328,9 +281,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         title="Enviar WhatsApp directo a la sala"
                       >
                         <MessageCircle className="w-4 h-4 text-[var(--ok)]" />
-                        <span className="hidden xs:inline text-[11px]">
-                          WhatsApp
-                        </span>
+                        <span className="hidden xs:inline text-[11px]">WhatsApp</span>
                       </a>
                     ) : null}
 
@@ -343,15 +294,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         title="Llamar directamente por teléfono"
                       >
                         <PhoneCall className="w-4 h-4 text-[var(--ink-2)]" />
-                        <span className="hidden xs:inline text-[11px]">
-                          Llamar
-                        </span>
+                        <span className="hidden xs:inline text-[11px]">Llamar</span>
                       </a>
                     ) : null}
 
                     {/* Direct Pitch Approval Button if pending */}
-                    {(lead.estado === 'pendiente_aprobacion' ||
-                      lead.estado === 'nuevo') && (
+                    {(lead.estado === 'pendiente_aprobacion' || lead.estado === 'nuevo') && (
                       <button
                         type="button"
                         onClick={(e) => handleQuickApprovePitch(e, lead)}
@@ -413,51 +361,25 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         type="checkbox"
                         ref={headerCheckboxRef}
                         checked={isAllSelected}
-                        onChange={
-                          isAllSelected ? onDeselectAll : onSelectAllFiltered
-                        }
+                        onChange={isAllSelected ? onDeselectAll : onSelectAllFiltered}
                         className="w-4 h-4 rounded-[var(--r-s)] text-[var(--acc)] focus:ring-[var(--acc)]/40 bg-[var(--sunken)] cursor-pointer accent-[var(--acc)]"
-                        title={
-                          isAllSelected
-                            ? 'Deseleccionar todos'
-                            : 'Seleccionar todos los resultados'
-                        }
+                        title={isAllSelected ? 'Deseleccionar todos' : 'Seleccionar todos los resultados'}
                       />
                     </div>
                   </th>
                 )}
 
-                <th className="py-3.5 px-3 w-10 text-center whitespace-nowrap">
-                  Fav
-                </th>
+                <th className="py-3.5 px-3 w-10 text-center whitespace-nowrap">Fav</th>
                 <th className="py-3.5 px-4 min-w-[220px] whitespace-nowrap">
-                  {sectionTab === 'medios'
-                    ? 'Medio / Contacto'
-                    : sectionTab === 'grupos'
-                      ? 'Banda / Management'
-                      : 'Espacio / Sala'}
+                  {sectionTab === 'medios' ? 'Medio / Contacto' : sectionTab === 'grupos' ? 'Banda / Management' : 'Espacio / Sala'}
                 </th>
-                <th className="py-3.5 px-4 min-w-[120px] whitespace-nowrap">
-                  Fiabilidad
-                </th>
-                <th className="py-3.5 px-4 min-w-[120px] whitespace-nowrap">
-                  Salud / Temp
-                </th>
-                <th className="py-3.5 px-4 min-w-[110px] whitespace-nowrap">
-                  Ciudad
-                </th>
-                <th className="py-3.5 px-4 min-w-[90px] whitespace-nowrap">
-                  {sectionTab === 'grupos' ? 'Róster / Aforo' : 'Aforo'}
-                </th>
-                <th className="py-3.5 px-4 min-w-[140px] whitespace-nowrap">
-                  Estado
-                </th>
-                <th className="py-3.5 px-4 min-w-[180px] whitespace-nowrap">
-                  Contacto / Directo
-                </th>
-                <th className="py-3.5 px-4 min-w-[160px] text-right whitespace-nowrap">
-                  Acciones Rápidas
-                </th>
+                <th className="py-3.5 px-4 min-w-[120px] whitespace-nowrap">Fiabilidad</th>
+                <th className="py-3.5 px-4 min-w-[120px] whitespace-nowrap">Salud / Temp</th>
+                <th className="py-3.5 px-4 min-w-[110px] whitespace-nowrap">Ciudad</th>
+                <th className="py-3.5 px-4 min-w-[90px] whitespace-nowrap">{sectionTab === 'grupos' ? 'Róster / Aforo' : 'Aforo'}</th>
+                <th className="py-3.5 px-4 min-w-[140px] whitespace-nowrap">Estado</th>
+                <th className="py-3.5 px-4 min-w-[180px] whitespace-nowrap">Contacto / Directo</th>
+                <th className="py-3.5 px-4 min-w-[160px] text-right whitespace-nowrap">Acciones Rápidas</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--hair)] text-xs align-middle">
@@ -465,20 +387,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 const isDetailOpen = selectedLead?.id === lead.id;
                 const isChecked = selectedLeadIds.includes(lead.id);
                 const phoneClean = cleanPhone(lead.telefono);
-                const leadKey = lead.id
-                  ? `lead-row-${lead.id}`
-                  : `lead-row-${idx}`;
+                const leadKey = lead.id ? `lead-row-${lead.id}` : `lead-row-${idx}`;
 
                 return (
                   <tr
                     key={leadKey}
                     onClick={() => onSelectLead(lead)}
                     className={`transition-colors cursor-pointer ${
-                      isChecked
-                        ? 'bg-[var(--acc-soft)]'
-                        : isDetailOpen
-                          ? 'bg-[var(--sunken)]'
-                          : 'hover:bg-[var(--sunken)]'
+                      isChecked ? 'bg-[var(--acc-soft)]' : isDetailOpen ? 'bg-[var(--sunken)]' : 'hover:bg-[var(--sunken)]'
                     }`}
                   >
                     {/* Row Select Checkbox */}
@@ -506,15 +422,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </td>
                     )}
 
-                    <td
-                      className="py-3.5 px-3 text-center align-middle"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <td className="py-3.5 px-3 text-center align-middle" onClick={(e) => e.stopPropagation()}>
                       <FavoriteButton
                         isFavorite={!!lead.es_favorito}
-                        onToggle={(newVal) =>
-                          onUpdateLead(lead.id, { es_favorito: newVal })
-                        }
+                        onToggle={(newVal) => onUpdateLead(lead.id, { es_favorito: newVal })}
                         size="sm"
                       />
                     </td>
@@ -539,10 +450,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             >
                               {lead.nombre_sala}
                             </span>
-                            <VerifiedBadge
-                              isVerified={isLeadVerificado(lead)}
-                              size="sm"
-                            />
+                            <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
                           </div>
                           <span className="text-[10px] text-[var(--ink-2)] font-sans font-normal truncate block">
                             {lead.genero || 'Sin género'}
@@ -556,32 +464,16 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[120px] whitespace-nowrap align-middle">
-                      <LeadHealthBadge
-                        lead={lead}
-                        showDescription={false}
-                        size="sm"
-                      />
+                      <LeadHealthBadge lead={lead} showDescription={false} size="sm" />
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[110px] text-[var(--ink-2)] align-middle">
-                      <span className="font-semibold">
-                        {lead.ciudad || 'España'}
-                      </span>
+                      <span className="font-semibold">{lead.ciudad || 'España'}</span>
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[90px] text-[var(--ink-2)] align-middle">
-                      <span
-                        className={
-                          lead.roster
-                            ? 'text-[var(--acc-ink)] font-semibold'
-                            : 'text-[var(--ink)]'
-                        }
-                      >
-                        {lead.roster
-                          ? `Róster: ${lead.roster}`
-                          : lead.aforo
-                            ? `${lead.aforo} pax`
-                            : 'n/d'}
+                      <span className={lead.roster ? 'text-[var(--acc-ink)] font-semibold' : 'text-[var(--ink)]'}>
+                        {lead.roster ? `Róster: ${lead.roster}` : lead.aforo ? `${lead.aforo} pax` : 'n/d'}
                       </span>
                     </td>
 
@@ -603,12 +495,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             <>
                               {(() => {
                                 const bounced = isBouncedLead(lead.notas);
-                                const invalid =
-                                  getEmailStatus(
-                                    lead.id,
-                                    lead.email_contacto,
-                                    emailValidities
-                                  ) === 'invalid';
+                                const invalid = getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid';
                                 const broken = bounced || invalid;
                                 return (
                                   <>
@@ -627,9 +514,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                     {broken && (
                                       <div
                                         title={
-                                          bounced
-                                            ? 'Email rebotado - el destinatario no existe'
-                                            : 'Email inválido - no se puede contactar'
+                                          bounced ? 'Email rebotado - el destinatario no existe' : 'Email inválido - no se puede contactar'
                                         }
                                       >
                                         <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)] flex-shrink-0" />
@@ -640,9 +525,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               })()}
                             </>
                           ) : (
-                            <span className="text-[var(--ink-2)] italic text-[11px]">
-                              Sin email
-                            </span>
+                            <span className="text-[var(--ink-2)] italic text-[11px]">Sin email</span>
                           )}
                         </div>
                         {phoneClean && (
@@ -680,8 +563,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           </a>
                         )}
 
-                        {(lead.estado === 'pendiente_aprobacion' ||
-                          lead.estado === 'nuevo') && (
+                        {(lead.estado === 'pendiente_aprobacion' || lead.estado === 'nuevo') && (
                           <button
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}

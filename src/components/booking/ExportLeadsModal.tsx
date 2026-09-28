@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  Download,
-  FileSpreadsheet,
-  FileCode,
-  Filter,
-  Layers,
-  CheckSquare,
-} from 'lucide-react';
+import { X, Download, FileSpreadsheet, FileCode, Filter, Layers, CheckSquare } from 'lucide-react';
 import { Lead } from '../../types';
 
 interface ExportLeadsModalProps {
@@ -27,9 +19,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
   selectedLeadIds = [],
   bandName = 'Banda',
 }) => {
-  const [exportScope, setExportScope] = useState<
-    'filtered' | 'all' | 'selected'
-  >('filtered');
+  const [exportScope, setExportScope] = useState<'filtered' | 'all' | 'selected'>('filtered');
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv');
   const [includeNotes, setIncludeNotes] = useState(true);
   const [includePitch, setIncludePitch] = useState(true);
@@ -148,12 +138,8 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[var(--ink)]">
-                Exportar Leads de Booking
-              </h3>
-              <p className="text-xs text-[var(--ink-2)]">
-                Descarga tu base de contactos en Excel o JSON
-              </p>
+              <h3 className="text-base font-bold text-[var(--ink)]">Exportar Leads de Booking</h3>
+              <p className="text-xs text-[var(--ink-2)]">Descarga tu base de contactos en Excel o JSON</p>
             </div>
           </div>
           <button
@@ -166,9 +152,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 1. Scope selection */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
-            1. ¿Qué contactos quieres exportar?
-          </label>
+          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">1. ¿Qué contactos quieres exportar?</label>
           <div className="grid grid-cols-1 gap-2">
             {/* Filtered */}
             <button
@@ -180,21 +164,16 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
               }`}
             >
-              <Filter
-                className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'filtered' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`}
-              />
+              <Filter className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'filtered' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold">
-                    Contactos a la vista con filtro actual
-                  </span>
+                  <span className="text-xs font-bold">Contactos a la vista con filtro actual</span>
                   <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     {filteredLeads.length} contactos
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                  Exporta únicamente las salas o medios que cumplen la búsqueda
-                  y los filtros aplicados en este momento.
+                  Exporta únicamente las salas o medios que cumplen la búsqueda y los filtros aplicados en este momento.
                 </p>
               </div>
             </button>
@@ -209,21 +188,16 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]'
               }`}
             >
-              <Layers
-                className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'all' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`}
-              />
+              <Layers className={`w-4 h-4 mt-0.5 shrink-0 ${exportScope === 'all' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold">
-                    Todos los contactos del CRM
-                  </span>
+                  <span className="text-xs font-bold">Todos los contactos del CRM</span>
                   <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
                     {allLeads.length} contactos
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                  Exporta toda la base de datos de salas, festivales, medios y
-                  contactos de la banda activa.
+                  Exporta toda la base de datos de salas, festivales, medios y contactos de la banda activa.
                 </p>
               </div>
             </button>
@@ -244,16 +218,13 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold">
-                      Solo contactos seleccionados
-                    </span>
+                    <span className="text-xs font-bold">Solo contactos seleccionados</span>
                     <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]/70">
                       {selectedLeads.length} seleccionados
                     </span>
                   </div>
                   <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                    Exporta únicamente las casillas que has marcado
-                    explícitamente en la lista.
+                    Exporta únicamente las casillas que has marcado explícitamente en la lista.
                   </p>
                 </div>
               </button>
@@ -263,9 +234,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
 
         {/* 2. Format selection */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">
-            2. Formato de descarga
-          </label>
+          <label className="text-xs font-bold text-[var(--acc)]/70 tracking-wider block">2. Formato de descarga</label>
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -279,9 +248,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
               <div>
                 <span className="text-xs block">Excel / CSV (.csv)</span>
-                <span className="text-[10px] text-[var(--ink-2)] font-normal">
-                  Compatible UTF-8 Windows
-                </span>
+                <span className="text-[10px] text-[var(--ink-2)] font-normal">Compatible UTF-8 Windows</span>
               </div>
             </button>
 
@@ -297,9 +264,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
               <div>
                 <span className="text-xs block">JSON Datos (.json)</span>
-                <span className="text-[10px] text-[var(--ink-2)] font-normal">
-                  Objeto raw estructurado
-                </span>
+                <span className="text-[10px] text-[var(--ink-2)] font-normal">Objeto raw estructurado</span>
               </div>
             </button>
           </div>
@@ -308,9 +273,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
         {/* 3. CSV Options */}
         {exportFormat === 'csv' && (
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80800 space-y-2">
-            <span className="text-[11px] font-bold text-[var(--ink-2)] block">
-              Campos adicionales en CSV:
-            </span>
+            <span className="text-[11px] font-bold text-[var(--ink-2)] block">Campos adicionales en CSV:</span>
             <div className="flex items-center gap-4 text-xs">
               <label className="flex items-center gap-2 cursor-pointer text-[var(--ink-2)]">
                 <input
@@ -352,8 +315,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
           >
             <Download className="w-4 h-4" />
             <span>
-              Descargar {targetCount}{' '}
-              {targetCount === 1 ? 'contacto' : 'contactos'}
+              Descargar {targetCount} {targetCount === 1 ? 'contacto' : 'contactos'}
             </span>
           </button>
         </div>

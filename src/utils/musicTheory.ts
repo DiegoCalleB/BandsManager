@@ -21,19 +21,19 @@ const NOMBRES_MIDI = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#'
  * hueco mudo que parece un fallo de la app.
  */
 export function notaAMidi(nota: string): number | null {
- const match = RE_NOTA.exec((nota || '').trim());
- if (!match) return null;
- const [, letra, alteracion, octavaStr] = match;
- const clase = CLASE_POR_LETRA[letra.toUpperCase()];
- if (clase === undefined) return null;
- const ajuste = alteracion === '#' ? 1 : alteracion === 'b' ? -1 : 0;
- const octava = parseInt(octavaStr, 10);
- const midi = (octava + 1) * 12 + clase + ajuste;
- return midi >= 0 && midi <= 127 ? midi : null;
+  const match = RE_NOTA.exec((nota || '').trim());
+  if (!match) return null;
+  const [, letra, alteracion, octavaStr] = match;
+  const clase = CLASE_POR_LETRA[letra.toUpperCase()];
+  if (clase === undefined) return null;
+  const ajuste = alteracion === '#' ? 1 : alteracion === 'b' ? -1 : 0;
+  const octava = parseInt(octavaStr, 10);
+  const midi = (octava + 1) * 12 + clase + ajuste;
+  return midi >= 0 && midi <= 127 ? midi : null;
 }
 
 export function midiANota(midi: number): string {
- const redondeado = Math.round(midi);
- const octava = Math.floor(redondeado / 12) - 1;
- return `${NOMBRES_MIDI[((redondeado % 12) + 12) % 12]}${octava}`;
+  const redondeado = Math.round(midi);
+  const octava = Math.floor(redondeado / 12) - 1;
+  return `${NOMBRES_MIDI[((redondeado % 12) + 12) % 12]}${octava}`;
 }

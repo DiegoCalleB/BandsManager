@@ -51,8 +51,7 @@ Saludos cordiales,
 {bandName} Agent Manager IA`,
   },
   medio: {
-    subject:
-      '[Nota de Prensa / Dossier] {bandName} presenta su gira 2026 y nuevos lanzamientos',
+    subject: '[Nota de Prensa / Dossier] {bandName} presenta su gira 2026 y nuevos lanzamientos',
     body: `Hola equipo de redacción de {{nombre_sala}},
 
 Nos ponemos en contacto desde {bandName} ({estilo}) para haceros llegar nuestro dossier promocional y últimos lanzamientos con motivo de nuestra gira 2026.
@@ -67,8 +66,7 @@ Muchas gracias por vuestro apoyo a la música independiente en directo,
 {bandName} Comunicación & Prensa`,
   },
   grupo: {
-    subject:
-      'Propuesta de concierto compartido e intercambio de fechas (Date Swap): {bandName} x {{nombre_sala}}',
+    subject: 'Propuesta de concierto compartido e intercambio de fechas (Date Swap): {bandName} x {{nombre_sala}}',
     body: `¡Buenas chavales de {{nombre_sala}}! 🎸🔥
 
 Os escribimos desde {bandName} ({estilo}). Nos mola mucho vuestro proyecto y creemos que nuestros directos conectarían genial en una fecha compartida.

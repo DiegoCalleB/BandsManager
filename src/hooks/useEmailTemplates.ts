@@ -1,21 +1,11 @@
 import { useState, useEffect } from 'react';
 
-export type TemplateCategory =
-  | 'salas'
-  | 'festivales'
-  | 'discotecas'
-  | 'medios'
-  | 'grupos'
-  | 'managements'
-  | 'ayuntamientos';
+export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 export function useEmailTemplates() {
   // Template states for Salas
-  const [subjectTemplateSala, setSubjectTemplateSala] = useState(
-    'Propuesta de concierto: {bandName} (Fusión)'
-  );
-  const [bodyTemplateSala, setBodyTemplateSala] =
-    useState(`Hola equipo de booking de {{nombre_sala}},
+  const [subjectTemplateSala, setSubjectTemplateSala] = useState('Propuesta de concierto: {bandName} (Fusión)');
+  const [bodyTemplateSala, setBodyTemplateSala] = useState(`Hola equipo de booking de {{nombre_sala}},
 
 Somos {bandName}, banda que fusiona {estilo}. Hemos visto su programación en {{ciudad}} y creemos que nuestra propuesta encaja perfecto para su público.
 
@@ -28,11 +18,8 @@ Un saludo,
   );
 
   // Template states for Festivales
-  const [subjectTemplateFestival, setSubjectTemplateFestival] = useState(
-    'Propuesta de Cartel / Booking Festival: {bandName} (Live Show)'
-  );
-  const [bodyTemplateFestival, setBodyTemplateFestival] =
-    useState(`Hola equipo de producción y booking de {{nombre_sala}},
+  const [subjectTemplateFestival, setSubjectTemplateFestival] = useState('Propuesta de Cartel / Booking Festival: {bandName} (Live Show)');
+  const [bodyTemplateFestival, setBodyTemplateFestival] = useState(`Hola equipo de producción y booking de {{nombre_sala}},
 
 Escribimos de parte de {bandName} para presentar la propuesta de nuestro show directo para la próxima edición de {{nombre_sala}} en {{ciudad}}.
 
@@ -49,11 +36,8 @@ Un saludo atento,
   );
 
   // Template states for Discotecas / Clubs
-  const [subjectTemplateDiscoteca, setSubjectTemplateDiscoteca] = useState(
-    'Propuesta Live Show / Session Nocturna: {bandName} (Live Set)'
-  );
-  const [bodyTemplateDiscoteca, setBodyTemplateDiscoteca] =
-    useState(`Hola equipo de programación de {{nombre_sala}},
+  const [subjectTemplateDiscoteca, setSubjectTemplateDiscoteca] = useState('Propuesta Live Show / Session Nocturna: {bandName} (Live Set)');
+  const [bodyTemplateDiscoteca, setBodyTemplateDiscoteca] = useState(`Hola equipo de programación de {{nombre_sala}},
 
 Os contactamos desde {bandName} para proponer una noche diferente en {{ciudad}}: un Live Performance & Clubbing Set de alta intensidad que fusiona ritmos bailables, instrumentos en directo y bases de potencia.
 
@@ -73,8 +57,7 @@ Saludos cordiales,
   const [subjectTemplateMedio, setSubjectTemplateMedio] = useState(
     '[Nota de Prensa / Dossier] {bandName} presenta su nuevo videoclip y gira'
   );
-  const [bodyTemplateMedio, setBodyTemplateMedio] =
-    useState(`Hola equipo de redacción de {{nombre_sala}},
+  const [bodyTemplateMedio, setBodyTemplateMedio] = useState(`Hola equipo de redacción de {{nombre_sala}},
 
 Nos ponemos en contacto desde {bandName}, proyecto independiente con propuesta enérgica y sonido propio.
 
@@ -93,8 +76,7 @@ Muchas gracias por su apoyo a la difusión de la música independiente,
   const [subjectTemplateGrupo, setSubjectTemplateGrupo] = useState(
     'Propuesta de concierto compartido e intercambio de fechas: {bandName} x {{nombre_sala}}'
   );
-  const [bodyTemplateGrupo, setBodyTemplateGrupo] =
-    useState(`¡Buenas chavales de {{nombre_sala}}!
+  const [bodyTemplateGrupo, setBodyTemplateGrupo] = useState(`¡Buenas chavales de {{nombre_sala}}!
 
 Os escribimos desde {bandName}. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
 
@@ -115,11 +97,8 @@ Podéis escuchar lo que hacemos aquí: {enlace_videos}
   );
 
   // Template states for Managements & Agencias
-  const [subjectTemplateManagement, setSubjectTemplateManagement] = useState(
-    'Propuesta de colaboración / Roster: {bandName} (Live Show)'
-  );
-  const [bodyTemplateManagement, setBodyTemplateManagement] =
-    useState(`Estimado equipo de {{nombre_sala}},
+  const [subjectTemplateManagement, setSubjectTemplateManagement] = useState('Propuesta de colaboración / Roster: {bandName} (Live Show)');
+  const [bodyTemplateManagement, setBodyTemplateManagement] = useState(`Estimado equipo de {{nombre_sala}},
 
 Nos dirigimos a vuestra agencia para presentar la propuesta artística de {bandName} con vista a posibles colaboraciones, coproducciones o inclusión en vuestro catálogo de booking para giras y festivales.
 
@@ -136,10 +115,9 @@ Atentamente,
   );
 
   // Template states for Ayuntamientos y Fiestas Patronales
-  const [subjectTemplateAyuntamiento, setSubjectTemplateAyuntamiento] =
-    useState(
-      'Propuesta de concierto para fiestas patronales: {bandName} en {{nombre_sala}}'
-    );
+  const [subjectTemplateAyuntamiento, setSubjectTemplateAyuntamiento] = useState(
+    'Propuesta de concierto para fiestas patronales: {bandName} en {{nombre_sala}}'
+  );
   const [bodyTemplateAyuntamiento, setBodyTemplateAyuntamiento] =
     useState(`Estimados responsables del Área de Cultura y Festejos de {{nombre_sala}},
 
@@ -162,11 +140,8 @@ Cordialmente,
   const [testPromptResult, setTestPromptResult] = useState('');
   const [isTestingPrompt, setIsTestingPrompt] = useState(false);
   const [isOptimizingTemplate, setIsOptimizingTemplate] = useState(false);
-  const [optimizationFeedbackMsg, setOptimizationFeedbackMsg] = useState<
-    string | null
-  >(null);
-  const [templateCustomInstruction, setTemplateCustomInstruction] =
-    useState('');
+  const [optimizationFeedbackMsg, setOptimizationFeedbackMsg] = useState<string | null>(null);
+  const [templateCustomInstruction, setTemplateCustomInstruction] = useState('');
   const [templateToneRating, setTemplateToneRating] = useState<number>(0);
   const [templateContentRating, setTemplateContentRating] = useState<number>(0);
 
@@ -221,22 +196,16 @@ ${data.optimized.body}`);
             ? ` (Estrellitas aplicadas: Tono ${templateToneRating || '-'}/5, Contenido ${templateContentRating || '-'}/5)`
             : '';
 
-        setOptimizationFeedbackMsg(
-          `✨ Plantilla re-generada con IA: ${data.optimized.explanation || countNote}${ratingsAppliedNote}`
-        );
+        setOptimizationFeedbackMsg(`✨ Plantilla re-generada con IA: ${data.optimized.explanation || countNote}${ratingsAppliedNote}`);
         setTemplateCustomInstruction('');
         setTemplateToneRating(0);
         setTemplateContentRating(0);
       } else {
-        setOptimizationFeedbackMsg(
-          '⚠️ No se pudo re-generar la plantilla. Inténtalo de nuevo.'
-        );
+        setOptimizationFeedbackMsg('⚠️ No se pudo re-generar la plantilla. Inténtalo de nuevo.');
       }
     } catch (err) {
       console.error('Error optimizing template:', err);
-      setOptimizationFeedbackMsg(
-        '⚠️ Error de conexión al re-generar la plantilla.'
-      );
+      setOptimizationFeedbackMsg('⚠️ Error de conexión al re-generar la plantilla.');
     } finally {
       setIsOptimizingTemplate(false);
     }
@@ -286,8 +255,7 @@ ${data.optimized.body}`);
           setSubject: setSubjectTemplateMedio,
           setBody: setBodyTemplateMedio,
           setGuidelines: setAiGuidelinesMedio,
-          title:
-            '📻 Editando Plantilla para Medios de Comunicación, Radio y Prensa',
+          title: '📻 Editando Plantilla para Medios de Comunicación, Radio y Prensa',
           desc: 'Nota de prensa, material de difusión, bio/fotos y propuesta para sonar en antena o entrevistas.',
         };
       case 'grupos':
@@ -320,8 +288,7 @@ ${data.optimized.body}`);
           setSubject: setSubjectTemplateAyuntamiento,
           setBody: setBodyTemplateAyuntamiento,
           setGuidelines: setAiGuidelinesAyuntamiento,
-          title:
-            '🏛️ Editando Plantilla para Ayuntamientos y Fiestas Patronales',
+          title: '🏛️ Editando Plantilla para Ayuntamientos y Fiestas Patronales',
           desc: 'Registro formal e institucional para programación cultural, fiestas patronales y eventos municipales.',
         };
     }
@@ -334,9 +301,7 @@ ${data.optimized.body}`);
     const activeData = getActiveTemplateData();
 
     try {
-      const token =
-        localStorage.getItem('bakandeya_token') ||
-        localStorage.getItem('token');
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
@@ -358,9 +323,7 @@ ${data.optimized.body}`);
       if (res.ok && data.success) {
         setTestPromptResult(`Asunto: ${data.subject}\n\n${data.body}`);
       } else {
-        setTestPromptResult(
-          `⚠️ ${data.error || 'No se pudo simular la plantilla.'}`
-        );
+        setTestPromptResult(`⚠️ ${data.error || 'No se pudo simular la plantilla.'}`);
       }
     } catch (err) {
       console.error('Error testing prompt:', err);
@@ -373,9 +336,7 @@ ${data.optimized.body}`);
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const token =
-          localStorage.getItem('bakandeya_token') ||
-          localStorage.getItem('token');
+        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
         const headers: Record<string, string> = {};
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
@@ -427,9 +388,7 @@ ${data.optimized.body}`);
     };
     const fetchStats = async () => {
       try {
-        const token =
-          localStorage.getItem('bakandeya_token') ||
-          localStorage.getItem('token');
+        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
         const headers: Record<string, string> = {};
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
@@ -451,9 +410,7 @@ ${data.optimized.body}`);
   const handleSaveTemplates = async () => {
     const activeData = getActiveTemplateData();
     try {
-      const token =
-        localStorage.getItem('bakandeya_token') ||
-        localStorage.getItem('token');
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
@@ -492,17 +449,10 @@ ${data.optimized.body}`);
   };
 
   const handleResetTemplate = async () => {
-    if (
-      !confirm(
-        `¿Restaurar la plantilla de ${templateTab} a valores por defecto?`
-      )
-    )
-      return;
+    if (!confirm(`¿Restaurar la plantilla de ${templateTab} a valores por defecto?`)) return;
 
     try {
-      const token =
-        localStorage.getItem('bakandeya_token') ||
-        localStorage.getItem('token');
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
@@ -530,9 +480,7 @@ ${data.optimized.body}`);
       }
     } catch (err) {
       console.error('Error resetting template:', err);
-      setOptimizationFeedbackMsg(
-        '⚠️ Error de conexión al resetear la plantilla.'
-      );
+      setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
     }
   };
 

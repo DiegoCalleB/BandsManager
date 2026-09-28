@@ -1,13 +1,4 @@
-import {
-  Lead,
-  Rehearsal,
-  Concert,
-  SocialPost,
-  Payment,
-  Message,
-  SocialMetric,
-  Tour,
-} from './types';
+import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, Tour } from './types';
 
 export const INITIAL_LEADS: Lead[] = [
   {
@@ -85,8 +76,7 @@ Os dejamos nuestro último directo en el Festival de Cabo de Plata: https://yout
 
 Salud y música,
 Bakandeya Agent Manager IA`,
-    notas:
-      'Granada siempre responde genial a la fusión y el reggae. Pitch adaptado destacando el Cabo de Plata.',
+    notas: 'Granada siempre responde genial a la fusión y el reggae. Pitch adaptado destacando el Cabo de Plata.',
   },
   {
     id: 'lead-4',
@@ -162,8 +152,7 @@ Quedamos a vuestra disposición para enviaros una propuesta económica detallada
 Saludos festivos,
 Bakandeya Agent Manager IA`,
     fecha_envio: '2026-07-01',
-    notas:
-      'Mail enviado el 1 de julio. Sin respuesta de momento. El Lector de Bandeja monitoriza la bandeja de entrada.',
+    notas: 'Mail enviado el 1 de julio. Sin respuesta de momento. El Lector de Bandeja monitoriza la bandeja de entrada.',
   },
   {
     id: 'lead-6',
@@ -240,8 +229,7 @@ Quedamos a su disposición para remitirles nuestro dossier técnico (Rider) y pr
 
 Cordialmente,
 Bakandeya Agent Manager IA`,
-    notas:
-      'Interesante para conseguir bolos municipales bien remunerados. Hay que vigilar el plazo de solicitud del ayuntamiento.',
+    notas: 'Interesante para conseguir bolos municipales bien remunerados. Hay que vigilar el plazo de solicitud del ayuntamiento.',
   },
   {
     id: 'lead-8',
@@ -380,8 +368,7 @@ Nuestros datos de directo: https://youtube.com/bakandeya_live
 
 Abrazos,
 Bakandeya Agent Manager IA`,
-    notas:
-      'Pitch aprobado por Diego. Pasado al estado APROBADO. El agente Enviador lo enviará en su próximo ciclo cron de esta tarde.',
+    notas: 'Pitch aprobado por Diego. Pasado al estado APROBADO. El agente Enviador lo enviará en su próximo ciclo cron de esta tarde.',
   },
   {
     id: 'lead-13',
@@ -532,8 +519,7 @@ Un abrazo festivo,
 Bakandeya Agent Manager IA`,
     fecha_envio: '2026-06-25',
     fecha_ultima_respuesta: '2026-07-04',
-    notas:
-      'Sala emblemática de Málaga con excelente acústica. Dirección confirmada: Calle Parauta, 25, 29006 Málaga.',
+    notas: 'Sala emblemática de Málaga con excelente acústica. Dirección confirmada: Calle Parauta, 25, 29006 Málaga.',
   },
   {
     id: 'lead-17',
@@ -563,16 +549,14 @@ Podéis escuchar lo que hacemos aquí: https://youtube.com/bakandeya_live
 ¡Un abrazo!
 Bakandeya Agent Manager IA`,
     fecha_ultima_respuesta: '2026-07-10',
-    notas:
-      'Banda con potente arraigo en Madrid. Muy receptivos a montar un doble cartel en la Sala Hebe o Copérnico.',
+    notas: 'Banda con potente arraigo en Madrid. Muy receptivos a montar un doble cartel en la Sala Hebe o Copérnico.',
     hilo_emails: [
       {
         id: 'em-vsk-1',
         fecha: '2026-07-10 17:00',
         remitente: 'sala',
         remitente_nombre: 'Vallekas Ska (Management)',
-        asunto:
-          'RE: Propuesta de concierto compartido e intercambio de fechas: Bakandeya x Vallekas Ska',
+        asunto: 'RE: Propuesta de concierto compartido e intercambio de fechas: Bakandeya x Vallekas Ska',
         mensaje:
           '¡Aúpa Bakandeya! Nos parece una idea brutal. Nosotros llenamos unos 200 en Vallekas y con vuestro violín y sintes montamos una noche balkan-ska de locos. Contad con nosotros para noviembre.',
       },
@@ -662,8 +646,7 @@ Audio en calidad broadcast y bio: https://bandmanager.io/epk
 Atentamente,
 Bakandeya Agent Manager IA`,
     fecha_ultima_respuesta: '2026-07-09',
-    notas:
-      'Interesados en ponernos en rotación nocturna y hacer una breve entrevista acústica.',
+    notas: 'Interesados en ponernos en rotación nocturna y hacer una breve entrevista acústica.',
   },
   {
     id: 'lead-21',
@@ -785,8 +768,7 @@ export const INITIAL_REHEARSALS: Rehearsal[] = [
     hora: '17:00 - 20:00',
     lugar: 'Locales Rock Palace, Madrid',
     asistentes: ['Jon', 'Filgue', 'R-violin', 'elyar'],
-    notas:
-      'Ensayo de post-gira de primavera. Se grabaron las maquetas de los tres nuevos temas con loops y violín acústico.',
+    notas: 'Ensayo de post-gira de primavera. Se grabaron las maquetas de los tres nuevos temas con loops y violín acústico.',
     estado: 'completado',
     band_id: 'band-bakandeya',
     bandName: 'Bakandeya',
@@ -844,8 +826,7 @@ export const INITIAL_CONCERTS: Concert[] = [
     aforo_total: 300,
     contrato_firmado: true,
     estado_pago: 'pendiente',
-    notas:
-      'Concierto co-headliner de Tarraco Ska Sound con entrada vendida casi al 100%.',
+    notas: 'Concierto co-headliner de Tarraco Ska Sound con entrada vendida casi al 100%.',
     tipo: 'sala',
     band_id: 'band-bakandeya',
     bandName: 'Bakandeya',
@@ -861,8 +842,7 @@ export const INITIAL_CONCERTS: Concert[] = [
     aforo_total: 5000,
     contrato_firmado: true,
     estado_pago: 'pendiente',
-    notas:
-      'Bolo gestionado con el Ayuntamiento. Factura emitida, pendiente de cobro tras la actuación.',
+    notas: 'Bolo gestionado con el Ayuntamiento. Factura emitida, pendiente de cobro tras la actuación.',
     tipo: 'ayuntamiento',
     band_id: 'band-bakandeya',
     bandName: 'Bakandeya',
@@ -1110,8 +1090,7 @@ export const INITIAL_MESSAGES: Message[] = [
   {
     id: 'msg-5',
     remitente: 'Filgue',
-    mensaje:
-      'Yo llevaré el bajo de repuesto y las pegatinas nuevas de Bakandeya para meter en los pedidos del merchan.',
+    mensaje: 'Yo llevaré el bajo de repuesto y las pegatinas nuevas de Bakandeya para meter en los pedidos del merchan.',
     fecha: '2026-07-09T12:00:00',
     leido: false,
   },
@@ -1378,8 +1357,7 @@ export const INITIAL_SONGS = [
     audioPrincipalUrl: '/audio/samples/sample_01_groove_apertura.mp3',
     audioUrl: '/audio/samples/sample_01_groove_apertura.mp3',
     enlaceAcordes: 'https://drive.google.com',
-    notasInternas:
-      'Intro con sección de vientos y solo de trompeta. Gran fuerza en estribillos.',
+    notasInternas: 'Intro con sección de vientos y solo de trompeta. Gran fuerza en estribillos.',
   },
   {
     id: 'song-2',
@@ -1395,8 +1373,7 @@ export const INITIAL_SONGS = [
     esVersionCovers: false,
     audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
     audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
-    notasInternas:
-      'Subida progresiva al final. Tema estelar de cierre en festival.',
+    notasInternas: 'Subida progresiva al final. Tema estelar de cierre en festival.',
   },
   {
     id: 'song-3',
@@ -1428,8 +1405,7 @@ export const INITIAL_SONGS = [
     esVersionCovers: false,
     audioPrincipalUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
     audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
-    notasInternas:
-      'Ritmo acelerado ska. Ideal para subir la energía a mitad del concierto.',
+    notasInternas: 'Ritmo acelerado ska. Ideal para subir la energía a mitad del concierto.',
   },
   {
     id: 'song-5',
@@ -1445,8 +1421,7 @@ export const INITIAL_SONGS = [
     esVersionCovers: false,
     audioPrincipalUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
     audioUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
-    notasInternas:
-      'Balada rock progresiva con solo de violín de Raúl en la sección central.',
+    notasInternas: 'Balada rock progresiva con solo de violín de Raúl en la sección central.',
   },
   {
     id: 'song-6',
@@ -1477,8 +1452,7 @@ export const INITIAL_SONGS = [
     esVersionCovers: false,
     audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
     audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
-    notasInternas:
-      'Sátira sobre los bots y mánagers virtuales. Ensayando para el próximo EP.',
+    notasInternas: 'Sátira sobre los bots y mánagers virtuales. Ensayando para el próximo EP.',
   },
   {
     id: 'song-8',
@@ -1503,8 +1477,7 @@ export const INITIAL_SETLISTS = [
     id: 'setlist-1',
     band_id: 'band-bakandeya',
     nombre: 'Festival Directo Caña 45 min',
-    descripcion:
-      'Repertorio de máxima energía para festivales y horarios reducidos',
+    descripcion: 'Repertorio de máxima energía para festivales y horarios reducidos',
     tipoFormato: 'festival',
     duracionTotalEstimadaMinutos: 45,
     fechaCreacion: '2026-03-01',
@@ -1565,8 +1538,7 @@ export const INITIAL_SETLISTS = [
     id: 'setlist-2',
     band_id: 'band-bakandeya',
     nombre: 'Concierto Sala Larga 75 min',
-    descripcion:
-      'Setlist completo con temas del disco, covers y bloque acústico',
+    descripcion: 'Setlist completo con temas del disco, covers y bloque acústico',
     tipoFormato: 'sala_larga',
     duracionTotalEstimadaMinutos: 75,
     fechaCreacion: '2026-04-10',
@@ -1642,8 +1614,7 @@ export const INITIAL_BANDS: any[] = [
     instagram: '@balkanparadiseorchestra',
     spotify_youtube: 'https://open.spotify.com/artist/balkanparadise',
     aforo_promedio: 1200,
-    notas_colaboracion:
-      '¡Concierto agendado! Bakandeya abre su fecha especial en Sala Razzmatazz 2 el 14 de Noviembre de 2026.',
+    notas_colaboracion: '¡Concierto agendado! Bakandeya abre su fecha especial en Sala Razzmatazz 2 el 14 de Noviembre de 2026.',
     ciudad_origen_swap: 'Barcelona',
   },
 ];

@@ -35,18 +35,10 @@ interface LeadDuplicatesModalProps {
   onDeleteLead?: (id: string) => void;
 }
 
-export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
-  isOpen,
-  onClose,
-  leads,
-  onUpdateLead,
-  onDeleteLead,
-}) => {
+export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({ isOpen, onClose, leads, onUpdateLead, onDeleteLead }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [ignoredGroupIds, setIgnoredGroupIds] = useState<Set<string>>(
-    new Set()
-  );
+  const [ignoredGroupIds, setIgnoredGroupIds] = useState<Set<string>>(new Set());
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Analizar duplicados
@@ -72,10 +64,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
   if (!isOpen) return null;
 
   // Fusionar un grupo conservando el lead especificado
-  const handleMergeGroup = async (
-    group: DuplicateGroup,
-    keepLeadId: string
-  ) => {
+  const handleMergeGroup = async (group: DuplicateGroup, keepLeadId: string) => {
     setIsProcessing(true);
     try {
       const targetLead = group.leads.find((l) => l.id === keepLeadId);
@@ -119,9 +108,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
       setTimeout(() => setSuccessMessage(null), 3500);
     } catch (err: any) {
       console.error('Error al fusionar grupo:', err);
-      alert(
-        'Hubo un error al fusionar las salas. Por favor, inténtalo de nuevo.'
-      );
+      alert('Hubo un error al fusionar las salas. Por favor, inténtalo de nuevo.');
     } finally {
       setIsProcessing(false);
     }
@@ -129,12 +116,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
 
   // Eliminar un lead individual duplicado
   const handleDeleteSingleLead = async (leadId: string, leadName: string) => {
-    if (
-      !confirm(
-        `¿Seguro que deseas eliminar el registro duplicado"${leadName}"?`
-      )
-    )
-      return;
+    if (!confirm(`¿Seguro que deseas eliminar el registro duplicado"${leadName}"?`)) return;
 
     setIsProcessing(true);
     try {
@@ -200,9 +182,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
       }
 
       window.dispatchEvent(new CustomEvent('app-data-updated'));
-      setSuccessMessage(
-        `Se han fusionado con éxito ${count} grupos de salas duplicadas.`
-      );
+      setSuccessMessage(`Se han fusionado con éxito ${count} grupos de salas duplicadas.`);
       setTimeout(() => setSuccessMessage(null), 4000);
     } catch (err) {
       console.error('Error merging all leads:', err);
@@ -215,14 +195,9 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
   const reasonCounts = {
     all: rawGroups.length,
     same_email: rawGroups.filter((g) => g.matchReason === 'same_email').length,
-    same_name_and_city: rawGroups.filter(
-      (g) => g.matchReason === 'same_name_and_city'
-    ).length,
-    similar_name_same_city: rawGroups.filter(
-      (g) => g.matchReason === 'similar_name_same_city'
-    ).length,
-    same_website: rawGroups.filter((g) => g.matchReason === 'same_website')
-      .length,
+    same_name_and_city: rawGroups.filter((g) => g.matchReason === 'same_name_and_city').length,
+    similar_name_same_city: rawGroups.filter((g) => g.matchReason === 'similar_name_same_city').length,
+    same_website: rawGroups.filter((g) => g.matchReason === 'same_website').length,
   };
 
   return (
@@ -232,26 +207,20 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
           className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-all ${'bg-[var(--surface)] text-[var(--ink)]'}`}
         >
           {/* Header */}
-          <div
-            className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${'bg-[var(--surface)]'}`}
-          >
+          <div className={`p-4 sm:p-5 flex items-center justify-between shrink-0 ${'bg-[var(--surface)]'}`}>
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
                 <Copy className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ink)]">
-                    Detector y Limpiador de Duplicados
-                  </h2>
+                  <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ink)]">Detector y Limpiador de Duplicados</h2>
                   <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70">
-                    {duplicateGroups.length}{' '}
-                    {duplicateGroups.length === 1 ? 'grupo' : 'grupos'}
+                    {duplicateGroups.length} {duplicateGroups.length === 1 ? 'grupo' : 'grupos'}
                   </span>
                 </div>
                 <p className={`text-xs mt-0.5 ${'text-[var(--ink-2)]'}`}>
-                  Detecta salas y contactos repetidos por email idéntico, nombre
-                  y ciudad, o dominios coincidentes.
+                  Detecta salas y contactos repetidos por email idéntico, nombre y ciudad, o dominios coincidentes.
                 </p>
               </div>
             </div>
@@ -274,9 +243,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
           )}
 
           {/* Controls & Filter Bar */}
-          <div
-            className={`p-3 sm:px-5 flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${'bg-[var(--sunken)]/60'}`}
-          >
+          <div className={`p-3 sm:px-5 flex flex-wrap items-center justify-between gap-2.5 shrink-0 ${'bg-[var(--sunken)]/60'}`}>
             {/* Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto py-1 max-w-full text-xs">
               <button
@@ -365,21 +332,15 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                 <div className="w-12 h-12 rounded-full bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center mx-auto">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-[var(--ink)]">
-                  ¡No se han encontrado salas ni leads duplicados!
-                </h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">¡No se han encontrado salas ni leads duplicados!</h3>
                 <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
-                  Tu base de datos está perfectamente limpia y organizada. No
-                  hay coincidencias conflictivas de nombres, correos ni
+                  Tu base de datos está perfectamente limpia y organizada. No hay coincidencias conflictivas de nombres, correos ni
                   recintos.
                 </p>
               </div>
             ) : (
               duplicateGroups.map((group) => (
-                <div
-                  key={group.id}
-                  className={`rounded-[var(--r-l)] p-4 transition-all ${'bg-[var(--bg)]/70'}`}
-                >
+                <div key={group.id} className={`rounded-[var(--r-l)] p-4 transition-all ${'bg-[var(--bg)]/70'}`}>
                   {/* Group Top Info */}
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 /60">
                     <div className="flex items-center gap-2">
@@ -387,18 +348,12 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                         <AlertTriangle className="w-3 h-3" />
                         {group.matchReasonLabel}
                       </span>
-                      <span className="text-[11px] text-[var(--ink-2)]">
-                        {group.confidence}% de certeza
-                      </span>
+                      <span className="text-[11px] text-[var(--ink-2)]">{group.confidence}% de certeza</span>
                     </div>
 
                     <button
                       type="button"
-                      onClick={() =>
-                        setIgnoredGroupIds((prev) =>
-                          new Set(prev).add(group.id)
-                        )
-                      }
+                      onClick={() => setIgnoredGroupIds((prev) => new Set(prev).add(group.id))}
                       className="text-[11px] text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
                     >
                       Ignorar (No son duplicados)
@@ -415,18 +370,14 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                         <div
                           key={lead.id}
                           className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-all ${
-                            isSuggested
-                              ? 'bg-[var(--accent-alt)]/10/60'
-                              : 'bg-[var(--surface)]'
+                            isSuggested ? 'bg-[var(--accent-alt)]/10/60' : 'bg-[var(--surface)]'
                           }`}
                         >
                           <div className="space-y-2">
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0">
                                 <div className="flex items-center gap-1.5 flex-wrap">
-                                  <h4 className="font-bold text-sm text-[var(--ink)] truncate">
-                                    {lead.nombre_sala}
-                                  </h4>
+                                  <h4 className="font-bold text-sm text-[var(--ink)] truncate">{lead.nombre_sala}</h4>
                                   {isSuggested && (
                                     <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--acc)] text-[var(--on-acc)]">
                                       ⭐ Recomendado
@@ -450,14 +401,10 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               {lead.email_contacto ? (
                                 <div className="flex items-center gap-1.5 truncate">
                                   <Mail className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
-                                  <span className="truncate">
-                                    {lead.email_contacto}
-                                  </span>
+                                  <span className="truncate">{lead.email_contacto}</span>
                                 </div>
                               ) : (
-                                <div className="text-[11px] text-[var(--ink-2)] italic">
-                                  Sin correo electrónico
-                                </div>
+                                <div className="text-[11px] text-[var(--ink-2)] italic">Sin correo electrónico</div>
                               )}
 
                               {lead.telefono && (
@@ -470,18 +417,13 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               {lead.website && (
                                 <div className="flex items-center gap-1.5 truncate text-[11px] text-[var(--ink-2)]">
                                   <Globe className="w-3 h-3 shrink-0" />
-                                  <span className="truncate">
-                                    {lead.website}
-                                  </span>
+                                  <span className="truncate">{lead.website}</span>
                                 </div>
                               )}
 
                               {lead.aforo ? (
                                 <div className="text-[11px] text-[var(--ink-2)]">
-                                  Aforo:{' '}
-                                  <span className="font-medium text-[var(--ink)]">
-                                    {lead.aforo} personas
-                                  </span>
+                                  Aforo: <span className="font-medium text-[var(--ink)]">{lead.aforo} personas</span>
                                 </div>
                               ) : null}
 
@@ -513,12 +455,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                             <button
                               type="button"
                               disabled={isProcessing}
-                              onClick={() =>
-                                handleDeleteSingleLead(
-                                  lead.id,
-                                  lead.nombre_sala
-                                )
-                              }
+                              onClick={() => handleDeleteSingleLead(lead.id, lead.nombre_sala)}
                               className="p-1.5 rounded-[var(--r-s)] text-[var(--alert)] hover:bg-[var(--alert)]/20 hover:text-[var(--ink-2)] transition cursor-pointer"
                               title="Eliminar solo este registro individual"
                             >
@@ -535,13 +472,9 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div
-            className={`p-3 sm:px-5 flex items-center justify-between text-xs ${'bg-[var(--bg)] text-[var(--ink-2)]'}`}
-          >
+          <div className={`p-3 sm:px-5 flex items-center justify-between text-xs ${'bg-[var(--bg)] text-[var(--ink-2)]'}`}>
             <span>
-              Total analizado:{' '}
-              <strong className="text-[var(--ink)]">{leads.length}</strong>{' '}
-              salas y leads.
+              Total analizado: <strong className="text-[var(--ink)]">{leads.length}</strong> salas y leads.
             </span>
             <button
               type="button"

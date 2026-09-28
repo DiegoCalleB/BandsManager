@@ -24,10 +24,7 @@ export function getEspectroColors(): ThemeColors {
 
   const colors = { ...fallbacks };
 
-  if (
-    typeof document !== 'undefined' &&
-    typeof getComputedStyle === 'function'
-  ) {
+  if (typeof document !== 'undefined' && typeof getComputedStyle === 'function') {
     const root = document.documentElement;
     const style = getComputedStyle(root);
 
@@ -76,21 +73,16 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     name: 'Modern Obsidian & Gold (Por Defecto)',
     bg: 'bg-[#0c0d12] text-[#f4f4f5]',
     card: 'bg-[#16161a]/95 rounded-2xl',
-    primary:
-      'bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] font-bold tracking-tight transition-all duration-200 rounded-xl',
+    primary: 'bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] font-bold tracking-tight transition-all duration-200 rounded-xl',
     primaryHover: 'hover:bg-[#e5bc40]',
     text: 'text-[var(--ink)]/80',
     textMuted: 'text-[var(--ink-2)]',
     accent: 'text-[var(--acc)]/80',
     accentBg: 'bg-[var(--acc)]/15 text-[var(--acc)]/80',
-    badgeGreen:
-      'bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
-    badgeYellow:
-      'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
-    badgeRed:
-      'bg-[var(--alert)]/15 text-[var(--alert)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
-    badgeBlue:
-      'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeGreen: 'bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeYellow: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeRed: 'bg-[var(--alert)]/15 text-[var(--alert)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeBlue: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
     neonShadow: 'shadow-none',
     fontDisplay: 'font-sans',
     fontSans: 'font-sans',
@@ -106,14 +98,10 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     textMuted: 'text-[var(--ink-2)]',
     accent: 'text-[var(--tentative)]',
     accentBg: 'bg-[var(--acc)]/20 text-[var(--acc)]/40',
-    badgeGreen:
-      'bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5',
-    badgeYellow:
-      'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5',
-    badgeRed:
-      'bg-[var(--alert)]/15 text-[var(--alert)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5',
-    badgeBlue:
-      'bg-[var(--acc)]/15 text-[var(--ink-3)] rounded-full text-[10px] font-medium px-2.5 py-0.5',
+    badgeGreen: 'bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5',
+    badgeYellow: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5',
+    badgeRed: 'bg-[var(--alert)]/15 text-[var(--alert)]/80 rounded-full text-[10px] font-medium px-2.5 py-0.5',
+    badgeBlue: 'bg-[var(--acc)]/15 text-[var(--ink-3)] rounded-full text-[10px] font-medium px-2.5 py-0.5',
     neonShadow: 'shadow-none',
     fontDisplay: 'font-sans',
     fontSans: 'font-sans',
@@ -129,14 +117,10 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     textMuted: 'text-[var(--ink-3)]',
     accent: 'text-[var(--acc)]/80/90',
     accentBg: 'bg-[var(--sunken)]/80 text-[var(--ink-2)]/80',
-    badgeGreen:
-      'bg-[var(--ok)]/10 text-[var(--ok)]/90 rounded-md text-[9px] font-medium',
-    badgeYellow:
-      'bg-[var(--acc)]/10 text-[var(--acc)]/80/90 rounded-md text-[9px] font-medium',
-    badgeRed:
-      'bg-[var(--alert)]/10 text-[var(--alert)]/80/90 rounded-md text-[9px] font-medium',
-    badgeBlue:
-      'bg-[var(--tentative)]/10 text-[var(--tentative)]/80/90 rounded-md text-[9px] font-medium',
+    badgeGreen: 'bg-[var(--ok)]/10 text-[var(--ok)]/90 rounded-md text-[9px] font-medium',
+    badgeYellow: 'bg-[var(--acc)]/10 text-[var(--acc)]/80/90 rounded-md text-[9px] font-medium',
+    badgeRed: 'bg-[var(--alert)]/10 text-[var(--alert)]/80/90 rounded-md text-[9px] font-medium',
+    badgeBlue: 'bg-[var(--tentative)]/10 text-[var(--tentative)]/80/90 rounded-md text-[9px] font-medium',
     neonShadow: 'shadow-none',
     fontDisplay: 'font-display',
     fontSans: 'font-sans',
@@ -152,14 +136,10 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     textMuted: 'text-[var(--ink-2)]',
     accent: 'text-[var(--ink-2)]/80',
     accentBg: 'bg-[var(--ink-3)]/40/80 text-[var(--ink-2)]/80',
-    badgeGreen:
-      'bg-[var(--ok)]/10 text-[var(--ok)] rounded-md text-[9px] font-medium',
-    badgeYellow:
-      'bg-[var(--acc)]/10 text-[var(--acc)]/80 rounded-md text-[9px] font-medium',
-    badgeRed:
-      'bg-[var(--alert)]/10 text-[var(--alert)]/80 rounded-md text-[9px] font-medium',
-    badgeBlue:
-      'bg-[var(--acc)]/10 text-[var(--ink-3)] rounded-md text-[9px] font-medium',
+    badgeGreen: 'bg-[var(--ok)]/10 text-[var(--ok)] rounded-md text-[9px] font-medium',
+    badgeYellow: 'bg-[var(--acc)]/10 text-[var(--acc)]/80 rounded-md text-[9px] font-medium',
+    badgeRed: 'bg-[var(--alert)]/10 text-[var(--alert)]/80 rounded-md text-[9px] font-medium',
+    badgeBlue: 'bg-[var(--acc)]/10 text-[var(--ink-3)] rounded-md text-[9px] font-medium',
     neonShadow: 'shadow-none',
     fontDisplay: 'font-sans',
     fontSans: 'font-sans',
@@ -175,14 +155,10 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     textMuted: 'text-[var(--ink-2)]',
     accent: 'text-[var(--ink-2)]/80',
     accentBg: 'bg-[var(--ink-3)]/40/80 text-[var(--ink-2)]/80',
-    badgeGreen:
-      'bg-[var(--ok)]/10 text-[var(--ok)] rounded-md text-[9px] font-medium',
-    badgeYellow:
-      'bg-[var(--acc)]/10 text-[var(--acc)]/80 rounded-md text-[9px] font-medium',
-    badgeRed:
-      'bg-[var(--alert)]/10 text-[var(--alert)]/80 rounded-md text-[9px] font-medium',
-    badgeBlue:
-      'bg-[var(--acc)]/10 text-[var(--ink-3)] rounded-md text-[9px] font-medium',
+    badgeGreen: 'bg-[var(--ok)]/10 text-[var(--ok)] rounded-md text-[9px] font-medium',
+    badgeYellow: 'bg-[var(--acc)]/10 text-[var(--acc)]/80 rounded-md text-[9px] font-medium',
+    badgeRed: 'bg-[var(--alert)]/10 text-[var(--alert)]/80 rounded-md text-[9px] font-medium',
+    badgeBlue: 'bg-[var(--acc)]/10 text-[var(--ink-3)] rounded-md text-[9px] font-medium',
     neonShadow: 'shadow-none',
     fontDisplay: 'font-sans',
     fontSans: 'font-sans',
@@ -191,21 +167,16 @@ export const THEMES: Record<ThemeName, ThemeColors> = {
     name: 'Clásico (Diseño Original)',
     bg: 'bg-[#0c0d12] text-[#f4f4f5]',
     card: 'bg-[#16161a]/95 rounded-2xl',
-    primary:
-      'bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] font-bold tracking-tight transition-all duration-200 rounded-xl',
+    primary: 'bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] font-bold tracking-tight transition-all duration-200 rounded-xl',
     primaryHover: 'hover:bg-[#e5bc40]',
     text: 'text-[var(--ink)]/80',
     textMuted: 'text-[var(--ink-2)]',
     accent: 'text-[var(--acc)]/80',
     accentBg: 'bg-[var(--acc)]/15 text-[var(--acc)]/80',
-    badgeGreen:
-      'bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
-    badgeYellow:
-      'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
-    badgeRed:
-      'bg-[var(--alert)]/15 text-[var(--alert)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
-    badgeBlue:
-      'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeGreen: 'bg-[var(--ok)]/15 text-[var(--ok)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeYellow: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeRed: 'bg-[var(--alert)]/15 text-[var(--alert)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
+    badgeBlue: 'bg-[var(--acc)]/15 text-[var(--acc)]/80 rounded-full text-[10px] font-medium tracking-normal px-2.5 py-0.5',
     neonShadow: 'shadow-none',
     fontDisplay: 'font-sans',
     fontSans: 'font-sans',

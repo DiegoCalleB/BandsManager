@@ -18,9 +18,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 // Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
 // metía en el mismo bundle inicial el CRM, calendario, reels, repertorio, etc. — un fan que
 // solo quiere donar por Revolut/PayPal pagaba el peso entero de todo el panel interno.
-function safeLazy<T extends React.ComponentType<any>>(
-  factory: () => Promise<{ default: T } | any>
-) {
+function safeLazy<T extends React.ComponentType<any>>(factory: () => Promise<{ default: T } | any>) {
   return lazy(async () => {
     try {
       const mod = await factory();
@@ -51,9 +49,7 @@ const CalendarView = safeLazy(() => import('./components/CalendarView'));
 const ReelsCenter = safeLazy(() => import('./components/ReelsCenter'));
 const Finanzas = safeLazy(() => import('./components/Finanzas'));
 const TourManager = safeLazy(() => import('./components/TourManager'));
-const RepertorioSetlists = safeLazy(
-  () => import('./components/RepertorioSetlists')
-);
+const RepertorioSetlists = safeLazy(() => import('./components/RepertorioSetlists'));
 const Merchan = safeLazy(() => import('./components/Merchan'));
 const Chatbot = safeLazy(() => import('./components/Chatbot'));
 const EPKManager = safeLazy(() => import('./components/EPKManager'));
@@ -69,9 +65,7 @@ const PublicMusiciansLanding = safeLazy(() =>
     default: m.PublicMusiciansLanding,
   }))
 );
-const PublicEPK = safeLazy(() =>
-  import('./components/PublicEPK').then((m) => ({ default: m.PublicEPK }))
-);
+const PublicEPK = safeLazy(() => import('./components/PublicEPK').then((m) => ({ default: m.PublicEPK })));
 const Planes = safeLazy(() => import('./components/Planes'));
 import { LoginModal } from './components/LoginModal';
 import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
@@ -86,17 +80,8 @@ import { BandSwitcherModal } from './components/BandSwitcherModal';
 import { PlanLimitModal } from './components/PlanLimitModal';
 import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
-import {
-  FontPresetKey,
-  applyFontPreset,
-  getStoredFontPreset,
-} from './utils/typography';
-import {
-  hasModuleAccess,
-  getPlanDefinition,
-  checkRecordLimit,
-  normalizePlan,
-} from './utils/planPermissions';
+import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
+import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from './utils/planPermissions';
 import {
   NAV_ITEMS,
   NAV_GROUPS_DESKTOP,
@@ -116,20 +101,7 @@ import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboard
 import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
-import {
-  Menu,
-  Sparkles,
-  LogOut,
-  ShieldAlert,
-  UserCheck,
-  RefreshCw,
-  X,
-  ChevronDown,
-  Lock,
-  Zap,
-  Target,
-  Guitar,
-} from 'lucide-react';
+import { Menu, Sparkles, LogOut, ShieldAlert, UserCheck, RefreshCw, X, ChevronDown, Lock, Zap, Target, Guitar } from 'lucide-react';
 
 export default function App() {
   const { t, language, isTranslating, refreshTranslation } = useLanguage();
@@ -200,10 +172,8 @@ export default function App() {
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showCampaignModal, setShowCampaignModal] = useState(false);
-  const [showProfileWizardModal, setShowProfileWizardModal] =
-    useState<boolean>(false);
-  const [showOnboardingModal, setShowOnboardingModal] =
-    useState<boolean>(false);
+  const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
@@ -213,19 +183,11 @@ export default function App() {
   const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
   const activeBandFromList = (availableBands || []).find(
     (b: any) =>
-      (b.band_id &&
-        (b.band_id === currentActiveBandId ||
-          b.band_id.replace(/^(band|reg)-/, '') === cleanActiveBandId)) ||
-      (b.id &&
-        (b.id === currentActiveBandId ||
-          b.id.replace(/^(band|reg)-/, '') === cleanActiveBandId))
+      (b.band_id && (b.band_id === currentActiveBandId || b.band_id.replace(/^(band|reg)-/, '') === cleanActiveBandId)) ||
+      (b.id && (b.id === currentActiveBandId || b.id.replace(/^(band|reg)-/, '') === cleanActiveBandId))
   );
   const currentActiveBandName =
-    activeBandFromList?.nombre_banda ||
-    activeBandFromList?.bandName ||
-    currentUser?.bandName ||
-    currentUser?.name ||
-    'Mi Banda';
+    activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name || 'Mi Banda';
   const currentActiveBandLogo =
     epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0
       ? epkConfig.logoUrl
@@ -234,21 +196,10 @@ export default function App() {
         (currentUser as any)?.logoUrl ||
         (currentUser as any)?.logo_url ||
         (currentUser as any)?.imagen_url ||
-        (cleanActiveBandId === 'bakandeya'
-          ? '/logo_bakandeya_bueno_sin_fondo.png'
-          : '');
+        (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
 
-  const isSameBand = (
-    id1?: string,
-    id2?: string,
-    name1?: string,
-    name2?: string
-  ) => {
-    if (
-      name1 &&
-      name2 &&
-      name1.trim().toLowerCase() === name2.trim().toLowerCase()
-    ) {
+  const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
+    if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
       return true;
     }
     if (!id1 && !id2) return true;
@@ -265,55 +216,32 @@ export default function App() {
       .trim()
       .toLowerCase();
     if (clean1 === clean2) return true;
-    if (
-      clean1 &&
-      clean2 &&
-      (clean1.includes(clean2) || clean2.includes(clean1))
-    )
-      return true;
+    if (clean1 && clean2 && (clean1.includes(clean2) || clean2.includes(clean1))) return true;
     return false;
   };
 
   const currentActiveBandPlan = React.useMemo(() => {
-    if (
-      availableBands &&
-      Array.isArray(availableBands) &&
-      availableBands.length > 0
-    ) {
+    if (availableBands && Array.isArray(availableBands) && availableBands.length > 0) {
       const match = availableBands.find((b: any) =>
-        isSameBand(
-          b.band_id || b.id,
-          currentActiveBandId,
-          b.bandName || b.nombre_banda || b.name,
-          currentActiveBandName
-        )
+        isSameBand(b.band_id || b.id, currentActiveBandId, b.bandName || b.nombre_banda || b.name, currentActiveBandName)
       );
       if (match && match.plan) {
         return normalizePlan(match.plan);
       }
     }
     return normalizePlan(currentUser?.plan || 'ensayo');
-  }, [
-    availableBands,
-    currentActiveBandId,
-    currentActiveBandName,
-    currentUser?.plan,
-  ]);
+  }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
 
   // Plan Promo y Promo+ (fase beta, festivales): a diferencia del resto de planes, que enseñan los
   // módulos no incluidos con un candado "Plan" (invitando a mejorar), Promo no debe ni
   // enseñar que esos módulos existen — así que el nav los oculta del todo en vez de bloquearlos.
-  const isPromoPlan =
-    currentActiveBandPlan === 'promo' || currentActiveBandPlan === 'promo_plus';
+  const isPromoPlan = currentActiveBandPlan === 'promo' || currentActiveBandPlan === 'promo_plus';
 
   // Disparar reactivamente el asistente de perfil o bienvenida si la banda activa actual aún no lo ha completado
   useEffect(() => {
     if (isLoggedIn && cleanActiveBandId) {
       try {
-        const { wizardCompleted, onboardingCompleted } = isOnboardingCompleted(
-          cleanActiveBandId,
-          currentUser
-        );
+        const { wizardCompleted, onboardingCompleted } = isOnboardingCompleted(cleanActiveBandId, currentUser);
 
         // Si es una banda nueva o sin asistente completado para este usuario, abrir el asistente
         if (!wizardCompleted) {
@@ -375,11 +303,7 @@ export default function App() {
               .includes('prensa')
         ).length;
 
-    const limitCheck = checkRecordLimit(
-      currentActiveBandPlan,
-      isMedio ? 'medios' : 'leads',
-      currentCount
-    );
+    const limitCheck = checkRecordLimit(currentActiveBandPlan, isMedio ? 'medios' : 'leads', currentCount);
     if (!limitCheck.allowed) {
       setPlanLimitModal({
         isOpen: true,
@@ -393,11 +317,7 @@ export default function App() {
 
   const handleAddFanWithLimitCheck = async (fanData: any) => {
     const currentCount = fans.length;
-    const limitCheck = checkRecordLimit(
-      currentActiveBandPlan,
-      'fans',
-      currentCount
-    );
+    const limitCheck = checkRecordLimit(currentActiveBandPlan, 'fans', currentCount);
     if (!limitCheck.allowed) {
       setPlanLimitModal({
         isOpen: true,
@@ -459,8 +379,7 @@ export default function App() {
       // usuario que lo tuviera como última pantalla aterriza en Repertorio, no en Resumen.
       const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
       const migrated = saved === 'directo' ? 'repertorio' : saved;
-      if (migrated && (VALID_VIEWS as string[]).includes(migrated))
-        return migrated as MainView;
+      if (migrated && (VALID_VIEWS as string[]).includes(migrated)) return migrated as MainView;
     } catch {
       // localStorage puede no estar disponible (modo privado estricto, etc.) — no es crítico.
     }
@@ -554,20 +473,11 @@ export default function App() {
     setIsMobileMenuOpen(false);
     const targetGroupId = findNavGroupIdForItem(view);
     if (targetGroupId) {
-      setOpenNavGroupIds((prev) =>
-        prev[targetGroupId] ? prev : { ...prev, [targetGroupId]: true }
-      );
+      setOpenNavGroupIds((prev) => (prev[targetGroupId] ? prev : { ...prev, [targetGroupId]: true }));
     }
     if (options) {
       setBookingOptions({
-        sectionTab:
-          view === 'medios'
-            ? 'medios'
-            : view === 'management'
-              ? 'grupos'
-              : view === 'booking'
-                ? 'salas'
-                : undefined,
+        sectionTab: view === 'medios' ? 'medios' : view === 'management' ? 'grupos' : view === 'booking' ? 'salas' : undefined,
         ...options,
       });
     } else if (view === 'medios') {
@@ -594,56 +504,41 @@ export default function App() {
       .catch(() => {});
   }, [currentActiveBandId]);
 
-  const handleCrmSectionChange = useCallback(
-    (section: 'salas' | 'medios' | 'grupos' | 'bandas') => {
-      if (section === 'bandas') {
-        setCurrentView((prev) => {
-          if (prev !== 'bandas') {
-            const targetGroupId = findNavGroupIdForItem('bandas');
-            if (targetGroupId) {
-              setOpenNavGroupIds((openPrev) =>
-                openPrev[targetGroupId]
-                  ? openPrev
-                  : { ...openPrev, [targetGroupId]: true }
-              );
-            }
-            return 'bandas';
-          }
-          return prev;
-        });
-        return;
-      }
-
-      const targetView: 'booking' | 'medios' | 'management' =
-        section === 'medios'
-          ? 'medios'
-          : section === 'grupos'
-            ? 'management'
-            : 'booking';
-
+  const handleCrmSectionChange = useCallback((section: 'salas' | 'medios' | 'grupos' | 'bandas') => {
+    if (section === 'bandas') {
       setCurrentView((prev) => {
-        if (prev !== targetView) {
-          const targetGroupId = findNavGroupIdForItem(targetView);
+        if (prev !== 'bandas') {
+          const targetGroupId = findNavGroupIdForItem('bandas');
           if (targetGroupId) {
-            setOpenNavGroupIds((openPrev) =>
-              openPrev[targetGroupId]
-                ? openPrev
-                : { ...openPrev, [targetGroupId]: true }
-            );
+            setOpenNavGroupIds((openPrev) => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
           }
-          return targetView;
+          return 'bandas';
         }
         return prev;
       });
+      return;
+    }
 
-      setBookingOptions((prev) => ({
-        ...prev,
-        sectionTab: section,
-        statusFilter: 'todos',
-      }));
-    },
-    []
-  );
+    const targetView: 'booking' | 'medios' | 'management' =
+      section === 'medios' ? 'medios' : section === 'grupos' ? 'management' : 'booking';
+
+    setCurrentView((prev) => {
+      if (prev !== targetView) {
+        const targetGroupId = findNavGroupIdForItem(targetView);
+        if (targetGroupId) {
+          setOpenNavGroupIds((openPrev) => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
+        }
+        return targetView;
+      }
+      return prev;
+    });
+
+    setBookingOptions((prev) => ({
+      ...prev,
+      sectionTab: section,
+      statusFilter: 'todos',
+    }));
+  }, []);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openGroupSheetId, setOpenGroupSheetId] = useState<string | null>(null);
@@ -675,8 +570,7 @@ export default function App() {
   });
 
   // Active Font State
-  const [currentFont, setCurrentFont] =
-    useState<FontPresetKey>(getStoredFontPreset);
+  const [currentFont, setCurrentFont] = useState<FontPresetKey>(getStoredFontPreset);
   const [showFontModal, setShowFontModal] = useState(false);
 
   useEffect(() => {
@@ -697,9 +591,7 @@ export default function App() {
     const sessionParam = urlParams.get('session_id');
 
     if (paymentStatus === 'success') {
-      const planName = planParam
-        ? planParam.toUpperCase().replace('_', '')
-        : 'PRO';
+      const planName = planParam ? planParam.toUpperCase().replace('_', '') : 'PRO';
 
       // Clean URL params immediately
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -733,9 +625,7 @@ export default function App() {
         fetchState();
       }
 
-      alert(
-        `🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`
-      );
+      alert(`🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`);
     } else if (paymentStatus === 'cancelled') {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -750,8 +640,7 @@ export default function App() {
   useEffect(() => {
     // Observa cambios en el atributo data-theme
     const observer = new MutationObserver(() => {
-      const newTheme =
-        document.documentElement.getAttribute('data-theme') || 'classic';
+      const newTheme = document.documentElement.getAttribute('data-theme') || 'classic';
       setDataTheme(newTheme);
     });
 
@@ -766,9 +655,7 @@ export default function App() {
   const isEspectroActive = dataTheme === 'light' || dataTheme === 'dark';
 
   // Proporciona colores del sistema Espectro o fallback al sistema antiguo
-  const colors: ThemeColors = isEspectroActive
-    ? getEspectroColors()
-    : THEMES[currentTheme] || THEMES.indie_velvet;
+  const colors: ThemeColors = isEspectroActive ? getEspectroColors() : THEMES[currentTheme] || THEMES.indie_velvet;
 
   // Persist Theme Selection - sincroniza tanto currentTheme como data-theme
   const handleThemeChange = (theme: ThemeName) => {
@@ -791,37 +678,15 @@ export default function App() {
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter((c) => {
-      if (!c.band_id && !c.bandName)
-        return isSameBand(
-          currentActiveBandId,
-          'band-bakandeya',
-          '',
-          currentActiveBandName
-        );
-      return isSameBand(
-        c.band_id,
-        currentActiveBandId,
-        c.bandName,
-        currentActiveBandName
-      );
+      if (!c.band_id && !c.bandName) return isSameBand(currentActiveBandId, 'band-bakandeya', '', currentActiveBandName);
+      return isSameBand(c.band_id, currentActiveBandId, c.bandName, currentActiveBandName);
     });
   }, [concerts, currentActiveBandId, currentActiveBandName]);
 
   const activeBandRehearsals = React.useMemo(() => {
     return rehearsals.filter((r) => {
-      if (!r.band_id && !r.bandName)
-        return isSameBand(
-          currentActiveBandId,
-          'band-bakandeya',
-          '',
-          currentActiveBandName
-        );
-      return isSameBand(
-        r.band_id,
-        currentActiveBandId,
-        r.bandName,
-        currentActiveBandName
-      );
+      if (!r.band_id && !r.bandName) return isSameBand(currentActiveBandId, 'band-bakandeya', '', currentActiveBandName);
+      return isSameBand(r.band_id, currentActiveBandId, r.bandName, currentActiveBandName);
     });
   }, [rehearsals, currentActiveBandId, currentActiveBandName]);
 
@@ -832,66 +697,36 @@ export default function App() {
     const isMedio = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
-      return (
-        s.includes('medio') ||
-        s.includes('radio') ||
-        s.includes('prensa') ||
-        s.includes('tv') ||
-        s.includes('podc')
-      );
+      return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
     };
     const isManagement = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
-      return [
-        'agencia',
-        'manager',
-        'productora',
-        'sello',
-        'promotora',
-        'management',
-      ].some((t) => s.includes(t));
+      return ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some((t) => s.includes(t));
     };
     const isBanda = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
       return (
-        s === 'grupo' ||
-        s.includes('grup') ||
-        s.includes('banda') ||
-        s.includes('artist') ||
-        s.includes('musico') ||
-        s.includes('músico')
+        s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico')
       );
     };
     const totalEvents = concerts.length + rehearsals.length;
-    const activeEvents =
-      activeBandConcerts.length + activeBandRehearsals.length;
+    const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
     return {
-      booking: leads.filter(
-        (l) => !isMedio(l) && !isBanda(l) && !isManagement(l)
-      ).length,
+      booking: leads.filter((l) => !isMedio(l) && !isBanda(l) && !isManagement(l)).length,
       medios: leads.filter((l) => isMedio(l)).length,
       management: leads.filter((l) => isManagement(l)).length,
       bandas: bandsCount,
       calendario: totalEvents === 0 ? 0 : `${activeEvents}/${totalEvents}`,
     } as Record<string, number | string>;
-  }, [
-    leads,
-    concerts,
-    rehearsals,
-    activeBandConcerts,
-    activeBandRehearsals,
-    bandsCount,
-  ]);
+  }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals, bandsCount]);
 
   // Vista agrupada del menú (secciones colapsables) para planes con menú largo y para `promo_plus`/`promo_music`;
   // `promo` (4 módulos) se queda con la lista plana de siempre sin agrupaciones.
   const shouldGroupNav = shouldGroupNavForPlan(currentActiveBandPlan);
 
-  const [openNavGroupIds, setOpenNavGroupIds] = useState<
-    Record<string, boolean>
-  >(() => {
+  const [openNavGroupIds, setOpenNavGroupIds] = useState<Record<string, boolean>>(() => {
     try {
       const stored = localStorage.getItem('bm_nav_open_groups');
       if (stored) return JSON.parse(stored);
@@ -904,10 +739,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(
-        'bm_nav_open_groups',
-        JSON.stringify(openNavGroupIds)
-      );
+      localStorage.setItem('bm_nav_open_groups', JSON.stringify(openNavGroupIds));
     } catch {
       /* localStorage no disponible: el toggle sigue funcionando en memoria */
     }
@@ -931,12 +763,7 @@ export default function App() {
   // Public Landing Routes
   const isFanRoute = React.useMemo(() => {
     const p = window.location.pathname.toLowerCase();
-    return (
-      p.startsWith('/fans') ||
-      p.startsWith('/unete') ||
-      p.startsWith('/directo') ||
-      p.startsWith('/fan')
-    );
+    return p.startsWith('/fans') || p.startsWith('/unete') || p.startsWith('/directo') || p.startsWith('/fan');
   }, []);
 
   const isMusicianRoute = React.useMemo(() => {
@@ -953,9 +780,7 @@ export default function App() {
 
   const isEpkRoute = React.useMemo(() => {
     const p = window.location.pathname.toLowerCase();
-    return (
-      p.startsWith('/epk') || p.startsWith('/dossier') || p.startsWith('/press')
-    );
+    return p.startsWith('/epk') || p.startsWith('/dossier') || p.startsWith('/press');
   }, []);
 
   if (isMusicianRoute) {
@@ -995,11 +820,7 @@ export default function App() {
           </div>
         }
       >
-        <FansLanding
-          currentBandId={currentActiveBandId}
-          currentBandName={currentActiveBandName}
-          currentBandLogo={currentActiveBandLogo}
-        />
+        <FansLanding currentBandId={currentActiveBandId} currentBandName={currentActiveBandName} currentBandLogo={currentActiveBandLogo} />
       </Suspense>
     );
   }
@@ -1097,9 +918,7 @@ export default function App() {
                   title="Gestionar Campañas de Booking"
                 >
                   <Target className="w-3.5 h-3.5" />
-                  <span className="text-[10px] hidden xs:inline">
-                    {activeCampaign ? 'Campaña' : 'Campañas'}
-                  </span>
+                  <span className="text-[10px] hidden xs:inline">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
                 </button>
               )}
             </div>
@@ -1115,34 +934,25 @@ export default function App() {
           {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
             let isActive = false;
             if (openGroupSheetId) {
-              isActive =
-                slot.kind === 'group' && openGroupSheetId === slot.groupId;
+              isActive = slot.kind === 'group' && openGroupSheetId === slot.groupId;
             } else if (isMobileMenuOpen) {
               isActive = slot.kind === 'more';
             } else {
               if (slot.kind === 'view') {
                 isActive = currentView === slot.itemId;
               } else if (slot.kind === 'group') {
-                isActive =
-                  (slot.itemId ? currentView === slot.itemId : false) ||
-                  findNavGroupIdForItem(currentView) === slot.groupId;
+                isActive = (slot.itemId ? currentView === slot.itemId : false) || findNavGroupIdForItem(currentView) === slot.groupId;
               } else if (slot.kind === 'more') {
                 const groupOfView = findNavGroupIdForItem(currentView);
                 const isDirectBottomSlot =
-                  currentView === 'resumen' ||
-                  currentView === 'calendario' ||
-                  groupOfView === 'musica' ||
-                  groupOfView === 'promocion';
+                  currentView === 'resumen' || currentView === 'calendario' || groupOfView === 'musica' || groupOfView === 'promocion';
                 isActive = !isDirectBottomSlot;
               }
             }
             const IconComp = slot.itemId
               ? NAV_ITEMS[slot.itemId as NavItemId].icon
               : slot.kind === 'group' && slot.groupId
-                ? NAV_ITEMS[
-                    NAV_GROUPS_MOBILE.find((g) => g.id === slot.groupId)!
-                      .itemIds[0]
-                  ].icon
+                ? NAV_ITEMS[NAV_GROUPS_MOBILE.find((g) => g.id === slot.groupId)!.itemIds[0]].icon
                 : Menu;
             const slotLabel = t(slot.labelKey, slot.labelDefault);
             return (
@@ -1157,17 +967,12 @@ export default function App() {
                   } else if (slot.kind === 'group') {
                     setIsMobileMenuOpen(false);
                     const isAlreadyInGroup =
-                      (slot.itemId && currentView === slot.itemId) ||
-                      findNavGroupIdForItem(currentView) === slot.groupId;
+                      (slot.itemId && currentView === slot.itemId) || findNavGroupIdForItem(currentView) === slot.groupId;
                     if (isAlreadyInGroup) {
-                      setOpenGroupSheetId((prev) =>
-                        prev === slot.groupId ? null : (slot.groupId as string)
-                      );
+                      setOpenGroupSheetId((prev) => (prev === slot.groupId ? null : (slot.groupId as string)));
                     } else {
                       setOpenGroupSheetId(null);
-                      const defaultTarget =
-                        slot.itemId ||
-                        (slot.groupId === 'musica' ? 'repertorio' : 'epk');
+                      const defaultTarget = slot.itemId || (slot.groupId === 'musica' ? 'repertorio' : 'epk');
                       handleNavigate(defaultTarget as any);
                     }
                   } else {
@@ -1181,9 +986,7 @@ export default function App() {
               >
                 <span
                   className={`flex items-center justify-center w-10 h-10 rounded-[var(--r-pill)] transition-colors ${
-                    isActive
-                      ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
-                      : 'text-[var(--ink-2)]'
+                    isActive ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'
                   }`}
                 >
                   <IconComp className="w-5 h-5" />
@@ -1197,9 +1000,7 @@ export default function App() {
  en la bottom bar, reusando NavItemButton tal cual lo usa el drawer completo. */}
         {openGroupSheetId &&
           (() => {
-            const group = NAV_GROUPS_MOBILE.find(
-              (g) => g.id === openGroupSheetId
-            );
+            const group = NAV_GROUPS_MOBILE.find((g) => g.id === openGroupSheetId);
             if (!group) return null;
             return (
               <>
@@ -1214,11 +1015,7 @@ export default function App() {
                   </div>
                   <div className="px-3 pb-4 flex flex-col gap-1">
                     {group.itemIds
-                      .filter(
-                        (id) =>
-                          (!NAV_ITEMS[id].adminOnly || isAdmin) &&
-                          hasModuleAccess(currentActiveBandPlan, id)
-                      )
+                      .filter((id) => (!NAV_ITEMS[id].adminOnly || isAdmin) && hasModuleAccess(currentActiveBandPlan, id))
                       .map((id) => {
                         const item = NAV_ITEMS[id];
                         return (
@@ -1227,10 +1024,7 @@ export default function App() {
                             item={item}
                             label={t(item.labelKey, item.labelDefault)}
                             isSelected={currentView === item.id}
-                            isAllowed={hasModuleAccess(
-                              currentActiveBandPlan,
-                              item.id
-                            )}
+                            isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
                             badge={navBadges[item.id]}
                             onNavigate={() => {
                               handleNavigate(item.id as any);
@@ -1253,10 +1047,7 @@ export default function App() {
         {isMobileMenuOpen && (
           <div className="md:hidden fixed inset-0 z-[9999] flex">
             {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
+            <div className="fixed inset-0 bg-[var(--scrim)]/75 transition-opacity" onClick={() => setIsMobileMenuOpen(false)} />
             {/* Drawer panel */}
             <div className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
               {/* Drawer Header */}
@@ -1285,9 +1076,7 @@ export default function App() {
                       <span
                         className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)]'}`}
                       />
-                      <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                        Banda activa
-                      </span>
+                      <span className="text-[10px] font-sans text-[var(--ink-2)]">Banda activa</span>
                     </div>
                   </div>
                 </div>
@@ -1309,10 +1098,7 @@ export default function App() {
                       item={item}
                       label={t(item.labelKey, item.labelDefault)}
                       isSelected={currentView === item.id}
-                      isAllowed={hasModuleAccess(
-                        currentActiveBandPlan,
-                        item.id
-                      )}
+                      isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
                       badge={navBadges[item.id]}
                       onNavigate={() => handleNavigate(item.id as any)}
                       variant="mobile"
@@ -1335,35 +1121,23 @@ export default function App() {
                         variant="mobile"
                       />
                     ))
-                  : FLAT_NAV_ORDER_IDS.filter(
-                      (id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id)
-                    )
+                  : FLAT_NAV_ORDER_IDS.filter((id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id))
                       .map((id) => NAV_ITEMS[id])
-                      .filter(
-                        (item) =>
-                          (!item.adminOnly || isAdmin) &&
-                          (!isPromoPlan ||
-                            hasModuleAccess(currentActiveBandPlan, item.id))
-                      )
+                      .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
                       .map((item) => (
                         <NavItemButton
                           key={item.id}
                           item={item}
                           label={t(item.labelKey, item.labelDefault)}
                           isSelected={currentView === item.id}
-                          isAllowed={hasModuleAccess(
-                            currentActiveBandPlan,
-                            item.id
-                          )}
+                          isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
                           badge={navBadges[item.id]}
                           onNavigate={() => handleNavigate(item.id as any)}
                           variant="mobile"
                         />
                       ))}
                 {shouldGroupNav &&
-                  NAV_PINNED_BOTTOM_IDS.filter((id) =>
-                    hasModuleAccess(currentActiveBandPlan, id)
-                  ).map((id) => {
+                  NAV_PINNED_BOTTOM_IDS.filter((id) => hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
                     const item = NAV_ITEMS[id];
                     return (
                       <NavItemButton
@@ -1371,10 +1145,7 @@ export default function App() {
                         item={item}
                         label={t(item.labelKey, item.labelDefault)}
                         isSelected={currentView === item.id}
-                        isAllowed={hasModuleAccess(
-                          currentActiveBandPlan,
-                          item.id
-                        )}
+                        isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
                         badge={navBadges[item.id]}
                         onNavigate={() => handleNavigate(item.id as any)}
                         variant="mobile"
@@ -1392,21 +1163,9 @@ export default function App() {
                   const userPlan = currentActiveBandPlan;
                   const pDef = getPlanDefinition(userPlan);
                   const totalCredits =
-                    userPlan === 'cabeza_de_cartel'
-                      ? 2500
-                      : userPlan === 'de_gira'
-                        ? 800
-                        : userPlan === 'local'
-                          ? 300
-                          : 100;
-                  const estimatedUsed = Math.min(
-                    totalCredits,
-                    Math.max(12, leads.length * 2 + posts.length)
-                  );
-                  const pct = Math.min(
-                    100,
-                    Math.round((estimatedUsed / totalCredits) * 100)
-                  );
+                    userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
+                  const estimatedUsed = Math.min(totalCredits, Math.max(12, leads.length * 2 + posts.length));
+                  const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
 
                   return (
                     <div
@@ -1420,9 +1179,7 @@ export default function App() {
                       <div className="flex items-center justify-between gap-1 mb-1.5">
                         <div className="flex items-center gap-1.5">
                           <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
-                          <span className="text-[11px] font-semibold text-[var(--ink-2)]">
-                            Créditos IA
-                          </span>
+                          <span className="text-[11px] font-semibold text-[var(--ink-2)]">Créditos IA</span>
                         </div>
                         <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">
                           {estimatedUsed} / {totalCredits}
@@ -1437,12 +1194,8 @@ export default function App() {
                         />
                       </div>
                       <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
-                        <span className="truncate max-w-[100px]">
-                          Plan {pDef.name}
-                        </span>
-                        <span className="text-[var(--acc-ink)] font-semibold transition-colors">
-                          Planes →
-                        </span>
+                        <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
+                        <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
                       </div>
                     </div>
                   );
@@ -1468,20 +1221,14 @@ export default function App() {
                       <div
                         className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
                         style={{
-                          backgroundColor:
-                            currentUser.avatarColor || 'var(--acc)',
+                          backgroundColor: currentUser.avatarColor || 'var(--acc)',
                         }}
                       >
                         {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
                       </div>
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
-                          {currentUser.name}
-                        </span>
-                        <span
-                          className="text-[10px] text-[var(--ink-2)] truncate"
-                          title={currentUser.email || currentUser.username}
-                        >
+                        <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">{currentUser.name}</span>
+                        <span className="text-[10px] text-[var(--ink-2)] truncate" title={currentUser.email || currentUser.username}>
                           {currentUser.email || currentUser.username}
                         </span>
                       </div>
@@ -1537,9 +1284,7 @@ export default function App() {
               ) : (
                 <div className="w-24 h-24 xl:w-28 xl:h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1 p-2 shrink-0 group-hover:scale-105 transition-transform duration-300">
                   <Guitar className="w-6 h-6 opacity-80 group-hover:scale-110 transition-transform" />
-                  <span className="text-[9px] font-bold text-[var(--ink-2)] text-center">
-                    {currentActiveBandName}
-                  </span>
+                  <span className="text-[9px] font-bold text-[var(--ink-2)] text-center">{currentActiveBandName}</span>
                 </div>
               )}
             </div>
@@ -1614,35 +1359,23 @@ export default function App() {
                     variant="desktop"
                   />
                 ))
-              : FLAT_NAV_ORDER_IDS.filter(
-                  (id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id)
-                )
+              : FLAT_NAV_ORDER_IDS.filter((id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id))
                   .map((id) => NAV_ITEMS[id])
-                  .filter(
-                    (item) =>
-                      (!item.adminOnly || isAdmin) &&
-                      (!isPromoPlan ||
-                        hasModuleAccess(currentActiveBandPlan, item.id))
-                  )
+                  .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
                   .map((item) => (
                     <NavItemButton
                       key={item.id}
                       item={item}
                       label={t(item.labelKey, item.labelDefault)}
                       isSelected={currentView === item.id}
-                      isAllowed={hasModuleAccess(
-                        currentActiveBandPlan,
-                        item.id
-                      )}
+                      isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
                       badge={navBadges[item.id]}
                       onNavigate={() => handleNavigate(item.id as any)}
                       variant="desktop"
                     />
                   ))}
             {shouldGroupNav &&
-              NAV_PINNED_BOTTOM_IDS.filter((id) =>
-                hasModuleAccess(currentActiveBandPlan, id)
-              ).map((id) => {
+              NAV_PINNED_BOTTOM_IDS.filter((id) => hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
                 const item = NAV_ITEMS[id];
                 return (
                   <NavItemButton
@@ -1663,9 +1396,7 @@ export default function App() {
           {!isPromoPlan && (
             <div className="px-3 pt-3 pb-2 space-y-1.5">
               <div className="flex items-center justify-between px-1">
-                <p className="text-[11px] font-semibold text-[var(--ink-2)]">
-                  Campañas
-                </p>
+                <p className="text-[11px] font-semibold text-[var(--ink-2)]">Campañas</p>
                 <button
                   onClick={() => setShowCampaignModal(true)}
                   className="text-[11px] font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
@@ -1697,9 +1428,7 @@ export default function App() {
                       {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
                     </span>
                     <span className="text-[10px] text-[var(--ink-2)] truncate">
-                      {activeCampaign
-                        ? `${activeCampaign.targetDates?.length || 0} fechas en calendario`
-                        : 'Sin campaña activa'}
+                      {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
                     </span>
                   </div>
                 </div>
@@ -1715,22 +1444,9 @@ export default function App() {
             (() => {
               const userPlan = currentActiveBandPlan;
               const pDef = getPlanDefinition(userPlan);
-              const totalCredits =
-                userPlan === 'cabeza_de_cartel'
-                  ? 2500
-                  : userPlan === 'de_gira'
-                    ? 800
-                    : userPlan === 'local'
-                      ? 300
-                      : 100;
-              const estimatedUsed = Math.min(
-                totalCredits,
-                Math.max(12, leads.length * 2 + posts.length)
-              );
-              const pct = Math.min(
-                100,
-                Math.round((estimatedUsed / totalCredits) * 100)
-              );
+              const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
+              const estimatedUsed = Math.min(totalCredits, Math.max(12, leads.length * 2 + posts.length));
+              const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
 
               return (
                 <div
@@ -1741,9 +1457,7 @@ export default function App() {
                   <div className="flex items-center justify-between gap-1 mb-1.5">
                     <div className="flex items-center gap-1.5">
                       <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
-                      <span className="text-[11px] font-semibold text-[var(--ink-2)]">
-                        Créditos IA
-                      </span>
+                      <span className="text-[11px] font-semibold text-[var(--ink-2)]">Créditos IA</span>
                     </div>
                     <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">
                       {estimatedUsed} / {totalCredits}
@@ -1758,12 +1472,8 @@ export default function App() {
                     />
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
-                    <span className="truncate max-w-[100px]">
-                      Plan {pDef.name}
-                    </span>
-                    <span className="text-[var(--acc-ink)] font-semibold transition-colors">
-                      Planes →
-                    </span>
+                    <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
+                    <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
                   </div>
                 </div>
               );
@@ -1788,13 +1498,8 @@ export default function App() {
                     {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
-                      {currentUser.name}
-                    </span>
-                    <span
-                      className="text-[10px] text-[var(--ink-2)] truncate"
-                      title={currentUser.email || currentUser.username}
-                    >
+                    <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">{currentUser.name}</span>
+                    <span className="text-[10px] text-[var(--ink-2)] truncate" title={currentUser.email || currentUser.username}>
                       {currentUser.email || currentUser.username}
                     </span>
                   </div>
@@ -1833,19 +1538,16 @@ export default function App() {
         {/* Main Content Area */}
         <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
           {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
-          {activeCampaign &&
-            ['booking', 'medios', 'management', 'bandas'].includes(
-              currentView
-            ) && (
-              <GlobalCampaignBar
-                campaign={activeCampaign}
-                allLeads={leads}
-                onOpenManager={() => setShowCampaignModal(true)}
-                onDeactivate={() => handleSetActiveCampaign(null)}
-                onNavigate={handleNavigate}
-                currentView={currentView}
-              />
-            )}
+          {activeCampaign && ['booking', 'medios', 'management', 'bandas'].includes(currentView) && (
+            <GlobalCampaignBar
+              campaign={activeCampaign}
+              allLeads={leads}
+              onOpenManager={() => setShowCampaignModal(true)}
+              onDeactivate={() => handleSetActiveCampaign(null)}
+              onNavigate={handleNavigate}
+              currentView={currentView}
+            />
+          )}
 
           {/* Sync warning if backend fails */}
           {syncStatus === 'error' && (
@@ -1853,9 +1555,8 @@ export default function App() {
               <div className="flex gap-2 items-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--alert)]/60 shrink-0" />
                 <span>
-                  <strong>Modo Simulación Activo:</strong> No se pudo conectar
-                  con el servidor Express backend local. Los cambios actuales se
-                  almacenarán temporalmente en memoria.
+                  <strong>Modo Simulación Activo:</strong> No se pudo conectar con el servidor Express backend local. Los cambios actuales
+                  se almacenarán temporalmente en memoria.
                 </span>
               </div>
               <button
@@ -1868,10 +1569,7 @@ export default function App() {
           )}
 
           {/* Dynamic Views */}
-          <div
-            key={currentView}
-            className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in"
-          >
+          <div key={currentView} className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in">
             {isLoading ? (
               <SkeletonDashboard />
             ) : (
@@ -1906,9 +1604,7 @@ export default function App() {
                     isPromoPlan={isPromoPlan}
                   />
                 )}
-                {(currentView === 'booking' ||
-                  currentView === 'medios' ||
-                  currentView === 'management') && (
+                {(currentView === 'booking' || currentView === 'medios' || currentView === 'management') && (
                   <BookingCRM
                     key="contacts-crm"
                     activeCampaign={activeCampaign}
@@ -1922,19 +1618,12 @@ export default function App() {
                     epkConfig={epkConfig}
                     onUpdateEpkConfig={handleUpdateEpkConfig}
                     initialSection={
-                      currentView === 'medios'
-                        ? 'medios'
-                        : currentView === 'management'
-                          ? 'grupos'
-                          : bookingOptions.sectionTab || 'salas'
+                      currentView === 'medios' ? 'medios' : currentView === 'management' ? 'grupos' : bookingOptions.sectionTab || 'salas'
                     }
                     onSectionChange={handleCrmSectionChange}
                     onNavigate={handleNavigate}
                     bandsCount={bandsCount}
-                    initialStatusFilter={
-                      (bookingOptions.statusFilter as LeadStatus | 'todos') ||
-                      'todos'
-                    }
+                    initialStatusFilter={(bookingOptions.statusFilter as LeadStatus | 'todos') || 'todos'}
                     initialSelectedLeadId={bookingOptions.selectedLeadId}
                     currentUser={currentUser}
                     bandName={currentActiveBandName}
@@ -2021,9 +1710,7 @@ export default function App() {
                     )}
                   />
                 )}
-                {(currentView === 'repertorio' ||
-                  currentView === 'catalogo' ||
-                  currentView === 'discografia') && (
+                {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia') && (
                   <ErrorBoundary fallbackTitle="Repertorio y Setlists">
                     <RepertorioSetlists
                       key={currentActiveBandId}
@@ -2125,16 +1812,11 @@ export default function App() {
                       bandUsers={bandUsers}
                     />
                   ) : (
-                    <div
-                      className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}
-                    >
+                    <div className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}>
                       <ShieldAlert className="w-10 h-10 text-[var(--alert)] mx-auto" />
-                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60 tracking-wider">
-                        Acceso Restringido
-                      </h3>
+                      <h3 className="text-sm font-sans font-bold text-[var(--alert)]/60 tracking-wider">Acceso Restringido</h3>
                       <p className="text-xs text-[var(--ink-3)] max-w-md mx-auto">
-                        El apartado de Finanzas es confidencial y solo está
-                        accesible para los administradores de la banda.
+                        El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda.
                       </p>
                     </div>
                   ))}
@@ -2177,17 +1859,14 @@ export default function App() {
         </main>
 
         {/* User Management Modal for Band Leader */}
-        {showUserManagementModal &&
-          (isAdmin ||
-            currentUser?.role === 'leader' ||
-            currentUser?.role === 'admin') && (
-            <UserManagementModal
-              currentUser={currentUser}
-              users={bandUsers}
-              onClose={() => setShowUserManagementModal(false)}
-              onRefreshUsers={fetchState}
-            />
-          )}
+        {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
+          <UserManagementModal
+            currentUser={currentUser}
+            users={bandUsers}
+            onClose={() => setShowUserManagementModal(false)}
+            onRefreshUsers={fetchState}
+          />
+        )}
 
         {/* User Profile & Password Change Modal for All Users */}
         {showUserProfileModal && currentUser && (
@@ -2232,9 +1911,7 @@ export default function App() {
         {currentView !== 'chat' && !isPromoPlan && (
           <div
             className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-all duration-200 ${
-              isFloatingChatOpen
-                ? 'block animate-in slide-in-from-bottom-5'
-                : 'hidden'
+              isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
             }`}
           >
             <Suspense fallback={null}>
@@ -2273,22 +1950,14 @@ export default function App() {
                   ? 'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50'
                   : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105'
             }`}
-            title={
-              isChatLoading
-                ? 'Agente AI ejecutando en segundo plano...'
-                : 'Abrir Agente Mánager AI'
-            }
+            title={isChatLoading ? 'Agente AI ejecutando en segundo plano...' : 'Abrir Agente Mánager AI'}
           >
             {isFloatingChatOpen ? (
               <X className="w-5 h-5" />
             ) : (
               <>
                 <div className="relative">
-                  {isChatLoading ? (
-                    <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" />
-                  ) : (
-                    <Guitar className="w-5 h-5" />
-                  )}
+                  {isChatLoading ? <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" /> : <Guitar className="w-5 h-5" />}
                   <span
                     className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`}
                   />
@@ -2305,19 +1974,10 @@ export default function App() {
         )}
 
         {/* Metronome Pro Modal */}
-        <MetronomeModal
-          isOpen={showMetronomeModal}
-          onClose={() => setShowMetronomeModal(false)}
-          songs={[]}
-          colors={colors}
-        />
+        <MetronomeModal isOpen={showMetronomeModal} onClose={() => setShowMetronomeModal(false)} songs={[]} colors={colors} />
 
         {/* Tuner Pro Modal */}
-        <TunerModal
-          isOpen={showTunerModal}
-          onClose={() => setShowTunerModal(false)}
-          colors={colors}
-        />
+        <TunerModal isOpen={showTunerModal} onClose={() => setShowTunerModal(false)} colors={colors} />
 
         {/* Band Switcher Modal (Netflix Style) */}
         <BandSwitcherModal
@@ -2340,9 +2000,7 @@ export default function App() {
         {/* Soft Limits Upgrade Modal */}
         <PlanLimitModal
           isOpen={planLimitModal.isOpen}
-          onClose={() =>
-            setPlanLimitModal((prev) => ({ ...prev, isOpen: false }))
-          }
+          onClose={() => setPlanLimitModal((prev) => ({ ...prev, isOpen: false }))}
           onNavigateToPlanes={() => {
             setPlanLimitModal((prev) => ({ ...prev, isOpen: false }));
             handleNavigate('planes');
@@ -2372,10 +2030,7 @@ export default function App() {
             setShowOnboardingModal(false);
             try {
               if (cleanActiveBandId) {
-                localStorage.setItem(
-                  `bandmanager_onboarding_completed_${cleanActiveBandId}`,
-                  'true'
-                );
+                localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`, 'true');
               }
               localStorage.setItem('bandmanager_onboarding_completed', 'true');
             } catch {}
@@ -2391,18 +2046,10 @@ export default function App() {
             setShowProfileWizardModal(false);
             try {
               if (cleanActiveBandId) {
-                localStorage.setItem(
-                  `bandmanager_profile_wizard_completed_${cleanActiveBandId}`,
-                  'true'
-                );
+                localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
               }
-              localStorage.setItem(
-                'bandmanager_profile_wizard_completed',
-                'true'
-              );
-              window.dispatchEvent(
-                new CustomEvent('bandmanager_onboarding_finished')
-              );
+              localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
+              window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
             } catch {}
           }}
           currentUser={currentUser}
@@ -2420,11 +2067,7 @@ export default function App() {
           bandPlan={currentActiveBandPlan}
         />
 
-        <GlobalPlayer
-          colors={colors}
-          onOpenStudio={handleOpenStudio}
-          onOpenIris={handleOpenIris}
-        />
+        <GlobalPlayer colors={colors} onOpenStudio={handleOpenStudio} onOpenIris={handleOpenIris} />
       </div>
     </PlayerProvider>
   );

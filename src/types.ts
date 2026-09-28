@@ -19,14 +19,7 @@ export type LeadStatus =
 // Mismas 7 categorías que server/promptsManager.ts (mapLeadTipoToTemplateCategory) y
 // src/components/booking/TemplateConfigSection.tsx usan para las plantillas generales por
 // tipo de lead — se reutilizan aquí para poder definir un mensaje de campaña por caso de uso.
-export type PitchTemplateCategory =
-  | 'salas'
-  | 'festivales'
-  | 'discotecas'
-  | 'medios'
-  | 'grupos'
-  | 'managements'
-  | 'ayuntamientos';
+export type PitchTemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 export interface BookingCampaign {
   id: string;
@@ -100,13 +93,7 @@ export interface InteractionLog {
   tipo: 'Llamada' | 'WhatsApp' | 'Email' | 'Reunión' | 'Otro';
   autor?: string;
   notas: string;
-  resultado?:
-    | 'Interesado'
-    | 'Enviar propuesta'
-    | 'Seguimiento pendiente'
-    | 'Rechazado'
-    | 'Info recibida'
-    | 'Acuerdo cerrado';
+  resultado?: 'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado';
 }
 
 export interface SavedFilter {
@@ -116,14 +103,7 @@ export interface SavedFilter {
   searchTerm?: string;
   selectedCityFilter?: string;
   statusFilter?: LeadStatus | 'todos';
-  typeFilter?:
-    | LeadType
-    | 'todos'
-    | 'radio'
-    | 'tv'
-    | 'prensa'
-    | 'redes'
-    | 'podcast';
+  typeFilter?: LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast';
   minCapacityFilter?: number;
 }
 
@@ -191,14 +171,7 @@ export interface Lead {
 
 export interface RehearsalAgendaItem {
   id: string;
-  tipo:
-    | 'cancion'
-    | 'calentamiento'
-    | 'pausa'
-    | 'intro'
-    | 'outro'
-    | 'seccion_especifica'
-    | 'improvisacion';
+  tipo: 'cancion' | 'calentamiento' | 'pausa' | 'intro' | 'outro' | 'seccion_especifica' | 'improvisacion';
   titulo: string;
   songId?: string;
   duracionEstimadaMin: number;
@@ -533,17 +506,7 @@ export interface EPKConfig {
 
 export type EPKTemplateId = 'stage' | 'minimal' | 'neon' | 'vintage';
 
-export type EPKSectionId =
-  | 'cifras'
-  | 'datos'
-  | 'videos'
-  | 'miembros'
-  | 'bio'
-  | 'prensa'
-  | 'musica'
-  | 'galeria'
-  | 'escucha'
-  | 'conciertos';
+export type EPKSectionId = 'cifras' | 'datos' | 'videos' | 'miembros' | 'bio' | 'prensa' | 'musica' | 'galeria' | 'escucha' | 'conciertos';
 
 export interface PressQuote {
   id: string;
@@ -616,15 +579,7 @@ export interface Payment {
   id: string;
   band_id?: string;
   tipo: 'ingreso' | 'gasto';
-  categoria:
-    | 'concierto'
-    | 'merchandising'
-    | 'subvencion'
-    | 'transporte'
-    | 'alojamiento'
-    | 'comida'
-    | 'promo'
-    | 'otros';
+  categoria: 'concierto' | 'merchandising' | 'subvencion' | 'transporte' | 'alojamiento' | 'comida' | 'promo' | 'otros';
   concepto: string;
   importe: number;
   fecha: string;
@@ -711,14 +666,7 @@ export interface User {
   username: string;
   name: string;
   role: UserRole;
-  plan?:
-    | 'promo'
-    | 'promo_plus'
-    | 'ensayo'
-    | 'local'
-    | 'de_gira'
-    | 'cabeza_de_cartel'
-    | string;
+  plan?: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
   bandName?: string;
   band_id?: string;
   main_band_id?: string;
@@ -748,24 +696,11 @@ export interface UserWithHash extends User {
   salt: string;
 }
 
-export type ThemeName =
-  | 'indie_velvet'
-  | 'stitch_dark'
-  | 'backstage_neon'
-  | 'roots_ska'
-  | 'brutalist_fuzz'
-  | 'classic';
+export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz' | 'classic';
 
 // Patrones de batería soportados por el sintetizador de acompañamiento (src/utils/accompanimentSynth.ts),
 // compartido entre el generador del Song Studio y las bases rítmicas propuestas por el chatbot.
-export type DrumPatternStyle =
-  | 'rock'
-  | 'pop'
-  | 'funk'
-  | 'reggae'
-  | 'ska'
-  | 'cumbia'
-  | 'punk';
+export type DrumPatternStyle = 'rock' | 'pop' | 'funk' | 'reggae' | 'ska' | 'cumbia' | 'punk';
 
 // Instrumentos melódicos que el "genio de la lámpara" del chatbot puede sintetizar
 // (src/utils/instrumentSynth.ts, motor Tone.js) para proponer ideas de partes de canción
@@ -814,14 +749,7 @@ export interface AudioTrack {
 export interface SongAudioIdea {
   id: string;
   titulo: string;
-  seccion:
-    | 'general'
-    | 'intro'
-    | 'verso'
-    | 'estribillo'
-    | 'puente'
-    | 'solo'
-    | 'outro';
+  seccion: 'general' | 'intro' | 'verso' | 'estribillo' | 'puente' | 'solo' | 'outro';
   audioUrl: string; // Primary or legacy single audio track
   pistas?: AudioTrack[]; // Multitrack basic recording support
   subidoPor: string;
@@ -1048,14 +976,7 @@ export interface RegisteredBand {
   fecha_registro: string;
   nombre_banda: string;
   email: string;
-  plan:
-    | 'promo'
-    | 'promo_plus'
-    | 'ensayo'
-    | 'local'
-    | 'de_gira'
-    | 'cabeza_de_cartel'
-    | string;
+  plan: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
   contacto_nombre?: string;
   estilo_musical?: string;
   localizacion?: string;
@@ -1105,10 +1026,7 @@ export interface PitchLearningExample {
   texto_aprobado: string;
   tuvo_edicion: boolean;
   diferencia_longitud?: number;
-  tipo_accion:
-    | 'aprobado_propuesta'
-    | 'aprobado_respuesta'
-    | 'regenerado_con_feedback';
+  tipo_accion: 'aprobado_propuesta' | 'aprobado_respuesta' | 'regenerado_con_feedback';
   resultado_respuesta?: 'pendiente' | 'positiva' | 'negativa' | 'sin_respuesta';
   fecha_aprobacion: string;
 }

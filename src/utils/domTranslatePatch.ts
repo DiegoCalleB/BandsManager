@@ -12,27 +12,31 @@
  */
 
 if (typeof window !== 'undefined' && typeof Node === 'function' && Node.prototype) {
- const originalRemoveChild = Node.prototype.removeChild;
- Node.prototype.removeChild = function <T extends Node>(child: T): T {
- if (child.parentNode !== this) {
- if (typeof console !== 'undefined' && console.warn) {
- console.warn('[DOM Patch] Node.removeChild: child is not a direct child of parent. Handled gracefully.', child, this);
- }
- return child;
- }
- return originalRemoveChild.call(this, child) as T;
- };
+  const originalRemoveChild = Node.prototype.removeChild;
+  Node.prototype.removeChild = function <T extends Node>(child: T): T {
+    if (child.parentNode !== this) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn('[DOM Patch] Node.removeChild: child is not a direct child of parent. Handled gracefully.', child, this);
+      }
+      return child;
+    }
+    return originalRemoveChild.call(this, child) as T;
+  };
 
- const originalInsertBefore = Node.prototype.insertBefore;
- Node.prototype.insertBefore = function <T extends Node>(newNode: T, referenceNode: Node | null): T {
- if (referenceNode && referenceNode.parentNode !== this) {
- if (typeof console !== 'undefined' && console.warn) {
- console.warn('[DOM Patch] Node.insertBefore: referenceNode is not a direct child of parent. Appending instead.', referenceNode, this);
- }
- return this.appendChild(newNode) as T;
- }
- return originalInsertBefore.call(this, newNode, referenceNode) as T;
- };
+  const originalInsertBefore = Node.prototype.insertBefore;
+  Node.prototype.insertBefore = function <T extends Node>(newNode: T, referenceNode: Node | null): T {
+    if (referenceNode && referenceNode.parentNode !== this) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(
+          '[DOM Patch] Node.insertBefore: referenceNode is not a direct child of parent. Appending instead.',
+          referenceNode,
+          this
+        );
+      }
+      return this.appendChild(newNode) as T;
+    }
+    return originalInsertBefore.call(this, newNode, referenceNode) as T;
+  };
 }
 
 export {};

@@ -5,691 +5,656 @@ import { ModalPortal } from './common/ModalPortal';
 import { STEM_INSTRUMENT_CATEGORIES, NON_STEM_ROLES } from '../config/stemInstruments';
 
 interface UserManagementModalProps {
- currentUser: User;
- users: User[];
- onClose: () => void;
- onRefreshUsers: () => void;
+  currentUser: User;
+  users: User[];
+  onClose: () => void;
+  onRefreshUsers: () => void;
 }
 
-export const UserManagementModal: React.FC<UserManagementModalProps> = ({
- currentUser,
- users,
- onClose,
- onRefreshUsers}) => {
- const [activeTab, setActiveTab] = useState<'list' |'create' |'associate'>('list');
- 
- // New user form state
- const [newUsername, setNewUsername] = useState('');
- const [newEmail, setNewEmail] = useState('');
- const [newName, setNewName] = useState('');
- const [newPassword, setNewPassword] = useState('');
- const [newRole, setNewRole] = useState<UserRole>('member');
- const [newInstrument, setNewInstrument] = useState('');
- const [newAvatarColor, setNewAvatarColor] = useState('#3b82f6');
+export const UserManagementModal: React.FC<UserManagementModalProps> = ({ currentUser, users, onClose, onRefreshUsers }) => {
+  const [activeTab, setActiveTab] = useState<'list' | 'create' | 'associate'>('list');
 
- // Associate existing user form state
- const [assocEmail, setAssocEmail] = useState('');
- const [assocRole, setAssocRole] = useState<UserRole>('member');
- const [assocInstrument, setAssocInstrument] = useState('');
+  // New user form state
+  const [newUsername, setNewUsername] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newName, setNewName] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newRole, setNewRole] = useState<UserRole>('member');
+  const [newInstrument, setNewInstrument] = useState('');
+  const [newAvatarColor, setNewAvatarColor] = useState('#3b82f6');
 
- // Helper for Authorization Headers
- const getHeaders = () => {
- const token = localStorage.getItem('bakandeya_token');
- return {'Content-Type':'application/json',
- ...(token ? {'Authorization': `Bearer ${token}` } : {})
- };
- };
+  // Associate existing user form state
+  const [assocEmail, setAssocEmail] = useState('');
+  const [assocRole, setAssocRole] = useState<UserRole>('member');
+  const [assocInstrument, setAssocInstrument] = useState('');
 
- // Change password state
- const [editingUserId, setEditingUserId] = useState<string | null>(null);
- const [changePasswordValue, setChangePasswordValue] = useState('');
+  // Helper for Authorization Headers
+  const getHeaders = () => {
+    const token = localStorage.getItem('bakandeya_token');
+    return { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+  };
 
- // Status feedback
- const [loading, setLoading] = useState(false);
- const [error, setError] = useState<string | null>(null);
- const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  // Change password state
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+  const [changePasswordValue, setChangePasswordValue] = useState('');
 
- const colors = ['var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'var(--acc)', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
- ];
+  // Status feedback
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
- const handleCreateUser = async (e: React.FormEvent) => {
- e.preventDefault();
- if (!newUsername.trim() || !newEmail.trim() || !newName.trim() || !newPassword) {
- setError('Por favor, completa usuario, email, nombre real y contraseña.');
- return;
- }
+  const colors = [
+    'var(--ok)', // Emerald'#3b82f6', // Blue'#ec4899', // Pink'var(--acc)', // Amber'var(--acc)', // Purple'#06b6d4', // Cyan'#f97316', // Orange'#ef4444' // Red
+  ];
 
- setLoading(true);
- setError(null);
- setSuccessMsg(null);
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newUsername.trim() || !newEmail.trim() || !newName.trim() || !newPassword) {
+      setError('Por favor, completa usuario, email, nombre real y contraseña.');
+      return;
+    }
 
- try {
- const response = await fetch('/api/users', {
- method:'POST',
- headers: getHeaders(),
- body: JSON.stringify({
- username: newUsername.trim(),
- email: newEmail.trim(),
- name: newName.trim(),
- password: newPassword,
- role: newRole,
- instrument: newInstrument.trim(),
- avatarColor: newAvatarColor,
-		band_id: currentUser.band_id
- })
- });
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
- const data = await response.json();
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          username: newUsername.trim(),
+          email: newEmail.trim(),
+          name: newName.trim(),
+          password: newPassword,
+          role: newRole,
+          instrument: newInstrument.trim(),
+          avatarColor: newAvatarColor,
+          band_id: currentUser.band_id,
+        }),
+      });
 
- if (!response.ok) {
- throw new Error(data.error ||'Error al crear usuario');
- }
+      const data = await response.json();
 
- setSuccessMsg(`¡Usuario @${data.username} creado con éxito!`);
- setNewUsername('');
- setNewEmail('');
- setNewName('');
- setNewPassword('');
- setNewInstrument('');
- onRefreshUsers();
- setActiveTab('list');
- } catch (err: any) {
- setError(err.message ||'Error en el servidor');
- } finally {
- setLoading(false);
- }
- };
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al crear usuario');
+      }
 
- const handleAssociateUser = async (e: React.FormEvent) => {
- e.preventDefault();
- if (!assocEmail) {
- setError('Por favor, ingresa el email del músico.');
- return;
- }
+      setSuccessMsg(`¡Usuario @${data.username} creado con éxito!`);
+      setNewUsername('');
+      setNewEmail('');
+      setNewName('');
+      setNewPassword('');
+      setNewInstrument('');
+      onRefreshUsers();
+      setActiveTab('list');
+    } catch (err: any) {
+      setError(err.message || 'Error en el servidor');
+    } finally {
+      setLoading(false);
+    }
+  };
 
- setLoading(true);
- setError(null);
- setSuccessMsg(null);
+  const handleAssociateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!assocEmail) {
+      setError('Por favor, ingresa el email del músico.');
+      return;
+    }
 
- try {
- const response = await fetch('/api/users/associate', {
- method:'POST',
- headers: getHeaders(),
- body: JSON.stringify({
- email: assocEmail.trim(),
- role: assocRole,
- instrument: assocInstrument.trim()
- })
- });
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
- let data: any = {};
- const contentType = response.headers.get('content-type') ||'';
- if (contentType.includes('application/json')) {
- data = await response.json();
- } else {
- const text = await response.text();
- throw new Error(`Error en el servidor (${response.status}): ${text.slice(0, 100)}`);
- }
+    try {
+      const response = await fetch('/api/users/associate', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          email: assocEmail.trim(),
+          role: assocRole,
+          instrument: assocInstrument.trim(),
+        }),
+      });
 
- if (!response.ok) {
- throw new Error(data.error ||'Error al asociar músico');
- }
+      let data: any = {};
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(`Error en el servidor (${response.status}): ${text.slice(0, 100)}`);
+      }
 
- setSuccessMsg(`¡Músico ${data.name} (@${data.username}) asociado con éxito!`);
- setAssocEmail('');
- setAssocInstrument('');
- onRefreshUsers();
- setActiveTab('list');
- } catch (err: any) {
- setError(err.message ||'Error en el servidor');
- } finally {
- setLoading(false);
- }
- };
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al asociar músico');
+      }
 
- const handleChangeRole = async (userId: string, newRole: UserRole, username: string) => {
- setLoading(true);
- setError(null);
- setSuccessMsg(null);
+      setSuccessMsg(`¡Músico ${data.name} (@${data.username}) asociado con éxito!`);
+      setAssocEmail('');
+      setAssocInstrument('');
+      onRefreshUsers();
+      setActiveTab('list');
+    } catch (err: any) {
+      setError(err.message || 'Error en el servidor');
+    } finally {
+      setLoading(false);
+    }
+  };
 
- try {
- const response = await fetch(`/api/users/${userId}`, {
- method:'PUT',
- headers: getHeaders(),
- body: JSON.stringify({ role: newRole })
- });
+  const handleChangeRole = async (userId: string, newRole: UserRole, username: string) => {
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
- const data = await response.json();
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({ role: newRole }),
+      });
 
- if (!response.ok) {
- throw new Error(data.error ||'Error al actualizar el rol');
- }
+      const data = await response.json();
 
- setSuccessMsg(`Rol cambiado a ${newRole ==='leader' ?'Admin / Mánager' :'Miembro (Músico)'} para @${username}`);
- onRefreshUsers();
- } catch (err: any) {
- setError(err.message ||'Error al actualizar rol');
- } finally {
- setLoading(false);
- }
- };
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al actualizar el rol');
+      }
 
- const handleChangePassword = async (userId: string) => {
- if (!changePasswordValue || changePasswordValue.trim().length < 3) {
- setError('La nueva contraseña debe tener al menos 3 caracteres.');
- return;
- }
+      setSuccessMsg(`Rol cambiado a ${newRole === 'leader' ? 'Admin / Mánager' : 'Miembro (Músico)'} para @${username}`);
+      onRefreshUsers();
+    } catch (err: any) {
+      setError(err.message || 'Error al actualizar rol');
+    } finally {
+      setLoading(false);
+    }
+  };
 
- setLoading(true);
- setError(null);
- setSuccessMsg(null);
+  const handleChangePassword = async (userId: string) => {
+    if (!changePasswordValue || changePasswordValue.trim().length < 3) {
+      setError('La nueva contraseña debe tener al menos 3 caracteres.');
+      return;
+    }
 
- try {
- const response = await fetch(`/api/users/${userId}`, {
- method:'PUT',
- headers: getHeaders(),
- body: JSON.stringify({ newPassword: changePasswordValue.trim() })
- });
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
- const data = await response.json();
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({ newPassword: changePasswordValue.trim() }),
+      });
 
- if (!response.ok) {
- throw new Error(data.error ||'Error al actualizar contraseña');
- }
+      const data = await response.json();
 
- setSuccessMsg(`Contraseña actualizada para @${data.username}`);
- setEditingUserId(null);
- setChangePasswordValue('');
- onRefreshUsers();
- } catch (err: any) {
- setError(err.message ||'Error en el servidor');
- } finally {
- setLoading(false);
- }
- };
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al actualizar contraseña');
+      }
 
- const handleDeleteUser = async (userId: string, username: string) => {
- if (!window.confirm(`¿Estás seguro de eliminar el acceso para @${username}?`)) {
- return;
- }
+      setSuccessMsg(`Contraseña actualizada para @${data.username}`);
+      setEditingUserId(null);
+      setChangePasswordValue('');
+      onRefreshUsers();
+    } catch (err: any) {
+      setError(err.message || 'Error en el servidor');
+    } finally {
+      setLoading(false);
+    }
+  };
 
- setLoading(true);
- setError(null);
- setSuccessMsg(null);
+  const handleDeleteUser = async (userId: string, username: string) => {
+    if (!window.confirm(`¿Estás seguro de eliminar el acceso para @${username}?`)) {
+      return;
+    }
 
- try {
- const response = await fetch(`/api/users/${userId}`, {
- method:'DELETE',
- headers: getHeaders()
- });
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
- const data = await response.json();
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+      });
 
- if (!response.ok) {
- throw new Error(data.error ||'Error al eliminar usuario');
- }
+      const data = await response.json();
 
- setSuccessMsg(`Usuario @${username} eliminado correctamente.`);
- onRefreshUsers();
- } catch (err: any) {
- setError(err.message ||'Error al eliminar');
- } finally {
- setLoading(false);
- }
- };
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al eliminar usuario');
+      }
 
- return (
- <ModalPortal isOpen={true} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
- <div 
- className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}
- >
- <datalist id="instrument-suggestions">
- {STEM_INSTRUMENT_CATEGORIES.map(cat => <option key={cat} value={cat} />)}
- {NON_STEM_ROLES.map(role => <option key={role} value={role} />)}
- </datalist>
- {/* Modal Header */}
- <div className={`px-6 py-4 flex justify-between items-center ${
- '-neutral-200 bg-[var(--bg)]'
- }`}>
- <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
- <Users className="w-5 h-5" />
- </div>
- <div>
- <h3 className="font-bold font-display tracking-wider text-base flex items-center gap-2">
- <span>Gestión de Miembros de la Banda</span>
- <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
- Panel Admin
- </span>
- </h3>
- <p className="text-[11px] text-[var(--ink-2)] font-sans">
- Crea cuentas, administra roles y gestiona contraseñas para el equipo
- </p>
- </div>
- </div>
- <button
- onClick={onClose}
- className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
- >
- <X className="w-5 h-5" />
- </button>
- </div>
+      setSuccessMsg(`Usuario @${username} eliminado correctamente.`);
+      onRefreshUsers();
+    } catch (err: any) {
+      setError(err.message || 'Error al eliminar');
+    } finally {
+      setLoading(false);
+    }
+  };
 
- {/* Tab Selection */}
- <div className={`px-6 pt-3 flex gap-2 ${
- '-neutral-200 bg-[var(--bg)]/50'
- }`}>
- <button
- onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
- activeTab ==='list'
- ?'-indigo-400 text-[var(--tentative)]'
- :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
- }`}
- >
- <Users className="w-3.5 h-3.5" />
- <span>Lista de Miembros ({users.length})</span>
- </button>
- <button
- onClick={() => { setActiveTab('create'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
- activeTab ==='create'
- ?'-indigo-400 text-[var(--tentative)]'
- :'-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
- }`}
- >
- <UserPlus className="w-3.5 h-3.5" />
- <span>+ Nuevo Músico</span>
- </button>
- <button
- onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
- activeTab ==='associate'
- ?'text-[var(--tentative)]'
- :'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
- }`}
- >
- <Link2 className="w-3.5 h-3.5" />
- <span>Asociar Músico Existente</span>
- </button>
- </div>
+  return (
+    <ModalPortal isOpen={true} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+        <div
+          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+        >
+          <datalist id="instrument-suggestions">
+            {STEM_INSTRUMENT_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat} />
+            ))}
+            {NON_STEM_ROLES.map((role) => (
+              <option key={role} value={role} />
+            ))}
+          </datalist>
+          {/* Modal Header */}
+          <div className={`px-6 py-4 flex justify-between items-center ${'-neutral-200 bg-[var(--bg)]'}`}>
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--tentative)]/10 -indigo-500/20 text-[var(--tentative)] flex items-center justify-center">
+                <Users className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold font-display tracking-wider text-base flex items-center gap-2">
+                  <span>Gestión de Miembros de la Banda</span>
+                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
+                    Panel Admin
+                  </span>
+                </h3>
+                <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                  Crea cuentas, administra roles y gestiona contraseñas para el equipo
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
- {/* Messages */}
- <div className="px-6 pt-3">
- {error && (
- <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
- <AlertCircle className="w-4 h-4 shrink-0" />
- <span>{error}</span>
- </div>
- )}
- {successMsg && (
- <div className="p-3 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
- <Check className="w-4 h-4 shrink-0" />
- <span>{successMsg}</span>
- </div>
- )}
- </div>
+          {/* Tab Selection */}
+          <div className={`px-6 pt-3 flex gap-2 ${'-neutral-200 bg-[var(--bg)]/50'}`}>
+            <button
+              onClick={() => {
+                setActiveTab('list');
+                setError(null);
+                setSuccessMsg(null);
+              }}
+              className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
+                activeTab === 'list' ? '-indigo-400 text-[var(--tentative)]' : '-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span>Lista de Miembros ({users.length})</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('create');
+                setError(null);
+                setSuccessMsg(null);
+              }}
+              className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
+                activeTab === 'create'
+                  ? '-indigo-400 text-[var(--tentative)]'
+                  : '-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+              }`}
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span>+ Nuevo Músico</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('associate');
+                setError(null);
+                setSuccessMsg(null);
+              }}
+              className={`px-4 py-2 text-xs font-bold font-sans tracking-wider transition-all flex items-center gap-1.5 ${
+                activeTab === 'associate' ? 'text-[var(--tentative)]' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+              }`}
+            >
+              <Link2 className="w-3.5 h-3.5" />
+              <span>Asociar Músico Existente</span>
+            </button>
+          </div>
 
- {/* Tab Body */}
- <div className="p-6 overflow-y-auto flex-1 space-y-4">
- {activeTab ==='list' ? (
- <div className="space-y-3">
- {users.map((u) => {
- const isLeader = u.role ==='leader';
- const isSelf = u.id === currentUser.id;
- const isEditingThisUser = editingUserId === u.id;
+          {/* Messages */}
+          <div className="px-6 pt-3">
+            {error && (
+              <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+            {successMsg && (
+              <div className="p-3 bg-[var(--ok)]/10 -emerald-500/20 rounded-[var(--r-m)] text-xs text-[var(--ok)] flex items-center gap-2">
+                <Check className="w-4 h-4 shrink-0" />
+                <span>{successMsg}</span>
+              </div>
+            )}
+          </div>
 
- return (
- <div
- key={u.id}
- className={`p-4 rounded-[var(--r-m)] transition-all ${
- 'bg-[var(--bg)] -neutral-200/80 hover:-neutral-300'
- }`}
- >
- <div className="flex flex-wrap items-center justify-between gap-3">
- <div className="flex items-center gap-3">
- <div
- className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
- style={{ backgroundColor: u.avatarColor ||'var(--ok)' }}
- >
- {u.name.slice(0, 2)}
- </div>
- <div>
- <div className="flex items-center gap-2">
- <strong className="font-bold text-sm font-sans">{u.name}</strong>
- <span className="text-xs text-[var(--ink-2)] font-sans">@{u.username}</span>
- {isLeader ? (
- <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/30 flex items-center gap-1">
- <Shield className="w-2.5 h-2.5" />
- <span>Admin</span>
- </span>
- ) : (
- <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -blue-500/30">
- Miembro
- </span>
- )}
- {isSelf && (
- <span className="px-1.5 py-0.5 text-[9px] font-sans rounded bg-[var(--surface)]/15 text-[var(--ok)]">
- Tú
- </span>
- )}
- </div>
- <div className="text-xs text-[var(--ink-2)] flex items-center gap-2 mt-0.5">
- <span className="flex items-center gap-1">
- <Music className="w-3 h-3 text-[var(--ok)]" />
- <span>{u.instrument ||'Músico'}</span>
- </span>
- </div>
- </div>
- </div>
+          {/* Tab Body */}
+          <div className="p-6 overflow-y-auto flex-1 space-y-4">
+            {activeTab === 'list' ? (
+              <div className="space-y-3">
+                {users.map((u) => {
+                  const isLeader = u.role === 'leader';
+                  const isSelf = u.id === currentUser.id;
+                  const isEditingThisUser = editingUserId === u.id;
 
- {/* User Actions */}
- <div className="flex flex-wrap items-center gap-2">
- {/* Role Select Dropdown */}
- <select
- value={u.role ||'member'}
- onChange={(e) => handleChangeRole(u.id, e.target.value as UserRole, u.username)}
- disabled={loading || isSelf}
- title={isSelf ?"No puedes cambiar tu propio rol desde aquí" :"Cambiar rol del usuario"}
- className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
- u.role ==='leader'
- ?'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/40 hover:bg-[var(--acc)]/25'
- :'bg-[var(--surface)] text-[var(--acc)]/80 -blue-500/30 hover:bg-[var(--surface)]/80'
- } ${isSelf ?'opacity-70 cursor-not-allowed' :''}`}
- >
- <option value="member" className="bg-[var(--surface)] text-[var(--ink-2)]">Rol: Miembro</option>
- <option value="leader" className="bg-[var(--surface)] text-[var(--acc)]/70">Rol: Admin</option>
- </select>
+                  return (
+                    <div
+                      key={u.id}
+                      className={`p-4 rounded-[var(--r-m)] transition-all ${'bg-[var(--bg)] -neutral-200/80 hover:-neutral-300'}`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
+                            style={{ backgroundColor: u.avatarColor || 'var(--ok)' }}
+                          >
+                            {u.name.slice(0, 2)}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <strong className="font-bold text-sm font-sans">{u.name}</strong>
+                              <span className="text-xs text-[var(--ink-2)] font-sans">@{u.username}</span>
+                              {isLeader ? (
+                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/30 flex items-center gap-1">
+                                  <Shield className="w-2.5 h-2.5" />
+                                  <span>Admin</span>
+                                </span>
+                              ) : (
+                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -blue-500/30">
+                                  Miembro
+                                </span>
+                              )}
+                              {isSelf && (
+                                <span className="px-1.5 py-0.5 text-[9px] font-sans rounded bg-[var(--surface)]/15 text-[var(--ok)]">
+                                  Tú
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-[var(--ink-2)] flex items-center gap-2 mt-0.5">
+                              <span className="flex items-center gap-1">
+                                <Music className="w-3 h-3 text-[var(--ok)]" />
+                                <span>{u.instrument || 'Músico'}</span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
 
- <button
- type="button"
- onClick={() => {
- if (isEditingThisUser) {
- setEditingUserId(null);
- } else {
- setEditingUserId(u.id);
- setChangePasswordValue('');
- }
- }}
- className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
- >
- <Key className="w-3 h-3 text-[var(--acc)]" />
- <span>{isEditingThisUser ?'Cancelar' :'Contraseña'}</span>
- </button>
+                        {/* User Actions */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          {/* Role Select Dropdown */}
+                          <select
+                            value={u.role || 'member'}
+                            onChange={(e) => handleChangeRole(u.id, e.target.value as UserRole, u.username)}
+                            disabled={loading || isSelf}
+                            title={isSelf ? 'No puedes cambiar tu propio rol desde aquí' : 'Cambiar rol del usuario'}
+                            className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
+                              u.role === 'leader'
+                                ? 'bg-[var(--acc)]/15 text-[var(--acc)] -amber-0/40 hover:bg-[var(--acc)]/25'
+                                : 'bg-[var(--surface)] text-[var(--acc)]/80 -blue-500/30 hover:bg-[var(--surface)]/80'
+                            } ${isSelf ? 'opacity-70 cursor-not-allowed' : ''}`}
+                          >
+                            <option value="member" className="bg-[var(--surface)] text-[var(--ink-2)]">
+                              Rol: Miembro
+                            </option>
+                            <option value="leader" className="bg-[var(--surface)] text-[var(--acc)]/70">
+                              Rol: Admin
+                            </option>
+                          </select>
 
- {!isSelf && (
- <button
- type="button"
- onClick={() => handleDeleteUser(u.id, u.username)}
- className="p-1.5 rounded-[var(--r-s)] -rose-500/30 text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
- title="Eliminar usuario"
- >
- <Trash2 className="w-3.5 h-3.5" />
- </button>
- )}
- </div>
- </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (isEditingThisUser) {
+                                setEditingUserId(null);
+                              } else {
+                                setEditingUserId(u.id);
+                                setChangePasswordValue('');
+                              }
+                            }}
+                            className="px-2.5 py-1.5 rounded-[var(--r-s)] -neutral-700/80 text-xs font-sans hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer"
+                          >
+                            <Key className="w-3 h-3 text-[var(--acc)]" />
+                            <span>{isEditingThisUser ? 'Cancelar' : 'Contraseña'}</span>
+                          </button>
 
- {/* Quick Password Reset Subform */}
- {isEditingThisUser && (
- <div className="mt-3 pt-3 bg-[var(--surface)]/80 flex items-center gap-2 animate-in fade-in duration-200">
- <input
- type="text"
- value={changePasswordValue}
- onChange={(e) => setChangePasswordValue(e.target.value)}
- placeholder="Nueva contraseña secreta..."
- className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${
- 'bg-[var(--surface)]'
- }`}
- />
- <button
- type="button"
- onClick={() => handleChangePassword(u.id)}
- disabled={loading}
- className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
- >
- <Check className="w-3.5 h-3.5" />
- <span>Guardar</span>
- </button>
- </div>
- )}
- </div>
- );
- })}
- </div>
- ) : activeTab ==='create' ? (
- /* Create User Form */
- <form onSubmit={handleCreateUser} className="space-y-4">
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Usuario (para login) *
- </label>
- <input
- type="text"
- value={newUsername}
- onChange={(e) => setNewUsername(e.target.value)}
- placeholder="Ej: pablo, carlos, ana"
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)]'
- }`}
- required
- />
- </div>
+                          {!isSelf && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteUser(u.id, u.username)}
+                              className="p-1.5 rounded-[var(--r-s)] -rose-500/30 text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors"
+                              title="Eliminar usuario"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Email *
- </label>
- <input
- type="email"
- value={newEmail}
- onChange={(e) => setNewEmail(e.target.value)}
- placeholder="Ej: pablo@gmail.com"
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)]'
- }`}
- required
- />
- </div>
- </div>
+                      {/* Quick Password Reset Subform */}
+                      {isEditingThisUser && (
+                        <div className="mt-3 pt-3 bg-[var(--surface)]/80 flex items-center gap-2 animate-in fade-in duration-200">
+                          <input
+                            type="text"
+                            value={changePasswordValue}
+                            onChange={(e) => setChangePasswordValue(e.target.value)}
+                            placeholder="Nueva contraseña secreta..."
+                            className={`flex-1 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans outline-none ${'bg-[var(--surface)]'}`}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleChangePassword(u.id)}
+                            disabled={loading}
+                            className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs transition-colors flex items-center gap-1"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Guardar</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : activeTab === 'create' ? (
+              /* Create User Form */
+              <form onSubmit={handleCreateUser} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Usuario (para login) *</label>
+                    <input
+                      type="text"
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      placeholder="Ej: pablo, carlos, ana"
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      required
+                    />
+                  </div>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Nombre Completo *
- </label>
- <input
- type="text"
- value={newName}
- onChange={(e) => setNewName(e.target.value)}
- placeholder="Ej: Pablo (Violín / Sintetizador)"
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)]'
- }`}
- required
- />
- </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Email *</label>
+                    <input
+                      type="email"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      placeholder="Ej: pablo@gmail.com"
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      required
+                    />
+                  </div>
+                </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Contraseña Inicial *
- </label>
- <input
- type="text"
- value={newPassword}
- onChange={(e) => setNewPassword(e.target.value)}
- placeholder="Contraseña del usuario"
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)]'
- }`}
- required
- />
- </div>
- </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Nombre Completo *</label>
+                    <input
+                      type="text"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      placeholder="Ej: Pablo (Violín / Sintetizador)"
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      required
+                    />
+                  </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Rol en la App
- </label>
- <select
- value={newRole}
- onChange={(e) => setNewRole(e.target.value as UserRole)}
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)]'
- }`}
- >
- <option value="member">Miembro de Banda (Músico)</option>
- <option value="leader">Admin / Dirección de Banda</option>
- </select>
- </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Contraseña Inicial *</label>
+                    <input
+                      type="text"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Contraseña del usuario"
+                      className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                      required
+                    />
+                  </div>
+                </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Instrumento / Puesto
- </label>
- <input
- type="text"
- list="instrument-suggestions"
- value={newInstrument}
- onChange={(e) => setNewInstrument(e.target.value)}
- placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)]'
- }`}
- />
- <p className="text-[10px] text-[var(--ink-2)]">
- Usa uno de los nombres sugeridos (Voz, Batería, Bajo, Guitarras, Teclados, Arreglos) para que el modo Ensayo Individual y Mi Monitor encuentren su pista aislada automáticamente.
- </p>
- </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Rol en la App</label>
+                  <select
+                    value={newRole}
+                    onChange={(e) => setNewRole(e.target.value as UserRole)}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                  >
+                    <option value="member">Miembro de Banda (Músico)</option>
+                    <option value="leader">Admin / Dirección de Banda</option>
+                  </select>
+                </div>
 
- <div className="space-y-1.5">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Color Identificador
- </label>
- <div className="flex items-center gap-2">
- {colors.map((c) => (
- <button
- key={c}
- type="button"
- onClick={() => setNewAvatarColor(c)}
- className={`w-7 h-7 rounded-full transition-transform ${
- newAvatarColor === c ?'scale-110 -white ring-2 ring-emerald-500' :'-transparent opacity-75 hover:opacity-100'
- }`}
- style={{ backgroundColor: c }}
- />
- ))}
- </div>
- </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Instrumento / Puesto</label>
+                  <input
+                    type="text"
+                    list="instrument-suggestions"
+                    value={newInstrument}
+                    onChange={(e) => setNewInstrument(e.target.value)}
+                    placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)]'}`}
+                  />
+                  <p className="text-[10px] text-[var(--ink-2)]">
+                    Usa uno de los nombres sugeridos (Voz, Batería, Bajo, Guitarras, Teclados, Arreglos) para que el modo Ensayo Individual
+                    y Mi Monitor encuentren su pista aislada automáticamente.
+                  </p>
+                </div>
 
- <button
- type="submit"
- disabled={loading}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
- >
- {loading ? (
- <span>Creando miembro...</span>
- ) : (
- <>
- <UserPlus className="w-4 h-4" />
- <span>Crear e Inscribir Nuevo Miembro</span>
- </>
- )}
- </button>
- </form>
- ) : (
- /* Associate Existing User Form */
- <form onSubmit={handleAssociateUser} className="space-y-4">
- <div className="p-4 bg-[var(--tentative)]/5 rounded-[var(--r-l)] text-xs text-[var(--ink-2)]">
- <p className="font-semibold text-[var(--tentative)] mb-1 flex items-center gap-1.5">
- <Sparkles className="w-3.5 h-3.5" />
- <span>¿Músico ya registrado en la plataforma?</span>
- </p>
- <span>Aquí puedes agregar a tu banda un músico existente (como Wes Borland) que ya tiene cuenta en otra banda sin tener que recrear su usuario ni contraseña.</span>
- </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Color Identificador</label>
+                  <div className="flex items-center gap-2">
+                    {colors.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setNewAvatarColor(c)}
+                        className={`w-7 h-7 rounded-full transition-transform ${
+                          newAvatarColor === c ? 'scale-110 -white ring-2 ring-emerald-500' : '-transparent opacity-75 hover:opacity-100'
+                        }`}
+                        style={{ backgroundColor: c }}
+                      />
+                    ))}
+                  </div>
+                </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Email del Músico Registrado *
- </label>
- <input
- type="email"
- value={assocEmail}
- onChange={(e) => setAssocEmail(e.target.value)}
- placeholder="Introduce su email exacto..."
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}
- required
- />
- </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
+                >
+                  {loading ? (
+                    <span>Creando miembro...</span>
+                  ) : (
+                    <>
+                      <UserPlus className="w-4 h-4" />
+                      <span>Crear e Inscribir Nuevo Miembro</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            ) : (
+              /* Associate Existing User Form */
+              <form onSubmit={handleAssociateUser} className="space-y-4">
+                <div className="p-4 bg-[var(--tentative)]/5 rounded-[var(--r-l)] text-xs text-[var(--ink-2)]">
+                  <p className="font-semibold text-[var(--tentative)] mb-1 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>¿Músico ya registrado en la plataforma?</span>
+                  </p>
+                  <span>
+                    Aquí puedes agregar a tu banda un músico existente (como Wes Borland) que ya tiene cuenta en otra banda sin tener que
+                    recrear su usuario ni contraseña.
+                  </span>
+                </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Rol en esta Banda
- </label>
- <select
- value={assocRole}
- onChange={(e) => setAssocRole(e.target.value as UserRole)}
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}
- >
- <option value="member">Miembro de Banda (Músico)</option>
- <option value="leader">Admin / Dirección de Banda</option>
- </select>
- </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Email del Músico Registrado *</label>
+                  <input
+                    type="email"
+                    value={assocEmail}
+                    onChange={(e) => setAssocEmail(e.target.value)}
+                    placeholder="Introduce su email exacto..."
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                    required
+                  />
+                </div>
 
- <div className="space-y-1">
- <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">
- Instrumento / Puesto (opcional)
- </label>
- <input
- type="text"
- list="instrument-suggestions"
- value={assocInstrument}
- onChange={(e) => setAssocInstrument(e.target.value)}
- placeholder="Ej: Guitarra, Bajista, Manager, Coros"
- className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${
- 'bg-[var(--surface)] text-[var(--ink)]'
- }`}
- />
- </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Rol en esta Banda</label>
+                  <select
+                    value={assocRole}
+                    onChange={(e) => setAssocRole(e.target.value as UserRole)}
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                  >
+                    <option value="member">Miembro de Banda (Músico)</option>
+                    <option value="leader">Admin / Dirección de Banda</option>
+                  </select>
+                </div>
 
- <button
- type="submit"
- disabled={loading || !assocEmail.trim()}
- className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
- >
- {loading ? (
- <span>Asociando músico...</span>
- ) : (
- <>
- <UserPlus className="w-4 h-4" />
- <span>Asociar Músico a mi Banda</span>
- </>
- )}
- </button>
- </form>
- )}
- </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)]">Instrumento / Puesto (opcional)</label>
+                  <input
+                    type="text"
+                    list="instrument-suggestions"
+                    value={assocInstrument}
+                    onChange={(e) => setAssocInstrument(e.target.value)}
+                    placeholder="Ej: Guitarra, Bajista, Manager, Coros"
+                    className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                  />
+                </div>
 
- {/* Modal Footer */}
- <div className={`px-6 py-3 text-right ${
- '-neutral-200 bg-[var(--bg)]'
- }`}>
- <button
- onClick={onClose}
- className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
- >
- Cerrar Panel
- </button>
- </div>
- </div>
- </div>
- </ModalPortal>
- );
+                <button
+                  type="submit"
+                  disabled={loading || !assocEmail.trim()}
+                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
+                >
+                  {loading ? (
+                    <span>Asociando músico...</span>
+                  ) : (
+                    <>
+                      <UserPlus className="w-4 h-4" />
+                      <span>Asociar Músico a mi Banda</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Modal Footer */}
+          <div className={`px-6 py-3 text-right ${'-neutral-200 bg-[var(--bg)]'}`}>
+            <button
+              onClick={onClose}
+              className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] hover:bg-[var(--surface)]/80 transition-colors"
+            >
+              Cerrar Panel
+            </button>
+          </div>
+        </div>
+      </div>
+    </ModalPortal>
+  );
 };

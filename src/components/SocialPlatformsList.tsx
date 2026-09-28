@@ -29,15 +29,8 @@ interface SocialPlatformsListProps {
   showClickCounts?: boolean;
 }
 
-export const PayPalLogo: React.FC<{ className?: string }> = ({
-  className = 'w-full h-full',
-}) => (
-  <svg
-    viewBox="0 0 32 32"
-    className={className}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+export const PayPalLogo: React.FC<{ className?: string }> = ({ className = 'w-full h-full' }) => (
+  <svg viewBox="0 0 32 32" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Front / Top-Left P (Dark Blue #003087) */}
     <path
       d="M21.9 8.2c-.3-1.6-1-2.8-2.2-3.7C18.3 3.4 16.5 3 14.1 3H6.8c-.8 0-1.5.6-1.6 1.4L1.7 26.6c-.1.7.4 1.4 1.1 1.4h5.6l1.4-9h2.9c4.8 0 8.5-2 9.4-7 0-.3.1-.6.1-.9.1-.6 0-1.3-.3-1.9z"
@@ -122,14 +115,12 @@ export const PLATFORM_CONFIG: Record<
     colorClass: 'text-[var(--ok)]',
     bgClass: 'bg-[var(--ok)]/10',
     borderClass: 'border-[var(--ok)]/30',
-    hoverClass:
-      'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]',
+    hoverClass: 'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]',
   },
   instagram: {
     label: 'Instagram',
     colorClass: 'text-[var(--alert)]',
-    bgClass:
-      'bg-gradient-to-r from-[var(--acc)]/10 via-pink-500/10 to-amber-0/10',
+    bgClass: 'bg-gradient-to-r from-[var(--acc)]/10 via-pink-500/10 to-amber-0/10',
     borderClass: 'border-[var(--alert)]/30',
     hoverClass:
       'hover:from-[var(--acc)]/20 hover:via-pink-500/20 hover:to-amber-0/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60',
@@ -139,40 +130,35 @@ export const PLATFORM_CONFIG: Record<
     colorClass: 'text-[var(--alert)]',
     bgClass: 'bg-[var(--alert)]/10',
     borderClass: 'border-[var(--alert)]/30',
-    hoverClass:
-      'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60',
+    hoverClass: 'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--alert)]/60',
   },
   tiktok: {
     label: 'TikTok',
     colorClass: 'text-[var(--acc)]',
     bgClass: 'bg-[var(--acc)]/10',
     borderClass: 'border-[var(--acc)]/30',
-    hoverClass:
-      'hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80',
+    hoverClass: 'hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80',
   },
   appleMusic: {
     label: 'Apple Music',
     colorClass: 'text-[var(--alert)]',
     bgClass: 'bg-[var(--alert)]/10',
     borderClass: 'border-[var(--alert)]/30',
-    hoverClass:
-      'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--ink-2)]',
+    hoverClass: 'hover:bg-[var(--alert)]/20 hover:border-[var(--alert)]/50 hover:text-[var(--ink-2)]',
   },
   bandcamp: {
     label: 'Bandcamp',
     colorClass: 'text-[var(--ok)]',
     bgClass: 'bg-[var(--ok)]/10',
     borderClass: 'border-[var(--ok)]/30',
-    hoverClass:
-      'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ok)]/60',
+    hoverClass: 'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ok)]/60',
   },
   facebook: {
     label: 'Facebook',
     colorClass: 'text-[var(--acc)]',
     bgClass: 'bg-[var(--tentative)]/50/10',
     borderClass: 'border-[var(--acc)]/30',
-    hoverClass:
-      'hover:bg-[var(--tentative)]/50/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80',
+    hoverClass: 'hover:bg-[var(--tentative)]/50/20 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80',
   },
   twitter: {
     label: 'X / Twitter',
@@ -193,24 +179,21 @@ export const PLATFORM_CONFIG: Record<
     colorClass: 'text-[var(--ink-3)]',
     bgClass: 'bg-[var(--acc)]/10',
     borderClass: 'border-[var(--acc)]/30',
-    hoverClass:
-      'hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--tentative)]/40',
+    hoverClass: 'hover:bg-[var(--acc)]/20 hover:border-[var(--acc)]/50 hover:text-[var(--tentative)]/40',
   },
   paypal: {
     label: 'PayPal',
     colorClass: 'text-[var(--ink-2)]',
     bgClass: 'bg-[var(--bg)]/15',
     borderClass: 'border-[var(--hair)]/40',
-    hoverClass:
-      'hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-[var(--ink-3)]',
+    hoverClass: 'hover:bg-[var(--bg)]/25 hover:border-[var(--hair)]/60 hover:text-[var(--ink-3)]',
   },
   whatsapp: {
     label: 'WhatsApp',
     colorClass: 'text-[var(--ok)]',
     bgClass: 'bg-[var(--ok)]/10',
     borderClass: 'border-[var(--ok)]/30',
-    hoverClass:
-      'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]',
+    hoverClass: 'hover:bg-[var(--ok)]/20 hover:border-[var(--ok)]/50 hover:text-[var(--ink-2)]',
   },
 };
 
@@ -272,13 +255,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
 
   // Filtrar estrictamente solo aquellas redes que tengan una URL válida, rellena y NO sean métodos de pago (Revolut, PayPal) ni WhatsApp
   const validEntries = Object.entries(links)
-    .filter(
-      ([key, url]) =>
-        !NON_SOCIAL_KEYS.has(key.toLowerCase()) &&
-        url &&
-        typeof url === 'string' &&
-        url.trim() !== ''
-    )
+    .filter(([key, url]) => !NON_SOCIAL_KEYS.has(key.toLowerCase()) && url && typeof url === 'string' && url.trim() !== '')
     .sort(([keyA], [keyB]) => {
       const indexA = PLATFORM_PRIORITY_ORDER.indexOf(keyA);
       const indexB = PLATFORM_PRIORITY_ORDER.indexOf(keyB);
@@ -292,11 +269,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
   if (variant === 'pills') {
     return (
       <div className="space-y-2">
-        {showTitle && (
-          <p className="text-xs text-[var(--ink-2)] font-semibold tracking-wider text-center">
-            {title}
-          </p>
-        )}
+        {showTitle && <p className="text-xs text-[var(--ink-2)] font-semibold tracking-wider text-center">{title}</p>}
         <div className="flex flex-wrap items-center justify-center gap-2">
           {validEntries.map(([key, url]) => {
             const config = PLATFORM_CONFIG[key] || {
@@ -322,9 +295,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
                 <IconComp className="w-4 h-4 shrink-0" />
                 <span>{label}</span>
                 {showClickCounts && typeof count === 'number' && count > 0 && (
-                  <span className="text-[10px] font-sans px-1.5 py-0.2 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">
-                    {count}
-                  </span>
+                  <span className="text-[10px] font-sans px-1.5 py-0.2 rounded-full bg-[var(--sunken)] text-[var(--ink-2)]">{count}</span>
                 )}
               </a>
             );
@@ -338,12 +309,8 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
     <div className="space-y-3">
       {showTitle && (
         <div className="text-center">
-          <p className="text-xs text-[var(--acc)] font-bold tracking-wider">
-            {title}
-          </p>
-          <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-            {subtitle || getDefaultSubtitle()}
-          </p>
+          <p className="text-xs text-[var(--acc)] font-bold tracking-wider">{title}</p>
+          <p className="text-[11px] text-[var(--ink-2)] mt-0.5">{subtitle || getDefaultSubtitle()}</p>
         </div>
       )}
 
@@ -386,13 +353,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               className={`flex items-center justify-center gap-2.5 p-3 rounded-[var(--r-m)] text-xs font-bold transition-all duration-200 group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
             >
               <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span
-                className={
-                  isFullWidth ? 'text-sm font-black tracking-wide' : 'truncate'
-                }
-              >
-                {label}
-              </span>
+              <span className={isFullWidth ? 'text-sm font-black tracking-wide' : 'truncate'}>{label}</span>
               {showClickCounts && typeof count === 'number' && count > 0 && (
                 <span className="text-[10px] font-sans px-1.5 py-0.5 rounded-full bg-[var(--sunken)] text-[var(--ink-2)] shrink-0 ml-auto">
                   {count}
@@ -406,22 +367,10 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
   );
 };
 
-export const BizumLogo: React.FC<{ className?: string }> = ({
-  className = 'w-full h-full',
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    className={className}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+export const BizumLogo: React.FC<{ className?: string }> = ({ className = 'w-full h-full' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="9" cy="8" r="2.5" fill="currentColor" />
     <circle cx="16" cy="18" r="2.5" fill="currentColor" />
-    <path
-      d="M10.5 19 L14.5 7"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
+    <path d="M10.5 19 L14.5 7" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
   </svg>
 );

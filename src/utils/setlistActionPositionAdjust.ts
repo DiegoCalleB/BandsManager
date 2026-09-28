@@ -11,10 +11,7 @@
  * pendientes se pueden "reajustar" en el frontend sin tener que volver a llamar a la IA.
  */
 
-export type IndexChange =
- | { type: 'move'; from: number; to: number }
- | { type: 'remove'; at: number }
- | { type: 'insert'; at: number };
+export type IndexChange = { type: 'move'; from: number; to: number } | { type: 'remove'; at: number } | { type: 'insert'; at: number };
 
 /**
  * Ajusta una posición 0-indexada tras un cambio en OTRO punto del mismo array. Devuelve null si
@@ -23,25 +20,25 @@ export type IndexChange =
  * inventado.
  */
 export function adjustIndex(position0: number, change: IndexChange): number | null {
- if (change.type === 'move') {
- const { from, to } = change;
- if (position0 === from) return to;
- if (from < position0 && position0 <= to) return position0 - 1;
- if (to <= position0 && position0 < from) return position0 + 1;
- return position0;
- }
- if (change.type === 'remove') {
- if (position0 === change.at) return null;
- return position0 > change.at ? position0 - 1 : position0;
- }
- // insert
- return position0 >= change.at ? position0 + 1 : position0;
+  if (change.type === 'move') {
+    const { from, to } = change;
+    if (position0 === from) return to;
+    if (from < position0 && position0 <= to) return position0 - 1;
+    if (to <= position0 && position0 < from) return position0 + 1;
+    return position0;
+  }
+  if (change.type === 'remove') {
+    if (position0 === change.at) return null;
+    return position0 > change.at ? position0 - 1 : position0;
+  }
+  // insert
+  return position0 >= change.at ? position0 + 1 : position0;
 }
 
 /** Misma idea que `adjustIndex` pero en 1-indexado (que es como estas posiciones viajan en las
  * acciones de la IA) y pasando `undefined` a través sin tocar (un campo que esa acción no usa). */
 export function adjustPosition1(pos: number | undefined, change: IndexChange): number | null | undefined {
- if (pos == null) return undefined;
- const adjusted0 = adjustIndex(pos - 1, change);
- return adjusted0 == null ? null : adjusted0 + 1;
+  if (pos == null) return undefined;
+  const adjusted0 = adjustIndex(pos - 1, change);
+  return adjusted0 == null ? null : adjusted0 + 1;
 }

@@ -51,10 +51,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 Generador de Pitch Date Swap: Bakandeya x {band.nombre_banda}
               </h3>
             </div>
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
-            >
+            <button onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer">
               <X className="w-5 h-5 text-[var(--ink-2)]" />
             </button>
           </div>
@@ -63,16 +60,10 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
           {!activeCampaign?.isActive && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-sans">
               <div>
-                <label className="block text-[10px] text-[var(--ink-2)] mb-1">
-                  Ciudad de Bakandeya
-                </label>
+                <label className="block text-[10px] text-[var(--ink-2)] mb-1">Ciudad de Bakandeya</label>
                 <select
                   value={proposedBakandeyaCity}
-                  onChange={(e) =>
-                    setProposedBakandeyaCity(
-                      e.target.value as 'Madrid' | 'Sevilla' | 'Ambas'
-                    )
-                  }
+                  onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
                   className="w-full bg-[var(--surface)]/80 text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
                 >
                   <option value="Madrid">Madrid</option>
@@ -82,9 +73,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] text-[var(--ink-2)] mb-1">
-                  Sala propuesta en Madrid/Sevilla
-                </label>
+                <label className="block text-[10px] text-[var(--ink-2)] mb-1">Sala propuesta en Madrid/Sevilla</label>
                 <input
                   type="text"
                   value={proposedVenueBakandeya}
@@ -94,9 +83,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] text-[var(--ink-2)] mb-1">
-                  Periodo / Mes Estimado
-                </label>
+                <label className="block text-[10px] text-[var(--ink-2)] mb-1">Periodo / Mes Estimado</label>
                 <input
                   type="text"
                   value={proposedMonth}
@@ -111,9 +98,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
           <div className="space-y-1.5">
             <label className="block text-[10px] font-sans tracking-wider text-[var(--acc)] flex items-center justify-between">
               <span>Mensaje de Propuesta Generado (Músico a Músico)</span>
-              <span className="text-[10px] text-[var(--ink-2)] lowercase">
-                editable & listo para enviar
-              </span>
+              <span className="text-[10px] text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
             </label>
 
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] text-[10px] font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
@@ -124,10 +109,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
           {/* Actions Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <div className="text-[10px] font-sans text-[var(--ink-2)]">
-              Destinatario:{' '}
-              <strong className="text-[var(--ink)]">
-                {band.contacto_nombre || band.nombre_banda}
-              </strong>
+              Destinatario: <strong className="text-[var(--ink)]">{band.contacto_nombre || band.nombre_banda}</strong>
             </div>
 
             <div className="flex items-center gap-2">
@@ -140,11 +122,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                 }}
                 className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-m)] font-sans text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
               >
-                {copiedPitch ? (
-                  <Check className="w-4 h-4 text-[var(--ok)]" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
+                {copiedPitch ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
                 <span>{copiedPitch ? '¡Copiado! ' : 'Copiar Texto'}</span>
               </button>
 

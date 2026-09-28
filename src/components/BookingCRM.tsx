@@ -6,10 +6,7 @@ import { uploadFileToServer } from '../utils/audioStorage';
 import { useSavedFilters } from '../hooks/useSavedFilters';
 import { useCityChips } from '../hooks/useCityChips';
 import { useInteractionLog } from '../hooks/useInteractionLog';
-import {
-  useEmailTemplates,
-  TemplateCategory,
-} from '../hooks/useEmailTemplates';
+import { useEmailTemplates, TemplateCategory } from '../hooks/useEmailTemplates';
 import { useGmailIntegration } from '../hooks/useGmailIntegration';
 import { useNegotiationSimulation } from '../hooks/useNegotiationSimulation';
 import {
@@ -93,18 +90,11 @@ import { LeadsTable } from './booking/LeadsTable';
 import { VenueDetailPanel } from './booking/VenueDetailPanel';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { isLeadVerificado } from '../utils/leadReliability';
-import {
-  leadMatchesCampaignCity,
-  leadMatchesCampaignCapacity,
-  leadMatchesCampaignDates,
-} from '../utils/campaignMatch';
+import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from '../utils/campaignMatch';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
-import {
-  BulkProgressModal,
-  BulkProgressItem,
-} from './booking/BulkProgressModal';
+import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
@@ -232,11 +222,7 @@ const matchesGruposType = (l: Lead, filter: string): boolean => {
 interface BookingCRMProps {
   leads: Lead[];
   colors: ThemeColors;
-  onUpdateLead: (
-    leadId: string,
-    updatedFields: Partial<Lead>,
-    expectedStatus?: string
-  ) => void;
+  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
   onAddLead?: (lead: Lead) => void;
   onDeleteLead?: (id: string) => void;
   onBulkDeleteLeads?: (ids: string[]) => void;
@@ -255,24 +241,10 @@ interface BookingCRMProps {
   onCampaignChange?: (campaign: BookingCampaign | null) => void;
 }
 
-import {
-  normalizeStatus,
-  normalizeType,
-  autoDetectVenueAddress,
-  VENUE_ADDRESS_DATABASE,
-} from '../utils/bookingUtils';
-import {
-  leadStatusDotColor,
-  leadStatusBadgeClass,
-  leadStatusLabel,
-} from '../utils/leadStatusPresentation';
+import { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE } from '../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
 
-export {
-  normalizeStatus,
-  normalizeType,
-  autoDetectVenueAddress,
-  VENUE_ADDRESS_DATABASE,
-};
+export { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE };
 
 export default function BookingCRM({
   leads,
@@ -297,9 +269,7 @@ export default function BookingCRM({
 }: BookingCRMProps) {
   const bookingTutorial = useModuleTutorial('booking');
   const effectiveBandName = bandName || 'Tu Banda';
-  const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(
-    initialSection || 'salas'
-  );
+  const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
 
   const handleSelectSectionTab = (tab: 'salas' | 'medios' | 'grupos') => {
     setSectionTab(tab);
@@ -395,14 +365,7 @@ export default function BookingCRM({
     displayCityChips,
     handleAddCustomCity,
     handleRemoveCustomCity,
-  } = useCityChips(
-    leads,
-    sectionTab,
-    epkConfig,
-    onUpdateEpkConfig,
-    selectedCityFilter,
-    setSelectedCityFilter
-  );
+  } = useCityChips(leads, sectionTab, epkConfig, onUpdateEpkConfig, selectedCityFilter, setSelectedCityFilter);
 
   const {
     interactionType,
@@ -439,29 +402,16 @@ export default function BookingCRM({
     handleResetTemplate,
   } = useEmailTemplates();
 
-  const {
-    gmailUser,
-    gmailToken,
-    isSyncingGmail,
-    gmailStatusMsg,
-    handleGmailLogin,
-    handleGmailLogout,
-    handleSyncGmailForLead,
-  } = useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
+  const { gmailUser, gmailToken, isSyncingGmail, gmailStatusMsg, handleGmailLogin, handleGmailLogout, handleSyncGmailForLead } =
+    useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
 
   const [filterByCampaign, setFilterByCampaign] = useState(
-    Boolean(
-      activeCampaign &&
-      (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)
-    )
+    Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true))
   );
 
   // Automatically activate campaign filter & reset conflicting manual search filters whenever a campaign is active
   useEffect(() => {
-    if (
-      activeCampaign &&
-      (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)
-    ) {
+    if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
       setFilterByCampaign(true);
       if (sectionTab === 'salas') {
         setSelectedCityFilter('');
@@ -471,11 +421,7 @@ export default function BookingCRM({
         setSearchTerm('');
       }
     }
-  }, [
-    activeCampaign?.id,
-    activeCampaign?.isActive,
-    (activeCampaign as any)?.is_active,
-  ]);
+  }, [activeCampaign?.id, activeCampaign?.isActive, (activeCampaign as any)?.is_active]);
 
   // Keep selectedLead synchronized with the latest leads prop data
   useEffect(() => {
@@ -490,15 +436,10 @@ export default function BookingCRM({
   // Automatically detect & save address when a lead is selected
   useEffect(() => {
     if (selectedLead && !selectedLead.direccion && selectedLead.nombre_sala) {
-      const detected = autoDetectVenueAddress(
-        selectedLead.nombre_sala,
-        selectedLead.ciudad || ''
-      );
+      const detected = autoDetectVenueAddress(selectedLead.nombre_sala, selectedLead.ciudad || '');
       if (detected) {
         onUpdateLead(selectedLead.id, { direccion: detected });
-        setSelectedLead((prev) =>
-          prev ? { ...prev, direccion: detected } : null
-        );
+        setSelectedLead((prev) => (prev ? { ...prev, direccion: detected } : null));
       }
     }
   }, [selectedLead?.id, selectedLead?.nombre_sala, selectedLead?.direccion]);
@@ -538,28 +479,18 @@ export default function BookingCRM({
 
       if (data.dispatchedCount > 0) {
         alert(`¡Agente Enviador ejecutado con éxito! ${data.message || ''}`);
-      } else if (
-        data.results &&
-        data.results.some((r: any) => r.status === 'error')
-      ) {
+      } else if (data.results && data.results.some((r: any) => r.status === 'error')) {
         const errMsgs = data.results
           .filter((r: any) => r.status === 'error')
           .map((r: any) => `${r.nombre_sala}: ${r.error}`)
           .join('\n');
-        alert(
-          `Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`
-        );
+        alert(`Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`);
       } else {
-        alert(
-          data.message ||
-            'No se encontraron correos aprobados pendientes de despacho.'
-        );
+        alert(data.message || 'No se encontraron correos aprobados pendientes de despacho.');
       }
     } catch (err: any) {
       console.error('Error al ejecutar Agente Enviador:', err);
-      alert(
-        `Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`
-      );
+      alert(`Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`);
     } finally {
       setIsDispatchingEmails(false);
     }
@@ -586,10 +517,7 @@ export default function BookingCRM({
 
   const [isUploadingLeadLogo, setIsUploadingLeadLogo] = useState(false);
 
-  const handleLeadLogoUpload = async (
-    file: File,
-    isEdit: boolean
-  ): Promise<string | null> => {
+  const handleLeadLogoUpload = async (file: File, isEdit: boolean): Promise<string | null> => {
     if (!currentBandId) {
       alert('No hay ninguna banda activa para subir la imagen.');
       return null;
@@ -605,9 +533,7 @@ export default function BookingCRM({
         if (isEdit) {
           setEditedLeadInfo((prev) => ({ ...prev, imagen_url: url }));
           if (selectedLead?.id) {
-            setSelectedLead((prev) =>
-              prev ? { ...prev, imagen_url: url } : null
-            );
+            setSelectedLead((prev) => (prev ? { ...prev, imagen_url: url } : null));
             onUpdateLead(selectedLead.id, { imagen_url: url });
           }
         } else {
@@ -632,20 +558,14 @@ export default function BookingCRM({
   // Selected Lead AI Scout Scraping state
   const [isScrapingLead, setIsScrapingLead] = useState(false);
   const [scrapingLeadStatus, setScrapingLeadStatus] = useState('');
-  const [scrapedDataForLead, setScrapedDataForLead] = useState<any | null>(
-    null
-  );
-  const [scrapingLeadError, setScrapingLeadError] = useState<string | null>(
-    null
-  );
+  const [scrapedDataForLead, setScrapedDataForLead] = useState<any | null>(null);
+  const [scrapingLeadError, setScrapingLeadError] = useState<string | null>(null);
 
   // Email thread and manual dispatch states
   const [activeTab, setActiveTab] = useState<'info' | 'emails'>('info');
   const [manualEmailBody, setManualEmailBody] = useState('');
   const [manualEmailSubject, setManualEmailSubject] = useState('');
-  const [manualEmailSender, setManualEmailSender] = useState(
-    'Bakandeya Agent Manager IA'
-  );
+  const [manualEmailSender, setManualEmailSender] = useState('Bakandeya Agent Manager IA');
   const [manualEmailStatus, setManualEmailStatus] = useState('');
 
   const {
@@ -669,12 +589,7 @@ export default function BookingCRM({
     handleOpenAdvancedSimulation,
     handleGenerateSimulationEmail,
     handleCommitSimulation,
-  } = useNegotiationSimulation(
-    selectedLead,
-    setSelectedLead,
-    onUpdateLead,
-    setManualEmailStatus
-  );
+  } = useNegotiationSimulation(selectedLead, setSelectedLead, onUpdateLead, setManualEmailStatus);
 
   // Bulk enrich addresses for all venues & festivals
   const [isEnrichingAddresses, setIsEnrichingAddresses] = useState(false);
@@ -682,9 +597,7 @@ export default function BookingCRM({
 
   const handleEnrichAddresses = async () => {
     setIsEnrichingAddresses(true);
-    setEnrichStatusMsg(
-      'Buscando y autocompletando direcciones exactas para salas y festivales...'
-    );
+    setEnrichStatusMsg('Buscando y autocompletando direcciones exactas para salas y festivales...');
     try {
       const res = await apiFetch('/api/leads/enrich-addresses', {
         method: 'POST',
@@ -694,9 +607,7 @@ export default function BookingCRM({
       const data = res as any;
       if (data) {
         if (data.enrichedCount > 0) {
-          setEnrichStatusMsg(
-            `¡Éxito! Se han completado y guardado en Supabase ${data.enrichedCount} direcciones de salas/festivales.`
-          );
+          setEnrichStatusMsg(`¡Éxito! Se han completado y guardado en Supabase ${data.enrichedCount} direcciones de salas/festivales.`);
           if (Array.isArray(data.leads)) {
             data.leads.forEach((updatedLead: Lead) => {
               if (updatedLead.direccion) {
@@ -707,14 +618,10 @@ export default function BookingCRM({
             });
           }
         } else {
-          setEnrichStatusMsg(
-            `Todas las salas y festivales ya tienen su dirección informada (${data.totalLeads} total).`
-          );
+          setEnrichStatusMsg(`Todas las salas y festivales ya tienen su dirección informada (${data.totalLeads} total).`);
         }
       } else {
-        setEnrichStatusMsg(
-          'Fallo al autocompletar las direcciones en el servidor.'
-        );
+        setEnrichStatusMsg('Fallo al autocompletar las direcciones en el servidor.');
       }
     } catch (err) {
       console.error(err);
@@ -735,8 +642,7 @@ export default function BookingCRM({
   // Filter leads by active section tab
   const sectionLeads = useMemo(() => {
     const seen = new Set<string>();
-    const isGruposType = (norm: string) =>
-      ['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(norm);
+    const isGruposType = (norm: string) => ['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(norm);
     return (leads || []).filter((lead) => {
       if (!lead) return false;
       const leadKey = lead.id ? String(lead.id).trim() : null;
@@ -774,20 +680,15 @@ export default function BookingCRM({
       }
 
       const matchesSearch =
-        (lead.nombre_sala || '')
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
+        (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (lead.ciudad || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (lead.region || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (lead.email_contacto &&
-          lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
+        (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
       const normSt = normalizeStatus(lead.estado);
       const matchesStatus =
         statusFilter === 'todos' ||
         normSt === statusFilter ||
-        (statusFilter === 'pendiente_aprobacion' &&
-          normSt === 'nuevo' &&
-          !!lead.pitch_generado);
+        (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
 
       const matchesType =
         typeFilter === 'todos'
@@ -799,21 +700,10 @@ export default function BookingCRM({
               : normalizeType(lead.tipo) === typeFilter;
       const matchesCity =
         !selectedCityFilter ||
-        (lead.ciudad || '')
-          .toLowerCase()
-          .includes(selectedCityFilter.toLowerCase()) ||
-        (lead.region || '')
-          .toLowerCase()
-          .includes(selectedCityFilter.toLowerCase());
-      const matchesCapacity =
-        !minCapacityFilter || (lead.aforo || 0) >= minCapacityFilter;
-      return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesType &&
-        matchesCity &&
-        matchesCapacity
-      );
+        (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) ||
+        (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
+      const matchesCapacity = !minCapacityFilter || (lead.aforo || 0) >= minCapacityFilter;
+      return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
     });
   }, [
     sectionLeads,
@@ -829,16 +719,12 @@ export default function BookingCRM({
 
   const handleModalScrape = async () => {
     if (!newLeadData.nombre_sala.trim()) {
-      alert(
-        'Por favor, escribe al menos el nombre de la sala o medio para que el Agente Scout pueda buscar en Google.'
-      );
+      alert('Por favor, escribe al menos el nombre de la sala o medio para que el Agente Scout pueda buscar en Google.');
       return;
     }
 
     setIsModalScraping(true);
-    setModalScrapeStatus(
-      'Consultando Google Places API & Extraedor de Emails IA...'
-    );
+    setModalScrapeStatus('Consultando Google Places API & Extraedor de Emails IA...');
     setModalScrapeError('');
     setModalScrapeSuccessMsg('');
 
@@ -873,8 +759,7 @@ export default function BookingCRM({
       if (res.ok) {
         const resData = await res.json();
         if (resData.success && resData.data) {
-          const getVal = (f: any) =>
-            typeof f === 'object' && f !== null ? f.valor : f || '';
+          const getVal = (f: any) => (typeof f === 'object' && f !== null ? f.valor : f || '');
           const emailVal = getVal(resData.data.email_contacto);
           const telVal = getVal(resData.data.telefono);
           const webVal = getVal(resData.data.website);
@@ -892,10 +777,7 @@ export default function BookingCRM({
             telefono: telVal || prev.telefono,
             website: webVal || prev.website,
             region: regionVal || prev.region,
-            aforo:
-              aforoVal && !isNaN(Number(aforoVal))
-                ? Number(aforoVal)
-                : prev.aforo,
+            aforo: aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : prev.aforo,
             genero: generoVal || prev.genero,
             imagen_url: imgVal || prev.imagen_url,
             icono: iconVal || prev.icono,
@@ -908,22 +790,15 @@ export default function BookingCRM({
             `¡Éxito! Email: ${emailVal || 'No hallado'} | Tel: ${telVal || 'No hallado'} | Web: ${webVal || 'No hallado'}`
           );
         } else {
-          setModalScrapeError(
-            resData.error || 'No se pudieron recuperar datos con la IA Scout.'
-          );
+          setModalScrapeError(resData.error || 'No se pudieron recuperar datos con la IA Scout.');
         }
       } else {
         const errJson = await res.json().catch(() => null);
-        setModalScrapeError(
-          errJson?.error ||
-            `Error ${res.status}: Fallo de respuesta del servidor.`
-        );
+        setModalScrapeError(errJson?.error || `Error ${res.status}: Fallo de respuesta del servidor.`);
       }
     } catch (err: any) {
       clearInterval(interval);
-      setModalScrapeError(
-        err.message || 'Error de conexión con el Agente Scout.'
-      );
+      setModalScrapeError(err.message || 'Error de conexión con el Agente Scout.');
     } finally {
       setIsModalScraping(false);
     }
@@ -969,22 +844,15 @@ export default function BookingCRM({
         if (resData.success && resData.data) {
           setScrapedDataForLead(resData.data);
         } else {
-          setScrapingLeadError(
-            resData.error || 'No se lograron extraer datos de contacto.'
-          );
+          setScrapingLeadError(resData.error || 'No se lograron extraer datos de contacto.');
         }
       } else {
         const errJson = await res.json().catch(() => null);
-        setScrapingLeadError(
-          errJson?.error ||
-            `Error ${res.status}: Fallo de respuesta del servidor.`
-        );
+        setScrapingLeadError(errJson?.error || `Error ${res.status}: Fallo de respuesta del servidor.`);
       }
     } catch (err: any) {
       clearInterval(interval);
-      setScrapingLeadError(
-        err.message || 'Fallo de conexión con Agente Scout.'
-      );
+      setScrapingLeadError(err.message || 'Fallo de conexión con Agente Scout.');
     } finally {
       setIsScrapingLead(false);
     }
@@ -992,8 +860,7 @@ export default function BookingCRM({
 
   const handleApplyScrapedToSelectedLead = () => {
     if (!selectedLead || !scrapedDataForLead) return;
-    const getVal = (f: any) =>
-      typeof f === 'object' && f !== null ? f.valor : f || '';
+    const getVal = (f: any) => (typeof f === 'object' && f !== null ? f.valor : f || '');
 
     const emailVal = getVal(scrapedDataForLead.email_contacto);
     const telVal = getVal(scrapedDataForLead.telefono);
@@ -1007,10 +874,7 @@ export default function BookingCRM({
     const iconVal = getVal(scrapedDataForLead.icono);
 
     const today = new Date().toISOString().split('T')[0];
-    const sourceSummary =
-      typeof scrapedDataForLead.source_info === 'string'
-        ? scrapedDataForLead.source_info
-        : 'Rastreo web Agente Scout';
+    const sourceSummary = typeof scrapedDataForLead.source_info === 'string' ? scrapedDataForLead.source_info : 'Rastreo web Agente Scout';
     const updatedNotes = `*** [${today}] Ficha enriquecida vía Agente Scout. ${sourceSummary} ***\n${selectedLead.notas || ''}`;
 
     const updatedFields: Partial<Lead> = {
@@ -1019,10 +883,7 @@ export default function BookingCRM({
       website: webVal || selectedLead.website,
       instagram: instaVal || selectedLead.instagram,
       contacto_nombre: contactoVal || selectedLead.contacto_nombre,
-      aforo:
-        aforoVal && !isNaN(Number(aforoVal))
-          ? Number(aforoVal)
-          : selectedLead.aforo,
+      aforo: aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : selectedLead.aforo,
       region: regionVal || selectedLead.region,
       genero: generoVal || selectedLead.genero,
       imagen_url: imgVal || selectedLead.imagen_url,
@@ -1048,9 +909,7 @@ export default function BookingCRM({
       ciudad: newLeadData.ciudad || 'Nacional',
       region: newLeadData.region || 'Nacional',
       aforo: newLeadData.aforo || 0,
-      genero:
-        newLeadData.genero ||
-        (sectionTab === 'medios' ? 'Radio' : 'Música en directo'),
+      genero: newLeadData.genero || (sectionTab === 'medios' ? 'Radio' : 'Música en directo'),
       tipo: sectionTab === 'medios' ? 'medio' : newLeadData.tipo,
       email_contacto: newLeadData.email_contacto || '',
       telefono: newLeadData.telefono || '',
@@ -1080,14 +939,11 @@ export default function BookingCRM({
     setSelectedLead(createdLead);
   };
 
-  const getStatusDotColor = (status: LeadStatus | string) =>
-    leadStatusDotColor(normalizeStatus(status));
+  const getStatusDotColor = (status: LeadStatus | string) => leadStatusDotColor(normalizeStatus(status));
 
-  const getStatusBadgeClass = (status: LeadStatus | string) =>
-    leadStatusBadgeClass(normalizeStatus(status));
+  const getStatusBadgeClass = (status: LeadStatus | string) => leadStatusBadgeClass(normalizeStatus(status));
 
-  const getStatusLabel = (status: LeadStatus | string) =>
-    leadStatusLabel(normalizeStatus(status), String(status));
+  const getStatusLabel = (status: LeadStatus | string) => leadStatusLabel(normalizeStatus(status), String(status));
 
   const handleOpenLead = (lead: Lead) => {
     setSelectedLead(lead);
@@ -1098,11 +954,7 @@ export default function BookingCRM({
     setRejectionNotes('');
 
     // Automatically switch to emails tab for negotiating or interested leads, else info
-    setActiveTab(
-      lead.estado === 'negociando' || lead.estado === 'interesado'
-        ? 'emails'
-        : 'info'
-    );
+    setActiveTab(lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
     setManualEmailBody('');
     setManualEmailSubject(
       lead.hilo_emails && lead.hilo_emails.length > 0
@@ -1176,8 +1028,7 @@ export default function BookingCRM({
 
     const today = new Date().toISOString().split('T')[0];
     const nuevaNota =
-      `*** [${today}] Correo personal manual enviado por ${manualEmailSender}:"${manualEmailSubject}" ***\n` +
-      (selectedLead.notas || '');
+      `*** [${today}] Correo personal manual enviado por ${manualEmailSender}:"${manualEmailSubject}" ***\n` + (selectedLead.notas || '');
 
     onUpdateLead(selectedLead.id, {
       hilo_emails: nuevoHilo,
@@ -1197,9 +1048,7 @@ export default function BookingCRM({
     );
 
     setManualEmailBody('');
-    setManualEmailStatus(
-      '¡Email enviado con éxito! Se ha registrado en el hilo de negociación.'
-    );
+    setManualEmailStatus('¡Email enviado con éxito! Se ha registrado en el hilo de negociación.');
     setTimeout(() => {
       setManualEmailStatus('');
     }, 4000);
@@ -1220,10 +1069,7 @@ export default function BookingCRM({
       simSender = 'Producción Artística (Viña Rock)';
       simBody =
         'Hola, gracias por pasarnos los detalles. El caché de 4.500€ entra en vuestros rangos para el escenario de Mestizaje. El slot de las 18:30 del viernes está libre. Confirmadnos si vuestro rider técnico incluye los sintetizadores listos para línea balanceada o si necesitáis cajas DI adicionales del festival. ¡Cerremos trato!';
-    } else if (
-      selectedLead.id === 'lead-6' ||
-      lowercaseName.includes('razzmatazz')
-    ) {
+    } else if (selectedLead.id === 'lead-6' || lowercaseName.includes('razzmatazz')) {
       simSender = 'Xavi (Booking Razzmatazz)';
       simBody = `Buenas, nos parece perfecto el acuerdo de taquilla al 80/20 con un mínimo de 150 entradas garantizadas. La fecha del sábado 5 de Diciembre queda reservada para ${effectiveBandName}. Decidme a qué email enviamos el borrador del contrato de sala. ¡Un saludo!`;
     } else {
@@ -1261,9 +1107,7 @@ export default function BookingCRM({
     }
 
     const today = new Date().toISOString().split('T')[0];
-    const nuevaNota =
-      `*** [${today}] Correo de simulación entrante recibido de ${simSender} ***\n` +
-      (selectedLead.notas || '');
+    const nuevaNota = `*** [${today}] Correo de simulación entrante recibido de ${simSender} ***\n` + (selectedLead.notas || '');
 
     onUpdateLead(selectedLead.id, {
       hilo_emails: nuevoHilo,
@@ -1284,9 +1128,7 @@ export default function BookingCRM({
         : null
     );
 
-    setManualEmailStatus(
-      `¡Simulación completada! Se recibió un correo entrante de ${simSender} y se sincronizó en Excel.`
-    );
+    setManualEmailStatus(`¡Simulación completada! Se recibió un correo entrante de ${simSender} y se sincronizó en Excel.`);
     setTimeout(() => {
       setManualEmailStatus('');
     }, 5000);
@@ -1295,9 +1137,7 @@ export default function BookingCRM({
   const handleSavePitchEdit = () => {
     if (!selectedLead) return;
     onUpdateLead(selectedLead.id, { pitch_generado: editedPitch });
-    setSelectedLead((prev) =>
-      prev ? { ...prev, pitch_generado: editedPitch } : null
-    );
+    setSelectedLead((prev) => (prev ? { ...prev, pitch_generado: editedPitch } : null));
     setIsEditingPitch(false);
   };
 
@@ -1381,13 +1221,9 @@ export default function BookingCRM({
       className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
     >
       {/* 2. LEADS CRM WORKSPACE */}
-      <div
-        className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}
-      >
+      <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}>
         {/* LEADS LIST AREA (Takes 100% width when no lead is selected, or 2/3 when detail panel is open) */}
-        <div
-          className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}
-        >
+        <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}>
           <div className="space-y-3 sm:space-y-4">
             {/* Header: Tabs + Unified Action Buttons */}
             <div className="flex flex-col gap-3">
@@ -1408,22 +1244,14 @@ export default function BookingCRM({
                     <span>Escenarios</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-                        sectionTab === 'salas'
-                          ? 'bg-[var(--sunken)] text-[var(--on-acc)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        sectionTab === 'salas' ? 'bg-[var(--sunken)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >
                       {
                         leads.filter(
                           (l) =>
                             !normalizeType(l.tipo).includes('medio') &&
-                            ![
-                              'grupo',
-                              'agencia',
-                              'manager',
-                              'productora',
-                              'sello',
-                            ].includes(normalizeType(l.tipo))
+                            !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))
                         ).length
                       }
                     </span>
@@ -1443,15 +1271,10 @@ export default function BookingCRM({
                     <span>Medios y Prensa</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-                        sectionTab === 'medios'
-                          ? 'bg-[var(--sunken)] text-[var(--on-acc)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        sectionTab === 'medios' ? 'bg-[var(--sunken)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >
-                      {
-                        leads.filter((l) => normalizeType(l.tipo) === 'medio')
-                          .length
-                      }
+                      {leads.filter((l) => normalizeType(l.tipo) === 'medio').length}
                     </span>
                   </button>
 
@@ -1469,21 +1292,14 @@ export default function BookingCRM({
                     <span>Management & Productoras</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-                        sectionTab === 'grupos'
-                          ? 'bg-[var(--sunken)] text-[var(--on-acc)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        sectionTab === 'grupos' ? 'bg-[var(--sunken)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >
                       {
                         leads.filter((l) =>
-                          [
-                            'agencia',
-                            'manager',
-                            'productora',
-                            'sello',
-                            'promotora',
-                            'management',
-                          ].some((t) => normalizeType(l.tipo).includes(t))
+                          ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some((t) =>
+                            normalizeType(l.tipo).includes(t)
+                          )
                         ).length
                       }
                     </span>
@@ -1525,31 +1341,16 @@ export default function BookingCRM({
                         region: 'Nacional',
                         direccion: '',
                         aforo: 0,
-                        tipo:
-                          sectionTab === 'medios'
-                            ? 'medio'
-                            : sectionTab === 'grupos'
-                              ? 'productora'
-                              : 'sala',
+                        tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
                         email_contacto: '',
                         telefono: '',
                         website: '',
                         instagram: '',
                         fuente: '',
-                        genero:
-                          sectionTab === 'medios'
-                            ? 'Radio'
-                            : sectionTab === 'grupos'
-                              ? 'Management / Booking'
-                              : 'Balkan / Ska',
+                        genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
                         notas: '',
                         pitch_generado: '',
-                        icono:
-                          sectionTab === 'medios'
-                            ? '📻'
-                            : sectionTab === 'grupos'
-                              ? '💼'
-                              : '🏛️',
+                        icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
                         imagen_url: '',
                       });
                       setIsAddingLeadModalOpen(true);
@@ -1559,20 +1360,12 @@ export default function BookingCRM({
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span className="sm:inline">
-                      Añadir{' '}
-                      {sectionTab === 'medios'
-                        ? 'medio'
-                        : sectionTab === 'grupos'
-                          ? 'contacto'
-                          : 'escenario'}
+                      Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}
                     </span>
                   </button>
 
                   {/* Tutorial (pequeño en móvil) */}
-                  <ModuleTutorialTrigger
-                    moduleId="booking"
-                    onClick={bookingTutorial.openTutorial}
-                  />
+                  <ModuleTutorialTrigger moduleId="booking" onClick={bookingTutorial.openTutorial} />
 
                   {/* Botón Exportar — Solo en PC */}
                   <button
@@ -1601,17 +1394,9 @@ export default function BookingCRM({
                     <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                     <span className="hidden sm:inline">Herramientas e IA</span>
                     <span className="sm:hidden">IA</span>
-                    {leads.filter(
-                      (l) => !l.email_contacto || l.email_contacto.trim() === ''
-                    ).length > 0 && (
+                    {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
                       <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
-                        {
-                          leads.filter(
-                            (l) =>
-                              !l.email_contacto ||
-                              l.email_contacto.trim() === ''
-                          ).length
-                        }
+                        {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length}
                       </span>
                     )}
                     {duplicateGroupsCount > 0 && (
@@ -1622,11 +1407,7 @@ export default function BookingCRM({
                         {duplicateGroupsCount} dup
                       </span>
                     )}
-                    {isMobileToolsOpen ? (
-                      <ChevronUp className="w-3 h-3 ml-0.5" />
-                    ) : (
-                      <ChevronDown className="w-3 h-3 ml-0.5" />
-                    )}
+                    {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
                   </button>
                 </div>
               </div>
@@ -1716,13 +1497,10 @@ export default function BookingCRM({
                       </span>
                       {duplicateGroupsCount > 0 ? (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[var(--acc)] text-[var(--on-acc)]">
-                          {duplicateGroupsCount}{' '}
-                          {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
+                          {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
                         </span>
                       ) : (
-                        <span className="text-[10px] text-[var(--ink-2)] font-normal">
-                          0 duplicados
-                        </span>
+                        <span className="text-[10px] text-[var(--ink-2)] font-normal">0 duplicados</span>
                       )}
                     </button>
 
@@ -1736,13 +1514,8 @@ export default function BookingCRM({
                     >
                       <span className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-[var(--tentative)]" />
-                        Agente Enriquecedor de Contactos (
-                        {
-                          leads.filter(
-                            (l) =>
-                              !l.email_contacto ||
-                              l.email_contacto.trim() === ''
-                          ).length
+                        Agente Enriquecedor de Contactos ({
+                          leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length
                         }{' '}
                         sin email)
                       </span>
@@ -1786,11 +1559,7 @@ export default function BookingCRM({
                       className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--bg)] hover:bg-[var(--surface)] text-[var(--ink)]700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
                     >
                       <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                      <span>
-                        {isEnrichingAddresses
-                          ? 'Rellenando direcciones...'
-                          : 'Autocompletar Direcciones'}
-                      </span>
+                      <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
                     </button>
                   </div>
                 </div>
@@ -1845,9 +1614,7 @@ export default function BookingCRM({
                     >
                       {sectionTab === 'medios' ? (
                         <>
-                          <option value="todos">
-                            🌟 Todos los medios ({sectionLeads.length})
-                          </option>
+                          <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
                           <option value="radio">📻 Radios</option>
                           <option value="tv">📺 TV</option>
                           <option value="prensa">📰 Prensa</option>
@@ -1856,9 +1623,7 @@ export default function BookingCRM({
                         </>
                       ) : sectionTab === 'grupos' ? (
                         <>
-                          <option value="todos">
-                            🌟 Todas las entidades ({sectionLeads.length})
-                          </option>
+                          <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
                           <option value="grupo">🎸 Grupos</option>
                           <option value="agencia">💼 Agencias</option>
                           <option value="manager">👔 Mánagers</option>
@@ -1867,44 +1632,16 @@ export default function BookingCRM({
                         </>
                       ) : (
                         <>
-                          <option value="todos">
-                            🌟 Tipo: Todos ({sectionLeads.length})
-                          </option>
-                          <option value="sala">
-                            🏛️ Salas (
-                            {
-                              sectionLeads.filter(
-                                (l) => normalizeType(l.tipo) === 'sala'
-                              ).length
-                            }
-                            )
-                          </option>
+                          <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
+                          <option value="sala">🏛️ Salas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sala').length})</option>
                           <option value="festival">
-                            🎪 Festivales (
-                            {
-                              sectionLeads.filter(
-                                (l) => normalizeType(l.tipo) === 'festival'
-                              ).length
-                            }
-                            )
+                            🎪 Festivales ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'festival').length})
                           </option>
                           <option value="discoteca">
-                            🪩 Discotecas (
-                            {
-                              sectionLeads.filter(
-                                (l) => normalizeType(l.tipo) === 'discoteca'
-                              ).length
-                            }
-                            )
+                            🪩 Discotecas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'discoteca').length})
                           </option>
                           <option value="ayuntamiento">
-                            🎆 Ayuntamientos (
-                            {
-                              sectionLeads.filter(
-                                (l) => normalizeType(l.tipo) === 'ayuntamiento'
-                              ).length
-                            }
-                            )
+                            🎆 Ayuntamientos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'ayuntamiento').length})
                           </option>
                         </>
                       )}
@@ -1917,9 +1654,7 @@ export default function BookingCRM({
                     <button
                       id="toggle-filters-btn"
                       type="button"
-                      onClick={() =>
-                        setIsMobileFiltersOpen(!isMobileFiltersOpen)
-                      }
+                      onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
                       className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                         activeFiltersCount > 0 || isMobileFiltersOpen
                           ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
@@ -1946,11 +1681,7 @@ export default function BookingCRM({
                             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
                             : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
                         }`}
-                        title={
-                          filterByCampaign
-                            ? 'Quitar filtro de campaña'
-                            : 'Filtrar por campaña'
-                        }
+                        title={filterByCampaign ? 'Quitar filtro de campaña' : 'Filtrar por campaña'}
                       >
                         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
                         <span>{filterByCampaign ? 'Campaña' : 'Campaña'}</span>
@@ -1972,9 +1703,7 @@ export default function BookingCRM({
                       type="button"
                       onClick={() => setViewMode('grid')}
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        viewMode === 'grid'
-                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                          : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                       title="Vista en Tarjetas"
                     >
@@ -1986,9 +1715,7 @@ export default function BookingCRM({
                       type="button"
                       onClick={() => setViewMode('table')}
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        viewMode === 'table'
-                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                          : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                       title="Vista en Detalles / Tabla"
                     >
@@ -2000,15 +1727,11 @@ export default function BookingCRM({
                       type="button"
                       onClick={() => setViewMode('map')}
                       className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        viewMode === 'map'
-                          ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                          : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                       title="Vista en Mapa GPS Interactivo"
                     >
-                      <MapIcon
-                        className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-2)]'}`}
-                      />
+                      <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-2)]'}`} />
                       <span className="hidden sm:inline">Mapa</span>
                     </button>
                   </div>
@@ -2020,9 +1743,7 @@ export default function BookingCRM({
             {enrichStatusMsg && (
               <div
                 className={`p-2.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
-                  enrichStatusMsg.includes('¡Éxito!')
-                    ? 'bg-[var(--ok-soft)] text-[var(--ok)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                  enrichStatusMsg.includes('¡Éxito!') ? 'bg-[var(--ok-soft)] text-[var(--ok)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -2060,15 +1781,11 @@ export default function BookingCRM({
 
                 {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
                 <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">
-                    Opciones rápidas
-                  </p>
+                  <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Opciones rápidas</p>
                   <div className="flex items-center gap-2 flex-wrap">
                     <button
                       type="button"
-                      onClick={() =>
-                        setOnlyFavoritesFilter(!onlyFavoritesFilter)
-                      }
+                      onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
                       className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
                         onlyFavoritesFilter
                           ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
@@ -2098,9 +1815,7 @@ export default function BookingCRM({
                         type="number"
                         placeholder="Ej: 300"
                         value={minCapacityFilter || ''}
-                        onChange={(e) =>
-                          setMinCapacityFilter(Number(e.target.value) || 0)
-                        }
+                        onChange={(e) => setMinCapacityFilter(Number(e.target.value) || 0)}
                         className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
                       />
                       {minCapacityFilter > 0 && (
@@ -2126,10 +1841,7 @@ export default function BookingCRM({
                         <span>💾 Guardar búsqueda</span>
                       </button>
                     ) : (
-                      <form
-                        onSubmit={handleSaveCurrentFilter}
-                        className="flex items-center gap-1.5 animate-fadeIn"
-                      >
+                      <form onSubmit={handleSaveCurrentFilter} className="flex items-center gap-1.5 animate-fadeIn">
                         <input
                           type="text"
                           autoFocus
@@ -2159,9 +1871,7 @@ export default function BookingCRM({
                 {/* Saved Filters List */}
                 {savedFilters.length > 0 && (
                   <div className="space-y-1.5">
-                    <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">
-                      Búsquedas guardadas
-                    </p>
+                    <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Búsquedas guardadas</p>
                     <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
                       {savedFilters.map((sf) => {
                         const isActive = activeSavedFilterId === sf.id;
@@ -2203,9 +1913,7 @@ export default function BookingCRM({
 
                 {/* 2. Tipo Filter */}
                 <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">
-                    Tipo de espacio / contacto
-                  </p>
+                  <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Tipo de espacio / contacto</p>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {(sectionTab === 'medios'
                       ? ([
@@ -2252,9 +1960,7 @@ export default function BookingCRM({
                 {/* 3. Ciudad Filter */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">
-                      Ciudad / Localidad
-                    </p>
+                    <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Ciudad / Localidad</p>
                     {selectedCityFilter && (
                       <button
                         type="button"
@@ -2278,17 +1984,13 @@ export default function BookingCRM({
                       Todas ({activeLeadsForSection.length})
                     </button>
                     {displayCityChips.map((cityName) => {
-                      const isSelected =
-                        selectedCityFilter.toLowerCase() ===
-                        cityName.toLowerCase();
+                      const isSelected = selectedCityFilter.toLowerCase() === cityName.toLowerCase();
                       const count = cityCounts[cityName] || 0;
                       return (
                         <button
                           key={cityName}
                           type="button"
-                          onClick={() =>
-                            setSelectedCityFilter(isSelected ? '' : cityName)
-                          }
+                          onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
                           className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
                             isSelected
                               ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold/50'
@@ -2296,11 +1998,7 @@ export default function BookingCRM({
                           }`}
                         >
                           <span>{cityName}</span>
-                          {count > 0 && (
-                            <span className="opacity-70 text-[10px]">
-                              ({count})
-                            </span>
-                          )}
+                          {count > 0 && <span className="opacity-70 text-[10px]">({count})</span>}
                         </button>
                       );
                     })}
@@ -2332,17 +2030,11 @@ export default function BookingCRM({
             {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
             {activeFiltersCount > 0 && !isMobileFiltersOpen && (
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
-                <span className="text-[10px] font-bold text-[var(--acc)] shrink-0">
-                  Filtros:
-                </span>
+                <span className="text-[10px] font-bold text-[var(--acc)] shrink-0">Filtros:</span>
                 {selectedCityFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     📍 {selectedCityFilter}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCityFilter('')}
-                      className="hover:text-[var(--ink)] cursor-pointer"
-                    >
+                    <button type="button" onClick={() => setSelectedCityFilter('')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -2350,11 +2042,7 @@ export default function BookingCRM({
                 {typeFilter !== 'todos' && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     🏛️ {typeFilter}
-                    <button
-                      type="button"
-                      onClick={() => setTypeFilter('todos')}
-                      className="hover:text-[var(--ink)] cursor-pointer"
-                    >
+                    <button type="button" onClick={() => setTypeFilter('todos')} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -2362,11 +2050,7 @@ export default function BookingCRM({
                 {onlyFavoritesFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     ⭐ Favoritos
-                    <button
-                      type="button"
-                      onClick={() => setOnlyFavoritesFilter(false)}
-                      className="hover:text-[var(--ink)] cursor-pointer"
-                    >
+                    <button type="button" onClick={() => setOnlyFavoritesFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -2374,11 +2058,7 @@ export default function BookingCRM({
                 {onlyVerifiedFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-3)] shrink-0">
                     ✔ Verificados
-                    <button
-                      type="button"
-                      onClick={() => setOnlyVerifiedFilter(false)}
-                      className="hover:text-[var(--ink)] cursor-pointer"
-                    >
+                    <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -2386,25 +2066,15 @@ export default function BookingCRM({
                 {minCapacityFilter > 0 && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     &gt;{minCapacityFilter} pax
-                    <button
-                      type="button"
-                      onClick={() => setMinCapacityFilter(0)}
-                      className="hover:text-[var(--ink)] cursor-pointer"
-                    >
+                    <button type="button" onClick={() => setMinCapacityFilter(0)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
                 )}
                 {activeSavedFilterId && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/50 shrink-0">
-                    📌{' '}
-                    {savedFilters.find((f) => f.id === activeSavedFilterId)
-                      ?.nombre || 'Búsqueda guardada'}
-                    <button
-                      type="button"
-                      onClick={() => setActiveSavedFilterId(null)}
-                      className="hover:text-[var(--ink)] cursor-pointer"
-                    >
+                    📌 {savedFilters.find((f) => f.id === activeSavedFilterId)?.nombre || 'Búsqueda guardada'}
+                    <button type="button" onClick={() => setActiveSavedFilterId(null)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -2438,10 +2108,7 @@ export default function BookingCRM({
                     ? sectionLeads.length
                     : sectionLeads.filter((l) => {
                         const norm = normalizeStatus(l.estado);
-                        if (tab.key === 'esperando_respuesta')
-                          return (
-                            norm === 'esperando_respuesta' || norm === 'enviado'
-                          );
+                        if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
                         return norm === tab.key;
                       }).length;
                 const isSelected = statusFilter === tab.key;
@@ -2460,9 +2127,7 @@ export default function BookingCRM({
                     <span>{tab.label}</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
-                        isSelected
-                          ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >
                       {count}
@@ -2476,13 +2141,8 @@ export default function BookingCRM({
             <BulkLeadsActionBar
               selectedCount={selectedLeadIds.length}
               totalFilteredCount={filteredLeads.length}
-              isAllSelected={
-                filteredLeads.length > 0 &&
-                filteredLeads.every((l) => selectedLeadIds.includes(l.id))
-              }
-              onSelectAll={() =>
-                setSelectedLeadIds(filteredLeads.map((l) => l.id))
-              }
+              isAllSelected={filteredLeads.length > 0 && filteredLeads.every((l) => selectedLeadIds.includes(l.id))}
+              onSelectAll={() => setSelectedLeadIds(filteredLeads.map((l) => l.id))}
               onDeselectAll={() => setSelectedLeadIds([])}
               onBulkStatusChange={(newStatus) => {
                 if (selectedLeadIds.length === 0) return;
@@ -2497,24 +2157,19 @@ export default function BookingCRM({
                 });
               }}
               onBulkGeneratePitches={async () => {
-                const selectedList = leads.filter((l) =>
-                  selectedLeadIds.includes(l.id)
-                );
+                const selectedList = leads.filter((l) => selectedLeadIds.includes(l.id));
                 if (selectedList.length === 0) return;
 
-                const initialItems: BulkProgressItem[] = selectedList.map(
-                  (l) => ({
-                    id: l.id,
-                    name: l.nombre_sala,
-                    status: 'pending',
-                  })
-                );
+                const initialItems: BulkProgressItem[] = selectedList.map((l) => ({
+                  id: l.id,
+                  name: l.nombre_sala,
+                  status: 'pending',
+                }));
 
                 setBulkProgressState({
                   isOpen: true,
                   title: 'Generando Pitches con IA Agéntica',
-                  subtitle:
-                    'Redactando propuestas personalizadas basadas en el ADN de la banda',
+                  subtitle: 'Redactando propuestas personalizadas basadas en el ADN de la banda',
                   items: initialItems,
                   currentIndex: 0,
                   totalCount: initialItems.length,
@@ -2538,22 +2193,14 @@ export default function BookingCRM({
 
                   try {
                     const campaignIsActive = Boolean(
-                      activeCampaign &&
-                      (activeCampaign.isActive ??
-                        (activeCampaign as any).is_active ??
-                        true)
+                      activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)
                     );
-                    const res = await apiFetch(
-                      `/api/leads/${targetLead.id}/regenerate-pitch`,
-                      {
-                        method: 'POST',
-                        body: JSON.stringify({
-                          activeCampaign: campaignIsActive
-                            ? activeCampaign
-                            : undefined,
-                        }),
-                      }
-                    );
+                    const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        activeCampaign: campaignIsActive ? activeCampaign : undefined,
+                      }),
+                    });
 
                     if (res.success && res.newPitchText) {
                       onUpdateLead(targetLead.id, {
@@ -2563,9 +2210,7 @@ export default function BookingCRM({
                       updatedItems[i] = {
                         ...updatedItems[i],
                         status: 'success',
-                        detail: res.simulated
-                          ? 'Propuesta lista (motor local ADN)'
-                          : 'Propuesta redactada',
+                        detail: res.simulated ? 'Propuesta lista (motor local ADN)' : 'Propuesta redactada',
                       };
                     } else {
                       updatedItems[i] = {
@@ -2595,24 +2240,19 @@ export default function BookingCRM({
                 }));
               }}
               onBulkEnrich={async () => {
-                const selectedList = leads.filter((l) =>
-                  selectedLeadIds.includes(l.id)
-                );
+                const selectedList = leads.filter((l) => selectedLeadIds.includes(l.id));
                 if (selectedList.length === 0) return;
 
-                const initialItems: BulkProgressItem[] = selectedList.map(
-                  (l) => ({
-                    id: l.id,
-                    name: l.nombre_sala,
-                    status: 'pending',
-                  })
-                );
+                const initialItems: BulkProgressItem[] = selectedList.map((l) => ({
+                  id: l.id,
+                  name: l.nombre_sala,
+                  status: 'pending',
+                }));
 
                 setBulkProgressState({
                   isOpen: true,
                   title: 'Enriquecimiento Masivo con Agente Scout',
-                  subtitle:
-                    'Buscando datos de contacto, aforo, dirección y redes',
+                  subtitle: 'Buscando datos de contacto, aforo, dirección y redes',
                   items: initialItems,
                   currentIndex: 0,
                   totalCount: initialItems.length,
@@ -2646,18 +2286,12 @@ export default function BookingCRM({
                     if (res.success && res.data) {
                       const d = res.data;
                       const updates: Partial<Lead> = {};
-                      if (d.email && !targetLead.email_contacto)
-                        updates.email_contacto = d.email;
-                      if (d.phone && !targetLead.telefono)
-                        updates.telefono = d.phone;
-                      if (d.website && !targetLead.website)
-                        updates.website = d.website;
-                      if (d.capacity && !targetLead.aforo)
-                        updates.aforo = d.capacity;
-                      if (d.address && !targetLead.direccion)
-                        updates.direccion = d.address;
-                      if (d.instagram && !targetLead.instagram)
-                        updates.instagram = d.instagram;
+                      if (d.email && !targetLead.email_contacto) updates.email_contacto = d.email;
+                      if (d.phone && !targetLead.telefono) updates.telefono = d.phone;
+                      if (d.website && !targetLead.website) updates.website = d.website;
+                      if (d.capacity && !targetLead.aforo) updates.aforo = d.capacity;
+                      if (d.address && !targetLead.direccion) updates.direccion = d.address;
+                      if (d.instagram && !targetLead.instagram) updates.instagram = d.instagram;
 
                       if (Object.keys(updates).length > 0) {
                         onUpdateLead(targetLead.id, updates);
@@ -2740,24 +2374,14 @@ export default function BookingCRM({
                 selectedLeadIds={selectedLeadIds}
                 onToggleSelectLead={(id, e) => {
                   if (e) e.stopPropagation();
-                  setSelectedLeadIds((prev) =>
-                    prev.includes(id)
-                      ? prev.filter((item) => item !== id)
-                      : [...prev, id]
-                  );
+                  setSelectedLeadIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
                 }}
                 onSelectAllFiltered={() => {
                   setSelectedLeadIds(filteredLeads.map((l) => l.id));
                 }}
                 onDeselectAll={() => setSelectedLeadIds([])}
-                isAllSelected={
-                  filteredLeads.length > 0 &&
-                  filteredLeads.every((l) => selectedLeadIds.includes(l.id))
-                }
-                isSomeSelected={
-                  filteredLeads.length > 0 &&
-                  filteredLeads.some((l) => selectedLeadIds.includes(l.id))
-                }
+                isAllSelected={filteredLeads.length > 0 && filteredLeads.every((l) => selectedLeadIds.includes(l.id))}
+                isSomeSelected={filteredLeads.length > 0 && filteredLeads.some((l) => selectedLeadIds.includes(l.id))}
               />
             )}
           </div>
@@ -2765,10 +2389,7 @@ export default function BookingCRM({
 
         {/* DETAILED WORKSPACE PANEL (Desktop view - rendered when a lead is selected) */}
         {selectedLead && (
-          <div
-            ref={interventionPanelRef}
-            className="hidden lg:block space-y-6 lg:col-span-1 transition-all duration-300"
-          >
+          <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-all duration-300">
             <VenueDetailPanel
               selectedLead={selectedLead}
               onClose={() => setSelectedLead(null)}
@@ -2808,10 +2429,7 @@ export default function BookingCRM({
       </div>
 
       {/* 3. EMAIL TEMPLATES & AI SETTINGS EDITOR CARD */}
-      <div
-        id="ai-template-config-section"
-        className="bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)] transition-colors"
-      >
+      <div id="ai-template-config-section" className="bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)] transition-colors">
         <div
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
           onClick={() => setIsTemplatesSectionOpen(!isTemplatesSectionOpen)}
@@ -2825,8 +2443,7 @@ export default function BookingCRM({
                 Configuración de plantillas y pautas AI (Redactor)
               </h3>
               <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-2)]">
-                Personaliza el correo por defecto y las directrices del Redactor
-                AI para Salas, Festivales, Medios y Grupos.
+                Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
               </p>
             </div>
           </div>
@@ -2845,32 +2462,22 @@ export default function BookingCRM({
               }`}
             >
               <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>
-              {isTemplatesSectionOpen ? (
-                <ChevronUp className="w-3.5 h-3.5" />
-              ) : (
-                <ChevronDown className="w-3.5 h-3.5" />
-              )}
+              {isTemplatesSectionOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
           </div>
         </div>
 
         {isTemplatesSectionOpen && (
           <div className="mt-5 pt-4800/80 space-y-6">
-            <div
-              className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${'-neutral-100'}`}
-            >
+            <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${'-neutral-100'}`}>
               <div>
-                <h4
-                  className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}
-                >
+                <h4 className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
                   Pautas diferenciadas por categoría
                 </h4>
               </div>
 
               {/* Template Tab Selector (7 Categories) */}
-              <div
-                className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--surface)]'}`}
-              >
+              <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--surface)]'}`}>
                 {[
                   { id: 'salas', label: '🏛️ Salas', icon: Building2 },
                   { id: 'festivales', label: '🎪 Festivales', icon: Tent },
@@ -2897,9 +2504,7 @@ export default function BookingCRM({
                       id={`template-tab-${tab.id}`}
                       onClick={() => setTemplateTab(tab.id as TemplateCategory)}
                       className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
-                        isActive
-                          ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold'
-                          : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        isActive ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
                       <IconComp className="w-3.5 h-3.5" />
@@ -2930,9 +2535,7 @@ export default function BookingCRM({
                   >
                     <div>
                       <strong>{activeTemplate.title}</strong>
-                      <p className="text-[10px] opacity-80 mt-0.5">
-                        {activeTemplate.desc}
-                      </p>
+                      <p className="text-[10px] opacity-80 mt-0.5">{activeTemplate.desc}</p>
                     </div>
                   </div>
 
@@ -2952,54 +2555,41 @@ export default function BookingCRM({
                       )}
 
                       <div className="space-y-1.5">
-                        <label
-                          className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}
-                        >
+                        <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>
                           Asunto del Email por Defecto
                         </label>
                         <input
                           id="template-subject"
                           type="text"
                           value={activeTemplate.subject}
-                          onChange={(e) =>
-                            activeTemplate.setSubject(e.target.value)
-                          }
+                          onChange={(e) => activeTemplate.setSubject(e.target.value)}
                           className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'}`}
                         />
                       </div>
 
                       <div className="space-y-1.5">
-                        <label
-                          className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}
-                        >
+                        <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>
                           Cuerpo de la Plantilla de Correo de Presentación
                         </label>
                         <textarea
                           id="template-body"
                           rows={8}
                           value={activeTemplate.body}
-                          onChange={(e) =>
-                            activeTemplate.setBody(e.target.value)
-                          }
+                          onChange={(e) => activeTemplate.setBody(e.target.value)}
                           className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'}`}
                           placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
                         />
                       </div>
 
                       <div className="space-y-1.5">
-                        <label
-                          className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}
-                        >
-                          <Sparkles className="w-3.5 h-3.5" /> Pautas AI
-                          (Directrices de Redacción Subjetiva)
+                        <label className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
+                          <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
                         </label>
                         <textarea
                           id="template-guidelines"
                           rows={3}
                           value={activeTemplate.guidelines}
-                          onChange={(e) =>
-                            activeTemplate.setGuidelines(e.target.value)
-                          }
+                          onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
                           className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'}`}
                           placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
                         />
@@ -3008,12 +2598,9 @@ export default function BookingCRM({
                       <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
                         <div className="flex items-center justify-between">
                           <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
-                            <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" />{' '}
-                            Evaluación y Entrenamiento de la Plantilla
+                            <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
                           </label>
-                          {(templateToneRating > 0 ||
-                            templateContentRating > 0 ||
-                            templateCustomInstruction) && (
+                          {(templateToneRating > 0 || templateContentRating > 0 || templateCustomInstruction) && (
                             <button
                               type="button"
                               onClick={() => {
@@ -3033,13 +2620,9 @@ export default function BookingCRM({
                           {/* Tono y Estilo */}
                           <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                             <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-[var(--ink)]">
-                                Tono y Estilo
-                              </span>
+                              <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
                               <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                {templateToneRating > 0
-                                  ? `${templateToneRating}/5`
-                                  : 'Sin calificar'}
+                                {templateToneRating > 0 ? `${templateToneRating}/5` : 'Sin calificar'}
                               </span>
                             </div>
                             <div className="flex items-center gap-1">
@@ -3047,15 +2630,9 @@ export default function BookingCRM({
                                 <button
                                   key={`crm-template-tone-${star}`}
                                   type="button"
-                                  onClick={() =>
-                                    setTemplateToneRating(
-                                      templateToneRating === star ? 0 : star
-                                    )
-                                  }
+                                  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
                                   className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                    templateToneRating >= star
-                                      ? 'text-[var(--acc)]'
-                                      : 'text-[var(--ink-2)]'
+                                    templateToneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                                   }`}
                                   title={`Calificar tono y estilo: ${star}/5`}
                                 >
@@ -3068,13 +2645,9 @@ export default function BookingCRM({
                           {/* Contenido y Estructura */}
                           <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                             <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-[var(--ink)]">
-                                Contenido y Estructura
-                              </span>
+                              <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
                               <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                {templateContentRating > 0
-                                  ? `${templateContentRating}/5`
-                                  : 'Sin calificar'}
+                                {templateContentRating > 0 ? `${templateContentRating}/5` : 'Sin calificar'}
                               </span>
                             </div>
                             <div className="flex items-center gap-1">
@@ -3082,15 +2655,9 @@ export default function BookingCRM({
                                 <button
                                   key={`crm-template-content-${star}`}
                                   type="button"
-                                  onClick={() =>
-                                    setTemplateContentRating(
-                                      templateContentRating === star ? 0 : star
-                                    )
-                                  }
+                                  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
                                   className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                    templateContentRating >= star
-                                      ? 'text-[var(--acc)]'
-                                      : 'text-[var(--ink-2)]'
+                                    templateContentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                                   }`}
                                   title={`Calificar contenido y estructura: ${star}/5`}
                                 >
@@ -3103,72 +2670,54 @@ export default function BookingCRM({
 
                         <div className="space-y-1 pt-1">
                           <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
-                            <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" />{' '}
-                            Comentario o Corrección Directa
+                            <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
                           </label>
                           <textarea
                             id="template-custom-instruction"
                             rows={2}
                             value={templateCustomInstruction}
-                            onChange={(e) =>
-                              setTemplateCustomInstruction(e.target.value)
-                            }
+                            onChange={(e) => setTemplateCustomInstruction(e.target.value)}
                             className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] focus: focus:outline-none font-sans leading-relaxed"
                             placeholder="Ej:'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
                           />
                         </div>
                         <div className="text-[9px] text-[var(--acc)]/70/80 font-sans leading-tight">
-                          💡 Califica con estrellas el tono y el contenido e
-                          introduce comentarios. Al hacer clic abajo en{' '}
-                          <strong>Regenerar</strong>, la IA usará tus
-                          valoraciones para optimizar la plantilla.
+                          💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en{' '}
+                          <strong>Regenerar</strong>, la IA usará tus valoraciones para optimizar la plantilla.
                         </div>
                       </div>
 
-                      <ExampleThreadsSection
-                        category={templateTab}
-                        textSub={textSub}
-                      />
+                      <ExampleThreadsSection category={templateTab} textSub={textSub} />
 
                       {/* Success Stats Badge + Reset Button */}
                       {templateStats && templateStats[templateTab] && (
                         <div className="space-y-2 pt-3 pb-2">
                           <div className="flex flex-wrap gap-2 items-center">
-                            <span className="text-[9px] font-sans text-[var(--ink-2)]">
-                              📊 Resultados:
-                            </span>
+                            <span className="text-[9px] font-sans text-[var(--ink-2)]">📊 Resultados:</span>
                             <span className="text-[9px] font-sans px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
                               {templateStats[templateTab].totalUses} usos
                             </span>
                             <span
                               className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? 'bg-[var(--ok)]/10 text-[var(--ok)]' : 'bg-[var(--hair)] text-[var(--ink-2)]'}`}
                             >
-                              {templateStats[templateTab].positiveResponses}/
-                              {templateStats[templateTab].totalUses} respuestas
-                              ({templateStats[templateTab].responseRate}%)
+                              {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas (
+                              {templateStats[templateTab].responseRate}%)
                             </span>
                           </div>
-                          {(templateStats[templateTab].invalidEmails > 0 ||
-                            templateStats[templateTab].bouncedEmails > 0) && (
+                          {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
                             <div className="space-y-1">
                               {templateStats[templateTab].invalidEmails > 0 && (
                                 <div
                                   className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${'bg-[var(--alert)]/10 text-[var(--alert)]'}`}
                                 >
                                   <span>⚠️</span>
-                                  <span>
-                                    {templateStats[templateTab].invalidEmails}{' '}
-                                    emails inválidos (excluidos del cálculo)
-                                  </span>
+                                  <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
                                 </div>
                               )}
                               {templateStats[templateTab].bouncedEmails > 0 && (
                                 <div className="text-[9px] px-2 py-1 rounded flex items-center gap-1 bg-[var(--ink-2)]/10 text-[var(--ink-2)]">
                                   <span>📬</span>
-                                  <span>
-                                    {templateStats[templateTab].bouncedEmails}{' '}
-                                    emails rebotados (usuario no existe)
-                                  </span>
+                                  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
                                 </div>
                               )}
                             </div>
@@ -3185,14 +2734,8 @@ export default function BookingCRM({
                           className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                           title="Re-redacta la plantilla y sus pautas integrando todo el feedback histórico de valoraciones del mánager"
                         >
-                          <Sparkles
-                            className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`}
-                          />
-                          <span>
-                            {isOptimizingTemplate
-                              ? 'Regenerando con IA...'
-                              : '✨ Regenerar Plantilla con IA y Aprendizaje'}
-                          </span>
+                          <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+                          <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
                         </button>
                         <button
                           id="template-btn-test"
@@ -3200,11 +2743,7 @@ export default function BookingCRM({
                           disabled={isTestingPrompt}
                           className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
                         >
-                          {isTestingPrompt ? (
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <RefreshCw className="w-3.5 h-3.5" />
-                          )}
+                          {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                           <span>Probar Prompt</span>
                         </button>
                         <button
@@ -3227,32 +2766,17 @@ export default function BookingCRM({
                     </div>
 
                     {/* Test / Prompt Output side */}
-                    <div
-                      className={` rounded-[var(--r-m)] p-4 flex flex-col justify-between ${'bg-[var(--surface)]'}`}
-                    >
+                    <div className={` rounded-[var(--r-m)] p-4 flex flex-col justify-between ${'bg-[var(--surface)]'}`}>
                       <div className="space-y-3">
-                        <div
-                          className={`flex items-center gap-2 pb-2 ${'-neutral-200'}`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`}
-                          />
-                          <h4
-                            className={`text-[10px] font-sans tracking-widest ${textSub}`}
-                          >
-                            Sandbox de Simulación de Redacción AI
-                          </h4>
+                        <div className={`flex items-center gap-2 pb-2 ${'-neutral-200'}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`} />
+                          <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
                         </div>
 
-                        <div
-                          className={`text-[10px] leading-relaxed font-sans ${textSub}`}
-                        >
-                          Cuando el agente de Supabase{' '}
-                          <strong>"Redactor"</strong> corre, lee estas
-                          plantillas y pautas, las mezcla con los detalles del
-                          contacto capturado por el <strong>"Scout"</strong>{' '}
-                          (aforo, ubicación, género, redes) y genera un borrador
-                          adaptado para que lo revises en esta misma pantalla.
+                        <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
+                          Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y pautas, las mezcla con los
+                          detalles del contacto capturado por el <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un
+                          borrador adaptado para que lo revises en esta misma pantalla.
                         </div>
 
                         {testPromptResult ? (
@@ -3267,14 +2791,11 @@ export default function BookingCRM({
                             <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
                               <div className="flex items-center justify-between">
                                 <span className="text-[10px] font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5 font-sans">
-                                  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" />{' '}
-                                  Valorar esta plantilla / resultado
+                                  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
                                 </span>
-                                {(templateToneRating > 0 ||
-                                  templateContentRating > 0) && (
+                                {(templateToneRating > 0 || templateContentRating > 0) && (
                                   <span className="text-[9px] text-[var(--acc)] font-sans">
-                                    Tono: {templateToneRating || '-'}/5 |
-                                    Contenido: {templateContentRating || '-'}/5
+                                    Tono: {templateToneRating || '-'}/5 | Contenido: {templateContentRating || '-'}/5
                                   </span>
                                 )}
                               </div>
@@ -3283,13 +2804,9 @@ export default function BookingCRM({
                                 {/* Tono */}
                                 <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-bold text-[var(--ink)]">
-                                      Tono y Estilo
-                                    </span>
+                                    <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
                                     <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                      {templateToneRating > 0
-                                        ? `${templateToneRating}/5`
-                                        : '⭐'}
+                                      {templateToneRating > 0 ? `${templateToneRating}/5` : '⭐'}
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-1">
@@ -3297,17 +2814,9 @@ export default function BookingCRM({
                                       <button
                                         key={`sandbox-tone-${star}`}
                                         type="button"
-                                        onClick={() =>
-                                          setTemplateToneRating(
-                                            templateToneRating === star
-                                              ? 0
-                                              : star
-                                          )
-                                        }
+                                        onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
                                         className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                          templateToneRating >= star
-                                            ? 'text-[var(--acc)]'
-                                            : 'text-[var(--ink-2)]'
+                                          templateToneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                                         }`}
                                         title={`Calificar tono: ${star}/5`}
                                       >
@@ -3320,13 +2829,9 @@ export default function BookingCRM({
                                 {/* Contenido */}
                                 <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-bold text-[var(--ink)]">
-                                      Contenido y Estructura
-                                    </span>
+                                    <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
                                     <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                      {templateContentRating > 0
-                                        ? `${templateContentRating}/5`
-                                        : '⭐'}
+                                      {templateContentRating > 0 ? `${templateContentRating}/5` : '⭐'}
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-1">
@@ -3334,17 +2839,9 @@ export default function BookingCRM({
                                       <button
                                         key={`sandbox-content-${star}`}
                                         type="button"
-                                        onClick={() =>
-                                          setTemplateContentRating(
-                                            templateContentRating === star
-                                              ? 0
-                                              : star
-                                          )
-                                        }
+                                        onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
                                         className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                          templateContentRating >= star
-                                            ? 'text-[var(--acc)]'
-                                            : 'text-[var(--ink-2)]'
+                                          templateContentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                                         }`}
                                         title={`Calificar contenido: ${star}/5`}
                                       >
@@ -3361,30 +2858,20 @@ export default function BookingCRM({
                                 disabled={isOptimizingTemplate}
                                 className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                               >
-                                <Sparkles
-                                  className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`}
-                                />
-                                <span>
-                                  Re-generar plantilla usando estas valoraciones
-                                  ✨
-                                </span>
+                                <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
+                                <span>Re-generar plantilla usando estas valoraciones ✨</span>
                               </button>
                             </div>
                           </div>
                         ) : (
-                          <div
-                            className={`border-2 rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${'text-[var(--ink-2)]'}`}
-                          >
-                            Haz clic en"Probar Prompt" a la izquierda para
-                            simular el resultado de generación del Redactor AI
-                            basado en tus directrices actuales.
+                          <div className={`border-2 rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>
+                            Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus
+                            directrices actuales.
                           </div>
                         )}
                       </div>
 
-                      <div
-                        className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}
-                      >
+                      <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
                         Módulo de Modelado AI de BandManager. Powered by Gemini.
                       </div>
                     </div>
@@ -3505,9 +2992,7 @@ export default function BookingCRM({
       {/* BULK PROGRESS MODAL */}
       <BulkProgressModal
         isOpen={bulkProgressState.isOpen}
-        onClose={() =>
-          setBulkProgressState((prev) => ({ ...prev, isOpen: false }))
-        }
+        onClose={() => setBulkProgressState((prev) => ({ ...prev, isOpen: false }))}
         title={bulkProgressState.title}
         subtitle={bulkProgressState.subtitle}
         items={bulkProgressState.items}
@@ -3517,11 +3002,7 @@ export default function BookingCRM({
       />
 
       {/* MODULE TUTORIAL MODAL */}
-      <ModuleTutorialModal
-        isOpen={bookingTutorial.isOpen}
-        onClose={bookingTutorial.closeTutorial}
-        moduleId="booking"
-      />
+      <ModuleTutorialModal isOpen={bookingTutorial.isOpen} onClose={bookingTutorial.closeTutorial} moduleId="booking" />
     </div>
   );
 }

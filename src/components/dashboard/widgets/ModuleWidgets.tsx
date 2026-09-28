@@ -16,16 +16,7 @@ import {
   Disc3,
   ShieldCheck,
 } from 'lucide-react';
-import {
-  Lead,
-  Concert,
-  Rehearsal,
-  Tour,
-  Fan,
-  SocialPost,
-  EPKConfig,
-  ThemeColors,
-} from '../../../types';
+import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
 import { api } from '../../../services/api';
 
 export interface ModuleWidgetProps {
@@ -43,18 +34,9 @@ export interface ModuleWidgetProps {
 }
 
 /* 1. CRM PIPELINE WIDGET */
-export function CrmPipelineWidget({
-  leads = [],
-  onNavigate,
-}: ModuleWidgetProps) {
-  const urgentRepliesNeeded = leads.filter(
-    (l) => l.estado === 'interesado' || l.estado === 'negociando'
-  );
-  const urgentApprovalsNeeded = leads.filter(
-    (l) =>
-      l.estado === 'pendiente_aprobacion' ||
-      (l.pitch_generado && l.estado === 'nuevo')
-  );
+export function CrmPipelineWidget({ leads = [], onNavigate }: ModuleWidgetProps) {
+  const urgentRepliesNeeded = leads.filter((l) => l.estado === 'interesado' || l.estado === 'negociando');
+  const urgentApprovalsNeeded = leads.filter((l) => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo'));
   const confirmedShows = leads.filter((l) => l.estado === 'confirmado');
 
   return (
@@ -65,12 +47,8 @@ export function CrmPipelineWidget({
             <Building2 className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-[var(--ink)]">
-              Booking
-            </h3>
-            <p className="text-xs text-[var(--ink-2)]">
-              Resumen de contrataciones
-            </p>
+            <h3 className="text-base font-semibold text-[var(--ink)]">Booking</h3>
+            <p className="text-xs text-[var(--ink-2)]">Resumen de contrataciones</p>
           </div>
         </div>
         {onNavigate && (
@@ -87,32 +65,22 @@ export function CrmPipelineWidget({
 
       <div className="grid grid-cols-3 gap-3 text-center">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-xl font-bold text-[var(--ink)] tabular-nums">
-            {urgentRepliesNeeded.length}
-          </span>
+          <span className="text-xl font-bold text-[var(--ink)] tabular-nums">{urgentRepliesNeeded.length}</span>
           <p className="text-[10px] text-[var(--ink-2)] mt-1">Negociando</p>
         </div>
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)]">
-          <span className="text-xl font-bold text-[var(--acc-ink)] tabular-nums">
-            {urgentApprovalsNeeded.length}
-          </span>
-          <p className="text-[10px] text-[var(--acc-ink)]/75 mt-1">
-            Por aprobar
-          </p>
+          <span className="text-xl font-bold text-[var(--acc-ink)] tabular-nums">{urgentApprovalsNeeded.length}</span>
+          <p className="text-[10px] text-[var(--acc-ink)]/75 mt-1">Por aprobar</p>
         </div>
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)]">
-          <span className="text-xl font-bold text-[var(--ok)] tabular-nums">
-            {confirmedShows.length}
-          </span>
+          <span className="text-xl font-bold text-[var(--ok)] tabular-nums">{confirmedShows.length}</span>
           <p className="text-[10px] text-[var(--ok)]/75 mt-1">Confirmados</p>
         </div>
       </div>
 
       <div className="text-xs text-[var(--ink-2)] flex items-center justify-between pt-1">
         <span>Total de salas y eventos en el embudo</span>
-        <span className="font-semibold text-[var(--ink-2)] tabular-nums">
-          {leads.length}
-        </span>
+        <span className="font-semibold text-[var(--ink-2)] tabular-nums">{leads.length}</span>
       </div>
     </div>
   );
@@ -149,12 +117,8 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
             <Music className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
-              Repertorio & Setlists
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Canciones e Iris Stems
-            </p>
+            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Repertorio & Setlists</h3>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Canciones e Iris Stems</p>
           </div>
         </div>
         {onNavigate && (
@@ -173,31 +137,19 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
         <div className="flex items-center gap-3">
           <Disc3 className="w-8 h-8 text-[var(--acc)] animate-spin-slow shrink-0" />
           <div>
-            <span className="text-xl font-sans font-bold text-[var(--ink-2)]">
-              {songCount}
-            </span>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Temas guardados en catálogo
-            </p>
+            <span className="text-xl font-sans font-bold text-[var(--ink-2)]">{songCount}</span>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Temas guardados en catálogo</p>
           </div>
         </div>
-        <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">
-          Iris IA Activo
-        </span>
+        <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">Iris IA Activo</span>
       </div>
     </div>
   );
 }
 
 /* 3. FINANCES WIDGET */
-export function FinancesWidget({
-  concerts = [],
-  onNavigate,
-}: ModuleWidgetProps) {
-  const totalCache = concerts.reduce(
-    (acc, c) => acc + (Number(c.cache) || 0),
-    0
-  );
+export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps) {
+  const totalCache = concerts.reduce((acc, c) => acc + (Number(c.cache) || 0), 0);
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
@@ -207,12 +159,8 @@ export function FinancesWidget({
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
-              Balance & Cachés
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Recaudación bruta proyectada
-            </p>
+            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Balance & Cachés</h3>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Recaudación bruta proyectada</p>
           </div>
         </div>
         {onNavigate && (
@@ -229,21 +177,13 @@ export function FinancesWidget({
 
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
         <div>
-          <span className="text-2xl font-sans font-black text-[var(--ok)]">
-            {totalCache.toLocaleString('es-ES')} €
-          </span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">
-            Suma de cachés de bolos
-          </p>
+          <span className="text-2xl font-sans font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Suma de cachés de bolos</p>
         </div>
         <div className="text-right">
-          <span className="text-xs font-sans text-[var(--ink-2)] font-bold">
-            {concerts.length} conciertos
-          </span>
+          <span className="text-xs font-sans text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
           <p className="text-[10px] font-sans text-[var(--ink-2)]">
-            Caché medio:{' '}
-            {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0}{' '}
-            €
+            Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €
           </p>
         </div>
       </div>
@@ -261,12 +201,8 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
-              Fans & Captación
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Comunidad y códigos QR
-            </p>
+            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Fans & Captación</h3>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Comunidad y códigos QR</p>
           </div>
         </div>
         {onNavigate && (
@@ -283,12 +219,8 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]">
-          <span className="text-2xl font-sans font-bold text-[var(--acc)]">
-            {fans.length}
-          </span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-1">
-            Fans Registrados
-          </p>
+          <span className="text-2xl font-sans font-bold text-[var(--acc)]">{fans.length}</span>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-1">Fans Registrados</p>
         </div>
         <button
           type="button"
@@ -296,9 +228,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
           className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all flex flex-col items-center justify-center cursor-pointer"
         >
           <QrCode className="w-5 h-5 text-[var(--acc)] mb-1" />
-          <span className="text-[11px] font-sans font-bold">
-            Generar QR de Concierto
-          </span>
+          <span className="text-[11px] font-sans font-bold">Generar QR de Concierto</span>
         </button>
       </div>
     </div>
@@ -315,12 +245,8 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
-              Dossier EPK Público
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Presencia y prensa para salas
-            </p>
+            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Dossier EPK Público</h3>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Presencia y prensa para salas</p>
           </div>
         </div>
         {onNavigate && (
@@ -337,12 +263,8 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
 
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
         <div>
-          <span className="text-xs font-sans font-bold text-[var(--tentative)]/80">
-            EPK Activo & Listo
-          </span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)]">
-            Optimizado para agentes y programadores
-          </p>
+          <span className="text-xs font-sans font-bold text-[var(--tentative)]/80">EPK Activo & Listo</span>
+          <p className="text-[10px] font-sans text-[var(--ink-2)]">Optimizado para agentes y programadores</p>
         </div>
         <a
           href="/epk"
@@ -358,14 +280,8 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
 }
 
 /* 6. AI AGENT WIDGET */
-export function AiAgentWidget({
-  leads = [],
-  currentUser,
-  onNavigate,
-}: ModuleWidgetProps) {
-  const pendingApprovals = leads.filter(
-    (l) => l.estado === 'pendiente_aprobacion'
-  ).length;
+export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWidgetProps) {
+  const pendingApprovals = leads.filter((l) => l.estado === 'pendiente_aprobacion').length;
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
@@ -375,12 +291,8 @@ export function AiAgentWidget({
             <Bot className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
-              Agente IA de Booking
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Redactor & Lector Autónomo
-            </p>
+            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Agente IA de Booking</h3>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Redactor & Lector Autónomo</p>
           </div>
         </div>
         {onNavigate && (
@@ -397,26 +309,17 @@ export function AiAgentWidget({
 
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
         <div>
-          <span className="text-lg font-sans font-bold text-[var(--acc)]">
-            {pendingApprovals} Borradores
-          </span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">
-            Pendientes de Aprobación Humana
-          </p>
+          <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider mt-0.5">Pendientes de Aprobación Humana</p>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">
-          ● Activo
-        </span>
+        <span className="px-2.5 py-1 rounded-full bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">● Activo</span>
       </div>
     </div>
   );
 }
 
 /* 7. TOUR LOGISTICS WIDGET */
-export function TourStatusWidget({
-  tours = [],
-  onNavigate,
-}: ModuleWidgetProps) {
+export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
@@ -425,12 +328,8 @@ export function TourStatusWidget({
             <Truck className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">
-              Giras & Logística
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Rutas de conciertos y producción
-            </p>
+            <h3 className="text-base font-bold font-display tracking-wider text-[var(--ink-2)]">Giras & Logística</h3>
+            <p className="text-xs font-sans text-[var(--ink-2)]">Rutas de conciertos y producción</p>
           </div>
         </div>
         {onNavigate && (
@@ -447,12 +346,8 @@ export function TourStatusWidget({
 
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between">
         <div>
-          <span className="text-sm font-sans font-bold text-[var(--ink-2)]">
-            {tours.length} Giras Programadas
-          </span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">
-            Rutas y hoteles unificados
-          </p>
+          <span className="text-sm font-sans font-bold text-[var(--ink-2)]">{tours.length} Giras Programadas</span>
+          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Rutas y hoteles unificados</p>
         </div>
       </div>
     </div>

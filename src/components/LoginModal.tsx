@@ -42,10 +42,7 @@ const LOGIN_POSTER = '/login-animation-poster.jpg';
 // red va mal (2G/slow-2g o modo Ahorro de Datos activado).
 function tieneConexionMala(): boolean {
   try {
-    const conn =
-      (navigator as any).connection ||
-      (navigator as any).mozConnection ||
-      (navigator as any).webkitConnection;
+    const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
     if (!conn) return false;
     if (conn.saveData) return true;
     return conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
@@ -91,9 +88,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
   // On mount, prefill username and emails if stored in localStorage
   useEffect(() => {
-    const savedUser =
-      localStorage.getItem('bakandeya_remembered_username') ||
-      localStorage.getItem('bakandeya_last_login_email');
+    const savedUser = localStorage.getItem('bakandeya_remembered_username') || localStorage.getItem('bakandeya_last_login_email');
     if (savedUser) {
       setUsername(savedUser);
       setRegEmail(savedUser);
@@ -126,9 +121,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   const [activatePassword, setActivatePassword] = useState('');
   const [showActivatePassword, setShowActivatePassword] = useState(false);
   const [activateStep, setActivateStep] = useState<1 | 2>(1);
-  const [activateBandsFound, setActivateBandsFound] = useState<
-    { band_id: string; bandName: string; role: string }[]
-  >([]);
+  const [activateBandsFound, setActivateBandsFound] = useState<{ band_id: string; bandName: string; role: string }[]>([]);
 
   // --- Check Invitation Step 1 ---
   const handleCheckInvitation = async (e: React.FormEvent) => {
@@ -328,9 +321,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       setPassword('');
       setError(null);
       setView('login');
-      setResetSuccessMsg(
-        '¡Contraseña restablecida con éxito! Ya puedes iniciar sesión.'
-      );
+      setResetSuccessMsg('¡Contraseña restablecida con éxito! Ya puedes iniciar sesión.');
     } catch (err: any) {
       setError(err.message || 'Error al confirmar la nueva contraseña');
     } finally {
@@ -338,19 +329,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     }
   };
 
-  const [featureCategory, setFeatureCategory] = useState<
-    'all' | 'booking' | 'media' | 'finance'
-  >('all');
+  const [featureCategory, setFeatureCategory] = useState<'all' | 'booking' | 'media' | 'finance'>('all');
 
   // --- Register Submit ---
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !regLeaderName.trim() ||
-      !regBandName.trim() ||
-      !regEmail.trim() ||
-      !regPassword
-    ) {
+    if (!regLeaderName.trim() || !regBandName.trim() || !regEmail.trim() || !regPassword) {
       setError('Por favor, completa todos los campos.');
       return;
     }
@@ -358,9 +342,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     handlePlanSelect('promo');
   };
 
-  const handlePlanSelect = async (
-    planKey: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string
-  ) => {
+  const handlePlanSelect = async (planKey: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string) => {
     setLoading(true);
     setError(null);
 
@@ -397,10 +379,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       onLoginSuccess(data.user, data.token, data.availableBands);
     } catch (err: any) {
-      console.warn(
-        'Backend register notice, proceeding with local session state:',
-        err
-      );
+      console.warn('Backend register notice, proceeding with local session state:', err);
       // Fallback local session if offline
       onLoginSuccess(
         {
@@ -429,10 +408,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       if (!googleUser) return; // User closed or cancelled popup
 
       const email = googleUser.email;
-      const displayName =
-        view === 'register' && regLeaderName.trim()
-          ? regLeaderName.trim()
-          : googleUser.name || email.split('@')[0];
+      const displayName = view === 'register' && regLeaderName.trim() ? regLeaderName.trim() : googleUser.name || email.split('@')[0];
 
       // Call backend API /api/auth/google
       try {
@@ -444,14 +420,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             name: displayName,
             uid: googleUser.sub,
             accessToken: googleUser.accessToken,
-            bandName:
-              view === 'register' && regBandName.trim()
-                ? regBandName.trim()
-                : undefined,
-            leaderName:
-              view === 'register' && regLeaderName.trim()
-                ? regLeaderName.trim()
-                : undefined,
+            bandName: view === 'register' && regBandName.trim() ? regBandName.trim() : undefined,
+            leaderName: view === 'register' && regLeaderName.trim() ? regLeaderName.trim() : undefined,
           }),
         });
 
@@ -463,10 +433,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           return;
         }
       } catch (backendErr) {
-        console.warn(
-          'API de auth Google fallo, iniciando sesion local:',
-          backendErr
-        );
+        console.warn('API de auth Google fallo, iniciando sesion local:', backendErr);
       }
 
       // Fallback local login if backend is unreachable
@@ -531,37 +498,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     if (/[0-9]/.test(pass) && /[^A-Za-z0-9]/.test(pass)) score += 1;
 
     const labels = ['Contraseña básica', 'Seguridad media', 'Muy segura'];
-    const colors = [
-      'bg-[var(--alert)]',
-      'bg-[var(--acc)]/60',
-      'bg-[var(--ok)]',
-    ];
-    const textColors = [
-      'text-[var(--alert)]',
-      'text-[var(--acc)]',
-      'text-[var(--ok)]',
-    ];
+    const colors = ['bg-[var(--alert)]', 'bg-[var(--acc)]/60', 'bg-[var(--ok)]'];
+    const textColors = ['text-[var(--alert)]', 'text-[var(--acc)]', 'text-[var(--ok)]'];
 
     return (
       <div className="space-y-1.5 pt-1 px-0.5">
         <div className="flex gap-1 h-1 w-full bg-[var(--surface)]/80 rounded-full overflow-hidden">
-          <div
-            className={`h-full transition-all duration-300 ${score >= 1 ? colors[0] : 'bg-transparent'} w-1/3`}
-          />
-          <div
-            className={`h-full transition-all duration-300 ${score >= 2 ? colors[1] : 'bg-transparent'} w-1/3`}
-          />
-          <div
-            className={`h-full transition-all duration-300 ${score >= 3 ? colors[2] : 'bg-transparent'} w-1/3`}
-          />
+          <div className={`h-full transition-all duration-300 ${score >= 1 ? colors[0] : 'bg-transparent'} w-1/3`} />
+          <div className={`h-full transition-all duration-300 ${score >= 2 ? colors[1] : 'bg-transparent'} w-1/3`} />
+          <div className={`h-full transition-all duration-300 ${score >= 3 ? colors[2] : 'bg-transparent'} w-1/3`} />
         </div>
         <div className="flex justify-between items-center text-[11px]">
-          <span className={`font-medium ${textColors[Math.max(0, score - 1)]}`}>
-            {labels[Math.max(0, score - 1)]}
-          </span>
-          <span className="text-[var(--ink-2)]">
-            {pass.length < 6 ? 'Mínimo 6 caracteres' : '✓ Longitud OK'}
-          </span>
+          <span className={`font-medium ${textColors[Math.max(0, score - 1)]}`}>{labels[Math.max(0, score - 1)]}</span>
+          <span className="text-[var(--ink-2)]">{pass.length < 6 ? 'Mínimo 6 caracteres' : '✓ Longitud OK'}</span>
         </div>
       </div>
     );
@@ -609,9 +558,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       title={l.label}
                     >
                       <span>{l.flag}</span>
-                      <span className="hidden sm:inline">
-                        {l.label.slice(0, 3)}
-                      </span>
+                      <span className="hidden sm:inline">{l.label.slice(0, 3)}</span>
                     </button>
                   );
                 })}
@@ -625,9 +572,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)] mt-0.5" />
                   <span className="leading-relaxed">{error}</span>
                 </div>
-                {(error.includes('Google') ||
-                  error.includes('OAuth') ||
-                  error.includes('bloqueado')) && (
+                {(error.includes('Google') || error.includes('OAuth') || error.includes('bloqueado')) && (
                   <div className="pt-1 flex justify-end">
                     <button
                       type="button"
@@ -677,10 +622,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                           onMouseEnter={handleReplayLoginVideo}
                         >
                           <source src="/login-animation.mp4" type="video/mp4" />
-                          <source
-                            src="/login-animation.webm"
-                            type="video/webm"
-                          />
+                          <source src="/login-animation.webm" type="video/webm" />
                         </video>
                       )}
                     </div>
@@ -694,10 +636,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   </div>
                 )}
 
-                <form
-                  onSubmit={handleLoginSubmit}
-                  className="w-full space-y-3.5"
-                >
+                <form onSubmit={handleLoginSubmit} className="w-full space-y-3.5">
                   <div className="relative flex items-center">
                     <Mail className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
                     <input
@@ -725,11 +664,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
                     >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
 
@@ -739,12 +674,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       <div
                         className={`w-4 h-4 rounded-md flex items-center justify-center transition-all duration-200 ${rememberMe ? 'bg-[var(--acc)] text-[var(--ink)]' : 'bg-[var(--surface)] /80'}`}
                       >
-                        <input
-                          type="checkbox"
-                          checked={rememberMe}
-                          onChange={(e) => setRememberMe(e.target.checked)}
-                          className="sr-only"
-                        />
+                        <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="sr-only" />
                         {rememberMe && <Check className="w-3 h-3 stroke-[3]" />}
                       </div>
                       <span>Recordar contraseña</span>
@@ -785,9 +715,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <div className="w-full /80"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">
-                      O continuar con
-                    </span>
+                    <span className="px-2.5 bg-[var(--surface)] text-[var(--ink-2)] font-medium">O continuar con</span>
                   </div>
                 </div>
 
@@ -823,9 +751,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <div className="pt-3 /60 text-center text-[11px] text-[var(--ink-2)]/90 flex items-center justify-center gap-1.5 font-medium">
                   <Shield className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>
-                    Acceso seguro cifrado · Datos 100% privados de tu banda
-                  </span>
+                  <span>Acceso seguro cifrado · Datos 100% privados de tu banda</span>
                 </div>
               </div>
             )}
@@ -848,9 +774,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <ArrowLeft className="w-4 h-4" />
                   </button>
                   <div>
-                    <h2 className="text-base font-bold text-[var(--ink-2)]">
-                      Restablecer contraseña
-                    </h2>
+                    <h2 className="text-base font-bold text-[var(--ink-2)]">Restablecer contraseña</h2>
                     <p className="text-xs text-[var(--ink-2)] leading-tight">
                       {resetStep === 1
                         ? 'Introduce tu correo o usuario para recuperar tu acceso.'
@@ -875,9 +799,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       <input
                         type="text"
                         value={resetEmailOrUsername}
-                        onChange={(e) =>
-                          setResetEmailOrUsername(e.target.value)
-                        }
+                        onChange={(e) => setResetEmailOrUsername(e.target.value)}
                         placeholder="Correo electrónico o Usuario"
                         className="w-full pl-11 pr-4 py-3.5 bg-[var(--surface)]/90 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-all"
                         required
@@ -885,8 +807,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     </div>
 
                     <p className="text-[11px] text-[var(--ink-2)] px-1 leading-tight">
-                      ⚡ Te enviaremos un código de verificación de 6 dígitos
-                      por correo electrónico para restablecer tu contraseña.
+                      ⚡ Te enviaremos un código de verificación de 6 dígitos por correo electrónico para restablecer tu contraseña.
                     </p>
 
                     <button
@@ -934,16 +855,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         />
                         <button
                           type="button"
-                          onClick={() =>
-                            setShowResetNewPassword(!showResetNewPassword)
-                          }
+                          onClick={() => setShowResetNewPassword(!showResetNewPassword)}
                           className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
                         >
-                          {showResetNewPassword ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
+                          {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
                       <PasswordStrengthBar pass={resetNewPassword} />
@@ -955,9 +870,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         <input
                           type={showResetNewPassword ? 'text' : 'password'}
                           value={resetConfirmPassword}
-                          onChange={(e) =>
-                            setResetConfirmPassword(e.target.value)
-                          }
+                          onChange={(e) => setResetConfirmPassword(e.target.value)}
                           placeholder="Repite la nueva contraseña"
                           className="w-full pl-11 pr-11 py-3.5 bg-[var(--surface)]/90 rounded-[var(--r-l)] text-sm text-[var(--ink-2)] placeholder:text-[var(--ink-2)] outline-none transition-all"
                           required
@@ -967,13 +880,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         <div className="text-[11px] px-1 flex items-center gap-1.5 pt-0.5">
                           {resetNewPassword === resetConfirmPassword ? (
                             <span className="text-[var(--ok)] font-medium flex items-center gap-1">
-                              <Check className="w-3.5 h-3.5" /> Las contraseñas
-                              coinciden perfectamente
+                              <Check className="w-3.5 h-3.5" /> Las contraseñas coinciden perfectamente
                             </span>
                           ) : (
-                            <span className="text-[var(--alert)] font-medium">
-                              Las contraseñas no coinciden aún
-                            </span>
+                            <span className="text-[var(--alert)] font-medium">Las contraseñas no coinciden aún</span>
                           )}
                         </div>
                       )}
@@ -981,11 +891,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                     <button
                       type="submit"
-                      disabled={
-                        loading ||
-                        (resetConfirmPassword.length > 0 &&
-                          resetNewPassword !== resetConfirmPassword)
-                      }
+                      disabled={loading || (resetConfirmPassword.length > 0 && resetNewPassword !== resetConfirmPassword)}
                       className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                     >
                       {loading ? (
@@ -1027,10 +933,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
  ========================================= */}
             {view === 'register' && (
               <div className="w-full p-6 sm:p-7 bg-[var(--surface)]/90/25 rounded-3xl animate-in slide-in-from-bottom-4 duration-300 space-y-4">
-                <form
-                  onSubmit={handleRegisterSubmit}
-                  className="w-full space-y-3.5"
-                >
+                <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
                   <div className="relative flex items-center">
                     <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
                     <input
@@ -1045,13 +948,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                   <div className="space-y-1">
                     <div className="flex items-center justify-between px-1">
-                      <span className="text-[11px] font-sans text-[var(--ink-2)]">
-                        Proyecto Musical:
-                      </span>
-                      <BandNameStylerHelper
-                        value={regBandName}
-                        onChange={(styled) => setRegBandName(styled)}
-                      />
+                      <span className="text-[11px] font-sans text-[var(--ink-2)]">Proyecto Musical:</span>
+                      <BandNameStylerHelper value={regBandName} onChange={(styled) => setRegBandName(styled)} />
                     </div>
                     <div className="relative flex items-center">
                       <Music className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
@@ -1094,11 +992,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         onClick={() => setShowRegPassword(!showRegPassword)}
                         className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
                       >
-                        {showRegPassword ? (
-                          <EyeOff className="w-4 h-4" />
-                        ) : (
-                          <Eye className="w-4 h-4" />
-                        )}
+                        {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                     <PasswordStrengthBar pass={regPassword} />
@@ -1125,9 +1019,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     <div className="w-full"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
-                      O regístrate con
-                    </span>
+                    <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O regístrate con</span>
                   </div>
                 </div>
 
@@ -1136,10 +1028,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 <div className="text-center mt-8">
                   <p className="text-sm text-[var(--ink-2)]">
                     ¿Ya tienes cuenta?{''}
-                    <button
-                      onClick={() => setView('login')}
-                      className="text-[var(--acc)] hover:underline font-medium cursor-pointer"
-                    >
+                    <button onClick={() => setView('login')} className="text-[var(--acc)] hover:underline font-medium cursor-pointer">
                       Inicia sesión
                     </button>
                   </p>
@@ -1155,19 +1044,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 {activateStep === 1 ? (
                   <div className="space-y-4">
                     <div className="text-center space-y-2 mb-4">
-                      <h2 className="text-lg font-bold text-[var(--ink-2)]">
-                        Darse de alta como miembro
-                      </h2>
+                      <h2 className="text-lg font-bold text-[var(--ink-2)]">Darse de alta como miembro</h2>
                       <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                        Si el director de tu banda ya te ha añadido en la lista
-                        de miembros, introduce tu correo para activar tu cuenta.
+                        Si el director de tu banda ya te ha añadido en la lista de miembros, introduce tu correo para activar tu cuenta.
                       </p>
                     </div>
 
-                    <form
-                      onSubmit={handleCheckInvitation}
-                      className="space-y-3.5"
-                    >
+                    <form onSubmit={handleCheckInvitation} className="space-y-3.5">
                       <div className="relative flex items-center">
                         <Mail className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
                         <input
@@ -1199,8 +1082,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     {activateEmail.trim().length > 2 && (
                       <div className="p-3 bg-[var(--surface)] rounded-[var(--r-l)] text-xs text-[var(--ink-2)] space-y-2 animate-in fade-in">
                         <p className="font-medium text-[var(--ink-2)]">
-                          ¿Quieres registrar tu propia banda en vez de activar
-                          una invitación?
+                          ¿Quieres registrar tu propia banda en vez de activar una invitación?
                         </p>
                         <button
                           type="button"
@@ -1222,9 +1104,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         <div className="w-full"></div>
                       </div>
                       <div className="relative flex justify-center text-xs">
-                        <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
-                          O comprobar con
-                        </span>
+                        <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O comprobar con</span>
                       </div>
                     </div>
 
@@ -1233,34 +1113,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 ) : (
                   <div className="space-y-4">
                     <div className="text-center space-y-2 mb-4">
-                      <h2 className="text-lg font-bold text-[var(--ink-2)]">
-                        ¡Invitación Encontrada!
-                      </h2>
+                      <h2 className="text-lg font-bold text-[var(--ink-2)]">¡Invitación Encontrada!</h2>
                       <div className="p-3 bg-[var(--acc)]/5/20 rounded-[var(--r-l)] text-xs text-[var(--acc)] space-y-1">
-                        <p className="font-semibold text-center text-[var(--ink-2)]">
-                          Banda(s) detectada(s):
-                        </p>
+                        <p className="font-semibold text-center text-[var(--ink-2)]">Banda(s) detectada(s):</p>
                         <ul className="list-disc pl-4 space-y-0.5 text-left max-h-24 overflow-y-auto">
                           {activateBandsFound.map((b, idx) => (
                             <li key={idx} className="text-[var(--ink-2)]">
-                              <span className="font-semibold text-[var(--ink-2)]">
-                                {b.bandName}
-                              </span>{' '}
-                              ({b.role === 'leader' ? 'Director' : 'Músico'})
+                              <span className="font-semibold text-[var(--ink-2)]">{b.bandName}</span> (
+                              {b.role === 'leader' ? 'Director' : 'Músico'})
                             </li>
                           ))}
                         </ul>
                       </div>
-                      <p className="text-xs text-[var(--ink-2)]">
-                        Establece tu nombre real, usuario y contraseña para
-                        activar tu cuenta.
-                      </p>
+                      <p className="text-xs text-[var(--ink-2)]">Establece tu nombre real, usuario y contraseña para activar tu cuenta.</p>
                     </div>
 
-                    <form
-                      onSubmit={handleActivateAccount}
-                      className="space-y-3.5"
-                    >
+                    <form onSubmit={handleActivateAccount} className="space-y-3.5">
                       <div className="relative flex items-center">
                         <User className="w-4 h-4 text-[var(--acc)] absolute left-4 pointer-events-none" />
                         <input
@@ -1297,16 +1165,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         />
                         <button
                           type="button"
-                          onClick={() =>
-                            setShowActivatePassword(!showActivatePassword)
-                          }
+                          onClick={() => setShowActivatePassword(!showActivatePassword)}
                           className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
                         >
-                          {showActivatePassword ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
+                          {showActivatePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
 
@@ -1331,9 +1193,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         <div className="w-full"></div>
                       </div>
                       <div className="relative flex justify-center text-xs">
-                        <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">
-                          O activar con tu cuenta de Google
-                        </span>
+                        <span className="px-2 bg-[var(--bg)] text-[var(--ink-2)]">O activar con tu cuenta de Google</span>
                       </div>
                     </div>
 
@@ -1377,15 +1237,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   </div>
 
                   <h1 className="text-2xl font-bold text-[var(--ink-2)] tracking-tight">
-                    Plan Promo para{' '}
-                    <span className="text-[var(--acc)]">
-                      {regBandName || 'tu Banda'}
-                    </span>
+                    Plan Promo para <span className="text-[var(--acc)]">{regBandName || 'tu Banda'}</span>
                   </h1>
-                  <p className="text-[var(--ink-2)] text-xs">
-                    Acceso gratuito a Dossier (EPK), Captación de Fans con QR y
-                    Calendario.
-                  </p>
+                  <p className="text-[var(--ink-2)] text-xs">Acceso gratuito a Dossier (EPK), Captación de Fans con QR y Calendario.</p>
                 </div>
 
                 <div className="bg-[var(--surface)]/50 rounded-3xl p-6 flex flex-col space-y-4">
@@ -1394,10 +1248,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       Festivales & Buskers
                     </span>
                     <span className="text-xl font-black text-[var(--ink)]">
-                      0€{' '}
-                      <span className="text-xs font-normal text-[var(--ink-2)]">
-                        / gratis
-                      </span>
+                      0€ <span className="text-xs font-normal text-[var(--ink-2)]">/ gratis</span>
                     </span>
                   </div>
 
@@ -1426,9 +1277,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     disabled={loading}
                     className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-sm tracking-wide transition-all cursor-pointer disabled:opacity-50"
                   >
-                    {loading
-                      ? 'Creando cuenta...'
-                      : 'Crear mi Dossier y QR Gratis'}
+                    {loading ? 'Creando cuenta...' : 'Crear mi Dossier y QR Gratis'}
                   </button>
                 </div>
               </div>

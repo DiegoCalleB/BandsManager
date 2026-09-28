@@ -32,12 +32,7 @@ import {
   Volume2,
   Ticket,
 } from 'lucide-react';
-import {
-  SocialPlatformsList,
-  SocialLinks,
-  PayPalLogo,
-  BizumLogo,
-} from './SocialPlatformsList';
+import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import {
   FAN_FORM_TRANSLATIONS,
@@ -65,16 +60,10 @@ export interface FansLandingProps {
   onClosePreview?: () => void;
 }
 
-const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({
-  code,
-  className = 'w-4 h-3',
-}) => {
+const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className = 'w-4 h-3' }) => {
   if (code === 'es') {
     return (
-      <svg
-        className={`${className} rounded-xs object-cover shrink-0`}
-        viewBox="0 0 640 480"
-      >
+      <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
         <path fill="#c60b1e" d="M0 0h640v480H0z" />
         <path fill="#ffc400" d="M0 120h640v240H0z" />
       </svg>
@@ -82,15 +71,9 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({
   }
   if (code === 'en') {
     return (
-      <svg
-        className={`${className} rounded-xs object-cover shrink-0`}
-        viewBox="0 0 640 480"
-      >
+      <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
         <path fill="#012169" d="M0 0h640v480H0z" />
-        <path
-          fill="#fff"
-          d="m75 0 245 180L565 0h75v55L415 240l225 185v55h-75L320 300 75 480H0v-55l225-185L0 55V0z"
-        />
+        <path fill="#fff" d="m75 0 245 180L565 0h75v55L415 240l225 185v55h-75L320 300 75 480H0v-55l225-185L0 55V0z" />
         <path
           fill="#c8102e"
           d="m425 240 215 175v25h-35L390 265zm-210 0L0 415v25h35l215-175zm210 0L640 65V40h-35L390 215zm-210 0L0 65V40h35l215 175z"
@@ -102,10 +85,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({
   }
   if (code === 'it') {
     return (
-      <svg
-        className={`${className} rounded-xs object-cover shrink-0`}
-        viewBox="0 0 640 480"
-      >
+      <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
         <path fill="#009246" d="M0 0h213.3v480H0z" />
         <path fill="#fff" d="M213.3 0h213.4v480H213.3z" />
         <path fill="#ce2b37" d="M426.7 0H640v480H426.7z" />
@@ -114,10 +94,7 @@ const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({
   }
   if (code === 'cs') {
     return (
-      <svg
-        className={`${className} rounded-xs object-cover shrink-0`}
-        viewBox="0 0 640 480"
-      >
+      <svg className={`${className} rounded-xs object-cover shrink-0`} viewBox="0 0 640 480">
         <path fill="#d7141a" d="M0 0h640v480H0z" />
         <path fill="#fff" d="M0 0h640v240H0z" />
         <path fill="#11457e" d="M0 0l320 240L0 480z" />
@@ -146,9 +123,7 @@ const FanFormLanguageSwitcher: React.FC<{
         }`}
       >
         <FlagIcon code={l.code} className="w-4 h-3 shrink-0" />
-        <span className="uppercase">
-          {l.code === 'en' ? 'GB' : l.code.toUpperCase()}
-        </span>
+        <span className="uppercase">{l.code === 'en' ? 'GB' : l.code.toUpperCase()}</span>
       </button>
     ))}
   </div>
@@ -184,24 +159,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [concertId, setConcertId] = useState('');
   const [concertName, setConcertName] = useState('');
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [isConcertLink, setIsConcertLink] = useState(
-    Boolean(previewConcert || previewConcertName)
-  );
-  const [language, setLanguage] = useFanFormLanguage(
-    isPreview ? previewLanguage : undefined
-  );
+  const [isConcertLink, setIsConcertLink] = useState(Boolean(previewConcert || previewConcertName));
+  const [language, setLanguage] = useFanFormLanguage(isPreview ? previewLanguage : undefined);
 
   // El idioma"del concierto": el que trae el QR (o el de la previsualización), capturado una
   // sola vez al montar. A propósito NO seguimos a `language` según el fan va tocando el
   // selector: si es-tiquetara"English" en un show en Praga, tomar ahí el ancla habría hecho
   // desaparecer el checo del selector (es/en da solo 2 idiomas). El idioma de fondo del
   // concierto se queda fijo; solo decide QUÉ 2-3 banderas se ofrecen, no cuál está activa.
-  const [conciertoLanguage, setConciertoLanguage] = useState<FanFormLanguage>(
-    () => language
-  );
-  const availableLanguages = FAN_FORM_LANGUAGES.filter((l) =>
-    idiomasDisponiblesParaConcierto(conciertoLanguage).includes(l.code)
-  ).sort(
+  const [conciertoLanguage, setConciertoLanguage] = useState<FanFormLanguage>(() => language);
+  const availableLanguages = FAN_FORM_LANGUAGES.filter((l) => idiomasDisponiblesParaConcierto(conciertoLanguage).includes(l.code)).sort(
     (a, b) =>
       idiomasDisponiblesParaConcierto(conciertoLanguage).indexOf(a.code) -
       idiomasDisponiblesParaConcierto(conciertoLanguage).indexOf(b.code)
@@ -224,8 +191,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       // rellenado descarga/cupón en el apartado QR, aquí tampoco se inventan (antes se colaban
       // los valores de Bakandeya y la banda creía tener un incentivo configurado).
       const inc = previewConfig?.incentivoFans || {
-        mensajeAgradecimiento:
-          '¡Gracias por unirte a nuestra comunidad oficial!',
+        mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!',
       };
       setSuccessData({
         success: true,
@@ -239,10 +205,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   }, [isPreview, previewView, previewConfig]);
 
   const dict = FAN_FORM_TRANSLATIONS[language];
-  const t = (
-    key: keyof typeof dict,
-    vars?: Record<string, string | undefined>
-  ) => (vars ? interpolate(dict[key], vars) : dict[key]);
+  const t = (key: keyof typeof dict, vars?: Record<string, string | undefined>) => (vars ? interpolate(dict[key], vars) : dict[key]);
 
   const DEFAULT_BAKANDEYA_SOCIALS: SocialLinks = {
     instagram: 'https://instagram.com/bakandeya_oficial',
@@ -255,9 +218,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [resolvedBandId, setResolvedBandId] = useState<string>('band-active');
   const [bandName, setBandName] = useState<string>('');
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(
-    undefined
-  );
+  const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(undefined);
   const [contactoBooking, setContactoBooking] = useState<{
     email?: string;
     telefono?: string;
@@ -274,9 +235,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     titulo?: string;
     descripcion?: string;
   } | null>(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    'revolut' | 'paypal' | 'bizum' | 'iban'
-  >('revolut');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum' | 'iban'>('revolut');
   const [copiedBizum, setCopiedBizum] = useState(false);
   const [miembros, setMiembros] = useState<BandMember[]>([]);
   const [upcomingConcerts, setUpcomingConcerts] = useState<Concert[]>([]);
@@ -302,10 +261,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       return;
     }
 
-    if (
-      !audioPreviewRef.current ||
-      audioPreviewRef.current.src !== targetAudioUrl
-    ) {
+    if (!audioPreviewRef.current || audioPreviewRef.current.src !== targetAudioUrl) {
       if (audioPreviewRef.current) {
         audioPreviewRef.current.pause();
       }
@@ -331,8 +287,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   };
 
   const handleShareWithFriend = async () => {
-    const currentUrl =
-      typeof window !== 'undefined' ? window.location.href : '';
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
     const shareMessage = `¡Únete a la comunidad de ${bandName} para escuchar temas inéditos y conseguir descuentos exclusivos! 🎸 ${currentUrl}`;
 
     if (typeof navigator !== 'undefined' && navigator.share) {
@@ -388,10 +343,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       if (initialBandLogo || previewConfig.logoUrl) {
         setLogoUrl(initialBandLogo || previewConfig.logoUrl || null);
       }
-      if (
-        previewConfig.enlacesRedes &&
-        Object.keys(previewConfig.enlacesRedes).length > 0
-      ) {
+      if (previewConfig.enlacesRedes && Object.keys(previewConfig.enlacesRedes).length > 0) {
         setSocialLinks(previewConfig.enlacesRedes);
       }
       if (previewConfig.contactoBooking) {
@@ -403,9 +355,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       if (previewConfig.donacionRevolut) {
         setDonacionRevolut(previewConfig.donacionRevolut);
         if (previewConfig.donacionRevolut.metodoPorDefecto) {
-          setSelectedPaymentMethod(
-            previewConfig.donacionRevolut.metodoPorDefecto
-          );
+          setSelectedPaymentMethod(previewConfig.donacionRevolut.metodoPorDefecto);
         }
       }
       if (previewConfig.audioPreview) {
@@ -416,11 +366,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
       if (previewConcert) {
         setConcertId(previewConcert.id);
-        setConcertName(
-          sanitizeConcertDisplayName(
-            `${previewConcert.sala} (${previewConcert.ciudad})`
-          )
-        );
+        setConcertName(sanitizeConcertDisplayName(`${previewConcert.sala} (${previewConcert.ciudad})`));
         setIsConcertLink(true);
       } else if (previewConcertName) {
         setConcertName(sanitizeConcertDisplayName(previewConcertName));
@@ -431,8 +377,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     // 1. Determine active band ID from URL, props or localStorage
     const params = new URLSearchParams(window.location.search);
-    const queryBand =
-      params.get('band_id') || params.get('band') || params.get('b');
+    const queryBand = params.get('band_id') || params.get('band') || params.get('b');
 
     let storedBandId = '';
     let storedBandName = '';
@@ -449,18 +394,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         storedBandLogo = parsed.logoUrl || parsed.logo_url || '';
       }
       if (!storedBandId) {
-        storedBandId =
-          localStorage.getItem('band_manager_active_band_id') || '';
+        storedBandId = localStorage.getItem('band_manager_active_band_id') || '';
       }
     } catch {}
 
     // Priority: 1. URL query param, 2. Props (if explicitly passed and differs from generic), 3. Logged-in stored user.
-    const targetBandId = (
-      queryBand ||
-      initialBandId ||
-      storedBandId ||
-      ''
-    ).toLowerCase();
+    const targetBandId = (queryBand || initialBandId || storedBandId || '').toLowerCase();
     const cleanId = targetBandId.replace(/^(band|reg)-/, '');
     setResolvedBandId(targetBandId);
 
@@ -481,10 +420,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setSocialLinks(undefined);
       setContactoBooking(null);
       setMiembros([]);
-    } else if (
-      initialBandName &&
-      !initialBandName.toLowerCase().includes('bakandeya')
-    ) {
+    } else if (initialBandName && !initialBandName.toLowerCase().includes('bakandeya')) {
       setBandName(initialBandName);
       if (initialBandLogo) setLogoUrl(initialBandLogo);
       setMiembros([]);
@@ -508,11 +444,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     // 2. Fetch public EPK details for this specific band
     fetch(`/api/public/epk?band_id=${encodeURIComponent(targetBandId)}`)
-      .then((res) =>
-        res.ok && res.headers.get('content-type')?.includes('application/json')
-          ? res.json().catch(() => null)
-          : null
-      )
+      .then((res) => (res.ok && res.headers.get('content-type')?.includes('application/json') ? res.json().catch(() => null) : null))
       .then((data) => {
         if (data) {
           if (data.bandName) setBandName(data.bandName);
@@ -526,10 +458,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             setLogoUrl(null);
           }
 
-          if (
-            data.epkConfig?.enlacesRedes &&
-            Object.keys(data.epkConfig.enlacesRedes).length > 0
-          ) {
+          if (data.epkConfig?.enlacesRedes && Object.keys(data.epkConfig.enlacesRedes).length > 0) {
             setSocialLinks(data.epkConfig.enlacesRedes);
           } else if (cleanId === 'bakandeya') {
             setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
@@ -542,11 +471,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             });
           }
 
-          if (
-            data.epkConfig?.miembros &&
-            Array.isArray(data.epkConfig.miembros) &&
-            data.epkConfig.miembros.length > 0
-          ) {
+          if (data.epkConfig?.miembros && Array.isArray(data.epkConfig.miembros) && data.epkConfig.miembros.length > 0) {
             setMiembros(data.epkConfig.miembros);
           } else {
             setMiembros([]);
@@ -555,15 +480,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           if (data.epkConfig?.donacionRevolut) {
             setDonacionRevolut(data.epkConfig.donacionRevolut);
             if (data.epkConfig.donacionRevolut.metodoPorDefecto) {
-              setSelectedPaymentMethod(
-                data.epkConfig.donacionRevolut.metodoPorDefecto
-              );
+              setSelectedPaymentMethod(data.epkConfig.donacionRevolut.metodoPorDefecto);
             }
-          } else if (
-            data.epkConfig?.enlacesRedes?.revolut ||
-            data.epkConfig?.enlacesRedes?.paypal ||
-            data.epkConfig?.enlacesRedes?.bizum
-          ) {
+          } else if (data.epkConfig?.enlacesRedes?.revolut || data.epkConfig?.enlacesRedes?.paypal || data.epkConfig?.enlacesRedes?.bizum) {
             const rawRev = data.epkConfig.enlacesRedes.revolut?.trim();
             const revUrl = rawRev
               ? rawRev.startsWith('http')
@@ -594,11 +513,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     .replace(/^@/, '')
                 : undefined,
               bizumTelefono: rawBiz,
-              metodoPorDefecto: revUrl
-                ? 'revolut'
-                : payUrl
-                  ? 'paypal'
-                  : 'bizum',
+              metodoPorDefecto: revUrl ? 'revolut' : payUrl ? 'paypal' : 'bizum',
             });
           } else {
             setDonacionRevolut(null);
@@ -606,14 +521,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           if (data.epkConfig?.audioPreview) {
             setAudioPreviewConfig(data.epkConfig.audioPreview);
-          } else if (
-            data.highlightedSongs &&
-            data.highlightedSongs.length > 0
-          ) {
+          } else if (data.highlightedSongs && data.highlightedSongs.length > 0) {
             const songWithAudio = data.highlightedSongs.find(
-              (s: any) =>
-                s.audioPrincipalUrl ||
-                (s.audioIdeas && s.audioIdeas[0]?.audioUrl)
+              (s: any) => s.audioPrincipalUrl || (s.audioIdeas && s.audioIdeas[0]?.audioUrl)
             );
             if (songWithAudio) {
               setAudioPreviewConfig({
@@ -621,11 +531,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 cancionId: songWithAudio.id,
                 tituloTema: songWithAudio.titulo,
                 subtitulo: 'Dale al play para escuchar cómo sonamos',
-                audioUrl:
-                  songWithAudio.audioPrincipalUrl ||
-                  (songWithAudio.audioIdeas &&
-                    songWithAudio.audioIdeas[0]?.audioUrl) ||
-                  '',
+                audioUrl: songWithAudio.audioPrincipalUrl || (songWithAudio.audioIdeas && songWithAudio.audioIdeas[0]?.audioUrl) || '',
               });
             }
           }
@@ -646,10 +552,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     if (pathParts.length > 1) {
       slug = pathParts[1];
-    } else if (
-      pathParts.length === 1 &&
-      !['unete', 'fans', 'directo', 'bakandeya', 'app'].includes(pathParts[0])
-    ) {
+    } else if (pathParts.length === 1 && !['unete', 'fans', 'directo', 'bakandeya', 'app'].includes(pathParts[0])) {
       slug = pathParts[0];
     }
 
@@ -692,11 +595,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const revolutUrl =
     safeUrl(
       rawRevolutUrl ||
-        (rawRevolutTag
-          ? rawRevolutTag.startsWith('http')
-            ? rawRevolutTag
-            : `https://revolut.me/${rawRevolutTag}`
-          : '') ||
+        (rawRevolutTag ? (rawRevolutTag.startsWith('http') ? rawRevolutTag : `https://revolut.me/${rawRevolutTag}`) : '') ||
         (rawSocialRevolut
           ? rawSocialRevolut.startsWith('http')
             ? rawSocialRevolut
@@ -714,11 +613,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const paypalUrl =
     safeUrl(
       rawPaypalUrl ||
-        (rawPaypalUser
-          ? rawPaypalUser.startsWith('http')
-            ? rawPaypalUser
-            : `https://paypal.me/${rawPaypalUser}`
-          : '') ||
+        (rawPaypalUser ? (rawPaypalUser.startsWith('http') ? rawPaypalUser : `https://paypal.me/${rawPaypalUser}`) : '') ||
         (rawSocialPaypal
           ? rawSocialPaypal.startsWith('http')
             ? rawSocialPaypal
@@ -726,21 +621,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           : '')
     ) || '';
 
-  const bizumPhone = (
-    donacionRevolut?.bizumTelefono ||
-    socialLinks?.bizum ||
-    ''
-  ).trim();
+  const bizumPhone = (donacionRevolut?.bizumTelefono || socialLinks?.bizum || '').trim();
 
   const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  const revolutDisplay =
-    rawHandle || (rawRevolutTag ? `revolut.me/${rawRevolutTag}` : '');
+  const revolutDisplay = rawHandle || (rawRevolutTag ? `revolut.me/${rawRevolutTag}` : '');
 
-  const rawPaypalHandle = paypalUrl
-    .replace(/^https?:\/\//, '')
-    .replace(/\/$/, '');
-  const paypalDisplay =
-    rawPaypalHandle || (rawPaypalUser ? `paypal.me/${rawPaypalUser}` : '');
+  const rawPaypalHandle = paypalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const paypalDisplay = rawPaypalHandle || (rawPaypalUser ? `paypal.me/${rawPaypalUser}` : '');
 
   const hasRevolut = Boolean(revolutUrl);
   const hasPaypal = Boolean(paypalUrl);
@@ -770,17 +657,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         window.location.origin.includes('run.app')
         ? `${window.location.origin}/epk`
         : 'https://bandmanager.io/epk'
-      : 'https://bandmanager.io/epk') +
-    `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+      : 'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
-  const renderRevolutCard = (
-    contextType: 'redes' | 'form' | 'success' = 'redes'
-  ) => {
-    if (
-      (!revolutUrl && !paypalUrl && !hasBizum) ||
-      donacionRevolut?.habilitado === false
-    )
-      return null;
+  const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
+    if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;
 
     const isSuccessScreen = contextType === 'success';
     const isFormScreen = contextType === 'form';
@@ -817,9 +697,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const bizumClicks = clickCounts['bizum'] || 0;
     const totalClicks = revolutClicks + paypalClicks + bizumClicks;
 
-    const preferredMethodSetting =
-      (donacionRevolut?.metodoPorDefecto as 'revolut' | 'paypal' | 'bizum') ||
-      'revolut';
+    const preferredMethodSetting = (donacionRevolut?.metodoPorDefecto as 'revolut' | 'paypal' | 'bizum') || 'revolut';
 
     // Lista de métodos disponibles
     const availableMethods: Array<'revolut' | 'paypal' | 'bizum'> = [];
@@ -827,18 +705,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     if (hasPaypal) availableMethods.push('paypal');
     if (hasBizum) availableMethods.push('bizum');
 
-    const primaryMethod = availableMethods.includes(preferredMethodSetting)
-      ? preferredMethodSetting
-      : availableMethods[0];
+    const primaryMethod = availableMethods.includes(preferredMethodSetting) ? preferredMethodSetting : availableMethods[0];
 
-    const secondaryMethods = availableMethods.filter(
-      (m) => m !== primaryMethod
-    );
+    const secondaryMethods = availableMethods.filter((m) => m !== primaryMethod);
 
-    const renderPaymentButton = (
-      method: 'revolut' | 'paypal' | 'bizum',
-      variant: 'full' | 'half'
-    ) => {
+    const renderPaymentButton = (method: 'revolut' | 'paypal' | 'bizum', variant: 'full' | 'half') => {
       const isFull = variant === 'full';
       if (method === 'revolut') {
         return (
@@ -857,10 +728,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <div
               className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
             >
-              <svg
-                className="w-full h-full fill-[var(--ink)]"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-full h-full fill-[var(--ink)]" viewBox="0 0 24 24">
                 <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z" />
               </svg>
             </div>
@@ -957,11 +825,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     };
 
     return (
-      <div
-        className={
-          isSuccessScreen ? 'pt-3 text-left' : isFormScreen ? 'pt-2' : 'pt-1.5'
-        }
-      >
+      <div className={isSuccessScreen ? 'pt-3 text-left' : isFormScreen ? 'pt-2' : 'pt-1.5'}>
         <div className="relative rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)]/95 via-[var(--surface)]/90 to-[var(--surface)]/95 hover:/60 p-3.5 sm:p-4 transition-all duration-300 text-left overflow-hidden">
           {/* Halo ambiental sutil */}
           <div
@@ -983,16 +847,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight leading-snug">
-                  {label}
-                </h3>
+                <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight leading-snug">{label}</h3>
                 <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
                   {t('revolutBadge') || 'Contribución'}
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--ink-2)]/90 leading-relaxed mt-1">
-                {descText}
-              </p>
+              <p className="text-[11px] text-[var(--ink-2)]/90 leading-relaxed mt-1">{descText}</p>
             </div>
           </div>
 
@@ -1009,21 +869,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Botones de Pasarelas / Métodos de Pago */}
           <div className="pt-3">
-            {availableMethods.length === 1 &&
-              renderPaymentButton(availableMethods[0], 'full')}
+            {availableMethods.length === 1 && renderPaymentButton(availableMethods[0], 'full')}
 
             {availableMethods.length === 2 && (
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-                {availableMethods.map((m) => renderPaymentButton(m, 'half'))}
-              </div>
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">{availableMethods.map((m) => renderPaymentButton(m, 'half'))}</div>
             )}
 
             {availableMethods.length === 3 && (
               <div className="space-y-2.5">
                 {primaryMethod && renderPaymentButton(primaryMethod, 'full')}
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-                  {secondaryMethods.map((m) => renderPaymentButton(m, 'half'))}
-                </div>
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">{secondaryMethods.map((m) => renderPaymentButton(m, 'half'))}</div>
               </div>
             )}
           </div>
@@ -1032,15 +887,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="pt-2.5 flex items-center justify-between text-[10px] text-[var(--ink-2)]">
             <span className="flex items-center gap-1">
               <LockIcon className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
-              <span>
-                {t('revolutSecureDirect') ||
-                  'Pago seguro y directo a la banda · Sin intermediarios'}
-              </span>
+              <span>{t('revolutSecureDirect') || 'Pago seguro y directo a la banda · Sin intermediarios'}</span>
             </span>
             {totalClicks > 0 && (
               <span className="text-[9px] font-sans text-[var(--ink-2)] bg-[var(--surface)] px-1.5 py-0.5 rounded">
-                {totalClicks}{' '}
-                {totalClicks === 1 ? t('clickSingular') : t('clickPlural')}
+                {totalClicks} {totalClicks === 1 ? t('clickSingular') : t('clickPlural')}
               </span>
             )}
           </div>
@@ -1064,8 +915,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setTimeout(() => {
         setLoading(false);
         const inc = previewConfig?.incentivoFans || {
-          mensajeAgradecimiento:
-            '¡Gracias por unirte a nuestra comunidad oficial!',
+          mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!',
         };
         setSuccessData({
           success: true,
@@ -1111,15 +961,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const incentivo = successData.incentivo || {};
     // Solo hay bloque de beneficios si la banda ha rellenado de verdad la descarga o el cupón
     // en el apartado QR; una cadena vacía o con espacios no cuenta como incentivo configurado.
-    const enlaceDescargaFan = safeUrl(
-      typeof incentivo.enlaceDescarga === 'string'
-        ? incentivo.enlaceDescarga.trim()
-        : ''
-    );
-    const codigoDescuentoFan =
-      typeof incentivo.codigoDescuento === 'string'
-        ? incentivo.codigoDescuento.trim()
-        : '';
+    const enlaceDescargaFan = safeUrl(typeof incentivo.enlaceDescarga === 'string' ? incentivo.enlaceDescarga.trim() : '');
+    const codigoDescuentoFan = typeof incentivo.codigoDescuento === 'string' ? incentivo.codigoDescuento.trim() : '';
     const tieneBeneficios = Boolean(enlaceDescargaFan || codigoDescuentoFan);
 
     return (
@@ -1163,11 +1006,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <Heart className="w-10 h-10 text-[var(--acc)]" />
           </div>
 
-          <FanFormLanguageSwitcher
-            language={language}
-            onChange={setLanguage}
-            languages={availableLanguages}
-          />
+          <FanFormLanguageSwitcher language={language} onChange={setLanguage} languages={availableLanguages} />
 
           <div className="space-y-2">
             <h2 className="text-2xl font-black text-[var(--ink)] font-display tracking-widest flex items-center justify-center gap-2">
@@ -1177,19 +1016,15 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <p className="text-[var(--ink-2)] font-sans text-sm leading-relaxed max-w-xs mx-auto">
               {successData.alreadyRegistered
                 ? successData.message
-                : (incentivo.mensajeAgradecimiento && language === 'es') ||
-                    !t('registeredDefaultMessage', { bandName })
-                  ? incentivo.mensajeAgradecimiento ||
-                    t('registeredDefaultMessage', { bandName })
+                : (incentivo.mensajeAgradecimiento && language === 'es') || !t('registeredDefaultMessage', { bandName })
+                  ? incentivo.mensajeAgradecimiento || t('registeredDefaultMessage', { bandName })
                   : t('registeredDefaultMessage', { bandName })}
             </p>
           </div>
 
           {tieneBeneficios && (
             <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-6 mt-6 space-y-4">
-              <h3 className="text-[var(--acc)] font-black tracking-widest text-xs font-sans">
-                {t('benefitsTitle')}
-              </h3>
+              <h3 className="text-[var(--acc)] font-black tracking-widest text-xs font-sans">{t('benefitsTitle')}</h3>
 
               {enlaceDescargaFan && (
                 <div className="pt-2">
@@ -1207,14 +1042,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
               {codigoDescuentoFan && (
                 <div className="pt-2">
-                  <p className="text-[10px] text-[var(--ink-2)] tracking-wider font-bold mb-1">
-                    {t('merchCode')}
-                  </p>
+                  <p className="text-[10px] text-[var(--ink-2)] tracking-wider font-bold mb-1">{t('merchCode')}</p>
                   <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] rounded-[var(--r-s)]">
                     <Tag className="w-4 h-4 text-[var(--ok)]" />
-                    <span className="font-sans text-[var(--ok)] font-bold tracking-widest">
-                      {codigoDescuentoFan}
-                    </span>
+                    <span className="font-sans text-[var(--ok)] font-bold tracking-widest">{codigoDescuentoFan}</span>
                   </div>
                 </div>
               )}
@@ -1225,8 +1056,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="bg-[var(--surface)] rounded-[var(--r-m)] p-4 text-left space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 tracking-wider">
-                <Share2 className="w-3.5 h-3.5" />{' '}
-                {t('shareWithFriend') || 'Pásaselo a un colega'}
+                <Share2 className="w-3.5 h-3.5" /> {t('shareWithFriend') || 'Pásaselo a un colega'}
               </span>
             </div>
             <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
@@ -1241,13 +1071,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               >
                 {copiedShareLink ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-[var(--ink)]" />{' '}
-                    {t('shareCopied') || '¡Copiado!'}
+                    <Check className="w-3.5 h-3.5 text-[var(--ink)]" /> {t('shareCopied') || '¡Copiado!'}
                   </>
                 ) : (
                   <>
-                    <Share2 className="w-3.5 h-3.5 text-[var(--ink)]" />{' '}
-                    {t('shareWithFriend') || 'Compartir'}
+                    <Share2 className="w-3.5 h-3.5 text-[var(--ink)]" /> {t('shareWithFriend') || 'Compartir'}
                   </>
                 )}
               </button>
@@ -1271,9 +1099,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 variant="grid"
                 title={t('followUsPlatforms')}
                 language={language}
-                onPlatformClick={(plat, url) =>
-                  trackClick(plat, url, 'success')
-                }
+                onPlatformClick={(plat, url) => trackClick(plat, url, 'success')}
                 clickCounts={clickCounts}
                 showClickCounts={true}
               />
@@ -1289,8 +1115,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               onClick={() => trackClick('epk', epkUrl, 'success')}
               className="text-xs font-sans text-[var(--acc)]/90 hover:text-[var(--acc)]/70 underline font-bold transition-colors inline-flex items-center gap-1"
             >
-              {t('epkSuccessLink', { bandName })}{' '}
-              <ExternalLink className="w-3 h-3" />
+              {t('epkSuccessLink', { bandName })} <ExternalLink className="w-3 h-3" />
             </a>
           </div>
 
@@ -1298,61 +1123,55 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {renderRevolutCard('success')}
 
           {/* Booking / Contrataciones in Success View */}
-          {contactoBooking &&
-            (contactoBooking.email || contactoBooking.telefono) && (
-              <div className="pt-4 text-left">
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
-                      <Briefcase className="w-3.5 h-3.5 text-[var(--acc)]" />{' '}
-                      {t('bookingTitle')}
+          {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
+            <div className="pt-4 text-left">
+              <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
+                    <Briefcase className="w-3.5 h-3.5 text-[var(--acc)]" /> {t('bookingTitle')}
+                  </div>
+                  <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70">
+                    {t('bookingBadgeLive')}
+                  </span>
+                </div>
+                <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
+                  {renderBold(t('bookingQuestion', { bandName }))}
+                </p>
+                <div className="space-y-1.5 pt-1">
+                  {contactoBooking.email && (
+                    <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
+                      <a
+                        href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
+                        className="flex items-center gap-2 text-xs font-sans text-[var(--acc)]/70 hover:text-[var(--ink)] truncate flex-1"
+                      >
+                        <Mail className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
+                        <span className="truncate">{contactoBooking.email}</span>
+                      </a>
                     </div>
-                    <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70">
-                      {t('bookingBadgeLive')}
-                    </span>
-                  </div>
-                  <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
-                    {renderBold(t('bookingQuestion', { bandName }))}
-                  </p>
-                  <div className="space-y-1.5 pt-1">
-                    {contactoBooking.email && (
-                      <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
-                        <a
-                          href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
-                          className="flex items-center gap-2 text-xs font-sans text-[var(--acc)]/70 hover:text-[var(--ink)] truncate flex-1"
-                        >
-                          <Mail className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                          <span className="truncate">
-                            {contactoBooking.email}
-                          </span>
-                        </a>
-                      </div>
-                    )}
-                    {contactoBooking.telefono && (
-                      <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
-                        <a
-                          href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
-                          className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] truncate flex-1"
-                        >
-                          <Phone className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                          <span className="truncate">
-                            {contactoBooking.telefono}
-                          </span>
-                        </a>
-                        <a
-                          href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-2 py-0.5 text-[9px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
-                        >
-                          <MessageCircle className="w-3 h-3" /> WhatsApp
-                        </a>
-                      </div>
-                    )}
-                  </div>
+                  )}
+                  {contactoBooking.telefono && (
+                    <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
+                      <a
+                        href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
+                        className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] truncate flex-1"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
+                        <span className="truncate">{contactoBooking.telefono}</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-0.5 text-[9px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
+                      >
+                        <MessageCircle className="w-3 h-3" /> WhatsApp
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
           {/* Banner para músicos y bandas */}
           <div className="pt-4 text-left">
@@ -1361,9 +1180,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span>{t('musicianBannerTitle')}</span>
               </div>
-              <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
-                {t('musicianBannerSubtitle')}
-              </p>
+              <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">{t('musicianBannerSubtitle')}</p>
               <div className="pt-1">
                 <a
                   href="/musicos"
@@ -1379,10 +1196,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Enlace a Inicio */}
           <div className="pt-2">
-            <a
-              href="/"
-              className="text-xs font-sans text-[var(--ink-2)] hover:text-[var(--acc)] underline transition-colors"
-            >
+            <a href="/" className="text-xs font-sans text-[var(--ink-2)] hover:text-[var(--acc)] underline transition-colors">
               {t('backHome')}
             </a>
           </div>
@@ -1413,18 +1227,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           ) : (
             <div className="w-24 h-24 mx-auto rounded-[var(--r-l)] /50 bg-gradient-to-br from-[var(--surface)] to-[var(--surface)] flex flex-col items-center justify-center p-2">
               <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
-              <span className="text-[10px] font-black text-[var(--acc)]/70 font-display tracking-wider line-clamp-1">
-                {bandName}
-              </span>
+              <span className="text-[10px] font-black text-[var(--acc)]/70 font-display tracking-wider line-clamp-1">{bandName}</span>
             </div>
           )}
           <div className="space-y-1">
-            <h1 className="text-3xl font-black text-[var(--ink)] font-display tracking-widest">
-              {t('joinTitle', { bandName })}
-            </h1>
-            <p className="text-amber-0/80 text-[10px] font-sans tracking-widest font-bold">
-              {t('officialChannel')}
-            </p>
+            <h1 className="text-3xl font-black text-[var(--ink)] font-display tracking-widest">{t('joinTitle', { bandName })}</h1>
+            <p className="text-amber-0/80 text-[10px] font-sans tracking-widest font-bold">{t('officialChannel')}</p>
           </div>
           <div className="pt-2 space-y-2">
             {isConcertLink ? (
@@ -1446,72 +1254,56 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </span>
               </div>
             )}
-            <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed max-w-sm mx-auto">
-              {renderBold(t('supportIntro'))}
-            </p>
-            <FanFormLanguageSwitcher
-              language={language}
-              onChange={setLanguage}
-              languages={availableLanguages}
-            />
+            <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed max-w-sm mx-auto">{renderBold(t('supportIntro'))}</p>
+            <FanFormLanguageSwitcher language={language} onChange={setLanguage} languages={availableLanguages} />
           </div>
         </div>
 
         {/* REPRODUCTOR AUDIO PREVIEW DIRECTO (Single / Adelanto) */}
-        {audioPreviewConfig?.habilitado !== false &&
-          Boolean(audioPreviewConfig?.audioUrl?.trim()) && (
-            <div className="p-3 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--surface)] flex items-center justify-between gap-3 text-left">
-              <button
-                type="button"
-                onClick={toggleAudioPreview}
-                aria-label={
-                  isPlayingAudioPreview
-                    ? t('audioPreviewPause') || 'Pausar audio'
-                    : t('audioPreviewPlay') || 'Reproducir audio'
-                }
-                className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[var(--ink)] flex items-center justify-center shrink-0 transition-all active:scale-95"
-              >
-                {isPlayingAudioPreview ? (
-                  <Pause className="w-5 h-5 fill-bg-[var(--surface)]" />
-                ) : (
-                  <Play className="w-5 h-5 fill-bg-[var(--surface)] translate-x-0.5" />
-                )}
-              </button>
+        {audioPreviewConfig?.habilitado !== false && Boolean(audioPreviewConfig?.audioUrl?.trim()) && (
+          <div className="p-3 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--surface)] via-[var(--surface)] to-[var(--surface)] flex items-center justify-between gap-3 text-left">
+            <button
+              type="button"
+              onClick={toggleAudioPreview}
+              aria-label={isPlayingAudioPreview ? t('audioPreviewPause') || 'Pausar audio' : t('audioPreviewPlay') || 'Reproducir audio'}
+              className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[var(--ink)] flex items-center justify-center shrink-0 transition-all active:scale-95"
+            >
+              {isPlayingAudioPreview ? (
+                <Pause className="w-5 h-5 fill-bg-[var(--surface)]" />
+              ) : (
+                <Play className="w-5 h-5 fill-bg-[var(--surface)] translate-x-0.5" />
+              )}
+            </button>
 
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)] truncate">
-                  <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                  <span className="truncate">
-                    {audioPreviewConfig?.tituloTema?.trim() ||
-                      `${bandName} · Directo Preview`}
-                  </span>
-                </div>
-                <p className="text-[10px] text-[var(--ink-2)] font-sans truncate">
-                  {isPlayingAudioPreview
-                    ? t('audioPreviewPlaying') || 'Sonando adelanto en vivo...'
-                    : audioPreviewConfig?.subtitulo?.trim() ||
-                      t('audioPreviewPrompt') ||
-                      'Dale al play para escuchar cómo sonamos'}
-                </p>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)] truncate">
+                <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
+                <span className="truncate">{audioPreviewConfig?.tituloTema?.trim() || `${bandName} · Directo Preview`}</span>
               </div>
-
-              {/* Animación de ondas de audio */}
-              <div className="flex items-center gap-1 h-5 shrink-0 px-2">
-                <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-5' : 'h-1.5'}`}
-                />
-                <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-3 animate-bounce' : 'h-2'}`}
-                />
-                <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-4' : 'h-1'}`}
-                />
-                <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-2 animate-bounce' : 'h-2.5'}`}
-                />
-              </div>
+              <p className="text-[10px] text-[var(--ink-2)] font-sans truncate">
+                {isPlayingAudioPreview
+                  ? t('audioPreviewPlaying') || 'Sonando adelanto en vivo...'
+                  : audioPreviewConfig?.subtitulo?.trim() || t('audioPreviewPrompt') || 'Dale al play para escuchar cómo sonamos'}
+              </p>
             </div>
-          )}
+
+            {/* Animación de ondas de audio */}
+            <div className="flex items-center gap-1 h-5 shrink-0 px-2">
+              <span
+                className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-5' : 'h-1.5'}`}
+              />
+              <span
+                className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-3 animate-bounce' : 'h-2'}`}
+              />
+              <span
+                className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-4' : 'h-1'}`}
+              />
+              <span
+                className={`w-1 bg-[var(--acc)]/60 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-2 animate-bounce' : 'h-2.5'}`}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Dual Tab Mode Switcher */}
         <div className="flex bg-[var(--surface)] p-1.5 rounded-[var(--r-l)] text-xs font-sans">
@@ -1543,12 +1335,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {activeTab === 'redes' && (
           <div className="space-y-3.5 animate-fade-in pt-1">
             <div className="p-3.5 bg-[var(--surface)]/80 rounded-[var(--r-m)] text-center space-y-1">
-              <p className="text-xs font-bold text-[var(--acc)]">
-                {t('followHelpTitle')}
-              </p>
-              <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
-                {renderBold(t('followHelpBody'))}
-              </p>
+              <p className="text-xs font-bold text-[var(--acc)]">{t('followHelpTitle')}</p>
+              <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">{renderBold(t('followHelpBody'))}</p>
             </div>
 
             <SocialPlatformsList
@@ -1587,12 +1375,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
               <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-gradient-to-br from-amber-0/25 to-rose-500/15 text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
                 {logoUrl && !imgError ? (
-                  <img
-                    src={logoUrl}
-                    alt={bandName}
-                    className="w-full h-full object-cover"
-                    onError={() => setImgError(true)}
-                  />
+                  <img src={logoUrl} alt={bandName} className="w-full h-full object-cover" onError={() => setImgError(true)} />
                 ) : (
                   <BookOpen className="w-5 h-5" />
                 )}
@@ -1602,8 +1385,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   {t('epkCardTitle') || `Conócenos · ${bandName || 'La Banda'}`}
                 </span>
                 <span className="text-[11px] text-[var(--ink-2)] font-sans block truncate mt-0.5">
-                  {t('epkCardSubtitle') ||
-                    'Historia, miembros, fotos y dossier'}
+                  {t('epkCardSubtitle') || 'Historia, miembros, fotos y dossier'}
                 </span>
               </div>
 
@@ -1617,15 +1399,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       title={`${m.nombre}${m.rol ? ` (${m.rol})` : ''}`}
                     >
                       {m.fotoUrl ? (
-                        <img
-                          src={m.fotoUrl}
-                          alt={m.nombre}
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" />
                       ) : (
-                        <span>
-                          {(m.nombre || 'M').slice(0, 2).toUpperCase()}
-                        </span>
+                        <span>{(m.nombre || 'M').slice(0, 2).toUpperCase()}</span>
                       )}
                     </div>
                   ))}
@@ -1648,33 +1424,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2.5 text-left">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5 tracking-wider">
-                    <Calendar className="w-3.5 h-3.5" />{' '}
-                    {t('upcomingShowsTitle') || 'Próximos Conciertos'}
+                    <Calendar className="w-3.5 h-3.5" /> {t('upcomingShowsTitle') || 'Próximos Conciertos'}
                   </span>
                   <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
-                    {upcomingConcerts.length}{' '}
-                    {upcomingConcerts.length === 1 ? 'fecha' : 'fechas'}
+                    {upcomingConcerts.length} {upcomingConcerts.length === 1 ? 'fecha' : 'fechas'}
                   </span>
                 </div>
-                <div
-                  className={`space-y-1.5 ${showAllConcerts ? 'max-h-64 overflow-y-auto pr-0.5' : ''}`}
-                >
-                  {(showAllConcerts
-                    ? upcomingConcerts
-                    : upcomingConcerts.slice(0, 3)
-                  ).map((c) => (
-                    <div
-                      key={c.id}
-                      className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans space-y-1.5"
-                    >
+                <div className={`space-y-1.5 ${showAllConcerts ? 'max-h-64 overflow-y-auto pr-0.5' : ''}`}>
+                  {(showAllConcerts ? upcomingConcerts : upcomingConcerts.slice(0, 3)).map((c) => (
+                    <div key={c.id} className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="min-w-0 pr-2">
-                          <p className="font-bold text-[var(--ink)] truncate">
-                            {c.sala}
-                          </p>
+                          <p className="font-bold text-[var(--ink)] truncate">{c.sala}</p>
                           <p className="text-[11px] text-[var(--ink-2)] truncate flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-amber-0/80 shrink-0" />{' '}
-                            {c.ciudad}
+                            <MapPin className="w-3 h-3 text-amber-0/80 shrink-0" /> {c.ciudad}
                           </p>
                         </div>
                         <span className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[10px] font-bold shrink-0 font-sans">
@@ -1694,9 +1457,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                             </a>
                           )}
                           {c.entradasLugarFisico && (
-                            <span className="text-[10px] text-[var(--ink-2)] truncate">
-                              📍 También en: {c.entradasLugarFisico}
-                            </span>
+                            <span className="text-[10px] text-[var(--ink-2)] truncate">📍 También en: {c.entradasLugarFisico}</span>
                           )}
                         </div>
                       )}
@@ -1715,8 +1476,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       </>
                     ) : (
                       <>
-                        Ver todas ({upcomingConcerts.length}){' '}
-                        <ChevronDown className="w-3.5 h-3.5" />
+                        Ver todas ({upcomingConcerts.length}) <ChevronDown className="w-3.5 h-3.5" />
                       </>
                     )}
                   </button>
@@ -1738,14 +1498,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Tab 2: Formulario de Registro */}
         {activeTab === 'form' && (
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-4 pt-1 animate-fade-in text-left"
-          >
+          <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in text-left">
             {error && (
-              <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] text-xs font-sans rounded-[var(--r-m)] text-center">
-                {error}
-              </div>
+              <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] text-xs font-sans rounded-[var(--r-m)] text-center">{error}</div>
             )}
 
             {/* CAMPOS OBLIGATORIOS (Rápidos y sin fricción) */}
@@ -1757,9 +1512,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 type="text"
                 required
                 value={formData.nombre}
-                onChange={(e) =>
-                  setFormData({ ...formData, nombre: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                 className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                 placeholder={t('placeholderName')}
               />
@@ -1772,9 +1525,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 type="email"
                 required
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3.5 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                 placeholder="tu@email.com"
               />
@@ -1787,16 +1538,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 onClick={() => setShowOptionalFields(!showOptionalFields)}
                 className="w-full py-2 px-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-xs font-sans flex items-center justify-between transition-colors"
               >
-                <span>
-                  {showOptionalFields
-                    ? '– Ocultar detalles adicionales'
-                    : '+ Añadir ciudad, canción o mensaje (opcional)'}
-                </span>
-                {showOptionalFields ? (
-                  <ChevronUp className="w-4 h-4" />
-                ) : (
-                  <ChevronDown className="w-4 h-4" />
-                )}
+                <span>{showOptionalFields ? '– Ocultar detalles adicionales' : '+ Añadir ciudad, canción o mensaje (opcional)'}</span>
+                {showOptionalFields ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
             </div>
 
@@ -1810,9 +1553,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <input
                     type="text"
                     value={formData.ciudad}
-                    onChange={(e) =>
-                      setFormData({ ...formData, ciudad: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
                     className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                     placeholder={t('placeholderCity')}
                   />
@@ -1823,9 +1564,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   </label>
                   <select
                     value={formData.comoConocio}
-                    onChange={(e) =>
-                      setFormData({ ...formData, comoConocio: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, comoConocio: e.target.value })}
                     className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors appearance-none"
                   >
                     <option value="">{t('optionSelect')}</option>
@@ -1862,9 +1601,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <input
                     type="text"
                     value={formData.instagram}
-                    onChange={(e) =>
-                      setFormData({ ...formData, instagram: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                     className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors"
                     placeholder={t('placeholderInstagram')}
                   />
@@ -1877,9 +1614,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <textarea
                     rows={2}
                     value={formData.mensaje}
-                    onChange={(e) =>
-                      setFormData({ ...formData, mensaje: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
                     className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-[var(--ink)] font-sans text-sm outline-none transition-colors resize-none"
                     placeholder={t('placeholderMessage')}
                   />
@@ -1917,9 +1652,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     {t('consentPrivacyLink')}
                   </button>
                   {t('consentMiddle')}
-                  <strong className="text-[var(--ink-2)]">
-                    {t('consentExplicit')}
-                  </strong>
+                  <strong className="text-[var(--ink-2)]">{t('consentExplicit')}</strong>
                   {t('consentSuffix')}
                 </span>
               </label>
@@ -1946,9 +1679,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {/* Social Links shown below form as well */}
             {socialLinks && Object.values(socialLinks).some(Boolean) && (
               <div className="pt-4 space-y-2">
-                <p className="text-[11px] font-bold text-[var(--ink-2)] font-sans text-center tracking-wider">
-                  {t('followUsAlso')}
-                </p>
+                <p className="text-[11px] font-bold text-[var(--ink-2)] font-sans text-center tracking-wider">{t('followUsAlso')}</p>
                 <SocialPlatformsList
                   links={socialLinks}
                   variant="pills"
@@ -1964,69 +1695,60 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         )}
 
         {/* Sección Destacada de Contrataciones & Booking Directo */}
-        {contactoBooking &&
-          (contactoBooking.email || contactoBooking.telefono) && (
-            <div className="pt-5 space-y-3">
-              <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/30 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[var(--acc)]">
-                    <Briefcase className="w-4 h-4 text-[var(--acc)]" />
-                    <span className="text-xs font-sans font-black tracking-wider">
-                      {t('bookingTitle')}
-                    </span>
+        {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
+          <div className="pt-5 space-y-3">
+            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/30 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-[var(--acc)]">
+                  <Briefcase className="w-4 h-4 text-[var(--acc)]" />
+                  <span className="text-xs font-sans font-black tracking-wider">{t('bookingTitle')}</span>
+                </div>
+                <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+                  {t('bookingBadgeLive')}
+                </span>
+              </div>
+
+              <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">{renderBold(t('bookingQuestion', { bandName }))}</p>
+
+              <div className="space-y-2 pt-1">
+                {contactoBooking.email && (
+                  <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:/40 transition-colors">
+                    <a
+                      href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
+                      className="flex items-center gap-2.5 text-xs font-sans text-[var(--acc)]/70 hover:text-[var(--ink)] transition-colors truncate flex-1 font-bold"
+                    >
+                      <Mail className="w-4 h-4 text-[var(--acc)] shrink-0" />
+                      <span className="truncate">{contactoBooking.email}</span>
+                    </a>
                   </div>
-                  <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
-                    {t('bookingBadgeLive')}
-                  </span>
-                </div>
+                )}
 
-                <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
-                  {renderBold(t('bookingQuestion', { bandName }))}
-                </p>
-
-                <div className="space-y-2 pt-1">
-                  {contactoBooking.email && (
-                    <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:/40 transition-colors">
+                {contactoBooking.telefono && (
+                  <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:border-[var(--ok)]/40 transition-colors">
+                    <a
+                      href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
+                      className="flex items-center gap-2.5 text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors truncate flex-1 font-bold"
+                    >
+                      <Phone className="w-4 h-4 text-[var(--ok)] shrink-0" />
+                      <span className="truncate">{contactoBooking.telefono}</span>
+                    </a>
+                    <div className="flex items-center shrink-0 ml-2">
                       <a
-                        href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
-                        className="flex items-center gap-2.5 text-xs font-sans text-[var(--acc)]/70 hover:text-[var(--ink)] transition-colors truncate flex-1 font-bold"
+                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 text-[10px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
                       >
-                        <Mail className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                        <span className="truncate">
-                          {contactoBooking.email}
-                        </span>
+                        <MessageCircle className="w-3.5 h-3.5 text-[var(--ok)]" />
+                        <span>WhatsApp</span>
                       </a>
                     </div>
-                  )}
-
-                  {contactoBooking.telefono && (
-                    <div className="flex items-center justify-between p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] hover:border-[var(--ok)]/40 transition-colors">
-                      <a
-                        href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
-                        className="flex items-center gap-2.5 text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors truncate flex-1 font-bold"
-                      >
-                        <Phone className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className="truncate">
-                          {contactoBooking.telefono}
-                        </span>
-                      </a>
-                      <div className="flex items-center shrink-0 ml-2">
-                        <a
-                          href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-2.5 py-1 text-[10px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
-                        >
-                          <MessageCircle className="w-3.5 h-3.5 text-[var(--ok)]" />
-                          <span>WhatsApp</span>
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
+          </div>
+        )}
 
         {/* Banner para músicos y bandas al final del formulario */}
         <div className="pt-4 text-left">
@@ -2035,9 +1757,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>{t('musicianBannerTitle')}</span>
             </div>
-            <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
-              {t('musicianBannerSubtitle')}
-            </p>
+            <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">{t('musicianBannerSubtitle')}</p>
             <div className="pt-1">
               <a
                 href="/musicos"
@@ -2060,10 +1780,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm tracking-wider">
                 <Shield className="w-5 h-5" /> {t('privacyModalTitle')}
               </div>
-              <button
-                onClick={() => setShowPrivacyModal(false)}
-                className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
-              >
+              <button onClick={() => setShowPrivacyModal(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>

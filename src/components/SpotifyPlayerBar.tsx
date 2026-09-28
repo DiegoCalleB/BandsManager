@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const SILENT_AUDIO_URI =
-  'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, ThemeColors } from '../types';
 import {
   Play,
@@ -22,21 +21,9 @@ import {
   ChevronUp,
   ChevronDown,
 } from 'lucide-react';
-import {
-  parseGoogleDriveAudioUrl,
-  isGoogleDriveUrl,
-  resolveAudioUrl,
-  fileToBase64,
-} from '../utils/audioStorage';
-import {
-  CROSSFADE_SECONDS,
-  computeCrossfadeGains,
-  shouldCrossfade,
-} from '../utils/crossfade';
-import {
-  transposeChordToken,
-  getSemitoneDifference,
-} from '../utils/chordUtils';
+import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from '../utils/audioStorage';
+import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
+import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
 import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { usePlayer } from '../context/PlayerContext';
@@ -89,10 +76,7 @@ export default function SpotifyPlayerBar({
   onIsPlayingChange,
   transposeSemitones: propTransposeSemitones = 0,
 }: SpotifyPlayerBarProps) {
-  const {
-    setCurrentTime: setContextCurrentTime,
-    setDuration: setContextDuration,
-  } = usePlayer();
+  const { setCurrentTime: setContextCurrentTime, setDuration: setContextDuration } = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -108,28 +92,16 @@ export default function SpotifyPlayerBar({
 
   // Cálculo automático de semitonos (prop explícita o diferencia entre tonalidad y tonalidadDeseada)
   const calculatedSemitones = React.useMemo(() => {
-    if (
-      typeof propTransposeSemitones === 'number' &&
-      propTransposeSemitones !== 0
-    ) {
+    if (typeof propTransposeSemitones === 'number' && propTransposeSemitones !== 0) {
       return propTransposeSemitones;
     }
     if (song?.tonalidad && (song as any)?.tonalidadDeseada) {
-      return (
-        getSemitoneDifference(song.tonalidad, (song as any).tonalidadDeseada) ??
-        0
-      );
+      return getSemitoneDifference(song.tonalidad, (song as any).tonalidadDeseada) ?? 0;
     }
     return 0;
-  }, [
-    propTransposeSemitones,
-    song?.id,
-    song?.tonalidad,
-    (song as any)?.tonalidadDeseada,
-  ]);
+  }, [propTransposeSemitones, song?.id, song?.tonalidad, (song as any)?.tonalidadDeseada]);
 
-  const [transposeSemitones, setTransposeSemitones] =
-    useState<number>(calculatedSemitones);
+  const [transposeSemitones, setTransposeSemitones] = useState<number>(calculatedSemitones);
 
   useEffect(() => {
     setTransposeSemitones(calculatedSemitones);
@@ -148,10 +120,8 @@ export default function SpotifyPlayerBar({
   const audioRefA = useRef<HTMLAudioElement | null>(null);
   const audioRefB = useRef<HTMLAudioElement | null>(null);
   const activeSlotRef = useRef<'A' | 'B'>('A');
-  const getActiveAudioEl = () =>
-    activeSlotRef.current === 'A' ? audioRefA.current : audioRefB.current;
-  const getInactiveAudioEl = () =>
-    activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current;
+  const getActiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefA.current : audioRefB.current);
+  const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
 
   // Spotify Pedalboard C++ DSP on server is used for audio transposition instead of Web Audio phase vocoders
 
@@ -269,17 +239,11 @@ export default function SpotifyPlayerBar({
       // Este tema llegó aquí por un fundido: ya está sonando de verdad desde antes
       const activeEl = getActiveAudioEl();
       const realDuration = activeEl?.duration;
-      setDuration(
-        realDuration && isFinite(realDuration)
-          ? realDuration
-          : song.duracionSegundos || 210
-      );
+      setDuration(realDuration && isFinite(realDuration) ? realDuration : song.duracionSegundos || 210);
       return;
     }
 
-    const hasNewPlaySignal = !!(
-      playSignal && playSignal !== lastHandledSignalRef.current
-    );
+    const hasNewPlaySignal = !!(playSignal && playSignal !== lastHandledSignalRef.current);
     if (playSignal) {
       lastHandledSignalRef.current = playSignal;
     }
@@ -288,8 +252,7 @@ export default function SpotifyPlayerBar({
     const wasPlaying = isPlaying;
     const previousTime = activeEl?.currentTime || currentTime || 0;
 
-    const shouldPlayNow =
-      autoPlay || hasNewPlaySignal || (!isNewSong && wasPlaying);
+    const shouldPlayNow = autoPlay || hasNewPlaySignal || (!isNewSong && wasPlaying);
 
     if (isNewSong) {
       setCurrentTime(0);
@@ -299,9 +262,7 @@ export default function SpotifyPlayerBar({
 
     if (activeAudioUrl) {
       if (activeEl) {
-        const urlChanged =
-          activeEl.src !== activeAudioUrl &&
-          !activeEl.src.endsWith(activeAudioUrl);
+        const urlChanged = activeEl.src !== activeAudioUrl && !activeEl.src.endsWith(activeAudioUrl);
         if (urlChanged) {
           activeEl.src = activeAudioUrl;
           activeEl.playbackRate = playbackRate;
@@ -387,9 +348,7 @@ export default function SpotifyPlayerBar({
         // Simple subtle click synth sound for practice
         try {
           if (!audioCtxRef.current) {
-            audioCtxRef.current = new (
-              window.AudioContext || (window as any).webkitAudioContext
-            )();
+            audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
           }
           if (audioCtxRef.current.state === 'suspended') {
             audioCtxRef.current.resume();
@@ -399,10 +358,7 @@ export default function SpotifyPlayerBar({
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(440, audioCtxRef.current.currentTime);
           gain.gain.setValueAtTime(0.05, audioCtxRef.current.currentTime);
-          gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioCtxRef.current.currentTime + 0.08
-          );
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtxRef.current.currentTime + 0.08);
           osc.connect(gain);
           gain.connect(audioCtxRef.current.destination);
           osc.start();
@@ -436,11 +392,7 @@ export default function SpotifyPlayerBar({
   // Mismo cálculo que handleNext (con vuelta al principio de la cola) — se usa tanto para saltar
   // manualmente como para saber a qué tema fundir cuando se acerca el final del actual.
   const nextQueueSong: Song | null =
-    songs.length > 0
-      ? currentIdx >= 0 && currentIdx < songs.length - 1
-        ? songs[currentIdx + 1]
-        : songs[0]
-      : null;
+    songs.length > 0 ? (currentIdx >= 0 && currentIdx < songs.length - 1 ? songs[currentIdx + 1] : songs[0]) : null;
 
   const handlePrev = () => {
     cancelCrossfade();
@@ -527,12 +479,7 @@ export default function SpotifyPlayerBar({
 
     if (!crossfadeEnabled || isLooping || isCrossfadingRef.current) return;
     if (!nextQueueSong || nextQueueSong.id === song.id) return; // cola de un solo tema: nada que fundir
-    if (
-      !duration ||
-      !shouldCrossfade(duration) ||
-      duration - currentTimeSec > CROSSFADE_SECONDS
-    )
-      return;
+    if (!duration || !shouldCrossfade(duration) || duration - currentTimeSec > CROSSFADE_SECONDS) return;
 
     const nextRawUrl = getRawAudioUrl(nextQueueSong);
     if (!nextRawUrl) return;
@@ -625,8 +572,7 @@ export default function SpotifyPlayerBar({
           e.preventDefault();
         }}
         onTimeUpdate={() => {
-          if (activeSlotRef.current === 'A' && audioRefA.current)
-            handleActiveTimeUpdate(audioRefA.current.currentTime);
+          if (activeSlotRef.current === 'A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime);
         }}
         onLoadedMetadata={() => {
           if (activeSlotRef.current === 'A' && audioRefA.current?.duration) {
@@ -646,8 +592,7 @@ export default function SpotifyPlayerBar({
           e.preventDefault();
         }}
         onTimeUpdate={() => {
-          if (activeSlotRef.current === 'B' && audioRefB.current)
-            handleActiveTimeUpdate(audioRefB.current.currentTime);
+          if (activeSlotRef.current === 'B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime);
         }}
         onLoadedMetadata={() => {
           if (activeSlotRef.current === 'B' && audioRefB.current?.duration) {
@@ -675,16 +620,10 @@ export default function SpotifyPlayerBar({
             >
               <div className="relative shrink-0 w-8 h-8 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden md:w-10 md:h-10">
                 {song.portadaUrl ? (
-                  <img
-                    src={song.portadaUrl}
-                    alt={song.titulo}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-[var(--sunken)] flex items-center justify-center">
-                    <Disc
-                      className={`w-4 h-4 md:w-5 md:h-5 ${isPlaying ? 'animate-spin text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}
-                    />
+                    <Disc className={`w-4 h-4 md:w-5 md:h-5 ${isPlaying ? 'animate-spin text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
                   </div>
                 )}
                 {isPlaying && (
@@ -703,24 +642,15 @@ export default function SpotifyPlayerBar({
                 <div className="text-[9px] text-[var(--ink-2)] font-sans truncate md:text-[10px]">
                   <span>{song.artista || 'Banda'}</span>
                   <span className="mx-1">•</span>
-                  <span className="text-[var(--ok)] font-semibold">
-                    {song.tonalidad || 'Am'}
-                  </span>
+                  <span className="text-[var(--ok)] font-semibold">{song.tonalidad || 'Am'}</span>
                   {transposeSemitones !== 0 && (
                     <span className="text-[var(--alert)] ml-1 font-bold">
                       {transposeChordToken(
                         song.tonalidad || 'Am',
                         transposeSemitones,
-                        /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(
-                          (song.tonalidad || 'Am').trim()
-                        )
-                          ? 'ES'
-                          : 'EN'
+                        /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN'
                       )}{' '}
-                      (
-                      {transposeSemitones > 0
-                        ? `+${transposeSemitones}`
-                        : transposeSemitones}
+                      ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones}
                       st)
                     </span>
                   )}
@@ -792,16 +722,10 @@ export default function SpotifyPlayerBar({
               <div className="flex items-center gap-3.5 min-w-0">
                 <div className="relative shrink-0 w-14 h-14 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden group">
                   {song.portadaUrl ? (
-                    <img
-                      src={song.portadaUrl}
-                      alt={song.titulo}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-[var(--ok)]/30 via-[var(--surface)] to-[var(--sunken)] flex items-center justify-center">
-                      <Disc
-                        className={`w-7 h-7 ${isPlaying ? 'animate-spin-slow text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}
-                      />
+                      <Disc className={`w-7 h-7 ${isPlaying ? 'animate-spin-slow text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
                     </div>
                   )}
                   {isPlaying && (
@@ -815,9 +739,7 @@ export default function SpotifyPlayerBar({
 
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-bold text-[var(--ink)] hover:underline cursor-pointer truncate">
-                      {song.titulo}
-                    </h4>
+                    <h4 className="text-sm font-bold text-[var(--ink)] hover:underline cursor-pointer truncate">{song.titulo}</h4>
                     {onUpdateSong && (
                       <button
                         type="button"
@@ -828,15 +750,9 @@ export default function SpotifyPlayerBar({
                           })
                         }
                         className="text-[var(--ink-2)] hover:text-[var(--ok)] transition cursor-pointer p-0.5"
-                        title={
-                          song.favoritoGeneral
-                            ? 'Guardado en Favoritos'
-                            : 'Guardar en Favoritos'
-                        }
+                        title={song.favoritoGeneral ? 'Guardado en Favoritos' : 'Guardar en Favoritos'}
                       >
-                        <Sparkles
-                          className={`w-4 h-4 ${song.favoritoGeneral ? 'text-[var(--ok)] fill-[var(--ok)]' : ''}`}
-                        />
+                        <Sparkles className={`w-4 h-4 ${song.favoritoGeneral ? 'text-[var(--ok)] fill-[var(--ok)]' : ''}`} />
                       </button>
                     )}
                     {isDrive && (
@@ -846,9 +762,7 @@ export default function SpotifyPlayerBar({
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-[11px] text-[var(--ink-2)] font-sans mt-0.5 truncate">
-                    <span className="text-[var(--ink)] font-medium">
-                      {song.artista || 'Banda'}
-                    </span>
+                    <span className="text-[var(--ink)] font-medium">{song.artista || 'Banda'}</span>
                     <span>•</span>
                     <span className="text-[var(--ok)] font-semibold">
                       {song.tonalidad || 'Am'}
@@ -858,17 +772,9 @@ export default function SpotifyPlayerBar({
                           {transposeChordToken(
                             song.tonalidad || 'Am',
                             transposeSemitones,
-                            /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(
-                              (song.tonalidad || 'Am').trim()
-                            )
-                              ? 'ES'
-                              : 'EN'
+                            /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN'
                           )}{' '}
-                          (
-                          {transposeSemitones > 0
-                            ? `+${transposeSemitones}`
-                            : transposeSemitones}{' '}
-                          st)
+                          ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
                         </span>
                       )}
                       {isTransposingAudio && (
@@ -885,9 +791,7 @@ export default function SpotifyPlayerBar({
                     {isCrossfading && nextQueueSong && (
                       <>
                         <span>•</span>
-                        <span className="text-[var(--ink-2)] font-semibold">
-                          🔀 → {nextQueueSong.titulo}
-                        </span>
+                        <span className="text-[var(--ink-2)] font-semibold">🔀 → {nextQueueSong.titulo}</span>
                       </>
                     )}
                   </div>
@@ -903,11 +807,7 @@ export default function SpotifyPlayerBar({
                   className="p-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                   title={isMinimized ? 'Expandir Reproductor' : 'Minimizar'}
                 >
-                  {isMinimized ? (
-                    <ChevronUp className="w-5 h-5" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5" />
-                  )}
+                  {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -920,9 +820,7 @@ export default function SpotifyPlayerBar({
                 <button
                   onClick={() => setIsLooping(!isLooping)}
                   className={`p-1.5 rounded-full transition-all cursor-pointer ${
-                    isLooping
-                      ? 'text-[var(--ok)] bg-[var(--surface)]/10'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    isLooping ? 'text-[var(--ok)] bg-[var(--surface)]/10' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title={isLooping ? 'Repetir tema activado' : 'Activar Bucle'}
                 >
@@ -944,11 +842,7 @@ export default function SpotifyPlayerBar({
                   className="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
                   title={isPlaying ? 'Pausar' : 'Reproducir Canción'}
                 >
-                  {isPlaying ? (
-                    <Pause className="w-5 h-5 fill-current" />
-                  ) : (
-                    <Play className="w-5 h-5 fill-current ml-0.5" />
-                  )}
+                  {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
                 </button>
 
                 {/* Next Song */}
@@ -964,15 +858,9 @@ export default function SpotifyPlayerBar({
                 <button
                   onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
                   className={`p-1.5 rounded-full transition-all cursor-pointer text-sm ${
-                    crossfadeEnabled
-                      ? 'text-[var(--ok)] bg-[var(--ok)]/15'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    crossfadeEnabled ? 'text-[var(--ok)] bg-[var(--ok)]/15' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
-                  title={
-                    crossfadeEnabled
-                      ? 'Fundido entre temas activado (5s)'
-                      : 'Activar fundido entre temas (5s)'
-                  }
+                  title={crossfadeEnabled ? 'Fundido entre temas activado (5s)' : 'Activar fundido entre temas (5s)'}
                 >
                   🔀
                 </button>
@@ -994,30 +882,18 @@ export default function SpotifyPlayerBar({
                 {/* Pitch Transpose selector (Spotify Pedalboard DSP) */}
                 <select
                   value={transposeSemitones}
-                  onChange={(e) =>
-                    setTransposeSemitones(parseInt(e.target.value, 10))
-                  }
+                  onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
                   className={`bg-[var(--sunken)] text-xs font-medium rounded-[var(--r-s)] px-2.5 py-1.5 cursor-pointer hover:bg-[var(--sunken)]/80 focus:ring-2 focus:ring-[var(--ok)]/50 transition-all ${
-                    transposeSemitones !== 0
-                      ? 'text-[var(--alert)]'
-                      : 'text-[var(--ink-2)]'
+                    transposeSemitones !== 0 ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]'
                   }`}
                   title="Trasposición de Tono"
                 >
                   {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
                     const origKey = song?.tonalidad?.trim();
-                    let label =
-                      st > 0
-                        ? `+${st} st`
-                        : st < 0
-                          ? `${st} st`
-                          : '0 (Original)';
+                    let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
                     if (origKey) {
                       const targetKey = transposeChordToken(origKey, st, 'EN');
-                      label =
-                        st === 0
-                          ? `${origKey} (Original)`
-                          : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
+                      label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
                     }
                     return (
                       <option key={st} value={st}>
@@ -1030,9 +906,7 @@ export default function SpotifyPlayerBar({
 
               {/* Timeline Slider */}
               <div className="w-full flex items-center gap-2 text-[11px] font-sans text-[var(--ink-2)]">
-                <span className="w-9 text-right shrink-0">
-                  {formatSecs(currentTime)}
-                </span>
+                <span className="w-9 text-right shrink-0">{formatSecs(currentTime)}</span>
 
                 <div className="relative flex-1 flex items-center">
                   <input
@@ -1046,9 +920,7 @@ export default function SpotifyPlayerBar({
                   />
                 </div>
 
-                <span className="w-9 text-left shrink-0">
-                  {formatSecs(duration)}
-                </span>
+                <span className="w-9 text-left shrink-0">{formatSecs(duration)}</span>
               </div>
             </div>
 
@@ -1080,9 +952,7 @@ export default function SpotifyPlayerBar({
 
               {/* Iris Stem Separator Button */}
               <button
-                onClick={() =>
-                  onOpenIris ? onOpenIris(song) : onOpenStudio(song)
-                }
+                onClick={() => (onOpenIris ? onOpenIris(song) : onOpenStudio(song))}
                 className="px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]/25 hover:bg-[var(--acc)]/35 text-[var(--acc)] font-bold text-xs font-sans flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
                 title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
               >
@@ -1092,15 +962,8 @@ export default function SpotifyPlayerBar({
 
               {/* Volume */}
               <div className="hidden sm:flex items-center gap-1.5 pl-2">
-                <button
-                  onClick={() => setIsMuted(!isMuted)}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
-                >
-                  {isMuted || volume === 0 ? (
-                    <VolumeX className="w-4 h-4 text-[var(--alert)]" />
-                  ) : (
-                    <Volume2 className="w-4 h-4" />
-                  )}
+                <button onClick={() => setIsMuted(!isMuted)} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1">
+                  {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-[var(--alert)]" /> : <Volume2 className="w-4 h-4" />}
                 </button>
                 <input
                   type="range"

@@ -28,12 +28,7 @@ import {
   Smartphone,
   Monitor,
 } from 'lucide-react';
-import {
-  DashboardWidgetConfig,
-  DEFAULT_DASHBOARD_WIDGETS,
-  AVAILABLE_MODULE_WIDGETS,
-  WidgetType,
-} from '../../types/dashboardWidgets';
+import { DashboardWidgetConfig, DEFAULT_DASHBOARD_WIDGETS, AVAILABLE_MODULE_WIDGETS, WidgetType } from '../../types/dashboardWidgets';
 import { CalendarWidget } from './widgets/CalendarWidget';
 import { ExecutiveSummaryHero } from './ExecutiveSummaryHero';
 import {
@@ -45,24 +40,8 @@ import {
   AiAgentWidget,
   TourStatusWidget,
 } from './widgets/ModuleWidgets';
-import {
-  RepertorioEnergyChartWidget,
-  BookingFunnelChartWidget,
-  FinancesChartWidget,
-  SocialFansGrowthWidget,
-} from './widgets/ChartWidgets';
-import {
-  Concert,
-  Rehearsal,
-  Lead,
-  Tour,
-  Fan,
-  SocialPost,
-  EPKConfig,
-  ThemeColors,
-  Setlist,
-  Song,
-} from '../../types';
+import { RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget } from './widgets/ChartWidgets';
+import { Concert, Rehearsal, Lead, Tour, Fan, SocialPost, EPKConfig, ThemeColors, Setlist, Song } from '../../types';
 import { api } from '../../services/api';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { useScrollLock } from '../../hooks/useScrollLock';
@@ -107,9 +86,7 @@ export function DashboardWidgetGrid({
   const userPlan = currentUser?.plan;
 
   // Load saved widgets from user preferences or use default, filtering by module access
-  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as
-    | DashboardWidgetConfig[]
-    | undefined;
+  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as DashboardWidgetConfig[] | undefined;
 
   // true si la carga inicial tuvo que quitar algún widget duplicado — dispara un guardado
   // silencioso una vez montado, para que la limpieza no se pierda en la próxima carga (ver
@@ -117,10 +94,7 @@ export function DashboardWidgetGrid({
   const hadDuplicatesOnLoadRef = React.useRef(false);
 
   const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
-    const initial =
-      Array.isArray(savedWidgets) && savedWidgets.length > 0
-        ? savedWidgets
-        : DEFAULT_DASHBOARD_WIDGETS;
+    const initial = Array.isArray(savedWidgets) && savedWidgets.length > 0 ? savedWidgets : DEFAULT_DASHBOARD_WIDGETS;
     const withModuleAccess = initial.filter((w) => {
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
       if (meta && meta.requiredModule) {
@@ -247,20 +221,13 @@ export function DashboardWidgetGrid({
 
   // Change width span (wSpan)
   const handleChangeWSpan = (id: string, newSpan: 3 | 4 | 6 | 8 | 12) => {
-    const updated = widgets.map((w) =>
-      w.id === id ? { ...w, wSpan: newSpan } : w
-    );
+    const updated = widgets.map((w) => (w.id === id ? { ...w, wSpan: newSpan } : w));
     updateAndSaveWidgets(updated);
   };
 
   // Change height mode (hSpan)
-  const handleChangeHSpan = (
-    id: string,
-    newHSpan: 'compact' | 'normal' | 'tall'
-  ) => {
-    const updated = widgets.map((w) =>
-      w.id === id ? { ...w, hSpan: newHSpan } : w
-    );
+  const handleChangeHSpan = (id: string, newHSpan: 'compact' | 'normal' | 'tall') => {
+    const updated = widgets.map((w) => (w.id === id ? { ...w, hSpan: newHSpan } : w));
     updateAndSaveWidgets(updated);
   };
 
@@ -271,10 +238,7 @@ export function DashboardWidgetGrid({
   };
 
   // Update specific widget settings (e.g., calendar view mode)
-  const handleUpdateWidgetSettings = (
-    id: string,
-    newSettings: Record<string, any>
-  ) => {
+  const handleUpdateWidgetSettings = (id: string, newSettings: Record<string, any>) => {
     const updated = widgets.map((w) => {
       if (w.id === id) {
         return {
@@ -307,10 +271,7 @@ export function DashboardWidgetGrid({
     const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === type);
     if (!meta) return;
 
-    if (
-      meta.requiredModule &&
-      !hasModuleAccess(userPlan, meta.requiredModule)
-    ) {
+    if (meta.requiredModule && !hasModuleAccess(userPlan, meta.requiredModule)) {
       return;
     }
 
@@ -328,10 +289,7 @@ export function DashboardWidgetGrid({
       hSpan: meta.defaultHSpan || 'normal',
       visible: true,
       order: widgets.length,
-      settings:
-        type === 'calendar'
-          ? { calendarViewMode: 'list', calendarFilter: 'all' }
-          : undefined,
+      settings: type === 'calendar' ? { calendarViewMode: 'list', calendarFilter: 'all' } : undefined,
     };
 
     updateAndSaveWidgets([...widgets, newWidget]);
@@ -376,60 +334,24 @@ export function DashboardWidgetGrid({
             onSetAgendaFilterMode={onSetAgendaFilterMode}
             onNavigate={onNavigate}
             viewMode={widget.settings?.calendarViewMode || 'list'}
-            onChangeViewMode={(mode) =>
-              handleUpdateWidgetSettings(widget.id, { calendarViewMode: mode })
-            }
+            onChangeViewMode={(mode) => handleUpdateWidgetSettings(widget.id, { calendarViewMode: mode })}
             filterType={widget.settings?.calendarFilter || 'all'}
-            onChangeFilterType={(f) =>
-              handleUpdateWidgetSettings(widget.id, { calendarFilter: f })
-            }
+            onChangeFilterType={(f) => handleUpdateWidgetSettings(widget.id, { calendarFilter: f })}
             isEditMode={isEditMode}
           />
         );
       case 'executive_summary':
-        return (
-          <ExecutiveSummaryHero
-            concerts={concerts}
-            leads={leads}
-            rehearsals={rehearsals}
-            onNavigate={onNavigate}
-          />
-        );
+        return <ExecutiveSummaryHero concerts={concerts} leads={leads} rehearsals={rehearsals} onNavigate={onNavigate} />;
       case 'repertorio_energy':
-        return (
-          <RepertorioEnergyChartWidget
-            onNavigate={onNavigate}
-            heightMode={heightMode}
-            setlists={setlists}
-            songs={songs}
-          />
-        );
+        return <RepertorioEnergyChartWidget onNavigate={onNavigate} heightMode={heightMode} setlists={setlists} songs={songs} />;
       case 'crm_pipeline':
         return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} />;
       case 'booking_funnel_chart':
-        return (
-          <BookingFunnelChartWidget
-            leads={leads}
-            onNavigate={onNavigate}
-            heightMode={heightMode}
-          />
-        );
+        return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
       case 'finances_chart':
-        return (
-          <FinancesChartWidget
-            concerts={concerts}
-            onNavigate={onNavigate}
-            heightMode={heightMode}
-          />
-        );
+        return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} />;
       case 'social_fans_chart':
-        return (
-          <SocialFansGrowthWidget
-            fans={fans}
-            onNavigate={onNavigate}
-            heightMode={heightMode}
-          />
-        );
+        return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} />;
       case 'repertorio_summary':
         return <RepertorioWidget onNavigate={onNavigate} />;
       case 'finances_summary':
@@ -437,17 +359,9 @@ export function DashboardWidgetGrid({
       case 'social_fans':
         return <SocialFansWidget fans={fans} onNavigate={onNavigate} />;
       case 'epk_status':
-        return (
-          <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate} />
-        );
+        return <EpkStatusWidget epkConfig={epkConfig} onNavigate={onNavigate} />;
       case 'ai_agent_status':
-        return (
-          <AiAgentWidget
-            leads={leads}
-            currentUser={currentUser}
-            onNavigate={onNavigate}
-          />
-        );
+        return <AiAgentWidget leads={leads} currentUser={currentUser} onNavigate={onNavigate} />;
       case 'tour_status':
         return <TourStatusWidget tours={tours} onNavigate={onNavigate} />;
       default:
@@ -477,16 +391,12 @@ export function DashboardWidgetGrid({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-[var(--ink)]">
-                Tu panel
-              </span>
+              <span className="text-sm font-semibold text-[var(--ink)]">Tu panel</span>
               <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
                 Arrastra para reordenar
               </span>
             </div>
-            <p className="text-xs text-[var(--ink-2)] mt-0.5">
-              {visibleWidgets.length} widgets activos · se guardan solos
-            </p>
+            <p className="text-xs text-[var(--ink-2)] mt-0.5">{visibleWidgets.length} widgets activos · se guardan solos</p>
           </div>
         </div>
 
@@ -506,12 +416,8 @@ export function DashboardWidgetGrid({
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110 hover:text-[var(--ink)]'
             }`}
           >
-            <Settings
-              className={`w-4 h-4 ${isEditMode ? 'text-[var(--on-acc)]' : 'text-[var(--acc-ink)]'}`}
-            />
-            <span>
-              {isEditMode ? 'Finalizar Edición' : 'Personalizar Dashboard'}
-            </span>
+            <Settings className={`w-4 h-4 ${isEditMode ? 'text-[var(--on-acc)]' : 'text-[var(--acc-ink)]'}`} />
+            <span>{isEditMode ? 'Finalizar Edición' : 'Personalizar Dashboard'}</span>
           </button>
 
           {isEditMode && (
@@ -556,15 +462,13 @@ export function DashboardWidgetGrid({
             <div className="flex items-center gap-1.5">
               <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
-                <strong>Ancho & Alto:</strong> Elige tamaño con los iconos de
-                barra.
+                <strong>Ancho & Alto:</strong> Elige tamaño con los iconos de barra.
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
-                <strong>Multi-dispositivo:</strong> En móvil se apila a 1
-                columna.
+                <strong>Multi-dispositivo:</strong> En móvil se apila a 1 columna.
               </span>
             </div>
           </div>
@@ -593,26 +497,16 @@ export function DashboardWidgetGrid({
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, widget.id)}
               onDragEnd={handleDragEnd}
-              className={`${colSpanClass} relative transition-all duration-200 ${
-                isDragging ? 'opacity-40 scale-[0.98]' : ''
-              } ${
-                isDragOver
-                  ? 'ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10'
-                  : ''
-              } ${
-                isEditMode
-                  ? 'ring-2 ring-[var(--acc)]/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-[var(--acc)]'
-                  : ''
-              }`}
+              className={`${colSpanClass} relative transition-all duration-200 ${isDragging ? 'opacity-40 scale-[0.98]' : ''} ${
+                isDragOver ? 'ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10' : ''
+              } ${isEditMode ? 'ring-2 ring-[var(--acc)]/40 rounded-[var(--r-l)] p-1 bg-[var(--acc)]/5 hover:ring-[var(--acc)]' : ''}`}
             >
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-xl mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
                   <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
                     <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                    <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
-                      {widget.title || widget.type}
-                    </span>
+                    <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">{widget.title || widget.type}</span>
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
@@ -630,9 +524,7 @@ export function DashboardWidgetGrid({
                           title={label}
                           aria-label={`Ancho: ${label}`}
                           className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
-                            widget.wSpan === span
-                              ? 'bg-[var(--acc)]'
-                              : 'hover:bg-[var(--sunken)]'
+                            widget.wSpan === span ? 'bg-[var(--acc)]' : 'hover:bg-[var(--sunken)]'
                           }`}
                         >
                           <span
@@ -657,9 +549,7 @@ export function DashboardWidgetGrid({
                           title={label}
                           aria-label={`Alto: ${label}`}
                           className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
-                            (widget.hSpan || 'normal') === val
-                              ? 'bg-[var(--acc)]'
-                              : 'hover:bg-[var(--sunken)]'
+                            (widget.hSpan || 'normal') === val ? 'bg-[var(--acc)]' : 'hover:bg-[var(--sunken)]'
                           }`}
                         >
                           <span
@@ -717,9 +607,7 @@ export function DashboardWidgetGrid({
         {isEditMode && (
           <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans font-bold flex items-center gap-1.5 w-fit">
             <Info className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-            <span>
-              Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)
-            </span>
+            <span>Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)</span>
           </div>
         )}
         <AiSupportWidget variant="card" />
@@ -732,10 +620,7 @@ export function DashboardWidgetGrid({
  tapa. El resto de modales reales del repo (SongModal, BandSwitcherModal...) ya usan
  z-[9999]/z-[10000] por este mismo motivo; este era el único que se había quedado en z-50. */}
       {isAddModalOpen && (
-        <div
-          style={addModalOverlayStyle}
-          className="z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4"
-        >
+        <div style={addModalOverlayStyle} className="z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
             {/* Header */}
             <div className="p-5 flex items-center justify-between">
@@ -744,12 +629,9 @@ export function DashboardWidgetGrid({
                   <Plus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">
-                    Catálogo de Widgets del Dashboard
-                  </h3>
+                  <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Catálogo de Widgets del Dashboard</h3>
                   <p className="text-xs font-sans text-[var(--ink-2)]">
-                    Añade los que quieras, uno detrás de otro — el catálogo no
-                    se cierra hasta que tú lo cierres
+                    Añade los que quieras, uno detrás de otro — el catálogo no se cierra hasta que tú lo cierres
                   </p>
                 </div>
               </div>
@@ -791,9 +673,7 @@ export function DashboardWidgetGrid({
             {/* List of Available Widgets */}
             <div className="p-5 overflow-y-auto space-y-3 flex-1">
               {filteredLibrary.map((item) => {
-                const isAlreadyAdded = widgets.some(
-                  (w) => w.type === item.type && w.visible
-                );
+                const isAlreadyAdded = widgets.some((w) => w.type === item.type && w.visible);
 
                 return (
                   <div
@@ -802,16 +682,12 @@ export function DashboardWidgetGrid({
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-[var(--ink-2)]">
-                          {item.title}
-                        </span>
+                        <span className="text-sm font-bold text-[var(--ink-2)]">{item.title}</span>
                         <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--acc)]">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                        {item.description}
-                      </p>
+                      <p className="text-xs text-[var(--ink-2)] leading-relaxed">{item.description}</p>
                     </div>
 
                     <button
@@ -824,14 +700,8 @@ export function DashboardWidgetGrid({
                           : 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-95'
                       }`}
                     >
-                      {isAlreadyAdded ? (
-                        <Check className="w-4 h-4" />
-                      ) : (
-                        <Plus className="w-4 h-4" />
-                      )}
-                      <span>
-                        {isAlreadyAdded ? 'Ya en tu panel' : 'Añadir'}
-                      </span>
+                      {isAlreadyAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                      <span>{isAlreadyAdded ? 'Ya en tu panel' : 'Añadir'}</span>
                     </button>
                   </div>
                 );

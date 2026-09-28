@@ -6,10 +6,7 @@ interface UseTonePitchShiftProps {
   semitones: number;
 }
 
-export function useTonePitchShift({
-  audioElement,
-  semitones,
-}: UseTonePitchShiftProps) {
+export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShiftProps) {
   const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
   const mediaSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const isConnectedRef = useRef<boolean>(false);
@@ -68,19 +65,12 @@ export function useTonePitchShift({
           if (!audioElement.crossOrigin) {
             audioElement.crossOrigin = 'anonymous';
           }
-          const createSource =
-            rawAudioContext.createMediaElementSource ||
-            (rawAudioContext as any).createMediaElementAudioSource;
-          mediaSourceRef.current = createSource.call(
-            rawAudioContext,
-            audioElement
-          );
+          const createSource = rawAudioContext.createMediaElementSource || (rawAudioContext as any).createMediaElementAudioSource;
+          mediaSourceRef.current = createSource.call(rawAudioContext, audioElement);
         }
 
         if (!mediaSourceRef.current || !pitchShiftRef.current) {
-          throw new Error(
-            'No se pudo construir el nodo de trasposición o capturar la pista de audio.'
-          );
+          throw new Error('No se pudo construir el nodo de trasposición o capturar la pista de audio.');
         }
 
         if (!isConnectedRef.current) {
@@ -99,10 +89,7 @@ export function useTonePitchShift({
             isConnectedRef.current = true;
           }
         } catch (fallbackErr) {
-          console.warn(
-            '[useTonePitchShift] No se pudo reconectar la pista a la salida tras el fallo — puede quedar muda:',
-            fallbackErr
-          );
+          console.warn('[useTonePitchShift] No se pudo reconectar la pista a la salida tras el fallo — puede quedar muda:', fallbackErr);
         }
       }
     };

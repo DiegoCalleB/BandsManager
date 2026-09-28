@@ -38,19 +38,14 @@ export function useSavedFilters(
   initialStatusFilter: LeadStatus | 'todos'
 ) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(
-    initialStatusFilter
-  );
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
   // Para sectionTab === 'medios', typeFilter también acepta las sub-categorías heurísticas de
   // matchesMedioType en BookingCRM ('radio', 'tv', 'prensa', 'redes', 'podcast'), que no son
   // LeadType reales sino un filtro por palabras clave sobre el lead.
-  const [typeFilter, setTypeFilter] = useState<
-    LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast'
-  >('todos');
+  const [typeFilter, setTypeFilter] = useState<LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast'>('todos');
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
   const [minCapacityFilter, setMinCapacityFilter] = useState<number>(0);
-  const [onlyFavoritesFilter, setOnlyFavoritesFilter] =
-    useState<boolean>(false);
+  const [onlyFavoritesFilter, setOnlyFavoritesFilter] = useState<boolean>(false);
   const [onlyVerifiedFilter, setOnlyVerifiedFilter] = useState<boolean>(false);
 
   useEffect(() => {
@@ -70,9 +65,7 @@ export function useSavedFilters(
 
   const [isSavingFilterOpen, setIsSavingFilterOpen] = useState<boolean>(false);
   const [newFilterName, setNewFilterName] = useState<string>('');
-  const [activeSavedFilterId, setActiveSavedFilterId] = useState<string | null>(
-    null
-  );
+  const [activeSavedFilterId, setActiveSavedFilterId] = useState<string | null>(null);
 
   const handleApplySavedFilter = (sf: SavedFilter) => {
     setActiveSavedFilterId(sf.id);
@@ -102,10 +95,7 @@ export function useSavedFilters(
     const updated = [newSf, ...savedFilters];
     setSavedFilters(updated);
     try {
-      localStorage.setItem(
-        'bakandeya_saved_crm_filters',
-        JSON.stringify(updated)
-      );
+      localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
     } catch (err) {
       console.error(err);
     }
@@ -120,10 +110,7 @@ export function useSavedFilters(
     const updated = savedFilters.filter((f) => f.id !== filterId);
     setSavedFilters(updated);
     try {
-      localStorage.setItem(
-        'bakandeya_saved_crm_filters',
-        JSON.stringify(updated)
-      );
+      localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
     } catch (err) {
       console.error(err);
     }

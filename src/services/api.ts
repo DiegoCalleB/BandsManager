@@ -26,8 +26,7 @@ export class ApiError extends Error {
 }
 
 export function getAuthHeaders(): HeadersInit {
-  const token =
-    localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
   let activeBandId = '';
   try {
     const userStr = localStorage.getItem('bakandeya_user');
@@ -54,28 +53,13 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
 
   if (response.status === 409) {
     const errorData = await response.json().catch(() => ({}));
-    throw new ApiError(
-      errorData.error ||
-        'Conflicto de sincronización. Los datos han cambiado en paralelo.',
-      409,
-      errorData
-    );
+    throw new ApiError(errorData.error || 'Conflicto de sincronización. Los datos han cambiado en paralelo.', 409, errorData);
   }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    const detailedMessage =
-      errorData.message ||
-      errorData.error ||
-      errorData.detail ||
-      `Error en la petición HTTP (${response.status})`;
-    throw new ApiError(
-      typeof detailedMessage === 'string'
-        ? detailedMessage
-        : JSON.stringify(detailedMessage),
-      response.status,
-      errorData
-    );
+    const detailedMessage = errorData.message || errorData.error || errorData.detail || `Error en la petición HTTP (${response.status})`;
+    throw new ApiError(typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage), response.status, errorData);
   }
 
   // Handle empty body responses (e.g., 204 No Content)
@@ -117,46 +101,29 @@ export const api = {
     });
   },
 
-  async setMainBand(
-    band_id: string
-  ): Promise<{ success: boolean; user: User; availableBands: any[] }> {
-    return request<{ success: boolean; user: User; availableBands: any[] }>(
-      '/api/users/set-main-band',
-      {
-        method: 'POST',
-        body: JSON.stringify({ band_id }),
-      }
-    );
+  async setMainBand(band_id: string): Promise<{ success: boolean; user: User; availableBands: any[] }> {
+    return request<{ success: boolean; user: User; availableBands: any[] }>('/api/users/set-main-band', {
+      method: 'POST',
+      body: JSON.stringify({ band_id }),
+    });
   },
 
-  async setBandOrder(
-    band_order: string[]
-  ): Promise<{ success: boolean; user: User; availableBands: any[] }> {
-    return request<{ success: boolean; user: User; availableBands: any[] }>(
-      '/api/users/set-band-order',
-      {
-        method: 'POST',
-        body: JSON.stringify({ band_order }),
-      }
-    );
+  async setBandOrder(band_order: string[]): Promise<{ success: boolean; user: User; availableBands: any[] }> {
+    return request<{ success: boolean; user: User; availableBands: any[] }>('/api/users/set-band-order', {
+      method: 'POST',
+      body: JSON.stringify({ band_order }),
+    });
   },
 
-  async saveUiPreferences(
-    preferences: Record<string, any>
-  ): Promise<{ success: boolean; ui_preferences: any; user: User }> {
-    return request<{ success: boolean; ui_preferences: any; user: User }>(
-      '/api/users/ui-preferences',
-      {
-        method: 'POST',
-        body: JSON.stringify(preferences),
-      }
-    );
+  async saveUiPreferences(preferences: Record<string, any>): Promise<{ success: boolean; ui_preferences: any; user: User }> {
+    return request<{ success: boolean; ui_preferences: any; user: User }>('/api/users/ui-preferences', {
+      method: 'POST',
+      body: JSON.stringify(preferences),
+    });
   },
 
   async getUiPreferences(): Promise<{ success: boolean; ui_preferences: any }> {
-    return request<{ success: boolean; ui_preferences: any }>(
-      '/api/users/ui-preferences'
-    );
+    return request<{ success: boolean; ui_preferences: any }>('/api/users/ui-preferences');
   },
 
   async createBand(data: {
@@ -187,9 +154,7 @@ export const api = {
     });
   },
 
-  async leaveBand(
-    bandId: string
-  ): Promise<{
+  async leaveBand(bandId: string): Promise<{
     success: boolean;
     message?: string;
     user?: User;
@@ -222,18 +187,12 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({
         ...data,
-        originUrl:
-          typeof window !== 'undefined' ? window.location.origin : undefined,
+        originUrl: typeof window !== 'undefined' ? window.location.origin : undefined,
       }),
     });
   },
 
-  async startCheckout(options: {
-    planId: string;
-    billingInterval?: 'monthly' | 'annual';
-    bandId?: string;
-    userEmail?: string;
-  }): Promise<{
+  async startCheckout(options: { planId: string; billingInterval?: 'monthly' | 'annual'; bandId?: string; userEmail?: string }): Promise<{
     success: boolean;
     url?: string;
     free?: boolean;
@@ -245,11 +204,7 @@ export const api = {
     }
     if (res.success && res.url) {
       try {
-        if (
-          typeof window !== 'undefined' &&
-          window.top &&
-          window.top !== window.self
-        ) {
+        if (typeof window !== 'undefined' && window.top && window.top !== window.self) {
           const win = window.open(res.url, '_blank');
           if (!win || win.closed || typeof win.closed === 'undefined') {
             window.location.href = res.url;
@@ -267,12 +222,7 @@ export const api = {
     throw new Error(res.error || 'Error al conectar con la pasarela de pago');
   },
 
-  async consumeCredits(data: {
-    bandId?: string;
-    userEmail?: string;
-    creditsAmount?: number;
-    featureName?: string;
-  }): Promise<{
+  async consumeCredits(data: { bandId?: string; userEmail?: string; creditsAmount?: number; featureName?: string }): Promise<{
     success: boolean;
     exhausted?: boolean;
     creditos_usados?: number;
@@ -286,10 +236,7 @@ export const api = {
     });
   },
 
-  async getCreditsStatus(params?: {
-    bandId?: string;
-    userEmail?: string;
-  }): Promise<{
+  async getCreditsStatus(params?: { bandId?: string; userEmail?: string }): Promise<{
     success: boolean;
     plan: string;
     creditos_usados: number;
@@ -333,9 +280,7 @@ export const api = {
   },
 
   // EPK
-  async updateEpkConfig(
-    newConfig: Partial<EPKConfig> & { bandId?: string }
-  ): Promise<EPKConfig> {
+  async updateEpkConfig(newConfig: Partial<EPKConfig> & { bandId?: string }): Promise<EPKConfig> {
     const targetBandId = newConfig.bandId;
     return request('/api/epk', {
       method: 'PUT',
@@ -349,11 +294,7 @@ export const api = {
    * UNA llamada por pulsación. El servidor no vuelve a llamar al modelo si el texto original
    * no ha cambiado desde la última traducción, salvo que se pase forzar: true.
    */
-  async traducirEpk(params: {
-    idioma: string;
-    bandId?: string;
-    forzar?: boolean;
-  }): Promise<{
+  async traducirEpk(params: { idioma: string; bandId?: string; forzar?: boolean }): Promise<{
     success: boolean;
     idioma: string;
     traduccion: NonNullable<EPKConfig['traducciones']>[string];
@@ -367,10 +308,7 @@ export const api = {
     });
   },
 
-  async updateIncentive(
-    incentivoFans: NonNullable<EPKConfig['incentivoFans']>,
-    bandId?: string
-  ): Promise<{ ok: boolean }> {
+  async updateIncentive(incentivoFans: NonNullable<EPKConfig['incentivoFans']>, bandId?: string): Promise<{ ok: boolean }> {
     return request('/api/epk', {
       method: 'PUT',
       headers: bandId ? { 'x-band-id': bandId } : undefined,
@@ -384,18 +322,13 @@ export const api = {
     button_type?: string;
     context?: string;
   }): Promise<{ success: boolean; count?: number }> {
-    return request<{ success: boolean; count?: number }>(
-      '/api/public/track-click',
-      {
-        method: 'POST',
-        body: JSON.stringify(params),
-      }
-    ).catch(() => ({ success: false }));
+    return request<{ success: boolean; count?: number }>('/api/public/track-click', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    }).catch(() => ({ success: false }));
   },
 
-  async getEpkClickStats(
-    bandId?: string
-  ): Promise<{ success: boolean; clicks: Record<string, number | string> }> {
+  async getEpkClickStats(bandId?: string): Promise<{ success: boolean; clicks: Record<string, number | string> }> {
     const q = bandId ? `?band_id=${encodeURIComponent(bandId)}` : '';
     return request<{
       success: boolean;
@@ -422,9 +355,7 @@ export const api = {
     return request('/api/response-strategies');
   },
 
-  async updateResponseStrategies(
-    strategies: Record<string, any>
-  ): Promise<any> {
+  async updateResponseStrategies(strategies: Record<string, any>): Promise<any> {
     return request('/api/response-strategies', {
       method: 'POST',
       body: JSON.stringify({ strategies }),
@@ -432,12 +363,9 @@ export const api = {
   },
 
   async deleteResponseStrategy(responseType: string): Promise<any> {
-    return request(
-      `/api/response-strategies/${encodeURIComponent(responseType)}`,
-      {
-        method: 'DELETE',
-      }
-    );
+    return request(`/api/response-strategies/${encodeURIComponent(responseType)}`, {
+      method: 'DELETE',
+    });
   },
 
   // Leads
@@ -461,8 +389,7 @@ export const api = {
     const query = new URLSearchParams();
     if (params?.page) query.set('page', String(params.page));
     if (params?.limit) query.set('limit', String(params.limit));
-    if (params?.estado && params.estado !== 'todos')
-      query.set('estado', params.estado);
+    if (params?.estado && params.estado !== 'todos') query.set('estado', params.estado);
     if (params?.search) query.set('search', params.search);
     if (params?.ciudad) query.set('ciudad', params.ciudad);
     if (params?.sortBy) query.set('sortBy', params.sortBy);
@@ -478,11 +405,7 @@ export const api = {
     });
   },
 
-  async updateLead(
-    id: string,
-    updatedFields: Partial<Lead>,
-    expectedStatus?: string
-  ): Promise<Lead> {
+  async updateLead(id: string, updatedFields: Partial<Lead>, expectedStatus?: string): Promise<Lead> {
     return request(`/api/leads/${id}`, {
       method: 'PUT',
       body: JSON.stringify({ ...updatedFields, expectedStatus }),
@@ -498,24 +421,18 @@ export const api = {
   // Historial real de conversación (server/db/leadMessages.ts) - lo que el Enviador mandó de
   // verdad y lo que el Lector detectó como respuesta o borrador enviado a mano. Distinto de
   // lead.hilo_emails (sync manual de Gmail desde el cliente).
-  async getLeadMessages(
-    leadId: string
-  ): Promise<{ success: boolean; messages: any[] }> {
+  async getLeadMessages(leadId: string): Promise<{ success: boolean; messages: any[] }> {
     return request(`/api/leads/${leadId}/messages`);
   },
 
-  async bulkDeleteLeads(
-    ids: string[]
-  ): Promise<{ success: boolean; count: number }> {
+  async bulkDeleteLeads(ids: string[]): Promise<{ success: boolean; count: number }> {
     return request('/api/leads/bulk-delete', {
       method: 'POST',
       body: JSON.stringify({ ids }),
     });
   },
 
-  async bulkDeleteBands(
-    ids: string[]
-  ): Promise<{ success: boolean; count: number }> {
+  async bulkDeleteBands(ids: string[]): Promise<{ success: boolean; count: number }> {
     return request('/api/bands/bulk-delete', {
       method: 'POST',
       body: JSON.stringify({ ids }),
@@ -530,10 +447,7 @@ export const api = {
     });
   },
 
-  async updateRehearsal(
-    id: string,
-    updatedFields: Partial<Rehearsal>
-  ): Promise<Rehearsal> {
+  async updateRehearsal(id: string, updatedFields: Partial<Rehearsal>): Promise<Rehearsal> {
     return request(`/api/rehearsals/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
@@ -554,10 +468,7 @@ export const api = {
     });
   },
 
-  async updateConcert(
-    id: string,
-    updatedFields: Partial<Concert>
-  ): Promise<Concert> {
+  async updateConcert(id: string, updatedFields: Partial<Concert>): Promise<Concert> {
     return request(`/api/concerts/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
@@ -578,10 +489,7 @@ export const api = {
     });
   },
 
-  async updatePost(
-    id: string,
-    updatedFields: Partial<SocialPost>
-  ): Promise<SocialPost> {
+  async updatePost(id: string, updatedFields: Partial<SocialPost>): Promise<SocialPost> {
     return request(`/api/posts/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
@@ -596,10 +504,7 @@ export const api = {
     });
   },
 
-  async updateMetric(
-    id: string,
-    updatedFields: Partial<SocialMetric>
-  ): Promise<SocialMetric> {
+  async updateMetric(id: string, updatedFields: Partial<SocialMetric>): Promise<SocialMetric> {
     return request(`/api/metrics/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
@@ -613,9 +518,7 @@ export const api = {
   },
 
   async getSocialContentItems(platform?: string): Promise<any[]> {
-    const url = platform
-      ? `/api/metrics/content-items?platform=${platform}`
-      : '/api/metrics/content-items';
+    const url = platform ? `/api/metrics/content-items?platform=${platform}` : '/api/metrics/content-items';
     const res = await request<{ items?: any[] }>(url);
     return res?.items || [];
   },
@@ -634,10 +537,7 @@ export const api = {
     });
   },
 
-  async updatePayment(
-    id: string,
-    updatedFields: Partial<Payment>
-  ): Promise<Payment> {
+  async updatePayment(id: string, updatedFields: Partial<Payment>): Promise<Payment> {
     return request(`/api/payments/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
@@ -794,10 +694,7 @@ export const api = {
     });
   },
 
-  async updateFan(
-    id: string,
-    updatedFields: Partial<Fan>
-  ): Promise<{ success: boolean; fan: Fan }> {
+  async updateFan(id: string, updatedFields: Partial<Fan>): Promise<{ success: boolean; fan: Fan }> {
     return request(`/api/fans/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(updatedFields),
@@ -812,21 +709,14 @@ export const api = {
 
   // Billing
   // La URL del feed .ics la firma el servidor, así que no se puede montar en el cliente.
-  async getCalendarFeedUrl(
-    bandIds: string
-  ): Promise<{ success?: boolean; path?: string; error?: string }> {
-    return request(
-      `/api/calendar-feed-url?band_id=${encodeURIComponent(bandIds)}`
-    );
+  async getCalendarFeedUrl(bandIds: string): Promise<{ success?: boolean; path?: string; error?: string }> {
+    return request(`/api/calendar-feed-url?band_id=${encodeURIComponent(bandIds)}`);
   },
 
   // sessionId: el servidor ya no se cree el plan que le mandemos, lo comprueba contra Stripe
   // con esta sesión de Checkout. Sin ella la confirmación se rechaza y el alta queda en manos
   // del webhook, que es quien manda de todas formas.
-  async confirmPaymentSuccess(data: {
-    sessionId: string;
-    bandId?: string;
-  }): Promise<any> {
+  async confirmPaymentSuccess(data: { sessionId: string; bandId?: string }): Promise<any> {
     return request('/api/billing/confirm-success', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -855,9 +745,7 @@ export const api = {
     return request('/api/metrics/instagram/status');
   },
 
-  async connectInstagramToken(
-    accessToken: string
-  ): Promise<{ success: boolean; message: string; account?: any }> {
+  async connectInstagramToken(accessToken: string): Promise<{ success: boolean; message: string; account?: any }> {
     return request('/api/metrics/instagram/connect', {
       method: 'POST',
       body: JSON.stringify({ accessToken }),
@@ -999,36 +887,27 @@ export const api = {
     return request('/api/campaigns');
   },
 
-  async saveCampaign(
-    campaign: Partial<BookingCampaign>
-  ): Promise<{ success: boolean; campaign: BookingCampaign }> {
+  async saveCampaign(campaign: Partial<BookingCampaign>): Promise<{ success: boolean; campaign: BookingCampaign }> {
     return request('/api/campaigns', {
       method: 'POST',
       body: JSON.stringify(campaign),
     });
   },
 
-  async updateCampaign(
-    id: string,
-    campaign: Partial<BookingCampaign>
-  ): Promise<{ success: boolean; campaign: BookingCampaign }> {
+  async updateCampaign(id: string, campaign: Partial<BookingCampaign>): Promise<{ success: boolean; campaign: BookingCampaign }> {
     return request(`/api/campaigns/${id}`, {
       method: 'PUT',
       body: JSON.stringify(campaign),
     });
   },
 
-  async deleteCampaign(
-    id: string
-  ): Promise<{ success: boolean; message?: string }> {
+  async deleteCampaign(id: string): Promise<{ success: boolean; message?: string }> {
     return request(`/api/campaigns/${id}`, {
       method: 'DELETE',
     });
   },
 
-  async setActiveCampaign(
-    id: string | null
-  ): Promise<{
+  async setActiveCampaign(id: string | null): Promise<{
     success: boolean;
     activeCampaign: BookingCampaign | null;
     campaigns: BookingCampaign[];
@@ -1107,9 +986,7 @@ export const api = {
   },
 
   // Force immediate campaign tone DNA training if enough examples exist
-  async trainCampaignToneDna(
-    campaignId: string
-  ): Promise<{
+  async trainCampaignToneDna(campaignId: string): Promise<{
     success: boolean;
     campaign?: BookingCampaign;
     message?: string;
@@ -1121,17 +998,12 @@ export const api = {
   },
 
   // Advanced AI analysis of setlist energy and pacing
-  async analyzeSetlistWithAI(
-    setlistId: string
-  ): Promise<{ success: boolean; analysis?: any; error?: string }> {
+  async analyzeSetlistWithAI(setlistId: string): Promise<{ success: boolean; analysis?: any; error?: string }> {
     // repertorioRouter se monta en /api (no /api/repertorio) y la ruta real del servidor es
     // "analyze-with-ai", no "analyze" — ver server/routes/repertorio.ts.
-    return request(
-      `/api/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`,
-      {
-        method: 'POST',
-      }
-    );
+    return request(`/api/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
+      method: 'POST',
+    });
   },
 
   async transposeAudio(data: {
@@ -1147,16 +1019,10 @@ export const api = {
   },
 
   // Plan de cambios (reordenar, quitar/añadir canciones del catálogo, añadir bloques) hacia el "setlist perfecto"
-  async generatePerfectSetlist(
-    setlistId: string,
-    feedback?: any
-  ): Promise<{ success: boolean; plan?: any; error?: string }> {
-    return request(
-      `/api/setlists/${encodeURIComponent(setlistId)}/generate-perfect-setlist`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ feedback }),
-      }
-    );
+  async generatePerfectSetlist(setlistId: string, feedback?: any): Promise<{ success: boolean; plan?: any; error?: string }> {
+    return request(`/api/setlists/${encodeURIComponent(setlistId)}/generate-perfect-setlist`, {
+      method: 'POST',
+      body: JSON.stringify({ feedback }),
+    });
   },
 };

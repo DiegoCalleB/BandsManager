@@ -42,12 +42,7 @@ import {
 } from '../utils/temaEspectro';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
-import {
-  getPlanDefinition,
-  getPlanChangeType,
-  normalizePlan,
-  PLANS,
-} from '../utils/planPermissions';
+import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from '../utils/planPermissions';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 import { ModalPortal } from './common/ModalPortal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
@@ -109,24 +104,16 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   const { language, setLanguage } = useLanguage();
   const [name, setName] = useState(currentUser.name || '');
   const [instrument, setInstrument] = useState(currentUser.instrument || '');
-  const [avatarColor, setAvatarColor] = useState(
-    currentUser.avatarColor || 'var(--ok)'
-  );
-  const [selectedMainBandId, setSelectedMainBandId] = useState(
-    currentUser.main_band_id || currentUser.band_id || ''
-  );
-  const [bandLogoUrl, setBandLogoUrl] = useState<string>(
-    epkConfig?.logoUrl || ''
-  );
+  const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor || 'var(--ok)');
+  const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id || '');
+  const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl || '');
 
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name || '');
       setInstrument(currentUser.instrument || '');
       setAvatarColor(currentUser.avatarColor || 'var(--ok)');
-      setSelectedMainBandId(
-        currentUser.main_band_id || currentUser.band_id || ''
-      );
+      setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || '');
     }
   }, [currentUser]);
 
@@ -145,31 +132,24 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAppearance, setShowAppearance] = useState(false);
-  const [prefEspectro, setPrefEspectro] = useState<PreferenciaTema>(() =>
-    leerPreferenciaEspectro()
-  );
+  const [prefEspectro, setPrefEspectro] = useState<PreferenciaTema>(() => leerPreferenciaEspectro());
   const [showAgentConfig, setShowAgentConfig] = useState(false);
 
   const activeBandMatch = availableBands?.find(
     (b) =>
-      b.band_id === (currentUser.band_id || currentUser.main_band_id) ||
-      (b as any).id === (currentUser.band_id || currentUser.main_band_id)
+      b.band_id === (currentUser.band_id || currentUser.main_band_id) || (b as any).id === (currentUser.band_id || currentUser.main_band_id)
   );
   const effectivePlan = activeBandMatch?.plan || currentUser.plan;
   const currentPlanDef = getPlanDefinition(effectivePlan);
   const isHighestPlan = currentPlanDef.id === 'cabeza_de_cartel';
   // Plan Promo y Promo+ (fase beta, festivales): sin agentes IA ni cambio de plan visible.
-  const isPromoUser =
-    normalizePlan(effectivePlan) === 'promo' ||
-    normalizePlan(effectivePlan) === 'promo_plus';
+  const isPromoUser = normalizePlan(effectivePlan) === 'promo' || normalizePlan(effectivePlan) === 'promo_plus';
 
   // Password change state
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogoChangeInProfile = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleLogoChangeInProfile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingLogo(true);
@@ -218,8 +198,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Available bands local state & synchronization
-  const [localAvailableBands, setLocalAvailableBands] =
-    useState(availableBands);
+  const [localAvailableBands, setLocalAvailableBands] = useState(availableBands);
   useEffect(() => {
     setLocalAvailableBands(availableBands);
   }, [availableBands]);
@@ -227,14 +206,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   // Band creation inside Profile Modal
   const [showCreateBandSection, setShowCreateBandSection] = useState(false);
   const [createBandName, setCreateBandName] = useState('');
-  const [createBandLeaderName, setCreateBandLeaderName] = useState(
-    currentUser.name || currentUser.username || ''
-  );
+  const [createBandLeaderName, setCreateBandLeaderName] = useState(currentUser.name || currentUser.username || '');
   const [createBandStyle, setCreateBandStyle] = useState('');
   const [createBandLocation, setCreateBandLocation] = useState('España');
-  const [createBandPlan, setCreateBandPlan] = useState<
-    'emergente' | 'profesional' | 'elite' | 'promo' | 'promo_plus'
-  >('profesional');
+  const [createBandPlan, setCreateBandPlan] = useState<'emergente' | 'profesional' | 'elite' | 'promo' | 'promo_plus'>('profesional');
   const [isCreatingBand, setIsCreatingBand] = useState(false);
 
   // Band deletion inside Profile Modal
@@ -253,17 +228,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     setIsCreatingBand(true);
     setError(null);
     setSuccessMsg(null);
-    const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION
-      ? 'promo'
-      : createBandPlan;
+    const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION ? 'promo' : createBandPlan;
     try {
       const res = await api.createBand({
         bandName: createBandName.trim(),
-        leaderName:
-          createBandLeaderName.trim() ||
-          currentUser.name ||
-          currentUser.username ||
-          'Líder',
+        leaderName: createBandLeaderName.trim() || currentUser.name || currentUser.username || 'Líder',
         plan: effectivePlan,
         estilo_musical: createBandStyle.trim() || undefined,
         localizacion: createBandLocation.trim() || undefined,
@@ -282,37 +251,24 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         }
 
         // Redirect to Stripe Checkout for paid plans
-        if (
-          (effectivePlan as string) !== 'ensayo' &&
-          effectivePlan !== 'promo' &&
-          effectivePlan !== 'promo_plus' &&
-          res.band_id
-        ) {
+        if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && effectivePlan !== 'promo_plus' && res.band_id) {
           try {
             await api.startCheckout({
               planId: effectivePlan,
               billingInterval: 'monthly',
               bandId: res.band_id,
-              userEmail:
-                currentUser?.email && currentUser.email.includes('@')
-                  ? currentUser.email
-                  : undefined,
+              userEmail: currentUser?.email && currentUser.email.includes('@') ? currentUser.email : undefined,
             });
             setShowCreateBandSection(false);
             setCreateBandName('');
             setCreateBandStyle('');
             return;
           } catch (stripeErr) {
-            console.error(
-              'Error initiating Stripe checkout on create band in profile:',
-              stripeErr
-            );
+            console.error('Error initiating Stripe checkout on create band in profile:', stripeErr);
           }
         }
 
-        setSuccessMsg(
-          `¡Proyecto"${createBandName.trim()}" creado y configurado con éxito!`
-        );
+        setSuccessMsg(`¡Proyecto"${createBandName.trim()}" creado y configurado con éxito!`);
         setShowCreateBandSection(false);
         setCreateBandName('');
         setCreateBandStyle('');
@@ -342,16 +298,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         if (res.user) {
           localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
           onUpdateUser(res.user as User);
-          setSelectedMainBandId(
-            res.user.main_band_id || res.user.band_id || ''
-          );
+          setSelectedMainBandId(res.user.main_band_id || res.user.band_id || '');
         }
         if (res.availableBands && Array.isArray(res.availableBands)) {
           setLocalAvailableBands(res.availableBands);
         }
-        setSuccessMsg(
-          `"${targetBandName}" eliminada correctamente de tu cuenta.`
-        );
+        setSuccessMsg(`"${targetBandName}" eliminada correctamente de tu cuenta.`);
         if (onRefreshData) await onRefreshData();
       } else {
         setError(res?.message || 'Error al eliminar la banda');
@@ -359,10 +311,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     } catch (err: any) {
       console.error('Error deleting band in profile modal:', err);
       const rawMsg = err?.message || '';
-      const isNetworkErr =
-        rawMsg === 'Failed to fetch' ||
-        rawMsg.includes('NetworkError') ||
-        rawMsg.includes('fetch');
+      const isNetworkErr = rawMsg === 'Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
       const userFriendlyMsg = isNetworkErr
         ? 'Error de conexión con el servidor. Por favor, reintenta en unos instantes.'
         : rawMsg || 'Error al eliminar la banda de tu usuario';
@@ -395,15 +344,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
     try {
       const token = localStorage.getItem('bakandeya_token');
-      if (
-        selectedMainBandId &&
-        selectedMainBandId !==
-          (currentUser.main_band_id || currentUser.band_id) &&
-        onSetMainBand
-      ) {
-        await onSetMainBand(selectedMainBandId).catch((e: any) =>
-          console.warn('Could not set main band:', e)
-        );
+      if (selectedMainBandId && selectedMainBandId !== (currentUser.main_band_id || currentUser.band_id) && onSetMainBand) {
+        await onSetMainBand(selectedMainBandId).catch((e: any) => console.warn('Could not set main band:', e));
       }
       const response = await fetch(`/api/users/${currentUser.id}`, {
         method: 'PUT',
@@ -447,9 +389,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           className={`w-full max-w-md rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
         >
           {/* Modal Header */}
-          <div
-            className={`px-6 py-4 flex justify-between items-center ${'-neutral-200 bg-[var(--bg)]'}`}
-          >
+          <div className={`px-6 py-4 flex justify-between items-center ${'-neutral-200 bg-[var(--bg)]'}`}>
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[var(--ink)] font-sans text-sm shrink-0"
@@ -463,8 +403,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </h3>
                 <p className="text-[11px] text-[var(--ink-2)] font-sans flex items-center gap-1.5 flex-wrap">
                   <span>
-                    @{currentUser.username} •{' '}
-                    {isAdmin ? 'Administrador' : 'Músico'}
+                    @{currentUser.username} • {isAdmin ? 'Administrador' : 'Músico'}
                   </span>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/15 text-[var(--acc)]/70">
                     <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -482,10 +421,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </div>
 
           {/* Form Body */}
-          <form
-            onSubmit={handleSubmit}
-            className="p-6 space-y-4 overflow-y-auto max-h-[75vh]"
-          >
+          <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto max-h-[75vh]">
             {error && (
               <div className="p-3 bg-[var(--alert)]/10 -rose-500/20 rounded-[var(--r-m)] text-xs text-[var(--alert)] flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
@@ -501,9 +437,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             )}
 
             {/* Plan Suscrito & Upgrade Section */}
-            <div
-              className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${'bg-[var(--bg)]'}`}
-            >
+            <div className={`p-3.5 rounded-[var(--r-m)] relative overflow-hidden transition-all ${'bg-[var(--bg)]'}`}>
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <div className="w-9 h-9 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center shrink-0">
@@ -511,16 +445,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-sans text-[var(--ink-2)] tracking-wide">
-                        Plan:
-                      </span>
-                      <span className="text-xs font-bold text-[var(--acc)]/70 font-sans">
-                        {currentPlanDef.name}
-                      </span>
+                      <span className="text-xs font-sans text-[var(--ink-2)] tracking-wide">Plan:</span>
+                      <span className="text-xs font-bold text-[var(--acc)]/70 font-sans">{currentPlanDef.name}</span>
                     </div>
-                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                      {currentPlanDef.description}
-                    </p>
+                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">{currentPlanDef.description}</p>
                   </div>
                 </div>
 
@@ -592,9 +520,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     type="button"
                     onClick={() => setAvatarColor(c)}
                     className={`w-7 h-7 rounded-full transition-transform cursor-pointer ${
-                      avatarColor === c
-                        ? 'scale-110 -white ring-2 ring-emerald-500'
-                        : '-transparent opacity-75 hover:opacity-100'
+                      avatarColor === c ? 'scale-110 -white ring-2 ring-emerald-500' : '-transparent opacity-75 hover:opacity-100'
                     }`}
                     style={{ backgroundColor: c }}
                   />
@@ -609,14 +535,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <Camera className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Logo de tu Banda / Proyecto Musical</span>
                 </span>
-                <span className="text-[10px] text-[var(--acc)]/80 font-normal font-sans">
-                  Editar Avatar
-                </span>
+                <span className="text-[10px] text-[var(--acc)]/80 font-normal font-sans">Editar Avatar</span>
               </label>
 
-              <div
-                className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${'bg-[var(--surface)]'}`}
-              >
+              <div className={`p-3 rounded-[var(--r-m)] flex items-center justify-between gap-3 ${'bg-[var(--surface)]'}`}>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] overflow-hidden flex items-center justify-center p-1 shrink-0 relative group">
                     {bandLogoUrl && !logoImgError ? (
@@ -633,9 +555,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-xs font-bold text-[var(--ink)]">
-                        {activeBandName || currentUser.bandName || 'Tu Banda'}
-                      </p>
+                      <p className="text-xs font-bold text-[var(--ink)]">{activeBandName || currentUser.bandName || 'Tu Banda'}</p>
                       {isPromoUser ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-sans font-extrabold tracking-wider bg-[var(--acc)]/60/15 text-[var(--acc)]/70">
                           <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -654,9 +574,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         </button>
                       )}
                     </div>
-                    <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                      Avatar / Logo oficial de la banda
-                    </p>
+                    <p className="text-[10px] text-[var(--ink-2)] font-sans">Avatar / Logo oficial de la banda</p>
                   </div>
                 </div>
 
@@ -672,13 +590,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <span>Cambiar Logo</span>
                     </>
                   )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={uploadingLogo}
-                    onChange={handleLogoChangeInProfile}
-                  />
+                  <input type="file" accept="image/*" className="hidden" disabled={uploadingLogo} onChange={handleLogoChangeInProfile} />
                 </label>
               </div>
             </div>
@@ -707,15 +619,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   )}
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowCreateBandSection(!showCreateBandSection)
-                    }
+                    onClick={() => setShowCreateBandSection(!showCreateBandSection)}
                     className="text-[11px] font-sans text-[var(--ok)] hover:text-[var(--ink-2)] transition-colors flex items-center gap-1 cursor-pointer font-bold"
                   >
                     <Plus className="w-3 h-3" />
-                    <span>
-                      {showCreateBandSection ? 'Cerrar' : '+ Crear Proyecto'}
-                    </span>
+                    <span>{showCreateBandSection ? 'Cerrar' : '+ Crear Proyecto'}</span>
                   </button>
                   {onOpenBandSwitcher && (
                     <button
@@ -754,9 +662,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                   <div className="space-y-2">
                     <div>
-                      <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">
-                        Nombre del Proyecto / Banda *
-                      </label>
+                      <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">Nombre del Proyecto / Banda *</label>
                       <input
                         type="text"
                         required
@@ -769,9 +675,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">
-                          Estilo / Género
-                        </label>
+                        <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">Estilo / Género</label>
                         <input
                           type="text"
                           value={createBandStyle}
@@ -781,15 +685,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">
-                          Ubicación
-                        </label>
+                        <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1">Ubicación</label>
                         <input
                           type="text"
                           value={createBandLocation}
-                          onChange={(e) =>
-                            setCreateBandLocation(e.target.value)
-                          }
+                          onChange={(e) => setCreateBandLocation(e.target.value)}
                           placeholder="Ej. Madrid, Barcelona..."
                           className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                         />
@@ -798,43 +698,31 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                     {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
                       <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                        Se creará en el plan{' '}
-                        <span className="text-[var(--acc)] font-bold">
-                          Promo
-                        </span>{' '}
-                        (dossier, calendario y fans).
+                        Se creará en el plan <span className="text-[var(--acc)] font-bold">Promo</span> (dossier, calendario y fans).
                       </p>
                     ) : (
                       <div>
-                        <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1.5">
-                          Plan Inicial del Proyecto
-                        </label>
+                        <label className="text-[10px] font-sans text-[var(--ink-2)] block mb-1.5">Plan Inicial del Proyecto</label>
                         <div className="grid grid-cols-3 gap-1.5">
-                          {(['emergente', 'profesional', 'elite'] as const).map(
-                            (pKey) => {
-                              const planDef = getPlanDefinition(pKey);
-                              const isPlanSelected = createBandPlan === pKey;
-                              return (
-                                <button
-                                  key={pKey}
-                                  type="button"
-                                  onClick={() => setCreateBandPlan(pKey)}
-                                  className={`p-2 rounded-[var(--r-s)] text-left text-[11px] transition-all cursor-pointer ${
-                                    isPlanSelected
-                                      ? 'bg-[var(--acc)]/20 /80 text-[var(--acc)]/70'
-                                      : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
-                                  }`}
-                                >
-                                  <p className="font-bold truncate text-[10px]">
-                                    {planDef.name.split('')[0]}
-                                  </p>
-                                  <p className="text-[9px] font-sans text-[var(--acc)]/90">
-                                    {planDef.price}
-                                  </p>
-                                </button>
-                              );
-                            }
-                          )}
+                          {(['emergente', 'profesional', 'elite'] as const).map((pKey) => {
+                            const planDef = getPlanDefinition(pKey);
+                            const isPlanSelected = createBandPlan === pKey;
+                            return (
+                              <button
+                                key={pKey}
+                                type="button"
+                                onClick={() => setCreateBandPlan(pKey)}
+                                className={`p-2 rounded-[var(--r-s)] text-left text-[11px] transition-all cursor-pointer ${
+                                  isPlanSelected
+                                    ? 'bg-[var(--acc)]/20 /80 text-[var(--acc)]/70'
+                                    : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--bg)]'
+                                }`}
+                              >
+                                <p className="font-bold truncate text-[10px]">{planDef.name.split('')[0]}</p>
+                                <p className="text-[9px] font-sans text-[var(--acc)]/90">{planDef.price}</p>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
@@ -875,13 +763,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/10 space-y-2 animate-in fade-in duration-200">
                   <p className="text-xs font-bold text-[var(--alert)] flex items-center gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
-                    <span>
-                      ¿Eliminar proyecto"{bandToDeleteInProfile.name}"?
-                    </span>
+                    <span>¿Eliminar proyecto"{bandToDeleteInProfile.name}"?</span>
                   </p>
                   <p className="text-[11px] text-[var(--ink-2)]">
-                    Se desvinculará este proyecto de tu cuenta de usuario. Esta
-                    acción no se puede deshacer.
+                    Se desvinculará este proyecto de tu cuenta de usuario. Esta acción no se puede deshacer.
                   </p>
                   <div className="flex items-center justify-end gap-2 pt-1">
                     <button
@@ -913,12 +798,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
               )}
 
-              <div
-                className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}
-              >
+              <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
                 <p className="text-[11px] text-[var(--ink-2)]">
-                  Selecciona tu proyecto principal por defecto o gestiona tus
-                  bandas activas:
+                  Selecciona tu proyecto principal por defecto o gestiona tus bandas activas:
                 </p>
 
                 {localAvailableBands && localAvailableBands.length > 0 ? (
@@ -928,16 +810,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         selectedMainBandId === b.band_id ||
                         (b.band_id &&
                           selectedMainBandId &&
-                          selectedMainBandId.replace(/^(band|reg)-/, '') ===
-                            b.band_id.replace(/^(band|reg)-/, ''));
+                          selectedMainBandId.replace(/^(band|reg)-/, '') === b.band_id.replace(/^(band|reg)-/, ''));
                       const isDeleting = deletingBandId === b.band_id;
                       return (
                         <div
                           key={b.band_id}
                           className={`w-full p-2.5 rounded-[var(--r-m)] flex items-center justify-between gap-3 transition-all ${
-                            isSelected
-                              ? 'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70'
-                              : 'bg-[var(--surface)] text-[var(--ink-2)]'
+                            isSelected ? 'bg-[var(--acc)]/15 /50 text-[var(--acc)]/70' : 'bg-[var(--surface)] text-[var(--ink-2)]'
                           }`}
                         >
                           <button
@@ -949,14 +828,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               {b.bandName.slice(0, 2).toUpperCase()}
                             </div>
                             <div className="min-w-0">
-                              <p className="text-xs font-bold truncate">
-                                {b.bandName}
-                              </p>
+                              <p className="text-xs font-bold truncate">{b.bandName}</p>
                               <p className="text-[10px] text-[var(--ink-2)] font-sans capitalize">
-                                {b.role === 'leader'
-                                  ? 'Líder / Mánager'
-                                  : 'Miembro'}{' '}
-                                • {getPlanDefinition(b.plan).name}
+                                {b.role === 'leader' ? 'Líder / Mánager' : 'Miembro'} • {getPlanDefinition(b.plan).name}
                               </p>
                             </div>
                           </button>
@@ -990,11 +864,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 title="Eliminar proyecto"
                                 className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/10 transition-colors cursor-pointer"
                               >
-                                {isDeleting ? (
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                ) : (
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                )}
+                                {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                               </button>
                             )}
                           </div>
@@ -1004,12 +874,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
-                    <span className="text-xs font-bold text-[var(--ink)]">
-                      {activeBandName || currentUser.bandName || 'BAKANDEYA'}
-                    </span>
-                    <span className="text-[10px] font-sans text-[var(--acc)]">
-                      Principal
-                    </span>
+                    <span className="text-xs font-bold text-[var(--ink)]">{activeBandName || currentUser.bandName || 'BAKANDEYA'}</span>
+                    <span className="text-[10px] font-sans text-[var(--acc)]">Principal</span>
                   </div>
                 )}
               </div>
@@ -1022,9 +888,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Idioma de la Plataforma / Language</span>
                 </span>
-                <span className="text-[10px] text-[var(--acc)]/80 font-normal font-sans">
-                  Multilenguaje
-                </span>
+                <span className="text-[10px] text-[var(--acc)]/80 font-normal font-sans">Multilenguaje</span>
               </label>
               <div className="pt-1">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -1042,14 +906,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         }`}
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-base leading-none">
-                            {lang.flag}
-                          </span>
+                          <span className="text-base leading-none">{lang.flag}</span>
                           <span className="text-xs truncate">{lang.label}</span>
                         </div>
-                        {isSelected && (
-                          <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                        )}
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />}
                       </button>
                     );
                   })}
@@ -1067,9 +927,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 >
                   <div className="flex items-center gap-2">
                     <Palette className="w-4 h-4 text-[var(--acc)]" />
-                    <span className="text-xs font-sans font-semibold">
-                      Personalización Visual (Tema y Fuente)
-                    </span>
+                    <span className="text-xs font-sans font-semibold">Personalización Visual (Tema y Fuente)</span>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-sans text-[var(--ink-2)]">
                     <span>{showAppearance ? 'Ocultar' : 'Configurar'}</span>
@@ -1101,12 +959,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                     : 'bg-[var(--surface)] text-[var(--ink-2)] hover:'
                                 }`}
                               >
-                                <span className="text-[11px] font-sans truncate">
-                                  {t.name}
-                                </span>
-                                {isSelected && (
-                                  <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                                )}
+                                <span className="text-[11px] font-sans truncate">{t.name}</span>
+                                {isSelected && <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />}
                               </button>
                             );
                           })}
@@ -1135,15 +989,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 }`}
                               >
                                 <div className="flex items-center justify-between gap-1 w-full">
-                                  <span
-                                    className="text-[11px] font-bold truncate"
-                                    style={{ fontFamily: p.displayFont }}
-                                  >
+                                  <span className="text-[11px] font-bold truncate" style={{ fontFamily: p.displayFont }}>
                                     {p.name}
                                   </span>
-                                  {isSelected && (
-                                    <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                                  )}
+                                  {isSelected && <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />}
                                 </div>
                               </button>
                             );
@@ -1169,9 +1018,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <span>Nuevo diseño — Espectro (en pruebas)</span>
                 </label>
                 <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
-                  Ve probando el rediseño mientras migro pantalla a pantalla. Lo
-                  que aún no está migrado se ve igual que siempre en cualquiera
-                  de las cuatro opciones — no rompe nada.
+                  Ve probando el rediseño mientras migro pantalla a pantalla. Lo que aún no está migrado se ve igual que siempre en
+                  cualquiera de las cuatro opciones — no rompe nada.
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {PREFERENCIAS_ESPECTRO.map((p) => {
@@ -1191,12 +1039,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         }`}
                         title={p.descripcion}
                       >
-                        <span className="text-[11px] font-sans truncate">
-                          {p.etiqueta}
-                        </span>
-                        {isSelected && (
-                          <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                        )}
+                        <span className="text-[11px] font-sans truncate">{p.etiqueta}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />}
                       </button>
                     );
                   })}
@@ -1226,9 +1070,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 >
                   <div className="flex items-center gap-2">
                     <Bot className="w-4 h-4 text-[var(--acc)]" />
-                    <span className="text-xs font-sans font-semibold">
-                      Configuración de Agentes IA (Autonomía, Horarios y Email)
-                    </span>
+                    <span className="text-xs font-sans font-semibold">Configuración de Agentes IA (Autonomía, Horarios y Email)</span>
                   </div>
                   <span className="text-[11px] font-sans font-bold text-[var(--acc)] flex items-center gap-1">
                     <span>Abrir</span>
@@ -1245,9 +1087,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-sans text-[var(--ink-2)]">
-                  Nueva Contraseña Secreta
-                </label>
+                <label className="text-[11px] font-sans text-[var(--ink-2)]">Nueva Contraseña Secreta</label>
                 <input
                   type="password"
                   value={newPassword}
@@ -1259,9 +1099,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
               {newPassword.length > 0 && (
                 <div className="space-y-1 animate-in fade-in duration-200">
-                  <label className="text-[11px] font-sans text-[var(--ink-2)]">
-                    Confirmar Nueva Contraseña
-                  </label>
+                  <label className="text-[11px] font-sans text-[var(--ink-2)]">Confirmar Nueva Contraseña</label>
                   <input
                     type="password"
                     value={confirmPassword}
@@ -1274,47 +1112,37 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             </div>
 
             {/* Admin Band Management Section inside Profile */}
-            {(isAdmin ||
-              currentUser.role === 'leader' ||
-              currentUser.role === 'admin') &&
-              onOpenBandManagement && (
-                <div className="pt-2 bg-[var(--surface)]/80 space-y-2">
-                  <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <Shield className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                      <span>Administración de la Banda</span>
-                    </span>
-                    <span className="text-[10px] text-[var(--tentative)] font-sans font-bold">
-                      Solo Admins
-                    </span>
-                  </label>
+            {(isAdmin || currentUser.role === 'leader' || currentUser.role === 'admin') && onOpenBandManagement && (
+              <div className="pt-2 bg-[var(--surface)]/80 space-y-2">
+                <label className="text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5 text-[var(--tentative)]" />
+                    <span>Administración de la Banda</span>
+                  </span>
+                  <span className="text-[10px] text-[var(--tentative)] font-sans font-bold">Solo Admins</span>
+                </label>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onOpenBandManagement();
-                    }}
-                    className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${'bg-[var(--tentative)]/5 hover:bg-[var(--acc)]/15 text-[var(--ink-2)]'}`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Users className="w-4 h-4 text-[var(--tentative)] shrink-0" />
-                      <div>
-                        <div className="text-xs font-bold font-sans">
-                          Gestión de la Banda
-                        </div>
-                        <div className="text-[10px] opacity-75 font-sans">
-                          Crear nuevos músicos, cambiar sus contraseñas y
-                          permisos
-                        </div>
-                      </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenBandManagement();
+                  }}
+                  className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${'bg-[var(--tentative)]/5 hover:bg-[var(--acc)]/15 text-[var(--ink-2)]'}`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Users className="w-4 h-4 text-[var(--tentative)] shrink-0" />
+                    <div>
+                      <div className="text-xs font-bold font-sans">Gestión de la Banda</div>
+                      <div className="text-[10px] opacity-75 font-sans">Crear nuevos músicos, cambiar sus contraseñas y permisos</div>
                     </div>
-                    <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
-                      Abrir &rarr;
-                    </span>
-                  </button>
-                </div>
-              )}
+                  </div>
+                  <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--ink-2)] -indigo-500/30">
+                    Abrir &rarr;
+                  </span>
+                </button>
+              </div>
+            )}
 
             <button
               type="submit"
@@ -1333,13 +1161,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </form>
 
           {/* Modal Footer */}
-          <div
-            className={`px-6 py-3 flex justify-between items-center ${'-neutral-200 bg-[var(--bg)]'}`}
-          >
-            {(isAdmin ||
-              currentUser.role === 'leader' ||
-              currentUser.role === 'admin') &&
-            onOpenBandManagement ? (
+          <div className={`px-6 py-3 flex justify-between items-center ${'-neutral-200 bg-[var(--bg)]'}`}>
+            {(isAdmin || currentUser.role === 'leader' || currentUser.role === 'admin') && onOpenBandManagement ? (
               <button
                 onClick={() => {
                   onClose();
@@ -1351,9 +1174,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <span>Gestión de la Banda</span>
               </button>
             ) : (
-              <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                BandManager.io v2.0
-              </span>
+              <span className="text-[10px] font-sans text-[var(--ink-2)]">BandManager.io v2.0</span>
             )}
 
             <button
@@ -1367,10 +1188,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
         {/* Upgrade Plan Modal */}
         {showUpgradeModal && (
-          <ModalPortal
-            isOpen={showUpgradeModal}
-            onClose={() => setShowUpgradeModal(false)}
-          >
+          <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
               <div
                 className={`w-full max-w-lg rounded-[var(--r-l)] overflow-hidden flex flex-col my-auto max-h-[90vh] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
@@ -1381,12 +1199,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans tracking-wider">
-                        Cambiar Plan de Suscripción
-                      </h3>
-                      <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                        Selecciona el plan para tu proyecto musical
-                      </p>
+                      <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans tracking-wider">Cambiar Plan de Suscripción</h3>
+                      <p className="text-[10px] text-[var(--ink-2)] font-sans">Selecciona el plan para tu proyecto musical</p>
                     </div>
                   </div>
                   <button
@@ -1402,10 +1216,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/20 text-[var(--ink)] text-xs flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
                         <AlertCircle className="w-5 h-5 text-[var(--alert)] shrink-0" />
-                        <span>
-                          Pago pendiente. Actualiza tu método de pago para
-                          mantener tus funciones.
-                        </span>
+                        <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
                       </div>
                       <button
                         type="button"
@@ -1417,8 +1228,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               bandId: currentUser.band_id,
                               returnUrl: window.location.href,
                             });
-                            if (res.success && res.url)
-                              window.location.href = res.url;
+                            if (res.success && res.url) window.location.href = res.url;
                           } catch (e) {}
                         }}
                         className="px-3 py-1 bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer whitespace-nowrap"
@@ -1433,9 +1243,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <Calendar className="w-4 h-4 text-[var(--acc)] shrink-0" />
                       <span>
                         Cambio programado a{' '}
-                        <strong className="uppercase font-sans text-[var(--acc)]/70">
-                          {currentUser.plan_pendiente.replace('_', '')}
-                        </strong>{' '}
+                        <strong className="uppercase font-sans text-[var(--acc)]/70">{currentUser.plan_pendiente.replace('_', '')}</strong>{' '}
                         al finalizar el ciclo.
                       </span>
                     </div>
@@ -1444,9 +1252,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <div className="flex items-center justify-between gap-2 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80">
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                      <span className="text-xs text-[var(--ink-2)] font-sans">
-                        Facturación & Tarjetas en Stripe:
-                      </span>
+                      <span className="text-xs text-[var(--ink-2)] font-sans">Facturación & Tarjetas en Stripe:</span>
                     </div>
                     <button
                       type="button"
@@ -1459,10 +1265,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                           if (res.success && res.url) {
                             window.location.href = res.url;
                           } else {
-                            alert(
-                              res.error ||
-                                'No se pudo abrir el portal de Stripe'
-                            );
+                            alert(res.error || 'No se pudo abrir el portal de Stripe');
                           }
                         } catch (err: any) {
                           alert('Error al conectar con Stripe: ' + err.message);
@@ -1476,12 +1279,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
 
                   <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                    Tu proyecto tiene actualmente activo el{' '}
-                    <strong className="text-[var(--acc)]/70">
-                      {currentPlanDef.name}
-                    </strong>
-                    . Puedes cambiar de plan al instante haciendo clic en el
-                    botón de la opción que desees:
+                    Tu proyecto tiene actualmente activo el <strong className="text-[var(--acc)]/70">{currentPlanDef.name}</strong>. Puedes
+                    cambiar de plan al instante haciendo clic en el botón de la opción que desees:
                   </p>
 
                   <div className="space-y-3">
@@ -1491,16 +1290,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         <div
                           key={plan.id}
                           className={`p-4 rounded-[var(--r-m)] transition-all ${
-                            isCurrent
-                              ? 'bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30'
-                              : 'bg-[var(--surface)]/60 hover:'
+                            isCurrent ? 'bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30' : 'bg-[var(--surface)]/60 hover:'
                           }`}
                         >
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-xs text-[var(--ink)] font-sans">
-                                {plan.name}
-                              </span>
+                              <span className="font-bold text-xs text-[var(--ink)] font-sans">{plan.name}</span>
                               <span
                                 className="text-[9px] font-sans font-bold px-2 py-0.5 rounded"
                                 style={{
@@ -1517,33 +1312,24 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                 </span>
                               )}
                             </div>
-                            <span className="text-xs font-bold font-sans text-[var(--acc)]">
-                              {plan.price}
-                            </span>
+                            <span className="text-xs font-bold font-sans text-[var(--acc)]">{plan.price}</span>
                           </div>
 
                           {plan.stickerGift && (
                             <div className="mt-2 px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/60/10 flex items-center gap-1.5 text-[10px] font-sans text-[var(--acc)]/70 font-bold">
                               <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
-                              <span>
-                                Regalo de bienvenida: {plan.stickerGift.qty}
-                              </span>
+                              <span>Regalo de bienvenida: {plan.stickerGift.qty}</span>
                             </div>
                           )}
 
                           <div className="flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)] mt-1.5">
                             <span>{plan.description}</span>
-                            <span className="text-[var(--ink-2)] font-bold shrink-0">
-                              {plan.credits}
-                            </span>
+                            <span className="text-[var(--ink-2)] font-bold shrink-0">{plan.credits}</span>
                           </div>
 
                           <ul className="mt-2.5 space-y-1 font-sans">
                             {plan.features.map((feat, idx) => (
-                              <li
-                                key={idx}
-                                className="text-[10.5px] text-[var(--ink-2)] flex items-center gap-1.5"
-                              >
+                              <li key={idx} className="text-[10.5px] text-[var(--ink-2)] flex items-center gap-1.5">
                                 <Check className="w-3 h-3 text-[var(--ok)] shrink-0" />
                                 <span>{feat}</span>
                               </li>
@@ -1552,9 +1338,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                           <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 /80">
                             <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                              {isCurrent
-                                ? 'Tu plan activo'
-                                : 'Cambio de plan inmediato'}
+                              {isCurrent ? 'Tu plan activo' : 'Cambio de plan inmediato'}
                             </span>
                             {isCurrent ? (
                               <span className="text-[10px] font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
@@ -1570,13 +1354,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                       await api.startCheckout({
                                         planId: plan.id,
                                         billingInterval: 'monthly',
-                                        bandId:
-                                          currentUser.band_id || 'default',
-                                        userEmail:
-                                          currentUser?.email &&
-                                          currentUser.email.includes('@')
-                                            ? currentUser.email
-                                            : undefined,
+                                        bandId: currentUser.band_id || 'default',
+                                        userEmail: currentUser?.email && currentUser.email.includes('@') ? currentUser.email : undefined,
                                       });
                                       setShowUpgradeModal(false);
                                       return;
@@ -1592,22 +1371,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                       ...currentUser,
                                       plan: plan.id,
                                     };
-                                    localStorage.setItem(
-                                      'bakandeya_user',
-                                      JSON.stringify(updatedUser)
-                                    );
-                                    if (onUpdateUser)
-                                      onUpdateUser(updatedUser as User);
+                                    localStorage.setItem('bakandeya_user', JSON.stringify(updatedUser));
+                                    if (onUpdateUser) onUpdateUser(updatedUser as User);
                                     setShowUpgradeModal(false);
-                                    alert(
-                                      `¡Plan de suscripción cambiado con éxito a ${plan.name}! Módulos activados.`
-                                    );
+                                    alert(`¡Plan de suscripción cambiado con éxito a ${plan.name}! Módulos activados.`);
                                   } catch (e: any) {
                                     console.error('Error al cambiar plan:', e);
-                                    alert(
-                                      e?.message ||
-                                        'No se pudo cambiar el plan. Reintenta en unos instantes.'
-                                    );
+                                    alert(e?.message || 'No se pudo cambiar el plan. Reintenta en unos instantes.');
                                   }
                                 }}
                                 className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"

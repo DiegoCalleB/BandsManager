@@ -23,9 +23,7 @@ export interface IsolatedStemResult {
 /**
  * Procesa un archivo de audio y genera 5 stems aislados con cancelación activa de fase anti-vocal
  */
-export async function separateAudioIntoStems(
-  audioUrl: string
-): Promise<IsolatedStemResult[]> {
+export async function separateAudioIntoStems(audioUrl: string): Promise<IsolatedStemResult[]> {
   try {
     // 1. Fetch original audio content safely handling indexeddb keys, base64 data URLs & streams
     const arrayBuffer = await getAudioArrayBufferFromUrl(audioUrl);
@@ -40,20 +38,10 @@ export async function separateAudioIntoStems(
     const numberOfChannels = audioBuffer.numberOfChannels;
 
     // STEP 1: Render the isolated Vocal Buffer V(t)
-    const vocalBuffer = await renderIsolatedVocalBuffer(
-      audioBuffer,
-      duration,
-      sampleRate,
-      numberOfChannels
-    );
+    const vocalBuffer = await renderIsolatedVocalBuffer(audioBuffer, duration, sampleRate, numberOfChannels);
 
     // STEP 2: Generate Anti-Phase Vocal-Cancelled Base Buffer: M_instrumental(t) = Original(t) - V(t)
-    const vocalCancelledBuffer = createPhaseCancelledBuffer(
-      tempCtx,
-      audioBuffer,
-      vocalBuffer,
-      0.96
-    );
+    const vocalCancelledBuffer = createPhaseCancelledBuffer(tempCtx, audioBuffer, vocalBuffer, 0.96);
 
     // STEP 3: Generate Side-Channel Buffer S(t) = L(t) - R(t) (mathematically cancels dead-center vocals, kick & snare)
     const sideChannelBuffer = createSideChannelBuffer(tempCtx, audioBuffer);
@@ -94,11 +82,7 @@ export async function separateAudioIntoStems(
     const results: IsolatedStemResult[] = [];
 
     for (const stem of stemTypes) {
-      const offlineCtx = new OfflineAudioContext(
-        numberOfChannels,
-        Math.ceil(duration * sampleRate),
-        sampleRate
-      );
+      const offlineCtx = new OfflineAudioContext(numberOfChannels, Math.ceil(duration * sampleRate), sampleRate);
 
       const source = offlineCtx.createBufferSource();
       source.buffer = stem.sourceBuf;
@@ -183,18 +167,12 @@ export async function separateAudioIntoStems(
       const renderedBuffer = await offlineCtx.startRendering();
 
       // Clean background floor noise
-      const cleanedBuffer = applyNoiseThreshold(
-        renderedBuffer,
-        stem.instrument
-      );
+      const cleanedBuffer = applyNoiseThreshold(renderedBuffer, stem.instrument);
 
       const wavBlob = audioBufferToWavBlob(cleanedBuffer);
       const blobUrl = URL.createObjectURL(wavBlob);
       const bytes = wavBlob.size;
-      const sizeFormatted =
-        bytes < 1024 * 1024
-          ? `${(bytes / 1024).toFixed(0)} KB`
-          : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+      const sizeFormatted = bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(0)} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
       results.push({
         instrument: stem.instrument,
@@ -224,11 +202,7 @@ async function renderIsolatedVocalBuffer(
   sampleRate: number,
   numberOfChannels: number
 ): Promise<AudioBuffer> {
-  const offlineCtx = new OfflineAudioContext(
-    numberOfChannels,
-    Math.ceil(duration * sampleRate),
-    sampleRate
-  );
+  const offlineCtx = new OfflineAudioContext(numberOfChannels, Math.ceil(duration * sampleRate), sampleRate);
 
   const source = offlineCtx.createBufferSource();
   source.buffer = audioBuffer;
@@ -298,10 +272,7 @@ function createPhaseCancelledBuffer(
  * Genera el buffer del canal lateral Side: S(t) = 0.5 * (L(t) - R(t)).
  * Anula matemáticamente todo sonido paneado al centro exacto (Voces principales, bombo y caja de batería).
  */
-function createSideChannelBuffer(
-  ctx: AudioContext | OfflineAudioContext,
-  originalBuffer: AudioBuffer
-): AudioBuffer {
+function createSideChannelBuffer(ctx: AudioContext | OfflineAudioContext, originalBuffer: AudioBuffer): AudioBuffer {
   const numChannels = originalBuffer.numberOfChannels;
   const length = originalBuffer.length;
   const sampleRate = originalBuffer.sampleRate;
@@ -333,10 +304,7 @@ function createSideChannelBuffer(
 /**
  * Puerta de ruido para eliminar zumbidos o ruidos residuales por debajo del umbral auditivo
  */
-function applyNoiseThreshold(
-  buffer: AudioBuffer,
-  instrument: string
-): AudioBuffer {
+function applyNoiseThreshold(buffer: AudioBuffer, instrument: string): AudioBuffer {
   const numChannels = buffer.numberOfChannels;
   const length = buffer.length;
 

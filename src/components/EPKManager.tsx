@@ -1,28 +1,12 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import {
-  EPKConfig,
-  Song,
-  User,
-  BandMember,
-  EPKVideo,
-  DatosContratacion,
-} from '../types';
+import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { EPK_LANGUAGES } from '../i18n/epkTranslations';
-import {
-  IDIOMA_ORIGEN,
-  traduccionDesactualizada,
-  tieneTraduccion,
-} from '../utils/epkTraducciones';
+import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
 import { api } from '../services/api';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
-import {
-  EPKBlockId,
-  EPK_BLOCKS,
-  computeEPKHealth,
-  getBlockNavigation,
-} from './epk/epkBlocks';
+import { EPKBlockId, EPK_BLOCKS, computeEPKHealth, getBlockNavigation } from './epk/epkBlocks';
 import { EPKHeader } from './epk/EPKHeader';
 import { EPKPerfilBlock } from './epk/EPKPerfilBlock';
 import { EPKArchivosBlock } from './epk/EPKArchivosBlock';
@@ -83,8 +67,7 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     paypalUrl: '',
     metodoPorDefecto: 'revolut',
     titulo: 'Colabora con la banda',
-    descripcion:
-      'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
   },
   firmaEmail: {
     nombreRemitente: 'Booking & Management',
@@ -146,8 +129,7 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
     paypalUrl: '',
     metodoPorDefecto: 'revolut',
     titulo: 'Colabora con la banda',
-    descripcion:
-      'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
   },
   firmaEmail: {
     nombreRemitente: '',
@@ -236,28 +218,20 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   currentUser,
   isPromoPlan: isPromoPlanProp,
 }) => {
-  const isPromoUser =
-    isPromoPlanProp ?? normalizePlan(currentUser?.plan) === 'promo';
+  const isPromoUser = isPromoPlanProp ?? normalizePlan(currentUser?.plan) === 'promo';
   // App.tsx monta este componente sin pasarle'songs', así que el selector de temas
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
   // por prop, se piden al backend igual que hace RepertorioSetlists.
   const [songsCargadas, setSongsCargadas] = useState<Song[]>([]);
   const [errorSongs, setErrorSongs] = useState<string | null>(null);
-  const songs: Song[] =
-    songsProp && songsProp.length > 0 ? songsProp : songsCargadas;
+  const songs: Song[] = songsProp && songsProp.length > 0 ? songsProp : songsCargadas;
 
   const activeBandId = currentUser?.band_id || '';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const isBakandeya =
-    cleanBandId === 'bakandeya' ||
-    (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
+  const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
   const baseDefaults = isBakandeya ? DEFAULT_EPK_CONFIG : EMPTY_EPK_CONFIG;
 
-  const {
-    isOpen: isTutorialOpen,
-    openTutorial,
-    closeTutorial,
-  } = useModuleTutorial('epk');
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('epk');
 
   const [config, setConfig] = useState<EPKConfig>(() => {
     const initialRedes = {
@@ -284,15 +258,11 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     api
       .getSongs()
       .then((data) => {
-        if (!cancelado && Array.isArray(data?.songs))
-          setSongsCargadas(data.songs);
+        if (!cancelado && Array.isArray(data?.songs)) setSongsCargadas(data.songs);
       })
       .catch((err) => {
         console.warn('No se pudo cargar el repertorio para el EPK:', err);
-        if (!cancelado)
-          setErrorSongs(
-            'No se pudo cargar tu repertorio. Recarga la página o inténtalo en unos minutos.'
-          );
+        if (!cancelado) setErrorSongs('No se pudo cargar tu repertorio. Recarga la página o inténtalo en unos minutos.');
       });
     return () => {
       cancelado = true;
@@ -326,10 +296,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       setConfig((prev) => ({
         ...prev,
         ...epkConfig,
-        logoUrl:
-          epkConfig.logoUrl ||
-          prev.logoUrl ||
-          (isBakandeya ? '/logo_bakandeya.jpg' : ''),
+        logoUrl: epkConfig.logoUrl || prev.logoUrl || (isBakandeya ? '/logo_bakandeya.jpg' : ''),
         contactoBooking: mergedContacto,
         enlacesRedes: mergedRedes,
         firmaEmail: mergedFirma,
@@ -343,20 +310,15 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [activeBlock, setActiveBlock] = useState<EPKBlockId>('perfil');
   const [saving, setSaving] = useState(false);
-  const [previewDonationMethod, setPreviewDonationMethod] = useState<
-    'revolut' | 'paypal'
-  >('revolut');
+  const [previewDonationMethod, setPreviewDonationMethod] = useState<'revolut' | 'paypal'>('revolut');
 
   const healthStats = computeEPKHealth(config);
-  const { prev: prevBlockMeta, next: nextBlockMeta } =
-    getBlockNavigation(activeBlock);
+  const { prev: prevBlockMeta, next: nextBlockMeta } = getBlockNavigation(activeBlock);
 
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
   const [isUploadingRider, setIsUploadingRider] = useState(false);
-  const [subiendoFotoMiembro, setSubiendoFotoMiembro] = useState<string | null>(
-    null
-  );
+  const [subiendoFotoMiembro, setSubiendoFotoMiembro] = useState<string | null>(null);
   const [subiendoGaleria, setSubiendoGaleria] = useState(false);
   const [traduciendo, setTraduciendo] = useState<string | null>(null);
   const [errorTraduccion, setErrorTraduccion] = useState<string | null>(null);
@@ -367,9 +329,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   // defecto del servidor para resolver de qué banda es el dossier. Sin banda activa, no hay
   // banda de la que generar un enlace (antes esto generaba, sin querer, un enlace válido al EPK
   // público real de Bakandeya).
-  const bandQueryParam = activeBandId
-    ? `?band=${encodeURIComponent(activeBandId)}`
-    : '';
+  const bandQueryParam = activeBandId ? `?band=${encodeURIComponent(activeBandId)}` : '';
   const rawEpkBase =
     typeof window !== 'undefined'
       ? window.location.origin.includes('localhost') ||
@@ -404,9 +364,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       setTimeout(() => setSavedSuccess(false), 3500);
     } catch (err: any) {
       console.error('Error saving EPK config:', err);
-      setSaveError(
-        err?.message || 'No se pudo guardar el dossier. Inténtalo de nuevo.'
-      );
+      setSaveError(err?.message || 'No se pudo guardar el dossier. Inténtalo de nuevo.');
     } finally {
       setSaving(false);
     }
@@ -441,10 +399,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             await persistEpkUpdate({ ...config, logoUrl: url });
           } catch (fallbackErr: any) {
             console.error('Error saving logo fallback:', fallbackErr);
-            setSaveError(
-              fallbackErr?.message ||
-                'No se pudo subir el logo. Inténtalo de nuevo.'
-            );
+            setSaveError(fallbackErr?.message || 'No se pudo subir el logo. Inténtalo de nuevo.');
           }
         }
       };
@@ -454,9 +409,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     }
   };
 
-  const handleDossierUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleDossierUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -490,10 +443,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             });
           } catch (fallbackErr: any) {
             console.error('Error saving dossier fallback:', fallbackErr);
-            setSaveError(
-              fallbackErr?.message ||
-                'No se pudo subir el dossier. Inténtalo de nuevo.'
-            );
+            setSaveError(fallbackErr?.message || 'No se pudo subir el dossier. Inténtalo de nuevo.');
           }
         }
       };
@@ -532,10 +482,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             });
           } catch (fallbackErr: any) {
             console.error('Error saving rider fallback:', fallbackErr);
-            setSaveError(
-              fallbackErr?.message ||
-                'No se pudo subir el rider. Inténtalo de nuevo.'
-            );
+            setSaveError(fallbackErr?.message || 'No se pudo subir el rider. Inténtalo de nuevo.');
           }
         }
       };
@@ -567,10 +514,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       }));
     } catch (err: any) {
       console.error('Error subiendo fotos de galería:', err);
-      setSaveError(
-        err?.message ||
-          'No se pudieron subir una o varias fotos. Inténtalo de nuevo.'
-      );
+      setSaveError(err?.message || 'No se pudieron subir una o varias fotos. Inténtalo de nuevo.');
     } finally {
       setSubiendoGaleria(false);
     }
@@ -592,24 +536,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   // --- Formación de la banda (miembros con foto) ---
   const miembros: BandMember[] = config.miembros || [];
 
-  const actualizarMiembros = (nuevos: BandMember[]) =>
-    setConfig({ ...config, miembros: nuevos });
+  const actualizarMiembros = (nuevos: BandMember[]) => setConfig({ ...config, miembros: nuevos });
 
   const anadirMiembro = () => {
-    actualizarMiembros([
-      ...miembros,
-      { id: `m-${Date.now()}`, nombre: '', rol: '' },
-    ]);
+    actualizarMiembros([...miembros, { id: `m-${Date.now()}`, nombre: '', rol: '' }]);
   };
 
   const editarMiembro = (id: string, campos: Partial<BandMember>) => {
-    actualizarMiembros(
-      miembros.map((m) => (m.id === id ? { ...m, ...campos } : m))
-    );
+    actualizarMiembros(miembros.map((m) => (m.id === id ? { ...m, ...campos } : m)));
   };
 
-  const quitarMiembro = (id: string) =>
-    actualizarMiembros(miembros.filter((m) => m.id !== id));
+  const quitarMiembro = (id: string) => actualizarMiembros(miembros.filter((m) => m.id !== id));
 
   const subirFotoMiembro = async (id: string, file: File) => {
     setSubiendoFotoMiembro(id);
@@ -622,9 +559,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       editarMiembro(id, { fotoUrl: url });
     } catch (err: any) {
       console.error('Error subiendo foto de miembro:', err);
-      setSaveError(
-        err?.message || 'No se pudo subir la foto. Inténtalo de nuevo.'
-      );
+      setSaveError(err?.message || 'No se pudo subir la foto. Inténtalo de nuevo.');
     } finally {
       setSubiendoFotoMiembro(null);
     }
@@ -633,8 +568,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   // --- Vídeos de directo ---
   const videos: EPKVideo[] = config.videos || [];
 
-  const actualizarVideos = (nuevos: EPKVideo[]) =>
-    setConfig({ ...config, videos: nuevos });
+  const actualizarVideos = (nuevos: EPKVideo[]) => setConfig({ ...config, videos: nuevos });
 
   const anadirVideo = () => {
     // El primero que se añade queda destacado por defecto: es el que se ve grande arriba.
@@ -650,16 +584,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   const editarVideo = (id: string, campos: Partial<EPKVideo>) => {
-    actualizarVideos(
-      videos.map((v) => (v.id === id ? { ...v, ...campos } : v))
-    );
+    actualizarVideos(videos.map((v) => (v.id === id ? { ...v, ...campos } : v)));
   };
 
   const quitarVideo = (id: string) => {
     const restantes = videos.filter((v) => v.id !== id);
     // Si se borra el destacado, asciende el primero que quede para no dejar el EPK sin vídeo principal.
-    if (restantes.length > 0 && !restantes.some((v) => v.destacado))
-      restantes[0].destacado = true;
+    if (restantes.length > 0 && !restantes.some((v) => v.destacado)) restantes[0].destacado = true;
     actualizarVideos(restantes);
   };
 
@@ -667,17 +598,9 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     actualizarVideos(videos.map((v) => ({ ...v, destacado: v.id === id })));
   };
 
-  const editarDatoContratacion = (
-    campo: keyof DatosContratacion,
-    valor: string
-  ) => {
+  const editarDatoContratacion = (campo: keyof DatosContratacion, valor: string) => {
     const datos = { ...(config.datosContratacion || {}) } as any;
-    datos[campo] =
-      campo === 'numMusicos'
-        ? valor === ''
-          ? undefined
-          : Number(valor)
-        : valor;
+    datos[campo] = campo === 'numMusicos' ? (valor === '' ? undefined : Number(valor)) : valor;
     setConfig({ ...config, datosContratacion: datos });
   };
 
@@ -708,10 +631,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         },
       }));
       if (res.yaEstabaAlDia) {
-        setAvisoTraduccion(
-          res.mensaje ||
-            'La traducción ya estaba al día: no se ha gastado ninguna llamada a la IA.'
-        );
+        setAvisoTraduccion(res.mensaje || 'La traducción ya estaba al día: no se ha gastado ninguna llamada a la IA.');
       }
     } catch (err: any) {
       setErrorTraduccion(err?.message || 'No se pudo traducir el EPK.');
@@ -721,11 +641,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   /** Edición a mano de la traducción. Marca _revisadoAMano para saber que ya pasó por un humano. */
-  const editarTraduccion = (
-    idioma: string,
-    campo: 'biografia' | 'textoPie' | 'riderTecnico',
-    valor: string
-  ) => {
+  const editarTraduccion = (idioma: string, campo: 'biografia' | 'textoPie' | 'riderTecnico', valor: string) => {
     setConfig((prev) => ({
       ...prev,
       traducciones: {
@@ -739,12 +655,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     }));
   };
 
-  const editarTraduccionMiembro = (
-    idioma: string,
-    miembroId: string,
-    campo: 'rol' | 'bio',
-    valor: string
-  ) => {
+  const editarTraduccionMiembro = (idioma: string, miembroId: string, campo: 'rol' | 'bio', valor: string) => {
     setConfig((prev) => {
       const traduccion = prev.traducciones?.[idioma] || {};
       const miembrosTraducidos = { ...(traduccion.miembros || {}) };
@@ -796,10 +707,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       {savedSuccess && (
         <div className="p-3 sm:p-4 bg-[var(--ok-soft)] text-[var(--ok)] text-xs sm:text-sm font-semibold rounded-[var(--r-m)] flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--ok)] shrink-0" />
-          <span>
-            ¡Información del dossier y kit de prensa guardada y sincronizada
-            correctamente!
-          </span>
+          <span>¡Información del dossier y kit de prensa guardada y sincronizada correctamente!</span>
         </div>
       )}
 
@@ -815,9 +723,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         {(activeBlock === 'plantillas' || activeBlock === 'todos') && (
           <EPKPlantillasBlock
             config={config}
-            onChange={(updated) =>
-              setConfig((prev) => ({ ...prev, ...updated }))
-            }
+            onChange={(updated) => setConfig((prev) => ({ ...prev, ...updated }))}
             publicEpkUrl={publicEpkUrl}
             prevBlock={prevBlockMeta}
             nextBlock={nextBlockMeta}
@@ -923,9 +829,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           />
         )}
 
-        {(activeBlock === 'firma' ||
-          activeBlock === 'qr' ||
-          activeBlock === 'todos') && (
+        {(activeBlock === 'firma' || activeBlock === 'qr' || activeBlock === 'todos') && (
           <EPKFirmaQRBlock
             config={config}
             setConfig={setConfig}
@@ -949,29 +853,16 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         onClose={() => setShowFansPreviewModal(false)}
         currentBandId={activeBandId}
         currentBandName={
-          (currentUser?.bandName && currentUser.bandName !== 'Banda'
-            ? currentUser.bandName
-            : '') ||
-          (config.contactoBooking?.nombre &&
-          config.contactoBooking.nombre !== 'Banda'
-            ? config.contactoBooking.nombre
-            : '') ||
-          (isBakandeya
-            ? 'Bakandeya'
-            : cleanBandId
-              ? cleanBandId.charAt(0).toUpperCase() + cleanBandId.slice(1)
-              : 'Tu Banda')
+          (currentUser?.bandName && currentUser.bandName !== 'Banda' ? currentUser.bandName : '') ||
+          (config.contactoBooking?.nombre && config.contactoBooking.nombre !== 'Banda' ? config.contactoBooking.nombre : '') ||
+          (isBakandeya ? 'Bakandeya' : cleanBandId ? cleanBandId.charAt(0).toUpperCase() + cleanBandId.slice(1) : 'Tu Banda')
         }
         currentBandLogo={config.logoUrl}
         epkConfig={config}
       />
 
       {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal
-        moduleId="epk"
-        isOpen={isTutorialOpen}
-        onClose={closeTutorial}
-      />
+      <ModuleTutorialModal moduleId="epk" isOpen={isTutorialOpen} onClose={closeTutorial} />
     </div>
   );
 };

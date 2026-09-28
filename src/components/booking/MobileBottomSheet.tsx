@@ -53,10 +53,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   return createPortal(
     <div className="fixed inset-0 z-[999999] lg:hidden flex flex-col justify-end sm:justify-center sm:items-center p-0 sm:p-4 animate-in fade-in duration-150">
       {/* Backdrop overlay */}
-      <div
-        onClick={onClose}
-        className="fixed inset-0 bg-[var(--scrim)]/80 transition-opacity cursor-pointer z-[999998]"
-      />
+      <div onClick={onClose} className="fixed inset-0 bg-[var(--scrim)]/80 transition-opacity cursor-pointer z-[999998]" />
 
       {/* Sheet Drawer Container */}
       <div className="relative z-[999999] w-full sm:max-w-2xl max-h-[90vh] sm:max-h-[85vh] bg-[var(--bg)] sm:border-2 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 flex flex-col text-[var(--ink)] overflow-hidden">

@@ -47,19 +47,10 @@ import { THEMES } from '../utils/theme';
 import { Onda } from './ui/Onda';
 import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { FansCommunityView } from './fans/FansCommunityView';
-import {
-  FAN_FORM_LANGUAGES,
-  FanFormLanguage,
-  DEFAULT_FAN_FORM_LANGUAGE,
-  isFanFormLanguage,
-} from '../i18n/fansTranslations';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
 import { QrExportModal } from './QrExportModal';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
-import {
-  downloadQrAsSvg,
-  downloadQrAsHighResPng,
-  printHighQualityFlyer,
-} from '../utils/qrExport';
+import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
@@ -79,10 +70,7 @@ interface FansPanelProps {
   currentBandLogo?: string;
   metrics?: SocialMetric[];
   onAddMetric?: (metric: SocialMetric) => Promise<void>;
-  onUpdateMetric?: (
-    id: string,
-    updatedFields: Partial<SocialMetric>
-  ) => Promise<void>;
+  onUpdateMetric?: (id: string, updatedFields: Partial<SocialMetric>) => Promise<void>;
   onDeleteMetric?: (id: string) => Promise<void>;
   onScanRealMetrics?: () => Promise<void>;
   onSyncMetrics?: () => Promise<void>;
@@ -95,15 +83,7 @@ interface FansPanelProps {
   initialConcertId?: string;
 }
 
-const COLORS = [
-  'var(--acc)',
-  'var(--ok)',
-  'var(--acc)',
-  'var(--acc)',
-  'var(--alert)',
-  'var(--ok)',
-  'var(--ink-2)',
-];
+const COLORS = ['var(--acc)', 'var(--ok)', 'var(--acc)', 'var(--acc)', 'var(--alert)', 'var(--ok)', 'var(--ink-2)'];
 
 export const FansPanel: React.FC<FansPanelProps> = ({
   fans = [],
@@ -132,45 +112,26 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   initialConcertId,
 }) => {
   const effectiveBandName =
-    currentBandName ||
-    epkConfig?.contactoBooking?.nombre ||
-    (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
+    currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo =
     currentBandLogo ||
     epkConfig?.logoUrl ||
-    (effectiveBandName.toLowerCase().includes('bakandeya')
-      ? '/logo_bakandeya_bueno_sin_fondo.png'
-      : '');
-  const cleanBandId =
-    (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
-  const {
-    isOpen: isTutorialOpen,
-    openTutorial,
-    closeTutorial,
-  } = useModuleTutorial('fans');
-  const [activeTab, setActiveTab] = useState<
-    'metrics' | 'fans' | 'qr' | 'dashboard'
-  >(initialConcertId || isPromo ? 'qr' : 'metrics');
-  const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>(
-    'feed'
-  );
+    (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
+  const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('fans');
+  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(initialConcertId || isPromo ? 'qr' : 'metrics');
+  const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>('feed');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOrigen, setFilterOrigen] = useState<string>('');
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
   const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>('');
-  const [selectedConcertId, setSelectedConcertId] = useState<string>(
-    initialConcertId || ''
-  );
+  const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId || '');
   const [savedToConcertFeedback, setSavedToConcertFeedback] = useState(false);
   const [clickStats, setClickStats] = useState<Record<string, number>>({});
 
   useEffect(() => {
     fetch('/api/epk/clicks')
-      .then((res) =>
-        res.ok && res.headers.get('content-type')?.includes('application/json')
-          ? res.json()
-          : null
-      )
+      .then((res) => (res.ok && res.headers.get('content-type')?.includes('application/json') ? res.json() : null))
       .then((data) => {
         if (data && data.clicks) {
           setClickStats(data.clicks);
@@ -188,36 +149,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   // Configurable City Tabs state (synced with DB epkConfig.ciudadesConfig)
   const [customCityChips, setCustomCityChips] = useState<string[]>(() => {
-    if (
-      epkConfig?.ciudadesConfig &&
-      Array.isArray(epkConfig.ciudadesConfig) &&
-      epkConfig.ciudadesConfig.length > 0
-    ) {
+    if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
       return epkConfig.ciudadesConfig;
     }
     try {
       const saved = localStorage.getItem('bakandeya_custom_cities');
-      return saved
-        ? JSON.parse(saved)
-        : [
-            'Madrid',
-            'Sevilla',
-            'Barcelona',
-            'Málaga',
-            'Valencia',
-            'Granada',
-            'Cádiz',
-          ];
+      return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
     } catch {
-      return [
-        'Madrid',
-        'Sevilla',
-        'Barcelona',
-        'Málaga',
-        'Valencia',
-        'Granada',
-        'Cádiz',
-      ];
+      return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
     }
   });
 
@@ -225,11 +164,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [newCityInput, setNewCityInput] = useState('');
 
   useEffect(() => {
-    if (
-      epkConfig?.ciudadesConfig &&
-      Array.isArray(epkConfig.ciudadesConfig) &&
-      epkConfig.ciudadesConfig.length > 0
-    ) {
+    if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
       setCustomCityChips(epkConfig.ciudadesConfig);
     }
   }, [epkConfig?.ciudadesConfig]);
@@ -242,10 +177,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       const updated = [...customCityChips, formatted];
       setCustomCityChips(updated);
       try {
-        localStorage.setItem(
-          'bakandeya_custom_cities',
-          JSON.stringify(updated)
-        );
+        localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
       } catch {}
       if (onUpdateEpkConfig) {
         onUpdateEpkConfig({ ciudadesConfig: updated });
@@ -277,8 +209,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   //"valor por defecto" en el panel de cualquier otra.
   const [incentivo, setIncentivo] = useState(
     epkConfig?.incentivoFans || {
-      mensajeAgradecimiento:
-        '¡Muchas gracias por unirte a la familia de la banda!',
+      mensajeAgradecimiento: '¡Muchas gracias por unirte a la familia de la banda!',
       enlaceDescarga: '',
       codigoDescuento: '',
     }
@@ -312,45 +243,25 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [newCancionFavorita, setNewCancionFavorita] = useState('');
   const [newInstagram, setNewInstagram] = useState('');
   const [newMensaje, setNewMensaje] = useState('');
-  const [newNivel, setNewNivel] = useState<
-    'fiel' | 'superfan' | 'fundador' | 'backstage'
-  >('fiel');
+  const [newNivel, setNewNivel] = useState<'fiel' | 'superfan' | 'fundador' | 'backstage'>('fiel');
 
   const filteredFans = useMemo(() => {
     return fans.filter((f) => {
       const matchQuery =
         f.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
         f.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (f.ciudad &&
-          f.ciudad.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (f.conciertoOrigenNombre &&
-          f.conciertoOrigenNombre
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()));
+        (f.ciudad && f.ciudad.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (f.conciertoOrigenNombre && f.conciertoOrigenNombre.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchFilter = filterOrigen
-        ? f.conciertoOrigenId === filterOrigen ||
-          (filterOrigen === 'Otros' && !f.conciertoOrigenId)
-        : true;
+      const matchFilter = filterOrigen ? f.conciertoOrigenId === filterOrigen || (filterOrigen === 'Otros' && !f.conciertoOrigenId) : true;
 
-      const matchCity = selectedCityFilter
-        ? f.ciudad &&
-          f.ciudad.toLowerCase().includes(selectedCityFilter.toLowerCase())
-        : true;
+      const matchCity = selectedCityFilter ? f.ciudad && f.ciudad.toLowerCase().includes(selectedCityFilter.toLowerCase()) : true;
 
-      const matchNivel = selectedNivelFilter
-        ? f.nivelFan === selectedNivelFilter
-        : true;
+      const matchNivel = selectedNivelFilter ? f.nivelFan === selectedNivelFilter : true;
 
       return matchQuery && matchFilter && matchCity && matchNivel;
     });
-  }, [
-    fans,
-    searchQuery,
-    filterOrigen,
-    selectedCityFilter,
-    selectedNivelFilter,
-  ]);
+  }, [fans, searchQuery, filterOrigen, selectedCityFilter, selectedNivelFilter]);
 
   // Analytics Data - Channel of Origin (robust categorization)
   const originData = useMemo(() => {
@@ -384,11 +295,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         category = 'Escaneo QR';
       } else if (lower.includes('amigo') || lower.includes('boca')) {
         category = 'Boca a Boca / Amigos';
-      } else if (
-        lower.includes('spot') ||
-        lower.includes('you') ||
-        lower.includes('web')
-      ) {
+      } else if (lower.includes('spot') || lower.includes('you') || lower.includes('web')) {
         category = 'Web / Streaming';
       } else if (lower.includes('manual')) {
         category = 'Registro Manual';
@@ -419,20 +326,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
     const sortedMonths = Object.keys(monthMap).sort();
     let runningTotal = 0;
-    const monthNames = [
-      'Ene',
-      'Feb',
-      'Mar',
-      'Abr',
-      'May',
-      'Jun',
-      'Jul',
-      'Ago',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dic',
-    ];
+    const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
     return sortedMonths.map((month) => {
       const newCount = monthMap[month];
@@ -474,15 +368,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      `Fans ${effectiveBandName}`
-    );
-    XLSX.writeFile(
-      workbook,
-      `Fans_${effectiveBandName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`
-    );
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Fans ${effectiveBandName}`);
+    XLSX.writeFile(workbook, `Fans_${effectiveBandName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   const handleManualAddSubmit = (e: React.FormEvent) => {
@@ -521,22 +408,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const defaultDomain = 'bandmanager.io';
   const [customDomain, setCustomDomain] = useState(defaultDomain);
   const [routePrefix, setRoutePrefix] = useState('unete');
-  const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(
-    DEFAULT_FAN_FORM_LANGUAGE
-  );
+  const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(DEFAULT_FAN_FORM_LANGUAGE);
 
   useEffect(() => {
     if (selectedConcert) {
-      const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, '-');
+      const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`.toLowerCase().replace(/[^a-z0-9]/g, '-');
       setCustomSlug(defaultSlug);
       // Precarga el idioma guardado en el concierto; el manager siempre puede cambiarlo a mano abajo.
-      setQrLanguage(
-        isFanFormLanguage(selectedConcert.idioma)
-          ? selectedConcert.idioma
-          : DEFAULT_FAN_FORM_LANGUAGE
-      );
+      setQrLanguage(isFanFormLanguage(selectedConcert.idioma) ? selectedConcert.idioma : DEFAULT_FAN_FORM_LANGUAGE);
     } else {
       setCustomSlug('');
     }
@@ -567,19 +446,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       : '/unete';
 
   const qrQueryParams: string[] = [];
-  if (currentBandId)
-    qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
-  else if (cleanBandId)
-    qrQueryParams.push(`band=${encodeURIComponent(cleanBandId)}`);
-  if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE)
-    qrQueryParams.push(`lang=${qrLanguage}`);
+  if (currentBandId) qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
+  else if (cleanBandId) qrQueryParams.push(`band=${encodeURIComponent(cleanBandId)}`);
+  if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE) qrQueryParams.push(`lang=${qrLanguage}`);
   if (selectedConcert) {
     // Permite que /api/public/fans guarde el concierto de origen real (concierto_origen_id)
     // en vez de depender solo del slug de la URL para adivinar el nombre.
     qrQueryParams.push(`concertId=${encodeURIComponent(selectedConcert.id)}`);
-    qrQueryParams.push(
-      `concertName=${encodeURIComponent(`${selectedConcert.sala} (${selectedConcert.ciudad})`)}`
-    );
+    qrQueryParams.push(`concertName=${encodeURIComponent(`${selectedConcert.sala} (${selectedConcert.ciudad})`)}`);
   }
   const qrConcertUrl = `${rawDomain}${pathFormatted}${qrQueryParams.length ? `?${qrQueryParams.join('&')}` : ''}`;
 
@@ -597,9 +471,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   };
 
   const handleShareWhatsApp = () => {
-    const concertTitle = selectedConcert
-      ? `${selectedConcert.sala} (${selectedConcert.ciudad})`
-      : effectiveBandName;
+    const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : effectiveBandName;
     const text = `¡Únete a ${effectiveBandName} en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
@@ -630,9 +502,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handleDownloadSvg = async () => {
     setIsExportingDirect(true);
     try {
-      const concertTitle = selectedConcert
-        ? `${selectedConcert.sala}`
-        : effectiveBandName;
+      const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
       await downloadQrAsSvg({
         svgElementId: 'qr-code-svg-container',
         filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-vectorial`,
@@ -648,9 +518,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handleDownloadPng4k = async () => {
     setIsExportingDirect(true);
     try {
-      const concertTitle = selectedConcert
-        ? `${selectedConcert.sala}`
-        : effectiveBandName;
+      const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
       await downloadQrAsHighResPng({
         svgElementId: 'qr-code-svg-container',
         filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-4k`,
@@ -666,9 +534,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   const handlePrintQr = () => {
     const concertTitle = selectedConcert ? selectedConcert.sala : undefined;
-    const dateCity = selectedConcert
-      ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}`
-      : undefined;
+    const dateCity = selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined;
 
     printHighQualityFlyer({
       svgElementId: 'qr-code-svg-container',
@@ -694,16 +560,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <span className="truncate">Captura QR & Fans</span>
           </h2>
           <p className="hidden sm:block text-[var(--ink-2)] font-sans text-sm mt-1">
-            Captura de fans en directo con códigos QR, métricas de redes,
-            comunidad interactiva y analítica de crecimiento.
+            Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento.
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <ModuleTutorialTrigger
-            moduleId="fans"
-            onClick={openTutorial}
-            label="Guía rápida"
-          />
+          <ModuleTutorialTrigger moduleId="fans" onClick={openTutorial} label="Guía rápida" />
 
           <div className="relative shrink-0">
             <button
@@ -716,10 +577,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </button>
             {showFansHeaderMenu && (
               <>
-                <div
-                  className="fixed inset-0 z-30"
-                  onClick={() => setShowFansHeaderMenu(false)}
-                />
+                <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
                 <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
                   <button
                     type="button"
@@ -729,8 +587,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
-                    <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />{' '}
-                    Guía Rápida & Tutorial
+                    <Sparkles className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" /> Guía Rápida & Tutorial
                   </button>
                   <button
                     type="button"
@@ -740,8 +597,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2 font-bold"
                   >
-                    <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
-                    Formulario
+                    <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
                   </button>
                   <button
                     type="button"
@@ -751,8 +607,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura
-                    Corto
+                    <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura Corto
                   </button>
                   <button
                     type="button"
@@ -762,8 +617,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }}
                     className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                   >
-                    <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan
-                    Manual
+                    <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan Manual
                   </button>
                   <button
                     id="fans-export-csv-btn"
@@ -791,8 +645,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             onClick={() => setActiveTab('metrics')}
             className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab === 'metrics' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
           >
-            <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento
-            & Métricas de Redes
+            <TrendingUp className="w-4 h-4 text-[var(--acc)]" /> 1. Seguimiento & Métricas de Redes
           </button>
         )}
         <button
@@ -800,24 +653,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           onClick={() => setActiveTab('qr')}
           className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab === 'qr' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
         >
-          <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? '1' : '2'}
-          . Captura en Vivo & QR
+          <QrCode className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? '1' : '2'}. Captura en Vivo & QR
         </button>
         <button
           id="tab-btn-fans-dashboard"
           onClick={() => setActiveTab('dashboard')}
           className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab === 'dashboard' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
         >
-          <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? '2' : '3'}.
-          Dashboard & Analítica
+          <Heart className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? '2' : '3'}. Dashboard & Analítica
         </button>
         <button
           id="tab-btn-fans-directory"
           onClick={() => setActiveTab('fans')}
           className={`px-4 py-2.5 flex items-center gap-2 transition cursor-pointer font-sans text-xs tracking-wider ${activeTab === 'fans' ? 'text-[var(--acc)] font-bold bg-[var(--acc)]/5' : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'}`}
         >
-          <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? '3' : '4'}.
-          Comunidad & Red Social ({fans.length})
+          <Users className="w-4 h-4 text-[var(--acc)]" /> {isPromo ? '3' : '4'}. Comunidad & Red Social ({fans.length})
         </button>
       </div>
 
@@ -825,35 +675,25 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">
-                Total Fans Registrados
-              </p>
-              <h3 className="text-5xl font-black text-[var(--ink)] font-display">
-                {fans.length}
-              </h3>
+              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Total Fans Registrados</p>
+              <h3 className="text-5xl font-black text-[var(--ink)] font-display">{fans.length}</h3>
             </div>
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">
-                Consentimiento RGPD
-              </p>
+              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Consentimiento RGPD</p>
               <h3 className="text-4xl font-black text-[var(--ok)] font-display flex items-center gap-2">
                 <ShieldCheck className="w-8 h-8" />
                 100%
               </h3>
             </div>
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">
-                Ciudades Activas
-              </p>
+              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Ciudades Activas</p>
               <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2">
                 <MapPin className="w-8 h-8" />
                 {new Set(fans.map((f) => f.ciudad).filter(Boolean)).size}
               </h3>
             </div>
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">
-                Clics Totales en QR & Redes
-              </p>
+              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Clics Totales en QR & Redes</p>
               <h3 className="text-4xl font-black text-[var(--ink-2)] font-display flex items-center gap-2">
                 <ExternalLink className="w-7 h-7" />
                 {Object.entries(clickStats)
@@ -867,8 +707,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           {Object.keys(clickStats).length > 0 && (
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-3">
               <h4 className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en
-                FansLanding & QR (Por Canal y Donaciones)
+                <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en FansLanding & QR (Por Canal y Donaciones)
               </h4>
               <div className="flex flex-wrap items-center gap-2 pt-1">
                 {Object.entries(clickStats)
@@ -878,9 +717,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       key={key}
                       className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans flex items-center gap-2"
                     >
-                      <span className="font-semibold text-[var(--ink-2)]">
-                        {key}:
-                      </span>
+                      <span className="font-semibold text-[var(--ink-2)]">{key}:</span>
                       <span className="font-black text-[var(--acc)]">
                         {count} {count === 1 ? 'clic' : 'clics'}
                       </span>
@@ -899,9 +736,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
                     Crecimiento Evolutivo de Fans
                   </p>
-                  <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                    Curva acumulativa de la comunidad {effectiveBandName}
-                  </p>
+                  <p className="text-[11px] text-[var(--ink-2)] font-sans">Curva acumulativa de la comunidad {effectiveBandName}</p>
                 </div>
                 <span className="text-xs font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-s)]">
                   Total: {fans.length} fans
@@ -928,12 +763,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <div className="flex flex-col items-center justify-center h-full gap-4">
                     <PublicoSilhouette opacity={0.12} size="medium" />
                     <div className="text-center space-y-1">
-                      <p className="text-sm font-semibold text-[var(--ink)]">
-                        La sala está vacía
-                      </p>
-                      <p className="text-xs text-[var(--ink-2)]">
-                        Empieza a registrar fans y ve cómo crece tu comunidad
-                      </p>
+                      <p className="text-sm font-semibold text-[var(--ink)]">La sala está vacía</p>
+                      <p className="text-xs text-[var(--ink-2)]">Empieza a registrar fans y ve cómo crece tu comunidad</p>
                     </div>
                   </div>
                 )}
@@ -943,12 +774,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             {/* Canal de Origen (Fixed & Visual) */}
             <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 h-88 flex flex-col">
               <div className="mb-2">
-                <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest font-sans">
-                  Canal de Origen de Fans
-                </p>
-                <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                  De dónde provienen los registros
-                </p>
+                <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest font-sans">Canal de Origen de Fans</p>
+                <p className="text-[11px] text-[var(--ink-2)] font-sans">De dónde provienen los registros</p>
               </div>
 
               <div className="flex-1 min-h-0 flex flex-col gap-4">
@@ -989,17 +816,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                                 backgroundColor: COLORS[idx % COLORS.length],
                               }}
                             />
-                            <span className="text-[var(--ink-2)] font-bold truncate">
-                              {item.name}
-                            </span>
+                            <span className="text-[var(--ink-2)] font-bold truncate">{item.name}</span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-[var(--acc)] font-bold">
-                              {item.value}
-                            </span>
-                            <span className="text-[var(--ink-2)] text-[10px]">
-                              ({item.percentage}%)
-                            </span>
+                            <span className="text-[var(--acc)] font-bold">{item.value}</span>
+                            <span className="text-[var(--ink-2)] text-[10px]">({item.percentage}%)</span>
                           </div>
                         </div>
                       ))}
@@ -1007,18 +828,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center w-full h-full gap-4 py-12">
-                    <PublicoSilhouette
-                      animated={false}
-                      opacity={0.14}
-                      size="large"
-                    />
+                    <PublicoSilhouette animated={false} opacity={0.14} size="large" />
                     <div className="text-center">
-                      <p className="text-[var(--ink-2)] text-sm font-sans">
-                        La audiencia aún no ha llegado.
-                      </p>
-                      <p className="text-[var(--ink-3)] text-xs font-sans mt-1">
-                        Cultiva tu fanbase conectándote con tus seguidores.
-                      </p>
+                      <p className="text-[var(--ink-2)] text-sm font-sans">La audiencia aún no ha llegado.</p>
+                      <p className="text-[var(--ink-3)] text-xs font-sans mt-1">Cultiva tu fanbase conectándote con tus seguidores.</p>
                     </div>
                   </div>
                 )}
@@ -1061,29 +874,20 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </button>
 
               {customCityChips.map((city) => {
-                const count = fans.filter(
-                  (f) =>
-                    f.ciudad &&
-                    f.ciudad.toLowerCase().includes(city.toLowerCase())
-                ).length;
-                const isSelected =
-                  selectedCityFilter.toLowerCase() === city.toLowerCase();
+                const count = fans.filter((f) => f.ciudad && f.ciudad.toLowerCase().includes(city.toLowerCase())).length;
+                const isSelected = selectedCityFilter.toLowerCase() === city.toLowerCase();
                 return (
                   <div
                     key={city}
                     onClick={() => setSelectedCityFilter(city)}
                     className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-[var(--acc)] text-[var(--ink)]'
-                        : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
+                      isSelected ? 'bg-[var(--acc)] text-[var(--ink)]' : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
                     }`}
                   >
                     <span>{city}</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                        isSelected
-                          ? 'bg-[var(--surface)]/20 text-[var(--ink)]'
-                          : 'bg-[var(--surface)] text-[var(--acc)]'
+                        isSelected ? 'bg-[var(--surface)]/20 text-[var(--ink)]' : 'bg-[var(--surface)] text-[var(--acc)]'
                       }`}
                     >
                       {count}
@@ -1092,9 +896,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       type="button"
                       onClick={(e) => handleRemoveCityTab(city, e)}
                       className={`p-0.5 rounded-full hover:bg-[var(--alert)]/30 transition opacity-60 group-hover/city:opacity-100 ${
-                        isSelected
-                          ? 'hover:text-[var(--alert)] text-[var(--ink)]'
-                          : 'hover:text-[var(--ink-2)] text-[var(--ink-2)]'
+                        isSelected ? 'hover:text-[var(--alert)] text-[var(--ink)]' : 'hover:text-[var(--ink-2)] text-[var(--ink-2)]'
                       }`}
                       title={`Eliminar pestaña ${city}`}
                     >
@@ -1105,10 +907,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               })}
 
               {isAddingCity ? (
-                <form
-                  onSubmit={handleAddCityTab}
-                  className="flex items-center gap-1"
-                >
+                <form onSubmit={handleAddCityTab} className="flex items-center gap-1">
                   <input
                     type="text"
                     autoFocus
@@ -1198,9 +997,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   type="button"
                   onClick={() => setViewMode('feed')}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'feed'
-                      ? 'bg-[var(--acc)] text-[var(--ink)]'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    viewMode === 'feed' ? 'bg-[var(--acc)] text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title="Muro Social & Comunidad"
                 >
@@ -1211,9 +1008,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   type="button"
                   onClick={() => setViewMode('grid')}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'grid'
-                      ? 'bg-[var(--acc)] text-[var(--ink)]'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title="Vista en Tarjetas"
                 >
@@ -1224,9 +1019,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   type="button"
                   onClick={() => setViewMode('table')}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'table'
-                      ? 'bg-[var(--acc)] text-[var(--ink)]'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title="Vista en Detalles / Tabla"
                 >
@@ -1237,9 +1030,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   type="button"
                   onClick={() => setViewMode('map')}
                   className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === 'map'
-                      ? 'bg-[var(--acc)] text-[var(--ink)]'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                   }`}
                   title="Vista en Mapa por Ciudades"
                 >
@@ -1248,9 +1039,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
               </div>
 
-              <span className="text-xs text-[var(--ink-2)] font-sans shrink-0 hidden sm:inline">
-                {filteredFans.length} resultados
-              </span>
+              <span className="text-xs text-[var(--ink-2)] font-sans shrink-0 hidden sm:inline">{filteredFans.length} resultados</span>
             </div>
           </div>
 
@@ -1273,9 +1062,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               {filteredFans.length === 0 ? (
                 <div className="col-span-full flex flex-col items-center justify-center py-12">
                   <PublicoSilhouette opacity={0.12} size="medium" />
-                  <p className="mt-6 font-medium text-[var(--ink)] text-sm">
-                    Sin fans que coincidan
-                  </p>
+                  <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin fans que coincidan</p>
                   <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
                     Ajusta los filtros o espera a que tus primeros fans se unan.
                   </p>
@@ -1292,12 +1079,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           {fan.nombre.charAt(0)}
                         </div>
                         <div>
-                          <h4 className="font-bold text-[var(--ink)] text-sm truncate max-w-[160px]">
-                            {fan.nombre}
-                          </h4>
-                          <p className="text-[11px] font-sans text-[var(--ink-2)] truncate max-w-[160px]">
-                            {fan.email}
-                          </p>
+                          <h4 className="font-bold text-[var(--ink)] text-sm truncate max-w-[160px]">{fan.nombre}</h4>
+                          <p className="text-[11px] font-sans text-[var(--ink-2)] truncate max-w-[160px]">{fan.email}</p>
                         </div>
                       </div>
                       <button
@@ -1316,24 +1099,16 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
                     <div className="grid grid-cols-2 gap-2 text-[11px] font-sans pt-2 /80">
                       <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
-                        <span className="text-[var(--ink-2)] text-[9px] block">
-                          Ciudad
-                        </span>
+                        <span className="text-[var(--ink-2)] text-[9px] block">Ciudad</span>
                         <span className="text-[var(--ink-2)] flex items-center gap-1 font-semibold">
                           <MapPin className="w-3 h-3 text-[var(--acc)] shrink-0" />
-                          <span className="truncate">
-                            {fan.ciudad || 'No especificada'}
-                          </span>
+                          <span className="truncate">{fan.ciudad || 'No especificada'}</span>
                         </span>
                       </div>
                       <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
-                        <span className="text-[var(--ink-2)] text-[9px] block">
-                          Origen / Canal
-                        </span>
+                        <span className="text-[var(--ink-2)] text-[9px] block">Origen / Canal</span>
                         <span className="text-[var(--acc)] truncate block font-semibold">
-                          {fan.comoConocio ||
-                            fan.conciertoOrigenNombre ||
-                            'Directo'}
+                          {fan.comoConocio || fan.conciertoOrigenNombre || 'Directo'}
                         </span>
                       </div>
                     </div>
@@ -1357,9 +1132,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-4 text-xs font-sans text-[var(--ink-2)]">
                 <div className="flex items-center gap-2 text-[var(--acc)] font-bold mb-3">
                   <MapIcon className="w-4 h-4" />
-                  <span>
-                    Distribución Geográfica de la Comunidad de Fans por Ciudades
-                  </span>
+                  <span>Distribución Geográfica de la Comunidad de Fans por Ciudades</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {Object.entries(
@@ -1374,15 +1147,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   )
                     .sort((a, b) => (b[1] as number) - (a[1] as number))
                     .map(([city, count]) => (
-                      <div
-                        key={city}
-                        className="bg-[var(--surface)] p-3 rounded-[var(--r-m)] flex items-center justify-between"
-                      >
+                      <div key={city} className="bg-[var(--surface)] p-3 rounded-[var(--r-m)] flex items-center justify-between">
                         <div className="flex items-center gap-2 truncate">
                           <MapPin className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                          <span className="font-bold text-[var(--ink)] truncate">
-                            {city}
-                          </span>
+                          <span className="font-bold text-[var(--ink)] truncate">{city}</span>
                         </div>
                         <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-full">
                           {count} {count === 1 ? 'fan' : 'fans'}
@@ -1414,22 +1182,16 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       <td colSpan={7} className="p-12">
                         <div className="flex flex-col items-center justify-center">
                           <PublicoSilhouette opacity={0.12} size="medium" />
-                          <p className="mt-6 font-medium text-[var(--ink)] text-sm">
-                            Sin fans que coincidan
-                          </p>
+                          <p className="mt-6 font-medium text-[var(--ink)] text-sm">Sin fans que coincidan</p>
                           <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
-                            Ajusta los filtros o espera a que tus primeros fans
-                            se unan.
+                            Ajusta los filtros o espera a que tus primeros fans se unan.
                           </p>
                         </div>
                       </td>
                     </tr>
                   ) : (
                     filteredFans.map((fan) => (
-                      <tr
-                        key={fan.id}
-                        className="hover:bg-[var(--surface)]/20 transition group"
-                      >
+                      <tr key={fan.id} className="hover:bg-[var(--surface)]/20 transition group">
                         <td className="p-3 font-semibold text-[var(--ink)]">
                           <div className="flex items-center gap-2">
                             <div className="w-6 h-6 rounded-full bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-[10px]">
@@ -1442,19 +1204,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         <td className="p-3">
                           {fan.ciudad ? (
                             <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-[var(--ink-2)]" />{' '}
-                              {fan.ciudad}
+                              <MapPin className="w-3 h-3 text-[var(--ink-2)]" /> {fan.ciudad}
                             </span>
                           ) : (
                             <span className="text-[var(--ink-2)]">-</span>
                           )}
                         </td>
-                        <td className="p-3 font-sans text-[10px] text-[var(--ink-2)] tracking-wider">
-                          {fan.comoConocio || '-'}
-                        </td>
-                        <td className="p-3 text-[11px] text-[var(--ok)] font-sans">
-                          {fan.conciertoOrigenNombre || '-'}
-                        </td>
+                        <td className="p-3 font-sans text-[10px] text-[var(--ink-2)] tracking-wider">{fan.comoConocio || '-'}</td>
+                        <td className="p-3 text-[11px] text-[var(--ok)] font-sans">{fan.conciertoOrigenNombre || '-'}</td>
                         <td className="p-3 text-center">
                           {fan.consentimientoRGPD ? (
                             <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
@@ -1493,8 +1250,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <QrCode className="w-6 h-6 text-[var(--acc)]" /> Generador de QR
             </h3>
             <p className="text-xs text-[var(--ink-2)] font-sans">
-              Genera el código, descárgalo o imprímelo. La recompensa al fan, el
-              dominio y el idioma están abajo, plegados.
+              Genera el código, descárgalo o imprímelo. La recompensa al fan, el dominio y el idioma están abajo, plegados.
             </p>
           </div>
 
@@ -1512,9 +1268,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               onChange={(e) => setSelectedConcertId(e.target.value)}
               className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-2.5 text-xs text-[var(--ink)] outline-none font-sans"
             >
-              <option value="">
-                -- Campaña General / QR Genérico de la Banda --
-              </option>
+              <option value="">-- Campaña General / QR Genérico de la Banda --</option>
               {concerts.map((c) => (
                 <option key={c.id} value={c.id}>
                   📅 {c.fecha} — {c.sala} ({c.ciudad})
@@ -1525,10 +1279,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
           {/* Contenido principal: el QR, grande y arriba del todo */}
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col items-center text-center space-y-4">
-            <div
-              id="qr-code-svg-container"
-              className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block relative"
-            >
+            <div id="qr-code-svg-container" className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block relative">
               <QRCode value={qrConcertUrl} size={210} level="H" />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 {effectiveBandLogo ? (
@@ -1549,9 +1300,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
             <div className="space-y-1">
               <h4 className="font-black text-[var(--ink)] font-display text-lg tracking-wider">
-                {selectedConcert
-                  ? selectedConcert.sala
-                  : `Únete a ${effectiveBandName}`}
+                {selectedConcert ? selectedConcert.sala : `Únete a ${effectiveBandName}`}
               </h4>
               <p className="text-xs text-[var(--ink-2)] font-sans">
                 {selectedConcert
@@ -1561,9 +1310,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </div>
 
             <div className="w-full flex items-center gap-2 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2">
-              <span className="flex-1 min-w-0 truncate font-sans text-[var(--acc)]/70 text-[11px] text-left">
-                {qrConcertUrl}
-              </span>
+              <span className="flex-1 min-w-0 truncate font-sans text-[var(--acc)]/70 text-[11px] text-left">{qrConcertUrl}</span>
               <button
                 type="button"
                 onClick={handleCopyQrUrl}
@@ -1594,10 +1341,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 {showQrMoreMenu && (
                   <>
-                    <div
-                      className="fixed inset-0 z-30"
-                      onClick={() => setShowQrMoreMenu(false)}
-                    />
+                    <div className="fixed inset-0 z-30" onClick={() => setShowQrMoreMenu(false)} />
                     <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-[11px] font-sans">
                       <button
                         type="button"
@@ -1608,8 +1352,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         disabled={isExportingDirect}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-3)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG
-                        (imprenta/lonas)
+                        <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG (imprenta/lonas)
                       </button>
                       <button
                         type="button"
@@ -1620,8 +1363,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         disabled={isExportingDirect}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--tentative)]/80 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra
-                        HD 4K
+                        <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra HD 4K
                       </button>
                       <button
                         type="button"
@@ -1631,8 +1373,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         }}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--acc)]/70 hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos
-                        (tarjeta, pegatina...)
+                        <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos (tarjeta, pegatina...)
                       </button>
                       <div className="h-px bg-[var(--surface)] my-1" />
                       <button
@@ -1643,8 +1384,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         }}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <MessageCircle className="w-3.5 h-3.5 shrink-0" />{' '}
-                        Compartir por WhatsApp
+                        <MessageCircle className="w-3.5 h-3.5 shrink-0" /> Compartir por WhatsApp
                       </button>
                       <button
                         type="button"
@@ -1654,8 +1394,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         }}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Share2 className="w-3.5 h-3.5 shrink-0" /> Compartir
-                        enlace
+                        <Share2 className="w-3.5 h-3.5 shrink-0" /> Compartir enlace
                       </button>
                       <a
                         href={qrConcertUrl}
@@ -1664,8 +1403,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         onClick={() => setShowQrMoreMenu(false)}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <ExternalLink className="w-3.5 h-3.5 shrink-0" /> Abrir
-                        landing en pestaña nueva
+                        <ExternalLink className="w-3.5 h-3.5 shrink-0" /> Abrir landing en pestaña nueva
                       </a>
                       <button
                         type="button"
@@ -1675,8 +1413,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         }}
                         className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
-                        <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
-                        formulario"Únete"
+                        <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar formulario"Únete"
                       </button>
                     </div>
                   </>
@@ -1693,8 +1430,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               className="w-full flex items-center justify-between text-xs font-bold text-[var(--ink-2)] hover:text-[var(--acc)]/70 font-sans tracking-wider transition cursor-pointer"
             >
               <span className="flex items-center gap-1.5">
-                <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada
-                (recompensa, dominio, idioma)
+                <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada (recompensa, dominio, idioma)
               </span>
               <span>{showAdvancedQrConfig ? '▲' : '▼'}</span>
             </button>
@@ -1702,10 +1438,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             {showAdvancedQrConfig && (
               <div className="mt-4 space-y-4">
                 {/* Incentivo / Recompensa al Fan */}
-                <div
-                  id="fans-incentive-section"
-                  className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-4"
-                >
+                <div id="fans-incentive-section" className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-4">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider flex items-center gap-2">
                       <Gift className="w-4 h-4 text-[var(--acc)]" />
@@ -1718,16 +1451,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     )}
                   </div>
                   <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                    Ofrece algo de valor al fan tras registrarse (un tema en
-                    directo exclusivo o descuento de merchan) para disparar la
-                    tasa de escaneos.
+                    Ofrece algo de valor al fan tras registrarse (un tema en directo exclusivo o descuento de merchan) para disparar la tasa
+                    de escaneos.
                   </p>
 
                   <div className="space-y-3 pt-1">
                     <div>
                       <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />{' '}
-                        Mensaje de Bienvenida / Agradecimiento:
+                        <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Mensaje de Bienvenida / Agradecimiento:
                       </label>
                       <input
                         type="text"
@@ -1746,8 +1477,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
-                          <Music className="w-3.5 h-3.5 text-[var(--acc)]" />{' '}
-                          Enlace de Descarga (Tema inédito/directo):
+                          <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Enlace de Descarga (Tema inédito/directo):
                         </label>
                         <input
                           type="url"
@@ -1764,8 +1494,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       </div>
                       <div>
                         <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
-                          <Tag className="w-3.5 h-3.5 text-[var(--acc)]" />{' '}
-                          Código Cupón Merchandising:
+                          <Tag className="w-3.5 h-3.5 text-[var(--acc)]" /> Código Cupón Merchandising:
                         </label>
                         <input
                           type="text"
@@ -1799,12 +1528,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <div className="bg-[var(--surface)]/80 p-5 rounded-[var(--r-l)] space-y-3">
                   <label className="text-xs font-bold text-[var(--ink-2)] font-sans tracking-wider flex items-center gap-2">
                     <Heart className="w-4 h-4 text-[var(--ink-2)]" />
-                    Colaboración Económica & Donaciones (Revolut, PayPal y
-                    Bizum)
+                    Colaboración Económica & Donaciones (Revolut, PayPal y Bizum)
                   </label>
                   <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                    {epkConfig?.donacionRevolut?.habilitado !== false &&
-                    epkConfig?.donacionRevolut?.revolutTag
+                    {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
                       ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público"Únete" y en la pantalla de confirmación.`
                       : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
                   </p>
@@ -1813,8 +1540,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     onClick={() => onNavigate?.('epk')}
                     className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] text-xs font-bold font-sans rounded-[var(--r-m)] shadow transition flex items-center gap-1.5 cursor-pointer"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Configurar en el
-                    Dossier EPK
+                    <ExternalLink className="w-3.5 h-3.5" /> Configurar en el Dossier EPK
                   </button>
                 </div>
 
@@ -1835,9 +1561,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       }`}
                     >
                       <span>🌐 Dominio Web Oficial</span>
-                      <span className="text-[10px] text-[var(--ink-2)] font-normal">
-                        Para impresiones/carteles
-                      </span>
+                      <span className="text-[10px] text-[var(--ink-2)] font-normal">Para impresiones/carteles</span>
                     </button>
                     <button
                       type="button"
@@ -1849,17 +1573,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       }`}
                     >
                       <span>🧪 Servidor Dev</span>
-                      <span className="text-[10px] text-[var(--ink-2)] font-normal">
-                        Para pruebas en visor actual
-                      </span>
+                      <span className="text-[10px] text-[var(--ink-2)] font-normal">Para pruebas en visor actual</span>
                     </button>
                   </div>
 
                   {useCustomDomain && (
                     <div className="space-y-1">
-                      <label className="text-[11px] font-sans text-[var(--ink-2)]">
-                        Dominio del Proyecto:
-                      </label>
+                      <label className="text-[11px] font-sans text-[var(--ink-2)]">Dominio del Proyecto:</label>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-sans text-[var(--ink-2)] bg-[var(--surface)] px-3 py-2.5 rounded-[var(--r-s)]">
                           https://
@@ -1876,30 +1596,18 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   )}
 
                   <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-sans text-[var(--ink-2)]">
-                      Slug personalizado:
-                    </label>
+                    <label className="text-[11px] font-sans text-[var(--ink-2)]">Slug personalizado:</label>
                     <div className="flex items-center gap-2">
                       <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] px-2.5 shrink-0">
-                        <span className="text-[11px] font-sans text-[var(--ink-2)]">
-                          /
-                        </span>
+                        <span className="text-[11px] font-sans text-[var(--ink-2)]">/</span>
                         <input
                           type="text"
                           value={routePrefix}
-                          onChange={(e) =>
-                            setRoutePrefix(
-                              e.target.value
-                                .toLowerCase()
-                                .replace(/[^a-z0-9]/g, '')
-                            )
-                          }
+                          onChange={(e) => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
                           className="w-16 bg-transparent text-[var(--acc)] text-xs font-sans py-2.5 font-bold outline-none"
                           placeholder="unete"
                         />
-                        <span className="text-[11px] font-sans text-[var(--ink-2)]">
-                          /
-                        </span>
+                        <span className="text-[11px] font-sans text-[var(--ink-2)]">/</span>
                       </div>
                       <input
                         type="text"
@@ -1919,9 +1627,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </div>
 
                   <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-sans text-[var(--ink-2)]">
-                      Idioma del formulario para este enlace:
-                    </label>
+                    <label className="text-[11px] font-sans text-[var(--ink-2)]">Idioma del formulario para este enlace:</label>
                     {/* grid en vez de flex de una sola fila: con 4+ idiomas (español, inglés,
  italiano, checo) un flex sin wrap se salía de la pantalla en móvil en
  vez de pasar a una segunda fila. */}
@@ -1943,8 +1649,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       ))}
                     </div>
                     <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                      El formulario se abrirá en este idioma por defecto; quien
-                      lo escanee siempre podrá cambiarlo a mano.
+                      El formulario se abrirá en este idioma por defecto; quien lo escanee siempre podrá cambiarlo a mano.
                     </p>
                   </div>
 
@@ -1957,10 +1662,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             customQrUrl: qrConcertUrl,
                           });
                           setSavedToConcertFeedback(true);
-                          setTimeout(
-                            () => setSavedToConcertFeedback(false),
-                            3500
-                          );
+                          setTimeout(() => setSavedToConcertFeedback(false), 3500);
                         }}
                         className={`w-full py-2.5 px-3 font-bold font-sans text-xs tracking-wider rounded-[var(--r-m)] flex items-center justify-center gap-2 transition cursor-pointer ${
                           savedToConcertFeedback
@@ -1987,11 +1689,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             svgElementId="qr-code-svg-container"
             bandName={effectiveBandName}
             concertTitle={selectedConcert ? selectedConcert.sala : undefined}
-            dateCity={
-              selectedConcert
-                ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}`
-                : undefined
-            }
+            dateCity={selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined}
             url={qrConcertUrl}
             logoUrl={effectiveBandLogo}
           />
@@ -2025,20 +1723,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <Users className="w-5 h-5 text-[var(--acc)]" />
                 Registrar Fan / Seguidor Manual
               </h3>
-              <button
-                type="button"
-                onClick={() => setShowAddModal(false)}
-                className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
-              >
+              <button type="button" onClick={() => setShowAddModal(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1">
                 ✕
               </button>
             </div>
             <form onSubmit={handleManualAddSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
-                    Nombre *
-                  </label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">Nombre *</label>
                   <input
                     type="text"
                     required
@@ -2049,9 +1741,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
-                    Email *
-                  </label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">Email *</label>
                   <input
                     type="email"
                     required
@@ -2065,9 +1755,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
-                    Ciudad
-                  </label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">Ciudad</label>
                   <input
                     type="text"
                     placeholder="Ej: Madrid, Sevilla..."
@@ -2077,18 +1765,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
-                    Origen / Canal
-                  </label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">Origen / Canal</label>
                   <select
                     value={newOrigen}
                     onChange={(e) => setNewOrigen(e.target.value)}
                     className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                   >
                     <option value="Manual">Registro Manual</option>
-                    <option value="Concierto Directo">
-                      Concierto / Directo
-                    </option>
+                    <option value="Concierto Directo">Concierto / Directo</option>
                     <option value="Instagram">Instagram</option>
                     <option value="TikTok">TikTok</option>
                     <option value="Spotify">Spotify / Streaming</option>
@@ -2100,9 +1784,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
-                    Nivel Fan
-                  </label>
+                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">Nivel Fan</label>
                   <select
                     value={newNivel}
                     onChange={(e) => setNewNivel(e.target.value as any)}
@@ -2188,11 +1870,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       />
 
       {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal
-        moduleId="fans"
-        isOpen={isTutorialOpen}
-        onClose={closeTutorial}
-      />
+      <ModuleTutorialModal moduleId="fans" isOpen={isTutorialOpen} onClose={closeTutorial} />
     </div>
   );
 };

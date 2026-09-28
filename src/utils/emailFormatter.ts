@@ -1,9 +1,5 @@
 import { EPKConfig, Lead } from '../types';
-import {
-  EpkLanguage,
-  DEFAULT_EPK_LANGUAGE,
-  idiomaEpkParaLead,
-} from '../i18n/epkTranslations';
+import { EpkLanguage, DEFAULT_EPK_LANGUAGE, idiomaEpkParaLead } from '../i18n/epkTranslations';
 
 export interface EmailAttachment {
   filename: string;
@@ -26,58 +22,45 @@ export interface SignatureDataParams {
   publicEpkUrl?: string;
 }
 
-export const SOCIAL_ICONS_BADGES_MAP: Record<
-  string,
-  { badgeUrl: string; label: string }
-> = {
+export const SOCIAL_ICONS_BADGES_MAP: Record<string, { badgeUrl: string; label: string }> = {
   instagram: {
-    badgeUrl:
-      'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
     label: 'Instagram',
   },
   facebook: {
-    badgeUrl:
-      'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
     label: 'Facebook',
   },
   tiktok: {
-    badgeUrl:
-      'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
     label: 'TikTok',
   },
   spotify: {
-    badgeUrl:
-      'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
     label: 'Spotify',
   },
   youtube: {
-    badgeUrl:
-      'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
     label: 'YouTube',
   },
   applemusic: {
-    badgeUrl:
-      'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
     label: 'Apple Music',
   },
   bandcamp: {
-    badgeUrl:
-      'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white',
     label: 'Bandcamp',
   },
   website: {
-    badgeUrl:
-      'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
     label: 'Web Oficial',
   },
   whatsapp: {
-    badgeUrl:
-      'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
     label: 'WhatsApp',
   },
   twitter: {
-    badgeUrl:
-      'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
+    badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
     label: 'X',
   },
 };
@@ -86,65 +69,36 @@ export const SOCIAL_ICONS_BADGES_MAP: Record<
  * Extracts and consolidates signature fields for HTML / plain-text generation
  */
 export function buildEmailSignatureData(params: SignatureDataParams) {
-  const resolvedBandName =
-    params.bandName || params.epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya =
-    params.isBakandeya ?? resolvedBandName.toLowerCase().includes('bakandeya');
-  const defaultEmail = isBakandeya
-    ? 'bakandeya@gmail.com'
-    : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
+  const resolvedBandName = params.bandName || params.epkConfig?.contactoBooking?.nombre || 'la banda';
+  const isBakandeya = params.isBakandeya ?? resolvedBandName.toLowerCase().includes('bakandeya');
+  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
   const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
 
   const firma = params.epkConfig?.firmaEmail;
   const booking = params.epkConfig?.contactoBooking;
 
   const remitenteNombre =
-    (params.senderName && params.senderName.toLowerCase() !== 'equipo'
-      ? params.senderName
-      : null) ||
+    (params.senderName && params.senderName.toLowerCase() !== 'equipo' ? params.senderName : null) ||
     firma?.nombreRemitente ||
     booking?.nombre ||
     (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
 
   const cargo = firma?.cargo || `Booking & Management | ${resolvedBandName}`;
-  const textoPie =
-    firma?.textoPie ||
-    (isBakandeya
-      ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica'
-      : '');
+  const textoPie = firma?.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
   const telefono = firma?.telefono || booking?.telefono || defaultPhone;
   const email = firma?.email || booking?.email || defaultEmail;
 
-  const origin =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : 'https://bandmanager.io';
-  const cleanBandId = (params.bandId || '')
-    .replace(/^(band|reg)-/, '')
-    .toLowerCase();
-  const fallbackOnlineEpk = params.bandId
-    ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}`
-    : `${origin}/epk`;
-  const dossierPdfUrl =
-    params.epkConfig?.dossierPdfUrl ||
-    params.epkConfig?.dossierDocumentUrl ||
-    '';
-  const dossierPdfName =
-    params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';
-  const effectiveEpkLink =
-    params.publicEpkUrl ||
-    dossierPdfUrl ||
-    (isBakandeya ? 'https://bakandeya.es/epk' : fallbackOnlineEpk);
-  const adjuntarDossier =
-    (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
+  const cleanBandId = (params.bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+  const fallbackOnlineEpk = params.bandId ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}` : `${origin}/epk`;
+  const dossierPdfUrl = params.epkConfig?.dossierPdfUrl || params.epkConfig?.dossierDocumentUrl || '';
+  const dossierPdfName = params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';
+  const effectiveEpkLink = params.publicEpkUrl || dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : fallbackOnlineEpk);
+  const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
   const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 
   // Absolute logo URL for external email clients
-  let logoUrl =
-    (firma?.incluirLogo ?? true)
-      ? params.epkConfig?.logoUrl ||
-        (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')
-      : '';
+  let logoUrl = (firma?.incluirLogo ?? true) ? params.epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '') : '';
   if (logoUrl && !logoUrl.startsWith('http') && !logoUrl.startsWith('data:')) {
     logoUrl = `${origin}${logoUrl.startsWith('/') ? '' : '/'}${logoUrl}`;
   }
@@ -168,14 +122,7 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
     url: string;
     badgeUrl: string;
   }> = Object.entries(rawRedesCombined)
-    .filter(
-      ([net, url]) =>
-        url &&
-        String(url).trim() !== '' &&
-        !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(
-          net.toLowerCase()
-        )
-    )
+    .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()))
     .map(([net, url]) => {
       const cleanKey = net.toLowerCase();
       const map = SOCIAL_ICONS_BADGES_MAP[cleanKey] || {
@@ -305,9 +252,7 @@ export function buildEmailSignatureHtml(params: SignatureDataParams): string {
 /**
  * Builds clean plain-text signature
  */
-export function buildEmailSignaturePlainText(
-  params: SignatureDataParams
-): string {
+export function buildEmailSignaturePlainText(params: SignatureDataParams): string {
   const data = buildEmailSignatureData(params);
 
   const linksTextArray = [
@@ -327,20 +272,13 @@ ${linksTextArray.length > 0 ? linksTextArray.join('| ') : ''}
 /**
  * Copies rich formatted HTML & plain-text signature to system clipboard
  */
-export async function copyRichSignatureToClipboard(
-  params: SignatureDataParams
-): Promise<boolean> {
+export async function copyRichSignatureToClipboard(params: SignatureDataParams): Promise<boolean> {
   const html = buildEmailSignatureHtml(params);
   const plainText = buildEmailSignaturePlainText(params);
 
   // Modern Clipboard API with rich text/html
   try {
-    if (
-      typeof navigator !== 'undefined' &&
-      navigator.clipboard &&
-      typeof window !== 'undefined' &&
-      (window as any).ClipboardItem
-    ) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && (window as any).ClipboardItem) {
       const htmlBlob = new Blob([html], { type: 'text/html' });
       const textBlob = new Blob([plainText], { type: 'text/plain' });
       await navigator.clipboard.write([
@@ -382,11 +320,7 @@ export async function copyRichSignatureToClipboard(
   }
 
   // Fallback to text copy
-  if (
-    typeof navigator !== 'undefined' &&
-    navigator.clipboard &&
-    navigator.clipboard.writeText
-  ) {
+  if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
     await navigator.clipboard.writeText(plainText);
     return true;
   }
@@ -458,8 +392,7 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   const streamContent = streamLines.join('\n');
   const streamLength = new TextEncoder().encode(streamContent).length;
   const obj4 = `4 0 obj\n<< /Length ${streamLength} >>\nstream\n${streamContent}\nendstream\nendobj\n`;
-  const obj5 =
-    '5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n';
+  const obj5 = '5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n';
 
   const pos1 = header.length;
   const pos2 = pos1 + obj1.length;
@@ -517,13 +450,8 @@ export function cleanTrailingPitchSignature(text: string): string {
         .split('\n')
         .map((s) => s.trim())
         .filter(Boolean)[0];
-      const isPureSignOff =
-        /^(¡?Un saludo|Atentamente|Cordialmente|¡?Un fuerte abrazo|Saludos)/i.test(
-          signOffWord || ''
-        );
-      cleaned =
-        cleaned.substring(0, idx).trim() +
-        (isPureSignOff ? `\n\n${signOffWord}` : '');
+      const isPureSignOff = /^(¡?Un saludo|Atentamente|Cordialmente|¡?Un fuerte abrazo|Saludos)/i.test(signOffWord || '');
+      cleaned = cleaned.substring(0, idx).trim() + (isPureSignOff ? `\n\n${signOffWord}` : '');
     }
   }
 
@@ -544,12 +472,9 @@ export function formatEmailWithSignatureAndDossier(params: {
   // email/teléfono reales (ver isBakandeya/defaultEmail/defaultPhone más abajo) para CUALQUIER
   // banda. Los llamantes actuales ya evitan pasar undefined (ver bandDisplayName en
   // Chatbot.tsx), pero la función no debe depender de eso para no filtrar datos reales.
-  const resolvedBandName =
-    bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
+  const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
   const isBakandeya = resolvedBandName.toLowerCase().includes('bakandeya');
-  const defaultEmail = isBakandeya
-    ? 'bakandeya@gmail.com'
-    : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
+  const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
   const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';
   const salaName = lead?.nombre_sala || 'vuestra sala';
   const salaCiudad = lead?.ciudad ? ` (${lead.ciudad})` : '';
@@ -564,8 +489,7 @@ export function formatEmailWithSignatureAndDossier(params: {
   const bodyContent = cleanTrailingPitchSignature(rawBody);
 
   // Check if bodyContent already has HTML
-  const isAlreadyHtml =
-    bodyContent.startsWith('<') || bodyContent.startsWith('<!DOCTYPE');
+  const isAlreadyHtml = bodyContent.startsWith('<') || bodyContent.startsWith('<!DOCTYPE');
 
   // Format body text paragraphs cleanly.
   const htmlBodyParagraphs = isAlreadyHtml
@@ -573,10 +497,7 @@ export function formatEmailWithSignatureAndDossier(params: {
     : bodyContent
         .split('\n\n')
         .map((paragraph) => {
-          const escaped = paragraph
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+          const escaped = paragraph.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
           return `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${escaped.replace(/\n/g, '<br>')}</p>`;
         })
         .join('');
@@ -592,16 +513,11 @@ export function formatEmailWithSignatureAndDossier(params: {
     (isBakandeya ? 'Bakandeya Management' : 'Equipo de Booking');
 
   const cargo = firma?.cargo || `Booking & Management | ${resolvedBandName}`;
-  const textoPie =
-    firma?.textoPie ||
-    (isBakandeya
-      ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica'
-      : '');
+  const textoPie = firma?.textoPie || (isBakandeya ? 'Electrobasureo: ska-balkan y mestizaje sobre percusión reciclada y electrónica' : '');
   const telefono = firma?.telefono || booking?.telefono || defaultPhone;
   const email = firma?.email || booking?.email || defaultEmail;
 
-  const dossierPdfUrl =
-    epkConfig?.dossierPdfUrl || epkConfig?.dossierDocumentUrl || '';
+  const dossierPdfUrl = epkConfig?.dossierPdfUrl || epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier Bakandeya.pdf';
 
   const rawRedesCombined: Record<string, string> = {
@@ -619,53 +535,43 @@ export function formatEmailWithSignatureAndDossier(params: {
 
   const socialIconsMap: Record<string, { badgeUrl: string; label: string }> = {
     instagram: {
-      badgeUrl:
-        'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
       label: 'Instagram',
     },
     facebook: {
-      badgeUrl:
-        'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
       label: 'Facebook',
     },
     tiktok: {
-      badgeUrl:
-        'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
       label: 'TikTok',
     },
     spotify: {
-      badgeUrl:
-        'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
       label: 'Spotify',
     },
     youtube: {
-      badgeUrl:
-        'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
       label: 'YouTube',
     },
     applemusic: {
-      badgeUrl:
-        'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
       label: 'Apple Music',
     },
     bandcamp: {
-      badgeUrl:
-        'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white',
       label: 'Bandcamp',
     },
     website: {
-      badgeUrl:
-        'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
       label: 'Web Oficial',
     },
     whatsapp: {
-      badgeUrl:
-        'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
       label: 'WhatsApp',
     },
     twitter: {
-      badgeUrl:
-        'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
+      badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
       label: 'X',
     },
   };
@@ -676,14 +582,7 @@ export function formatEmailWithSignatureAndDossier(params: {
     url: string;
     badgeUrl: string;
   }> = Object.entries(rawRedesCombined)
-    .filter(
-      ([net, url]) =>
-        url &&
-        String(url).trim() !== '' &&
-        !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(
-          net.toLowerCase()
-        )
-    )
+    .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()))
     .map(([net, url]) => {
       const cleanKey = net.toLowerCase();
       const map = socialIconsMap[cleanKey] || {
@@ -723,19 +622,10 @@ export function formatEmailWithSignatureAndDossier(params: {
  `
       : '';
 
-  const logoUrl =
-    (firma?.incluirLogo ?? true)
-      ? epkConfig?.logoUrl ||
-        (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')
-      : '';
-  const defaultOnlineEpk = bandId
-    ? `${origin}/epk?band=${encodeURIComponent(bandId)}`
-    : `${origin}/epk`;
-  const effectiveEpkLink =
-    dossierPdfUrl ||
-    (isBakandeya ? 'https://bakandeya.es/epk' : defaultOnlineEpk);
-  const adjuntarDossier =
-    (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
+  const logoUrl = (firma?.incluirLogo ?? true) ? epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '') : '';
+  const defaultOnlineEpk = bandId ? `${origin}/epk?band=${encodeURIComponent(bandId)}` : `${origin}/epk`;
+  const effectiveEpkLink = dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : defaultOnlineEpk);
+  const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
   const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 
   // 3. Construct natural, organically integrated HTML email
@@ -823,9 +713,7 @@ export function formatEmailWithSignatureAndDossier(params: {
     effectiveEpkLink ? `EPK / Dossier: ${effectiveEpkLink}` : '',
     rawRedesCombined.website ? `Web: ${rawRedesCombined.website}` : '',
     rawRedesCombined.spotify ? `Spotify: ${rawRedesCombined.spotify}` : '',
-    rawRedesCombined.instagram
-      ? `Instagram: ${rawRedesCombined.instagram}`
-      : '',
+    rawRedesCombined.instagram ? `Instagram: ${rawRedesCombined.instagram}` : '',
     rawRedesCombined.youtube ? `YouTube: ${rawRedesCombined.youtube}` : '',
   ].filter(Boolean);
 
@@ -849,9 +737,7 @@ ${linksTextArray.length > 0 ? linksTextArray.join('| ') : ''}
 
   const attachments: EmailAttachment[] = [
     {
-      filename: dossierPdfName.endsWith('.pdf')
-        ? dossierPdfName
-        : `${dossierPdfName}.pdf`,
+      filename: dossierPdfName.endsWith('.pdf') ? dossierPdfName : `${dossierPdfName}.pdf`,
       contentType: 'application/pdf',
       dataBase64: dossierPdfBase64,
     },

@@ -4,86 +4,86 @@
  */
 
 export interface QrExportOptions {
- svgElementId?: string;
- svgElement?: SVGElement | null;
- filename?: string;
- bandName?: string;
- concertTitle?: string;
- dateCity?: string;
- url?: string;
- logoUrl?: string;
- ctaText?: string;
- resolution?: '4k' | '2k' | 'print300dpi' | 'standard';
- template?: 'qr-only' | 'poster-a4' | 'badge-card';
+  svgElementId?: string;
+  svgElement?: SVGElement | null;
+  filename?: string;
+  bandName?: string;
+  concertTitle?: string;
+  dateCity?: string;
+  url?: string;
+  logoUrl?: string;
+  ctaText?: string;
+  resolution?: '4k' | '2k' | 'print300dpi' | 'standard';
+  template?: 'qr-only' | 'poster-a4' | 'badge-card';
 }
 
 /**
  * Convierte una imagen (URL) a base64 Data URL para incrustarla en SVG o Canvas sin problemas de CORS.
  */
 export async function urlToDataUrl(url: string): Promise<string> {
- if (!url) return '';
- if (url.startsWith('data:')) return url;
- try {
- const res = await fetch(url, { mode: 'cors' });
- const blob = await res.blob();
- return new Promise((resolve) => {
- const reader = new FileReader();
- reader.onloadend = () => resolve(reader.result as string || '');
- reader.onerror = () => resolve('');
- reader.readAsDataURL(blob);
- });
- } catch {
- // Si falla fetch (CORS u offline), devolvemos la URL original
- return url;
- }
+  if (!url) return '';
+  if (url.startsWith('data:')) return url;
+  try {
+    const res = await fetch(url, { mode: 'cors' });
+    const blob = await res.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve((reader.result as string) || '');
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    // Si falla fetch (CORS u offline), devolvemos la URL original
+    return url;
+  }
 }
 
 /**
  * Obtiene el SVG del código QR y lo limpia con atributos XML necesarios para ser un archivo .svg válido.
  */
 export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: string; sizePercent?: number }): string {
- const cloned = svgEl.cloneNode(true) as SVGElement;
- 
- // Asegurar namespaces y viewBox
- cloned.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
- cloned.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
- 
- const viewBox = cloned.getAttribute('viewBox') || '0 0 256 256';
- const [, , vbWidth, vbHeight] = viewBox.split('' ).map(Number);
- const w = vbWidth || 256;
- const h = vbHeight || 256;
+  const cloned = svgEl.cloneNode(true) as SVGElement;
 
- if (includeLogo && includeLogo.dataUrl) {
- const logoSize = Math.round(w * (includeLogo.sizePercent || 0.22));
- const logoX = Math.round((w - logoSize) / 2);
- const logoY = Math.round((h - logoSize) / 2);
- const radius = Math.round(logoSize * 0.2);
+  // Asegurar namespaces y viewBox
+  cloned.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  cloned.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
- // Fondo blanco protector para el logo central
- const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
- bgRect.setAttribute('x', String(logoX - 4));
- bgRect.setAttribute('y', String(logoY - 4));
- bgRect.setAttribute('width', String(logoSize + 8));
- bgRect.setAttribute('height', String(logoSize + 8));
- bgRect.setAttribute('rx', String(radius + 2));
- bgRect.setAttribute('fill', '#ffffff');
- bgRect.setAttribute('stroke', 'var(--acc)');
- bgRect.setAttribute('stroke-width', '2');
- cloned.appendChild(bgRect);
+  const viewBox = cloned.getAttribute('viewBox') || '0 0 256 256';
+  const [, , vbWidth, vbHeight] = viewBox.split('').map(Number);
+  const w = vbWidth || 256;
+  const h = vbHeight || 256;
 
- // Imagen del logo
- const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
- img.setAttribute('x', String(logoX));
- img.setAttribute('y', String(logoY));
- img.setAttribute('width', String(logoSize));
- img.setAttribute('height', String(logoSize));
- img.setAttribute('preserveAspectRatio', 'xMidYMid meet');
- img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', includeLogo.dataUrl);
- cloned.appendChild(img);
- }
+  if (includeLogo && includeLogo.dataUrl) {
+    const logoSize = Math.round(w * (includeLogo.sizePercent || 0.22));
+    const logoX = Math.round((w - logoSize) / 2);
+    const logoY = Math.round((h - logoSize) / 2);
+    const radius = Math.round(logoSize * 0.2);
 
- const serializer = new XMLSerializer();
- return serializer.serializeToString(cloned);
+    // Fondo blanco protector para el logo central
+    const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    bgRect.setAttribute('x', String(logoX - 4));
+    bgRect.setAttribute('y', String(logoY - 4));
+    bgRect.setAttribute('width', String(logoSize + 8));
+    bgRect.setAttribute('height', String(logoSize + 8));
+    bgRect.setAttribute('rx', String(radius + 2));
+    bgRect.setAttribute('fill', '#ffffff');
+    bgRect.setAttribute('stroke', 'var(--acc)');
+    bgRect.setAttribute('stroke-width', '2');
+    cloned.appendChild(bgRect);
+
+    // Imagen del logo
+    const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    img.setAttribute('x', String(logoX));
+    img.setAttribute('y', String(logoY));
+    img.setAttribute('width', String(logoSize));
+    img.setAttribute('height', String(logoSize));
+    img.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', includeLogo.dataUrl);
+    cloned.appendChild(img);
+  }
+
+  const serializer = new XMLSerializer();
+  return serializer.serializeToString(cloned);
 }
 
 /**
@@ -91,27 +91,27 @@ export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: st
  * Resolución matemática infinita, ideal para Illustrator, Corel, imprentas, roll-ups o lonas.
  */
 export async function downloadQrAsSvg(options: QrExportOptions): Promise<void> {
- const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
- if (!svgEl) {
- throw new Error('No se encontró el elemento SVG del código QR');
- }
+  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
+  if (!svgEl) {
+    throw new Error('No se encontró el elemento SVG del código QR');
+  }
 
- let logoDataUrl = '';
- if (options.logoUrl) {
- logoDataUrl = await urlToDataUrl(options.logoUrl);
- }
+  let logoDataUrl = '';
+  if (options.logoUrl) {
+    logoDataUrl = await urlToDataUrl(options.logoUrl);
+  }
 
- const svgString = getCleanSvgString(svgEl, logoDataUrl ? { dataUrl: logoDataUrl } : undefined);
- const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
- const url = URL.createObjectURL(blob);
+  const svgString = getCleanSvgString(svgEl, logoDataUrl ? { dataUrl: logoDataUrl } : undefined);
+  const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
 
- const link = document.createElement('a');
- link.href = url;
- link.download = `${options.filename || 'codigo-qr-bandmanager-vectorial'}.svg`;
- document.body.appendChild(link);
- link.click();
- document.body.removeChild(link);
- URL.revokeObjectURL(url);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${options.filename || 'codigo-qr-bandmanager-vectorial'}.svg`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 /**
@@ -119,254 +119,256 @@ export async function downloadQrAsSvg(options: QrExportOptions): Promise<void> {
  * Genera un archivo PNG ultranítido listo para carteles, flyers, pegatinas o pantallas.
  */
 export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<void> {
- const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
- if (!svgEl) {
- throw new Error('No se encontró el elemento SVG del código QR');
- }
+  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
+  if (!svgEl) {
+    throw new Error('No se encontró el elemento SVG del código QR');
+  }
 
- let logoImg: HTMLImageElement | null = null;
- if (options.logoUrl) {
- try {
- const dataUrl = await urlToDataUrl(options.logoUrl);
- logoImg = await new Promise((res, rej) => {
- const img = new Image();
- img.crossOrigin = 'anonymous';
- img.onload = () => res(img);
- img.onerror = () => res(null);
- img.src = dataUrl;
- });
- } catch {
- logoImg = null;
- }
- }
+  let logoImg: HTMLImageElement | null = null;
+  if (options.logoUrl) {
+    try {
+      const dataUrl = await urlToDataUrl(options.logoUrl);
+      logoImg = await new Promise((res, rej) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => res(img);
+        img.onerror = () => res(null);
+        img.src = dataUrl;
+      });
+    } catch {
+      logoImg = null;
+    }
+  }
 
- const template = options.template || 'qr-only';
- const canvas = document.createElement('canvas');
- const ctx = canvas.getContext('2d');
- if (!ctx) throw new Error('No se pudo inicializar el contexto de Canvas');
+  const template = options.template || 'qr-only';
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('No se pudo inicializar el contexto de Canvas');
 
- // Convertir SVG a Image para dibujarlo en el Canvas a resolución ultra alta
- const svgString = getCleanSvgString(svgEl);
- const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
- const svgUrl = URL.createObjectURL(svgBlob);
- const qrImg = await new Promise<HTMLImageElement>((resolve, reject) => {
- const img = new Image();
- img.onload = () => resolve(img);
- img.onerror = (e) => reject(e);
- img.src = svgUrl;
- });
+  // Convertir SVG a Image para dibujarlo en el Canvas a resolución ultra alta
+  const svgString = getCleanSvgString(svgEl);
+  const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+  const qrImg = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = (e) => reject(e);
+    img.src = svgUrl;
+  });
 
- if (template === 'poster-a4') {
- // Proporción A4 a 300 DPI: 2480 x 3508 px
- canvas.width = 2480;
- canvas.height = 3508;
+  if (template === 'poster-a4') {
+    // Proporción A4 a 300 DPI: 2480 x 3508 px
+    canvas.width = 2480;
+    canvas.height = 3508;
 
- // Fondo blanco elegante con marco ámbar
- ctx.fillStyle = '#ffffff';
- ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Fondo blanco elegante con marco ámbar
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
- // Borde exterior ámbar / dorado
- ctx.strokeStyle = 'var(--acc)';
- ctx.lineWidth = 24;
- ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+    // Borde exterior ámbar / dorado
+    ctx.strokeStyle = 'var(--acc)';
+    ctx.lineWidth = 24;
+    ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
- // Cabecera con Logo de la Banda si existe
- let curY = 240;
- if (logoImg) {
- const maxLogoW = 700;
- const maxLogoH = 260;
- const ratio = Math.min(maxLogoW / logoImg.width, maxLogoH / logoImg.height, 1);
- const lw = logoImg.width * ratio;
- const lh = logoImg.height * ratio;
- ctx.drawImage(logoImg, (canvas.width - lw) / 2, curY, lw, lh);
- curY += lh + 60;
- }
+    // Cabecera con Logo de la Banda si existe
+    let curY = 240;
+    if (logoImg) {
+      const maxLogoW = 700;
+      const maxLogoH = 260;
+      const ratio = Math.min(maxLogoW / logoImg.width, maxLogoH / logoImg.height, 1);
+      const lw = logoImg.width * ratio;
+      const lh = logoImg.height * ratio;
+      ctx.drawImage(logoImg, (canvas.width - lw) / 2, curY, lw, lh);
+      curY += lh + 60;
+    }
 
- // Título de la Banda
- ctx.fillStyle = '#0f172a';
- ctx.font = '900 80px system-ui, -apple-system, sans-serif';
- ctx.textAlign = 'center';
- ctx.fillText((options.bandName || 'BANDMANAGER').toUpperCase(), canvas.width / 2, curY);
- curY += 70;
+    // Título de la Banda
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '900 80px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText((options.bandName || 'BANDMANAGER').toUpperCase(), canvas.width / 2, curY);
+    curY += 70;
 
- // Concierto / Sala / Ciudad
- if (options.concertTitle) {
- ctx.fillStyle = 'var(--acc)';
- ctx.font = '800 52px system-ui, -apple-system, sans-serif';
- ctx.fillText(options.concertTitle.toUpperCase(), canvas.width / 2, curY);
- curY += 60;
- }
- if (options.dateCity) {
- ctx.fillStyle = '#64748b';
- ctx.font = '600 40px monospace';
- ctx.fillText(options.dateCity, canvas.width / 2, curY);
- curY += 70;
- }
+    // Concierto / Sala / Ciudad
+    if (options.concertTitle) {
+      ctx.fillStyle = 'var(--acc)';
+      ctx.font = '800 52px system-ui, -apple-system, sans-serif';
+      ctx.fillText(options.concertTitle.toUpperCase(), canvas.width / 2, curY);
+      curY += 60;
+    }
+    if (options.dateCity) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '600 40px monospace';
+      ctx.fillText(options.dateCity, canvas.width / 2, curY);
+      curY += 70;
+    }
 
- // Mensaje de llamada a la acción (CTA)
- curY += 40;
- ctx.fillStyle = '#1e293b';
- ctx.font = '700 48px system-ui, -apple-system, sans-serif';
- const cta = options.ctaText || '¡ESCANEA CON LA CÁMARA DE TU MÓVIL!';
- ctx.fillText(cta, canvas.width / 2, curY);
- curY += 70;
+    // Mensaje de llamada a la acción (CTA)
+    curY += 40;
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '700 48px system-ui, -apple-system, sans-serif';
+    const cta = options.ctaText || '¡ESCANEA CON LA CÁMARA DE TU MÓVIL!';
+    ctx.fillText(cta, canvas.width / 2, curY);
+    curY += 70;
 
- // Subtítulo explicativo
- ctx.fillStyle = '#64748b';
- ctx.font = '500 36px system-ui, -apple-system, sans-serif';
- ctx.fillText('Accede a contenido exclusivo, canciones inéditas y sorteos de merch', canvas.width / 2, curY);
- curY += 90;
+    // Subtítulo explicativo
+    ctx.fillStyle = '#64748b';
+    ctx.font = '500 36px system-ui, -apple-system, sans-serif';
+    ctx.fillText('Accede a contenido exclusivo, canciones inéditas y sorteos de merch', canvas.width / 2, curY);
+    curY += 90;
 
- // Código QR Central Gigante (1400 x 1400 px)
- const qrSize = 1400;
- const qrX = (canvas.width - qrSize) / 2;
- const qrY = curY;
+    // Código QR Central Gigante (1400 x 1400 px)
+    const qrSize = 1400;
+    const qrX = (canvas.width - qrSize) / 2;
+    const qrY = curY;
 
- // Caja de fondo del QR
- ctx.fillStyle = '#ffffff';
- ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
- ctx.shadowBlur = 40;
- ctx.shadowOffsetY = 20;
- ctx.fillRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
- ctx.shadowColor = 'transparent';
+    // Caja de fondo del QR
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 20;
+    ctx.fillRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
+    ctx.shadowColor = 'transparent';
 
- ctx.strokeStyle = 'var(--acc)';
- ctx.lineWidth = 16;
- ctx.strokeRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
+    ctx.strokeStyle = 'var(--acc)';
+    ctx.lineWidth = 16;
+    ctx.strokeRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
 
- ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
- // Overlay del logo en el centro del QR
- if (logoImg) {
- const centerLogoSize = 280;
- const cx = qrX + (qrSize - centerLogoSize) / 2;
- const cy = qrY + (qrSize - centerLogoSize) / 2;
- 
- ctx.fillStyle = '#ffffff';
- ctx.strokeStyle = 'var(--acc)';
- ctx.lineWidth = 10;
- ctx.beginPath();
- ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
- ctx.fill();
- ctx.stroke();
+    // Overlay del logo en el centro del QR
+    if (logoImg) {
+      const centerLogoSize = 280;
+      const cx = qrX + (qrSize - centerLogoSize) / 2;
+      const cy = qrY + (qrSize - centerLogoSize) / 2;
 
- ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
- }
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = 'var(--acc)';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
+      ctx.fill();
+      ctx.stroke();
 
- curY = qrY + qrSize + 140;
+      ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
+    }
 
- // URL legible en el pie de página
- if (options.url) {
- ctx.fillStyle = '#0f172a';
- ctx.font = 'bold 36px monospace';
- ctx.fillText(options.url, canvas.width / 2, curY);
- }
+    curY = qrY + qrSize + 140;
 
- // Pie de marca
- ctx.fillStyle = '#94a3b8';
- ctx.font = '500 28px system-ui, -apple-system, sans-serif';
- ctx.fillText('BandManager • Gestión y Captura de Fans para Músicos', canvas.width / 2, canvas.height - 100);
+    // URL legible en el pie de página
+    if (options.url) {
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 36px monospace';
+      ctx.fillText(options.url, canvas.width / 2, curY);
+    }
 
- } else if (template === 'badge-card') {
- // Tarjeta Cuadrada para Merchandising / Pegatina 2400 x 2400 px
- canvas.width = 2400;
- canvas.height = 2400;
+    // Pie de marca
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '500 28px system-ui, -apple-system, sans-serif';
+    ctx.fillText('BandManager • Gestión y Captura de Fans para Músicos', canvas.width / 2, canvas.height - 100);
+  } else if (template === 'badge-card') {
+    // Tarjeta Cuadrada para Merchandising / Pegatina 2400 x 2400 px
+    canvas.width = 2400;
+    canvas.height = 2400;
 
- ctx.fillStyle = '#ffffff';
- ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
- ctx.strokeStyle = 'var(--acc)';
- ctx.lineWidth = 20;
- ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+    ctx.strokeStyle = 'var(--acc)';
+    ctx.lineWidth = 20;
+    ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
- let curY = 180;
- ctx.fillStyle = '#0f172a';
- ctx.font = '900 70px system-ui, -apple-system, sans-serif';
- ctx.textAlign = 'center';
- ctx.fillText((options.bandName || 'ÚNETE A LA COMUNIDAD').toUpperCase(), canvas.width / 2, curY);
- curY += 70;
+    let curY = 180;
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '900 70px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText((options.bandName || 'ÚNETE A LA COMUNIDAD').toUpperCase(), canvas.width / 2, curY);
+    curY += 70;
 
- if (options.concertTitle) {
- ctx.fillStyle = 'var(--acc)';
- ctx.font = '700 44px system-ui, -apple-system, sans-serif';
- ctx.fillText(options.concertTitle, canvas.width / 2, curY);
- curY += 70;
- }
+    if (options.concertTitle) {
+      ctx.fillStyle = 'var(--acc)';
+      ctx.font = '700 44px system-ui, -apple-system, sans-serif';
+      ctx.fillText(options.concertTitle, canvas.width / 2, curY);
+      curY += 70;
+    }
 
- const qrSize = 1500;
- const qrX = (canvas.width - qrSize) / 2;
- const qrY = curY + 20;
+    const qrSize = 1500;
+    const qrX = (canvas.width - qrSize) / 2;
+    const qrY = curY + 20;
 
- ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
- if (logoImg) {
- const centerLogoSize = 300;
- const cx = qrX + (qrSize - centerLogoSize) / 2;
- const cy = qrY + (qrSize - centerLogoSize) / 2;
- 
- ctx.fillStyle = '#ffffff';
- ctx.strokeStyle = 'var(--acc)';
- ctx.lineWidth = 10;
- ctx.beginPath();
- ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
- ctx.fill();
- ctx.stroke();
+    if (logoImg) {
+      const centerLogoSize = 300;
+      const cx = qrX + (qrSize - centerLogoSize) / 2;
+      const cy = qrY + (qrSize - centerLogoSize) / 2;
 
- ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
- }
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = 'var(--acc)';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
+      ctx.fill();
+      ctx.stroke();
 
- curY = qrY + qrSize + 100;
- ctx.fillStyle = '#475569';
- ctx.font = 'bold 36px monospace';
- ctx.fillText(options.url || '', canvas.width / 2, curY);
+      ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
+    }
 
- } else {
- // QR-ONLY (3000 x 3000 px Ultra HD limpio para maquetadores)
- const dim = 3000;
- canvas.width = dim;
- canvas.height = dim;
+    curY = qrY + qrSize + 100;
+    ctx.fillStyle = '#475569';
+    ctx.font = 'bold 36px monospace';
+    ctx.fillText(options.url || '', canvas.width / 2, curY);
+  } else {
+    // QR-ONLY (3000 x 3000 px Ultra HD limpio para maquetadores)
+    const dim = 3000;
+    canvas.width = dim;
+    canvas.height = dim;
 
- // Fondo blanco puro
- ctx.fillStyle = '#ffffff';
- ctx.fillRect(0, 0, dim, dim);
+    // Fondo blanco puro
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, dim, dim);
 
- // Padding de silencio de 200px
- const pad = 200;
- const qrSize = dim - (pad * 2);
- ctx.drawImage(qrImg, pad, pad, qrSize, qrSize);
+    // Padding de silencio de 200px
+    const pad = 200;
+    const qrSize = dim - pad * 2;
+    ctx.drawImage(qrImg, pad, pad, qrSize, qrSize);
 
- // Logo central integrado en HD
- if (logoImg) {
- const centerLogoSize = Math.round(qrSize * 0.22);
- const cx = pad + (qrSize - centerLogoSize) / 2;
- const cy = pad + (qrSize - centerLogoSize) / 2;
+    // Logo central integrado en HD
+    if (logoImg) {
+      const centerLogoSize = Math.round(qrSize * 0.22);
+      const cx = pad + (qrSize - centerLogoSize) / 2;
+      const cy = pad + (qrSize - centerLogoSize) / 2;
 
- ctx.fillStyle = '#ffffff';
- ctx.strokeStyle = 'var(--acc)';
- ctx.lineWidth = 16;
- ctx.beginPath();
- ctx.roundRect(cx - 20, cy - 20, centerLogoSize + 40, centerLogoSize + 40, 32);
- ctx.fill();
- ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = 'var(--acc)';
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.roundRect(cx - 20, cy - 20, centerLogoSize + 40, centerLogoSize + 40, 32);
+      ctx.fill();
+      ctx.stroke();
 
- ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
- }
- }
+      ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
+    }
+  }
 
- URL.revokeObjectURL(svgUrl);
+  URL.revokeObjectURL(svgUrl);
 
- // Descarga como archivo PNG
- canvas.toBlob((blob) => {
- if (!blob) return;
- const url = URL.createObjectURL(blob);
- const link = document.createElement('a');
- link.href = url;
- link.download = `${options.filename || 'codigo-qr-ultra-hd'}-${template}.png`;
- document.body.appendChild(link);
- link.click();
- document.body.removeChild(link);
- URL.revokeObjectURL(url);
- }, 'image/png', 1.0);
+  // Descarga como archivo PNG
+  canvas.toBlob(
+    (blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${options.filename || 'codigo-qr-ultra-hd'}-${template}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+    'image/png',
+    1.0
+  );
 }
 
 /**
@@ -374,38 +376,38 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
  * Abre un diálogo de impresión maquetado con estilos A4 listos para imprimir en cualquier impresora o guardar como PDF vectorial.
  */
 export function printHighQualityFlyer(options: {
- svgElementId?: string;
- svgElement?: SVGElement | null;
- bandName?: string;
- concertTitle?: string;
- dateCity?: string;
- url: string;
- logoUrl?: string;
- ctaText?: string;
- subtitle?: string;
+  svgElementId?: string;
+  svgElement?: SVGElement | null;
+  bandName?: string;
+  concertTitle?: string;
+  dateCity?: string;
+  url: string;
+  logoUrl?: string;
+  ctaText?: string;
+  subtitle?: string;
 }) {
- const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
- if (!svgEl) {
- alert('No se pudo encontrar el código QR para imprimir');
- return;
- }
+  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
+  if (!svgEl) {
+    alert('No se pudo encontrar el código QR para imprimir');
+    return;
+  }
 
- const svgString = getCleanSvgString(svgEl);
- const printWin = window.open('', '_blank');
- if (!printWin) {
- alert('Por favor habilita las ventanas emergentes (pop-ups) en tu navegador para imprimir el cartel.');
- return;
- }
+  const svgString = getCleanSvgString(svgEl);
+  const printWin = window.open('', '_blank');
+  if (!printWin) {
+    alert('Por favor habilita las ventanas emergentes (pop-ups) en tu navegador para imprimir el cartel.');
+    return;
+  }
 
- const bandName = options.bandName || 'BANDA';
- const concertTitle = options.concertTitle || 'Directo en Vivo';
- const dateCity = options.dateCity || '';
- const url = options.url || '';
- const logoUrl = options.logoUrl || '';
- const cta = options.ctaText || '¡ESCANEA CON TU MÓVIL!';
- const subtitle = options.subtitle || 'Únete a nuestra comunidad oficial, accede a canciones inéditas, sorpresas exclusivas y sorteos.';
+  const bandName = options.bandName || 'BANDA';
+  const concertTitle = options.concertTitle || 'Directo en Vivo';
+  const dateCity = options.dateCity || '';
+  const url = options.url || '';
+  const logoUrl = options.logoUrl || '';
+  const cta = options.ctaText || '¡ESCANEA CON TU MÓVIL!';
+  const subtitle = options.subtitle || 'Únete a nuestra comunidad oficial, accede a canciones inéditas, sorpresas exclusivas y sorteos.';
 
- printWin.document.write(`
+  printWin.document.write(`
  <!DOCTYPE html>
  <html lang="es">
  <head>
@@ -575,11 +577,15 @@ export function printHighQualityFlyer(options: {
 
  <div class="qr-wrapper">
  <div id="svg-container">${svgString}</div>
- ${logoUrl ? `
+ ${
+   logoUrl
+     ? `
  <div class="qr-center-logo">
  <img src="${logoUrl}" alt="Logo" />
  </div>
- ` : ''}
+ `
+     : ''
+ }
  </div>
 
  <div class="url-box">${url}</div>
@@ -593,5 +599,5 @@ export function printHighQualityFlyer(options: {
  </body>
  </html>
  `);
- printWin.document.close();
+  printWin.document.close();
 }

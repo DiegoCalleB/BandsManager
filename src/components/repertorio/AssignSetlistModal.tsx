@@ -5,135 +5,128 @@ import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 
 interface AssignSetlistModalProps {
- assigningSetlist: Setlist | null;
- colors: ThemeColors;
- concerts: Concert[];
- rehearsals: Rehearsal[];
- selectedConcertToAssign: string;
- onSelectEvent: (id: string) => void;
- onClose: () => void;
- onSave: () => void;
+  assigningSetlist: Setlist | null;
+  colors: ThemeColors;
+  concerts: Concert[];
+  rehearsals: Rehearsal[];
+  selectedConcertToAssign: string;
+  onSelectEvent: (id: string) => void;
+  onClose: () => void;
+  onSave: () => void;
 }
 
 export function AssignSetlistModal({
- assigningSetlist,
- colors,
- concerts,
- rehearsals,
- selectedConcertToAssign,
- onSelectEvent,
- onClose,
- onSave
+  assigningSetlist,
+  colors,
+  concerts,
+  rehearsals,
+  selectedConcertToAssign,
+  onSelectEvent,
+  onClose,
+  onSave,
 }: AssignSetlistModalProps) {
- if (!assigningSetlist) return null;
+  if (!assigningSetlist) return null;
 
- return (
- <ModalPortal isOpen={!!assigningSetlist} onClose={onClose}>
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
- <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
- <div className="flex justify-between items-center pb-3">
- <h3 className={`text-sm font-bold font-sans ${colors.text}`}>
- Asignar Repertorio a Concierto / Ensayo
- </h3>
- <button onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
- <X className="w-4 h-4" />
- </button>
- </div>
+  return (
+    <ModalPortal isOpen={!!assigningSetlist} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] space-y-4 my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
+          <div className="flex justify-between items-center pb-3">
+            <h3 className={`text-sm font-bold font-sans ${colors.text}`}>Asignar Repertorio a Concierto / Ensayo</h3>
+            <button onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
- <p className="text-[10px] text-[var(--ink-2)] font-sans">
- Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
- <strong className="text-[var(--acc)] font-sans">"{assigningSetlist.nombre}"</strong>:
- </p>
+          <p className="text-[10px] text-[var(--ink-2)] font-sans">
+            Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
+            <strong className="text-[var(--acc)] font-sans">"{assigningSetlist.nombre}"</strong>:
+          </p>
 
- <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-sans">
- <div className="text-[10px] text-[var(--acc)] font-bold pt-1">Próximos Conciertos:</div>
- {concerts.length === 0 ? (
- <div className="flex flex-col items-center justify-center py-6">
- <PublicoSilhouette opacity={0.12} size="small" />
- <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin conciertos</p>
- <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
- </div>
- ) : (
- concerts.map(c => (
- <label
- key={c.id}
- className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
- selectedConcertToAssign === c.id
- ? 'bg-[var(--acc)]/15'
- : 'bg-[var(--surface)]/60'
- }`}
- >
- <div className="flex items-center gap-2">
- <input
- type="radio"
- name="event_assign"
- value={c.id}
- checked={selectedConcertToAssign === c.id}
- onChange={() => onSelectEvent(c.id)}
- />
- <div>
- <div className="font-bold text-[var(--ink)]">{c.sala} ({c.ciudad})</div>
- <div className="text-[10px] text-[var(--ink-2)]">{c.fecha}</div>
- </div>
- </div>
- </label>
- ))
- )}
+          <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-sans">
+            <div className="text-[10px] text-[var(--acc)] font-bold pt-1">Próximos Conciertos:</div>
+            {concerts.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-6">
+                <PublicoSilhouette opacity={0.12} size="small" />
+                <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin conciertos</p>
+                <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
+              </div>
+            ) : (
+              concerts.map((c) => (
+                <label
+                  key={c.id}
+                  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
+                    selectedConcertToAssign === c.id ? 'bg-[var(--acc)]/15' : 'bg-[var(--surface)]/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="event_assign"
+                      value={c.id}
+                      checked={selectedConcertToAssign === c.id}
+                      onChange={() => onSelectEvent(c.id)}
+                    />
+                    <div>
+                      <div className="font-bold text-[var(--ink)]">
+                        {c.sala} ({c.ciudad})
+                      </div>
+                      <div className="text-[10px] text-[var(--ink-2)]">{c.fecha}</div>
+                    </div>
+                  </div>
+                </label>
+              ))
+            )}
 
- <div className="text-[10px] text-[var(--ok)] font-bold pt-3">Próximos Ensayos:</div>
- {rehearsals.length === 0 ? (
- <div className="flex flex-col items-center justify-center py-6">
- <PublicoSilhouette opacity={0.12} size="small" />
- <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin ensayos</p>
- <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
- </div>
- ) : (
- rehearsals.map(r => (
- <label
- key={r.id}
- className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
- selectedConcertToAssign === r.id
- ? 'bg-[var(--ok)]/15'
- : 'bg-[var(--surface)]/60'
- }`}
- >
- <div className="flex items-center gap-2">
- <input
- type="radio"
- name="event_assign"
- value={r.id}
- checked={selectedConcertToAssign === r.id}
- onChange={() => onSelectEvent(r.id)}
- />
- <div>
- <div className="font-bold text-[var(--ink)]">Ensayo en {r.lugar}</div>
- <div className="text-[10px] text-[var(--ink-2)]">{r.fecha} a las {r.hora}</div>
- </div>
- </div>
- </label>
- ))
- )}
- </div>
+            <div className="text-[10px] text-[var(--ok)] font-bold pt-3">Próximos Ensayos:</div>
+            {rehearsals.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-6">
+                <PublicoSilhouette opacity={0.12} size="small" />
+                <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin ensayos</p>
+                <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
+              </div>
+            ) : (
+              rehearsals.map((r) => (
+                <label
+                  key={r.id}
+                  className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer ${
+                    selectedConcertToAssign === r.id ? 'bg-[var(--ok)]/15' : 'bg-[var(--surface)]/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="event_assign"
+                      value={r.id}
+                      checked={selectedConcertToAssign === r.id}
+                      onChange={() => onSelectEvent(r.id)}
+                    />
+                    <div>
+                      <div className="font-bold text-[var(--ink)]">Ensayo en {r.lugar}</div>
+                      <div className="text-[10px] text-[var(--ink-2)]">
+                        {r.fecha} a las {r.hora}
+                      </div>
+                    </div>
+                  </div>
+                </label>
+              ))
+            )}
+          </div>
 
- <div className="pt-3 flex justify-end gap-2">
- <button
- onClick={onClose}
- className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-[10px] font-sans"
- >
- Cancelar
- </button>
- <button
- onClick={onSave}
- disabled={!selectedConcertToAssign}
- className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold disabled:opacity-40 ${
-'bg-[var(--acc)] text-[var(--on-acc)]'
- }`}
- >
- Guardar Asignación
- </button>
- </div>
- </div>
- </div>
- </ModalPortal>
- );
+          <div className="pt-3 flex justify-end gap-2">
+            <button onClick={onClose} className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-[10px] font-sans">
+              Cancelar
+            </button>
+            <button
+              onClick={onSave}
+              disabled={!selectedConcertToAssign}
+              className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold disabled:opacity-40 ${'bg-[var(--acc)] text-[var(--on-acc)]'}`}
+            >
+              Guardar Asignación
+            </button>
+          </div>
+        </div>
+      </div>
+    </ModalPortal>
+  );
 }

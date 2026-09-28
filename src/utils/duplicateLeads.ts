@@ -169,8 +169,7 @@ export function calculateLeadCompletenessScore(lead: Lead): number {
   if (lead.telefono && lead.telefono.trim().length > 3) score += 10;
   if (lead.instagram && lead.instagram.trim().length > 2) score += 8;
   if (lead.website && lead.website.trim().length > 4) score += 8;
-  if (lead.contacto_nombre && lead.contacto_nombre.trim().length > 1)
-    score += 8;
+  if (lead.contacto_nombre && lead.contacto_nombre.trim().length > 1) score += 8;
   if (lead.direccion && lead.direccion.trim().length > 3) score += 6;
   if (lead.aforo && lead.aforo > 0) score += 5;
   if (lead.notas && lead.notas.trim().length > 0) score += 5;
@@ -204,10 +203,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
 
   emailMap.forEach((matchedLeads, email) => {
     if (matchedLeads.length > 1) {
-      const sortedByScore = [...matchedLeads].sort(
-        (a, b) =>
-          calculateLeadCompletenessScore(b) - calculateLeadCompletenessScore(a)
-      );
+      const sortedByScore = [...matchedLeads].sort((a, b) => calculateLeadCompletenessScore(b) - calculateLeadCompletenessScore(a));
       groups.push({
         id: `dup-email-${email}`,
         matchReason: 'same_email',
@@ -249,11 +245,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
 
       if (unvisited.length > 1) {
         const [cleanName, cleanCity] = key.split('|');
-        const sortedByScore = [...matchedLeads].sort(
-          (a, b) =>
-            calculateLeadCompletenessScore(b) -
-            calculateLeadCompletenessScore(a)
-        );
+        const sortedByScore = [...matchedLeads].sort((a, b) => calculateLeadCompletenessScore(b) - calculateLeadCompletenessScore(a));
         groups.push({
           id: `dup-namecity-${key}`,
           matchReason: 'same_name_and_city',
@@ -265,9 +257,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
 
         for (let i = 0; i < matchedLeads.length; i++) {
           for (let j = i + 1; j < matchedLeads.length; j++) {
-            visitedPairKeys.add(
-              [matchedLeads[i].id, matchedLeads[j].id].sort().join(':')
-            );
+            visitedPairKeys.add([matchedLeads[i].id, matchedLeads[j].id].sort().join(':'));
           }
         }
       }
@@ -304,11 +294,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
         const sim = stringSimilarity(normA, normB);
         if (sim >= 0.82) {
           visitedPairKeys.add(pairKey);
-          const sorted = [a, b].sort(
-            (x, y) =>
-              calculateLeadCompletenessScore(y) -
-              calculateLeadCompletenessScore(x)
-          );
+          const sorted = [a, b].sort((x, y) => calculateLeadCompletenessScore(y) - calculateLeadCompletenessScore(x));
           groups.push({
             id: `dup-sim-${a.id}-${b.id}`,
             matchReason: 'similar_name_same_city',
@@ -324,23 +310,11 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
 
   // 4. Mismo Website o Instagram (si no es vacío ni dominio genérico)
   const webMap = new Map<string, Lead[]>();
-  const IGNORED_DOMAINS = [
-    'facebook.com',
-    'instagram.com',
-    'linktr.ee',
-    'google.com',
-    'youtube.com',
-    'twitter.com',
-    'x.com',
-  ];
+  const IGNORED_DOMAINS = ['facebook.com', 'instagram.com', 'linktr.ee', 'google.com', 'youtube.com', 'twitter.com', 'x.com'];
 
   for (const lead of leads) {
     const normWeb = normalizeWebOrHandle(lead.website);
-    if (
-      normWeb &&
-      normWeb.length > 5 &&
-      !IGNORED_DOMAINS.some((d) => normWeb === d || normWeb === d + '/')
-    ) {
+    if (normWeb && normWeb.length > 5 && !IGNORED_DOMAINS.some((d) => normWeb === d || normWeb === d + '/')) {
       if (!webMap.has(normWeb)) webMap.set(normWeb, []);
       webMap.get(normWeb)!.push(lead);
     }
@@ -350,16 +324,10 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
     if (matchedLeads.length > 1) {
       const unvisited = matchedLeads.filter((l, idx) => {
         if (idx === 0) return true;
-        return !visitedPairKeys.has(
-          [matchedLeads[0].id, l.id].sort().join(':')
-        );
+        return !visitedPairKeys.has([matchedLeads[0].id, l.id].sort().join(':'));
       });
       if (unvisited.length > 1) {
-        const sorted = [...matchedLeads].sort(
-          (x, y) =>
-            calculateLeadCompletenessScore(y) -
-            calculateLeadCompletenessScore(x)
-        );
+        const sorted = [...matchedLeads].sort((x, y) => calculateLeadCompletenessScore(y) - calculateLeadCompletenessScore(x));
         groups.push({
           id: `dup-web-${normWeb}`,
           matchReason: 'same_website',
@@ -370,9 +338,7 @@ export function findDuplicateLeads(leads: Lead[]): DuplicateGroup[] {
         });
         for (let i = 0; i < matchedLeads.length; i++) {
           for (let j = i + 1; j < matchedLeads.length; j++) {
-            visitedPairKeys.add(
-              [matchedLeads[i].id, matchedLeads[j].id].sort().join(':')
-            );
+            visitedPairKeys.add([matchedLeads[i].id, matchedLeads[j].id].sort().join(':'));
           }
         }
       }
@@ -396,8 +362,7 @@ export function mergeTwoLeads(primary: Lead, secondary: Lead): Lead {
   } else if (
     secondary.email_contacto?.trim() &&
     merged.email_contacto?.trim() &&
-    normalizeEmail(secondary.email_contacto) !==
-      normalizeEmail(merged.email_contacto) &&
+    normalizeEmail(secondary.email_contacto) !== normalizeEmail(merged.email_contacto) &&
     !merged.email_secundario
   ) {
     merged.email_secundario = secondary.email_contacto.trim();
@@ -423,11 +388,7 @@ export function mergeTwoLeads(primary: Lead, secondary: Lead): Lead {
     merged.direccion = secondary.direccion.trim();
   }
 
-  if (
-    (!merged.aforo || merged.aforo <= 0) &&
-    secondary.aforo &&
-    secondary.aforo > 0
-  ) {
+  if ((!merged.aforo || merged.aforo <= 0) && secondary.aforo && secondary.aforo > 0) {
     merged.aforo = secondary.aforo;
   }
 
@@ -446,19 +407,13 @@ export function mergeTwoLeads(primary: Lead, secondary: Lead): Lead {
   const primaryNotes = (primary.notas || '').trim();
   const secondaryNotes = (secondary.notas || '').trim();
   if (secondaryNotes && !primaryNotes.includes(secondaryNotes)) {
-    merged.notas = primaryNotes
-      ? `${primaryNotes}\n\n[Fusionado de ${secondary.nombre_sala}]: ${secondaryNotes}`
-      : secondaryNotes;
+    merged.notas = primaryNotes ? `${primaryNotes}\n\n[Fusionado de ${secondary.nombre_sala}]: ${secondaryNotes}` : secondaryNotes;
   }
 
   // Combinar historial de mensajes/hilo si existen
   if (secondary.hilo_emails && secondary.hilo_emails.length > 0) {
-    const existingMsgIds = new Set(
-      (merged.hilo_emails || []).map((m) => m.id || `${m.fecha}-${m.asunto}`)
-    );
-    const newEmails = secondary.hilo_emails.filter(
-      (m) => !existingMsgIds.has(m.id || `${m.fecha}-${m.asunto}`)
-    );
+    const existingMsgIds = new Set((merged.hilo_emails || []).map((m) => m.id || `${m.fecha}-${m.asunto}`));
+    const newEmails = secondary.hilo_emails.filter((m) => !existingMsgIds.has(m.id || `${m.fecha}-${m.asunto}`));
     merged.hilo_emails = [...(merged.hilo_emails || []), ...newEmails];
   }
 
@@ -478,11 +433,7 @@ export function checkSingleLeadDuplicate(
 
   for (const existing of existingLeads) {
     // 1. Mismo email
-    if (
-      normEmail &&
-      normEmail.includes('@') &&
-      normalizeEmail(existing.email_contacto) === normEmail
-    ) {
+    if (normEmail && normEmail.includes('@') && normalizeEmail(existing.email_contacto) === normEmail) {
       return {
         isDuplicate: true,
         matchedLead: existing,
@@ -494,13 +445,7 @@ export function checkSingleLeadDuplicate(
     const exName = normalizeVenueName(existing.nombre_sala);
     const exCity = normalizeText(existing.ciudad);
     if (normName.length >= 3 && exName === normName) {
-      if (
-        !normCity ||
-        !exCity ||
-        normCity === exCity ||
-        normCity === 'espana' ||
-        exCity === 'espana'
-      ) {
+      if (!normCity || !exCity || normCity === exCity || normCity === 'espana' || exCity === 'espana') {
         return {
           isDuplicate: true,
           matchedLead: existing,

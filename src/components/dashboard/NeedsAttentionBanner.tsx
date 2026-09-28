@@ -30,21 +30,17 @@ const diasDesde = (fechaIso: string): number => {
  * esto primero". Alcance a propósito: solo datos que ya existen (leads, conciertos), nada de
  * push/email — eso es una capa aparte para más adelante.
  */
-export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({
-  concerts = [],
-  leads = [],
-  onNavigate
-}) => {
+export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({ concerts = [], leads = [], onNavigate }) => {
   const hoyIso = new Date().toISOString().slice(0, 10);
 
   const leadsSinResponder = leads
-    .filter(l => (l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo')) && l.fecha_envio)
-    .map(l => ({ lead: l, dias: diasDesde(l.fecha_envio!) }))
+    .filter((l) => (l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo')) && l.fecha_envio)
+    .map((l) => ({ lead: l, dias: diasDesde(l.fecha_envio!) }))
     .filter(({ dias }) => dias >= 3);
 
   const cobrosPendientes = concerts
-    .filter(c => c.fecha < hoyIso && c.estado_pago !== 'pagado')
-    .map(c => ({ concert: c, dias: diasDesde(c.fecha) }))
+    .filter((c) => c.fecha < hoyIso && c.estado_pago !== 'pagado')
+    .map((c) => ({ concert: c, dias: diasDesde(c.fecha) }))
     .filter(({ dias }) => dias >= 7);
 
   const items: AttentionItem[] = [
@@ -72,12 +68,10 @@ export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({
     <div className="p-4 rounded-[var(--r-l)] bg-[var(--alert)]/10 space-y-2.5">
       <div className="flex items-center gap-2 text-[var(--alert)]">
         <AlertCircle className="w-4 h-4 shrink-0" />
-        <span className="text-xs font-sans font-bold uppercase tracking-wide">
-          Mira esto primero
-        </span>
+        <span className="text-xs font-sans font-bold uppercase tracking-wide">Mira esto primero</span>
       </div>
       <div className="space-y-1.5">
-        {items.map(item => (
+        {items.map((item) => (
           <button
             key={item.id}
             type="button"

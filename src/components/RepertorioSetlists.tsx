@@ -7,24 +7,10 @@
  react-hooks/immutability
 */
 import { getLowLatencyAudioStream } from '../utils/audioLatency';
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { api } from '../services/api';
-import {
-  ThemeColors,
-  Song,
-  Setlist,
-  SetlistItem,
-  Concert,
-  Rehearsal,
-  SetlistShortcut,
-} from '../types';
+import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { usePlayer } from '../context/PlayerContext';
 import {
@@ -93,10 +79,7 @@ import { useCatalogFilters } from '../hooks/useCatalogFilters';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { useStagePlayer } from '../hooks/useStagePlayer';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
-import {
-  ConfirmDeleteAlbumModal,
-  ConfirmDeleteAlbumData,
-} from './repertorio/ConfirmDeleteAlbumModal';
+import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
 import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
 import { AssignSetlistModal } from './repertorio/AssignSetlistModal';
 import { SongModal } from './repertorio/SongModal';
@@ -105,12 +88,7 @@ import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
-import {
-  PerfectSetlistModal,
-  PerfectSetlistAction,
-  PerfectSetlistPlan,
-  SetlistFeedbackInput,
-} from './repertorio/PerfectSetlistModal';
+import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
@@ -120,10 +98,7 @@ import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
 import { cacheActiveStageSetlist } from '../utils/stageOfflineCache';
-import {
-  formatSongTitle,
-  normalizeSongTitlesInList,
-} from '../utils/formatSongTitle';
+import { formatSongTitle, normalizeSongTitlesInList } from '../utils/formatSongTitle';
 import { AlbumCover } from './AlbumCover';
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import {
@@ -134,25 +109,10 @@ import {
   saveSetlistsToLocalStorageSafely,
   resolveAudioUrl,
 } from '../utils/audioStorage';
-import {
-  calculateSetlistStats,
-  resolveBandMembers,
-  BandMemberOption,
-} from '../utils/repertorioUtils';
-import {
-  queuePendingSetlistSync,
-  clearPendingSetlistSync,
-  getPendingSetlistSyncs,
-} from '../utils/offlineSync';
-import {
-  analyzeSetlistEnergy,
-  getEnergyInfo,
-  calcularCurvaEnergiaIdeal,
-} from '../utils/energyPacingUtils';
-import {
-  parseTonalidad,
-  evaluarTransicionArmonica,
-} from '../utils/harmonicAnalysis';
+import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
+import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
+import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
+import { parseTonalidad, evaluarTransicionArmonica } from '../utils/harmonicAnalysis';
 import {
   optimizarOrdenPorTransiciones,
   costeTotalTransiciones,
@@ -227,13 +187,8 @@ export function formatSecondsToMmSs(secs: number): string {
 }
 
 function getTokenValueForPrint(tokenName: string): string {
-  const style =
-    typeof document !== 'undefined'
-      ? getComputedStyle(document.documentElement)
-      : null;
-  return style
-    ? style.getPropertyValue(tokenName).trim() || '#666666'
-    : '#666666';
+  const style = typeof document !== 'undefined' ? getComputedStyle(document.documentElement) : null;
+  return style ? style.getPropertyValue(tokenName).trim() || '#666666' : '#666666';
 }
 
 function generatePdfStylesheet(): string {
@@ -296,10 +251,7 @@ function generatePdfStylesheet(): string {
  `;
 }
 
-export const SHOW_ITEM_TYPES: Record<
-  string,
-  { label: string; icon: string; bg: string; text: string }
-> = {
+export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string }> = {
   header: {
     label: 'Encabezado de Bloque / Sección',
     icon: '⚡',
@@ -368,11 +320,9 @@ export const SHOW_ITEM_TYPES: Record<
 // cursor mientras se arrastra. Se crea una sola vez a nivel de módulo para que ya esté decodificada
 // cuando el usuario arrastre de verdad — el reordenamiento en sí no cambia, solo desaparece la foto.
 // window.Image (no el icono `Image` de lucide-react importado arriba, que shadowea el global).
-const TRANSPARENT_DRAG_IMAGE =
-  typeof window !== 'undefined' ? new window.Image() : null;
+const TRANSPARENT_DRAG_IMAGE = typeof window !== 'undefined' ? new window.Image() : null;
 if (TRANSPARENT_DRAG_IMAGE) {
-  TRANSPARENT_DRAG_IMAGE.src =
-    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
+  TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
 }
 
 const DEFAULT_SONGS: Song[] = [
@@ -459,8 +409,7 @@ const DEFAULT_SONGS: Song[] = [
     estadoTema: 'listo',
     esVersionCovers: false,
     enlaceAcordes: 'https://drive.google.com',
-    notasInternas:
-      'Intro con sección de vientos y solo de trompeta. Gran fuerza en estribillos.',
+    notasInternas: 'Intro con sección de vientos y solo de trompeta. Gran fuerza en estribillos.',
   },
   {
     id: 'song-2',
@@ -473,8 +422,7 @@ const DEFAULT_SONGS: Song[] = [
     albumDisco: 'Álbum Debut (2025)',
     estadoTema: 'listo',
     esVersionCovers: false,
-    notasInternas:
-      'Subida progresiva al final. Tema estelar de cierre en festival.',
+    notasInternas: 'Subida progresiva al final. Tema estelar de cierre en festival.',
   },
   {
     id: 'song-3',
@@ -500,8 +448,7 @@ const DEFAULT_SONGS: Song[] = [
     albumDisco: 'Single 2026',
     estadoTema: 'listo',
     esVersionCovers: false,
-    notasInternas:
-      'Ritmo acelerado ska. Ideal para subir la energía a mitad del concierto.',
+    notasInternas: 'Ritmo acelerado ska. Ideal para subir la energía a mitad del concierto.',
   },
   {
     id: 'song-5',
@@ -514,8 +461,7 @@ const DEFAULT_SONGS: Song[] = [
     albumDisco: 'Álbum Debut (2025)',
     estadoTema: 'listo',
     esVersionCovers: false,
-    notasInternas:
-      'Balada rock progresiva con solo de violín de Raúl en la sección central.',
+    notasInternas: 'Balada rock progresiva con solo de violín de Raúl en la sección central.',
   },
   {
     id: 'song-6',
@@ -540,8 +486,7 @@ const DEFAULT_SONGS: Song[] = [
     albumDisco: 'Inéditas / En Proceso',
     estadoTema: 'ensayando',
     esVersionCovers: false,
-    notasInternas:
-      'Sátira sobre los bots y mánagers virtuales. Ensayando para el próximo EP.',
+    notasInternas: 'Sátira sobre los bots y mánagers virtuales. Ensayando para el próximo EP.',
   },
   {
     id: 'song-8',
@@ -562,8 +507,7 @@ const DEFAULT_SETLISTS: Setlist[] = [
   {
     id: 'setlist-1',
     nombre: 'Festival Directo Caña 45 min',
-    descripcion:
-      'Estructura ágil en 3 bloques (Calentamiento, Nudo y Desenlace) con beatbox y presentación',
+    descripcion: 'Estructura ágil en 3 bloques (Calentamiento, Nudo y Desenlace) con beatbox y presentación',
     tipoFormato: 'festival',
     duracionTotalEstimadaMinutos: 45,
     fechaCreacion: '2026-03-01',
@@ -594,8 +538,7 @@ const DEFAULT_SETLISTS: Setlist[] = [
         tituloCustom: 'Solo de Percusión / Intro Vocal',
         duracionEstimadaMinutos: 2,
         duracionEstimadaSegundos: 120,
-        notaTema:
-          'Luz cenital sobre el solista. La base rítmica marca el pulso.',
+        notaTema: 'Luz cenital sobre el solista. La base rítmica marca el pulso.',
       },
 
       {
@@ -658,8 +601,7 @@ const DEFAULT_SETLISTS: Setlist[] = [
   {
     id: 'setlist-2',
     nombre: 'Concierto Sala Larga 75 min',
-    descripcion:
-      'Setlist completo con bloque acústico, solos e intros explicativas',
+    descripcion: 'Setlist completo con bloque acústico, solos e intros explicativas',
     tipoFormato: 'sala_larga',
     duracionTotalEstimadaMinutos: 75,
     fechaCreacion: '2026-04-10',
@@ -740,8 +682,7 @@ export default function RepertorioSetlists({
 }: RepertorioSetlistsProps) {
   const { t } = useLanguage();
   const isLightTheme =
-    (typeof document !== 'undefined' &&
-      document.documentElement.dataset.theme === 'light') ||
+    (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light') ||
     colors.name?.toLowerCase().includes('light') ||
     colors.bg.includes('f8fafc') ||
     colors.bg.includes('white') ||
@@ -749,11 +690,7 @@ export default function RepertorioSetlists({
     false;
   const bName = bandName || 'Tu Banda';
 
-  const {
-    isOpen: isTutorialOpen,
-    openTutorial,
-    closeTutorial,
-  } = useModuleTutorial('repertorio');
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('repertorio');
 
   const cleanBand = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
   const isBakandeya = cleanBand === 'bakandeya';
@@ -776,11 +713,7 @@ export default function RepertorioSetlists({
         if (!s || typeof s !== 'object') return false;
         const sId = (s.id || '').toLowerCase();
         if (sId.startsWith('sample-track-')) return true;
-        if (
-          sId.startsWith('song-cm-') ||
-          /^song-[1-8]$/.test(sId) ||
-          sId.startsWith('live_song_')
-        ) {
+        if (sId.startsWith('song-cm-') || /^song-[1-8]$/.test(sId) || sId.startsWith('live_song_')) {
           return false;
         }
         return true;
@@ -806,12 +739,8 @@ export default function RepertorioSetlists({
 
   // Navigation tab inside module
   const [showPdfPreview, setShowPdfPreview] = useState(false);
-  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists'>(
-    'setlists'
-  );
-  const [catalogoViewMode, setCatalogoViewMode] = useState<
-    'albumes' | 'canciones'
-  >('albumes');
+  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists'>('setlists');
+  const [catalogoViewMode, setCatalogoViewMode] = useState<'albumes' | 'canciones'>('albumes');
 
   // Sync activeTab with the view prop (when navigating from sidebar)
   useEffect(() => {
@@ -870,12 +799,7 @@ export default function RepertorioSetlists({
       try {
         const res = await api.getSongs();
         // Solo actualizar si la API devuelve canciones (array no-vacío)
-        if (
-          isMounted &&
-          res?.songs &&
-          Array.isArray(res.songs) &&
-          res.songs.length > 0
-        ) {
+        if (isMounted && res?.songs && Array.isArray(res.songs) && res.songs.length > 0) {
           setSongs(res.songs);
         }
       } catch (err) {
@@ -937,18 +861,11 @@ export default function RepertorioSetlists({
     }
   }, [activeSetlistId]);
 
-  const activeSetlist = useMemo(
-    () => setlists.find((s) => s.id === activeSetlistId) || setlists[0] || null,
-    [setlists, activeSetlistId]
-  );
+  const activeSetlist = useMemo(() => setlists.find((s) => s.id === activeSetlistId) || setlists[0] || null, [setlists, activeSetlistId]);
 
   // Performance mode for showing song structures during concert
-  const [performanceSetlistId, setPerformanceSetlistId] = useState<
-    string | null
-  >(null);
-  const [performanceInitialMode, setPerformanceInitialMode] = useState<
-    'directo' | 'ensayo'
-  >('directo');
+  const [performanceSetlistId, setPerformanceSetlistId] = useState<string | null>(null);
+  const [performanceInitialMode, setPerformanceInitialMode] = useState<'directo' | 'ensayo'>('directo');
 
   // Custom"quick add" shortcuts the band created itself for the"Rápidos" row below, on top of
   // the built-in ones (Presentación, Chapa, BIS...). Persisted per band in Supabase via
@@ -959,12 +876,7 @@ export default function RepertorioSetlists({
   const [newShortcutLabel, setNewShortcutLabel] = useState('');
   const [newShortcutMinutes, setNewShortcutMinutes] = useState<number>(1);
 
-  const {
-    shareModalData,
-    setShareModalData,
-    handleShareSetlist,
-    handleShareSong,
-  } = useShareModal(songs, bName);
+  const { shareModalData, setShareModalData, handleShareSetlist, handleShareSong } = useShareModal(songs, bName);
 
   // Filter States for Catalog
   const {
@@ -1005,22 +917,14 @@ export default function RepertorioSetlists({
   } = useAudioPlayer();
 
   // Global player context for persistent playback across modules
-  const {
-    currentSong: playerCurrentSong,
-    setCurrentSong,
-    setSongs: setPlayerSongs,
-    setIsPlaying: setPlayerIsPlaying,
-  } = usePlayer();
+  const { currentSong: playerCurrentSong, setCurrentSong, setSongs: setPlayerSongs, setIsPlaying: setPlayerIsPlaying } = usePlayer();
 
   // Inicializar reproductor global con canción aleatoria que tenga audio (solo si está vacío)
   useEffect(() => {
     if (!playerCurrentSong) {
-      const songsWithAudio = songs.filter(
-        (s) => s.audioUrl || s.audioPrincipalUrl
-      );
+      const songsWithAudio = songs.filter((s) => s.audioUrl || s.audioPrincipalUrl);
       if (songsWithAudio.length > 0) {
-        const randomSong =
-          songsWithAudio[Math.floor(Math.random() * songsWithAudio.length)];
+        const randomSong = songsWithAudio[Math.floor(Math.random() * songsWithAudio.length)];
         setCurrentSong(randomSong);
       }
     }
@@ -1056,16 +960,9 @@ export default function RepertorioSetlists({
   // Catálogo/Discografía);"Reproducir desde aquí" en una fila de Repertorio la sustituye por las
   // canciones de ESE repertorio, en su orden. Se resetea a null (= catálogo) desde cualquier
   // entrada de reproducción que no venga de un repositorio.
-  const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(
-    null
-  );
+  const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
   const selectPlayerSongWithQueue = useCallback(
-    (
-      song: Song | null,
-      autoPlay: boolean = false,
-      queue: Song[] | null = null,
-      transposeSemitones: number = 0
-    ) => {
+    (song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null, transposeSemitones: number = 0) => {
       setPlayerQueueOverride(queue);
       handleSelectPlayerSong(song, autoPlay, transposeSemitones);
       // Dispatch to global player for persistent playback
@@ -1077,13 +974,7 @@ export default function RepertorioSetlists({
         setCurrentSong(null);
       }
     },
-    [
-      handleSelectPlayerSong,
-      setCurrentSong,
-      setPlayerSongs,
-      setPlayerIsPlaying,
-      songs,
-    ]
+    [handleSelectPlayerSong, setCurrentSong, setPlayerSongs, setPlayerIsPlaying, songs]
   );
 
   // Song Modal State
@@ -1093,8 +984,7 @@ export default function RepertorioSetlists({
 
   // Studio Ideas Modal State
   const [activeStudioSong, setActiveStudioSong] = useState<Song | null>(null);
-  const [activeStudioOpenIris, setActiveStudioOpenIris] =
-    useState<boolean>(false);
+  const [activeStudioOpenIris, setActiveStudioOpenIris] = useState<boolean>(false);
 
   const handleOpenStudioModal = useCallback(
     (song: Song | null, opts?: { openIris?: boolean }) => {
@@ -1107,8 +997,7 @@ export default function RepertorioSetlists({
 
   // Chords Viewer Modal State
   const [activeChordsSong, setActiveChordsSong] = useState<Song | null>(null);
-  const [activeMemberNotesSong, setActiveMemberNotesSong] =
-    useState<Song | null>(null);
+  const [activeMemberNotesSong, setActiveMemberNotesSong] = useState<Song | null>(null);
 
   // Transition Preview Modal State (para comprobar el enlace auditivo/armónico entre temas consecutivos)
   const [transitionPreviewData, setTransitionPreviewData] = useState<{
@@ -1125,8 +1014,7 @@ export default function RepertorioSetlists({
     (idxA: number, idxB: number) => {
       if (!activeSetlist || !activeSetlist.items) return;
       const items = activeSetlist.items;
-      if (idxA < 0 || idxB < 0 || idxA >= items.length || idxB >= items.length)
-        return;
+      if (idxA < 0 || idxB < 0 || idxA >= items.length || idxB >= items.length) return;
 
       const itA = items[idxA];
       const itB = items[idxB];
@@ -1149,20 +1037,11 @@ export default function RepertorioSetlists({
   );
 
   // Selected item in active setlist (for intelligent insertion beneath selected song)
-  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<
-    string | null
-  >(null);
-  const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<
-    string | null
-  >(null);
-  const [dragOverCatalogSongId, setDragOverCatalogSongId] = useState<
-    string | null
-  >(null);
+  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
+  const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<string | null>(null);
+  const [dragOverCatalogSongId, setDragOverCatalogSongId] = useState<string | null>(null);
 
-  const handleDropCatalogSong = (
-    sourceSongId: string,
-    targetSongId: string
-  ) => {
+  const handleDropCatalogSong = (sourceSongId: string, targetSongId: string) => {
     if (sourceSongId === targetSongId) return;
     const sourceIdx = songs.findIndex((s) => s.id === sourceSongId);
     const targetIdx = songs.findIndex((s) => s.id === targetSongId);
@@ -1185,9 +1064,7 @@ export default function RepertorioSetlists({
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify(s),
-      }).catch((err) =>
-        console.error('Error updating catalog song order on server:', err)
-      );
+      }).catch((err) => console.error('Error updating catalog song order on server:', err));
     });
   };
   // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más"wow")
@@ -1211,8 +1088,7 @@ export default function RepertorioSetlists({
   // de estar rotas en silencio a pintarse SIEMPRE, una por cada transición entre canciones
   // consecutivas — en un setlist normal eso es ruido constante encima de la curva. El toggle
   // de abajo ("✓ / ✕ Calidad de uniones") sigue ahí para quien las quiera activar.
-  const [showTransitionBadges, setShowTransitionBadges] =
-    useState<boolean>(false);
+  const [showTransitionBadges, setShowTransitionBadges] = useState<boolean>(false);
   // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
   //"⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
   // justo la queja:"estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
@@ -1247,12 +1123,9 @@ export default function RepertorioSetlists({
   // nunca sobre el original — este estado vive en el padre, no en el modal, precisamente porque
   // generar el plan cambia qué setlist está activo (duplicado) y el modal no debe reiniciarse
   // (perder el plan a medio aplicar) solo porque activeSetlistId cambió por su propia acción.
-  const [perfectSetlistPlan, setPerfectSetlistPlan] =
-    useState<PerfectSetlistPlan | null>(null);
+  const [perfectSetlistPlan, setPerfectSetlistPlan] = useState<PerfectSetlistPlan | null>(null);
   const [perfectSetlistLoading, setPerfectSetlistLoading] = useState(false);
-  const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(
-    null
-  );
+  const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(null);
   // Qué copia de trabajo ya existe para esta ronda de"Setlist Perfecto" — se especificó que
   //"Regenerar" no crease una copia nueva cada vez, así que se recuerda cuál ya se creó (por
   // ambos ids: el original del que salió y el propio id de la copia) y se reutiliza mientras no se
@@ -1282,8 +1155,7 @@ export default function RepertorioSetlists({
   const [optimizeSummary, setOptimizeSummary] = useState<string | null>(null);
   // Sugerencia activa de"¿dónde meto una chapa?" — se queda fija (no se autodesvanece como el
   // resumen de arriba) hasta que el usuario la inserta o pide otra, porque trae una acción propia.
-  const [chapaSuggestion, setChapaSuggestion] =
-    useState<SugerenciaChapa | null>(null);
+  const [chapaSuggestion, setChapaSuggestion] = useState<SugerenciaChapa | null>(null);
 
   // Datos del Mapa de Energía, memoizados por setlist/repertorio real — si se recalculan en
   // cada render (p.ej. cada vez que cambia highlightedSongIds al hacer hover), Recharts ve un
@@ -1308,16 +1180,13 @@ export default function RepertorioSetlists({
       let pendingBlocks: number[] = [];
       const flushBlocks = (leftPos: number, rightPos: number) => {
         pendingBlocks.forEach((ptIdx, i) => {
-          xPositions[ptIdx] =
-            leftPos +
-            ((i + 1) / (pendingBlocks.length + 1)) * (rightPos - leftPos);
+          xPositions[ptIdx] = leftPos + ((i + 1) / (pendingBlocks.length + 1)) * (rightPos - leftPos);
         });
         pendingBlocks = [];
       };
       analysis.points.forEach((pt, i) => {
         if (pt.isSong) {
-          if (pendingBlocks.length > 0)
-            flushBlocks(songCounter - 1, songCounter);
+          if (pendingBlocks.length > 0) flushBlocks(songCounter - 1, songCounter);
           xPositions[i] = songCounter;
           songCounter += 1;
         } else {
@@ -1339,37 +1208,24 @@ export default function RepertorioSetlists({
       // canción contra una chapa/interludio que no tiene tonalidad.
       let harmonyClash = false;
       if (!isSpeechEvent && pt.song?.tonalidad) {
-        const siguienteCancion = analysis.points
-          .slice(idx + 1)
-          .find((p) => p.isSong);
+        const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
         const keyA = parseTonalidad(pt.song.tonalidad);
-        const keyB = siguienteCancion?.song?.tonalidad
-          ? parseTonalidad(siguienteCancion.song.tonalidad)
-          : null;
-        if (keyA && keyB)
-          harmonyClash = evaluarTransicionArmonica(keyA, keyB) === 'choque';
+        const keyB = siguienteCancion?.song?.tonalidad ? parseTonalidad(siguienteCancion.song.tonalidad) : null;
+        if (keyA && keyB) harmonyClash = evaluarTransicionArmonica(keyA, keyB) === 'choque';
       }
       let transitionToNext: EvaluacionUnion | null = null;
       let transitionFromPrev: EvaluacionUnion | null = null;
       if (!isSpeechEvent && pt.song) {
-        const siguienteCancion = analysis.points
-          .slice(idx + 1)
-          .find((p) => p.isSong);
+        const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
         if (siguienteCancion?.song) {
-          transitionToNext = evaluarCalidadUnion(
-            pt.song,
-            siguienteCancion.song
-          );
+          transitionToNext = evaluarCalidadUnion(pt.song, siguienteCancion.song);
         }
         const anteriorCancion = analysis.points
           .slice(0, idx)
           .reverse()
           .find((p) => p.isSong);
         if (anteriorCancion?.song) {
-          transitionFromPrev = evaluarCalidadUnion(
-            anteriorCancion.song,
-            pt.song
-          );
+          transitionFromPrev = evaluarCalidadUnion(anteriorCancion.song, pt.song);
         }
       }
 
@@ -1381,21 +1237,14 @@ export default function RepertorioSetlists({
         name: pt.title,
         score: isSpeechEvent ? null : pt.score,
         idealScore: isSpeechEvent ? null : idealCurve[idx],
-        range: [
-          Math.max(1, pt.score - pt.variance),
-          Math.min(20, pt.score + pt.variance),
-        ] as [number, number],
+        range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
         color: pt.info.hexColor,
         icon: pt.info.icon,
         label: pt.info.label,
         variance: pt.variance,
         isSong: pt.isSong,
         isSpeechEvent,
-        bpm: isSpeechEvent
-          ? null
-          : typeof pt.song?.bpm === 'number' && pt.song.bpm > 0
-            ? pt.song.bpm
-            : null,
+        bpm: isSpeechEvent ? null : typeof pt.song?.bpm === 'number' && pt.song.bpm > 0 ? pt.song.bpm : null,
         harmonyClash,
         tonalidad: isSpeechEvent ? null : pt.song?.tonalidad?.trim() || null,
         transitionToNext,
@@ -1449,20 +1298,12 @@ export default function RepertorioSetlists({
 
   // Drag and Drop state for setlist items
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
-  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(
-    null
-  );
-  const [expandedSetlistItemIds, setExpandedSetlistItemIds] = useState<
-    Set<string>
-  >(new Set());
+  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
+  const [expandedSetlistItemIds, setExpandedSetlistItemIds] = useState<Set<string>>(new Set());
   // Popover de energía manual (1-10 en UI, se guarda ×2 como energia 1-20): qué item de setlist
   // tiene el selector abierto ahora mismo, y estado de guardado para deshabilitar mientras dura.
-  const [editingEnergyItemId, setEditingEnergyItemId] = useState<string | null>(
-    null
-  );
-  const [savingEnergyItemId, setSavingEnergyItemId] = useState<string | null>(
-    null
-  );
+  const [editingEnergyItemId, setEditingEnergyItemId] = useState<string | null>(null);
+  const [savingEnergyItemId, setSavingEnergyItemId] = useState<string | null>(null);
   // Posición del popover, calculada al abrirlo a partir del botón real (getBoundingClientRect) y
   // pintada vía portal con position:fixed — antes el popover era position:absolute dentro de la
   // lista con scroll (overflow-y-auto), así que en canciones cerca del final del scroll quedaba
@@ -1519,22 +1360,13 @@ export default function RepertorioSetlists({
   // Guarda (o quita, con null) el tono en el que se quiere tocar esta canción en ESTE
   // repertorio — vive en el SetlistItem, no en la canción, porque el mismo tema puede tocarse
   // en tonos distintos según el bolo/cantante (ver comentario en types.ts).
-  const handleSetTonalidadDeseada = (
-    itemId: string,
-    tonalidad: string | null
-  ) => {
+  const handleSetTonalidadDeseada = (itemId: string, tonalidad: string | null) => {
     if (!activeSetlist) return;
     const updatedSetlist: Setlist = {
       ...activeSetlist,
-      items: activeSetlist.items.map((it) =>
-        it.id === itemId
-          ? { ...it, tonalidadDeseada: tonalidad || undefined }
-          : it
-      ),
+      items: activeSetlist.items.map((it) => (it.id === itemId ? { ...it, tonalidadDeseada: tonalidad || undefined } : it)),
     };
-    setSetlists((prev) =>
-      prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st))
-    );
+    setSetlists((prev) => prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st)));
     syncSetlistToBackend(updatedSetlist);
     setEditingKeyItemId(null);
   };
@@ -1542,20 +1374,10 @@ export default function RepertorioSetlists({
   // Núcleo compartido: fija a mano la energía (1-20) de una canción, tanto desde el popover 1-10
   // de la fila (handleSetEnergiaManual) como desde el arrastre vertical en el propio gráfico
   // (handleEnergyChartDrag) — un solo sitio que llama al PATCH y actualiza el estado optimista.
-  const handleSetEnergiaManualValue = async (
-    song: Song,
-    itemId: string,
-    nuevaEnergia: number
-  ) => {
+  const handleSetEnergiaManualValue = async (song: Song, itemId: string, nuevaEnergia: number) => {
     setSavingEnergyItemId(itemId);
     // Optimista: refleja el cambio ya mismo en la UI y en el gráfico, sin esperar al servidor.
-    setSongs((prev) =>
-      prev.map((s) =>
-        s.id === song.id
-          ? { ...s, energia: nuevaEnergia, energiaManual: true }
-          : s
-      )
-    );
+    setSongs((prev) => prev.map((s) => (s.id === song.id ? { ...s, energia: nuevaEnergia, energiaManual: true } : s)));
     try {
       await fetch(`/api/songs/${song.id}/energia`, {
         method: 'PATCH',
@@ -1570,11 +1392,8 @@ export default function RepertorioSetlists({
     }
   };
 
-  const handleSetEnergiaManual = (
-    song: Song,
-    itemId: string,
-    valor1a10: number
-  ) => handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
+  const handleSetEnergiaManual = (song: Song, itemId: string, valor1a10: number) =>
+    handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
 
   // Arrastrar un punto en vertical en el Mapa de Energía cambia su energía (1-20) directamente —
   // mismo resultado que el popover 1-10 de la fila, pero sin salir del gráfico. EnergyChart ya
@@ -1595,8 +1414,7 @@ export default function RepertorioSetlists({
     onConfirm: () => void;
   } | null>(null);
 
-  const [deleteAlbumData, setDeleteAlbumData] =
-    useState<ConfirmDeleteAlbumData | null>(null);
+  const [deleteAlbumData, setDeleteAlbumData] = useState<ConfirmDeleteAlbumData | null>(null);
   const [assignSongsModalData, setAssignSongsModalData] = useState<{
     isOpen: boolean;
     albumName: string;
@@ -1610,11 +1428,8 @@ export default function RepertorioSetlists({
     text: string;
     type: 'loading' | 'success' | 'warning' | 'error';
   } | null>(null);
-  const [defaultAlbumForNewSong, setDefaultAlbumForNewSong] =
-    useState<string>('');
-  const [selectedCatalogIds, setSelectedCatalogIds] = useState<Set<string>>(
-    new Set()
-  );
+  const [defaultAlbumForNewSong, setDefaultAlbumForNewSong] = useState<string>('');
+  const [selectedCatalogIds, setSelectedCatalogIds] = useState<Set<string>>(new Set());
 
   const sortedSongsByAlbumAndOrder = useMemo(() => {
     return [...songs].sort((a, b) => {
@@ -1633,9 +1448,7 @@ export default function RepertorioSetlists({
   }, [songs]);
 
   const handleUpdateSongFromChords = (updatedSong: Song) => {
-    const updatedList = songs.map((s) =>
-      s.id === updatedSong.id ? updatedSong : s
-    );
+    const updatedList = songs.map((s) => (s.id === updatedSong.id ? updatedSong : s));
     setSongs(updatedList);
     saveSongsToLocalStorageSafely(updatedList);
     setActiveChordsSong(updatedSong);
@@ -1648,9 +1461,7 @@ export default function RepertorioSetlists({
   };
 
   const handleUpdateSongFromStudio = (updatedSong: Song) => {
-    const updatedList = songs.map((s) =>
-      s.id === updatedSong.id ? updatedSong : s
-    );
+    const updatedList = songs.map((s) => (s.id === updatedSong.id ? updatedSong : s));
     setSongs(updatedList);
     saveSongsToLocalStorageSafely(updatedList);
     // Este handler se reutiliza como"guardar canción" genérico (MemberNotesModal, favorito,
@@ -1671,20 +1482,14 @@ export default function RepertorioSetlists({
   };
 
   // Setlist Assign Modal State
-  const [assigningSetlist, setAssigningSetlist] = useState<Setlist | null>(
-    null
-  );
-  const [selectedConcertToAssign, setSelectedConcertToAssign] =
-    useState<string>('');
+  const [assigningSetlist, setAssigningSetlist] = useState<Setlist | null>(null);
+  const [selectedConcertToAssign, setSelectedConcertToAssign] = useState<string>('');
 
   // Show Event / Interludio Modal State & Mic Recorder
   const [showShowItemModal, setShowShowItemModal] = useState(false);
-  const [editingShowItem, setEditingShowItem] = useState<SetlistItem | null>(
-    null
-  );
+  const [editingShowItem, setEditingShowItem] = useState<SetlistItem | null>(null);
   const [showItemAudioUrl, setShowItemAudioUrl] = useState<string>('');
-  const [isRecordingShowItem, setIsRecordingShowItem] =
-    useState<boolean>(false);
+  const [isRecordingShowItem, setIsRecordingShowItem] = useState<boolean>(false);
   const [recordingShowItemSecs, setRecordingShowItemSecs] = useState<number>(0);
   const showItemMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const showItemChunksRef = useRef<Blob[]>([]);
@@ -1693,9 +1498,7 @@ export default function RepertorioSetlists({
   const toggleFavoriteSong = (songId: string) => {
     setSongs((prevSongs) => {
       const target = prevSongs.find((s) => s.id === songId);
-      const updated = prevSongs.map((s) =>
-        s.id === songId ? { ...s, favoritoGeneral: !s.favoritoGeneral } : s
-      );
+      const updated = prevSongs.map((s) => (s.id === songId ? { ...s, favoritoGeneral: !s.favoritoGeneral } : s));
       saveSongsToLocalStorageSafely(updated);
       if (target) {
         const updatedSong = {
@@ -1706,9 +1509,7 @@ export default function RepertorioSetlists({
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(updatedSong),
-        }).catch((err) =>
-          console.error('Error updating favorite on server:', err)
-        );
+        }).catch((err) => console.error('Error updating favorite on server:', err));
       }
       return updated;
     });
@@ -1733,30 +1534,16 @@ export default function RepertorioSetlists({
       const savedS = localStorage.getItem(keyS);
       const parsedS = savedS ? JSON.parse(savedS) : [];
       const sanitizedS = sanitizeBandSongs(parsedS);
-      setSongs(
-        sanitizedS.length > 0
-          ? sanitizedS
-          : isBakandeya
-            ? DEFAULT_SONGS
-            : SAMPLER_SONGS
-      );
+      setSongs(sanitizedS.length > 0 ? sanitizedS : isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
 
       const savedSt = localStorage.getItem(keySt);
       const parsedSt = savedSt ? JSON.parse(savedSt) : [];
       const sanitizedSt = sanitizeBandSetlists(parsedSt);
-      setSetlists(
-        sanitizedSt.length > 0
-          ? sanitizedSt
-          : isBakandeya
-            ? DEFAULT_SETLISTS
-            : SAMPLER_SETLISTS
-      );
+      setSetlists(sanitizedSt.length > 0 ? sanitizedSt : isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
       if (sanitizedSt.length > 0) {
         setActiveSetlistId(sanitizedSt[0].id);
       } else {
-        setActiveSetlistId(
-          isBakandeya ? 'setlist-1' : SAMPLER_SETLISTS[0]?.id || ''
-        );
+        setActiveSetlistId(isBakandeya ? 'setlist-1' : SAMPLER_SETLISTS[0]?.id || '');
       }
     } catch {
       setSongs(isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
@@ -1776,13 +1563,7 @@ export default function RepertorioSetlists({
           const dataS = await resSongs.json();
           if (dataS.songs && Array.isArray(dataS.songs)) {
             const sanitized = sanitizeBandSongs(dataS.songs);
-            setSongs(
-              sanitized.length > 0
-                ? sanitized
-                : isBakandeya
-                  ? DEFAULT_SONGS
-                  : SAMPLER_SONGS
-            );
+            setSongs(sanitized.length > 0 ? sanitized : isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
           }
         }
 
@@ -1790,29 +1571,17 @@ export default function RepertorioSetlists({
           const dataSt = await resSetlists.json();
           if (dataSt.setlists && Array.isArray(dataSt.setlists)) {
             const sanitized = sanitizeBandSetlists(dataSt.setlists);
-            const finalSetlists =
-              sanitized.length > 0
-                ? sanitized
-                : isBakandeya
-                  ? DEFAULT_SETLISTS
-                  : SAMPLER_SETLISTS;
+            const finalSetlists = sanitized.length > 0 ? sanitized : isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
             setSetlists(finalSetlists);
             if (finalSetlists.length > 0) {
-              setActiveSetlistId((prev) =>
-                finalSetlists.some((s: any) => s.id === prev)
-                  ? prev
-                  : finalSetlists[0].id
-              );
+              setActiveSetlistId((prev) => (finalSetlists.some((s: any) => s.id === prev) ? prev : finalSetlists[0].id));
             } else {
               setActiveSetlistId('');
             }
           }
         }
       } catch (err) {
-        console.warn(
-          'Unable to load repertorio from server API, using cached state:',
-          err
-        );
+        console.warn('Unable to load repertorio from server API, using cached state:', err);
       }
     };
 
@@ -1893,10 +1662,7 @@ export default function RepertorioSetlists({
           }
         }
       } catch (err) {
-        console.warn(
-          'No se pudieron cargar los accesos rápidos de repertorio:',
-          err
-        );
+        console.warn('No se pudieron cargar los accesos rápidos de repertorio:', err);
       }
     };
     fetchShortcuts();
@@ -1933,19 +1699,12 @@ export default function RepertorioSetlists({
         const audioBlob = new Blob(showItemChunksRef.current, {
           type: 'audio/webm',
         });
-        const file = new File(
-          [audioBlob],
-          `recording-show-${Date.now()}.webm`,
-          { type: 'audio/webm' }
-        );
+        const file = new File([audioBlob], `recording-show-${Date.now()}.webm`, { type: 'audio/webm' });
         try {
           const serverUrl = await uploadFileToServer(file);
           setShowItemAudioUrl(serverUrl);
         } catch (err) {
-          console.error(
-            'Error uploading show item recording to server disk:',
-            err
-          );
+          console.error('Error uploading show item recording to server disk:', err);
         }
         stream.getTracks().forEach((track) => track.stop());
       };
@@ -1977,9 +1736,7 @@ export default function RepertorioSetlists({
     }
   };
 
-  const handleShowItemAudioFileUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleShowItemAudioFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
@@ -2070,10 +1827,7 @@ export default function RepertorioSetlists({
     // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
     // el servidor no puede descargar ese audio, así que analizarlo daría un cifrado inventado
     // a partir del título. Mejor decirlo que fingir que se ha transcrito la grabación.
-    if (
-      !/^https?:\/\//i.test(song.audioPrincipalUrl) &&
-      !song.audioPrincipalUrl.startsWith('/')
-    ) {
+    if (!/^https?:\/\//i.test(song.audioPrincipalUrl) && !song.audioPrincipalUrl.startsWith('/')) {
       setStatusBanner({
         text: `El audio de"${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
         type: 'error',
@@ -2128,9 +1882,7 @@ export default function RepertorioSetlists({
             method: 'PUT',
             headers: getHeaders(),
             body: JSON.stringify(updatedSong),
-          }).catch((err) =>
-            console.error('Error persisting generated chords:', err)
-          );
+          }).catch((err) => console.error('Error persisting generated chords:', err));
         }
 
         // El backend distingue tres orígenes reales del cifrado para que este aviso nunca
@@ -2180,10 +1932,8 @@ export default function RepertorioSetlists({
     const formData = new FormData(e.currentTarget);
     const titulo = formData.get('titulo') as string;
     // La duración se introduce (y se autodetecta del audio) en dos campos separados, min y seg.
-    const duracionMin =
-      parseInt(formData.get('duracionMin') as string, 10) || 0;
-    const duracionSeg =
-      parseInt(formData.get('duracionSeg') as string, 10) || 0;
+    const duracionMin = parseInt(formData.get('duracionMin') as string, 10) || 0;
+    const duracionSeg = parseInt(formData.get('duracionSeg') as string, 10) || 0;
     const duracionSegundos = duracionMin * 60 + duracionSeg;
     const duracion = formatSecondsToMmSs(duracionSegundos);
     const tonalidad = (formData.get('tonalidad') as string) || 'Am';
@@ -2193,10 +1943,8 @@ export default function RepertorioSetlists({
     const genero = (formData.get('genero') as string) || '';
     const tipo = (formData.get('tipo') as string) || 'propio';
     const energia = parseInt(formData.get('energia') as string, 10) || 5;
-    const cantantePrincipal =
-      (formData.get('cantantePrincipal') as string) || '';
-    const estadoTema =
-      (formData.get('estadoTema') as Song['estadoTema']) || 'listo';
+    const cantantePrincipal = (formData.get('cantantePrincipal') as string) || '';
+    const estadoTema = (formData.get('estadoTema') as Song['estadoTema']) || 'listo';
     //"Cover / Versión" en el selector de tipo es la única fuente de este flag: evitamos
     // tener dos controles distintos que signifiquen lo mismo.
     const esVersionCovers = tipo === 'cover';
@@ -2204,8 +1952,7 @@ export default function RepertorioSetlists({
     const notasInternas = formData.get('notasInternas') as string;
     const notasRepertorio = (formData.get('notasRepertorio') as string) || '';
     const notasMiembrosJson = formData.get('notasMiembrosJson') as string;
-    let notasMiembros: Record<string, string> =
-      editingSong?.notasMiembros || {};
+    let notasMiembros: Record<string, string> = editingSong?.notasMiembros || {};
     if (notasMiembrosJson) {
       try {
         notasMiembros = JSON.parse(notasMiembrosJson);
@@ -2213,12 +1960,8 @@ export default function RepertorioSetlists({
         // ignore
       }
     }
-    let audioPrincipalUrl =
-      (formData.get('audioPrincipalUrl') as string) ||
-      editingSong?.audioPrincipalUrl ||
-      '';
-    let portadaUrl =
-      (formData.get('portadaUrl') as string) || editingSong?.portadaUrl || '';
+    let audioPrincipalUrl = (formData.get('audioPrincipalUrl') as string) || editingSong?.audioPrincipalUrl || '';
+    let portadaUrl = (formData.get('portadaUrl') as string) || editingSong?.portadaUrl || '';
 
     const audioFile = formData.get('audioFile') as File;
     const hasNewAudio = Boolean(audioFile && audioFile.size > 0);
@@ -2263,9 +2006,7 @@ export default function RepertorioSetlists({
         portadaUrl,
       };
       setSongs((prev) => {
-        const next = prev.map((s) =>
-          s.id === editingSong.id ? updatedSong : s
-        );
+        const next = prev.map((s) => (s.id === editingSong.id ? updatedSong : s));
         saveSongsToLocalStorageSafely(next);
         return next;
       });
@@ -2363,18 +2104,14 @@ export default function RepertorioSetlists({
         setSetlists((prev) =>
           prev.map((st) => ({
             ...st,
-            items: st.items.filter(
-              (it) => !it.songId || !idsSet.has(it.songId)
-            ),
+            items: st.items.filter((it) => !it.songId || !idsSet.has(it.songId)),
           }))
         );
         songIds.forEach((songId) => {
           fetch(`/api/songs/${songId}`, {
             method: 'DELETE',
             headers: getHeaders(),
-          }).catch((err) =>
-            console.error('Error deleting song on server:', err)
-          );
+          }).catch((err) => console.error('Error deleting song on server:', err));
         });
         clearCatalogSelection();
       },
@@ -2409,9 +2146,7 @@ export default function RepertorioSetlists({
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(updatedSong),
-        }).catch((err) =>
-          console.error('Error toggling favorite on server:', err)
-        );
+        }).catch((err) => console.error('Error toggling favorite on server:', err));
         return updatedSong;
       }
       return s;
@@ -2422,10 +2157,7 @@ export default function RepertorioSetlists({
 
   const handleUnassignAlbumSongs = (albumName: string) => {
     const updatedSongs = songs.map((s) => {
-      if (
-        (s.albumDisco || 'Singles / Sin Disco') === albumName ||
-        s.albumDisco === albumName
-      ) {
+      if ((s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName) {
         return { ...s, albumDisco: '' };
       }
       return s;
@@ -2434,28 +2166,18 @@ export default function RepertorioSetlists({
     saveSongsToLocalStorageSafely(updatedSongs);
 
     updatedSongs
-      .filter(
-        (s) =>
-          (s.albumDisco || 'Singles / Sin Disco') === albumName ||
-          s.albumDisco === albumName
-      )
+      .filter((s) => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName)
       .forEach((s) => {
         fetch(`/api/songs/${s.id}`, {
           method: 'PUT',
           headers: getHeaders(),
           body: JSON.stringify(s),
-        }).catch((err) =>
-          console.error('Error updating song album on server:', err)
-        );
+        }).catch((err) => console.error('Error updating song album on server:', err));
       });
   };
 
   const handleDeleteAlbumAndSongs = (albumName: string) => {
-    const songsToDelete = songs.filter(
-      (s) =>
-        (s.albumDisco || 'Singles / Sin Disco') === albumName ||
-        s.albumDisco === albumName
-    );
+    const songsToDelete = songs.filter((s) => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
     const idsToDelete = new Set(songsToDelete.map((s) => s.id));
 
     const updatedSongs = songs.filter((s) => !idsToDelete.has(s.id));
@@ -2490,9 +2212,7 @@ export default function RepertorioSetlists({
     const selectedSet = new Set(selectedSongIds);
     let isFirst = true;
     const updatedSongs = songs.map((s) => {
-      const isCurrentlyInAlbum =
-        (s.albumDisco || 'Singles / Sin Disco') === albumName ||
-        s.albumDisco === albumName;
+      const isCurrentlyInAlbum = (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName;
       if (selectedSet.has(s.id)) {
         const updated = { ...s, albumDisco: albumName };
         if (albumExtraInfo?.portadaUrl && isFirst) {
@@ -2514,17 +2234,11 @@ export default function RepertorioSetlists({
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify(s),
-      }).catch((err) =>
-        console.error('Error updating song album on server:', err)
-      );
+      }).catch((err) => console.error('Error updating song album on server:', err));
     });
   };
 
-  const handleReorderAlbumTrack = (
-    albumName: string,
-    songId: string,
-    direction: 'up' | 'down'
-  ) => {
+  const handleReorderAlbumTrack = (albumName: string, songId: string, direction: 'up' | 'down') => {
     const albumSongs = songs
       .filter((s) => (s.albumDisco || 'Singles / Sin Disco') === albumName)
       .sort((a, b) => (a.ordenAlbum ?? 0) - (b.ordenAlbum ?? 0));
@@ -2561,9 +2275,7 @@ export default function RepertorioSetlists({
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify(updated),
-      }).catch((err) =>
-        console.error('Error updating song order on server:', err)
-      );
+      }).catch((err) => console.error('Error updating song order on server:', err));
     });
   };
 
@@ -2596,9 +2308,7 @@ export default function RepertorioSetlists({
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify(songToUpdate),
-      }).catch((err) =>
-        console.warn('Error saving normalized song:', songToUpdate.id, err)
-      );
+      }).catch((err) => console.warn('Error saving normalized song:', songToUpdate.id, err));
     }
   };
 
@@ -2678,17 +2388,12 @@ export default function RepertorioSetlists({
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify(newSetlist),
-      }).catch((err) =>
-        console.error('Error creating setlist on server:', err)
-      );
+      }).catch((err) => console.error('Error creating setlist on server:', err));
     }
   };
 
   const handleOldSetlist = () => {
-    const name = prompt(
-      'Nombre para el nuevo repertorio:',
-      'Festival Verano 2026'
-    );
+    const name = prompt('Nombre para el nuevo repertorio:', 'Festival Verano 2026');
     if (!name || !name.trim()) return;
 
     const newSetlist: Setlist = {
@@ -2718,10 +2423,7 @@ export default function RepertorioSetlists({
     }).catch((err) => console.error('Error creating setlist on server:', err));
   };
 
-  const handleDuplicateSetlist = (
-    st: Setlist,
-    nameSuffix: string = '(Copia)'
-  ): Setlist => {
+  const handleDuplicateSetlist = (st: Setlist, nameSuffix: string = '(Copia)'): Setlist => {
     const duplicated: Setlist = {
       ...st,
       id: `setlist-${Date.now()}`,
@@ -2740,9 +2442,7 @@ export default function RepertorioSetlists({
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(duplicated),
-    }).catch((err) =>
-      console.error('Error duplicating setlist on server:', err)
-    );
+    }).catch((err) => console.error('Error duplicating setlist on server:', err));
 
     return duplicated;
   };
@@ -2760,20 +2460,14 @@ export default function RepertorioSetlists({
         }
         // Si se borra justo la copia de trabajo de"Setlist Perfecto" (o su original), esa referencia
         // ya no vale — la próxima vez que se pida el plan, se creará una copia nueva desde cero.
-        if (
-          perfectSetlistDraft &&
-          (perfectSetlistDraft.draftSetlistId === stId ||
-            perfectSetlistDraft.originalSetlistId === stId)
-        ) {
+        if (perfectSetlistDraft && (perfectSetlistDraft.draftSetlistId === stId || perfectSetlistDraft.originalSetlistId === stId)) {
           setPerfectSetlistDraft(null);
         }
 
         fetch(`/api/setlists/${stId}`, {
           method: 'DELETE',
           headers: getHeaders(),
-        }).catch((err) =>
-          console.error('Error deleting setlist on server:', err)
-        );
+        }).catch((err) => console.error('Error deleting setlist on server:', err));
       },
     });
   };
@@ -2786,10 +2480,7 @@ export default function RepertorioSetlists({
   // añadir una del catálogo o insertar un bloque son todos casos de"sustituir items por otro
   // array", así que todos pasan por aquí para compartir el snapshot de"Deshacer" (sourceKey
   // identifica qué acción lo generó) y el guardado/sync.
-  const applySetlistItemsChange = (
-    newItems: SetlistItem[],
-    sourceKey: string
-  ) => {
+  const applySetlistItemsChange = (newItems: SetlistItem[], sourceKey: string) => {
     if (!activeSetlist) return;
 
     setUndoReorderSnapshot({
@@ -2805,22 +2496,15 @@ export default function RepertorioSetlists({
     };
 
     setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st
-      );
+      const next = prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st));
       saveSetlistsToLocalStorageSafely(next);
       return next;
     });
     syncSetlistToBackend(updatedSetlist);
   };
 
-  const reorderSetlistItems = (
-    fromIndex: number,
-    toIndex: number,
-    sourceKey: string = 'manual'
-  ) => {
-    if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0)
-      return;
+  const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
+    if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
     const newItems = [...activeSetlist.items];
     const [movedItem] = newItems.splice(fromIndex, 1);
     newItems.splice(toIndex, 0, movedItem);
@@ -2835,9 +2519,7 @@ export default function RepertorioSetlists({
     const sugerencia = sugerirMejorPuntoParaChapa(activeSetlist.items, songs);
     setChapaSuggestion(sugerencia);
     if (!sugerencia) {
-      setOptimizeSummary(
-        '👍 Las transiciones ya van suaves — no hace falta forzar una chapa en ningún punto concreto.'
-      );
+      setOptimizeSummary('👍 Las transiciones ya van suaves — no hace falta forzar una chapa en ningún punto concreto.');
       window.setTimeout(() => setOptimizeSummary(null), 7000);
     }
   };
@@ -2847,15 +2529,7 @@ export default function RepertorioSetlists({
   // para el subtipo'chapa').
   const insertSuggestedChapa = () => {
     if (!chapaSuggestion) return;
-    handleAddItemToSetlist(
-      undefined,
-      'chapa',
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      chapaSuggestion.insertAfterItemId
-    );
+    handleAddItemToSetlist(undefined, 'chapa', undefined, undefined, undefined, undefined, chapaSuggestion.insertAfterItemId);
     setChapaSuggestion(null);
   };
 
@@ -2891,8 +2565,7 @@ export default function RepertorioSetlists({
     });
     applySetlistItemsChange(newItems, 'optimize-transitions');
 
-    const mejoraPct =
-      costeAntes > 0 ? Math.round((1 - costeDespues / costeAntes) * 100) : 0;
+    const mejoraPct = costeAntes > 0 ? Math.round((1 - costeDespues / costeAntes) * 100) : 0;
     setOptimizeSummary(
       mejoraPct > 0
         ? `🎯 Orden optimizado: transiciones un ${mejoraPct}% más suaves (tonalidad + tempo + energía).`
@@ -2905,19 +2578,14 @@ export default function RepertorioSetlists({
   // no encaja — a diferencia de handleRemoveSetlistItem, que borra por id desde la lista visual,
   // esto trabaja por índice porque así es como el plan referencia sus posiciones).
   const removeSetlistItemAtIndex = (index: number, sourceKey: string) => {
-    if (!activeSetlist || index < 0 || index >= activeSetlist.items.length)
-      return;
+    if (!activeSetlist || index < 0 || index >= activeSetlist.items.length) return;
     const newItems = activeSetlist.items.filter((_, i) => i !== index);
     applySetlistItemsChange(newItems, sourceKey);
   };
 
   // Inserta una canción del catálogo en `insertIndex` — variante de handleAddItemToSetlist que
   // inserta en una posición concreta (la que propuso el plan) en vez de tras el item seleccionado.
-  const insertSongAtIndex = (
-    songId: string,
-    insertIndex: number,
-    sourceKey: string
-  ) => {
+  const insertSongAtIndex = (songId: string, insertIndex: number, sourceKey: string) => {
     if (!activeSetlist) return;
     const newItem: SetlistItem = {
       id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
@@ -2946,9 +2614,7 @@ export default function RepertorioSetlists({
       tipoItem,
       tituloCustom,
       duracionEstimadaMinutos,
-      duracionEstimadaSegundos: duracionEstimadaMinutos
-        ? Math.round(duracionEstimadaMinutos * 60)
-        : undefined,
+      duracionEstimadaSegundos: duracionEstimadaMinutos ? Math.round(duracionEstimadaMinutos * 60) : undefined,
     };
     const newItems = [...activeSetlist.items];
     const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
@@ -2959,18 +2625,11 @@ export default function RepertorioSetlists({
   // Ejecuta UNA acción concreta del plan de"Setlist Perfecto" — cada acción ya viene validada por
   // el servidor (posiciones dentro de rango, catalog_index resuelto a un song_id real, block_type
   // dentro del enum), así que aquí solo se traduce cada tipo a la función que ya mueve/inserta/quita.
-  const applyPerfectSetlistAction = (
-    action: PerfectSetlistAction,
-    sourceKey: string
-  ) => {
+  const applyPerfectSetlistAction = (action: PerfectSetlistAction, sourceKey: string) => {
     switch (action.type) {
       case 'reorder':
         if (action.from_position != null && action.to_position != null) {
-          reorderSetlistItems(
-            action.from_position - 1,
-            action.to_position - 1,
-            sourceKey
-          );
+          reorderSetlistItems(action.from_position - 1, action.to_position - 1, sourceKey);
         }
         break;
       case 'remove_song':
@@ -2980,11 +2639,7 @@ export default function RepertorioSetlists({
         break;
       case 'add_song':
         if (action.song_id && action.insert_at_position != null) {
-          insertSongAtIndex(
-            action.song_id,
-            action.insert_at_position - 1,
-            sourceKey
-          );
+          insertSongAtIndex(action.song_id, action.insert_at_position - 1, sourceKey);
         }
         break;
       case 'add_block':
@@ -3008,17 +2663,13 @@ export default function RepertorioSetlists({
   // el plan nuevo se calcula contra SU estado actual (con lo que ya se haya aplicado). Solo se crea
   // una copia nueva si no existe ninguna todavía para este setlist, o si se pide explícitamente
   // (`forceNewCopy`, botón"Nueva copia" del modal).
-  const handleGeneratePerfectSetlist = async (
-    forceNewCopy: boolean = false,
-    feedback?: SetlistFeedbackInput
-  ) => {
+  const handleGeneratePerfectSetlist = async (forceNewCopy: boolean = false, feedback?: SetlistFeedbackInput) => {
     if (!activeSetlist) return;
 
     const existingDraft =
       !forceNewCopy &&
       perfectSetlistDraft &&
-      (perfectSetlistDraft.draftSetlistId === activeSetlist.id ||
-        perfectSetlistDraft.originalSetlistId === activeSetlist.id)
+      (perfectSetlistDraft.draftSetlistId === activeSetlist.id || perfectSetlistDraft.originalSetlistId === activeSetlist.id)
         ? perfectSetlistDraft
         : null;
 
@@ -3036,16 +2687,10 @@ export default function RepertorioSetlists({
     setPerfectSetlistLoading(true);
     setPerfectSetlistError(null);
     try {
-      const result = await api.generatePerfectSetlist(
-        targetSetlist.id,
-        feedback
-      );
+      const result = await api.generatePerfectSetlist(targetSetlist.id, feedback);
       if (result.success && result.plan) {
         if (!existingDraft) {
-          const copy = handleDuplicateSetlist(
-            targetSetlist,
-            '(Setlist Perfecto)'
-          );
+          const copy = handleDuplicateSetlist(targetSetlist, '(Setlist Perfecto)');
           setPerfectSetlistDraft({
             originalSetlistId: targetSetlist.id,
             draftSetlistId: copy.id,
@@ -3062,21 +2707,14 @@ export default function RepertorioSetlists({
     }
   };
 
-  const canUndoReorder =
-    !!undoReorderSnapshot &&
-    undoReorderSnapshot.setlistId === activeSetlist?.id;
+  const canUndoReorder = !!undoReorderSnapshot && undoReorderSnapshot.setlistId === activeSetlist?.id;
   // Qué acción concreta es la que"Deshacer" revertiría ahora mismo — null si no hay nada que
   // deshacer, o si el setlist activo cambió desde entonces. Solo la acción que dejó este snapshot
   // (la más reciente) puede mostrar su propio botón como"Deshacer" en vez de"Aplicar"/"Aplicado".
   const undoSourceKey = canUndoReorder ? undoReorderSnapshot!.sourceKey : null;
 
   const undoLastReorder = () => {
-    if (
-      !activeSetlist ||
-      !undoReorderSnapshot ||
-      undoReorderSnapshot.setlistId !== activeSetlist.id
-    )
-      return;
+    if (!activeSetlist || !undoReorderSnapshot || undoReorderSnapshot.setlistId !== activeSetlist.id) return;
 
     const restoredSetlist: Setlist = {
       ...activeSetlist,
@@ -3085,9 +2723,7 @@ export default function RepertorioSetlists({
     };
 
     setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? restoredSetlist : st
-      );
+      const next = prev.map((st) => (st.id === activeSetlist.id ? restoredSetlist : st));
       saveSetlistsToLocalStorageSafely(next);
       return next;
     });
@@ -3096,8 +2732,7 @@ export default function RepertorioSetlists({
   };
 
   const handleDropItem = (targetIndex: number) => {
-    if (draggedItemIndex !== null)
-      reorderSetlistItems(draggedItemIndex, targetIndex);
+    if (draggedItemIndex !== null) reorderSetlistItems(draggedItemIndex, targetIndex);
     setDraggedItemIndex(null);
     setDragOverItemIndex(null);
   };
@@ -3172,8 +2807,7 @@ export default function RepertorioSetlists({
       }
     }
 
-    const targetRefId =
-      insertAfterId !== undefined ? insertAfterId : selectedSetlistItemId;
+    const targetRefId = insertAfterId !== undefined ? insertAfterId : selectedSetlistItemId;
     let newItems: SetlistItem[];
     if (targetRefId) {
       const idx = activeSetlist.items.findIndex((it) => it.id === targetRefId);
@@ -3194,9 +2828,7 @@ export default function RepertorioSetlists({
     };
 
     setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st
-      );
+      const next = prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st));
       saveSetlistsToLocalStorageSafely(next);
       return next;
     });
@@ -3206,14 +2838,7 @@ export default function RepertorioSetlists({
 
   // Inserts a band-created custom shortcut into the active setlist as a generic ('otro') item
   const handleUseCustomShortcut = (sc: SetlistShortcut) => {
-    handleAddItemToSetlist(
-      undefined,
-      'otro',
-      sc.tituloCustom,
-      sc.duracionEstimadaMinutos,
-      sc.duracionEstimadaSegundos,
-      sc.notaTema
-    );
+    handleAddItemToSetlist(undefined, 'otro', sc.tituloCustom, sc.duracionEstimadaMinutos, sc.duracionEstimadaSegundos, sc.notaTema);
   };
 
   const handleCreateShortcut = async () => {
@@ -3290,9 +2915,7 @@ export default function RepertorioSetlists({
     };
 
     setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st
-      );
+      const next = prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st));
       saveSetlistsToLocalStorageSafely(next);
       return next;
     });
@@ -3315,17 +2938,14 @@ export default function RepertorioSetlists({
 
     if (editingShowItem) {
       updatedItems = activeSetlist.items.map((it) =>
-        it.id === editingShowItem.id
-          ? { ...it, ...mappedData, audioUrl: showItemAudioUrl }
-          : it
+        it.id === editingShowItem.id ? { ...it, ...mappedData, audioUrl: showItemAudioUrl } : it
       );
     } else {
       const defaultSubtype = (mappedData.bloqueSubtipo || 'otro') as any;
       const newItem: SetlistItem = {
         id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
         tipoItem: mappedData.tipoItem === 'cancion' ? 'cancion' : 'bloque',
-        bloqueSubtipo:
-          mappedData.tipoItem === 'cancion' ? undefined : defaultSubtype,
+        bloqueSubtipo: mappedData.tipoItem === 'cancion' ? undefined : defaultSubtype,
         tituloCustom: mappedData.tituloCustom || 'Evento del Show',
         duracionEstimadaMinutos: mappedData.duracionEstimadaMinutos || 2,
         duracionEstimadaSegundos: mappedData.duracionEstimadaSegundos || 120,
@@ -3334,9 +2954,7 @@ export default function RepertorioSetlists({
       };
 
       if (selectedSetlistItemId) {
-        const idx = activeSetlist.items.findIndex(
-          (it) => it.id === selectedSetlistItemId
-        );
+        const idx = activeSetlist.items.findIndex((it) => it.id === selectedSetlistItemId);
         if (idx !== -1) {
           updatedItems = [...activeSetlist.items];
           updatedItems.splice(idx + 1, 0, newItem);
@@ -3356,9 +2974,7 @@ export default function RepertorioSetlists({
     };
 
     setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st
-      );
+      const next = prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st));
       saveSetlistsToLocalStorageSafely(next);
       return next;
     });
@@ -3376,9 +2992,7 @@ export default function RepertorioSetlists({
       items: activeSetlist.items.filter((it) => it.id !== itemId),
     };
 
-    setSetlists((prev) =>
-      prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st))
-    );
+    setSetlists((prev) => prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st)));
     syncSetlistToBackend(updatedSetlist);
   };
 
@@ -3386,14 +3000,10 @@ export default function RepertorioSetlists({
     if (!activeSetlist) return;
     const updatedSetlist: Setlist = {
       ...activeSetlist,
-      items: activeSetlist.items.map((it) =>
-        it.id === itemId ? { ...it, notaTema: note } : it
-      ),
+      items: activeSetlist.items.map((it) => (it.id === itemId ? { ...it, notaTema: note } : it)),
     };
 
-    setSetlists((prev) =>
-      prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st))
-    );
+    setSetlists((prev) => prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st)));
     syncSetlistToBackend(updatedSetlist);
   };
 
@@ -3405,16 +3015,12 @@ export default function RepertorioSetlists({
     const concertMatch = concerts.find((c) => c.id === selectedConcertToAssign);
     if (concertMatch && onUpdateConcert) {
       onUpdateConcert(concertMatch.id, { setlistId: assigningSetlist.id });
-      alert(
-        `Repertorio"${assigningSetlist.nombre}" asignado con éxito al concierto en ${concertMatch.sala} (${concertMatch.ciudad}).`
-      );
+      alert(`Repertorio"${assigningSetlist.nombre}" asignado con éxito al concierto en ${concertMatch.sala} (${concertMatch.ciudad}).`);
     } else {
       const rehMatch = rehearsals.find((r) => r.id === selectedConcertToAssign);
       if (rehMatch && onUpdateRehearsal) {
         onUpdateRehearsal(rehMatch.id, { setlistId: assigningSetlist.id });
-        alert(
-          `Repertorio"${assigningSetlist.nombre}" asignado con éxito al ensayo de ${rehMatch.fecha}.`
-        );
+        alert(`Repertorio"${assigningSetlist.nombre}" asignado con éxito al ensayo de ${rehMatch.fecha}.`);
       }
     }
     setAssigningSetlist(null);
@@ -3541,9 +3147,7 @@ export default function RepertorioSetlists({
           setEditingSong(null);
           setShowSongModal(true);
         }}
-        onOpenNewAlbumModal={() =>
-          setAssignSongsModalData({ isOpen: true, albumName: '' })
-        }
+        onOpenNewAlbumModal={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
         songCount={songs.length}
         albumCount={albumsList.filter((a) => a !== 'todos').length}
         onOpenTutorial={openTutorial}
@@ -3553,9 +3157,7 @@ export default function RepertorioSetlists({
       {activeTab === 'setlists' && (
         <div className="w-full">
           {/* MAIN EDITOR FOR ACTIVE SETLIST */}
-          <div
-            className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 bg-[var(--surface)]`}
-          >
+          <div className={`w-full p-4 sm:p-6 rounded-[var(--r-l)] sm:rounded-3xl space-y-4 bg-[var(--surface)]`}>
             <input
               className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-amber-0/50 text-[var(--ink)]`}
               placeholder="Nombre del repertorio"
@@ -3566,11 +3168,7 @@ export default function RepertorioSetlists({
                   ...activeSetlist,
                   nombre: e.target.value,
                 };
-                setSetlists((prev) =>
-                  prev.map((st) =>
-                    st.id === activeSetlist.id ? updatedSetlist : st
-                  )
-                );
+                setSetlists((prev) => prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st)));
               }}
             />
 
@@ -3671,10 +3269,7 @@ export default function RepertorioSetlists({
                 </button>
                 {showSetlistActionsMenu && (
                   <>
-                    <div
-                      className="fixed inset-0 z-30"
-                      onClick={() => setShowSetlistActionsMenu(false)}
-                    />
+                    <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
                     <div
                       className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     >
@@ -3686,8 +3281,7 @@ export default function RepertorioSetlists({
                         }}
                         className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ok)] transition cursor-pointer flex items-center gap-2 ${'hover:bg-[var(--surface)]'}`}
                       >
-                        <MessageSquare className="w-3.5 h-3.5 shrink-0" />{' '}
-                        Compartir repertorio
+                        <MessageSquare className="w-3.5 h-3.5 shrink-0" /> Compartir repertorio
                       </button>
                       <button
                         type="button"
@@ -3697,8 +3291,7 @@ export default function RepertorioSetlists({
                         }}
                         className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ok)] transition cursor-pointer flex items-center gap-2 ${'hover:bg-[var(--surface)]'}`}
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />{' '}
-                        Asignar a bolo/ensayo
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Asignar a bolo/ensayo
                       </button>
                       <button
                         type="button"
@@ -3708,8 +3301,7 @@ export default function RepertorioSetlists({
                         }}
                         className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${'text-[var(--ink)] hover:bg-[var(--sunken)]'}`}
                       >
-                        <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir /
-                        PDF
+                        <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
                       </button>
                       <button
                         type="button"
@@ -3719,8 +3311,7 @@ export default function RepertorioSetlists({
                         }}
                         className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${'text-[var(--ink-2)] hover:bg-[var(--sunken)]'}`}
                       >
-                        <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar
-                        setlist
+                        <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar setlist
                       </button>
                       <button
                         type="button"
@@ -3733,8 +3324,7 @@ export default function RepertorioSetlists({
                         }}
                         className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${'text-[var(--ink-2)] hover:bg-[var(--sunken)]'}`}
                       >
-                        <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar
-                        detalles
+                        <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
                       </button>
                       <button
                         type="button"
@@ -3744,8 +3334,7 @@ export default function RepertorioSetlists({
                         }}
                         className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--alert)] transition cursor-pointer flex items-center gap-2 ${'hover:bg-[var(--alert-soft)]'}`}
                       >
-                        <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar
-                        setlist
+                        <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
                       </button>
                     </div>
                   </>
@@ -3767,22 +3356,12 @@ export default function RepertorioSetlists({
                       type="button"
                       onClick={() => setShowSetlistStats((v) => !v)}
                       className="flex items-center gap-1.5 text-xs hover:opacity-80 transition cursor-pointer text-[var(--ink-2)]"
-                      title={
-                        showSetlistStats
-                          ? 'Ocultar métricas secundarias'
-                          : 'Ver interludios, bloques y perfil de dinámica'
-                      }
+                      title={showSetlistStats ? 'Ocultar métricas secundarias' : 'Ver interludios, bloques y perfil de dinámica'}
                     >
-                      <span className="font-semibold text-[var(--ink)]">
-                        ⏱️ {activeSetlistMetrics.formattedTime}
-                      </span>
+                      <span className="font-semibold text-[var(--ink)]">⏱️ {activeSetlistMetrics.formattedTime}</span>
                       <span className="text-[var(--ink-2)]">·</span>
-                      <span className="font-bold text-[var(--acc)]">
-                        ⚡ {activeSetlistMetrics.avgBpm} BPM
-                      </span>
-                      <span className="text-[var(--ink-2)] text-[10px]">
-                        {showSetlistStats ? '▲' : '▼'}
-                      </span>
+                      <span className="font-bold text-[var(--acc)]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
+                      <span className="text-[var(--ink-2)] text-[10px]">{showSetlistStats ? '▲' : '▼'}</span>
                     </button>
 
                     <div className="relative shrink-0">
@@ -3792,15 +3371,11 @@ export default function RepertorioSetlists({
                         className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 hover:text-[var(--ink)] transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5"
                         title="Asistente IA del repertorio"
                       >
-                        🧠{' '}
-                        <span className="hidden xs:inline">Asistente IA</span>
+                        🧠 <span className="hidden xs:inline">Asistente IA</span>
                       </button>
                       {showAssistantChooser && (
                         <>
-                          <div
-                            className="fixed inset-0 z-30"
-                            onClick={() => setShowAssistantChooser(false)}
-                          />
+                          <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
                           <div
                             className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                           >
@@ -3812,12 +3387,9 @@ export default function RepertorioSetlists({
                               }}
                               className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer ${'hover:bg-[var(--surface)]'}`}
                             >
-                              <span className="text-xs font-semibold text-[var(--acc)] flex items-center gap-1.5">
-                                📖 Ver análisis
-                              </span>
+                              <span className="text-xs font-semibold text-[var(--acc)] flex items-center gap-1.5">📖 Ver análisis</span>
                               <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
-                                Arco narrativo, puntuación y sugerencias
-                                explicadas.
+                                Arco narrativo, puntuación y sugerencias explicadas.
                               </span>
                             </button>
                             <button
@@ -3861,9 +3433,7 @@ export default function RepertorioSetlists({
 
                 {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
                 {energyAnalysis.points.length > 0 && (
-                  <div
-                    className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${'bg-[var(--bg)]'}`}
-                  >
+                  <div className={`p-3 sm:p-4 rounded-[var(--r-l)] space-y-2.5 animate-fadeIn ${'bg-[var(--bg)]'}`}>
                     <div className="flex items-center justify-between gap-2 text-xs text-[var(--ink-2)]">
                       <span
                         className="font-semibold tracking-wider text-[var(--ink-2)] truncate text-[11px]"
@@ -3906,9 +3476,7 @@ export default function RepertorioSetlists({
                           <div className="relative">
                             <button
                               type="button"
-                              onClick={() =>
-                                setShowChartSettingsMenu((v) => !v)
-                              }
+                              onClick={() => setShowChartSettingsMenu((v) => !v)}
                               className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-all cursor-pointer"
                               title="Ajustes del gráfico (leyenda de colores, curva ideal)"
                             >
@@ -3916,12 +3484,7 @@ export default function RepertorioSetlists({
                             </button>
                             {showChartSettingsMenu && (
                               <>
-                                <div
-                                  className="fixed inset-0 z-30"
-                                  onClick={() =>
-                                    setShowChartSettingsMenu(false)
-                                  }
-                                />
+                                <div className="fixed inset-0 z-30" onClick={() => setShowChartSettingsMenu(false)} />
                                 <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-2.5 space-y-2.5">
                                   <button
                                     type="button"
@@ -3977,9 +3540,7 @@ export default function RepertorioSetlists({
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() =>
-                                      setShowTransitionBadges((v) => !v)
-                                    }
+                                    onClick={() => setShowTransitionBadges((v) => !v)}
                                     className={`w-full px-2 py-1 rounded-[var(--r-s)] transition-all cursor-pointer text-[10px] font-sans font-medium flex items-center justify-between ${
                                       showTransitionBadges
                                         ? 'bg-[var(--surface)]/70 text-[var(--ink-2)]'
@@ -3988,37 +3549,23 @@ export default function RepertorioSetlists({
                                     title="Muestra u oculta los ticks (✓) y aspas (✕) de calidad de unión entre temas en el gráfico"
                                   >
                                     <span>✓ / ✕ Calidad de uniones</span>
-                                    <span>
-                                      {showTransitionBadges ? 'ON' : 'OFF'}
-                                    </span>
+                                    <span>{showTransitionBadges ? 'ON' : 'OFF'}</span>
                                   </button>
                                   <div className="flex flex-col gap-1 text-[9px] text-[var(--ink)] pt-1">
                                     <span className="flex items-center gap-1.5">
-                                      <i
-                                        className="w-2 h-2 rounded-full inline-block"
-                                        style={{ background: '#0284c7' }}
-                                      />
+                                      <i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />
                                       🌙 Balada
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                      <i
-                                        className="w-2 h-2 rounded-full inline-block"
-                                        style={{ background: '#059669' }}
-                                      />
+                                      <i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />
                                       🎵 Media
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                      <i
-                                        className="w-2 h-2 rounded-full inline-block"
-                                        style={{ background: '#a16207' }}
-                                      />
+                                      <i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />
                                       🔥 Alta
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                      <i
-                                        className="w-2 h-2 rounded-full inline-block"
-                                        style={{ background: '#a21caf' }}
-                                      />
+                                      <i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />
                                       💣 Explosiva
                                     </span>
                                   </div>
@@ -4036,11 +3583,7 @@ export default function RepertorioSetlists({
                                 ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
                                 : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
                             }`}
-                            title={
-                              showTonalidad
-                                ? 'Ocultar tonalidades del gráfico'
-                                : 'Mostrar tonalidades en el gráfico'
-                            }
+                            title={showTonalidad ? 'Ocultar tonalidades del gráfico' : 'Mostrar tonalidades en el gráfico'}
                           >
                             🎼
                           </button>
@@ -4049,33 +3592,17 @@ export default function RepertorioSetlists({
                           type="button"
                           onClick={() => setShowEnergyMap((v) => !v)}
                           className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-all cursor-pointer"
-                          title={
-                            showEnergyMap
-                              ? 'Ocultar el mapa de energía'
-                              : 'Mostrar el mapa de energía'
-                          }
+                          title={showEnergyMap ? 'Ocultar el mapa de energía' : 'Mostrar el mapa de energía'}
                         >
-                          {showEnergyMap ? (
-                            <Eye className="w-3.5 h-3.5" />
-                          ) : (
-                            <EyeOff className="w-3.5 h-3.5" />
-                          )}
+                          {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowConcertPlayer((v) => !v)}
                           className="p-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] hover:text-[var(--ink)] transition-all cursor-pointer"
-                          title={
-                            showConcertPlayer
-                              ? 'Ocultar reproductor de concierto'
-                              : 'Mostrar reproductor de concierto'
-                          }
+                          title={showConcertPlayer ? 'Ocultar reproductor de concierto' : 'Mostrar reproductor de concierto'}
                         >
-                          {showConcertPlayer ? (
-                            <Pause className="w-3.5 h-3.5" />
-                          ) : (
-                            <Play className="w-3.5 h-3.5" />
-                          )}
+                          {showConcertPlayer ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                         </button>
                       </div>
                     </div>
@@ -4088,8 +3615,7 @@ export default function RepertorioSetlists({
  repertorios— como para dejarlo oculto. Una línea, sin dismiss ni estado
  extra (AGENTS.md §6). */}
                         <p className="text-[9px] text-[var(--ink-2)]">
-                          💡 Toca un punto para reordenar o cambiar su energía —
-                          la energía es de la canción, se aplica en todos tus
+                          💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus
                           repertorios.
                         </p>
                         {optimizeSummary && (
@@ -4100,31 +3626,17 @@ export default function RepertorioSetlists({
                         {chapaSuggestion &&
                           (() => {
                             const motivos: string[] = [];
-                            if (
-                              chapaSuggestion.coste.harmonyRelation === 'choque'
-                            )
-                              motivos.push('choque de tonalidad');
-                            if (
-                              chapaSuggestion.coste.bpmDiff != null &&
-                              chapaSuggestion.coste.bpmDiff >= 15
-                            )
-                              motivos.push(
-                                `salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`
-                              );
-                            if (
-                              chapaSuggestion.coste.energyDiff != null &&
-                              chapaSuggestion.coste.energyDiff >= 6
-                            )
+                            if (chapaSuggestion.coste.harmonyRelation === 'choque') motivos.push('choque de tonalidad');
+                            if (chapaSuggestion.coste.bpmDiff != null && chapaSuggestion.coste.bpmDiff >= 15)
+                              motivos.push(`salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`);
+                            if (chapaSuggestion.coste.energyDiff != null && chapaSuggestion.coste.energyDiff >= 6)
                               motivos.push('salto grande de energía');
                             return (
                               <div className="flex flex-wrap items-center gap-2 text-[10px] font-sans text-[var(--ink-3)] bg-[var(--ok)]/10 rounded-[var(--r-s)] px-2 py-1">
                                 <span>
-                                  💬 Mejor sitio para una chapa: entre{' '}
-                                  <b>"{chapaSuggestion.cancionAntes}"</b> y{' '}
+                                  💬 Mejor sitio para una chapa: entre <b>"{chapaSuggestion.cancionAntes}"</b> y{' '}
                                   <b>"{chapaSuggestion.cancionDespues}"</b>
-                                  {motivos.length > 0
-                                    ? ` — ${motivos.join(',')}.`
-                                    : '.'}
+                                  {motivos.length > 0 ? ` — ${motivos.join(',')}.` : '.'}
                                 </span>
                                 <button
                                   type="button"
@@ -4146,11 +3658,7 @@ export default function RepertorioSetlists({
                           })()}
 
                         {/* Advanced Energy Chart */}
-                        <div
-                          className={
-                            chartZoom ? 'overflow-x-auto -mx-1 px-1' : undefined
-                          }
-                        >
+                        <div className={chartZoom ? 'overflow-x-auto -mx-1 px-1' : undefined}>
                           <EnergyChart
                             setlistKey={activeSetlist.id}
                             chartData={chartData}
@@ -4164,8 +3672,7 @@ export default function RepertorioSetlists({
                               setSelectedSetlistItemId(id);
                             }}
                             onPreviewTransition={(selIdx) => {
-                              if (selIdx > 0)
-                                handleOpenTransitionPreview(selIdx - 1, selIdx);
+                              if (selIdx > 0) handleOpenTransitionPreview(selIdx - 1, selIdx);
                             }}
                             onReorder={reorderSetlistItems}
                             onEnergyChange={handleEnergyChartDrag}
@@ -4173,37 +3680,19 @@ export default function RepertorioSetlists({
                             showIdealCurve={showIdealCurve}
                             showBpmLine={showBpmLine}
                             showTonalidad={showTonalidad}
-                            expandedWidthPx={
-                              chartZoom
-                                ? Math.max(700, chartData.length * 60)
-                                : undefined
-                            }
+                            expandedWidthPx={chartZoom ? Math.max(700, chartData.length * 60) : undefined}
                             belowChartSlot={
                               selectedSetlistItemId &&
                               (() => {
-                                const selectedIndex = chartData.findIndex(
-                                  (d) => d.id === selectedSetlistItemId
-                                );
+                                const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
                                 if (selectedIndex === -1) return null;
                                 const point = chartData[selectedIndex];
-                                const canEditEnergy =
-                                  point.songId != null &&
-                                  typeof point.score === 'number';
-                                const info = canEditEnergy
-                                  ? getEnergyInfo(point.score as number)
-                                  : null;
+                                const canEditEnergy = point.songId != null && typeof point.score === 'number';
+                                const info = canEditEnergy ? getEnergyInfo(point.score as number) : null;
                                 const bumpEnergy = (delta: number) => {
-                                  if (
-                                    !canEditEnergy ||
-                                    typeof point.score !== 'number'
-                                  )
-                                    return;
-                                  const next = Math.max(
-                                    1,
-                                    Math.min(20, point.score + delta)
-                                  );
-                                  if (next !== point.score)
-                                    handleEnergyChartDrag(point, next);
+                                  if (!canEditEnergy || typeof point.score !== 'number') return;
+                                  const next = Math.max(1, Math.min(20, point.score + delta));
+                                  if (next !== point.score) handleEnergyChartDrag(point, next);
                                 };
                                 const dirBtnClass =
                                   'w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0';
@@ -4218,22 +3707,11 @@ export default function RepertorioSetlists({
                                       background: 'var(--sunken)',
                                     }
                                   : undefined;
-                                const prevName =
-                                  selectedIndex > 0
-                                    ? chartData[selectedIndex - 1]?.name
-                                    : null;
-                                const nextName =
-                                  selectedIndex < chartData.length - 1
-                                    ? chartData[selectedIndex + 1]?.name
-                                    : null;
-                                const hasPrevSong =
-                                  selectedIndex > 0 &&
-                                  chartData[selectedIndex - 1]?.songId &&
-                                  point.songId;
+                                const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
+                                const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
+                                const hasPrevSong = selectedIndex > 0 && chartData[selectedIndex - 1]?.songId && point.songId;
                                 const hasNextSong =
-                                  selectedIndex < chartData.length - 1 &&
-                                  chartData[selectedIndex + 1]?.songId &&
-                                  point.songId;
+                                  selectedIndex < chartData.length - 1 && chartData[selectedIndex + 1]?.songId && point.songId;
 
                                 return (
                                   <div className="w-full flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
@@ -4259,19 +3737,9 @@ export default function RepertorioSetlists({
                                       <button
                                         type="button"
                                         disabled={selectedIndex <= 0}
-                                        onClick={() =>
-                                          reorderSetlistItems(
-                                            selectedIndex,
-                                            selectedIndex - 1,
-                                            'stepper'
-                                          )
-                                        }
+                                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
                                         className={reorderBtnClass}
-                                        title={
-                                          prevName
-                                            ? `Mover antes de"${prevName}"`
-                                            : 'Mover una posición hacia atrás'
-                                        }
+                                        title={prevName ? `Mover antes de"${prevName}"` : 'Mover una posición hacia atrás'}
                                       >
                                         <ChevronLeft className="w-4 h-4" />
                                       </button>
@@ -4293,36 +3761,16 @@ export default function RepertorioSetlists({
                                                 color: 'var(--ink-3)',
                                               }
                                         }
-                                        title={
-                                          info
-                                            ? `${info.label} · ${Math.round((point.score as number) / 2)}/10`
-                                            : point.name
-                                        }
+                                        title={info ? `${info.label} · ${Math.round((point.score as number) / 2)}/10` : point.name}
                                       >
-                                        {info
-                                          ? Math.round(
-                                              (point.score as number) / 2
-                                            )
-                                          : '•'}
+                                        {info ? Math.round((point.score as number) / 2) : '•'}
                                       </div>
                                       <button
                                         type="button"
-                                        disabled={
-                                          selectedIndex >= chartData.length - 1
-                                        }
-                                        onClick={() =>
-                                          reorderSetlistItems(
-                                            selectedIndex,
-                                            selectedIndex + 1,
-                                            'stepper'
-                                          )
-                                        }
+                                        disabled={selectedIndex >= chartData.length - 1}
+                                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
                                         className={reorderBtnClass}
-                                        title={
-                                          nextName
-                                            ? `Mover después de"${nextName}"`
-                                            : 'Mover una posición hacia adelante'
-                                        }
+                                        title={nextName ? `Mover después de"${nextName}"` : 'Mover una posición hacia adelante'}
                                       >
                                         <ChevronRight className="w-4 h-4" />
                                       </button>
@@ -4346,20 +3794,14 @@ export default function RepertorioSetlists({
                                     {/* Botones de acción para probar transiciones de audio con tema anterior o siguiente */}
                                     {(hasPrevSong || hasNextSong) &&
                                       (() => {
-                                        const evalPrev =
-                                          point.transitionFromPrev;
+                                        const evalPrev = point.transitionFromPrev;
                                         const evalNext = point.transitionToNext;
                                         return (
                                           <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5">
                                             {hasPrevSong && (
                                               <button
                                                 type="button"
-                                                onClick={() =>
-                                                  handleOpenTransitionPreview(
-                                                    selectedIndex - 1,
-                                                    selectedIndex
-                                                  )
-                                                }
+                                                onClick={() => handleOpenTransitionPreview(selectedIndex - 1, selectedIndex)}
                                                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
                                                   evalPrev?.status === 'ok'
                                                     ? 'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--ok)]/70'
@@ -4378,15 +3820,12 @@ export default function RepertorioSetlists({
                                                       : 'bg-[var(--alert)]/30 text-[var(--ink)]'
                                                   }`}
                                                 >
-                                                  {evalPrev
-                                                    ? evalPrev.icon
-                                                    : '⚡'}
+                                                  {evalPrev ? evalPrev.icon : '⚡'}
                                                 </span>
                                                 <div className="flex flex-col text-left leading-none">
                                                   <div className="flex items-center gap-1">
                                                     <span>
-                                                      Unión con #{selectedIndex}{' '}
-                                                      ({prevName})
+                                                      Unión con #{selectedIndex} ({prevName})
                                                     </span>
                                                     {evalPrev && (
                                                       <span className="text-[10px] font-sans opacity-80">
@@ -4395,25 +3834,18 @@ export default function RepertorioSetlists({
                                                       </span>
                                                     )}
                                                   </div>
-                                                  {evalPrev &&
-                                                    evalPrev.motivos.length >
-                                                      0 && (
-                                                      <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">
-                                                        {evalPrev.motivos[0]}
-                                                      </span>
-                                                    )}
+                                                  {evalPrev && evalPrev.motivos.length > 0 && (
+                                                    <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">
+                                                      {evalPrev.motivos[0]}
+                                                    </span>
+                                                  )}
                                                 </div>
                                               </button>
                                             )}
                                             {hasNextSong && (
                                               <button
                                                 type="button"
-                                                onClick={() =>
-                                                  handleOpenTransitionPreview(
-                                                    selectedIndex,
-                                                    selectedIndex + 1
-                                                  )
-                                                }
+                                                onClick={() => handleOpenTransitionPreview(selectedIndex, selectedIndex + 1)}
                                                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
                                                   evalNext?.status === 'ok'
                                                     ? 'bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--ok)]/70'
@@ -4432,16 +3864,12 @@ export default function RepertorioSetlists({
                                                       : 'bg-[var(--alert)]/30 text-[var(--ink)]'
                                                   }`}
                                                 >
-                                                  {evalNext
-                                                    ? evalNext.icon
-                                                    : '⚡'}
+                                                  {evalNext ? evalNext.icon : '⚡'}
                                                 </span>
                                                 <div className="flex flex-col text-left leading-none">
                                                   <div className="flex items-center gap-1">
                                                     <span>
-                                                      Unión con #
-                                                      {selectedIndex + 2} (
-                                                      {nextName})
+                                                      Unión con #{selectedIndex + 2} ({nextName})
                                                     </span>
                                                     {evalNext && (
                                                       <span className="text-[10px] font-sans opacity-80">
@@ -4450,13 +3878,11 @@ export default function RepertorioSetlists({
                                                       </span>
                                                     )}
                                                   </div>
-                                                  {evalNext &&
-                                                    evalNext.motivos.length >
-                                                      0 && (
-                                                      <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">
-                                                        {evalNext.motivos[0]}
-                                                      </span>
-                                                    )}
+                                                  {evalNext && evalNext.motivos.length > 0 && (
+                                                    <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">
+                                                      {evalNext.motivos[0]}
+                                                    </span>
+                                                  )}
                                                 </div>
                                               </button>
                                             )}
@@ -4473,92 +3899,68 @@ export default function RepertorioSetlists({
                         {/* Avisos y sugerencias — plegados por defecto, con un solo toggle que resume
  cuántos hay entre los heurísticos y los del último Análisis IA, en vez de dos
  filas de badges siempre desplegadas ocupando pantalla. */}
-                        {(energyAnalysis.warnings.length > 0 ||
-                          (aiAnalysisResult?.suggestions?.length ?? 0) > 0) && (
+                        {(energyAnalysis.warnings.length > 0 || (aiAnalysisResult?.suggestions?.length ?? 0) > 0) && (
                           <button
                             type="button"
                             onClick={() => setShowHeuristicWarnings((v) => !v)}
                             className="w-full flex items-center justify-between px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink)] text-[10px] font-sans transition-all cursor-pointer"
                           >
                             <span>
-                              ⚠️ Avisos y sugerencias (
-                              {energyAnalysis.warnings.length +
-                                (aiAnalysisResult?.suggestions?.length ?? 0)}
-                              )
+                              ⚠️ Avisos y sugerencias ({energyAnalysis.warnings.length + (aiAnalysisResult?.suggestions?.length ?? 0)})
                             </span>
                             <span>{showHeuristicWarnings ? '▲' : '▼'}</span>
                           </button>
                         )}
 
                         {/* Warnings & Suggestions (Heuristic) */}
-                        {showHeuristicWarnings &&
-                          energyAnalysis.warnings.length > 0 && (
-                            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                              {energyAnalysis.warnings.map((w, i) => {
-                                const hasSongs =
-                                  !!w.songTitles && w.songTitles.length > 0;
-                                const isHighlighted =
-                                  hasSongs &&
-                                  highlightedSongIds.length > 0 &&
-                                  w.songTitles!.some((t) =>
-                                    titlesMatch(t, highlightedSongIds)
-                                  );
-                                return (
-                                  <span
-                                    key={i}
-                                    className={`px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition ${
-                                      w.type === 'warning'
-                                        ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
-                                        : w.type === 'success'
-                                          ? 'bg-[var(--ok)]/10 text-[var(--ink-2)]/30'
-                                          : 'bg-[var(--acc)]/10 text-[var(--ink-3)]/30'
-                                    } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
-                                    style={{
-                                      cursor: hasSongs ? 'pointer' : 'default',
-                                    }}
-                                    onMouseEnter={() => {
-                                      if (hasSongs)
-                                        setHighlightedSongIds(w.songTitles!);
-                                    }}
-                                    onMouseLeave={() =>
-                                      setHighlightedSongIds([])
-                                    }
-                                    onClick={() => {
-                                      if (hasSongs)
-                                        setHighlightedSongIds(
-                                          isHighlighted ? [] : w.songTitles!
-                                        );
-                                    }}
-                                    title={
-                                      hasSongs
-                                        ? `Resalta: ${w.songTitles!.join(',')}`
-                                        : undefined
-                                    }
-                                  >
-                                    <span>{w.icon}</span>
-                                    <span>{w.message}</span>
-                                    {w.suggestedReorder && (
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          reorderSetlistItems(
-                                            w.suggestedReorder!.fromIndex,
-                                            w.suggestedReorder!.toIndex,
-                                            `warning-${i}`
-                                          );
-                                        }}
-                                        className="ml-1 px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/25 text-[var(--ink)] font-bold transition"
-                                        title={w.suggestedReorder.description}
-                                      >
-                                        ✓ Aplicar
-                                      </button>
-                                    )}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          )}
+                        {showHeuristicWarnings && energyAnalysis.warnings.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                            {energyAnalysis.warnings.map((w, i) => {
+                              const hasSongs = !!w.songTitles && w.songTitles.length > 0;
+                              const isHighlighted =
+                                hasSongs && highlightedSongIds.length > 0 && w.songTitles!.some((t) => titlesMatch(t, highlightedSongIds));
+                              return (
+                                <span
+                                  key={i}
+                                  className={`px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition ${
+                                    w.type === 'warning'
+                                      ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
+                                      : w.type === 'success'
+                                        ? 'bg-[var(--ok)]/10 text-[var(--ink-2)]/30'
+                                        : 'bg-[var(--acc)]/10 text-[var(--ink-3)]/30'
+                                  } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
+                                  style={{
+                                    cursor: hasSongs ? 'pointer' : 'default',
+                                  }}
+                                  onMouseEnter={() => {
+                                    if (hasSongs) setHighlightedSongIds(w.songTitles!);
+                                  }}
+                                  onMouseLeave={() => setHighlightedSongIds([])}
+                                  onClick={() => {
+                                    if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : w.songTitles!);
+                                  }}
+                                  title={hasSongs ? `Resalta: ${w.songTitles!.join(',')}` : undefined}
+                                >
+                                  <span>{w.icon}</span>
+                                  <span>{w.message}</span>
+                                  {w.suggestedReorder && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
+                                      }}
+                                      className="ml-1 px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/25 text-[var(--ink)] font-bold transition"
+                                      title={w.suggestedReorder.description}
+                                    >
+                                      ✓ Aplicar
+                                    </button>
+                                  )}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
 
                         {/* AI Analysis Summary (if available) - as badges like warnings */}
                         {showHeuristicWarnings && aiAnalysisResult && (
@@ -4578,74 +3980,42 @@ export default function RepertorioSetlists({
                             </div>
                             {aiAnalysisResult.suggestions?.length > 0 && (
                               <div className="flex flex-wrap items-center gap-1.5">
-                                {aiAnalysisResult.suggestions.map(
-                                  (s: any, i: number) => {
-                                    const songsToHighlight: string[] =
-                                      s.songs_involved &&
-                                      s.songs_involved.length > 0
-                                        ? s.songs_involved
-                                        : []; // Si no hay songs_involved, usar array vacío
-                                    const hasSongs =
-                                      songsToHighlight.length > 0;
-                                    const isHighlighted =
-                                      hasSongs &&
-                                      highlightedSongIds.length > 0 &&
-                                      songsToHighlight.some(
-                                        (songTitle: string) =>
-                                          titlesMatch(
-                                            songTitle,
-                                            highlightedSongIds
-                                          )
-                                      );
-                                    return (
-                                      <span
-                                        key={i}
-                                        className="px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition"
-                                        style={{
-                                          backgroundColor: isHighlighted
-                                            ? 'rgb(168 85 247 / 0.4)'
-                                            : 'rgb(126 34 206 / 0.3)',
-                                          borderColor: isHighlighted
-                                            ? 'rgb(168 85 247 / 0.8)'
-                                            : 'rgb(147 51 234 / 0.4)',
-                                          color: 'rgb(196 181 253)',
-                                          cursor: hasSongs
-                                            ? 'pointer'
-                                            : 'default',
-                                        }}
-                                        onMouseEnter={() => {
-                                          if (hasSongs)
-                                            setHighlightedSongIds(
-                                              songsToHighlight
-                                            );
-                                        }}
-                                        onMouseLeave={() =>
-                                          setHighlightedSongIds([])
-                                        }
-                                        onClick={() => {
-                                          if (hasSongs)
-                                            setHighlightedSongIds(
-                                              isHighlighted
-                                                ? []
-                                                : songsToHighlight
-                                            );
-                                        }}
-                                        title={
-                                          hasSongs
-                                            ? `Resalta: ${songsToHighlight.join(',')}`
-                                            : s.title
-                                        }
-                                      >
-                                        <span>
-                                          {s.priority === 'high' && '🔴'}
-                                          {s.priority === 'medium' && '🟠'}
-                                          {s.priority === 'low' && '🟡'}
-                                        </span>
-                                        <span>{s.title}</span>
+                                {aiAnalysisResult.suggestions.map((s: any, i: number) => {
+                                  const songsToHighlight: string[] =
+                                    s.songs_involved && s.songs_involved.length > 0 ? s.songs_involved : []; // Si no hay songs_involved, usar array vacío
+                                  const hasSongs = songsToHighlight.length > 0;
+                                  const isHighlighted =
+                                    hasSongs &&
+                                    highlightedSongIds.length > 0 &&
+                                    songsToHighlight.some((songTitle: string) => titlesMatch(songTitle, highlightedSongIds));
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition"
+                                      style={{
+                                        backgroundColor: isHighlighted ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
+                                        borderColor: isHighlighted ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
+                                        color: 'rgb(196 181 253)',
+                                        cursor: hasSongs ? 'pointer' : 'default',
+                                      }}
+                                      onMouseEnter={() => {
+                                        if (hasSongs) setHighlightedSongIds(songsToHighlight);
+                                      }}
+                                      onMouseLeave={() => setHighlightedSongIds([])}
+                                      onClick={() => {
+                                        if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : songsToHighlight);
+                                      }}
+                                      title={hasSongs ? `Resalta: ${songsToHighlight.join(',')}` : s.title}
+                                    >
+                                      <span>
+                                        {s.priority === 'high' && '🔴'}
+                                        {s.priority === 'medium' && '🟠'}
+                                        {s.priority === 'low' && '🟡'}
                                       </span>
-                                    );
-                                  }
-                                )}
+                                      <span>{s.title}</span>
+                                    </span>
+                                  );
+                                })}
                               </div>
                             )}
                           </div>
@@ -4688,12 +4058,8 @@ export default function RepertorioSetlists({
             {activeSetlist.items.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <PublicoSilhouette opacity={0.12} size="medium" />
-                <p className="mt-6 font-medium text-[var(--ink)] text-sm">
-                  No hay canciones en este repertorio
-                </p>
-                <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
-                  Usa la barra superior para añadir temas o eventos.
-                </p>
+                <p className="mt-6 font-medium text-[var(--ink)] text-sm">No hay canciones en este repertorio</p>
+                <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">Usa la barra superior para añadir temas o eventos.</p>
               </div>
             ) : (
               activeSetlist.items.map((it, index) => {
@@ -4707,9 +4073,7 @@ export default function RepertorioSetlists({
 
                   // Check if this song has member notes
                   const memberNotesCount = song.notasMiembros
-                    ? Object.values(song.notasMiembros).filter(
-                        (v) => typeof v === 'string' && v.trim().length > 0
-                      ).length
+                    ? Object.values(song.notasMiembros).filter((v) => typeof v === 'string' && v.trim().length > 0).length
                     : 0;
 
                   const isExpanded = expandedSetlistItemIds.has(it.id);
@@ -4724,8 +4088,7 @@ export default function RepertorioSetlists({
                   };
 
                   // Reproducir esta canción sin tener que expandir la fila
-                  const isPlayingThisRow =
-                    activePlayerSong?.id === song.id && isPlayerPlaying;
+                  const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
                   const playThisSong = () => {
                     const setlistSongs = activeSetlist.items
                       .filter((i) => i.tipoItem === 'cancion' && i.songId)
@@ -4733,36 +4096,19 @@ export default function RepertorioSetlists({
                       .filter((s): s is Song => !!s);
                     // Calculate transposition from tonalidadDeseada if set
                     const diffResult =
-                      song.tonalidad && it.tonalidadDeseada
-                        ? getSemitoneDifference(
-                            song.tonalidad,
-                            it.tonalidadDeseada
-                          )
-                        : null;
+                      song.tonalidad && it.tonalidadDeseada ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada) : null;
                     const transposeSemitones = diffResult ?? 0;
-                    selectPlayerSongWithQueue(
-                      song,
-                      true,
-                      setlistSongs,
-                      transposeSemitones
-                    );
+                    selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
                   };
 
-                  const songIndex = activeSetlist.items
-                    .slice(0, index)
-                    .filter((i) => i.tipoItem === 'cancion').length;
+                  const songIndex = activeSetlist.items.slice(0, index).filter((i) => i.tipoItem === 'cancion').length;
 
                   return (
                     <div
                       key={it.id}
                       draggable={true}
                       onDragStart={(e) => {
-                        if (TRANSPARENT_DRAG_IMAGE)
-                          e.dataTransfer.setDragImage(
-                            TRANSPARENT_DRAG_IMAGE,
-                            0,
-                            0
-                          );
+                        if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0);
                         setDraggedItemIndex(index);
                       }}
                       onDragOver={(e) => {
@@ -4770,8 +4116,7 @@ export default function RepertorioSetlists({
                         setDragOverItemIndex(index);
                       }}
                       onDragLeave={() => {
-                        if (dragOverItemIndex === index)
-                          setDragOverItemIndex(null);
+                        if (dragOverItemIndex === index) setDragOverItemIndex(null);
                       }}
                       onDrop={(e) => {
                         e.preventDefault();
@@ -4783,18 +4128,12 @@ export default function RepertorioSetlists({
                       }}
                       onClick={() => {
                         if (!isSelected && !isExpanded) {
-                          setExpandedSetlistItemIds(
-                            new Set(expandedSetlistItemIds).add(it.id)
-                          );
+                          setExpandedSetlistItemIds(new Set(expandedSetlistItemIds).add(it.id));
                         }
                         setSelectedSetlistItemId(isSelected ? null : it.id);
                       }}
-                      className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${
-                        isDragging ? 'opacity-40 scale-[0.98]' : ''
-                      } ${
-                        isDragOver
-                          ? 'border-[var(--acc)] scale-[1.01] bg-[var(--ok)]/10'
-                          : ''
+                      className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${isDragging ? 'opacity-40 scale-[0.98]' : ''} ${
+                        isDragOver ? 'border-[var(--acc)] scale-[1.01] bg-[var(--ok)]/10' : ''
                       } ${
                         isSelected
                           ? 'border-[var(--acc)] ring-2 ring-indigo-500/20 bg-[var(--ok)]/10'
@@ -4820,11 +4159,7 @@ export default function RepertorioSetlists({
                             playThisSong();
                           }}
                           className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[var(--ok)] text-[var(--ink)] sm:bg-transparent sm:group-hover:bg-[var(--ok)] sm:group-hover:text-[var(--ink)]"
-                          title={
-                            isPlayingThisRow
-                              ? 'Sonando ahora'
-                              : 'Reproducir esta canción'
-                          }
+                          title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
                         >
                           {isPlayingThisRow ? (
                             <div className="flex items-center gap-0.5">
@@ -4834,9 +4169,7 @@ export default function RepertorioSetlists({
                             </div>
                           ) : (
                             <>
-                              <span className="sm:group-hover:hidden text-xs font-semibold text-[var(--ink-2)]">
-                                {songIndex + 1}
-                              </span>
+                              <span className="sm:group-hover:hidden text-xs font-semibold text-[var(--ink-2)]">{songIndex + 1}</span>
                               <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-[var(--ink)]" />
                             </>
                           )}
@@ -4859,45 +4192,15 @@ export default function RepertorioSetlists({
                           const KEY_POPOVER_WIDTH_PX = 200;
                           const KEY_POPOVER_HEIGHT_PX = 110;
                           const rawOrigKey = (song.tonalidad || '').trim();
-                          const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(
-                            rawOrigKey
-                          );
+                          const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(rawOrigKey);
                           const baseRoots = isEsKey
-                            ? [
-                                'Do',
-                                'Do#',
-                                'Re',
-                                'Re#',
-                                'Mi',
-                                'Fa',
-                                'Fa#',
-                                'Sol',
-                                'Sol#',
-                                'La',
-                                'La#',
-                                'Si',
-                              ]
-                            : [
-                                'C',
-                                'C#',
-                                'D',
-                                'D#',
-                                'E',
-                                'F',
-                                'F#',
-                                'G',
-                                'G#',
-                                'A',
-                                'A#',
-                                'B',
-                              ];
+                            ? ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si']
+                            : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
                           const keyMatch = rawOrigKey.match(
                             /^(Do#|Re#|Fa#|Sol#|La#|Do|Re|Mi|Fa|Sol|La|Si|C#|D#|F#|G#|A#|Db|Eb|Gb|Ab|Bb|C|D|E|F|G|A|B)(.*)$/i
                           );
                           const keySuffix = keyMatch ? keyMatch[2] : '';
-                          const keyNotes = baseRoots.map(
-                            (root) => `${root}${keySuffix}`
-                          );
+                          const keyNotes = baseRoots.map((root) => `${root}${keySuffix}`);
                           return (
                             <div className="relative shrink-0">
                               <button
@@ -4909,28 +4212,15 @@ export default function RepertorioSetlists({
                                     setEditingKeyItemId(null);
                                     return;
                                   }
-                                  const rect =
-                                    e.currentTarget.getBoundingClientRect();
+                                  const rect = e.currentTarget.getBoundingClientRect();
                                   setKeyPopoverPos({
-                                    top: Math.min(
-                                      rect.bottom + 4,
-                                      window.innerHeight -
-                                        KEY_POPOVER_HEIGHT_PX -
-                                        8
-                                    ),
-                                    left: Math.min(
-                                      rect.left,
-                                      window.innerWidth -
-                                        KEY_POPOVER_WIDTH_PX -
-                                        8
-                                    ),
+                                    top: Math.min(rect.bottom + 4, window.innerHeight - KEY_POPOVER_HEIGHT_PX - 8),
+                                    left: Math.min(rect.left, window.innerWidth - KEY_POPOVER_WIDTH_PX - 8),
                                   });
                                   setEditingKeyItemId(it.id);
                                 }}
                                 className={`text-[9px] font-sans px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
-                                  desiredKey
-                                    ? 'bg-[var(--acc)]/20 text-[var(--acc)]'
-                                    : 'bg-[var(--surface)]/15 text-[var(--ok)]'
+                                  desiredKey ? 'bg-[var(--acc)]/20 text-[var(--acc)]' : 'bg-[var(--surface)]/15 text-[var(--ok)]'
                                 }`}
                                 title={
                                   desiredKey
@@ -4938,9 +4228,7 @@ export default function RepertorioSetlists({
                                     : 'Tonalidad original. Clic para definir en qué tono tocarla en este repertorio (transposición automática).'
                                 }
                               >
-                                {desiredKey
-                                  ? `${song.tonalidad || '—'} → ${desiredKey}`
-                                  : song.tonalidad || '—'}
+                                {desiredKey ? `${song.tonalidad || '—'} → ${desiredKey}` : song.tonalidad || '—'}
                               </button>
                               {isEditingKey &&
                                 keyPopoverPos &&
@@ -4955,20 +4243,14 @@ export default function RepertorioSetlists({
                                     onClick={(e) => e.stopPropagation()}
                                   >
                                     <p className="text-[9px] font-sans text-[var(--ink-2)] px-0.5">
-                                      Tocar en tono (original:{' '}
-                                      {song.tonalidad || '—'}):
+                                      Tocar en tono (original: {song.tonalidad || '—'}):
                                     </p>
                                     <div className="grid grid-cols-4 gap-1">
                                       {keyNotes.map((note) => (
                                         <button
                                           key={note}
                                           type="button"
-                                          onClick={() =>
-                                            handleSetTonalidadDeseada(
-                                              it.id,
-                                              note
-                                            )
-                                          }
+                                          onClick={() => handleSetTonalidadDeseada(it.id, note)}
                                           className={`px-1 py-1 rounded text-[10px] font-sans font-bold transition cursor-pointer ${
                                             desiredKey === note
                                               ? 'bg-[var(--acc)] text-[var(--on-acc)]'
@@ -4982,13 +4264,10 @@ export default function RepertorioSetlists({
                                     {desiredKey && (
                                       <button
                                         type="button"
-                                        onClick={() =>
-                                          handleSetTonalidadDeseada(it.id, null)
-                                        }
+                                        onClick={() => handleSetTonalidadDeseada(it.id, null)}
                                         className="w-full text-center text-[9px] font-sans text-[var(--ink-2)] hover:text-[var(--alert)] pt-1.5 cursor-pointer"
                                       >
-                                        Volver al original (
-                                        {song.tonalidad || '—'})
+                                        Volver al original ({song.tonalidad || '—'})
                                       </button>
                                     )}
                                   </div>,
@@ -5004,9 +4283,7 @@ export default function RepertorioSetlists({
                         {song.estructuraDocumentoUrl && (
                           <span
                             className={`text-[8px] font-sans px-1 py-0.5 rounded shrink-0 ${
-                              song.estructuraVerificada
-                                ? 'bg-[var(--ok)]/15 text-[var(--ok)]'
-                                : 'bg-[var(--acc)]/15 text-[var(--acc)]'
+                              song.estructuraVerificada ? 'bg-[var(--ok)]/15 text-[var(--ok)]' : 'bg-[var(--acc)]/15 text-[var(--acc)]'
                             }`}
                             title={
                               song.estructuraVerificada
@@ -5018,20 +4295,13 @@ export default function RepertorioSetlists({
                           </span>
                         )}
 
-                        <span className="text-[9px] font-sans text-[var(--ink-2)] shrink-0">
-                          {song.bpm ? `${song.bpm}` : '—'}
-                        </span>
+                        <span className="text-[9px] font-sans text-[var(--ink-2)] shrink-0">{song.bpm ? `${song.bpm}` : '—'}</span>
 
-                        <span className="text-[9px] font-sans text-[var(--acc)] font-bold shrink-0">
-                          {song.duracion || '0:00'}
-                        </span>
+                        <span className="text-[9px] font-sans text-[var(--acc)] font-bold shrink-0">{song.duracion || '0:00'}</span>
 
                         {(() => {
                           const energy = getEnergyInfo(song);
-                          const currentVal1a10 = Math.max(
-                            1,
-                            Math.min(10, Math.round((song.energia || 10) / 2))
-                          );
+                          const currentVal1a10 = Math.max(1, Math.min(10, Math.round((song.energia || 10) / 2)));
                           const isEditingThis = editingEnergyItemId === it.id;
                           // Alto aproximado del popover (10 botones de 20px + padding) para decidir si hay hueco
                           // debajo en el viewport o si hay que abrirlo hacia arriba.
@@ -5048,19 +4318,11 @@ export default function RepertorioSetlists({
                                     setEditingEnergyItemId(null);
                                     return;
                                   }
-                                  const rect =
-                                    e.currentTarget.getBoundingClientRect();
-                                  const openUpward =
-                                    window.innerHeight - rect.bottom <
-                                    POPOVER_HEIGHT_PX + 8;
+                                  const rect = e.currentTarget.getBoundingClientRect();
+                                  const openUpward = window.innerHeight - rect.bottom < POPOVER_HEIGHT_PX + 8;
                                   setEnergyPopoverPos({
-                                    top: openUpward
-                                      ? rect.top - POPOVER_HEIGHT_PX - 4
-                                      : rect.bottom + 4,
-                                    left: Math.min(
-                                      rect.left,
-                                      window.innerWidth - POPOVER_WIDTH_PX - 8
-                                    ),
+                                    top: openUpward ? rect.top - POPOVER_HEIGHT_PX - 4 : rect.bottom + 4,
+                                    left: Math.min(rect.left, window.innerWidth - POPOVER_WIDTH_PX - 8),
                                     openUpward,
                                   });
                                   setEditingEnergyItemId(it.id);
@@ -5070,10 +4332,7 @@ export default function RepertorioSetlists({
                               >
                                 <span>{energy.icon}</span>
                                 {song.energiaManual && (
-                                  <span
-                                    className="ml-0.5"
-                                    title="Energía fijada a mano"
-                                  >
+                                  <span className="ml-0.5" title="Energía fijada a mano">
                                     ✋
                                   </span>
                                 )}
@@ -5097,21 +4356,12 @@ export default function RepertorioSetlists({
                                     }}
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    {Array.from(
-                                      { length: 10 },
-                                      (_, i) => i + 1
-                                    ).map((val) => (
+                                    {Array.from({ length: 10 }, (_, i) => i + 1).map((val) => (
                                       <button
                                         key={val}
                                         type="button"
                                         disabled={savingEnergyItemId === it.id}
-                                        onClick={() =>
-                                          handleSetEnergiaManual(
-                                            song,
-                                            it.id,
-                                            val
-                                          )
-                                        }
+                                        onClick={() => handleSetEnergiaManual(song, it.id, val)}
                                         className={`w-5 h-5 rounded text-[9px] font-sans font-bold flex items-center justify-center transition disabled:opacity-50 ${
                                           currentVal1a10 === val
                                             ? 'bg-[var(--acc)] text-[var(--on-acc)]'
@@ -5143,10 +4393,7 @@ export default function RepertorioSetlists({
  handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
  AGENTS.md §6. */}
                         {memberNotesCount > 0 && (
-                          <span
-                            className="text-[var(--acc)]/70 shrink-0"
-                            title={`${memberNotesCount} nota(s) de miembros`}
-                          >
+                          <span className="text-[var(--acc)]/70 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
                             <Users className="w-3 h-3" />
                           </span>
                         )}
@@ -5168,14 +4415,8 @@ export default function RepertorioSetlists({
                         {index > 0 &&
                           activeSetlist.items[index - 1]?.songId &&
                           (() => {
-                            const prevSong = songs.find(
-                              (s) =>
-                                s.id === activeSetlist.items[index - 1].songId
-                            );
-                            const evalUnion =
-                              prevSong && song
-                                ? evaluarCalidadUnion(prevSong, song)
-                                : null;
+                            const prevSong = songs.find((s) => s.id === activeSetlist.items[index - 1].songId);
+                            const evalUnion = prevSong && song ? evaluarCalidadUnion(prevSong, song) : null;
                             return (
                               <button
                                 type="button"
@@ -5222,17 +4463,9 @@ export default function RepertorioSetlists({
                             toggleExpand();
                           }}
                           className="p-0.5 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors shrink-0"
-                          title={
-                            isExpanded
-                              ? 'Ocultar detalles'
-                              : 'Ver afinación, disco, cantante, acordes y notas de miembros'
-                          }
+                          title={isExpanded ? 'Ocultar detalles' : 'Ver afinación, disco, cantante, acordes y notas de miembros'}
                         >
-                          {isExpanded ? (
-                            <ChevronUp className="w-3.5 h-3.5" />
-                          ) : (
-                            <ChevronDown className="w-3.5 h-3.5" />
-                          )}
+                          {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                         </button>
 
                         <button
@@ -5251,37 +4484,21 @@ export default function RepertorioSetlists({
                         // — mirar notasInternas hacía que esta línea nunca mostrara la nota general recién guardada.
                         // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
                         // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
-                        const userNote =
-                          currentUser?.name &&
-                          song.notasMiembros?.[currentUser.name.toLowerCase()];
-                        return song.notasRepertorio ||
-                          it.notaTema ||
-                          userNote ? (
-                          <div
-                            className="px-2.5 py-1.5 text-[10px] font-sans space-y-1"
-                            onClick={(e) => e.stopPropagation()}
-                          >
+                        const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
+                        return song.notasRepertorio || it.notaTema || userNote ? (
+                          <div className="px-2.5 py-1.5 text-[10px] font-sans space-y-1" onClick={(e) => e.stopPropagation()}>
                             {song.notasRepertorio && (
-                              <div
-                                className="text-[var(--accent-alt)]/80 truncate"
-                                title={song.notasRepertorio}
-                              >
+                              <div className="text-[var(--accent-alt)]/80 truncate" title={song.notasRepertorio}>
                                 📝 {song.notasRepertorio}
                               </div>
                             )}
                             {userNote && (
-                              <div
-                                className="text-[var(--ok)]/80 truncate"
-                                title={userNote}
-                              >
+                              <div className="text-[var(--ok)]/80 truncate" title={userNote}>
                                 👤 {currentUser.name}: {userNote}
                               </div>
                             )}
                             {it.notaTema && (
-                              <div
-                                className="text-[var(--ok)]/80 truncate"
-                                title={it.notaTema}
-                              >
+                              <div className="text-[var(--ok)]/80 truncate" title={it.notaTema}>
                                 💡 {it.notaTema}
                               </div>
                             )}
@@ -5291,31 +4508,20 @@ export default function RepertorioSetlists({
 
                       {/* EXPANDED DETAILS - Only when isExpanded */}
                       {isExpanded && (
-                        <div
-                          className={`border-t px-2.5 py-2 text-[9px] font-sans space-y-1 ${'bg-[var(--bg)]'}`}
-                        >
+                        <div className={`border-t px-2.5 py-2 text-[9px] font-sans space-y-1 ${'bg-[var(--bg)]'}`}>
                           {song.cantantePrincipal && (
                             <div className="text-[var(--ink-2)]">
-                              <span className="font-bold text-[var(--ink-2)]">
-                                Cantante:
-                              </span>{' '}
-                              {song.cantantePrincipal}
+                              <span className="font-bold text-[var(--ink-2)]">Cantante:</span> {song.cantantePrincipal}
                             </div>
                           )}
                           {song.afinacion && (
                             <div className="text-[var(--ink-2)]">
-                              <span className="font-bold text-[var(--ink-2)]">
-                                Afinación:
-                              </span>{' '}
-                              {song.afinacion}
+                              <span className="font-bold text-[var(--ink-2)]">Afinación:</span> {song.afinacion}
                             </div>
                           )}
                           {song.albumDisco && (
                             <div className="text-[var(--ink-2)]">
-                              <span className="font-bold text-[var(--ink-2)]">
-                                Disco:
-                              </span>{' '}
-                              {song.albumDisco}
+                              <span className="font-bold text-[var(--ink-2)]">Disco:</span> {song.albumDisco}
                             </div>
                           )}
 
@@ -5324,9 +4530,7 @@ export default function RepertorioSetlists({
                             placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
                             value={it.notaTema || ''}
                             onClick={(e) => e.stopPropagation()}
-                            onChange={(e) =>
-                              handleUpdateItemNote(it.id, e.target.value)
-                            }
+                            onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
                             className={`w-full text-[9px] font-sans px-2 py-1 rounded mt-1 ${'bg-[var(--sunken)] text-[var(--ink-2)] placeholder:text-[var(--ink-2)]'}`}
                           />
 
@@ -5345,9 +4549,7 @@ export default function RepertorioSetlists({
                               }`}
                             >
                               <Users className="w-3 h-3" /> Notas de miembros
-                              {memberNotesCount > 0
-                                ? ` (${memberNotesCount})`
-                                : ''}
+                              {memberNotesCount > 0 ? ` (${memberNotesCount})` : ''}
                             </button>
                             <button
                               type="button"
@@ -5367,29 +4569,20 @@ export default function RepertorioSetlists({
                               }}
                               className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors"
                             >
-                              <Headphones className="w-3 h-3 text-[var(--ok)]" />{' '}
-                              Studio multipista
+                              <Headphones className="w-3 h-3 text-[var(--ok)]" /> Studio multipista
                             </button>
                           </div>
                         </div>
                       )}
                     </div>
                   );
-                } else if (
-                  it.tipoItem === 'bloque' &&
-                  it.bloqueSubtipo === 'header'
-                ) {
+                } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
                   return (
                     <div
                       key={it.id}
                       draggable={true}
                       onDragStart={(e) => {
-                        if (TRANSPARENT_DRAG_IMAGE)
-                          e.dataTransfer.setDragImage(
-                            TRANSPARENT_DRAG_IMAGE,
-                            0,
-                            0
-                          );
+                        if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0);
                         setDraggedItemIndex(index);
                       }}
                       onDragOver={(e) => {
@@ -5397,8 +4590,7 @@ export default function RepertorioSetlists({
                         setDragOverItemIndex(index);
                       }}
                       onDragLeave={() => {
-                        if (dragOverItemIndex === index)
-                          setDragOverItemIndex(null);
+                        if (dragOverItemIndex === index) setDragOverItemIndex(null);
                       }}
                       onDrop={(e) => {
                         e.preventDefault();
@@ -5408,14 +4600,10 @@ export default function RepertorioSetlists({
                         setDraggedItemIndex(null);
                         setDragOverItemIndex(null);
                       }}
-                      onClick={() =>
-                        setSelectedSetlistItemId(isSelected ? null : it.id)
-                      }
+                      onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
                       className={`border rounded-[var(--r-s)] transition-all cursor-pointer ${
                         isDragging ? 'opacity-40 scale-[0.98]' : ''
-                      } ${
-                        isDragOver ? 'scale-[1.01] bg-[var(--acc)]/10' : ''
-                      } ${
+                      } ${isDragOver ? 'scale-[1.01] bg-[var(--acc)]/10' : ''} ${
                         isSelected
                           ? 'border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10'
                           : 'border-[var(--acc)]/50 bg-[var(--acc)]/5 hover:border-[var(--acc)]/70'
@@ -5447,11 +4635,7 @@ export default function RepertorioSetlists({
                                 s.id === activeSetlist.id
                                   ? {
                                       ...s,
-                                      items: s.items.map((x) =>
-                                        x.id === it.id
-                                          ? { ...x, tituloCustom: val }
-                                          : x
-                                      ),
+                                      items: s.items.map((x) => (x.id === it.id ? { ...x, tituloCustom: val } : x)),
                                     }
                                   : s
                               )
@@ -5485,8 +4669,7 @@ export default function RepertorioSetlists({
                     </div>
                   );
                 } else {
-                  const typeConfig =
-                    SHOW_ITEM_TYPES[it.tipoItem] || SHOW_ITEM_TYPES.otro;
+                  const typeConfig = SHOW_ITEM_TYPES[it.tipoItem] || SHOW_ITEM_TYPES.otro;
                   const durationText = formatItemDuration(it);
 
                   return (
@@ -5494,12 +4677,7 @@ export default function RepertorioSetlists({
                       key={it.id}
                       draggable={true}
                       onDragStart={(e) => {
-                        if (TRANSPARENT_DRAG_IMAGE)
-                          e.dataTransfer.setDragImage(
-                            TRANSPARENT_DRAG_IMAGE,
-                            0,
-                            0
-                          );
+                        if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0);
                         setDraggedItemIndex(index);
                       }}
                       onDragOver={(e) => {
@@ -5507,8 +4685,7 @@ export default function RepertorioSetlists({
                         setDragOverItemIndex(index);
                       }}
                       onDragLeave={() => {
-                        if (dragOverItemIndex === index)
-                          setDragOverItemIndex(null);
+                        if (dragOverItemIndex === index) setDragOverItemIndex(null);
                       }}
                       onDrop={(e) => {
                         e.preventDefault();
@@ -5518,14 +4695,10 @@ export default function RepertorioSetlists({
                         setDraggedItemIndex(null);
                         setDragOverItemIndex(null);
                       }}
-                      onClick={() =>
-                        setSelectedSetlistItemId(isSelected ? null : it.id)
-                      }
+                      onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
                       className={`rounded-[var(--r-s)] transition-all cursor-pointer ${typeConfig.bg} ${
                         isDragging ? 'opacity-40 scale-[0.98]' : ''
-                      } ${isDragOver ? 'border-2 scale-[1.01]' : ''} ${
-                        isSelected ? 'ring-2 ring-amber-400/60' : ''
-                      }`}
+                      } ${isDragOver ? 'border-2 scale-[1.01]' : ''} ${isSelected ? 'ring-2 ring-amber-400/60' : ''}`}
                     >
                       <div className="flex items-center gap-2 px-2.5 py-1.5">
                         {/* Drag Handle */}
@@ -5538,21 +4711,15 @@ export default function RepertorioSetlists({
                         </div>
 
                         {/* Icon */}
-                        <span className="text-base shrink-0">
-                          {typeConfig.icon}
-                        </span>
+                        <span className="text-base shrink-0">{typeConfig.icon}</span>
 
                         {/* Type Label */}
-                        <span
-                          className={`text-[8px] font-sans font-extrabold px-1.5 py-0.5 rounded-sm shrink-0 ${typeConfig.text}`}
-                        >
+                        <span className={`text-[8px] font-sans font-extrabold px-1.5 py-0.5 rounded-sm shrink-0 ${typeConfig.text}`}>
                           {typeConfig.label}
                         </span>
 
                         {/* Duration */}
-                        <span className="text-[9px] font-sans text-[var(--acc)] font-bold shrink-0">
-                          ⏱️ {durationText}
-                        </span>
+                        <span className="text-[9px] font-sans text-[var(--acc)] font-bold shrink-0">⏱️ {durationText}</span>
 
                         {/* Title - inline */}
                         <input
@@ -5567,11 +4734,7 @@ export default function RepertorioSetlists({
                                 s.id === activeSetlist.id
                                   ? {
                                       ...s,
-                                      items: s.items.map((x) =>
-                                        x.id === it.id
-                                          ? { ...x, tituloCustom: val }
-                                          : x
-                                      ),
+                                      items: s.items.map((x) => (x.id === it.id ? { ...x, tituloCustom: val } : x)),
                                     }
                                   : s
                               )
@@ -5608,10 +4771,7 @@ export default function RepertorioSetlists({
 
                       {/* SHOW NOTES IF EXIST */}
                       {it.notaTema && (
-                        <div
-                          className="px-2.5 py-1 text-[8px] font-sans text-[var(--ink)]/70 truncate"
-                          title={it.notaTema}
-                        >
+                        <div className="px-2.5 py-1 text-[8px] font-sans text-[var(--ink)]/70 truncate" title={it.notaTema}>
                           💡 {it.notaTema}
                         </div>
                       )}
@@ -5639,18 +4799,10 @@ export default function RepertorioSetlists({
               toggleFavoriteSong={handleToggleFavorite}
               activePlayerSong={activePlayerSong}
               isPlayerPlaying={isPlayerPlaying}
-              onSelectSong={(song, autoPlay, queue) =>
-                selectPlayerSongWithQueue(song, autoPlay, queue || null)
-              }
-              onRequestDeleteAlbum={(albumName, songCount) =>
-                setDeleteAlbumData({ albumName, songCount })
-              }
-              onEditAlbum={(albumName) =>
-                setAssignSongsModalData({ isOpen: true, albumName })
-              }
-              onCreateAlbum={() =>
-                setAssignSongsModalData({ isOpen: true, albumName: '' })
-              }
+              onSelectSong={(song, autoPlay, queue) => selectPlayerSongWithQueue(song, autoPlay, queue || null)}
+              onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
+              onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
+              onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
               onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
               onOpenChords={(song) => setActiveChordsSong(song)}
               onOpenStudio={(song) => handleOpenStudioModal(song)}
@@ -5678,13 +4830,7 @@ export default function RepertorioSetlists({
                         selectPlayerSongWithQueue(first, true, null);
                       }
                     }}
-                    isPlaying={
-                      !!(
-                        activePlayerSong &&
-                        isPlayerPlaying &&
-                        filteredSongs.some((s) => s.id === activePlayerSong.id)
-                      )
-                    }
+                    isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some((s) => s.id === activePlayerSong.id))}
                   />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Play className="w-6 h-6 text-white fill-white" />
@@ -5693,30 +4839,14 @@ export default function RepertorioSetlists({
 
                 {/* Content */}
                 <div className="flex-1 pb-1">
-                  <div className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider mb-2">
-                    Repertorio
-                  </div>
-                  <h1 className="text-2xl sm:text-4xl font-bold leading-tight truncate">
-                    {bName}
-                  </h1>
+                  <div className="text-xs font-semibold text-[var(--ink-2)] uppercase tracking-wider mb-2">Repertorio</div>
+                  <h1 className="text-2xl sm:text-4xl font-bold leading-tight truncate">{bName}</h1>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--ink-2)] mt-3">
-                    <span className="font-medium text-[var(--ink)]">
-                      {songs.length} temas
-                    </span>
+                    <span className="font-medium text-[var(--ink)]">{songs.length} temas</span>
                     <span className="text-[var(--ink-3)]">•</span>
-                    <span>
-                      {Math.round(
-                        songs.reduce(
-                          (acc, s) => acc + (s.duracionSegundos || 210),
-                          0
-                        ) / 60
-                      )}{' '}
-                      min
-                    </span>
+                    <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
                     <span className="text-[var(--ink-3)]">•</span>
-                    <span className="font-medium">
-                      {songs.filter((s) => s.favoritoGeneral).length} favoritos
-                    </span>
+                    <span className="font-medium">{songs.filter((s) => s.favoritoGeneral).length} favoritos</span>
                   </div>
                 </div>
 
@@ -5731,9 +4861,7 @@ export default function RepertorioSetlists({
                   className="shrink-0 w-12 h-12 rounded-full bg-[var(--acc)] hover:bg-[var(--acc)]/90 text-white font-bold flex items-center justify-center transition-all cursor-pointer active:scale-95 shadow-lg hover:shadow-xl"
                   title="Reproducir catálogo"
                 >
-                  {activePlayerSong &&
-                  isPlayerPlaying &&
-                  filteredSongs.some((s) => s.id === activePlayerSong.id) ? (
+                  {activePlayerSong && isPlayerPlaying && filteredSongs.some((s) => s.id === activePlayerSong.id) ? (
                     <Pause className="w-5 h-5 fill-current" />
                   ) : (
                     <Play className="w-5 h-5 fill-current ml-0.5" />
@@ -5761,11 +4889,7 @@ export default function RepertorioSetlists({
 
                 {/* Status filter toggle */}
                 <button
-                  onClick={() =>
-                    setCatalogStatusFilter(
-                      catalogStatusFilter === 'todos' ? 'listo' : 'todos'
-                    )
-                  }
+                  onClick={() => setCatalogStatusFilter(catalogStatusFilter === 'todos' ? 'listo' : 'todos')}
                   className={`px-3.5 py-2 rounded-[var(--r-m)] text-sm font-medium transition-colors flex items-center gap-2 ${
                     catalogStatusFilter === 'listo'
                       ? 'bg-[var(--acc)] text-white'
@@ -5796,9 +4920,7 @@ export default function RepertorioSetlists({
                 <button
                   type="button"
                   title="Más opciones"
-                  onClick={() =>
-                    setShowCatalogActionsMenu(!showCatalogActionsMenu)
-                  }
+                  onClick={() => setShowCatalogActionsMenu(!showCatalogActionsMenu)}
                   className="relative p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors"
                 >
                   <MoreHorizontal className="w-5 h-5" />
@@ -5837,17 +4959,11 @@ export default function RepertorioSetlists({
                 <div
                   className={`p-3.5 rounded-[var(--r-l)] flex flex-wrap items-center justify-between gap-3 ${'bg-[var(--ok)]/20 text-[var(--ok)]/40'}`}
                 >
-                  <span className="text-xs font-medium">
-                    {selectedCatalogIds.size} canciones seleccionadas
-                  </span>
+                  <span className="text-xs font-medium">{selectedCatalogIds.size} canciones seleccionadas</span>
                   <div className="flex items-center gap-2 flex-wrap">
                     <button
                       type="button"
-                      onClick={() =>
-                        handleBulkAddSelectedToSetlist(
-                          Array.from(selectedCatalogIds)
-                        )
-                      }
+                      onClick={() => handleBulkAddSelectedToSetlist(Array.from(selectedCatalogIds))}
                       className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] cursor-pointer transition-all flex items-center gap-1.5"
                     >
                       <ListPlus className="w-3.5 h-3.5" />
@@ -5855,9 +4971,7 @@ export default function RepertorioSetlists({
                     </button>
                     <button
                       type="button"
-                      onClick={() =>
-                        handleBulkDeleteSongs(Array.from(selectedCatalogIds))
-                      }
+                      onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
                       className="px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)] cursor-pointer transition-all flex items-center gap-1.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -5880,15 +4994,10 @@ export default function RepertorioSetlists({
                   <div className="flex items-center gap-2.5 min-w-0">
                     <input
                       type="checkbox"
-                      checked={
-                        filteredSongs.length > 0 &&
-                        filteredSongs.every((s) => selectedCatalogIds.has(s.id))
-                      }
+                      checked={filteredSongs.length > 0 && filteredSongs.every((s) => selectedCatalogIds.has(s.id))}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedCatalogIds(
-                            new Set(filteredSongs.map((s) => s.id))
-                          );
+                          setSelectedCatalogIds(new Set(filteredSongs.map((s) => s.id)));
                         } else {
                           clearCatalogSelection();
                         }
@@ -5897,28 +5006,16 @@ export default function RepertorioSetlists({
                       title="Seleccionar todo lo filtrado"
                     />
                     <span className="font-semibold text-[var(--ink-2)]">
-                      {selectedCatalogIds.size > 0
-                        ? `${selectedCatalogIds.size} seleccionadas`
-                        : `${filteredSongs.length} temas`}
+                      {selectedCatalogIds.size > 0 ? `${selectedCatalogIds.size} seleccionadas` : `${filteredSongs.length} temas`}
                     </span>
-                    <span className="hidden md:inline text-[11px] opacity-60">
-                      • Tono · BPM · Duración · Estado
-                    </span>
+                    <span className="hidden md:inline text-[11px] opacity-60">• Tono · BPM · Duración · Estado</span>
                   </div>
 
                   <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-2)] mt-3">
-                    <span className="hidden lg:inline opacity-70">
-                      Acciones rápidas:
-                    </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] font-medium">
-                      Acordes
-                    </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)]/50 font-medium">
-                      Studio
-                    </span>
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">
-                      Notas
-                    </span>
+                    <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)] font-medium">Acordes</span>
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ok)]/50 font-medium">Studio</span>
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-medium">Notas</span>
                     <span className="hidden sm:inline px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)] font-medium">
                       Editar
                     </span>
@@ -5931,9 +5028,7 @@ export default function RepertorioSetlists({
                 {filteredSongs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12">
                     <PublicoSilhouette opacity={0.12} size="small" />
-                    <p className="mt-4 font-medium text-[var(--ink)] text-xs">
-                      Sin canciones con esos filtros
-                    </p>
+                    <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin canciones con esos filtros</p>
                     <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
                       Ajusta los filtros o añade nuevas canciones a tu catálogo.
                     </p>
@@ -5942,16 +5037,10 @@ export default function RepertorioSetlists({
                   filteredSongs.map((s, idx) => {
                     const isPlayingCurrent = activePlayerSong?.id === s.id;
                     const isSelected = selectedCatalogIds.has(s.id);
-                    const albumLabel =
-                      s.albumDisco || s.album || 'Singles / Sin Disco';
+                    const albumLabel = s.albumDisco || s.album || 'Singles / Sin Disco';
                     const prevAlbumLabel =
-                      idx > 0
-                        ? filteredSongs[idx - 1].albumDisco ||
-                          filteredSongs[idx - 1].album ||
-                          'Singles / Sin Disco'
-                        : null;
-                    const showAlbumHeader =
-                      groupByAlbum && albumLabel !== prevAlbumLabel;
+                      idx > 0 ? filteredSongs[idx - 1].albumDisco || filteredSongs[idx - 1].album || 'Singles / Sin Disco' : null;
+                    const showAlbumHeader = groupByAlbum && albumLabel !== prevAlbumLabel;
                     const isDraggableCatalog =
                       filteredSongs.length > 1 &&
                       !catalogSearch.trim() &&
@@ -5965,9 +5054,7 @@ export default function RepertorioSetlists({
                         {showAlbumHeader && (
                           <div className="pt-3 pb-1 px-2 flex items-center gap-2 text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]">
                             <span>💿 {albumLabel}</span>
-                            <div
-                              className={`h-px flex-1 ${'bg-[var(--sunken)]'}`}
-                            />
+                            <div className={`h-px flex-1 ${'bg-[var(--sunken)]'}`} />
                           </div>
                         )}
 
@@ -5976,9 +5063,7 @@ export default function RepertorioSetlists({
                           index={idx + 1}
                           isPlayingCurrent={isPlayingCurrent}
                           isPlayerPlaying={isPlayerPlaying}
-                          onPlay={() =>
-                            selectPlayerSongWithQueue(s, true, null)
-                          }
+                          onPlay={() => selectPlayerSongWithQueue(s, true, null)}
                           onSelect={() => {
                             setEditingSong(s);
                             setShowSongModal(true);
@@ -5995,9 +5080,7 @@ export default function RepertorioSetlists({
                           onOpenChords={() => setActiveChordsSong(s)}
                           onOpenMemberNotes={() => setActiveMemberNotesSong(s)}
                           onOpenStudio={() => handleOpenStudioModal(s)}
-                          onOpenIris={() =>
-                            handleOpenStudioModal(s, { openIris: true })
-                          }
+                          onOpenIris={() => handleOpenStudioModal(s, { openIris: true })}
                           onEditSong={() => {
                             setEditingSong(s);
                             setShowSongModal(true);
@@ -6016,10 +5099,7 @@ export default function RepertorioSetlists({
                           onDragOver={(e) => {
                             e.preventDefault();
                             e.dataTransfer.dropEffect = 'move';
-                            if (
-                              draggedCatalogSongId &&
-                              dragOverCatalogSongId !== s.id
-                            ) {
+                            if (draggedCatalogSongId && dragOverCatalogSongId !== s.id) {
                               setDragOverCatalogSongId(s.id);
                             }
                           }}
@@ -6086,25 +5166,16 @@ export default function RepertorioSetlists({
       {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
       {showShowItemModal && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
-          <div
-            className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card}`}
-          >
+          <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card}`}>
             <div className="flex justify-between items-center pb-3">
               <div className="flex items-center gap-2">
-                <span className="p-2 bg-[var(--acc)]/20 text-[var(--ink-2)] rounded-[var(--r-m)]">
-                  ⚡
-                </span>
+                <span className="p-2 bg-[var(--acc)]/20 text-[var(--ink-2)] rounded-[var(--r-m)]">⚡</span>
                 <div>
-                  <h3
-                    className={`text-sm font-extrabold font-sans ${colors.text}`}
-                  >
-                    {editingShowItem
-                      ? 'Editar Interludio / Evento del Show'
-                      : 'Nuevo Interludio / Bloque del Show'}
+                  <h3 className={`text-sm font-extrabold font-sans ${colors.text}`}>
+                    {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
                   </h3>
                   <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                    Organiza momentos del directo (beatbox, presentaciones,
-                    bloque de temas, pausas).
+                    Organiza momentos del directo (beatbox, presentaciones, bloque de temas, pausas).
                   </p>
                 </div>
               </div>
@@ -6124,14 +5195,10 @@ export default function RepertorioSetlists({
                 e.preventDefault();
                 const form = e.currentTarget;
                 const formData = new FormData(form);
-                const tipo = formData.get(
-                  'tipoItem'
-                ) as SetlistItem['tipoItem'];
+                const tipo = formData.get('tipoItem') as SetlistItem['tipoItem'];
                 const titulo = formData.get('tituloCustom') as string;
-                const min =
-                  parseInt(formData.get('minutos') as string, 10) || 0;
-                const seg =
-                  parseInt(formData.get('segundos') as string, 10) || 0;
+                const min = parseInt(formData.get('minutos') as string, 10) || 0;
+                const seg = parseInt(formData.get('segundos') as string, 10) || 0;
                 const totalSeg = min * 60 + seg;
                 const notas = formData.get('notaTema') as string;
 
@@ -6146,25 +5213,15 @@ export default function RepertorioSetlists({
               className="space-y-4 text-xs font-sans"
             >
               <div>
-                <label className="block text-[var(--ink)] font-bold mb-1">
-                  Categoría del Evento *
-                </label>
+                <label className="block text-[var(--ink)] font-bold mb-1">Categoría del Evento *</label>
                 <select
                   name="tipoItem"
                   defaultValue={editingShowItem?.tipoItem || 'presentacion'}
                   className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                   onChange={(e) => {
                     const val = e.target.value as keyof typeof SHOW_ITEM_TYPES;
-                    const titleInput = e.target.form?.elements.namedItem(
-                      'tituloCustom'
-                    ) as HTMLInputElement;
-                    if (
-                      titleInput &&
-                      (!titleInput.value ||
-                        Object.values(SHOW_ITEM_TYPES).some(
-                          (t) => t.label === titleInput.value
-                        ))
-                    ) {
+                    const titleInput = e.target.form?.elements.namedItem('tituloCustom') as HTMLInputElement;
+                    if (titleInput && (!titleInput.value || Object.values(SHOW_ITEM_TYPES).some((t) => t.label === titleInput.value))) {
                       if (SHOW_ITEM_TYPES[val]) {
                         titleInput.value = SHOW_ITEM_TYPES[val].label;
                       }
@@ -6180,16 +5237,12 @@ export default function RepertorioSetlists({
               </div>
 
               <div>
-                <label className="block text-[var(--ink)] font-bold mb-1">
-                  Título / Nombre en la Hoja de Escenario *
-                </label>
+                <label className="block text-[var(--ink)] font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
                 <input
                   name="tituloCustom"
                   type="text"
                   required
-                  defaultValue={
-                    editingShowItem?.tituloCustom || 'Presentación de la Banda'
-                  }
+                  defaultValue={editingShowItem?.tituloCustom || 'Presentación de la Banda'}
                   placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
                   className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                 />
@@ -6202,9 +5255,7 @@ export default function RepertorioSetlists({
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-[10px] text-[var(--ink-2)] block mb-1">
-                      Minutos:
-                    </span>
+                    <span className="text-[10px] text-[var(--ink-2)] block mb-1">Minutos:</span>
                     <input
                       name="minutos"
                       type="number"
@@ -6212,42 +5263,31 @@ export default function RepertorioSetlists({
                       max="60"
                       defaultValue={
                         editingShowItem?.duracionEstimadaSegundos
-                          ? Math.floor(
-                              editingShowItem.duracionEstimadaSegundos / 60
-                            )
+                          ? Math.floor(editingShowItem.duracionEstimadaSegundos / 60)
                           : editingShowItem?.duracionEstimadaMinutos || 2
                       }
                       className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[var(--ink-2)] block mb-1">
-                      Segundos:
-                    </span>
+                    <span className="text-[10px] text-[var(--ink-2)] block mb-1">Segundos:</span>
                     <input
                       name="segundos"
                       type="number"
                       min="0"
                       max="59"
-                      defaultValue={
-                        editingShowItem?.duracionEstimadaSegundos
-                          ? editingShowItem.duracionEstimadaSegundos % 60
-                          : 0
-                      }
+                      defaultValue={editingShowItem?.duracionEstimadaSegundos ? editingShowItem.duracionEstimadaSegundos % 60 : 0}
                       className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${'bg-[var(--surface)] text-[var(--ink)]'}`}
                     />
                   </div>
                 </div>
                 <p className="text-[9px] text-[var(--ink-2)] italic">
-                  Este tiempo se suma automáticamente a la duración total del
-                  concierto.
+                  Este tiempo se suma automáticamente a la duración total del concierto.
                 </p>
               </div>
 
               <div>
-                <label className="block text-[var(--ink)] font-bold mb-1">
-                  Notas / Cues para la Banda / Sonido (Opcional)
-                </label>
+                <label className="block text-[var(--ink)] font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
                 <textarea
                   name="notaTema"
                   rows={2}
@@ -6287,21 +5327,14 @@ export default function RepertorioSetlists({
                       className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer"
                     >
                       <Mic className="w-3.5 h-3.5" />
-                      <span>
-                        {showItemAudioUrl ? 'Regrabar Voz' : 'Grabar Voz'}
-                      </span>
+                      <span>{showItemAudioUrl ? 'Regrabar Voz' : 'Grabar Voz'}</span>
                     </button>
                   )}
 
                   <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer">
                     <Upload className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     <span>Subir MP3 / WAV</span>
-                    <input
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleShowItemAudioFileUpload}
-                      className="hidden"
-                    />
+                    <input type="file" accept="audio/*" onChange={handleShowItemAudioFileUpload} className="hidden" />
                   </label>
 
                   {showItemAudioUrl && (
@@ -6321,18 +5354,12 @@ export default function RepertorioSetlists({
 
                 {showItemAudioUrl && (
                   <div className="pt-1">
-                    <audio
-                      src={showItemAudioUrl}
-                      controls
-                      onError={(e) => e.preventDefault()}
-                      className="w-full h-8 accent-sky-500"
-                    />
+                    <audio src={showItemAudioUrl} controls onError={(e) => e.preventDefault()} className="w-full h-8 accent-sky-500" />
                   </div>
                 )}
 
                 <p className="text-[9px] text-[var(--ink-2)] italic">
-                  Graba o sube la charla o performance para medir la duración
-                  exacta e incluirla en el reproductor del concierto.
+                  Graba o sube la charla o performance para medir la duración exacta e incluirla en el reproductor del concierto.
                 </p>
               </div>
 
@@ -6362,11 +5389,7 @@ export default function RepertorioSetlists({
       {/* PDF Preview Modal */}
       <PdfExportModal
         bandMembers={bandRosterMembers}
-        bandLogoUrl={
-          isBakandeya
-            ? '/logo_bakandeya_bueno_sin_fondo.png'
-            : bandLogoUrl || ''
-        }
+        bandLogoUrl={isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : bandLogoUrl || ''}
         isOpen={showPdfPreview}
         activeSetlist={activeSetlist}
         activeSetlistMetrics={activeSetlistMetrics}
@@ -6420,9 +5443,7 @@ export default function RepertorioSetlists({
         <AddSongsToSetlistModal
           isOpen={isAddSongsModalOpen}
           songs={songs}
-          existingSongIds={activeSetlist.items
-            .map((it) => it.songId)
-            .filter((id): id is string => Boolean(id))}
+          existingSongIds={activeSetlist.items.map((it) => it.songId).filter((id): id is string => Boolean(id))}
           colors={colors}
           onClose={() => setIsAddSongsModalOpen(false)}
           onAddSongs={handleAddMultipleSongsToSetlist}
@@ -6450,10 +5471,7 @@ export default function RepertorioSetlists({
       )}
 
       {/* CONFIRM DELETE MODAL DIALOG */}
-      <ConfirmDeleteModal
-        data={confirmDeleteModal}
-        onClose={() => setConfirmDeleteModal(null)}
-      />
+      <ConfirmDeleteModal data={confirmDeleteModal} onClose={() => setConfirmDeleteModal(null)} />
 
       {/* CONFIRM DELETE ALBUM MODAL DIALOG */}
       <ConfirmDeleteAlbumModal
@@ -6466,9 +5484,7 @@ export default function RepertorioSetlists({
       {/* SHARE MODAL */}
       <ShareModal
         isOpen={shareModalData.isOpen}
-        onClose={() =>
-          setShareModalData((prev) => ({ ...prev, isOpen: false }))
-        }
+        onClose={() => setShareModalData((prev) => ({ ...prev, isOpen: false }))}
         title={shareModalData.title}
         subtitle={shareModalData.subtitle}
         initialText={shareModalData.text}
@@ -6500,9 +5516,7 @@ export default function RepertorioSetlists({
                   : 'bg-[var(--surface)] text-[var(--ink-2)]'
           }`}
         >
-          {statusBanner.type === 'loading' && (
-            <span className="w-3.5 h-3.5 border-t-[var(--hair)] rounded-full animate-spin shrink-0" />
-          )}
+          {statusBanner.type === 'loading' && <span className="w-3.5 h-3.5 border-t-[var(--hair)] rounded-full animate-spin shrink-0" />}
           <span>{statusBanner.text}</span>
         </div>
       )}
@@ -6576,57 +5590,51 @@ export default function RepertorioSetlists({
       )}
 
       {/* SONG TRANSITION PREVIEW MODAL (PROBAR UNIÓN Y ENLACE AUDITIVO ENTRE TEMAS) */}
-      {transitionPreviewData?.isOpen &&
-        transitionPreviewData.songA &&
-        transitionPreviewData.songB && (
-          <SongTransitionPreviewModal
-            isOpen={transitionPreviewData.isOpen}
-            onClose={() => setTransitionPreviewData(null)}
-            songA={transitionPreviewData.songA}
-            songB={transitionPreviewData.songB}
-            itemA={transitionPreviewData.itemA}
-            itemB={transitionPreviewData.itemB}
-            indexA={transitionPreviewData.indexA}
-            indexB={transitionPreviewData.indexB}
-            totalItemsCount={activeSetlist?.items?.length || 0}
-            onNavigateTransition={(newIdxA, newIdxB) => {
-              handleOpenTransitionPreview(newIdxA, newIdxB);
-            }}
-            onSwapSongs={(idxA, idxB) => {
-              reorderSetlistItems(idxA, idxB);
-              setTransitionPreviewData((prev) =>
-                prev
-                  ? {
-                      ...prev,
-                      songA: prev.songB,
-                      songB: prev.songA,
-                      itemA: prev.itemB,
-                      itemB: prev.itemA,
-                    }
-                  : null
-              );
-            }}
-            onInsertInterludio={(afterItemId) => {
-              handleAddItemToSetlist(
-                undefined,
-                'chapa',
-                'Charla / Interludio',
-                1,
-                60,
-                'Transición hablada para modular tono o descanso',
-                afterItemId
-              );
-            }}
-            onUpdateSong={handleUpdateSongFromStudio}
-          />
-        )}
+      {transitionPreviewData?.isOpen && transitionPreviewData.songA && transitionPreviewData.songB && (
+        <SongTransitionPreviewModal
+          isOpen={transitionPreviewData.isOpen}
+          onClose={() => setTransitionPreviewData(null)}
+          songA={transitionPreviewData.songA}
+          songB={transitionPreviewData.songB}
+          itemA={transitionPreviewData.itemA}
+          itemB={transitionPreviewData.itemB}
+          indexA={transitionPreviewData.indexA}
+          indexB={transitionPreviewData.indexB}
+          totalItemsCount={activeSetlist?.items?.length || 0}
+          onNavigateTransition={(newIdxA, newIdxB) => {
+            handleOpenTransitionPreview(newIdxA, newIdxB);
+          }}
+          onSwapSongs={(idxA, idxB) => {
+            reorderSetlistItems(idxA, idxB);
+            setTransitionPreviewData((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    songA: prev.songB,
+                    songB: prev.songA,
+                    itemA: prev.itemB,
+                    itemB: prev.itemA,
+                  }
+                : null
+            );
+          }}
+          onInsertInterludio={(afterItemId) => {
+            handleAddItemToSetlist(
+              undefined,
+              'chapa',
+              'Charla / Interludio',
+              1,
+              60,
+              'Transición hablada para modular tono o descanso',
+              afterItemId
+            );
+          }}
+          onUpdateSong={handleUpdateSongFromStudio}
+        />
+      )}
 
       {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal
-        moduleId="repertorio"
-        isOpen={isTutorialOpen}
-        onClose={closeTutorial}
-      />
+      <ModuleTutorialModal moduleId="repertorio" isOpen={isTutorialOpen} onClose={closeTutorial} />
     </div>
   );
 }

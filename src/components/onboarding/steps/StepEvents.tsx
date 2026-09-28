@@ -45,14 +45,11 @@ export const StepEvents: React.FC<StepEventsProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Calendar className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">
-          Próximos Conciertos & Ensayos (Agenda)
-        </h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">Próximos Conciertos & Ensayos (Agenda)</h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
-        Publica tus próximas fechas para que tus fans compren entradas y los
-        promotores vean que tenéis una gira activa.
+        Publica tus próximas fechas para que tus fans compren entradas y los promotores vean que tenéis una gira activa.
       </p>
 
       {/* Events List */}
@@ -66,9 +63,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-bold text-xs ${
-                    ev.tipo === 'ensayo'
-                      ? 'bg-[var(--acc)]/10 text-[var(--acc)]'
-                      : 'bg-[var(--acc)]/10 text-[var(--acc)]'
+                    ev.tipo === 'ensayo' ? 'bg-[var(--acc)]/10 text-[var(--acc)]' : 'bg-[var(--acc)]/10 text-[var(--acc)]'
                   }`}
                 >
                   <span className="text-[9px] font-semibold">
@@ -78,18 +73,12 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                         })
                       : 'DÍA'}
                   </span>
-                  <span className="text-sm leading-none">
-                    {ev.fecha ? new Date(ev.fecha).getDate() : '--'}
-                  </span>
+                  <span className="text-sm leading-none">{ev.fecha ? new Date(ev.fecha).getDate() : '--'}</span>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-[var(--ink)]">
-                      {ev.titulo}
-                    </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
-                      {ev.tipo}
-                    </span>
+                    <span className="text-sm font-medium text-[var(--ink)]">{ev.titulo}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">{ev.tipo}</span>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] mt-0.5">
                     {ev.ciudad && <span>{ev.ciudad}</span>}

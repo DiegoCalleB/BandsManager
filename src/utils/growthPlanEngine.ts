@@ -1,8 +1,5 @@
 import { SocialMetric, EPKConfig } from '../types';
-import {
-  detectBandProfileArchetype,
-  BandProfileArchetype,
-} from './bandGrowthTiers';
+import { detectBandProfileArchetype, BandProfileArchetype } from './bandGrowthTiers';
 
 export interface ActionItem {
   id: string;
@@ -48,12 +45,7 @@ export interface GrowthPlan {
   weeklyBlueprint: {
     day: string;
     focus: string;
-    recommendedPlatform:
-      | 'instagram'
-      | 'tiktok'
-      | 'youtube'
-      | 'spotify'
-      | 'todas';
+    recommendedPlatform: 'instagram' | 'tiktok' | 'youtube' | 'spotify' | 'todas';
     contentAction: string;
     optimalPostingTime: string;
   }[];
@@ -66,17 +58,12 @@ export function getDeterministicGrowthPlan(
   epkConfig?: Partial<EPKConfig> | null,
   horizonDays: 30 | 60 | 90 = 30
 ): GrowthPlan {
-  const igCount =
-    latestMetric?.instagram_followers || latestMetric?.instagram || 0;
+  const igCount = latestMetric?.instagram_followers || latestMetric?.instagram || 0;
   const tkCount = latestMetric?.tiktok_followers || latestMetric?.tiktok || 0;
-  const ytSubs =
-    latestMetric?.youtube_subscribers || latestMetric?.youtube || 0;
+  const ytSubs = latestMetric?.youtube_subscribers || latestMetric?.youtube || 0;
   const ytViews = latestMetric?.youtube_total_views || 0;
-  const spCount =
-    latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0;
-  const hasSpotifyProfile = Boolean(
-    epkConfig?.enlacesRedes?.spotify || spCount > 0
-  );
+  const spCount = latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0;
+  const hasSpotifyProfile = Boolean(epkConfig?.enlacesRedes?.spotify || spCount > 0);
 
   const archetype = detectBandProfileArchetype(latestMetric);
   const tier = archetype.tier;
@@ -109,8 +96,7 @@ export function getDeterministicGrowthPlan(
       '«El momento exacto en el que el público se unió al coro por primera vez...»',
       '«Lo que nadie te cuenta de ensayar 5 horas un domingo para un bolo de 40 minutos.»',
     ];
-    igSchedule =
-      '3 Reels semanales (19:30 - 21:00h) + Stories de ensayo con sticker de pregunta y encuesta';
+    igSchedule = '3 Reels semanales (19:30 - 21:00h) + Stories de ensayo con sticker de pregunta y encuesta';
     igActions = [
       {
         id: 'ig-debut-1',
@@ -124,8 +110,7 @@ export function getDeterministicGrowthPlan(
       {
         id: 'ig-debut-2',
         title: 'Reels de fragmentos de ensayo con audio nativo limpio',
-        description:
-          'Graba en vertical con buena luz en el local. Corta directamente al inicio del estribillo sin introducciones lentas.',
+        description: 'Graba en vertical con buena luz en el local. Corta directamente al inicio del estribillo sin introducciones lentas.',
         impact: 'critico',
         difficulty: 'medio',
         frequency: 'semanal',
@@ -133,8 +118,7 @@ export function getDeterministicGrowthPlan(
       },
       {
         id: 'ig-debut-3',
-        title:
-          'Etiquetar la sala del concierto en Stories y Reels colaborativos',
+        title: 'Etiquetar la sala del concierto en Stories y Reels colaborativos',
         description:
           'Siempre que toques en directo, pide un post en colaboración o etiqueta la sala para que compartan en su cuenta y absorbas su público local.',
         impact: 'alto',
@@ -153,8 +137,7 @@ export function getDeterministicGrowthPlan(
         concept:
           'Compara la nota de voz cutre grabada en el móvil a las 2 AM con el tema terminado sonando a toda potencia con la banda junta.',
         hook: '«Así empezó esta canción en una nota de voz a las 3 AM vs cómo suena con toda la banda...»',
-        callToAction:
-          'Comenta si te mola el cambio o prefieres la maqueta acústica.',
+        callToAction: 'Comenta si te mola el cambio o prefieres la maqueta acústica.',
       },
     ];
   } else if (tier === 'local_traction') {
@@ -168,8 +151,7 @@ export function getDeterministicGrowthPlan(
       `«Si te gusta [Banda de Referencia], te garantizo que este tema de ${bandName} va directo a tu playlist.»`,
       '«La cara de nuestro batería cuando le dijimos que tocamos en el festival este mes.»',
     ];
-    igSchedule =
-      '4 Reels semanales (20:00 - 21:30h) + Canal de Difusión VIP semanal';
+    igSchedule = '4 Reels semanales (20:00 - 21:30h) + Canal de Difusión VIP semanal';
     igActions = [
       {
         id: 'ig-trac-1',
@@ -184,8 +166,7 @@ export function getDeterministicGrowthPlan(
       {
         id: 'ig-trac-2',
         title: 'Reels con sticker interactivo de cuenta atrás para conciertos',
-        description:
-          'Añade el sticker de cuenta atrás del concierto en las Stories y ancla el Reel del tema estrella en tu perfil.',
+        description: 'Añade el sticker de cuenta atrás del concierto en las Stories y ancla el Reel del tema estrella en tu perfil.',
         impact: 'critico',
         difficulty: 'medio',
         frequency: 'semanal',
@@ -209,11 +190,9 @@ export function getDeterministicGrowthPlan(
     igViralConcepts = [
       {
         title: 'La Prueba de Fuego del Público',
-        concept:
-          'Pide al público en directo que cante a capela una frase y grábalo desde el escenario con la cámara hacia ellos.',
+        concept: 'Pide al público en directo que cante a capela una frase y grábalo desde el escenario con la cámara hacia ellos.',
         hook: '«El momento exacto en el que dejamos de cantar nosotros y la sala entera gritó esto...»',
-        callToAction:
-          'Si estuviste en la sala, encuéntrate en el vídeo y comenta.',
+        callToAction: 'Si estuviste en la sala, encuéntrate en el vídeo y comenta.',
       },
     ];
   } else {
@@ -226,13 +205,11 @@ export function getDeterministicGrowthPlan(
       '«Así vivimos el concierto más salvaje de nuestra historia desde el escenario...»',
       '«El antes y el después de tocar 3 días seguidos sin dormir en furgoneta.»',
     ];
-    igSchedule =
-      '4-5 Reels semanales + Cobertura intensiva en directo durante fines de semana de bolo';
+    igSchedule = '4-5 Reels semanales + Cobertura intensiva en directo durante fines de semana de bolo';
     igActions = [
       {
         id: 'ig-cons-1',
-        title:
-          'Lanzar campañas de Anuncios segmentados por ciudad de concierto',
+        title: 'Lanzar campañas de Anuncios segmentados por ciudad de concierto',
         description:
           'Promociona con 5€/día el Reel del directo a personas interesadas en indie/rock en el radio de 25km de la sala donde tocas.',
         impact: 'critico',
@@ -243,8 +220,7 @@ export function getDeterministicGrowthPlan(
       {
         id: 'ig-cons-2',
         title: 'Colaboraciones cruzadas con otras bandas del cartel',
-        description:
-          'Publica posts compartidos (Co-Author) con los grupos con los que compartes escenario para sumar audiencias enteras.',
+        description: 'Publica posts compartidos (Co-Author) con los grupos con los que compartes escenario para sumar audiencias enteras.',
         impact: 'alto',
         difficulty: 'fácil',
         frequency: 'mensual',
@@ -258,8 +234,7 @@ export function getDeterministicGrowthPlan(
     igViralConcepts = [
       {
         title: 'El Viaje de 600km para 50 Minutos de Éxtasis',
-        concept:
-          'Muestra el viaje en furgoneta, montaje de escenario, cansancio y la explosión final de adrenalina al subir al escenario.',
+        concept: 'Muestra el viaje en furgoneta, montaje de escenario, cansancio y la explosión final de adrenalina al subir al escenario.',
         hook: '«600 kilómetros de carretera para vivir estos 50 minutos con vosotros. Valió cada segundo.»',
         callToAction: 'Etiqueta a quien te acompaña a todos los conciertos.',
       },
@@ -292,8 +267,7 @@ export function getDeterministicGrowthPlan(
 
   if (tkCount < 1000) {
     tkStage = 'Fase de Descubrimiento (0 - 1K)';
-    tkObjective =
-      'Conseguir que el algoritmo posicione vuestro audio original y viralice ganchos musicales ante público frío';
+    tkObjective = 'Conseguir que el algoritmo posicione vuestro audio original y viralice ganchos musicales ante público frío';
     tkStrategy =
       'TikTok es la plataforma de descubrimiento musical más potente. No necesitas seguidores para conseguir 50k views si el gancho en los primeros 1.5 segundos genera intriga o empatía musical. Sube la pista como sonido oficial.';
     tkHooks = [
@@ -312,8 +286,7 @@ export function getDeterministicGrowthPlan(
         impact: 'critico',
         difficulty: 'fácil',
         frequency: 'semanal',
-        kpiTarget:
-          'Lograr que al menos 15 personas graben TikToks con vuestro sonido',
+        kpiTarget: 'Lograr que al menos 15 personas graben TikToks con vuestro sonido',
       },
       {
         id: 'tk-deb-2',
@@ -333,31 +306,26 @@ export function getDeterministicGrowthPlan(
     tkViralConcepts = [
       {
         title: 'El Error que se Convirtió en Canción',
-        concept:
-          'Muestra una pifia o equivocación en el local que al final sonó tan bien que se quedó como puente del tema.',
+        concept: 'Muestra una pifia o equivocación en el local que al final sonó tan bien que se quedó como puente del tema.',
         hook: '«Nos equivocamos metiendo este acorde y acabó siendo la mejor parte del disco...»',
         callToAction: 'Dale al + si quieres escuchar cómo quedó en el estudio.',
       },
     ];
   } else {
     tkStage = 'Consolidación de Comunidad (1K+)';
-    tkObjective =
-      'Convertir usuarios virales de TikTok en oyentes activos de Spotify y seguidores en Instagram';
+    tkObjective = 'Convertir usuarios virales de TikTok en oyentes activos de Spotify y seguidores en Instagram';
     tkStrategy =
       'Usa la función de responder comentarios con vídeos tocando instrumentos en directo. Participa en tendencias musicales adaptándolas con el estilo propio de la banda.';
     tkHooks = [
       '«Nos pidieron tocar este tema en acústico y esto fue lo que pasó...»',
       '«Así reacciona la gente cuando metemos este cambio de ritmo en mitad del tema.»',
     ];
-    tkSchedule =
-      '1 TikTok diario alternando entre fragmentos de directo, humor de banda y proceso de grabación';
+    tkSchedule = '1 TikTok diario alternando entre fragmentos de directo, humor de banda y proceso de grabación';
     tkActions = [
       {
         id: 'tk-con-1',
-        title:
-          'Responder a comentarios pidiendo canciones con tomas en directo',
-        description:
-          'Aprovecha las preguntas de los fans en comentarios para crear nuevos clips tocando la estrofa solicitada.',
+        title: 'Responder a comentarios pidiendo canciones con tomas en directo',
+        description: 'Aprovecha las preguntas de los fans en comentarios para crear nuevos clips tocando la estrofa solicitada.',
         impact: 'alto',
         difficulty: 'fácil',
         frequency: 'semanal',
@@ -371,8 +339,7 @@ export function getDeterministicGrowthPlan(
     tkViralConcepts = [
       {
         title: 'Versión Inesperada con el Sonido de la Banda',
-        concept:
-          'Haz un cover de 20 segundos de un clásico del pop pero con el sonido distorsionado y enérgico de vuestro grupo.',
+        concept: 'Haz un cover de 20 segundos de un clásico del pop pero con el sonido distorsionado y enérgico de vuestro grupo.',
         hook: '«¿Cómo sonaría este hit si lo tocáramos en un festival de rock?»',
         callToAction: 'Comenta qué otra canción quieres que versionemos.',
       },
@@ -414,8 +381,7 @@ export function getDeterministicGrowthPlan(
       '«Sesión Acústica Exclusiva grabada en una sola toma sin cortes ni autotune.»',
       '«Detrás de cámaras: Cómo grabamos este videoclip con 0€ de presupuesto.»',
     ];
-    ytSchedule =
-      '2 Shorts semanales + 1 Vídeo largo de calidad (Sesión en directo o Videoclip) cada 4 semanas';
+    ytSchedule = '2 Shorts semanales + 1 Vídeo largo de calidad (Sesión en directo o Videoclip) cada 4 semanas';
     ytActions = [
       {
         id: 'yt-deb-1',
@@ -425,14 +391,12 @@ export function getDeterministicGrowthPlan(
         impact: 'critico',
         difficulty: 'fácil',
         frequency: 'semanal',
-        kpiTarget:
-          'Derivar el 25% de visitas de Shorts hacia el videoclip largo',
+        kpiTarget: 'Derivar el 25% de visitas de Shorts hacia el videoclip largo',
       },
       {
         id: 'yt-deb-2',
         title: 'Miniaturas de Alto Contraste con Expresiones y Texto Corto',
-        description:
-          'Usa miniaturas nítidas con primer plano de los músicos en directo, colores saturados y máximo 3 palabras en negrita.',
+        description: 'Usa miniaturas nítidas con primer plano de los músicos en directo, colores saturados y máximo 3 palabras en negrita.',
         impact: 'alto',
         difficulty: 'medio',
         frequency: 'semanal',
@@ -440,15 +404,13 @@ export function getDeterministicGrowthPlan(
       },
       {
         id: 'yt-deb-3',
-        title:
-          'Optimización SEO con Letra Completa y Enlaces en la Descripción',
+        title: 'Optimización SEO con Letra Completa y Enlaces en la Descripción',
         description:
           'Escribe la letra íntegra de la canción, acordes, créditos y enlaces a Spotify e Instagram en la descripción del vídeo.',
         impact: 'medio',
         difficulty: 'fácil',
         frequency: 'puntual',
-        kpiTarget:
-          'Aparecer en primeras posiciones al buscar letra de la canción',
+        kpiTarget: 'Aparecer en primeras posiciones al buscar letra de la canción',
       },
     ];
     ytDonts = [
@@ -458,16 +420,14 @@ export function getDeterministicGrowthPlan(
     ytViralConcepts = [
       {
         title: 'Sesión Acústica en Lugar Inesperado',
-        concept:
-          'Graba a la banda tocando en acústico en una azotea con atardecer, un túnel con eco o el bosque.',
+        concept: 'Graba a la banda tocando en acústico en una azotea con atardecer, un túnel con eco o el bosque.',
         hook: '«Tocamos esta canción con la reverberación natural de este túnel abandonado...»',
         callToAction: 'Suscríbete para ver la sesión completa.',
       },
     ];
   } else {
     ytStage = 'Consolidación Audiovisual (1K+ suscriptores)';
-    ytObjective =
-      'Fidelizar a la comunidad con directos completos, documentales de gira y monetización por YouTube Music';
+    ytObjective = 'Fidelizar a la comunidad con directos completos, documentales de gira y monetización por YouTube Music';
     ytStrategy =
       'Crea listas de reproducción organizadas por álbumes y conciertos completos. Los directos bien masterizados son la mejor carta de presentación para festivales.';
     ytHooks = [
@@ -484,8 +444,7 @@ export function getDeterministicGrowthPlan(
         impact: 'alto',
         difficulty: 'avanzado',
         frequency: 'mensual',
-        kpiTarget:
-          'Tiempo de reproducción promedio > 12 minutos por espectador',
+        kpiTarget: 'Tiempo de reproducción promedio > 12 minutos por espectador',
       },
     ];
     ytDonts = [
@@ -495,8 +454,7 @@ export function getDeterministicGrowthPlan(
     ytViralConcepts = [
       {
         title: 'El Documental de Fin de Gira',
-        concept:
-          'Resumen de 10 minutos con lo mejor de la temporada: viajes, risas, caídas y los momentos más emotivos con el público.',
+        concept: 'Resumen de 10 minutos con lo mejor de la temporada: viajes, risas, caídas y los momentos más emotivos con el público.',
         hook: '«1 año de gira resumido en 10 minutos de pura adrenalina.»',
         callToAction: 'Cuéntanos en comentarios en qué concierto estuviste.',
       },
@@ -563,15 +521,13 @@ export function getDeterministicGrowthPlan(
       },
       {
         id: 'sp-deb-2',
-        title:
-          'Pitch Editorial en Spotify for Artists con 3 semanas de antelación',
+        title: 'Pitch Editorial en Spotify for Artists con 3 semanas de antelación',
         description:
           'Rellena detalladamente los instrumentos, género, estado de ánimo (mood), ciudad y la historia del tema para que los curadores editoriales de España lo valoren.',
         impact: 'critico',
         difficulty: 'medio',
         frequency: 'mensual',
-        kpiTarget:
-          'Entrada en al menos 1 lista editorial de novedades (ej. Radar Indie, Novedades Rock)',
+        kpiTarget: 'Entrada en al menos 1 lista editorial de novedades (ej. Radar Indie, Novedades Rock)',
       },
       {
         id: 'sp-deb-3',
@@ -605,13 +561,11 @@ export function getDeterministicGrowthPlan(
       `«Superamos los ${spCount.toLocaleString()} oyentes en Spotify. ¡Gracias a todos los que nos tenéis en bucle!»`,
       '«Nuevo single disponible. Cuéntanos cuál es tu verso favorito en los comentarios.»',
     ];
-    spSchedule =
-      'Lanzamientos constantes cada 6 semanas + Campaña de Canvas animados en vertical para cada canción';
+    spSchedule = 'Lanzamientos constantes cada 6 semanas + Campaña de Canvas animados en vertical para cada canción';
     spActions = [
       {
         id: 'sp-con-1',
-        title:
-          'Subir Spotify Canvas (Vídeo vertical en bucle) a todas las canciones',
+        title: 'Subir Spotify Canvas (Vídeo vertical en bucle) a todas las canciones',
         description:
           'Crea vídeos verticales de 3 a 8 segundos en bucle para cada tema en Spotify. Aumenta las posibilidades de compartir en historias de Instagram un +145%.',
         impact: 'alto',
@@ -660,20 +614,17 @@ export function getDeterministicGrowthPlan(
     overallPillars: [
       {
         pillar: 'Directo y Energía de Escenario (Conversión a Salas)',
-        description:
-          'Demostrar con clips de sonido impecable que la banda ofrece un directo explosivo que nadie debe perderse.',
+        description: 'Demostrar con clips de sonido impecable que la banda ofrece un directo explosivo que nadie debe perderse.',
         weightPercentage: 40,
       },
       {
         pillar: 'Humanización & Detrás de Cámaras (Comunidad de Superfans)',
-        description:
-          'Ensayos, anécdotas de furgoneta, composición de letras y conexión personal entre los músicos y el público.',
+        description: 'Ensayos, anécdotas de furgoneta, composición de letras y conexión personal entre los músicos y el público.',
         weightPercentage: 35,
       },
       {
         pillar: 'Lanzamientos en Cascada & Streaming (Spotify / YouTube)',
-        description:
-          'Campañas de anticipación musical, Pre-Saves, Canvas animados y derivación constante a plataformas de escucha.',
+        description: 'Campañas de anticipación musical, Pre-Saves, Canvas animados y derivación constante a plataformas de escucha.',
         weightPercentage: 25,
       },
     ],
@@ -682,56 +633,49 @@ export function getDeterministicGrowthPlan(
         day: 'Lunes',
         focus: 'Humor & Anécdota de Furgoneta o Ensayo',
         recommendedPlatform: 'tiktok',
-        contentAction:
-          'Vídeo dinámico de 15s con anécdota o situación cómica de grupo con audio en tendencia.',
+        contentAction: 'Vídeo dinámico de 15s con anécdota o situación cómica de grupo con audio en tendencia.',
         optimalPostingTime: '16:00h',
       },
       {
         day: 'Martes',
         focus: 'Riff o Solo del Directo con Calidad de Sonido',
         recommendedPlatform: 'instagram',
-        contentAction:
-          'Reel vertical con audio nítido del último concierto y gancho visual en los primeros 2 segundos.',
+        contentAction: 'Reel vertical con audio nítido del último concierto y gancho visual en los primeros 2 segundos.',
         optimalPostingTime: '20:00h',
       },
       {
         day: 'Miércoles',
         focus: 'Interacción en Stories & Votaciones de Setlist',
         recommendedPlatform: 'instagram',
-        contentAction:
-          'Stickers de preguntas y encuestas sobre qué canciones tocar en el próximo concierto.',
+        contentAction: 'Stickers de preguntas y encuestas sobre qué canciones tocar en el próximo concierto.',
         optimalPostingTime: '14:00h',
       },
       {
         day: 'Jueves',
         focus: 'YouTube Short / Avance de Videoclip Oficial',
         recommendedPlatform: 'youtube',
-        contentAction:
-          'Short vertical con el momento cumbre del tema enlazado con 1 toque al videoclip oficial completo.',
+        contentAction: 'Short vertical con el momento cumbre del tema enlazado con 1 toque al videoclip oficial completo.',
         optimalPostingTime: '18:30h',
       },
       {
         day: 'Viernes',
         focus: 'Lanzamiento / Cuenta Atrás Concierto del Fin de Semana',
         recommendedPlatform: 'todas',
-        contentAction:
-          'Post colaborativo con la sala y sticker de cuenta atrás para la apertura de puertas.',
+        contentAction: 'Post colaborativo con la sala y sticker de cuenta atrás para la apertura de puertas.',
         optimalPostingTime: '19:30h',
       },
       {
         day: 'Sábado',
         focus: 'Cobertura en Vivo del Concierto (Stories)',
         recommendedPlatform: 'instagram',
-        contentAction:
-          '5-6 Stories en directo desde la prueba de sonido, camerino y momento del pogo con el público.',
+        contentAction: '5-6 Stories en directo desde la prueba de sonido, camerino y momento del pogo con el público.',
         optimalPostingTime: '22:30h',
       },
       {
         day: 'Domingo',
         focus: 'Agradecimiento y Recap del Concierto',
         recommendedPlatform: 'instagram',
-        contentAction:
-          'Carrusel de fotos o Reel resumen agradeciendo a la sala y a la ciudad por la energía.',
+        contentAction: 'Carrusel de fotos o Reel resumen agradeciendo a la sala y a la ciudad por la energía.',
         optimalPostingTime: '20:30h',
       },
     ],

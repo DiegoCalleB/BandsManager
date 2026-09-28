@@ -9,16 +9,16 @@ import { EpkLanguage, DEFAULT_EPK_LANGUAGE, isEpkLanguage } from '../i18n/epkTra
  * 3. Español por defecto.
  */
 function detectarIdiomaInicial(): EpkLanguage {
- if (typeof window === 'undefined') return DEFAULT_EPK_LANGUAGE;
+  if (typeof window === 'undefined') return DEFAULT_EPK_LANGUAGE;
 
- const params = new URLSearchParams(window.location.search);
- const queryLang = params.get('lang');
- if (isEpkLanguage(queryLang)) return queryLang;
+  const params = new URLSearchParams(window.location.search);
+  const queryLang = params.get('lang');
+  if (isEpkLanguage(queryLang)) return queryLang;
 
- const idiomaNavegador = (navigator.language || '').slice(0, 2).toLowerCase();
- if (isEpkLanguage(idiomaNavegador)) return idiomaNavegador;
+  const idiomaNavegador = (navigator.language || '').slice(0, 2).toLowerCase();
+  if (isEpkLanguage(idiomaNavegador)) return idiomaNavegador;
 
- return DEFAULT_EPK_LANGUAGE;
+  return DEFAULT_EPK_LANGUAGE;
 }
 
 /**
@@ -28,26 +28,26 @@ function detectarIdiomaInicial(): EpkLanguage {
  * También mantiene <html lang> al día, que es lo que leen lectores de pantalla y buscadores.
  */
 export function useEpkLanguage(): [EpkLanguage, (lang: EpkLanguage) => void] {
- const [language, setLanguageState] = useState<EpkLanguage>(detectarIdiomaInicial);
+  const [language, setLanguageState] = useState<EpkLanguage>(detectarIdiomaInicial);
 
- useEffect(() => {
- if (typeof document !== 'undefined') {
- document.documentElement.lang = language;
- }
- }, [language]);
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language;
+    }
+  }, [language]);
 
- const setLanguage = useCallback((lang: EpkLanguage) => {
- setLanguageState(lang);
- if (typeof window === 'undefined') return;
- try {
- const url = new URL(window.location.href);
- url.searchParams.set('lang', lang);
- window.history.replaceState({}, '', url.toString());
- } catch {
- // Si el navegador bloquea replaceState (iframe sandbox, por ejemplo) el idioma sigue
- // cambiando en pantalla: solo se pierde que quede reflejado en la URL.
- }
- }, []);
+  const setLanguage = useCallback((lang: EpkLanguage) => {
+    setLanguageState(lang);
+    if (typeof window === 'undefined') return;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', lang);
+      window.history.replaceState({}, '', url.toString());
+    } catch {
+      // Si el navegador bloquea replaceState (iframe sandbox, por ejemplo) el idioma sigue
+      // cambiando en pantalla: solo se pierde que quede reflejado en la URL.
+    }
+  }, []);
 
- return [language, setLanguage];
+  return [language, setLanguage];
 }

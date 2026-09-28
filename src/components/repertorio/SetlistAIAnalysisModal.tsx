@@ -1,25 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  X,
-  Loader,
-  AlertCircle,
-  Brain,
-  TrendingUp,
-  Zap,
-  Move,
-  Printer,
-  Share2,
-  Download,
-} from 'lucide-react';
+import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { api } from '../../services/api';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { PacingWarning } from '../../utils/energyPacingUtils';
-import {
-  IndexChange,
-  adjustPosition1,
-} from '../../utils/setlistActionPositionAdjust';
+import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -123,15 +109,9 @@ export function SetlistAIAnalysisModal({
   // confianza: la segunda podía mover la canción equivocada sin avisar. Ahora se reajustan las
   // posiciones de las pendientes tras cada aplicación (ver adjustPosition1), o se marcan como ya
   // no aplicables si la canción que necesitaban movió justo a la posición que ya no existe.
-  const [liveSuggestions, setLiveSuggestions] = useState<Suggestion[] | null>(
-    null
-  );
-  const [appliedSuggestionIndices, setAppliedSuggestionIndices] = useState<
-    Set<number>
-  >(new Set());
-  const [invalidSuggestionIndices, setInvalidSuggestionIndices] = useState<
-    Set<number>
-  >(new Set());
+  const [liveSuggestions, setLiveSuggestions] = useState<Suggestion[] | null>(null);
+  const [appliedSuggestionIndices, setAppliedSuggestionIndices] = useState<Set<number>>(new Set());
+  const [invalidSuggestionIndices, setInvalidSuggestionIndices] = useState<Set<number>>(new Set());
   const [preApplySnapshot, setPreApplySnapshot] = useState<{
     suggestions: Suggestion[];
     invalidIndices: Set<number>;
@@ -166,12 +146,7 @@ export function SetlistAIAnalysisModal({
     const next = [...liveSuggestions];
     const nextInvalid = new Set(invalidSuggestionIndices);
     for (let i = 0; i < next.length; i++) {
-      if (
-        i === idx ||
-        appliedSuggestionIndices.has(i) ||
-        invalidSuggestionIndices.has(i)
-      )
-        continue;
+      if (i === idx || appliedSuggestionIndices.has(i) || invalidSuggestionIndices.has(i)) continue;
       const other = next[i].suggested_reorder;
       if (!other) continue;
       const from_position = adjustPosition1(other.from_position, change);
@@ -267,10 +242,8 @@ export function SetlistAIAnalysisModal({
     if (!svgEl) return null;
     const clone = svgEl.cloneNode(true) as SVGSVGElement;
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    if (!clone.getAttribute('width'))
-      clone.setAttribute('width', String(svgEl.clientWidth || 600));
-    if (!clone.getAttribute('height'))
-      clone.setAttribute('height', String(svgEl.clientHeight || 200));
+    if (!clone.getAttribute('width')) clone.setAttribute('width', String(svgEl.clientWidth || 600));
+    if (!clone.getAttribute('height')) clone.setAttribute('height', String(svgEl.clientHeight || 200));
     const svgString = new XMLSerializer().serializeToString(clone);
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
   };
@@ -349,8 +322,7 @@ export function SetlistAIAnalysisModal({
     }
   };
 
-  const escapeHtml = (text: string) =>
-    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escapeHtml = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // Exporta el análisis a una hoja imprimible/PDF (mismo patrón que la Hoja de Escenario del
   // repertorio: una ventana nueva con HTML autocontenido + window.print()). El gráfico se
@@ -495,9 +467,7 @@ export function SetlistAIAnalysisModal({
       scale: 2,
       useCORS: true,
     });
-    return new Promise((resolve) =>
-      canvas.toBlob((blob) => resolve(blob), 'image/png')
-    );
+    return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/png'));
   };
 
   const downloadBlob = (blob: Blob, filename: string) => {
@@ -540,9 +510,7 @@ export function SetlistAIAnalysisModal({
         const file = new File([imageBlob], `analisis-ia-${setlistId}.png`, {
           type: 'image/png',
         });
-        const canShareFiles =
-          typeof navigator.canShare === 'function' &&
-          navigator.canShare({ files: [file] });
+        const canShareFiles = typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] });
         if (canShareFiles) {
           await navigator.share({ title: shareTitle, text, files: [file] });
           return;
@@ -564,10 +532,7 @@ export function SetlistAIAnalysisModal({
     } catch (err: any) {
       // AbortError = el usuario cerró el selector de compartir sin elegir nada: no es un fallo.
       if (err?.name !== 'AbortError') {
-        window.open(
-          `https://wa.me/?text=${encodeURIComponent(buildShareText(analysis))}`,
-          '_blank'
-        );
+        window.open(`https://wa.me/?text=${encodeURIComponent(buildShareText(analysis))}`, '_blank');
       }
     } finally {
       setSharing(false);
@@ -597,20 +562,13 @@ export function SetlistAIAnalysisModal({
  compacto). Un solo contenedor sticky con top-0 no necesita ningún offset. */}
           <div className="sticky top-0 z-10 bg-[var(--surface)]">
             {/* Header — arrastrable por si hace falta apartar el modal */}
-            <div
-              className="p-3 flex justify-between items-center cursor-move select-none"
-              onMouseDown={handleDragStart}
-            >
+            <div className="p-3 flex justify-between items-center cursor-move select-none" onMouseDown={handleDragStart}>
               <div className="flex items-center gap-2.5">
                 <Move className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
                 <Brain className="w-5 h-5 text-[var(--acc)]" />
                 <div>
-                  <h2 className="text-base font-bold">
-                    Análisis Avanzado con IA
-                  </h2>
-                  {setlistName && (
-                    <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>
-                  )}
+                  <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
+                  {setlistName && <p className="text-xs text-[var(--ink-2)]">{setlistName}</p>}
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
@@ -659,11 +617,7 @@ export function SetlistAIAnalysisModal({
                 {warnings.map((w, i) => {
                   const hasSongs = !!w.songTitles && w.songTitles.length > 0;
                   const isHighlighted =
-                    hasSongs &&
-                    highlightedSongIds.length > 0 &&
-                    w.songTitles!.some((t) =>
-                      titlesMatch(t, highlightedSongIds)
-                    );
+                    hasSongs && highlightedSongIds.length > 0 && w.songTitles!.some((t) => titlesMatch(t, highlightedSongIds));
                   return (
                     <span
                       key={i}
@@ -680,16 +634,9 @@ export function SetlistAIAnalysisModal({
                       }}
                       onMouseLeave={() => onHighlightSongs?.([])}
                       onClick={() => {
-                        if (hasSongs)
-                          onHighlightSongs?.(
-                            isHighlighted ? [] : w.songTitles!
-                          );
+                        if (hasSongs) onHighlightSongs?.(isHighlighted ? [] : w.songTitles!);
                       }}
-                      title={
-                        hasSongs
-                          ? `Resalta: ${w.songTitles!.join(',')}`
-                          : undefined
-                      }
+                      title={hasSongs ? `Resalta: ${w.songTitles!.join(',')}` : undefined}
                     >
                       <span>{w.icon}</span>
                       <span>{w.message}</span>
@@ -698,11 +645,7 @@ export function SetlistAIAnalysisModal({
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            onReorder(
-                              w.suggestedReorder!.fromIndex,
-                              w.suggestedReorder!.toIndex,
-                              `warning-${i}`
-                            );
+                            onReorder(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
                           }}
                           className="ml-1 px-1.5 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/25 text-[var(--ink)] font-bold transition"
                           title={w.suggestedReorder.description}
@@ -723,9 +666,8 @@ export function SetlistAIAnalysisModal({
               <div className="text-center py-8">
                 <Brain className="w-12 h-12 text-[var(--acc)]/50 mx-auto mb-4" />
                 <p className="text-[var(--ink-2)] mb-6">
-                  Haz un análisis profundo de tu setlist con IA. Te daremos
-                  sugerencias personalizadas sobre pacing, narrativa y
-                  psicología del público.
+                  Haz un análisis profundo de tu setlist con IA. Te daremos sugerencias personalizadas sobre pacing, narrativa y psicología
+                  del público.
                 </p>
                 <button
                   onClick={handleAnalyze}
@@ -749,10 +691,7 @@ export function SetlistAIAnalysisModal({
                 <div>
                   <p className="font-medium text-[var(--alert)]/40">Error</p>
                   <p className="text-sm text-[var(--alert)]/60">{error}</p>
-                  <button
-                    onClick={handleAnalyze}
-                    className="mt-3 text-sm text-[var(--alert)]/60 hover:text-[var(--alert)]/40 underline"
-                  >
+                  <button onClick={handleAnalyze} className="mt-3 text-sm text-[var(--alert)]/60 hover:text-[var(--alert)]/40 underline">
                     Reintentar
                   </button>
                 </div>
@@ -764,12 +703,8 @@ export function SetlistAIAnalysisModal({
                 {/* Score */}
                 <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-[var(--ink-2)] font-medium">
-                      Score General
-                    </span>
-                    <span className="text-lg font-bold text-[var(--acc)]">
-                      {analysis.overallScore}/100
-                    </span>
+                    <span className="text-sm text-[var(--ink-2)] font-medium">Score General</span>
+                    <span className="text-lg font-bold text-[var(--acc)]">{analysis.overallScore}/100</span>
                   </div>
                   <div className="w-full bg-[var(--surface)]/70 rounded-full h-1.5">
                     <div
@@ -781,30 +716,20 @@ export function SetlistAIAnalysisModal({
 
                 {/* Narrative Arc */}
                 <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
-                  <p className="text-xs text-[var(--ink-2)] mb-1.5">
-                    📖 Arco Narrativo
-                  </p>
-                  <p className="text-sm text-[var(--ink-2)]">
-                    {analysis.narrativeArc}
-                  </p>
+                  <p className="text-xs text-[var(--ink-2)] mb-1.5">📖 Arco Narrativo</p>
+                  <p className="text-sm text-[var(--ink-2)]">{analysis.narrativeArc}</p>
                 </div>
 
                 {/* Psychological Flow */}
                 <div className="bg-[var(--surface)]/80 rounded-[var(--r-s)] p-3">
-                  <p className="text-xs text-[var(--ink-2)] mb-1.5">
-                    🧠 Flujo Psicológico
-                  </p>
-                  <p className="text-sm text-[var(--ink-2)]">
-                    {analysis.psychologicalFlow}
-                  </p>
+                  <p className="text-xs text-[var(--ink-2)] mb-1.5">🧠 Flujo Psicológico</p>
+                  <p className="text-sm text-[var(--ink-2)]">{analysis.psychologicalFlow}</p>
                 </div>
 
                 {/* Strengths */}
                 {analysis.strengths.length > 0 && (
                   <div className="bg-[var(--ok)]/10 rounded-[var(--r-s)] p-3">
-                    <p className="text-xs font-medium text-[var(--ok)] mb-1.5">
-                      ✓ Fortalezas
-                    </p>
+                    <p className="text-xs font-medium text-[var(--ok)] mb-1.5">✓ Fortalezas</p>
                     <ul className="space-y-1">
                       {analysis.strengths.map((strength, idx) => (
                         <li key={idx} className="text-xs text-[var(--ok)]/60">
@@ -819,158 +744,128 @@ export function SetlistAIAnalysisModal({
                 <div>
                   <h3 className="text-sm font-semibold text-[var(--ink-2)] mb-3 flex items-center gap-2">
                     <Zap className="w-3.5 h-3.5 text-[var(--acc)]" />
-                    Sugerencias (
-                    {(liveSuggestions || analysis.suggestions).length})
+                    Sugerencias ({(liveSuggestions || analysis.suggestions).length})
                   </h3>
                   <div className="space-y-3">
-                    {(liveSuggestions || analysis.suggestions).map(
-                      (sugg, idx) => {
-                        const isHighlighted =
-                          sugg.songs_involved?.some((songName) =>
-                            titlesMatch(songName, highlightedSongIds)
-                          ) ?? false;
-                        const isInvalid = invalidSuggestionIndices.has(idx);
-                        return (
-                          <div
-                            key={idx}
-                            className={`rounded-[var(--r-s)] p-3 transition cursor-pointer ${
-                              isInvalid
-                                ? 'bg-[var(--surface)] opacity-50'
-                                : isHighlighted
-                                  ? 'bg-[var(--acc)]/80/30/50 ring-2 ring-purple-400/30'
-                                  : 'bg-[var(--surface)]/80 hover:'
-                            }`}
-                            onMouseEnter={() => {
-                              if (sugg.songs_involved?.length) {
-                                onHighlightSongs?.(sugg.songs_involved);
-                              }
-                            }}
-                            onMouseLeave={() => onHighlightSongs?.([])}
-                          >
-                            <div className="flex items-start gap-2.5 mb-2">
-                              <span className="text-sm">
-                                {getPriorityIcon(sugg.priority)}
-                              </span>
-                              <div className="flex-1">
-                                <div className="flex items-start justify-between gap-2">
-                                  <div>
-                                    <p className="text-sm font-semibold text-[var(--ink-2)]">
-                                      {sugg.title}
-                                    </p>
-                                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                                      {getCategoryIcon(sugg.category)}{' '}
-                                      {sugg.category}
-                                    </p>
-                                  </div>
-                                  {sugg.suggested_reorder &&
-                                    onReorder &&
-                                    (() => {
-                                      const sourceKey = `ai-suggestion-${idx}`;
-                                      if (isInvalid) {
-                                        return (
-                                          <span
-                                            className="text-[10px] text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
-                                            title="Un cambio anterior afectó a la canción que esta sugerencia necesitaba"
-                                          >
-                                            ⚠️ Ya no aplica
-                                          </span>
-                                        );
-                                      }
-                                      // Mientras esta aplicación siga siendo la más reciente, el propio
-                                      // botón"Aplicar" se convierte en"Deshacer" — no hace falta ir a
-                                      // buscar el botón genérico de arriba para revertir justo esto.
-                                      if (undoSourceKey === sourceKey) {
-                                        return (
-                                          <button
-                                            type="button"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              handleUndoSuggestion(idx);
-                                            }}
-                                            className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-sans transition whitespace-nowrap"
-                                            title="Deshacer este cambio de orden"
-                                          >
-                                            ↩️ Deshacer
-                                          </button>
-                                        );
-                                      }
-                                      if (appliedSuggestionIndices.has(idx)) {
-                                        // Se aplicó, pero luego se aplicó/arrastró otra cosa encima — el
-                                        // snapshot de un solo nivel ya no puede revertir justo esto.
-                                        return (
-                                          <span className="text-[10px] text-[var(--ok)] font-sans font-medium whitespace-nowrap">
-                                            ✓ Aplicado
-                                          </span>
-                                        );
-                                      }
+                    {(liveSuggestions || analysis.suggestions).map((sugg, idx) => {
+                      const isHighlighted = sugg.songs_involved?.some((songName) => titlesMatch(songName, highlightedSongIds)) ?? false;
+                      const isInvalid = invalidSuggestionIndices.has(idx);
+                      return (
+                        <div
+                          key={idx}
+                          className={`rounded-[var(--r-s)] p-3 transition cursor-pointer ${
+                            isInvalid
+                              ? 'bg-[var(--surface)] opacity-50'
+                              : isHighlighted
+                                ? 'bg-[var(--acc)]/80/30/50 ring-2 ring-purple-400/30'
+                                : 'bg-[var(--surface)]/80 hover:'
+                          }`}
+                          onMouseEnter={() => {
+                            if (sugg.songs_involved?.length) {
+                              onHighlightSongs?.(sugg.songs_involved);
+                            }
+                          }}
+                          onMouseLeave={() => onHighlightSongs?.([])}
+                        >
+                          <div className="flex items-start gap-2.5 mb-2">
+                            <span className="text-sm">{getPriorityIcon(sugg.priority)}</span>
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <p className="text-sm font-semibold text-[var(--ink-2)]">{sugg.title}</p>
+                                  <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                                    {getCategoryIcon(sugg.category)} {sugg.category}
+                                  </p>
+                                </div>
+                                {sugg.suggested_reorder &&
+                                  onReorder &&
+                                  (() => {
+                                    const sourceKey = `ai-suggestion-${idx}`;
+                                    if (isInvalid) {
+                                      return (
+                                        <span
+                                          className="text-[10px] text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
+                                          title="Un cambio anterior afectó a la canción que esta sugerencia necesitaba"
+                                        >
+                                          ⚠️ Ya no aplica
+                                        </span>
+                                      );
+                                    }
+                                    // Mientras esta aplicación siga siendo la más reciente, el propio
+                                    // botón"Aplicar" se convierte en"Deshacer" — no hace falta ir a
+                                    // buscar el botón genérico de arriba para revertir justo esto.
+                                    if (undoSourceKey === sourceKey) {
                                       return (
                                         <button
                                           type="button"
                                           onClick={(e) => {
                                             e.stopPropagation();
-                                            handleApplySuggestion(idx);
+                                            handleUndoSuggestion(idx);
                                           }}
-                                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] font-sans transition whitespace-nowrap"
-                                          title="Mover la canción a la posición sugerida"
+                                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-sans transition whitespace-nowrap"
+                                          title="Deshacer este cambio de orden"
                                         >
-                                          ✓ Aplicar
+                                          ↩️ Deshacer
                                         </button>
                                       );
-                                    })()}
-                                </div>
+                                    }
+                                    if (appliedSuggestionIndices.has(idx)) {
+                                      // Se aplicó, pero luego se aplicó/arrastró otra cosa encima — el
+                                      // snapshot de un solo nivel ya no puede revertir justo esto.
+                                      return (
+                                        <span className="text-[10px] text-[var(--ok)] font-sans font-medium whitespace-nowrap">
+                                          ✓ Aplicado
+                                        </span>
+                                      );
+                                    }
+                                    return (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleApplySuggestion(idx);
+                                        }}
+                                        className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] font-sans transition whitespace-nowrap"
+                                        title="Mover la canción a la posición sugerida"
+                                      >
+                                        ✓ Aplicar
+                                      </button>
+                                    );
+                                  })()}
                               </div>
-                            </div>
-
-                            <div className="space-y-1.5 text-xs ml-7">
-                              <div>
-                                <p className="text-[var(--ink-2)]">
-                                  🔍 Problema:
-                                </p>
-                                <p className="text-[var(--ink-2)]">
-                                  {sugg.issue}
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-[var(--ink-2)]">
-                                  💡 Sugerencia:
-                                </p>
-                                <p className="text-[var(--ink-2)] font-medium">
-                                  {sugg.suggestion}
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-[var(--ink-2)]">
-                                  ⭐ Impacto:
-                                </p>
-                                <p className="text-[var(--ink-2)]">
-                                  {sugg.impact}
-                                </p>
-                              </div>
-                              {sugg.songs_involved &&
-                                sugg.songs_involved.length > 0 && (
-                                  <div>
-                                    <p className="text-[var(--ink-2)]">
-                                      🎵 Canciones:
-                                    </p>
-                                    <p className="text-[var(--ink-2)]">
-                                      {sugg.songs_involved.join(',')}
-                                    </p>
-                                  </div>
-                                )}
                             </div>
                           </div>
-                        );
-                      }
-                    )}
+
+                          <div className="space-y-1.5 text-xs ml-7">
+                            <div>
+                              <p className="text-[var(--ink-2)]">🔍 Problema:</p>
+                              <p className="text-[var(--ink-2)]">{sugg.issue}</p>
+                            </div>
+                            <div>
+                              <p className="text-[var(--ink-2)]">💡 Sugerencia:</p>
+                              <p className="text-[var(--ink-2)] font-medium">{sugg.suggestion}</p>
+                            </div>
+                            <div>
+                              <p className="text-[var(--ink-2)]">⭐ Impacto:</p>
+                              <p className="text-[var(--ink-2)]">{sugg.impact}</p>
+                            </div>
+                            {sugg.songs_involved && sugg.songs_involved.length > 0 && (
+                              <div>
+                                <p className="text-[var(--ink-2)]">🎵 Canciones:</p>
+                                <p className="text-[var(--ink-2)]">{sugg.songs_involved.join(',')}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Areas for Improvement */}
                 {analysis.areasForImprovement.length > 0 && (
                   <div className="bg-[var(--acc-soft)] rounded-[var(--r-s)] p-3">
-                    <p className="text-xs font-medium text-[var(--acc)]/70 mb-1.5">
-                      🎯 Áreas de Mejora
-                    </p>
+                    <p className="text-xs font-medium text-[var(--acc)]/70 mb-1.5">🎯 Áreas de Mejora</p>
                     <ul className="space-y-1">
                       {analysis.areasForImprovement.map((area, idx) => (
                         <li key={idx} className="text-xs text-[var(--ink)]">
@@ -1003,11 +898,7 @@ export function SetlistAIAnalysisModal({
                 className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
                 title="Descargar el análisis completo como imagen PNG"
               >
-                {exportingImage ? (
-                  <Loader className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Download className="w-4 h-4" />
-                )}
+                {exportingImage ? <Loader className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                 Imagen
               </button>
               <button
@@ -1016,11 +907,7 @@ export function SetlistAIAnalysisModal({
                 className="flex-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] px-3 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
                 title="Compartir por WhatsApp u otra app"
               >
-                {sharing ? (
-                  <Loader className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Share2 className="w-4 h-4" />
-                )}
+                {sharing ? <Loader className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
                 Compartir
               </button>
             </div>

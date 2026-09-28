@@ -22,10 +22,10 @@ export type TemaResuelto = 'light' | 'dark' | 'classic';
 export type PreferenciaTema = TemaResuelto | 'system';
 
 export const PREFERENCIAS: ReadonlyArray<{ id: PreferenciaTema; etiqueta: string; descripcion: string }> = [
- { id: 'system', etiqueta: 'Automático', descripcion: 'Sigue el ajuste de tu dispositivo' },
- { id: 'light', etiqueta: 'Claro', descripcion: 'Para trabajar de día' },
- { id: 'dark', etiqueta: 'Oscuro', descripcion: 'Para la furgo y el camerino' },
- { id: 'classic', etiqueta: 'Clásico', descripcion: 'El diseño de siempre' },
+  { id: 'system', etiqueta: 'Automático', descripcion: 'Sigue el ajuste de tu dispositivo' },
+  { id: 'light', etiqueta: 'Claro', descripcion: 'Para trabajar de día' },
+  { id: 'dark', etiqueta: 'Oscuro', descripcion: 'Para la furgo y el camerino' },
+  { id: 'classic', etiqueta: 'Clásico', descripcion: 'El diseño de siempre' },
 ];
 
 /** Clave de caché en localStorage. La preferencia definitiva vivirá en el
@@ -43,49 +43,49 @@ export const TEMA_POR_DEFECTO: PreferenciaTema = 'light';
 const VALIDAS: ReadonlySet<string> = new Set(['light', 'dark', 'classic', 'system']);
 
 export function esPreferenciaValida(valor: unknown): valor is PreferenciaTema {
- return typeof valor === 'string' && VALIDAS.has(valor);
+  return typeof valor === 'string' && VALIDAS.has(valor);
 }
 
 function consultaOscuro(): MediaQueryList | null {
- if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return null;
- return window.matchMedia('(prefers-color-scheme: dark)');
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return null;
+  return window.matchMedia('(prefers-color-scheme: dark)');
 }
 
 /** Traduce la preferencia al tema que se pinta. */
 export function resolverTema(pref: PreferenciaTema): TemaResuelto {
- if (pref !== 'system') return pref;
- return consultaOscuro()?.matches ? 'dark' : 'light';
+  if (pref !== 'system') return pref;
+  return consultaOscuro()?.matches ? 'dark' : 'light';
 }
 
 /** Lee la preferencia cacheada. Nunca lanza: en navegación privada o con el
  * almacenamiento bloqueado, `localStorage` puede tirar al acceder. */
 export function leerPreferencia(): PreferenciaTema {
- try {
- const guardada = localStorage.getItem(CLAVE_TEMA);
- if (esPreferenciaValida(guardada)) return guardada;
- } catch {
- /* sin acceso a localStorage: se cae al valor por defecto */
- }
- return TEMA_POR_DEFECTO;
+  try {
+    const guardada = localStorage.getItem(CLAVE_TEMA);
+    if (esPreferenciaValida(guardada)) return guardada;
+  } catch {
+    /* sin acceso a localStorage: se cae al valor por defecto */
+  }
+  return TEMA_POR_DEFECTO;
 }
 
 /** Estampa el tema resuelto en <html data-theme="…">. */
 export function aplicarTema(pref: PreferenciaTema): TemaResuelto {
- const resuelto = resolverTema(pref);
- if (typeof document !== 'undefined') {
- document.documentElement.dataset.theme = resuelto;
- }
- return resuelto;
+  const resuelto = resolverTema(pref);
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.theme = resuelto;
+  }
+  return resuelto;
 }
 
 /** Guarda la preferencia y la aplica. */
 export function guardarPreferencia(pref: PreferenciaTema): TemaResuelto {
- try {
- localStorage.setItem(CLAVE_TEMA, pref);
- } catch {
- /* sin persistencia: el tema sigue aplicándose en esta sesión */
- }
- return aplicarTema(pref);
+  try {
+    localStorage.setItem(CLAVE_TEMA, pref);
+  } catch {
+    /* sin persistencia: el tema sigue aplicándose en esta sesión */
+  }
+  return aplicarTema(pref);
 }
 
 /**
@@ -93,16 +93,16 @@ export function guardarPreferencia(pref: PreferenciaTema): TemaResuelto {
  * preferencia sea'system'. Devuelve la función para desuscribirse.
  */
 export function escucharSistema(leerPref: () => PreferenciaTema): () => void {
- const mq = consultaOscuro();
- if (!mq) return () => {};
- const alCambiar = () => {
- if (leerPref() === 'system') aplicarTema('system');
- };
- mq.addEventListener('change', alCambiar);
- return () => mq.removeEventListener('change', alCambiar);
+  const mq = consultaOscuro();
+  if (!mq) return () => {};
+  const alCambiar = () => {
+    if (leerPref() === 'system') aplicarTema('system');
+  };
+  mq.addEventListener('change', alCambiar);
+  return () => mq.removeEventListener('change', alCambiar);
 }
 
 /** Arranque: aplica la preferencia cacheada. */
 export function inicializarTema(): TemaResuelto {
- return aplicarTema(leerPreferencia());
+  return aplicarTema(leerPreferencia());
 }

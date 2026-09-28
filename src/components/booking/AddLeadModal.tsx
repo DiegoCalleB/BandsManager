@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  Building2,
-  Radio,
-  Sparkles,
-  Loader2,
-  Upload,
-  Search,
-  Briefcase,
-} from 'lucide-react';
+import { X, Building2, Radio, Sparkles, Loader2, Upload, Search, Briefcase } from 'lucide-react';
 import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
@@ -113,9 +104,7 @@ export function AddLeadModal({
               ) : (
                 <Building2 className="w-5 h-5 text-[var(--acc)]/80" />
               )}
-              <h3
-                className={`text-sm font-bold font-display tracking-widest ${'text-[var(--acc)]'}`}
-              >
+              <h3 className={`text-sm font-bold font-display tracking-widest ${'text-[var(--acc)]'}`}>
                 {sectionTab === 'medios'
                   ? 'Nuevo Medio o Prensa'
                   : sectionTab === 'grupos'
@@ -134,9 +123,7 @@ export function AddLeadModal({
           <form onSubmit={onSubmit} className="space-y-3.5">
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label
-                  className={`block text-[10px] font-sans tracking-wider ${textSub}`}
-                >
+                <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>
                   {sectionTab === 'medios'
                     ? 'Nombre del Medio / Revista *'
                     : sectionTab === 'grupos'
@@ -155,21 +142,13 @@ export function AddLeadModal({
                   ) : (
                     <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                   )}
-                  <span>
-                    {isModalScraping
-                      ? 'Buscando datos...'
-                      : '✨ Autocompletar con IA Scout'}
-                  </span>
+                  <span>{isModalScraping ? 'Buscando datos...' : '✨ Autocompletar con IA Scout'}</span>
                 </button>
               </div>
               <input
                 type="text"
                 required
-                placeholder={
-                  sectionTab === 'medios'
-                    ? 'Ej. Radio 3, Mondosonoro, MariskalRock'
-                    : 'Ej. Sala El Sol, Festival Cabo de Plata'
-                }
+                placeholder={sectionTab === 'medios' ? 'Ej. Radio 3, Mondosonoro, MariskalRock' : 'Ej. Sala El Sol, Festival Cabo de Plata'}
                 value={newLeadData.nombre_sala}
                 onChange={(e) =>
                   setNewLeadData((prev) => ({
@@ -184,11 +163,7 @@ export function AddLeadModal({
             {/* Logo Selector */}
             <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)]800 space-y-2.5">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <label
-                  className={`block text-[10px] font-sans tracking-wider ${textSub}`}
-                >
-                  Icono o Logo del Medio / Sala
-                </label>
+                <label className={`block text-[10px] font-sans tracking-wider ${textSub}`}>Icono o Logo del Medio / Sala</label>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -197,15 +172,11 @@ export function AddLeadModal({
                     className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
                   >
                     <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-                    <span>
-                      {isSearchingLogo ? 'Buscando...' : '🔍 Buscar Logo'}
-                    </span>
+                    <span>{isSearchingLogo ? 'Buscando...' : '🔍 Buscar Logo'}</span>
                   </button>
                   <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all700">
                     <Upload className="w-3 h-3 text-[var(--acc)]" />
-                    <span>
-                      {isUploadingLeadLogo ? 'Subiendo...' : 'Subir Logo'}
-                    </span>
+                    <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir Logo'}</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -230,24 +201,14 @@ export function AddLeadModal({
 
               {newLeadData.imagen_url ? (
                 <div className="flex items-center gap-3 p-2 bg-[var(--bg)] rounded-[var(--r-s)]800">
-                  <img
-                    src={newLeadData.imagen_url}
-                    alt="Logo"
-                    className="w-10 h-10 rounded-[var(--r-s)] object-cover/50 shrink-0"
-                  />
+                  <img src={newLeadData.imagen_url} alt="Logo" className="w-10 h-10 rounded-[var(--r-s)] object-cover/50 shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
-                      {newLeadData.imagen_url}
-                    </p>
-                    <p className="text-[9px] text-[var(--ink-2)]">
-                      Logo oficial guardado
-                    </p>
+                    <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">{newLeadData.imagen_url}</p>
+                    <p className="text-[9px] text-[var(--ink-2)]">Logo oficial guardado</p>
                   </div>
                   <button
                     type="button"
-                    onClick={() =>
-                      setNewLeadData((prev) => ({ ...prev, imagen_url: '' }))
-                    }
+                    onClick={() => setNewLeadData((prev) => ({ ...prev, imagen_url: '' }))}
                     className="text-[10px] text-[var(--alert)] hover:underline px-2 py-1 cursor-pointer"
                   >
                     Quitar
@@ -255,31 +216,13 @@ export function AddLeadModal({
                 </div>
               ) : (
                 <div className="space-y-1.5">
-                  <p className="text-[9px] text-[var(--ink-2)]">
-                    Selecciona un emoji característico:
-                  </p>
+                  <p className="text-[9px] text-[var(--ink-2)]">Selecciona un emoji característico:</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {[
-                      '📻',
-                      '📰',
-                      '🌐',
-                      '🎙️',
-                      '📺',
-                      '🏛️',
-                      '🎪',
-                      '🪩',
-                      '🎸',
-                      '💼',
-                      '🎆',
-                      '⚡',
-                      '🔥',
-                    ].map((emoji) => (
+                    {['📻', '📰', '🌐', '🎙️', '📺', '🏛️', '🎪', '🪩', '🎸', '💼', '🎆', '⚡', '🔥'].map((emoji) => (
                       <button
                         key={emoji}
                         type="button"
-                        onClick={() =>
-                          setNewLeadData((prev) => ({ ...prev, icono: emoji }))
-                        }
+                        onClick={() => setNewLeadData((prev) => ({ ...prev, icono: emoji }))}
                         className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
                           newLeadData.icono === emoji
                             ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110'
@@ -300,9 +243,7 @@ export function AddLeadModal({
                 className={`p-2.5 rounded-[var(--r-s)] text-[10px] font-sans flex items-center gap-2 ${'bg-[var(--surface)]/30 text-[var(--acc)]'}`}
               >
                 <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]/80 shrink-0" />
-                <span className="text-[10px] font-bold">
-                  {modalScrapeStatus}
-                </span>
+                <span className="text-[10px] font-bold">{modalScrapeStatus}</span>
               </div>
             )}
 
@@ -319,11 +260,7 @@ export function AddLeadModal({
             )}
 
             <div>
-              <label
-                className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-              >
-                Dirección Exacta (Calle, Número...)
-              </label>
+              <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Dirección Exacta (Calle, Número...)</label>
               <input
                 type="text"
                 placeholder="Ej. Calle San Vicente Ferrer 33"
@@ -340,11 +277,7 @@ export function AddLeadModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label
-                  className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-                >
-                  Ciudad
-                </label>
+                <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Ciudad</label>
                 <input
                   type="text"
                   placeholder="Ej. Madrid, Barcelona"
@@ -359,11 +292,7 @@ export function AddLeadModal({
                 />
               </div>
               <div>
-                <label
-                  className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-                >
-                  Región / Alcance
-                </label>
+                <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Región / Alcance</label>
                 <input
                   type="text"
                   placeholder="Ej. Nacional, Cataluña, Andalucía"
@@ -381,11 +310,7 @@ export function AddLeadModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label
-                  className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-                >
-                  Email Principal (Contratación)
-                </label>
+                <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Email Principal (Contratación)</label>
                 <input
                   type="email"
                   placeholder="info@salanazcaconciertos.com"
@@ -401,11 +326,7 @@ export function AddLeadModal({
               </div>
 
               <div>
-                <label
-                  className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-                >
-                  Email Secundario / Promotora
-                </label>
+                <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Email Secundario / Promotora</label>
                 <input
                   type="email"
                   placeholder="info@magnetikproducciones.com"
@@ -422,14 +343,8 @@ export function AddLeadModal({
             </div>
 
             <div>
-              <label
-                className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-              >
-                {sectionTab === 'medios'
-                  ? 'Tipo de Medio'
-                  : sectionTab === 'grupos'
-                    ? 'Tipo de Organización'
-                    : 'Tipo de Espacio'}
+              <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
+                {sectionTab === 'medios' ? 'Tipo de Medio' : sectionTab === 'grupos' ? 'Tipo de Organización' : 'Tipo de Espacio'}
               </label>
               {sectionTab === 'medios' ? (
                 <select
@@ -444,12 +359,8 @@ export function AddLeadModal({
                 >
                   <option value="Radio">Radio / Programa</option>
                   <option value="Televisión">Televisión / Vídeo</option>
-                  <option value="Prensa">
-                    Prensa Escrita / Revista / Blog
-                  </option>
-                  <option value="Redes Sociales">
-                    Redes Sociales / Creadores
-                  </option>
+                  <option value="Prensa">Prensa Escrita / Revista / Blog</option>
+                  <option value="Redes Sociales">Redes Sociales / Creadores</option>
                   <option value="Podcasts">Podcasts / Entrevistas</option>
                 </select>
               ) : (
@@ -482,9 +393,7 @@ export function AddLeadModal({
               newLeadData.tipo === 'grupo' ||
               sectionTab === 'grupos') && (
               <div>
-                <label
-                  className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-                >
+                <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
                   Róster de Artistas / Bandas Representadas
                 </label>
                 <input
@@ -503,12 +412,8 @@ export function AddLeadModal({
             )}
 
             <div>
-              <label
-                className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-              >
-                {sectionTab === 'medios'
-                  ? 'Nota de Prensa / Propuesta de Presentación'
-                  : 'Propuesta de Concierto'}
+              <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>
+                {sectionTab === 'medios' ? 'Nota de Prensa / Propuesta de Presentación' : 'Propuesta de Concierto'}
               </label>
               <textarea
                 rows={3}
@@ -529,18 +434,12 @@ export function AddLeadModal({
             </div>
 
             <div>
-              <label
-                className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}
-              >
-                Notas Internas
-              </label>
+              <label className={`block text-[10px] font-sans tracking-wider mb-1 ${textSub}`}>Notas Internas</label>
               <input
                 type="text"
                 placeholder="Ej. Redactor jefe Bruno, programa nocturno, etc."
                 value={newLeadData.notas}
-                onChange={(e) =>
-                  setNewLeadData((prev) => ({ ...prev, notas: e.target.value }))
-                }
+                onChange={(e) => setNewLeadData((prev) => ({ ...prev, notas: e.target.value }))}
                 className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
               />
             </div>
@@ -557,11 +456,7 @@ export function AddLeadModal({
                 type="submit"
                 className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold tracking-wider transition-all cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
               >
-                {sectionTab === 'medios'
-                  ? 'Guardar Medio'
-                  : sectionTab === 'grupos'
-                    ? 'Guardar Contacto'
-                    : 'Guardar Sala'}
+                {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
               </button>
             </div>
           </form>
