@@ -207,7 +207,7 @@
    No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
 
 [data-modulo="booking"],
-[data-modulo="panel"]      { --acc:#2563EB; --acc-soft:#DBEAFE; --acc-ink:#1D4ED8; --on-acc:#FFFFFF; }
+[data-modulo="panel"]      { --acc:#D86E31; --acc-soft:#F9EAE1; --acc-ink:#813F18; --on-acc:#FFFFFF; }
 [data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
 [data-modulo="gira"],
 [data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
@@ -219,7 +219,7 @@
 [data-modulo="discografia"] { --acc:#1DB954; --acc-soft:#E8F9F1; --acc-ink:#1B9F41; --on-acc:#FFFFFF; }
 
 [data-theme="dark"] [data-modulo="booking"],
-[data-theme="dark"] [data-modulo="panel"]      { --acc:#60A5FA; --acc-soft:#1E3A5F; --acc-ink:#60A5FA; --on-acc:#0A1F3D; }
+[data-theme="dark"] [data-modulo="panel"]      { --acc:#E99463; --acc-soft:#3A2415; --acc-ink:#E99463; --on-acc:#2A1608; }
 [data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2D1A17; --acc-ink:#F08B84; --on-acc:#1F1413; }
 [data-theme="dark"] [data-modulo="gira"],
 [data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }

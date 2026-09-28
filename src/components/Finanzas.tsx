@@ -198,6 +198,7 @@ export default function Finanzas({
 
   return (
     <div
+      data-modulo="finanzas"
       className={`space-y-6 ${"text-[var(--ink)]"} font-sans w-full max-w-full overflow-x-hidden`}
     >
       {/* Header con Sincronización en Excel */}

@@ -135,22 +135,37 @@ async function cerrarModales(page: Page) {
 }
 
 /**
- * Escritorio: los grupos del sidebar (Contactos, Música, Promoción, Negocio)
- * arrancan PLEGADOS, así que sus `#nav-btn-*` no existen hasta desplegarlos.
- * Solo `resumen` y `calendario` están fijos arriba (NAV_PINNED_TOP_IDS).
+ * Escritorio: los grupos del sidebar (Directorio, Música, Promoción, Negocio)
+ * arrancan PLEGADOS, así que sus `#nav-btn-*` no existen hasta desplegar SU
+ * grupo. Solo `resumen` y `calendario` están fijos arriba (NAV_PINNED_TOP_IDS).
+ *
+ * Es un acordeón DE VERDAD (App.tsx `toggleNavGroup`: abrir un grupo cierra
+ * los demás — decisión de UX deliberada, no un bug), así que no se puede
+ * "desplegar todo" de una sentada: como mucho hay un grupo abierto en cada
+ * momento. Mapa duplicado a mano desde `src/config/navGroups.tsx` porque el
+ * proyecto E2E no comparte bundler con la app — si cambia la agrupación allí,
+ * hay que tocarlo aquí también.
  */
-async function desplegarGrupos(page: Page) {
-  const plegados = page.getByTitle('Desplegar sección');
-  for (let i = await plegados.count(); i > 0; i = await plegados.count()) {
-    await plegados.first().click();
-    await page.waitForTimeout(150);
-    if ((await plegados.count()) >= i) break; // no avanza: evita bucle infinito
-  }
-}
+const GRUPO_POR_NAV_ID: Record<string, string> = {
+  booking: 'Directorio', medios: 'Directorio', management: 'Directorio', bandas: 'Directorio',
+  repertorio: 'Música', ensayos: 'Música', discografia: 'Música',
+  epk: 'Promoción', fans: 'Promoción', reels: 'Promoción',
+  giras: 'Negocio', finanzas: 'Negocio', merchan: 'Negocio',
+};
 
 async function irAEscritorio(page: Page, idNav: string) {
-  await desplegarGrupos(page);
   const boton = page.locator(`#nav-btn-${idNav}`).first();
+  if (!(await boton.isVisible({ timeout: 500 }).catch(() => false))) {
+    const grupo = GRUPO_POR_NAV_ID[idNav];
+    if (grupo) {
+      // Header del grupo (no el chevron): si el grupo no está activo, un solo
+      // clic ya navega a su primer item Y lo despliega (ver `handleHeaderClick`
+      // en NavGroupSection.tsx) — para los demás items del grupo basta con que
+      // quede abierto para clicar su botón directamente a continuación.
+      await page.getByRole('button', { name: new RegExp(`^${grupo}`) }).first().click();
+      await page.waitForTimeout(300);
+    }
+  }
   await boton.waitFor({ state: 'visible', timeout: 10_000 });
   await boton.click();
   await page.waitForTimeout(700); // asentar render tras cambiar de módulo

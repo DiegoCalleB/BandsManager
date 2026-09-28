@@ -1044,7 +1044,10 @@ export default function Dashboard({
   };
 
   return (
-    <div className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden">
+    <div
+      data-modulo="panel"
+      className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
+    >
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex items-center justify-between gap-3 pb-1">
         <div>
