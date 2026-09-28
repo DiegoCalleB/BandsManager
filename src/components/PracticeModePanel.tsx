@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   X,
   Play,
@@ -18,28 +24,50 @@ import {
   Timer,
   Target,
   Sliders,
-} from 'lucide-react';
-import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
-import { resolveAudioUrl } from '../utils/audioStorage';
-import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
-import { matchInstrumentToStemCategory } from '../config/stemInstruments';
-import { apiFetch } from '../utils/api';
-import { useTonePitchShift } from '../hooks/useTonePitchShift';
-import { transposeChordToken } from '../utils/chordUtils';
+} from "lucide-react";
+import {
+  Song,
+  SongAudioIdea,
+  AudioTrack,
+  User,
+  SongSubstituteGuide,
+} from "../types";
+import { resolveAudioUrl } from "../utils/audioStorage";
+import {
+  exportMasterMixAudioBlob,
+  MasterMixTrackInput,
+  computeAutoBalanceVolumes,
+} from "../utils/audioLatency";
+import { matchInstrumentToStemCategory } from "../config/stemInstruments";
+import { apiFetch } from "../utils/api";
+import { useTonePitchShift } from "../hooks/useTonePitchShift";
+import { transposeChordToken } from "../utils/chordUtils";
 
-const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
+const TRANSPOSE_SEMITONE_OPTIONS = [
+  6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6,
+];
 
 /** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
  * el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
  * pistas a la vez, y los hooks no se pueden llamar dentro de un .map(), así que cada pista tiene
  * su propia instancia de este componente — se queda montado siempre (aunque semitones sea 0) para
  * no desconectar el audio de la pista a media sesión (ver comentario en TrackPitchShiftBridges). */
-function TrackPitchShiftBridge({ audioElement, semitones }: { audioElement: HTMLAudioElement | null; semitones: number }) {
+function TrackPitchShiftBridge({
+  audioElement,
+  semitones,
+}: {
+  audioElement: HTMLAudioElement | null;
+  semitones: number;
+}) {
   useTonePitchShift({ audioElement, semitones });
   return null;
 }
 
-function scheduleMetronomeClick(ctx: AudioContext, time: number, accent: boolean) {
+function scheduleMetronomeClick(
+  ctx: AudioContext,
+  time: number,
+  accent: boolean,
+) {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.frequency.value = accent ? 1500 : 1000;
@@ -67,7 +95,7 @@ interface TrackOverride {
 interface TrackChordsResult {
   cifradoTexto: string;
   guiaSustituto?: SongSubstituteGuide;
-  chordsSource: 'audio_real' | 'ia_sin_audio' | 'plantilla_generica';
+  chordsSource: "audio_real" | "ia_sin_audio" | "plantilla_generica";
   esAproximado: boolean;
 }
 
@@ -82,19 +110,27 @@ interface PracticeModePanelProps {
   /** Permite abrir el Modo Studio multipista completo de este tema */
   onOpenStudio?: () => void;
   /** Si se define, se ofrece un botón para sustituir el cifrado principal de la canción por el de esta pista aislada. */
-  onApplyAsMainChords?: (cifradoTexto: string, guiaSustituto?: SongSubstituteGuide) => void;
+  onApplyAsMainChords?: (
+    cifradoTexto: string,
+    guiaSustituto?: SongSubstituteGuide,
+  ) => void;
 }
 
-function buildStorageKey(song: Song, idea: SongAudioIdea, currentUser?: User): string {
-  const who = currentUser?.username || currentUser?.id || currentUser?.name || 'anon';
-  return `practiceMix:${song.band_id || 'sinbanda'}:${song.id}:${idea.id}:${who}`;
+function buildStorageKey(
+  song: Song,
+  idea: SongAudioIdea,
+  currentUser?: User,
+): string {
+  const who =
+    currentUser?.username || currentUser?.id || currentUser?.name || "anon";
+  return `practiceMix:${song.band_id || "sinbanda"}:${song.id}:${idea.id}:${who}`;
 }
 
 function formatTime(totalSeconds: number): string {
   if (!isFinite(totalSeconds) || totalSeconds < 0) totalSeconds = 0;
   const m = Math.floor(totalSeconds / 60);
   const s = Math.floor(totalSeconds % 60);
-  return `${m}:${String(s).padStart(2, '0')}`;
+  return `${m}:${String(s).padStart(2, "0")}`;
 }
 
 interface SmartSongSection {
@@ -116,13 +152,18 @@ export default function PracticeModePanel({
   onOpenStudio,
   onApplyAsMainChords,
 }: PracticeModePanelProps) {
-  const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
+  const storageKey = useMemo(
+    () => buildStorageKey(song, idea, currentUser),
+    [song, idea, currentUser],
+  );
 
   const [overrides, setOverrides] = useState<Record<string, TrackOverride>>({});
   const [speed, setSpeed] = useState(1);
   const [loopA, setLoopA] = useState<number | null>(null);
   const [loopB, setLoopB] = useState<number | null>(null);
-  const [activeSmartSectionId, setActiveSmartSectionId] = useState<string | null>(null);
+  const [activeSmartSectionId, setActiveSmartSectionId] = useState<
+    string | null
+  >(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -135,46 +176,83 @@ export default function PracticeModePanel({
   const [, setAudioReadyTick] = useState(0);
 
   // Secciones inteligentes calculadas a partir de la duración del audio o ideas registradas
-  const effectiveTotalDuration = duration > 0 ? duration : song.duracionSegundos > 0 ? song.duracionSegundos : 210;
+  const effectiveTotalDuration =
+    duration > 0
+      ? duration
+      : song.duracionSegundos > 0
+        ? song.duracionSegundos
+        : 210;
   const smartSections = useMemo<SmartSongSection[]>(() => {
     const total = effectiveTotalDuration;
     if (total <= 10) return [];
 
     return [
-      { id: 'intro', name: 'Intro', icon: '⚡', color: 'indigo', startSec: 0, endSec: Math.round(total * 0.12) },
-      { id: 'verse1', name: 'Estrofa 1', icon: '🎙️', color: 'sky', startSec: Math.round(total * 0.12), endSec: Math.round(total * 0.32) },
       {
-        id: 'chorus1',
-        name: 'Estribillo 1',
-        icon: '🔥',
-        color: 'amber',
+        id: "intro",
+        name: "Intro",
+        icon: "⚡",
+        color: "indigo",
+        startSec: 0,
+        endSec: Math.round(total * 0.12),
+      },
+      {
+        id: "verse1",
+        name: "Estrofa 1",
+        icon: "🎙️",
+        color: "sky",
+        startSec: Math.round(total * 0.12),
+        endSec: Math.round(total * 0.32),
+      },
+      {
+        id: "chorus1",
+        name: "Estribillo 1",
+        icon: "🔥",
+        color: "amber",
         startSec: Math.round(total * 0.32),
         endSec: Math.round(total * 0.5),
       },
-      { id: 'verse2', name: 'Estrofa 2', icon: '🎙️', color: 'sky', startSec: Math.round(total * 0.5), endSec: Math.round(total * 0.68) },
       {
-        id: 'bridge_solo',
-        name: 'Solo / Puente',
-        icon: '🎸',
-        color: 'purple',
+        id: "verse2",
+        name: "Estrofa 2",
+        icon: "🎙️",
+        color: "sky",
+        startSec: Math.round(total * 0.5),
+        endSec: Math.round(total * 0.68),
+      },
+      {
+        id: "bridge_solo",
+        name: "Solo / Puente",
+        icon: "🎸",
+        color: "purple",
         startSec: Math.round(total * 0.68),
         endSec: Math.round(total * 0.82),
       },
       {
-        id: 'chorus_final',
-        name: 'Estribillo Final',
-        icon: '💥',
-        color: 'rose',
+        id: "chorus_final",
+        name: "Estribillo Final",
+        icon: "💥",
+        color: "rose",
         startSec: Math.round(total * 0.82),
         endSec: Math.round(total * 0.94),
       },
-      { id: 'outro', name: 'Outro', icon: '🏁', color: 'emerald', startSec: Math.round(total * 0.94), endSec: Math.round(total) },
+      {
+        id: "outro",
+        name: "Outro",
+        icon: "🏁",
+        color: "emerald",
+        startSec: Math.round(total * 0.94),
+        endSec: Math.round(total),
+      },
     ];
   }, [effectiveTotalDuration]);
 
   // Detectar en qué sección está el cursor de reproducción actual
   const currentActiveSection = useMemo(() => {
-    return smartSections.find((s) => currentTime >= s.startSec && currentTime < s.endSec) || null;
+    return (
+      smartSections.find(
+        (s) => currentTime >= s.startSec && currentTime < s.endSec,
+      ) || null
+    );
   }, [smartSections, currentTime]);
 
   const applySmartSectionLoop = (sec: SmartSongSection) => {
@@ -195,17 +273,34 @@ export default function PracticeModePanel({
   const metronomeNextClickTimeRef = useRef<number>(0);
   const metronomeBeatCounterRef = useRef<number>(0);
 
-  const [chordsByTrack, setChordsByTrack] = useState<Record<string, TrackChordsResult>>({});
-  const [loadingChordsTrackId, setLoadingChordsTrackId] = useState<string | null>(null);
-  const [chordsErrorByTrack, setChordsErrorByTrack] = useState<Record<string, string>>({});
-  const [expandedChordsTrackId, setExpandedChordsTrackId] = useState<string | null>(null);
+  const [chordsByTrack, setChordsByTrack] = useState<
+    Record<string, TrackChordsResult>
+  >({});
+  const [loadingChordsTrackId, setLoadingChordsTrackId] = useState<
+    string | null
+  >(null);
+  const [chordsErrorByTrack, setChordsErrorByTrack] = useState<
+    Record<string, string>
+  >({});
+  const [expandedChordsTrackId, setExpandedChordsTrackId] = useState<
+    string | null
+  >(null);
 
   const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
 
-  const myCategory = useMemo(() => matchInstrumentToStemCategory(currentUser?.instrument), [currentUser?.instrument]);
-  const myTrack = useMemo(() => tracks.find((t) => t.instrumento === myCategory) || null, [tracks, myCategory]);
+  const myCategory = useMemo(
+    () => matchInstrumentToStemCategory(currentUser?.instrument),
+    [currentUser?.instrument],
+  );
+  const myTrack = useMemo(
+    () => tracks.find((t) => t.instrumento === myCategory) || null,
+    [tracks, myCategory],
+  );
 
-  const beatAnchorStorageKey = useMemo(() => `${storageKey}:beatAnchor`, [storageKey]);
+  const beatAnchorStorageKey = useMemo(
+    () => `${storageKey}:beatAnchor`,
+    [storageKey],
+  );
 
   // Cargar la mezcla personal guardada de este usuario para esta idea concreta
   useEffect(() => {
@@ -255,10 +350,13 @@ export default function PracticeModePanel({
       const ov = overrides[tr.id];
       return ov ? { ...tr, ...ov } : tr;
     },
-    [overrides]
+    [overrides],
   );
 
-  const hasSolo = useMemo(() => tracks.some((t) => getEffective(t).solo), [tracks, getEffective]);
+  const hasSolo = useMemo(
+    () => tracks.some((t) => getEffective(t).solo),
+    [tracks, getEffective],
+  );
 
   const applyDsp = useCallback(
     (tr: AudioTrack) => {
@@ -269,7 +367,7 @@ export default function PracticeModePanel({
       el.volume = audible ? Math.max(0, Math.min(1, eff.volumen ?? 1)) : 0;
       el.muted = !audible;
     },
-    [getEffective, hasSolo]
+    [getEffective, hasSolo],
   );
 
   useEffect(() => {
@@ -297,12 +395,14 @@ export default function PracticeModePanel({
     // Solo exclusivo, estilo Cubase: activar este desactiva el resto.
     setOverrides((prev) => {
       const next: Record<string, TrackOverride> = {};
-      for (const t of tracks) next[t.id] = { ...prev[t.id], solo: t.id === trackId };
+      for (const t of tracks)
+        next[t.id] = { ...prev[t.id], solo: t.id === trackId };
       return next;
     });
   };
 
-  const setTrackVolume = (trackId: string, vol: number) => setOverride(trackId, { volumen: vol });
+  const setTrackVolume = (trackId: string, vol: number) =>
+    setOverride(trackId, { volumen: vol });
 
   const resetOverrides = () => setOverrides({});
 
@@ -314,7 +414,7 @@ export default function PracticeModePanel({
     try {
       const volumes = await computeAutoBalanceVolumes(
         tracks.map((t) => ({ id: t.id, audioUrl: t.audioUrl })),
-        resolveAudioUrl
+        resolveAudioUrl,
       );
       setOverrides((prev) => {
         const next = { ...prev };
@@ -324,7 +424,7 @@ export default function PracticeModePanel({
         return next;
       });
     } catch (err) {
-      console.warn('[Practice Mode] Auto-Balance falló:', err);
+      console.warn("[Practice Mode] Auto-Balance falló:", err);
     } finally {
       setIsAutoBalancing(false);
     }
@@ -333,14 +433,16 @@ export default function PracticeModePanel({
   const applyPresetPracticeWithBand = () => {
     if (!myTrack) return;
     const next: Record<string, TrackOverride> = {};
-    for (const t of tracks) next[t.id] = { muted: t.id === myTrack.id, solo: false };
+    for (const t of tracks)
+      next[t.id] = { muted: t.id === myTrack.id, solo: false };
     setOverrides(next);
   };
 
   const applyPresetLearnMyPart = () => {
     if (!myTrack) return;
     const next: Record<string, TrackOverride> = {};
-    for (const t of tracks) next[t.id] = { solo: t.id === myTrack.id, muted: false };
+    for (const t of tracks)
+      next[t.id] = { solo: t.id === myTrack.id, muted: false };
     setOverrides(next);
   };
 
@@ -350,16 +452,16 @@ export default function PracticeModePanel({
       let el = audioRefs.current[tr.id];
       if (!el) {
         el = new Audio();
-        el.preload = 'auto';
+        el.preload = "auto";
         // Hay que fijar esto ANTES de asignar el .src: si se hace después (como hace, a la fuerza,
         // useTonePitchShift la primera vez que activas la trasposición), el navegador ya ha
         // empezado a pedir el audio sin modo CORS y createMediaElementSource() se queda mudo para
         // esa pista el resto de la sesión, sin lanzar ningún error visible.
-        el.crossOrigin = 'anonymous';
+        el.crossOrigin = "anonymous";
         audioRefs.current[tr.id] = el;
         createdAny = true;
       }
-      if (!el.src || el.src === '' || el.src.endsWith('undefined')) {
+      if (!el.src || el.src === "" || el.src.endsWith("undefined")) {
         try {
           const resolved = await resolveAudioUrl(tr.audioUrl);
           el.src = resolved || tr.audioUrl;
@@ -377,18 +479,21 @@ export default function PracticeModePanel({
   const resyncMetronomeAt = useCallback(
     (atTime: number, anchorOverride?: number) => {
       if (!metronomeCtxRef.current) {
-        metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        metronomeCtxRef.current = new (
+          window.AudioContext || (window as any).webkitAudioContext
+        )();
       }
       const ctx = metronomeCtxRef.current;
-      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
       const anchor = anchorOverride ?? beatAnchorSec;
       const secPerBeat = 60 / (song.bpm || 120) / speed;
       const relativeTime = atTime - anchor;
       const nextBeatIndex = Math.ceil(relativeTime / secPerBeat);
       metronomeBeatCounterRef.current = nextBeatIndex;
-      metronomeNextClickTimeRef.current = ctx.currentTime + (anchor + nextBeatIndex * secPerBeat - atTime);
+      metronomeNextClickTimeRef.current =
+        ctx.currentTime + (anchor + nextBeatIndex * secPerBeat - atTime);
     },
-    [song.bpm, speed, beatAnchorSec]
+    [song.bpm, speed, beatAnchorSec],
   );
 
   // Marca el instante actual como el primer golpe de compás — la claqueta reajusta su rejilla
@@ -420,8 +525,12 @@ export default function PracticeModePanel({
   useEffect(() => {
     if (metronomeOn && isPlaying) {
       resyncMetronomeAt(currentTime);
-      if (metronomeTimerRef.current) window.clearInterval(metronomeTimerRef.current);
-      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 50);
+      if (metronomeTimerRef.current)
+        window.clearInterval(metronomeTimerRef.current);
+      metronomeTimerRef.current = window.setInterval(
+        metronomeSchedulerTick,
+        50,
+      );
     } else if (metronomeTimerRef.current) {
       window.clearInterval(metronomeTimerRef.current);
       metronomeTimerRef.current = null;
@@ -444,7 +553,7 @@ export default function PracticeModePanel({
       Object.values(audioRefs.current).forEach((el) => {
         if (el) {
           el.pause();
-          el.src = '';
+          el.src = "";
         }
       });
       audioRefs.current = {};
@@ -471,7 +580,7 @@ export default function PracticeModePanel({
         resyncMetronomeAt(clamped);
       }
     },
-    [metronomeOn, isPlaying, resyncMetronomeAt]
+    [metronomeOn, isPlaying, resyncMetronomeAt],
   );
 
   // La primera pista actúa de"líder" de tiempo: de ahí sale el playhead y el chequeo de loop.
@@ -489,19 +598,21 @@ export default function PracticeModePanel({
     const onLoadedMeta = () => setDuration(el.duration || 0);
     const onEnded = () => setIsPlaying(false);
 
-    el.addEventListener('timeupdate', onTimeUpdate);
-    el.addEventListener('loadedmetadata', onLoadedMeta);
-    el.addEventListener('ended', onEnded);
+    el.addEventListener("timeupdate", onTimeUpdate);
+    el.addEventListener("loadedmetadata", onLoadedMeta);
+    el.addEventListener("ended", onEnded);
     return () => {
-      el.removeEventListener('timeupdate', onTimeUpdate);
-      el.removeEventListener('loadedmetadata', onLoadedMeta);
-      el.removeEventListener('ended', onEnded);
+      el.removeEventListener("timeupdate", onTimeUpdate);
+      el.removeEventListener("loadedmetadata", onLoadedMeta);
+      el.removeEventListener("ended", onEnded);
     };
   }, [tracks, loopA, loopB, seekAll]);
 
   const togglePlay = async () => {
     await ensureAudioLoaded();
-    const players = tracks.map((t) => audioRefs.current[t.id]).filter(Boolean) as HTMLAudioElement[];
+    const players = tracks
+      .map((t) => audioRefs.current[t.id])
+      .filter(Boolean) as HTMLAudioElement[];
     if (isPlaying) {
       players.forEach((el) => el.pause());
       setIsPlaying(false);
@@ -546,15 +657,18 @@ export default function PracticeModePanel({
     setLoopB(null);
   };
 
-  const handleExport = async (mode: 'sin-mi-pista' | 'solo-mi-pista' | 'mezcla-actual') => {
+  const handleExport = async (
+    mode: "sin-mi-pista" | "solo-mi-pista" | "mezcla-actual",
+  ) => {
     setExportError(null);
     setIsExporting(mode);
     try {
       const inputs: MasterMixTrackInput[] = tracks.map((t) => {
         const eff = getEffective(t);
         let muted = hasSolo ? !eff.solo : !!eff.muted;
-        if (mode === 'sin-mi-pista' && myTrack) muted = muted || t.id === myTrack.id;
-        if (mode === 'solo-mi-pista' && myTrack) muted = t.id !== myTrack.id;
+        if (mode === "sin-mi-pista" && myTrack)
+          muted = muted || t.id === myTrack.id;
+        if (mode === "solo-mi-pista" && myTrack) muted = t.id !== myTrack.id;
         return {
           audioUrl: t.audioUrl,
           volumen: eff.volumen,
@@ -568,16 +682,24 @@ export default function PracticeModePanel({
       });
       const blob = await exportMasterMixAudioBlob(inputs, resolveAudioUrl);
       const url = URL.createObjectURL(blob);
-      const suffix = mode === 'sin-mi-pista' ? 'sin_mi_pista' : mode === 'solo-mi-pista' ? 'solo_mi_pista' : 'mezcla_ensayo';
-      const a = document.createElement('a');
+      const suffix =
+        mode === "sin-mi-pista"
+          ? "sin_mi_pista"
+          : mode === "solo-mi-pista"
+            ? "solo_mi_pista"
+            : "mezcla_ensayo";
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `${song.titulo}_${idea.titulo}_${suffix}.wav`.replace(/[^a-zA-Z0-9_\-.]/g, '_');
+      a.download = `${song.titulo}_${idea.titulo}_${suffix}.wav`.replace(
+        /[^a-zA-Z0-9_\-.]/g,
+        "_",
+      );
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err: any) {
-      setExportError(err?.message || 'No se pudo exportar la mezcla.');
+      setExportError(err?.message || "No se pudo exportar la mezcla.");
     } finally {
       setIsExporting(null);
     }
@@ -586,15 +708,15 @@ export default function PracticeModePanel({
   const handleAnalyzeTrackChords = async (tr: AudioTrack) => {
     if (loadingChordsTrackId) return;
     setLoadingChordsTrackId(tr.id);
-    setChordsErrorByTrack((prev) => ({ ...prev, [tr.id]: '' }));
+    setChordsErrorByTrack((prev) => ({ ...prev, [tr.id]: "" }));
     setExpandedChordsTrackId(tr.id);
     try {
       // Sin songId a propósito: así el servidor NUNCA sobreescribe el cifrado principal de la
       // canción con el análisis de una pista aislada (bajo, guitarra...) — queda solo en este
       // panel hasta que el usuario decida explícitamente aplicarlo con onApplyAsMainChords.
-      const data = await apiFetch('/api/generate-song-chords', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const data = await apiFetch("/api/generate-song-chords", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           titulo: `${song.titulo} — pista aislada: ${tr.nombre}`,
           artista: undefined,
@@ -615,50 +737,61 @@ export default function PracticeModePanel({
     } catch (err: any) {
       setChordsErrorByTrack((prev) => ({
         ...prev,
-        [tr.id]: err?.message || 'No se pudieron detectar los acordes de esta pista.',
+        [tr.id]:
+          err?.message || "No se pudieron detectar los acordes de esta pista.",
       }));
     } finally {
       setLoadingChordsTrackId(null);
     }
   };
 
-  const chordsSourceLabel = (source: TrackChordsResult['chordsSource']) => {
-    if (source === 'audio_real')
+  const chordsSourceLabel = (source: TrackChordsResult["chordsSource"]) => {
+    if (source === "audio_real")
       return {
-        text: '🎧 Transcrito escuchando esta pista real',
-        tone: 'text-[var(--ok)]',
+        text: "🎧 Transcrito escuchando esta pista real",
+        tone: "text-[var(--ok)]",
       };
-    if (source === 'ia_sin_audio')
+    if (source === "ia_sin_audio")
       return {
-        text: '🤖 Propuesta de IA sin poder escuchar el audio',
-        tone: 'text-[var(--acc)]',
+        text: "🤖 Propuesta de IA sin poder escuchar el audio",
+        tone: "text-[var(--acc)]",
       };
     return {
-      text: '📐 Plantilla genérica (sin IA disponible)',
-      tone: 'text-[var(--ink-2)]',
+      text: "📐 Plantilla genérica (sin IA disponible)",
+      tone: "text-[var(--ink-2)]",
     };
   };
 
-  const panelBg = 'bg-[var(--surface)] text-[var(--ink)]';
-  const cardBg = 'bg-[var(--bg)]';
+  const panelBg = "bg-[var(--surface)] text-[var(--ink)]";
+  const cardBg = "bg-[var(--bg)]";
 
   return (
     <>
       {/* Puentes de trasposición: uno por pista, siempre montados (ver comentario en
  TrackPitchShiftBridge más arriba — desmontarlos a mitad de sesión dejaría esa pista muda). */}
       {tracks.map((tr) => (
-        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={semitonesOffset} />
+        <TrackPitchShiftBridge
+          key={tr.id}
+          audioElement={audioRefs.current[tr.id] || null}
+          semitones={semitonesOffset}
+        />
       ))}
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
-        <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
+        <div
+          className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}
+        >
           {/* Header */}
-          <div className={`px-5 py-4 flex items-center justify-between ${'bg-[var(--bg)]'}`}>
+          <div
+            className={`px-5 py-4 flex items-center justify-between ${"bg-[var(--bg)]"}`}
+          >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
                 <Headphones className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold font-display tracking-wider text-sm truncate">Sala de Ensayo Individual</h3>
+                <h3 className="font-bold font-display tracking-wider text-sm truncate">
+                  Sala de Ensayo Individual
+                </h3>
                 <p className="text-[11px] text-[var(--ink-2)] truncate">
                   {song.titulo} · {idea.titulo}
                 </p>
@@ -689,12 +822,15 @@ export default function PracticeModePanel({
             {/* Aviso: qué instrumento detectó / instrucción si no hay ninguno */}
             {myTrack ? (
               <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)]">
-                Tu instrumento (<strong>{currentUser?.instrument}</strong>) coincide con la pista <strong>{myTrack.nombre}</strong>.
+                Tu instrumento (<strong>{currentUser?.instrument}</strong>)
+                coincide con la pista <strong>{myTrack.nombre}</strong>.
               </div>
             ) : (
               <div className="text-xs px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70">
-                No hemos podido identificar tu pista. Pídele a quien administra la banda que te asigne un instrumento (Voz, Batería, Bajo,
-                Guitarras, Teclados o Arreglos) en Gestión de Miembros — mientras tanto puedes usar la mezcla manual de abajo.
+                No hemos podido identificar tu pista. Pídele a quien administra
+                la banda que te asigne un instrumento (Voz, Batería, Bajo,
+                Guitarras, Teclados o Arreglos) en Gestión de Miembros —
+                mientras tanto puedes usar la mezcla manual de abajo.
               </div>
             )}
 
@@ -727,29 +863,42 @@ export default function PracticeModePanel({
             </div>
 
             {/* Transporte + Looper de Secciones Inteligentes + Velocidad & Tono */}
-            <div className={`rounded-2xl border p-4 space-y-4 shadow-xl ${cardBg}`}>
+            <div
+              className={`rounded-2xl border p-4 space-y-4 shadow-xl ${cardBg}`}
+            >
               {/* Reproductor principal y barra de tiempo con zona de bucle visual */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
                     className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-zinc-950 flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-emerald-950/40 transition-all active:scale-95 cursor-pointer"
-                    title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
+                    title={
+                      isPlaying ? "Pausar (Espacio)" : "Reproducir (Espacio)"
+                    }
                   >
-                    {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
+                    {isPlaying ? (
+                      <Pause className="w-5 h-5 fill-current" />
+                    ) : (
+                      <Play className="w-5 h-5 fill-current ml-0.5" />
+                    )}
                   </button>
 
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between text-[11px] font-mono">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-white font-bold">{formatTime(currentTime)}</span>
+                        <span className="text-white font-bold">
+                          {formatTime(currentTime)}
+                        </span>
                         {currentActiveSection && (
                           <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                            {currentActiveSection.icon} {currentActiveSection.name}
+                            {currentActiveSection.icon}{" "}
+                            {currentActiveSection.name}
                           </span>
                         )}
                       </div>
-                      <span className="text-neutral-400">{formatTime(duration)}</span>
+                      <span className="text-neutral-400">
+                        {formatTime(duration)}
+                      </span>
                     </div>
 
                     {/* Seek bar interactiva con indicador de bucle A/B */}
@@ -760,7 +909,9 @@ export default function PracticeModePanel({
                         max={Math.max(duration, 0.1)}
                         step={0.1}
                         value={Math.min(currentTime, duration)}
-                        onChange={(e) => handleSeekBarChange(Number(e.target.value))}
+                        onChange={(e) =>
+                          handleSeekBarChange(Number(e.target.value))
+                        }
                         className="w-full accent-emerald-400 cursor-pointer h-2 bg-neutral-800 rounded-lg appearance-none"
                       />
                       {/* Resaltado visual del bucle A-B */}
@@ -800,15 +951,19 @@ export default function PracticeModePanel({
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[10px] text-neutral-400">Pulsa una sección para ensayarla en bucle infinito</span>
+                      <span className="text-[10px] text-neutral-400">
+                        Pulsa una sección para ensayarla en bucle infinito
+                      </span>
                     )}
                   </div>
 
                   {/* Botones de Secciones */}
                   <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
                     {smartSections.map((sec) => {
-                      const isLoopActive = loopA === sec.startSec && loopB === sec.endSec;
-                      const isPlayheadInside = currentTime >= sec.startSec && currentTime < sec.endSec;
+                      const isLoopActive =
+                        loopA === sec.startSec && loopB === sec.endSec;
+                      const isPlayheadInside =
+                        currentTime >= sec.startSec && currentTime < sec.endSec;
                       return (
                         <button
                           key={sec.id}
@@ -816,16 +971,18 @@ export default function PracticeModePanel({
                           onClick={() => applySmartSectionLoop(sec)}
                           className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                             isLoopActive
-                              ? 'bg-amber-500 text-zinc-950 border-amber-400 shadow-md shadow-amber-950/40 ring-1 ring-amber-300'
+                              ? "bg-amber-500 text-zinc-950 border-amber-400 shadow-md shadow-amber-950/40 ring-1 ring-amber-300"
                               : isPlayheadInside
-                                ? 'bg-indigo-500/20 text-indigo-200 border-indigo-500/40'
-                                : 'bg-white/5 border-white/10 text-neutral-300 hover:bg-white/10 hover:border-white/20'
+                                ? "bg-indigo-500/20 text-indigo-200 border-indigo-500/40"
+                                : "bg-white/5 border-white/10 text-neutral-300 hover:bg-white/10 hover:border-white/20"
                           }`}
                           title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
                         >
                           <span>{sec.icon}</span>
                           <span>{sec.name}</span>
-                          <span className="text-[9px] opacity-75 font-normal">({formatTime(sec.startSec)})</span>
+                          <span className="text-[9px] opacity-75 font-normal">
+                            ({formatTime(sec.startSec)})
+                          </span>
                         </button>
                       );
                     })}
@@ -844,7 +1001,9 @@ export default function PracticeModePanel({
                     </span>
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
-                        speed !== 1 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-white/5 text-neutral-300 border-white/10'
+                        speed !== 1
+                          ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                          : "bg-white/5 text-neutral-300 border-white/10"
                       }`}
                     >
                       {targetBpm} BPM ({speed.toFixed(2)}x)
@@ -862,11 +1021,11 @@ export default function PracticeModePanel({
                           onClick={() => changeSpeed(spd)}
                           className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-amber-500 text-zinc-950 border-amber-400 font-black'
-                              : 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                              ? "bg-amber-500 text-zinc-950 border-amber-400 font-black"
+                              : "bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:bg-white/10"
                           }`}
                         >
-                          {spd === 1.0 ? '1x (Orig)' : `${spd}x`}
+                          {spd === 1.0 ? "1x (Orig)" : `${spd}x`}
                         </button>
                       );
                     })}
@@ -892,7 +1051,9 @@ export default function PracticeModePanel({
                       max={Math.round(baseBpm * 1.6)}
                       step={1}
                       value={targetBpm}
-                      onChange={(e) => changeSpeed(Number(e.target.value) / baseBpm)}
+                      onChange={(e) =>
+                        changeSpeed(Number(e.target.value) / baseBpm)
+                      }
                       className="flex-1 accent-amber-500 h-1.5 cursor-pointer"
                     />
                     <button
@@ -920,18 +1081,29 @@ export default function PracticeModePanel({
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
                         semitonesOffset !== 0
-                          ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
-                          : 'bg-white/5 text-neutral-300 border-white/10'
+                          ? "bg-sky-500/20 text-sky-300 border-sky-500/40"
+                          : "bg-white/5 text-neutral-300 border-white/10"
                       }`}
                     >
                       {(() => {
                         const origKey = song.tonalidad?.trim();
-                        if (!origKey) return semitonesOffset === 0 ? 'Original' : `${semitonesOffset > 0 ? '+' : ''}${semitonesOffset} st`;
-                        const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(origKey) ? 'ES' : 'EN';
-                        const targetKey = transposeChordToken(origKey, semitonesOffset, notation);
+                        if (!origKey)
+                          return semitonesOffset === 0
+                            ? "Original"
+                            : `${semitonesOffset > 0 ? "+" : ""}${semitonesOffset} st`;
+                        const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(
+                          origKey,
+                        )
+                          ? "ES"
+                          : "EN";
+                        const targetKey = transposeChordToken(
+                          origKey,
+                          semitonesOffset,
+                          notation,
+                        );
                         return semitonesOffset === 0
                           ? `${origKey}`
-                          : `${targetKey} (${semitonesOffset > 0 ? '+' : ''}${semitonesOffset} st)`;
+                          : `${targetKey} (${semitonesOffset > 0 ? "+" : ""}${semitonesOffset} st)`;
                       })()}
                     </span>
                   </div>
@@ -947,11 +1119,13 @@ export default function PracticeModePanel({
                           onClick={() => setSemitonesOffset(st)}
                           className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
                             isActive
-                              ? 'bg-sky-500 text-zinc-950 border-sky-400 font-black'
-                              : 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                              ? "bg-sky-500 text-zinc-950 border-sky-400 font-black"
+                              : "bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:bg-white/10"
                           }`}
                         >
-                          {st === 0 ? 'Original' : `${st > 0 ? '+' : ''}${st} st`}
+                          {st === 0
+                            ? "Original"
+                            : `${st > 0 ? "+" : ""}${st} st`}
                         </button>
                       );
                     })}
@@ -964,8 +1138,8 @@ export default function PracticeModePanel({
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}
                       className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
                         metronomeOn
-                          ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                          : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
+                          ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                          : "bg-neutral-800 border-transparent text-neutral-400 hover:text-white"
                       }`}
                     >
                       <Timer className="w-3.5 h-3.5" />
@@ -976,8 +1150,8 @@ export default function PracticeModePanel({
                       title="Alinear claqueta con el primer beat"
                       className={`text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
                         beatAnchorSec > 0
-                          ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                          : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
+                          ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                          : "bg-neutral-800 border-transparent text-neutral-400 hover:text-white"
                       }`}
                     >
                       <Target className="w-3.5 h-3.5" />
@@ -990,7 +1164,9 @@ export default function PracticeModePanel({
             {/* Mezcla manual por pista */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">Mi mezcla (solo la ves tú)</span>
+                <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">
+                  Mi mezcla (solo la ves tú)
+                </span>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleAutoBalance}
@@ -998,8 +1174,12 @@ export default function PracticeModePanel({
                     title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
                     className="flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-3)] disabled:opacity-50"
                   >
-                    {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
-                    {isAutoBalancing ? 'Analizando...' : 'Auto-Balance'}
+                    {isAutoBalancing ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Scale className="w-3 h-3" />
+                    )}
+                    {isAutoBalancing ? "Analizando..." : "Auto-Balance"}
                   </button>
                   <button
                     onClick={resetOverrides}
@@ -1017,25 +1197,30 @@ export default function PracticeModePanel({
                 const isLoadingThis = loadingChordsTrackId === tr.id;
                 const isExpanded = expandedChordsTrackId === tr.id;
                 return (
-                  <div key={tr.id} className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? 'border-[var(--ok)]/40' : ''}`}>
+                  <div
+                    key={tr.id}
+                    className={`rounded-[var(--r-m)] ${cardBg} ${isMine ? "border-[var(--ok)]/40" : ""}`}
+                  >
                     <div className="flex items-center gap-2 px-3 py-2">
                       <span className="text-xs font-semibold truncate flex-1 min-w-0">
                         {tr.nombre}
                         {isMine && (
-                          <span className="ml-1.5 text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">TÚ</span>
+                          <span className="ml-1.5 text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)]">
+                            TÚ
+                          </span>
                         )}
                       </span>
                       <button
                         onClick={() => toggleMute(tr.id)}
                         title="Silenciar (solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.muted ? 'bg-[var(--alert)]/80 text-[var(--ink)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.muted ? "bg-[var(--alert)]/80 text-[var(--ink)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                       >
                         M
                       </button>
                       <button
                         onClick={() => toggleSolo(tr.id)}
                         title="Solo (aislar, solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? "bg-[var(--acc)]/60 text-[var(--on-acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"}`}
                       >
                         S
                       </button>
@@ -1046,37 +1231,62 @@ export default function PracticeModePanel({
                         max={1}
                         step={0.05}
                         value={eff.volumen ?? 1}
-                        onChange={(e) => setTrackVolume(tr.id, Number(e.target.value))}
+                        onChange={(e) =>
+                          setTrackVolume(tr.id, Number(e.target.value))
+                        }
                         className="w-20 accent-emerald-500"
                       />
                       <button
-                        onClick={() => (chords ? setExpandedChordsTrackId(isExpanded ? null : tr.id) : handleAnalyzeTrackChords(tr))}
+                        onClick={() =>
+                          chords
+                            ? setExpandedChordsTrackId(
+                                isExpanded ? null : tr.id,
+                              )
+                            : handleAnalyzeTrackChords(tr)
+                        }
                         title="Detectar acordes escuchando solo esta pista aislada"
                         disabled={isLoadingThis}
                         className="w-6 h-6 rounded flex items-center justify-center bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--hair)]/50 disabled:opacity-50"
                       >
-                        {isLoadingThis ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Music2 className="w-3.5 h-3.5" />}
+                        {isLoadingThis ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Music2 className="w-3.5 h-3.5" />
+                        )}
                       </button>
                     </div>
 
                     {isExpanded && (chords || chordsErr) && (
                       <div className="px-3 pb-3 space-y-2 pt-2">
-                        {chordsErr && <p className="text-[11px] text-[var(--alert)]">{chordsErr}</p>}
+                        {chordsErr && (
+                          <p className="text-[11px] text-[var(--alert)]">
+                            {chordsErr}
+                          </p>
+                        )}
                         {chords && (
                           <>
-                            <p className={`text-[10px] font-sans ${chordsSourceLabel(chords.chordsSource).tone}`}>
+                            <p
+                              className={`text-[10px] font-sans ${chordsSourceLabel(chords.chordsSource).tone}`}
+                            >
                               {chordsSourceLabel(chords.chordsSource).text}
-                              {chords.esAproximado && '· ⚠️ aproximado, verifica de oído'}
+                              {chords.esAproximado &&
+                                "· ⚠️ aproximado, verifica de oído"}
                             </p>
                             <pre className="text-[11px] font-sans whitespace-pre-wrap text-[var(--ink-2)] max-h-40 overflow-y-auto bg-[var(--sunken)] rounded-[var(--r-s)] p-2">
                               {chords.cifradoTexto}
                             </pre>
                             {onApplyAsMainChords && (
                               <button
-                                onClick={() => onApplyAsMainChords(chords.cifradoTexto, chords.guiaSustituto)}
+                                onClick={() =>
+                                  onApplyAsMainChords(
+                                    chords.cifradoTexto,
+                                    chords.guiaSustituto,
+                                  )
+                                }
                                 className="flex items-center gap-1.5 text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--hair)]/15 text-[var(--hair)]/50 hover:bg-[var(--hair)]/25"
                               >
-                                <CheckCircle2 className="w-3 h-3" /> Usar como cifrado principal de la canción
+                                <CheckCircle2 className="w-3 h-3" /> Usar como
+                                cifrado principal de la canción
                               </button>
                             )}
                           </>
@@ -1090,31 +1300,44 @@ export default function PracticeModePanel({
 
             {/* Exportar */}
             <div className={`rounded-[var(--r-m)] p-3 space-y-2 ${cardBg}`}>
-              <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">Descargar para escuchar offline</span>
+              <span className="text-[11px] font-sans font-semibold text-[var(--ink-2)]">
+                Descargar para escuchar offline
+              </span>
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={() => handleExport('sin-mi-pista')}
+                  onClick={() => handleExport("sin-mi-pista")}
                   disabled={!myTrack || isExporting !== null}
                   className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-3)] hover:bg-[var(--acc)]/20 disabled:opacity-40"
                 >
-                  <Download className="w-3.5 h-3.5" /> {isExporting === 'sin-mi-pista' ? 'Generando…' : 'Sin mi pista'}
+                  <Download className="w-3.5 h-3.5" />{" "}
+                  {isExporting === "sin-mi-pista"
+                    ? "Generando…"
+                    : "Sin mi pista"}
                 </button>
                 <button
-                  onClick={() => handleExport('solo-mi-pista')}
+                  onClick={() => handleExport("solo-mi-pista")}
                   disabled={!myTrack || isExporting !== null}
                   className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--hair)]/10 text-[var(--acc)]/50 hover:bg-[var(--hair)]/20 disabled:opacity-40"
                 >
-                  <Download className="w-3.5 h-3.5" /> {isExporting === 'solo-mi-pista' ? 'Generando…' : 'Solo mi pista'}
+                  <Download className="w-3.5 h-3.5" />{" "}
+                  {isExporting === "solo-mi-pista"
+                    ? "Generando…"
+                    : "Solo mi pista"}
                 </button>
                 <button
-                  onClick={() => handleExport('mezcla-actual')}
+                  onClick={() => handleExport("mezcla-actual")}
                   disabled={isExporting !== null}
                   className="flex items-center gap-1.5 text-[11px] font-sans px-3 py-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-40"
                 >
-                  <Download className="w-3.5 h-3.5" /> {isExporting === 'mezcla-actual' ? 'Generando…' : 'Mi mezcla actual'}
+                  <Download className="w-3.5 h-3.5" />{" "}
+                  {isExporting === "mezcla-actual"
+                    ? "Generando…"
+                    : "Mi mezcla actual"}
                 </button>
               </div>
-              {exportError && <p className="text-[11px] text-[var(--alert)]">{exportError}</p>}
+              {exportError && (
+                <p className="text-[11px] text-[var(--alert)]">{exportError}</p>
+              )}
             </div>
           </div>
         </div>

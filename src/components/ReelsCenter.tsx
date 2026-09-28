@@ -3912,7 +3912,7 @@ export default function ReelsCenter({
                     </div>
                     <div className="text-left">
                       <div className="flex items-center gap-1">
-                        <Flame className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-500" />
+                        <Flame className="w-3.5 h-3.5 text-[var(--acc)] fill-[var(--acc)]" />
                         <span className="text-xs font-bold text-[var(--ink)]">
                           Viralidad
                         </span>

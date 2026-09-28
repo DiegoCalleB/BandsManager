@@ -278,7 +278,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                 type="checkbox"
                 checked={includeLogo}
                 onChange={(e) => setIncludeLogo(e.target.checked)}
-                className="w-4 h-4 rounded text-[var(--acc)] focus:ring-amber-500 bg-[var(--surface)]"
+                className="w-4 h-4 rounded text-[var(--acc)] focus:ring-[var(--acc)] bg-[var(--surface)]"
               />
               <span className="text-xs text-[var(--ink-2)] font-medium">
                 Incrustar el logo oficial en el centro del código QR

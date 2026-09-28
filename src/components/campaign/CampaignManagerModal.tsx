@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { BookingCampaign, PitchTemplateCategory } from '../../types';
-import { HolidayDateWarning } from '../common/HolidayDateWarning';
+import React, { useState } from "react";
+import { BookingCampaign, PitchTemplateCategory } from "../../types";
+import { HolidayDateWarning } from "../common/HolidayDateWarning";
 import {
   Target,
   Calendar,
@@ -24,8 +24,8 @@ import {
   Radio,
   Briefcase,
   Landmark,
-} from 'lucide-react';
-import { GenerateAllTemplatesModal } from '../booking/GenerateAllTemplatesModal';
+} from "lucide-react";
+import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -35,13 +35,13 @@ const PITCH_CATEGORIES: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
-  { id: 'salas', label: '🏛️ Salas', icon: Building2 },
-  { id: 'festivales', label: '🎪 Festivales', icon: Tent },
-  { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
-  { id: 'medios', label: '📻 Medios', icon: Radio },
-  { id: 'grupos', label: '🎸 Grupos', icon: Users },
-  { id: 'managements', label: '💼 Managements', icon: Briefcase },
-  { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
+  { id: "salas", label: "🏛️ Salas", icon: Building2 },
+  { id: "festivales", label: "🎪 Festivales", icon: Tent },
+  { id: "discotecas", label: "🪩 Discotecas", icon: Disc3 },
+  { id: "medios", label: "📻 Medios", icon: Radio },
+  { id: "grupos", label: "🎸 Grupos", icon: Users },
+  { id: "managements", label: "💼 Managements", icon: Briefcase },
+  { id: "ayuntamientos", label: "🎉 Ayuntamientos", icon: Landmark },
 ];
 
 interface CampaignManagerModalProps {
@@ -49,9 +49,13 @@ interface CampaignManagerModalProps {
   onClose: () => void;
   campaigns: BookingCampaign[];
   activeCampaign: BookingCampaign | null;
-  onSaveCampaign: (campaign: Partial<BookingCampaign>) => Promise<BookingCampaign>;
+  onSaveCampaign: (
+    campaign: Partial<BookingCampaign>,
+  ) => Promise<BookingCampaign>;
   onDeleteCampaign: (id: string) => Promise<void>;
-  onSetActiveCampaign: (idOrCampaign: string | BookingCampaign | null) => Promise<void>;
+  onSetActiveCampaign: (
+    idOrCampaign: string | BookingCampaign | null,
+  ) => Promise<void>;
   onNavigate?: (view: string, options?: any) => void;
 }
 
@@ -66,34 +70,47 @@ export function CampaignManagerModal({
   onNavigate,
 }: CampaignManagerModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editingCampaignId, setEditingCampaignId] = useState<string | null>(null);
+  const [editingCampaignId, setEditingCampaignId] = useState<string | null>(
+    null,
+  );
   const [formData, setFormData] = useState<Partial<BookingCampaign>>({
-    name: '',
-    targetCities: ['Madrid'],
+    name: "",
+    targetCities: ["Madrid"],
     minCapacity: 300,
     maxCapacity: 500,
-    targetDates: ['2026-12-04', '2026-12-05'],
-    notes: '',
+    targetDates: ["2026-12-04", "2026-12-05"],
+    notes: "",
     customPitchTemplates: {},
-    color: 'var(--acc)',
+    color: "var(--acc)",
     isActive: true,
   });
-  const [newCityInput, setNewCityInput] = useState('');
-  const [activePitchCategory, setActivePitchCategory] = useState<PitchTemplateCategory>('salas');
-  const [isMultiTemplatesModalOpen, setIsMultiTemplatesModalOpen] = useState(false);
-  const [isGeneratingAllTemplates, setIsGeneratingAllTemplates] = useState(false);
-  const [templateGenerationFeedback, setTemplateGenerationFeedback] = useState<string | null>(null);
+  const [newCityInput, setNewCityInput] = useState("");
+  const [activePitchCategory, setActivePitchCategory] =
+    useState<PitchTemplateCategory>("salas");
+  const [isMultiTemplatesModalOpen, setIsMultiTemplatesModalOpen] =
+    useState(false);
+  const [isGeneratingAllTemplates, setIsGeneratingAllTemplates] =
+    useState(false);
+  const [templateGenerationFeedback, setTemplateGenerationFeedback] = useState<
+    string | null
+  >(null);
 
-  const handleGenerateAllCampaignTemplates = async (baseProposal: string): Promise<boolean> => {
+  const handleGenerateAllCampaignTemplates = async (
+    baseProposal: string,
+  ): Promise<boolean> => {
     setIsGeneratingAllTemplates(true);
     setTemplateGenerationFeedback(null);
     try {
-      const res = await fetch('/api/templates/generate-all', {
-        method: 'POST',
+      const res = await fetch("/api/templates/generate-all", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          ...(localStorage.getItem('bakandeya_token') || localStorage.getItem('token')
-            ? { 'x-auth-token': (localStorage.getItem('bakandeya_token') || localStorage.getItem('token'))! }
+          "Content-Type": "application/json",
+          ...(localStorage.getItem("bakandeya_token") ||
+          localStorage.getItem("token")
+            ? {
+                "x-auth-token": (localStorage.getItem("bakandeya_token") ||
+                  localStorage.getItem("token"))!,
+              }
             : {}),
         },
         body: JSON.stringify({
@@ -113,27 +130,33 @@ export function CampaignManagerModal({
       if (res.ok && data.success && data.generatedResults) {
         const newTemplates: Record<PitchTemplateCategory, string> = {
           ...(formData.customPitchTemplates || {}),
-          salas: data.generatedResults.salas?.body || '',
-          festivales: data.generatedResults.festivales?.body || '',
-          discotecas: data.generatedResults.discotecas?.body || '',
-          medios: data.generatedResults.medios?.body || '',
-          grupos: data.generatedResults.grupos?.body || '',
-          managements: data.generatedResults.managements?.body || '',
-          ayuntamientos: data.generatedResults.ayuntamientos?.body || '',
+          salas: data.generatedResults.salas?.body || "",
+          festivales: data.generatedResults.festivales?.body || "",
+          discotecas: data.generatedResults.discotecas?.body || "",
+          medios: data.generatedResults.medios?.body || "",
+          grupos: data.generatedResults.grupos?.body || "",
+          managements: data.generatedResults.managements?.body || "",
+          ayuntamientos: data.generatedResults.ayuntamientos?.body || "",
         };
         setFormData((prev) => ({
           ...prev,
           customPitchTemplates: newTemplates,
         }));
-        setTemplateGenerationFeedback('✨ Se han adaptado y aplicado con éxito las 7 plantillas para esta campaña.');
+        setTemplateGenerationFeedback(
+          "✨ Se han adaptado y aplicado con éxito las 7 plantillas para esta campaña.",
+        );
         return true;
       } else {
-        setTemplateGenerationFeedback(data.error || 'Error al generar las plantillas de campaña.');
+        setTemplateGenerationFeedback(
+          data.error || "Error al generar las plantillas de campaña.",
+        );
         return false;
       }
     } catch (err: any) {
-      console.error('Error in handleGenerateAllCampaignTemplates:', err);
-      setTemplateGenerationFeedback('⚠️ Error de conexión al generar las plantillas.');
+      console.error("Error in handleGenerateAllCampaignTemplates:", err);
+      setTemplateGenerationFeedback(
+        "⚠️ Error de conexión al generar las plantillas.",
+      );
       return false;
     } finally {
       setIsGeneratingAllTemplates(false);
@@ -145,17 +168,17 @@ export function CampaignManagerModal({
   const handleStartCreate = () => {
     setEditingCampaignId(null);
     setFormData({
-      name: 'Nueva Campaña' + new Date().getFullYear(),
-      targetCities: ['Madrid'],
+      name: "Nueva Campaña" + new Date().getFullYear(),
+      targetCities: ["Madrid"],
       minCapacity: 250,
       maxCapacity: 500,
-      targetDates: ['2026-12-04', '2026-12-05'],
-      notes: 'Búsqueda de salas y fechas para la gira.',
+      targetDates: ["2026-12-04", "2026-12-05"],
+      notes: "Búsqueda de salas y fechas para la gira.",
       customPitchTemplates: {},
-      color: 'var(--acc)',
+      color: "var(--acc)",
       isActive: true,
     });
-    setActivePitchCategory('salas');
+    setActivePitchCategory("salas");
     setIsEditing(true);
   };
 
@@ -167,13 +190,13 @@ export function CampaignManagerModal({
       minCapacity: camp.minCapacity || 0,
       maxCapacity: camp.maxCapacity || 0,
       targetDates: [...(camp.targetDates || [])],
-      targetDatesText: camp.targetDatesText || '',
-      notes: camp.notes || '',
+      targetDatesText: camp.targetDatesText || "",
+      notes: camp.notes || "",
       customPitchTemplates: { ...(camp.customPitchTemplates || {}) },
-      color: camp.color || 'var(--acc)',
+      color: camp.color || "var(--acc)",
       isActive: camp.isActive,
     });
-    setActivePitchCategory('salas');
+    setActivePitchCategory("salas");
     setIsEditing(true);
   };
 
@@ -182,17 +205,21 @@ export function CampaignManagerModal({
     const dates = formData.targetDates || [];
     const formattedDatesText = dates
       .map((d) => {
-        const parts = d.split('-');
+        const parts = d.split("-");
         if (parts.length === 3) {
-          const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-          return date.toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'short',
+          const date = new Date(
+            Number(parts[0]),
+            Number(parts[1]) - 1,
+            Number(parts[2]),
+          );
+          return date.toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "short",
           });
         }
         return d;
       })
-      .join(',');
+      .join(",");
 
     const payload = {
       id: editingCampaignId || undefined,
@@ -202,9 +229,9 @@ export function CampaignManagerModal({
       maxCapacity: Number(formData.maxCapacity || 0),
       targetDates: dates,
       targetDatesText: formattedDatesText,
-      notes: formData.notes || '',
+      notes: formData.notes || "",
       customPitchTemplates: formData.customPitchTemplates || {},
-      color: formData.color || 'var(--acc)',
+      color: formData.color || "var(--acc)",
       isActive: formData.isActive ?? true,
     };
 
@@ -238,7 +265,7 @@ export function CampaignManagerModal({
         targetCities: [...current, newCityInput.trim()],
       });
     }
-    setNewCityInput('');
+    setNewCityInput("");
   };
 
   const handleRemoveCity = (city: string) => {
@@ -248,7 +275,10 @@ export function CampaignManagerModal({
     });
   };
 
-  const handlePitchTemplateChange = (category: PitchTemplateCategory, value: string) => {
+  const handlePitchTemplateChange = (
+    category: PitchTemplateCategory,
+    value: string,
+  ) => {
     setFormData({
       ...formData,
       customPitchTemplates: {
@@ -258,7 +288,9 @@ export function CampaignManagerModal({
     });
   };
 
-  const filledPitchCategoriesCount = Object.values(formData.customPitchTemplates || {}).filter((v) => (v || '').trim()).length;
+  const filledPitchCategoriesCount = Object.values(
+    formData.customPitchTemplates || {},
+  ).filter((v) => (v || "").trim()).length;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
@@ -277,8 +309,9 @@ export function CampaignManagerModal({
                 </span>
               </h2>
               <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
-                Configura los objetivos de fechas, ciudades y aforo. Al activar una campaña, toda la web, el calendario y los pitches de IA
-                se enfocarán en ella.
+                Configura los objetivos de fechas, ciudades y aforo. Al activar
+                una campaña, toda la web, el calendario y los pitches de IA se
+                enfocarán en ella.
               </p>
             </div>
           </div>
@@ -297,7 +330,9 @@ export function CampaignManagerModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-3">
                 <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">
-                  {editingCampaignId ? '✎ Editar Campaña' : '➕ Crear Nueva Campaña'}
+                  {editingCampaignId
+                    ? "✎ Editar Campaña"
+                    : "➕ Crear Nueva Campaña"}
                 </span>
                 <button
                   onClick={() => setIsEditing(false)}
@@ -315,8 +350,10 @@ export function CampaignManagerModal({
                   </label>
                   <input
                     type="text"
-                    value={formData.name || ''}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={formData.name || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     placeholder="Ej: Campaña Diciembre 2026"
                     className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] focus:ring-1 focus:ring-purple-500"
                   />
@@ -326,13 +363,22 @@ export function CampaignManagerModal({
                     Color en Calendario
                   </label>
                   <div className="flex items-center gap-2 mt-1">
-                    {['var(--acc)', 'var(--acc)', 'var(--ok)', 'var(--ok)', 'var(--alert)', 'var(--acc)'].map((col) => (
+                    {[
+                      "var(--acc)",
+                      "var(--acc)",
+                      "var(--ok)",
+                      "var(--ok)",
+                      "var(--alert)",
+                      "var(--acc)",
+                    ].map((col) => (
                       <button
                         key={col}
                         type="button"
                         onClick={() => setFormData({ ...formData, color: col })}
                         className={`w-7 h-7 rounded-[var(--r-s)] transition-transform cursor-pointer ${
-                          formData.color === col ? 'scale-110 ring-2 ring-white/40' : 'border-transparent opacity-70 hover:opacity-100'
+                          formData.color === col
+                            ? "scale-110 ring-2 ring-white/40"
+                            : "border-transparent opacity-70 hover:opacity-100"
                         }`}
                         style={{ backgroundColor: col }}
                       />
@@ -343,7 +389,9 @@ export function CampaignManagerModal({
 
               {/* Target Cities */}
               <div>
-                <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">Ciudades Objetivo *</label>
+                <label className="block text-[11px] font-sans font-bold tracking-wider text-[var(--ink-2)] mb-1">
+                  Ciudades Objetivo *
+                </label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {formData.targetCities?.map((city) => (
                     <span
@@ -352,7 +400,11 @@ export function CampaignManagerModal({
                     >
                       <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
                       {city}
-                      <button type="button" onClick={() => handleRemoveCity(city)} className="hover:text-[var(--alert)] ml-1">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCity(city)}
+                        className="hover:text-[var(--alert)] ml-1"
+                      >
                         <X className="w-3 h-3" />
                       </button>
                     </span>
@@ -364,7 +416,7 @@ export function CampaignManagerModal({
                     value={newCityInput}
                     onChange={(e) => setNewCityInput(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                      if (e.key === "Enter") {
                         e.preventDefault();
                         handleAddCity();
                       }
@@ -459,12 +511,14 @@ export function CampaignManagerModal({
 
                     <div className="flex items-center gap-1.5 bg-[var(--hair)]/10 hover:bg-[var(--hair)]/20 rounded-[var(--r-m)] px-2.5 py-1 text-[var(--hair)]/80">
                       <Plus className="w-3.5 h-3.5" />
-                      <span className="text-[11px] font-sans font-bold">Añadir Fecha:</span>
+                      <span className="text-[11px] font-sans font-bold">
+                        Añadir Fecha:
+                      </span>
                       <input
                         type="date"
                         onChange={(e) => {
                           handleAddDate(e.target.value);
-                          e.target.value = '';
+                          e.target.value = "";
                         }}
                         className="bg-transparent text-xs font-sans text-[var(--acc)]/40 p-0 focus:ring-0 cursor-pointer"
                       />
@@ -472,8 +526,10 @@ export function CampaignManagerModal({
                   </div>
                 </div>
                 <p className="text-[11px] text-[var(--ink-2)] italic">
-                  💡 Consejo: Las fechas añadidas aparecerán destacadas con badge de campaña en el Calendario y serán propuestas
-                  automáticamente por los agentes de IA al redactar pitches a salas.
+                  💡 Consejo: Las fechas añadidas aparecerán destacadas con
+                  badge de campaña en el Calendario y serán propuestas
+                  automáticamente por los agentes de IA al redactar pitches a
+                  salas.
                 </p>
               </div>
 
@@ -484,8 +540,10 @@ export function CampaignManagerModal({
                 </label>
                 <textarea
                   rows={2}
-                  value={formData.notes || ''}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  value={formData.notes || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, notes: e.target.value })
+                  }
                   placeholder="Ej: Intercambio con bandas de ska/mestizaje locales para compartir backline y taquilla al 50%."
                   className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                 />
@@ -498,7 +556,8 @@ export function CampaignManagerModal({
                     Plantillas de Pitch de Campaña por Caso de Uso
                     {filledPitchCategoriesCount > 0 && (
                       <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--hair)]/20 text-[var(--hair)]/80">
-                        {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length} definidas
+                        {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length}{" "}
+                        definidas
                       </span>
                     )}
                   </label>
@@ -529,7 +588,9 @@ export function CampaignManagerModal({
 
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {PITCH_CATEGORIES.map((cat) => {
-                    const hasContent = !!(formData.customPitchTemplates?.[cat.id] || '').trim();
+                    const hasContent = !!(
+                      formData.customPitchTemplates?.[cat.id] || ""
+                    ).trim();
                     const isSelected = activePitchCategory === cat.id;
                     return (
                       <button
@@ -538,13 +599,15 @@ export function CampaignManagerModal({
                         onClick={() => setActivePitchCategory(cat.id)}
                         className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
                           isSelected
-                            ? 'bg-[var(--acc)]/30 text-[var(--acc)]/40/60'
-                            : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:'
+                            ? "bg-[var(--acc)]/30 text-[var(--acc)]/40/60"
+                            : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:"
                         }`}
                       >
                         <cat.icon className="w-3 h-3" />
                         {cat.label}
-                        {hasContent && <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />}
+                        {hasContent && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
+                        )}
                       </button>
                     );
                   })}
@@ -552,15 +615,23 @@ export function CampaignManagerModal({
                 <textarea
                   key={activePitchCategory}
                   rows={3}
-                  value={formData.customPitchTemplates?.[activePitchCategory] || ''}
-                  onChange={(e) => handlePitchTemplateChange(activePitchCategory, e.target.value)}
+                  value={
+                    formData.customPitchTemplates?.[activePitchCategory] || ""
+                  }
+                  onChange={(e) =>
+                    handlePitchTemplateChange(
+                      activePitchCategory,
+                      e.target.value,
+                    )
+                  }
                   placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para"${PITCH_CATEGORIES.find((c) => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
                   className="w-full bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)]"
                 />
                 <p className="text-[11px] text-[var(--ink-2)] italic mt-1">
-                  💡 Cada caso de uso tiene su propio mensaje. Mientras esta campaña esté activa, el Redactor IA prioriza el mensaje de la
-                  categoría del lead sobre la plantilla habitual; las categorías sin mensaje definido siguen usando solo la plantilla
-                  habitual.
+                  💡 Cada caso de uso tiene su propio mensaje. Mientras esta
+                  campaña esté activa, el Redactor IA prioriza el mensaje de la
+                  categoría del lead sobre la plantilla habitual; las categorías
+                  sin mensaje definido siguen usando solo la plantilla habitual.
                 </p>
               </div>
 
@@ -588,7 +659,9 @@ export function CampaignManagerModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">Campañas Registradas</span>
+                  <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
+                    Campañas Registradas
+                  </span>
                 </div>
                 <button
                   onClick={handleStartCreate}
@@ -603,21 +676,25 @@ export function CampaignManagerModal({
                 onClick={() => onSetActiveCampaign(null)}
                 className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
                   !activeCampaign
-                    ? 'bg-[var(--surface)]/80 ring-1 ring-amber-400/30'
-                    : 'bg-[var(--surface)] hover: text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                    ? "bg-[var(--surface)]/80 ring-1 ring-[var(--acc)]/30"
+                    : "bg-[var(--surface)] hover:text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
-                      !activeCampaign ? 'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' : 'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+                      !activeCampaign
+                        ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70"
+                        : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                     }`}
                   >
                     <Compass className="w-4 h-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-[var(--ink)]">Modo General (Sin Filtro de Campaña)</span>
+                      <span className="text-xs font-bold text-[var(--ink)]">
+                        Modo General (Sin Filtro de Campaña)
+                      </span>
                       {!activeCampaign && (
                         <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
                           ACTIVO
@@ -625,14 +702,17 @@ export function CampaignManagerModal({
                       )}
                     </div>
                     <p className="text-[11px] text-[var(--ink-2)]">
-                      Muestra todas las salas, bandas y conciertos sin filtrar por una campaña específica.
+                      Muestra todas las salas, bandas y conciertos sin filtrar
+                      por una campaña específica.
                     </p>
                   </div>
                 </div>
                 {!activeCampaign ? (
                   <Check className="w-5 h-5 text-[var(--acc)]" />
                 ) : (
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]">Seleccionar</span>
+                  <span className="text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]">
+                    Seleccionar
+                  </span>
                 )}
               </div>
 
@@ -640,22 +720,32 @@ export function CampaignManagerModal({
               <div className="space-y-3">
                 {campaigns.map((camp) => {
                   const isActive = activeCampaign?.id === camp.id;
-                  const themeColor = camp.color || 'var(--acc)';
+                  const themeColor = camp.color || "var(--acc)";
                   return (
                     <div
                       key={camp.id}
                       className={`p-4 rounded-[var(--r-m)] transition-all relative overflow-hidden ${
-                        isActive ? 'bg-[var(--surface)]/60 ring-1 ring-purple-500/30' : 'bg-[var(--surface)] hover:'
+                        isActive
+                          ? "bg-[var(--surface)]/60 ring-1 ring-purple-500/30"
+                          : "bg-[var(--surface)] hover:"
                       }`}
                     >
                       {/* Left accent stripe */}
-                      <div className="absolute top-0 left-0 bottom-0 w-1.5" style={{ backgroundColor: themeColor }} />
+                      <div
+                        className="absolute top-0 left-0 bottom-0 w-1.5"
+                        style={{ backgroundColor: themeColor }}
+                      />
 
                       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 ml-2">
                         <div className="space-y-1.5 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: themeColor }} />
-                            <h3 className="text-sm font-bold font-display text-[var(--ink)]">{camp.name}</h3>
+                            <span
+                              className="w-2.5 h-2.5 rounded-full shrink-0"
+                              style={{ backgroundColor: themeColor }}
+                            />
+                            <h3 className="text-sm font-bold font-display text-[var(--ink)]">
+                              {camp.name}
+                            </h3>
                             {isActive ? (
                               <span className="inline-flex items-center gap-1 text-[9px] font-sans font-extrabold px-2 py-0.5 rounded-full bg-[var(--hair)]/20 text-[var(--hair)]/80">
                                 <Flame className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -675,7 +765,8 @@ export function CampaignManagerModal({
                           <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-2)] pt-0.5">
                             <span className="flex items-center gap-1 text-[var(--ink-3)]">
                               <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                              {camp.targetCities?.join(',') || 'Cualquier ciudad'}
+                              {camp.targetCities?.join(",") ||
+                                "Cualquier ciudad"}
                             </span>
                             <span className="flex items-center gap-1 text-[var(--acc)]/70">
                               <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -683,19 +774,28 @@ export function CampaignManagerModal({
                             </span>
                             <span className="flex items-center gap-1 text-[var(--alert)]/60">
                               <Calendar className="w-3.5 h-3.5 text-[var(--alert)]" />
-                              {camp.targetDates?.length || 0} fechas ({camp.targetDatesText || 'Sin definir'})
+                              {camp.targetDates?.length || 0} fechas (
+                              {camp.targetDatesText || "Sin definir"})
                             </span>
-                            {Object.values(camp.customPitchTemplates || {}).some((v) => (v || '').trim()) && (
+                            {Object.values(
+                              camp.customPitchTemplates || {},
+                            ).some((v) => (v || "").trim()) && (
                               <span className="flex items-center gap-1 text-[var(--hair)]/80">
                                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-                                {Object.values(camp.customPitchTemplates || {}).filter((v) => (v || '').trim()).length} plantilla(s)
-                                propia(s)
+                                {
+                                  Object.values(
+                                    camp.customPitchTemplates || {},
+                                  ).filter((v) => (v || "").trim()).length
+                                }{" "}
+                                plantilla(s) propia(s)
                               </span>
                             )}
                           </div>
 
                           {camp.notes && (
-                            <p className="text-[11px] text-[var(--ink-2)] italic font-sans pt-1">&ldquo;{camp.notes}&rdquo;</p>
+                            <p className="text-[11px] text-[var(--ink-2)] italic font-sans pt-1">
+                              &ldquo;{camp.notes}&rdquo;
+                            </p>
                           )}
                         </div>
 
@@ -708,13 +808,14 @@ export function CampaignManagerModal({
                                   type="button"
                                   onClick={() => {
                                     onClose();
-                                    onNavigate('calendario', {
+                                    onNavigate("calendario", {
                                       selectedDate: camp.targetDates?.[0],
                                     });
                                   }}
                                   className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--hair)]/20 text-[var(--hair)]/80 hover:bg-[var(--hair)]/30 flex items-center gap-1"
                                 >
-                                  <Calendar className="w-3 h-3" /> Ver en Calendario
+                                  <Calendar className="w-3 h-3" /> Ver en
+                                  Calendario
                                 </button>
                               )}
                               <button
@@ -747,7 +848,11 @@ export function CampaignManagerModal({
                           <button
                             type="button"
                             onClick={() => {
-                              if (window.confirm(`¿Eliminar la campaña"${camp.name}"?`)) {
+                              if (
+                                window.confirm(
+                                  `¿Eliminar la campaña"${camp.name}"?`,
+                                )
+                              ) {
                                 onDeleteCampaign(camp.id);
                               }
                             }}
@@ -784,7 +889,7 @@ export function CampaignManagerModal({
         <GenerateAllTemplatesModal
           isOpen={isMultiTemplatesModalOpen}
           onClose={() => setIsMultiTemplatesModalOpen(false)}
-          initialBaseText={formData.notes || ''}
+          initialBaseText={formData.notes || ""}
           onGenerateAll={handleGenerateAllCampaignTemplates}
           isGenerating={isGeneratingAllTemplates}
           mode="campaign"

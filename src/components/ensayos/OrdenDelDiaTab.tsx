@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   Plus,
   Disc3,
@@ -26,12 +26,20 @@ import {
   Undo2,
   FolderInput,
   FlameKindling,
-} from 'lucide-react';
-import { Rehearsal, RehearsalAgendaItem, RehearsalObjective, Song, Setlist, Concert, ThemeColors } from '../../types';
-import { formatSongTitle } from '../../utils/formatSongTitle';
-import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
-import { ModalPortal } from '../common/ModalPortal';
-import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+} from "lucide-react";
+import {
+  Rehearsal,
+  RehearsalAgendaItem,
+  RehearsalObjective,
+  Song,
+  Setlist,
+  Concert,
+  ThemeColors,
+} from "../../types";
+import { formatSongTitle } from "../../utils/formatSongTitle";
+import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
+import { ModalPortal } from "../common/ModalPortal";
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 
 interface OrdenDelDiaTabProps {
   rehearsal: Rehearsal;
@@ -43,24 +51,54 @@ interface OrdenDelDiaTabProps {
   onGoToLiveMode: () => void;
 }
 
-const BLOCK_TYPES: Record<string, { label: string; icon: string; bg: string; text: string }> = {
-  cancion: { label: 'Canción de Repertorio', icon: '🎵', bg: 'bg-[var(--acc)]/10', text: 'text-[var(--acc)]' },
-  calentamiento: { label: 'Calentamiento / Sonido', icon: '🔥', bg: 'bg-[var(--acc)]/10', text: 'text-[var(--acc)]/80' },
-  pausa: { label: 'Pausa / Descanso / Birra', icon: '☕', bg: 'bg-[var(--surface)]/80', text: 'text-[var(--ink-2)]' },
-  seccion_especifica: {
-    label: 'Sección Específica (Solo, Coros, Intro)',
-    icon: '🎯',
-    bg: 'bg-[var(--tentative)]/10',
-    text: 'text-[var(--acc)]',
+const BLOCK_TYPES: Record<
+  string,
+  { label: string; icon: string; bg: string; text: string }
+> = {
+  cancion: {
+    label: "Canción de Repertorio",
+    icon: "🎵",
+    bg: "bg-[var(--acc)]/10",
+    text: "text-[var(--acc)]",
   },
-  improvisacion: { label: 'Jam / Improvisación / Riff', icon: '🎸', bg: 'bg-[var(--ok)]/10', text: 'text-[var(--ok)]' },
-  outro: { label: 'Repaso Final / Feedback', icon: '🏁', bg: 'bg-[var(--acc)]/10', text: 'text-[var(--ink-2)]' },
+  calentamiento: {
+    label: "Calentamiento / Sonido",
+    icon: "🔥",
+    bg: "bg-[var(--acc)]/10",
+    text: "text-[var(--acc)]/80",
+  },
+  pausa: {
+    label: "Pausa / Descanso / Birra",
+    icon: "☕",
+    bg: "bg-[var(--surface)]/80",
+    text: "text-[var(--ink-2)]",
+  },
+  seccion_especifica: {
+    label: "Sección Específica (Solo, Coros, Intro)",
+    icon: "🎯",
+    bg: "bg-[var(--tentative)]/10",
+    text: "text-[var(--acc)]",
+  },
+  improvisacion: {
+    label: "Jam / Improvisación / Riff",
+    icon: "🎸",
+    bg: "bg-[var(--ok)]/10",
+    text: "text-[var(--ok)]",
+  },
+  outro: {
+    label: "Repaso Final / Feedback",
+    icon: "🏁",
+    bg: "bg-[var(--acc)]/10",
+    text: "text-[var(--ink-2)]",
+  },
 };
 
 // 1x1 transparent drag ghost image
-const TRANSPARENT_DRAG_IMAGE = typeof window !== 'undefined' ? new window.Image() : null;
+const TRANSPARENT_DRAG_IMAGE =
+  typeof window !== "undefined" ? new window.Image() : null;
 if (TRANSPARENT_DRAG_IMAGE) {
-  TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
+  TRANSPARENT_DRAG_IMAGE.src =
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7";
 }
 
 export function OrdenDelDiaTab({
@@ -82,55 +120,70 @@ export function OrdenDelDiaTab({
 
   // Multi-song selection state
   const [selectedSongIds, setSelectedSongIds] = useState<string[]>([]);
-  const [searchSongQuery, setSearchSongQuery] = useState('');
-  const [selectedAlbumFilter, setSelectedAlbumFilter] = useState('todos');
+  const [searchSongQuery, setSearchSongQuery] = useState("");
+  const [selectedAlbumFilter, setSelectedAlbumFilter] = useState("todos");
   const [onlyFavorites, setOnlyFavorites] = useState(false);
 
   // Drag and drop state
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
-  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
+  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(
+    null,
+  );
   const [historyStack, setHistoryStack] = useState<RehearsalAgendaItem[][]>([]);
 
   // Custom block form state
-  const [blockTipo, setBlockTipo] = useState<RehearsalAgendaItem['tipo']>('calentamiento');
-  const [blockTitulo, setBlockTitulo] = useState('');
+  const [blockTipo, setBlockTipo] =
+    useState<RehearsalAgendaItem["tipo"]>("calentamiento");
+  const [blockTitulo, setBlockTitulo] = useState("");
   const [blockDuracion, setBlockDuracion] = useState(15);
-  const [blockEnfoque, setBlockEnfoque] = useState('');
+  const [blockEnfoque, setBlockEnfoque] = useState("");
 
   // Nuevo objetivo rápido
-  const [nuevoObjTexto, setNuevoObjTexto] = useState('');
+  const [nuevoObjTexto, setNuevoObjTexto] = useState("");
 
   // Estadísticas del orden del día
-  const totalMinutosEstimados = agenda.reduce((acc, item) => acc + (item.duracionEstimadaMin || 0), 0);
-  const cancionesCount = agenda.filter((item) => item.tipo === 'cancion').length;
-  const pausasCount = agenda.filter((item) => item.tipo === 'pausa').length;
+  const totalMinutosEstimados = agenda.reduce(
+    (acc, item) => acc + (item.duracionEstimadaMin || 0),
+    0,
+  );
+  const cancionesCount = agenda.filter(
+    (item) => item.tipo === "cancion",
+  ).length;
+  const pausasCount = agenda.filter((item) => item.tipo === "pausa").length;
 
   // Lista de álbumes para el filtro del modal
   const albumsList = useMemo(() => {
     const set = new Set<string>();
     songs.forEach((s) => {
       const alb = s.albumDisco || s.album;
-      set.add(alb || 'Singles / Sin Disco');
+      set.add(alb || "Singles / Sin Disco");
     });
-    return ['todos', ...Array.from(set)];
+    return ["todos", ...Array.from(set)];
   }, [songs]);
 
   // Existing songs in agenda
   const existingSongIdsInAgenda = useMemo(() => {
-    return new Set(agenda.filter((a) => a.tipo === 'cancion' && a.songId).map((a) => a.songId!));
+    return new Set(
+      agenda
+        .filter((a) => a.tipo === "cancion" && a.songId)
+        .map((a) => a.songId!),
+    );
   }, [agenda]);
 
   // Canciones filtradas en el modal
   const filteredSongs = useMemo(() => {
     return songs.filter((s) => {
       const matchSearch =
-        searchSongQuery === '' ||
+        searchSongQuery === "" ||
         s.titulo.toLowerCase().includes(searchSongQuery.toLowerCase()) ||
-        (s.tonalidad && s.tonalidad.toLowerCase().includes(searchSongQuery.toLowerCase())) ||
-        (s.genero && s.genero.toLowerCase().includes(searchSongQuery.toLowerCase()));
+        (s.tonalidad &&
+          s.tonalidad.toLowerCase().includes(searchSongQuery.toLowerCase())) ||
+        (s.genero &&
+          s.genero.toLowerCase().includes(searchSongQuery.toLowerCase()));
       const matchFav = !onlyFavorites || !!s.favoritoGeneral;
-      const alb = s.albumDisco || s.album || 'Singles / Sin Disco';
-      const matchAlbum = selectedAlbumFilter === 'todos' || alb === selectedAlbumFilter;
+      const alb = s.albumDisco || s.album || "Singles / Sin Disco";
+      const matchAlbum =
+        selectedAlbumFilter === "todos" || alb === selectedAlbumFilter;
       return matchSearch && matchFav && matchAlbum;
     });
   }, [songs, searchSongQuery, onlyFavorites, selectedAlbumFilter]);
@@ -163,12 +216,16 @@ export function OrdenDelDiaTab({
   // Duración total de canciones seleccionadas
   const selectedDurationSeconds = useMemo(() => {
     const set = new Set(selectedSongIds);
-    return songs.filter((s) => set.has(s.id)).reduce((acc, s) => acc + (s.duracionSegundos || 210), 0);
+    return songs
+      .filter((s) => set.has(s.id))
+      .reduce((acc, s) => acc + (s.duracionSegundos || 210), 0);
   }, [selectedSongIds, songs]);
 
   // Toggle objetivo
   const handleToggleObjetivo = (id: string) => {
-    const updated = objetivos.map((o) => (o.id === id ? { ...o, completado: !o.completado } : o));
+    const updated = objetivos.map((o) =>
+      o.id === id ? { ...o, completado: !o.completado } : o,
+    );
     onUpdateRehearsal({ objetivos: updated });
   };
 
@@ -180,7 +237,7 @@ export function OrdenDelDiaTab({
       completado: false,
     };
     onUpdateRehearsal({ objetivos: [...objetivos, nuevo] });
-    setNuevoObjTexto('');
+    setNuevoObjTexto("");
   };
 
   const handleDeleteObjetivo = (id: string) => {
@@ -188,8 +245,8 @@ export function OrdenDelDiaTab({
   };
 
   // Agenda mutations
-  const handleMoveItem = (index: number, direction: 'up' | 'down') => {
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+  const handleMoveItem = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= agenda.length) return;
 
     setHistoryStack((prev) => [...prev, agenda]);
@@ -229,7 +286,10 @@ export function OrdenDelDiaTab({
     onUpdateRehearsal({ agenda: agenda.filter((a) => a.id !== id) });
   };
 
-  const handleUpdateAgendaItem = (id: string, updates: Partial<RehearsalAgendaItem>) => {
+  const handleUpdateAgendaItem = (
+    id: string,
+    updates: Partial<RehearsalAgendaItem>,
+  ) => {
     const updated = agenda.map((a) => (a.id === id ? { ...a, ...updates } : a));
     onUpdateRehearsal({ agenda: updated });
   };
@@ -241,15 +301,19 @@ export function OrdenDelDiaTab({
 
     const newItems: RehearsalAgendaItem[] = selectedSongIds.map((sId) => {
       const s = songs.find((item) => item.id === sId);
-      const estMin = s?.duracionSegundos ? Math.ceil(s.duracionSegundos / 60) + 3 : 7;
+      const estMin = s?.duracionSegundos
+        ? Math.ceil(s.duracionSegundos / 60) + 3
+        : 7;
       return {
         id: `ag-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-        tipo: 'cancion',
-        titulo: s?.titulo || 'Canción',
+        tipo: "cancion",
+        titulo: s?.titulo || "Canción",
         songId: sId,
         duracionEstimadaMin: estMin,
-        prioridad: 'media',
-        enfoque: s?.tonalidad ? `Tonalidad: ${s.tonalidad} • BPM: ${s.bpm || '--'}` : '',
+        prioridad: "media",
+        enfoque: s?.tonalidad
+          ? `Tonalidad: ${s.tonalidad} • BPM: ${s.bpm || "--"}`
+          : "",
       };
     });
 
@@ -262,25 +326,26 @@ export function OrdenDelDiaTab({
   const handleConfirmAddBlock = (e: React.FormEvent) => {
     e.preventDefault();
     setHistoryStack((prev) => [...prev, agenda]);
-    const titulo = blockTitulo.trim() || BLOCK_TYPES[blockTipo]?.label || 'Bloque';
+    const titulo =
+      blockTitulo.trim() || BLOCK_TYPES[blockTipo]?.label || "Bloque";
     const newItem: RehearsalAgendaItem = {
       id: `ag-${Date.now()}`,
       tipo: blockTipo,
       titulo,
       duracionEstimadaMin: Number(blockDuracion) || 15,
       enfoque: blockEnfoque.trim() || undefined,
-      prioridad: 'media',
+      prioridad: "media",
     };
     onUpdateRehearsal({ agenda: [...agenda, newItem] });
-    setBlockTitulo('');
-    setBlockEnfoque('');
+    setBlockTitulo("");
+    setBlockEnfoque("");
     setShowAddBlockModal(false);
   };
 
   // Import any Setlist from Band
   const handleImportSetlist = (setlist: Setlist, replace: boolean = false) => {
     if (!setlist.items || setlist.items.length === 0) {
-      alert('El repertorio seleccionado no tiene temas.');
+      alert("El repertorio seleccionado no tiene temas.");
       return;
     }
 
@@ -291,30 +356,32 @@ export function OrdenDelDiaTab({
     if (replace || agenda.length === 0) {
       items.push({
         id: `ag-warmup-${Date.now()}`,
-        tipo: 'calentamiento',
-        titulo: 'Calentamiento & Prueba de Sonido',
+        tipo: "calentamiento",
+        titulo: "Calentamiento & Prueba de Sonido",
         duracionEstimadaMin: 15,
-        enfoque: 'Chequeo de afinación y niveles de monitores',
+        enfoque: "Chequeo de afinación y niveles de monitores",
       });
     }
 
     setlist.items.forEach((it, idx) => {
-      if (it.tipoItem === 'cancion' || it.songId) {
+      if (it.tipoItem === "cancion" || it.songId) {
         const s = songs.find((x) => x.id === it.songId);
         items.push({
           id: `ag-st-${idx}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
-          tipo: 'cancion',
-          titulo: s?.titulo || it.tituloCustom || 'Canción',
+          tipo: "cancion",
+          titulo: s?.titulo || it.tituloCustom || "Canción",
           songId: it.songId,
-          duracionEstimadaMin: s?.duracionSegundos ? Math.ceil(s.duracionSegundos / 60) + 3 : 7,
+          duracionEstimadaMin: s?.duracionSegundos
+            ? Math.ceil(s.duracionSegundos / 60) + 3
+            : 7,
           enfoque: `Repertorio: ${setlist.nombre}`,
-          prioridad: 'media',
+          prioridad: "media",
         });
       } else {
         items.push({
           id: `ag-pausa-${idx}-${Date.now()}`,
-          tipo: 'pausa',
-          titulo: it.tituloCustom || 'Pausa / Intermedio',
+          tipo: "pausa",
+          titulo: it.tituloCustom || "Pausa / Intermedio",
           duracionEstimadaMin: 10,
         });
       }
@@ -323,8 +390,8 @@ export function OrdenDelDiaTab({
     if (replace || agenda.length === 0) {
       items.push({
         id: `ag-outro-${Date.now()}`,
-        tipo: 'outro',
-        titulo: 'Repaso Final & Valoración',
+        tipo: "outro",
+        titulo: "Repaso Final & Valoración",
         duracionEstimadaMin: 10,
       });
     }
@@ -342,18 +409,25 @@ export function OrdenDelDiaTab({
             <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
               <ListOrdered className="w-4 h-4" />
             </span>
-            <h3 className="text-sm font-sans font-bold text-[var(--ink)] tracking-wider">Orden del Día & Objetivos</h3>
+            <h3 className="text-sm font-sans font-bold text-[var(--ink)] tracking-wider">
+              Orden del Día & Objetivos
+            </h3>
           </div>
           <p className="text-xs text-[var(--ink-2)]">
-            Añade temas en orden, reorganiza arrastrando y planifica los minutos exactos del ensayo.
+            Añade temas en orden, reorganiza arrastrando y planifica los minutos
+            exactos del ensayo.
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1 font-sans text-xs">
             <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--acc)]/70 font-bold">
               ⏱ {totalMinutosEstimados} min estimados
             </span>
-            <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">🎵 {cancionesCount} canciones</span>
+            <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
+              🎵 {cancionesCount} canciones
+            </span>
             {pausasCount > 0 && (
-              <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">☕ {pausasCount} descansos</span>
+              <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
+                ☕ {pausasCount} descansos
+              </span>
             )}
             {historyStack.length > 0 && (
               <button
@@ -384,7 +458,7 @@ export function OrdenDelDiaTab({
 
           <button
             onClick={onGoToLiveMode}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] font-sans font-black text-xs tracking-wider hover:brightness-110 transition-all cursor-pointer active:scale-95"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] font-sans font-black text-xs tracking-wider hover:brightness-110 transition-all cursor-pointer active:scale-95"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Iniciar Modo Local en Vivo</span>
@@ -399,23 +473,30 @@ export function OrdenDelDiaTab({
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <CheckSquare className="w-4 h-4 text-[var(--acc)]" />
-                <h4 className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">Objetivos del Ensayo</h4>
+                <h4 className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">
+                  Objetivos del Ensayo
+                </h4>
               </div>
               <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                {objetivos.filter((o) => o.completado).length}/{objetivos.length}
+                {objetivos.filter((o) => o.completado).length}/
+                {objetivos.length}
               </span>
             </div>
 
             {/* List */}
             <div className="space-y-2 mb-3 max-h-64 overflow-y-auto">
               {objetivos.length === 0 ? (
-                <p className="text-xs text-[var(--ink-2)] italic py-2">No hay objetivos marcados para esta sesión. Añade uno abajo.</p>
+                <p className="text-xs text-[var(--ink-2)] italic py-2">
+                  No hay objetivos marcados para esta sesión. Añade uno abajo.
+                </p>
               ) : (
                 objetivos.map((obj) => (
                   <div
                     key={obj.id}
                     className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
-                      obj.completado ? 'bg-[var(--ok)]/10/30 text-[var(--ink-2)]' : 'bg-[var(--surface)] text-[var(--ink)] hover:'
+                      obj.completado
+                        ? "bg-[var(--ok)]/10/30 text-[var(--ink-2)]"
+                        : "bg-[var(--surface)] text-[var(--ink)] hover:"
                     }`}
                   >
                     <button
@@ -428,7 +509,11 @@ export function OrdenDelDiaTab({
                       ) : (
                         <Square className="w-4 h-4 text-[var(--ink-2)] shrink-0 mt-0.5" />
                       )}
-                      <span className={`text-xs ${obj.completado ? 'line-through opacity-70' : ''}`}>{obj.texto}</span>
+                      <span
+                        className={`text-xs ${obj.completado ? "line-through opacity-70" : ""}`}
+                      >
+                        {obj.texto}
+                      </span>
                     </button>
                     <button
                       type="button"
@@ -450,7 +535,7 @@ export function OrdenDelDiaTab({
                 value={nuevoObjTexto}
                 onChange={(e) => setNuevoObjTexto(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
                     handleAddObjetivo();
                   }
@@ -474,11 +559,18 @@ export function OrdenDelDiaTab({
             </h5>
             <ul className="text-xs text-[var(--ink-2)] space-y-1.5 pl-4 list-disc font-sans">
               <li>
-                Arrastra cualquier tema por el icono <GripVertical className="w-3 h-3 inline text-[var(--ink-2)]" /> para cambiar el orden
-                en 1 segundo.
+                Arrastra cualquier tema por el icono{" "}
+                <GripVertical className="w-3 h-3 inline text-[var(--ink-2)]" />{" "}
+                para cambiar el orden en 1 segundo.
               </li>
-              <li>Al añadir canciones múltiples, pulsa en el orden deseado para insertarlas tal cual.</li>
-              <li>Marca descansos de 5-10 min para oxigenar el oído y repasar detalles técnicos.</li>
+              <li>
+                Al añadir canciones múltiples, pulsa en el orden deseado para
+                insertarlas tal cual.
+              </li>
+              <li>
+                Marca descansos de 5-10 min para oxigenar el oído y repasar
+                detalles técnicos.
+              </li>
             </ul>
           </div>
         </div>
@@ -520,9 +612,12 @@ export function OrdenDelDiaTab({
             <div className="p-8 rounded-[var(--r-l)] bg-[var(--surface)] text-center space-y-3">
               <Disc3 className="w-10 h-10 text-[var(--ink-2)] mx-auto animate-spin-slow" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-[var(--ink-2)]">El orden del día está vacío</p>
+                <p className="text-sm font-bold text-[var(--ink-2)]">
+                  El orden del día está vacío
+                </p>
                 <p className="text-xs text-[var(--ink-2)] max-w-sm mx-auto">
-                  Añade canciones en el orden que quieras ensayar o carga un setlist completo con 1-clic.
+                  Añade canciones en el orden que quieras ensayar o carga un
+                  setlist completo con 1-clic.
                 </p>
               </div>
               <div className="flex flex-wrap justify-center gap-2 pt-2">
@@ -553,7 +648,9 @@ export function OrdenDelDiaTab({
                 const bType = BLOCK_TYPES[item.tipo] || BLOCK_TYPES.cancion;
                 const isDragging = draggedItemIndex === idx;
                 const isDragOver = dragOverItemIndex === idx;
-                const matchedSong = item.songId ? songs.find((s) => s.id === item.songId) : null;
+                const matchedSong = item.songId
+                  ? songs.find((s) => s.id === item.songId)
+                  : null;
 
                 return (
                   <div
@@ -561,7 +658,11 @@ export function OrdenDelDiaTab({
                     draggable={true}
                     onDragStart={(e) => {
                       if (TRANSPARENT_DRAG_IMAGE) {
-                        e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0);
+                        e.dataTransfer.setDragImage(
+                          TRANSPARENT_DRAG_IMAGE,
+                          0,
+                          0,
+                        );
                       }
                       setDraggedItemIndex(idx);
                     }}
@@ -582,14 +683,14 @@ export function OrdenDelDiaTab({
                     }}
                     className={`p-3 sm:p-4 rounded-[var(--r-m)] transition-all ${
                       isDragging
-                        ? 'opacity-30 scale-[0.98]'
+                        ? "opacity-30 scale-[0.98]"
                         : isDragOver
-                          ? 'scale-[1.01] bg-[var(--acc)]/10'
-                          : item.evaluacion === 'bordada'
-                            ? 'bg-[var(--surface)]/30 hover:border-[var(--ok)]/50'
-                            : item.evaluacion === 'repetir'
-                              ? 'bg-[var(--surface)]/30 hover:border-[var(--alert)]/50'
-                              : 'bg-[var(--surface)] hover:'
+                          ? "scale-[1.01] bg-[var(--acc)]/10"
+                          : item.evaluacion === "bordada"
+                            ? "bg-[var(--surface)]/30 hover:border-[var(--ok)]/50"
+                            : item.evaluacion === "repetir"
+                              ? "bg-[var(--surface)]/30 hover:border-[var(--alert)]/50"
+                              : "bg-[var(--surface)] hover:"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -610,8 +711,12 @@ export function OrdenDelDiaTab({
 
                         <div className="space-y-1 min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm font-bold font-sans text-[var(--ink)] truncate">{formatSongTitle(item.titulo)}</span>
-                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-sans font-bold ${bType.bg} ${bType.text}`}>
+                            <span className="text-sm font-bold font-sans text-[var(--ink)] truncate">
+                              {formatSongTitle(item.titulo)}
+                            </span>
+                            <span
+                              className={`px-2 py-0.5 rounded-md text-[10px] font-sans font-bold ${bType.bg} ${bType.text}`}
+                            >
                               {bType.icon} {bType.label}
                             </span>
 
@@ -628,17 +733,17 @@ export function OrdenDelDiaTab({
                             )}
 
                             {/* Evaluation badge if set */}
-                            {item.evaluacion === 'bordada' && (
+                            {item.evaluacion === "bordada" && (
                               <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
                                 🟢 Bordada
                               </span>
                             )}
-                            {item.evaluacion === 'regular' && (
+                            {item.evaluacion === "regular" && (
                               <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                                 🟡 Regular
                               </span>
                             )}
-                            {item.evaluacion === 'repetir' && (
+                            {item.evaluacion === "repetir" && (
                               <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--alert)]/20 text-[var(--ink-2)]">
                                 🔴 Repetir
                               </span>
@@ -650,8 +755,12 @@ export function OrdenDelDiaTab({
                             <input
                               type="text"
                               placeholder="Enfoque: ej. solo de guitarra, compenetrar coros, dinamismo..."
-                              value={item.enfoque || ''}
-                              onChange={(e) => handleUpdateAgendaItem(item.id, { enfoque: e.target.value })}
+                              value={item.enfoque || ""}
+                              onChange={(e) =>
+                                handleUpdateAgendaItem(item.id, {
+                                  enfoque: e.target.value,
+                                })
+                              }
                               className="w-full text-xs font-sans text-[var(--ink-2)] bg-transparent hover: focus: outline-none transition-colors"
                             />
                           </div>
@@ -672,12 +781,17 @@ export function OrdenDelDiaTab({
                             value={item.duracionEstimadaMin}
                             onChange={(e) =>
                               handleUpdateAgendaItem(item.id, {
-                                duracionEstimadaMin: Math.max(1, Number(e.target.value)),
+                                duracionEstimadaMin: Math.max(
+                                  1,
+                                  Number(e.target.value),
+                                ),
                               })
                             }
                             className="w-8 text-xs font-sans font-bold text-[var(--acc)] bg-transparent text-center outline-none"
                           />
-                          <span className="text-[10px] font-sans text-[var(--ink-2)]">m</span>
+                          <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                            m
+                          </span>
                         </div>
 
                         {/* Move Up / Down Buttons */}
@@ -685,7 +799,7 @@ export function OrdenDelDiaTab({
                           <button
                             type="button"
                             disabled={idx === 0}
-                            onClick={() => handleMoveItem(idx, 'up')}
+                            onClick={() => handleMoveItem(idx, "up")}
                             className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-[var(--ink-2)] cursor-pointer"
                             title="Subir posición"
                           >
@@ -694,7 +808,7 @@ export function OrdenDelDiaTab({
                           <button
                             type="button"
                             disabled={idx === agenda.length - 1}
-                            onClick={() => handleMoveItem(idx, 'down')}
+                            onClick={() => handleMoveItem(idx, "down")}
                             className="p-1 text-[var(--ink-2)] hover:text-[var(--ink)] disabled:opacity-20 disabled:hover:text-[var(--ink-2)] cursor-pointer"
                             title="Bajar posición"
                           >
@@ -723,16 +837,22 @@ export function OrdenDelDiaTab({
 
       {/* MODAL: AÑADIR CANCIONES MÚLTIPLES EN EL ORDEN DE SELECCIÓN */}
       {showAddSongModal && (
-        <ModalPortal isOpen={showAddSongModal} onClose={() => setShowAddSongModal(false)}>
+        <ModalPortal
+          isOpen={showAddSongModal}
+          onClose={() => setShowAddSongModal(false)}
+        >
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
             <div className="w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col bg-[var(--surface)] text-[var(--ink)]">
               <div className="flex justify-between items-center pb-3">
                 <div className="flex items-center gap-2">
                   <Disc3 className="w-5 h-5 text-[var(--acc)]" />
                   <div>
-                    <h3 className="text-sm font-bold font-sans text-[var(--ink)]">Añadir Canciones al Orden del Día</h3>
+                    <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
+                      Añadir Canciones al Orden del Día
+                    </h3>
                     <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                      Pulsa sobre las canciones en el orden en que quieras ensayarlas (#1, #2, #3...).
+                      Pulsa sobre las canciones en el orden en que quieras
+                      ensayarlas (#1, #2, #3...).
                     </p>
                   </div>
                 </div>
@@ -765,7 +885,7 @@ export function OrdenDelDiaTab({
                   >
                     {albumsList.map((alb) => (
                       <option key={alb} value={alb}>
-                        {alb === 'todos' ? 'Todos los álbumes' : alb}
+                        {alb === "todos" ? "Todos los álbumes" : alb}
                       </option>
                     ))}
                   </select>
@@ -775,11 +895,13 @@ export function OrdenDelDiaTab({
                     onClick={() => setOnlyFavorites((p) => !p)}
                     className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer transition-colors ${
                       onlyFavorites
-                        ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
-                        : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
-                    <Star className={`w-3 h-3 ${onlyFavorites ? 'fill-amber-400 text-[var(--acc)]' : ''}`} />
+                    <Star
+                      className={`w-3 h-3 ${onlyFavorites ? "fill-[var(--acc)] text-[var(--acc)]" : ""}`}
+                    />
                     <span>Solo Favoritos</span>
                   </button>
 
@@ -807,7 +929,9 @@ export function OrdenDelDiaTab({
                 {filteredSongs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10">
                     <PublicoSilhouette opacity={0.12} size="small" />
-                    <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin canciones disponibles</p>
+                    <p className="mt-4 font-medium text-[var(--ink)] text-xs">
+                      Sin canciones disponibles
+                    </p>
                     <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
                       Ajusta los filtros o añade canciones a tu repertorio.
                     </p>
@@ -825,14 +949,16 @@ export function OrdenDelDiaTab({
                         onClick={() => toggleSongSelection(s.id)}
                         className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
                           isSelected
-                            ? 'bg-[var(--acc)]/60/15 /50 text-[var(--acc)]/70'
-                            : 'bg-[var(--surface)] hover:bg-[var(--surface)] hover:'
+                            ? "bg-[var(--acc)]/60/15 /50 text-[var(--acc)]/70"
+                            : "bg-[var(--surface)] hover:bg-[var(--surface)] hover:"
                         }`}
                       >
                         {/* Number in selection order */}
                         <div
                           className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
-                            isSelected ? 'bg-[var(--acc)]/60 text-[var(--ink)] scale-105' : 'text-[var(--ink-2)]'
+                            isSelected
+                              ? "bg-[var(--acc)]/60 text-[var(--ink)] scale-105"
+                              : "text-[var(--ink-2)]"
                           }`}
                         >
                           {isSelected ? selectedIndex + 1 : null}
@@ -840,8 +966,12 @@ export function OrdenDelDiaTab({
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-bold text-[var(--ink)] truncate">{formatSongTitle(s.titulo)}</span>
-                            {s.favoritoGeneral && <Star className="w-3 h-3 text-[var(--acc)] fill-amber-400 shrink-0" />}
+                            <span className="text-xs font-bold text-[var(--ink)] truncate">
+                              {formatSongTitle(s.titulo)}
+                            </span>
+                            {s.favoritoGeneral && (
+                              <Star className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)] shrink-0" />
+                            )}
                             {alreadyInAgenda && (
                               <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] shrink-0">
                                 Ya en agenda
@@ -854,7 +984,9 @@ export function OrdenDelDiaTab({
                             )}
                           </div>
                           <div className="text-[10px] text-[var(--ink-2)] font-sans truncate">
-                            {s.albumDisco || s.album || 'Sin álbum'} · {s.tonalidad || '—'} · {s.bpm ? `${s.bpm} BPM · ` : ''}
+                            {s.albumDisco || s.album || "Sin álbum"} ·{" "}
+                            {s.tonalidad || "—"} ·{" "}
+                            {s.bpm ? `${s.bpm} BPM · ` : ""}
                             {formatSecondsToMmSs(s.duracionSegundos || 0)}
                           </div>
                         </div>
@@ -869,7 +1001,7 @@ export function OrdenDelDiaTab({
                 <span className="text-[10px] font-sans text-[var(--ink-2)]">
                   {selectedSongIds.length > 0
                     ? `${selectedSongIds.length} temas seleccionados en orden · ~${Math.ceil(selectedDurationSeconds / 60)} min`
-                    : 'Ninguna canción seleccionada'}
+                    : "Ninguna canción seleccionada"}
                 </span>
                 <div className="flex gap-2">
                   <button
@@ -886,7 +1018,12 @@ export function OrdenDelDiaTab({
                     className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/60 hover:bg-[var(--acc)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4 stroke-[3]" />
-                    <span>Añadir {selectedSongIds.length > 0 ? `${selectedSongIds.length} Canciones en Orden` : 'Canciones'}</span>
+                    <span>
+                      Añadir{" "}
+                      {selectedSongIds.length > 0
+                        ? `${selectedSongIds.length} Canciones en Orden`
+                        : "Canciones"}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -897,13 +1034,18 @@ export function OrdenDelDiaTab({
 
       {/* MODAL: CARGAR SETLIST COMPLETO */}
       {showImportSetlistModal && (
-        <ModalPortal isOpen={showImportSetlistModal} onClose={() => setShowImportSetlistModal(false)}>
+        <ModalPortal
+          isOpen={showImportSetlistModal}
+          onClose={() => setShowImportSetlistModal(false)}
+        >
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
             <div className="w-full max-w-lg p-5 rounded-[var(--r-l)] my-auto flex flex-col bg-[var(--surface)] text-[var(--ink)]">
               <div className="flex justify-between items-center pb-3">
                 <div className="flex items-center gap-2">
                   <FolderInput className="w-5 h-5 text-[var(--acc)]" />
-                  <h3 className="text-sm font-bold font-sans text-[var(--ink)]">Cargar Repertorio al Ensayo</h3>
+                  <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
+                    Cargar Repertorio al Ensayo
+                  </h3>
                 </div>
                 <button
                   type="button"
@@ -916,21 +1058,27 @@ export function OrdenDelDiaTab({
 
               <div className="py-4 space-y-3">
                 <p className="text-xs text-[var(--ink-2)]">
-                  Selecciona uno de los repertorios de la banda para volcar todas sus canciones y pausas automáticamente:
+                  Selecciona uno de los repertorios de la banda para volcar
+                  todas sus canciones y pausas automáticamente:
                 </p>
 
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {setlists.map((st) => {
-                    const count = st.items?.filter((it) => it.tipoItem === 'cancion' || it.songId).length || 0;
+                    const count =
+                      st.items?.filter(
+                        (it) => it.tipoItem === "cancion" || it.songId,
+                      ).length || 0;
                     return (
                       <div
                         key={st.id}
                         className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between gap-3 hover: transition-all"
                       >
                         <div>
-                          <p className="text-xs font-bold text-[var(--ink)]">{st.nombre}</p>
+                          <p className="text-xs font-bold text-[var(--ink)]">
+                            {st.nombre}
+                          </p>
                           <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                            {count} canciones · {st.tipoFormato || 'Repertorio'}
+                            {count} canciones · {st.tipoFormato || "Repertorio"}
                           </p>
                         </div>
                         <div className="flex gap-1.5">
@@ -973,7 +1121,10 @@ export function OrdenDelDiaTab({
 
       {/* Modal: Add Custom Block */}
       {showAddBlockModal && (
-        <ModalPortal isOpen={showAddBlockModal} onClose={() => setShowAddBlockModal(false)}>
+        <ModalPortal
+          isOpen={showAddBlockModal}
+          onClose={() => setShowAddBlockModal(false)}
+        >
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fade-in">
             <form
               onSubmit={handleConfirmAddBlock}
@@ -982,19 +1133,27 @@ export function OrdenDelDiaTab({
               <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-2">
                   <Layers className="w-4 h-4 text-[var(--acc)]" />
-                  <h4 className="text-sm font-sans font-bold text-[var(--ink)]">Añadir Bloque de Sesión</h4>
+                  <h4 className="text-sm font-sans font-bold text-[var(--ink)]">
+                    Añadir Bloque de Sesión
+                  </h4>
                 </div>
-                <button type="button" onClick={() => setShowAddBlockModal(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)]">
+                <button
+                  type="button"
+                  onClick={() => setShowAddBlockModal(false)}
+                  className="text-[var(--ink-2)] hover:text-[var(--ink)]"
+                >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
               <div className="p-4 space-y-3.5">
                 <div>
-                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">Tipo de Bloque</label>
+                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
+                    Tipo de Bloque
+                  </label>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(BLOCK_TYPES)
-                      .filter(([k]) => k !== 'cancion')
+                      .filter(([k]) => k !== "cancion")
                       .map(([key, def]) => (
                         <button
                           key={key}
@@ -1005,19 +1164,23 @@ export function OrdenDelDiaTab({
                           }}
                           className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-all cursor-pointer ${
                             blockTipo === key
-                              ? 'bg-[var(--acc)]/60/20 /40 text-[var(--acc)]/70 font-bold'
-                              : 'bg-[var(--surface)] text-[var(--ink-2)] hover:'
+                              ? "bg-[var(--acc)]/60/20 /40 text-[var(--acc)]/70 font-bold"
+                              : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                           }`}
                         >
                           <span>{def.icon}</span>
-                          <span className="truncate">{def.label.split('(')[0]}</span>
+                          <span className="truncate">
+                            {def.label.split("(")[0]}
+                          </span>
                         </button>
                       ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">Título del Bloque</label>
+                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
+                    Título del Bloque
+                  </label>
                   <input
                     type="text"
                     placeholder="Ej: Calentamiento & Sonido, Pausa café..."
@@ -1028,7 +1191,9 @@ export function OrdenDelDiaTab({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">Duración Estimada (Minutos)</label>
+                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
+                    Duración Estimada (Minutos)
+                  </label>
                   <input
                     type="number"
                     min="1"
@@ -1040,7 +1205,9 @@ export function OrdenDelDiaTab({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">Enfoque / Instrucciones</label>
+                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
+                    Enfoque / Instrucciones
+                  </label>
                   <input
                     type="text"
                     placeholder="Ej: Ajustar retorno de monitores y afinación..."

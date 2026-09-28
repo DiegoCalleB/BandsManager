@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
-import { X, Search, Check, ListPlus, Star } from 'lucide-react';
-import { Song, ThemeColors } from '../../types';
-import { ModalPortal } from '../common/ModalPortal';
-import { PublicoSilhouette } from '../ui/PublicoSilhouette';
-import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
-import { formatSongTitle } from '../../utils/formatSongTitle';
+import React, { useMemo, useState } from "react";
+import { X, Search, Check, ListPlus, Star } from "lucide-react";
+import { Song, ThemeColors } from "../../types";
+import { ModalPortal } from "../common/ModalPortal";
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
+import { formatSongTitle } from "../../utils/formatSongTitle";
 
 interface AddSongsToSetlistModalProps {
   isOpen: boolean;
@@ -15,33 +15,43 @@ interface AddSongsToSetlistModalProps {
   onAddSongs: (songIds: string[]) => void;
 }
 
-export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors, onClose, onAddSongs }: AddSongsToSetlistModalProps) {
-  const [search, setSearch] = useState('');
+export function AddSongsToSetlistModal({
+  isOpen,
+  songs,
+  existingSongIds,
+  colors,
+  onClose,
+  onAddSongs,
+}: AddSongsToSetlistModalProps) {
+  const [search, setSearch] = useState("");
   const [onlyFavoritos, setOnlyFavoritos] = useState(false);
-  const [albumFilter, setAlbumFilter] = useState('todos');
+  const [albumFilter, setAlbumFilter] = useState("todos");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const existingSet = useMemo(() => new Set(existingSongIds), [existingSongIds]);
+  const existingSet = useMemo(
+    () => new Set(existingSongIds),
+    [existingSongIds],
+  );
 
   const albumsList = useMemo(() => {
     const set = new Set<string>();
     songs.forEach((s) => {
       const alb = s.albumDisco || s.album;
-      set.add(alb || 'Singles / Sin Disco');
+      set.add(alb || "Singles / Sin Disco");
     });
-    return ['todos', ...Array.from(set)];
+    return ["todos", ...Array.from(set)];
   }, [songs]);
 
   if (!isOpen) return null;
 
   const filteredSongs = songs.filter((s) => {
     const matchSearch =
-      search === '' ||
+      search === "" ||
       s.titulo.toLowerCase().includes(search.toLowerCase()) ||
       (s.tonalidad && s.tonalidad.toLowerCase().includes(search.toLowerCase()));
     const matchFav = !onlyFavoritos || s.favoritoGeneral;
-    const alb = s.albumDisco || s.album || 'Singles / Sin Disco';
-    const matchAlbum = albumFilter === 'todos' || alb === albumFilter;
+    const alb = s.albumDisco || s.album || "Singles / Sin Disco";
+    const matchAlbum = albumFilter === "todos" || alb === albumFilter;
     return matchSearch && matchFav && matchAlbum;
   });
 
@@ -71,7 +81,9 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
 
   const selectedSet = new Set(selectedIds);
 
-  const selectedDurationSeconds = songs.filter((s) => selectedSet.has(s.id)).reduce((acc, s) => acc + (s.duracionSegundos || 0), 0);
+  const selectedDurationSeconds = songs
+    .filter((s) => selectedSet.has(s.id))
+    .reduce((acc, s) => acc + (s.duracionSegundos || 0), 0);
 
   const handleSubmit = () => {
     if (selectedIds.length === 0) return;
@@ -82,13 +94,20 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}>
+        <div
+          className={`w-full max-w-2xl p-5 rounded-[var(--r-l)] my-auto max-h-[92vh] flex flex-col ${colors.card} text-[var(--ink)]`}
+        >
           <div className="flex justify-between items-center pb-3">
             <div className="flex items-center gap-2">
               <ListPlus className="w-5 h-5 text-[var(--ok)]" />
-              <h3 className="text-sm font-bold font-sans text-[var(--ink)]">Añadir Varias Canciones al Repertorio</h3>
+              <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
+                Añadir Varias Canciones al Repertorio
+              </h3>
             </div>
-            <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+            <button
+              onClick={onClose}
+              className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+            >
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -101,7 +120,7 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar por título o tonalidad..."
-                className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                className={`w-full pl-8 pr-3 py-2 text-xs font-sans rounded-[var(--r-m)] focus:outline-none ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               />
             </div>
 
@@ -109,11 +128,11 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
               <select
                 value={albumFilter}
                 onChange={(e) => setAlbumFilter(e.target.value)}
-                className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${'bg-[var(--surface)] text-[var(--acc)]'}`}
+                className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${"bg-[var(--surface)] text-[var(--acc)]"}`}
               >
                 {albumsList.map((alb) => (
                   <option key={alb} value={alb}>
-                    {alb === 'todos' ? 'Todos los álbumes' : alb}
+                    {alb === "todos" ? "Todos los álbumes" : alb}
                   </option>
                 ))}
               </select>
@@ -123,11 +142,13 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
                 onClick={() => setOnlyFavoritos((p) => !p)}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer transition-colors ${
                   onlyFavoritos
-                    ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
-                    : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                    : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
-                <Star className={`w-3 h-3 ${onlyFavoritos ? 'fill-amber-400' : ''}`} />
+                <Star
+                  className={`w-3 h-3 ${onlyFavoritos ? "fill-[var(--acc)]" : ""}`}
+                />
                 <span>Solo Favoritos</span>
               </button>
 
@@ -155,8 +176,12 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
             {filteredSongs.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <PublicoSilhouette opacity={0.12} size="small" />
-                <p className="mt-4 font-medium text-[var(--ink)] text-xs">No hay canciones disponibles</p>
-                <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">Ajusta los filtros o crea nuevas canciones en tu repertorio.</p>
+                <p className="mt-4 font-medium text-[var(--ink)] text-xs">
+                  No hay canciones disponibles
+                </p>
+                <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs">
+                  Ajusta los filtros o crea nuevas canciones en tu repertorio.
+                </p>
               </div>
             ) : (
               filteredSongs.map((s) => {
@@ -169,20 +194,28 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
                     key={s.id}
                     onClick={() => toggleSong(s.id)}
                     className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
-                      isSelected ? 'bg-[var(--surface)]/50' : 'bg-[var(--surface)] hover:bg-[var(--surface)]/80'
+                      isSelected
+                        ? "bg-[var(--surface)]/50"
+                        : "bg-[var(--surface)] hover:bg-[var(--surface)]/80"
                     }`}
                   >
                     <div
                       className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
-                        isSelected ? 'bg-[var(--surface)] text-[var(--ink)] scale-105' : 'text-[var(--ink-2)]'
+                        isSelected
+                          ? "bg-[var(--surface)] text-[var(--ink)] scale-105"
+                          : "text-[var(--ink-2)]"
                       }`}
                     >
                       {isSelected ? selectedIndex + 1 : null}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-[var(--ink)] truncate">{formatSongTitle(s.titulo)}</span>
-                        {s.favoritoGeneral && <Star className="w-3 h-3 text-[var(--acc)] fill-amber-400 shrink-0" />}
+                        <span className="text-xs font-bold text-[var(--ink)] truncate">
+                          {formatSongTitle(s.titulo)}
+                        </span>
+                        {s.favoritoGeneral && (
+                          <Star className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)] shrink-0" />
+                        )}
                         {alreadyInSetlist && (
                           <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/70 text-[var(--ink-2)] shrink-0">
                             Ya en el repertorio
@@ -195,7 +228,9 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
                         )}
                       </div>
                       <div className="text-[10px] text-[var(--ink-2)] font-sans truncate">
-                        {s.albumDisco || s.album || 'Sin álbum'} · {s.tonalidad || '—'} · {formatSecondsToMmSs(s.duracionSegundos || 0)}
+                        {s.albumDisco || s.album || "Sin álbum"} ·{" "}
+                        {s.tonalidad || "—"} ·{" "}
+                        {formatSecondsToMmSs(s.duracionSegundos || 0)}
                       </div>
                     </div>
                   </button>
@@ -208,7 +243,7 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
             <span className="text-[10px] font-sans text-[var(--ink-2)]">
               {selectedIds.length > 0
                 ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`
-                : 'Ninguna canción seleccionada'}
+                : "Ninguna canción seleccionada"}
             </span>
             <div className="flex gap-2">
               <button
@@ -225,7 +260,12 @@ export function AddSongsToSetlistModal({ isOpen, songs, existingSongIds, colors,
                 className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <ListPlus className="w-4 h-4 stroke-[3]" />
-                <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` : 'Canciones'}</span>
+                <span>
+                  Añadir{" "}
+                  {selectedIds.length > 0
+                    ? `${selectedIds.length} Canciones en Orden`
+                    : "Canciones"}
+                </span>
               </button>
             </div>
           </div>

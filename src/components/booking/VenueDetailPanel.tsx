@@ -1,23 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog, Setlist, EmailMessage, Concert } from '../../types';
-import { checkBandDateConflict, getCityTourHistory, getCommercialDealSnippets } from '../../utils/bookingTourContext';
-import { LeadHealthBadge } from './LeadHealthBadge';
-import { VerifiedBadge } from '../common/VerifiedBadge';
-import { LeadAvatar } from './LeadAvatar';
-import { ReliabilityBadge } from '../common/ReliabilityBadge';
-import { FavoriteButton } from '../common/FavoriteButton';
-import { isLeadVerificado } from '../../utils/leadReliability';
-import DirectionsCard from '../DirectionsCard';
-import { apiFetch } from '../../utils/api';
-import { api } from '../../services/api';
-import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
-import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
-import { DealAndLogisticsCopilot } from './DealAndLogisticsCopilot';
-import { QuickDealSimulator } from './QuickDealSimulator';
-import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../utils/bookingFollowup';
-import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
-import { HolidayDateWarning } from '../common/HolidayDateWarning';
-import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+import React, { useState, useEffect } from "react";
+import {
+  Lead,
+  LeadStatus,
+  LeadType,
+  InteractionLog,
+  Setlist,
+  EmailMessage,
+  Concert,
+} from "../../types";
+import {
+  checkBandDateConflict,
+  getCityTourHistory,
+  getCommercialDealSnippets,
+} from "../../utils/bookingTourContext";
+import { LeadHealthBadge } from "./LeadHealthBadge";
+import { VerifiedBadge } from "../common/VerifiedBadge";
+import { LeadAvatar } from "./LeadAvatar";
+import { ReliabilityBadge } from "../common/ReliabilityBadge";
+import { FavoriteButton } from "../common/FavoriteButton";
+import { isLeadVerificado } from "../../utils/leadReliability";
+import DirectionsCard from "../DirectionsCard";
+import { apiFetch } from "../../utils/api";
+import { api } from "../../services/api";
+import { MultiModelPitchComparatorModal } from "./MultiModelPitchComparatorModal";
+import { BoloConfirmadoSetlistModal } from "./BoloConfirmadoSetlistModal";
+import { DealAndLogisticsCopilot } from "./DealAndLogisticsCopilot";
+import { QuickDealSimulator } from "./QuickDealSimulator";
+import {
+  isLeadNeedsFollowup,
+  getDaysSinceContact,
+  generateFollowupTemplate,
+} from "../../utils/bookingFollowup";
+import {
+  formatFestivalDateRange,
+  toIsoDateString,
+} from "../../utils/festivalDateFormat";
+import { HolidayDateWarning } from "../common/HolidayDateWarning";
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import {
   Edit3,
   X,
@@ -77,10 +96,14 @@ import {
   PartyPopper,
   Flame,
   Handshake,
-} from 'lucide-react';
-import { EmailDeliveryTicks } from './EmailDeliveryTicks';
-import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
-import { WhatsAppPreviewModal } from './WhatsAppPreviewModal';
+} from "lucide-react";
+import { EmailDeliveryTicks } from "./EmailDeliveryTicks";
+import {
+  getWhatsAppUrl,
+  openWhatsAppChat,
+  WHATSAPP_WINDOW_NAME,
+} from "../../utils/whatsapp";
+import { WhatsAppPreviewModal } from "./WhatsAppPreviewModal";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -97,11 +120,11 @@ interface VenueDetailPanelProps {
   normalizeStatus: (status: string) => LeadStatus;
   normalizeType: (type?: string) => string;
   autoDetectVenueAddress: (venueName: string, city: string) => string;
-  sectionTab: 'salas' | 'medios' | 'grupos';
+  sectionTab: "salas" | "medios" | "grupos";
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
-  initialTab?: 'info' | 'emails' | 'copilot' | 'bitacora';
+  initialTab?: "info" | "emails" | "copilot" | "bitacora";
   onOpenRoadbookModal?: (lead: Lead) => void;
   onFilterByRouteCity?: (city: string) => void;
   bandName?: string;
@@ -123,14 +146,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   activeCampaign,
   onLeadLogoUpload,
   isUploadingLeadLogo = false,
-  initialTab = 'info',
+  initialTab = "info",
   onOpenRoadbookModal,
   onFilterByRouteCity,
   bandName,
   concerts = [],
 }) => {
   // Active Tab inside panel
-  const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'intelligence' | 'copilot' | 'bitacora'>(initialTab as any);
+  const [activeTab, setActiveTab] = useState<
+    "info" | "emails" | "intelligence" | "copilot" | "bitacora"
+  >(initialTab as any);
 
   useEffect(() => {
     if (initialTab) {
@@ -150,28 +175,38 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Pitch Editing & Feedback State
   const [isEditingPitch, setIsEditingPitch] = useState(false);
-  const [editedPitch, setEditedPitch] = useState(selectedLead?.pitch_generado || '');
+  const [editedPitch, setEditedPitch] = useState(
+    selectedLead?.pitch_generado || "",
+  );
   const [isEnrichingApis, setIsEnrichingApis] = useState(false);
   const [toneRating, setToneRating] = useState<number>(0);
   const [contentRating, setContentRating] = useState<number>(0);
-  const [feedbackComment, setFeedbackComment] = useState<string>('');
-  const [feedbackScope, setFeedbackScope] = useState<'este_pitch' | 'global'>('este_pitch');
+  const [feedbackComment, setFeedbackComment] = useState<string>("");
+  const [feedbackScope, setFeedbackScope] = useState<"este_pitch" | "global">(
+    "este_pitch",
+  );
   const [isRegeneratingPitch, setIsRegeneratingPitch] = useState(false);
   const [isRevertingPitch, setIsRevertingPitch] = useState(false);
-  const [feedbackSuccessMsg, setFeedbackSuccessMsg] = useState<string | null>(null);
+  const [feedbackSuccessMsg, setFeedbackSuccessMsg] = useState<string | null>(
+    null,
+  );
   const [showFeedbackHistory, setShowFeedbackHistory] = useState(false);
   const [showMultiModelModal, setShowMultiModelModal] = useState(false);
-  const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek'>('gemini');
+  const [selectedAiModel, setSelectedAiModel] = useState<"gemini" | "deepseek">(
+    "gemini",
+  );
 
   // Bolo Confirmado -> Setlist Optimization Modal
   const [showBoloConfirmadoModal, setShowBoloConfirmadoModal] = useState(false);
   const [feedbackBoloMsg, setFeedbackBoloMsg] = useState<string | null>(null);
 
   // Bitácora state
-  const [interactionType, setInteractionType] = useState<InteractionLog['tipo']>('Llamada');
-  const [interactionAutor, setInteractionAutor] = useState('Mánager / Booking');
-  const [interactionNotes, setInteractionNotes] = useState('');
-  const [interactionResultado, setInteractionResultado] = useState<InteractionLog['resultado']>('Interesado');
+  const [interactionType, setInteractionType] =
+    useState<InteractionLog["tipo"]>("Llamada");
+  const [interactionAutor, setInteractionAutor] = useState("Mánager / Booking");
+  const [interactionNotes, setInteractionNotes] = useState("");
+  const [interactionResultado, setInteractionResultado] =
+    useState<InteractionLog["resultado"]>("Interesado");
 
   // Quick Copy status
   const [copiedPitch, setCopiedPitch] = useState(false);
@@ -187,32 +222,47 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [isScanningJina, setIsScanningJina] = useState(false);
   const [isDetectingDates, setIsDetectingDates] = useState(false);
   const [isEnrichingInstagram, setIsEnrichingInstagram] = useState(false);
-  const [scoutActionFeedback, setScoutActionFeedback] = useState<string | null>(null);
+  const [scoutActionFeedback, setScoutActionFeedback] = useState<string | null>(
+    null,
+  );
 
   const handleScanWithJina = async () => {
     if (!selectedLead) return;
     const targetUrl = selectedLead.website || editedLeadInfo.website;
     if (!targetUrl) {
-      setScoutActionFeedback('Añade un sitio web o enlace a la sala para escanear con Jina Reader');
+      setScoutActionFeedback(
+        "Añade un sitio web o enlace a la sala para escanear con Jina Reader",
+      );
       setTimeout(() => setScoutActionFeedback(null), 4000);
       return;
     }
     try {
       setIsScanningJina(true);
-      setScoutActionFeedback('Escaneando sitio web con Jina Reader (r.jina.ai)...');
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-jina`, {
-        method: 'POST',
-        body: JSON.stringify({ website: targetUrl }),
-      });
+      setScoutActionFeedback(
+        "Escaneando sitio web con Jina Reader (r.jina.ai)...",
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-jina`,
+        {
+          method: "POST",
+          body: JSON.stringify({ website: targetUrl }),
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Jina Reader: Extraído móvil, fijo, email y rider correctamente.');
+        setScoutActionFeedback(
+          "✓ Jina Reader: Extraído móvil, fijo, email y rider correctamente.",
+        );
       } else {
-        setScoutActionFeedback(`Aviso: ${res?.error || 'No se encontraron datos adicionales.'}`);
+        setScoutActionFeedback(
+          `Aviso: ${res?.error || "No se encontraron datos adicionales."}`,
+        );
       }
     } catch (err: any) {
-      setScoutActionFeedback(`Error Jina Reader: ${err?.message || 'Error de conexión'}`);
+      setScoutActionFeedback(
+        `Error Jina Reader: ${err?.message || "Error de conexión"}`,
+      );
     } finally {
       setIsScanningJina(false);
       setTimeout(() => setScoutActionFeedback(null), 5000);
@@ -223,28 +273,45 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsDetectingDates(true);
-      setScoutActionFeedback('Consultando y contrastando radar en Wegow y Bandsintown...');
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/detect-dates`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback(
+        "Consultando y contrastando radar en Wegow y Bandsintown...",
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/detect-dates`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
         const numLibres = res.radar?.fechas_libres_detectadas?.length || 0;
         const numOcupadas = res.radar?.fechas_ocupadas?.length || 0;
-        const contrastado = res.radar?.contrastado_multi_fuente ? '✓ Multi-fuente contrastada (Wegow + Bandsintown)' : 'Radar consultado';
+        const contrastado = res.radar?.contrastado_multi_fuente
+          ? "✓ Multi-fuente contrastada (Wegow + Bandsintown)"
+          : "Radar consultado";
         if (res.radar?.datos_fechas_encontrados === false) {
-          setScoutActionFeedback('(no se han encontrado datos de fechas de esta sala)');
+          setScoutActionFeedback(
+            "(no se han encontrado datos de fechas de esta sala)",
+          );
         } else if (res.radar?.is_campaign_active) {
-          setScoutActionFeedback(`${contrastado}: ${res.radar?.mensaje_disponibilidad || `${numLibres} fechas libres detectadas`}`);
+          setScoutActionFeedback(
+            `${contrastado}: ${res.radar?.mensaje_disponibilidad || `${numLibres} fechas libres detectadas`}`,
+          );
         } else {
-          setScoutActionFeedback(`${contrastado}: ${numOcupadas} eventos detectados. ${numLibres} fechas libres disponibles.`);
+          setScoutActionFeedback(
+            `${contrastado}: ${numOcupadas} eventos detectados. ${numLibres} fechas libres disponibles.`,
+          );
         }
       } else {
-        setScoutActionFeedback(`Aviso: ${res?.error || 'No se pudieron calcular las fechas.'}`);
+        setScoutActionFeedback(
+          `Aviso: ${res?.error || "No se pudieron calcular las fechas."}`,
+        );
       }
     } catch (err: any) {
-      setScoutActionFeedback(`Error Radar: ${err?.message || 'Error de conexión'}`);
+      setScoutActionFeedback(
+        `Error Radar: ${err?.message || "Error de conexión"}`,
+      );
     } finally {
       setIsDetectingDates(false);
       setTimeout(() => setScoutActionFeedback(null), 5000);
@@ -255,27 +322,39 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     const igHandle = selectedLead.instagram || editedLeadInfo.instagram;
     if (!igHandle) {
-      setScoutActionFeedback('Añade un perfil de Instagram a la sala para analizarlo');
+      setScoutActionFeedback(
+        "Añade un perfil de Instagram a la sala para analizarlo",
+      );
       setTimeout(() => setScoutActionFeedback(null), 4000);
       return;
     }
     try {
       setIsEnrichingInstagram(true);
-      setScoutActionFeedback('Consultando perfil comercial de Instagram...');
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-instagram`, {
-        method: 'POST',
-        body: JSON.stringify({ instagram: igHandle }),
-      });
+      setScoutActionFeedback("Consultando perfil comercial de Instagram...");
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-instagram`,
+        {
+          method: "POST",
+          body: JSON.stringify({ instagram: igHandle }),
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Instagram: Datos comerciales y WhatsApp sincronizados.');
+        setScoutActionFeedback(
+          "✓ Instagram: Datos comerciales y WhatsApp sincronizados.",
+        );
       } else {
-        const info = res?.data?.apify_free_tier_info || res?.error || 'No se extrajeron datos adicionales';
+        const info =
+          res?.data?.apify_free_tier_info ||
+          res?.error ||
+          "No se extrajeron datos adicionales";
         setScoutActionFeedback(`Aviso: ${info}`);
       }
     } catch (err: any) {
-      setScoutActionFeedback(`Error Instagram: ${err?.message || 'Error de conexión'}`);
+      setScoutActionFeedback(
+        `Error Instagram: ${err?.message || "Error de conexión"}`,
+      );
     } finally {
       setIsEnrichingInstagram(false);
       setTimeout(() => setScoutActionFeedback(null), 6000);
@@ -286,8 +365,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsExtractingDates(true);
-      const res: any = await apiFetch('/api/leads/enrich-lead', {
-        method: 'POST',
+      const res: any = await apiFetch("/api/leads/enrich-lead", {
+        method: "POST",
         body: JSON.stringify({ leadId: selectedLead.id, force: true }),
       });
       if (res?.lead) {
@@ -295,7 +374,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           setEditedLeadInfo((prev) => ({
             ...prev,
             festival_start_date: res.lead.festival_start_date,
-            festival_end_date: res.lead.festival_end_date || res.lead.festival_start_date,
+            festival_end_date:
+              res.lead.festival_end_date || res.lead.festival_start_date,
           }));
         }
         if (onUpdateLead) {
@@ -303,36 +383,58 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         }
       }
     } catch (err: any) {
-      console.warn('Error enriqueciendo fechas:', err);
+      console.warn("Error enriqueciendo fechas:", err);
     } finally {
       setIsExtractingDates(false);
     }
   };
 
   const [isCalculatingRoute, setIsCalculatingRoute] = useState(false);
-  const [routeOrigin, setRouteOrigin] = useState('Madrid');
+  const [routeOrigin, setRouteOrigin] = useState("Madrid");
   const [isEnrichingSocial, setIsEnrichingSocial] = useState(false);
-  const [isEnrichingBookingWindow, setIsEnrichingBookingWindow] = useState(false);
+  const [isEnrichingBookingWindow, setIsEnrichingBookingWindow] =
+    useState(false);
   const [isEnrichingLocalEvents, setIsEnrichingLocalEvents] = useState(false);
   const [isEnrichingPressMedia, setIsEnrichingPressMedia] = useState(false);
   const [isEnrichingCoBooking, setIsEnrichingCoBooking] = useState(false);
 
   // Financial simulation state
-  const [simAnticipada, setSimAnticipada] = useState<number>(selectedLead?.financial_break_even?.precio_entrada_anticipada ?? 12);
-  const [simTaquilla, setSimTaquilla] = useState<number>(selectedLead?.financial_break_even?.precio_entrada_taquilla ?? 15);
-  const [simAlquiler, setSimAlquiler] = useState<number>(selectedLead?.financial_break_even?.alquiler_sala_fijo ?? 250);
-  const [simPctSala, setSimPctSala] = useState<number>(selectedLead?.financial_break_even?.porcentaje_sala ?? 15);
-  const [simGastosProd, setSimGastosProd] = useState<number>(selectedLead?.financial_break_even?.gastos_produccion_fijos ?? 150);
-  const [simNumMusicos, setSimNumMusicos] = useState<number>(selectedLead?.financial_break_even?.num_musicos ?? 5);
-  const [isRecalculatingFinancial, setIsRecalculatingFinancial] = useState(false);
+  const [simAnticipada, setSimAnticipada] = useState<number>(
+    selectedLead?.financial_break_even?.precio_entrada_anticipada ?? 12,
+  );
+  const [simTaquilla, setSimTaquilla] = useState<number>(
+    selectedLead?.financial_break_even?.precio_entrada_taquilla ?? 15,
+  );
+  const [simAlquiler, setSimAlquiler] = useState<number>(
+    selectedLead?.financial_break_even?.alquiler_sala_fijo ?? 250,
+  );
+  const [simPctSala, setSimPctSala] = useState<number>(
+    selectedLead?.financial_break_even?.porcentaje_sala ?? 15,
+  );
+  const [simGastosProd, setSimGastosProd] = useState<number>(
+    selectedLead?.financial_break_even?.gastos_produccion_fijos ?? 150,
+  );
+  const [simNumMusicos, setSimNumMusicos] = useState<number>(
+    selectedLead?.financial_break_even?.num_musicos ?? 5,
+  );
+  const [isRecalculatingFinancial, setIsRecalculatingFinancial] =
+    useState(false);
 
   useEffect(() => {
     if (selectedLead?.financial_break_even) {
-      setSimAnticipada(selectedLead.financial_break_even.precio_entrada_anticipada ?? 12);
-      setSimTaquilla(selectedLead.financial_break_even.precio_entrada_taquilla ?? 15);
-      setSimAlquiler(selectedLead.financial_break_even.alquiler_sala_fijo ?? 250);
+      setSimAnticipada(
+        selectedLead.financial_break_even.precio_entrada_anticipada ?? 12,
+      );
+      setSimTaquilla(
+        selectedLead.financial_break_even.precio_entrada_taquilla ?? 15,
+      );
+      setSimAlquiler(
+        selectedLead.financial_break_even.alquiler_sala_fijo ?? 250,
+      );
       setSimPctSala(selectedLead.financial_break_even.porcentaje_sala ?? 15);
-      setSimGastosProd(selectedLead.financial_break_even.gastos_produccion_fijos ?? 150);
+      setSimGastosProd(
+        selectedLead.financial_break_even.gastos_produccion_fijos ?? 150,
+      );
       setSimNumMusicos(selectedLead.financial_break_even.num_musicos ?? 5);
     }
     if (selectedLead?.tour_logistics?.origen) {
@@ -344,19 +446,30 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsEnrichingApis(true);
-      setScoutActionFeedback('Analizando Spotify, Google Places, Setlist, Ruta, Redes, Ventana Booking, Eventos, Prensa y Co-Booking...');
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-all-apis`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback(
+        "Analizando Spotify, Google Places, Setlist, Ruta, Redes, Ventana Booking, Eventos, Prensa y Co-Booking...",
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-all-apis`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Inteligencia Multi-API completa: 11 fuentes de datos conectadas y actualizadas.');
+        setScoutActionFeedback(
+          "✓ Inteligencia Multi-API completa: 11 fuentes de datos conectadas y actualizadas.",
+        );
       } else {
-        setScoutActionFeedback(`Aviso: ${res?.error || 'No se pudieron completar todas las consultas'}`);
+        setScoutActionFeedback(
+          `Aviso: ${res?.error || "No se pudieron completar todas las consultas"}`,
+        );
       }
     } catch (err: any) {
-      setScoutActionFeedback(`Error Inteligencia: ${err?.message || 'Error de conexión'}`);
+      setScoutActionFeedback(
+        `Error Inteligencia: ${err?.message || "Error de conexión"}`,
+      );
     } finally {
       setIsEnrichingApis(false);
       setTimeout(() => setScoutActionFeedback(null), 5000);
@@ -367,15 +480,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsCalculatingRoute(true);
-      setScoutActionFeedback(`Calculando ruta y gasolina desde ${routeOrigin}...`);
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-logistics`, {
-        method: 'POST',
-        body: JSON.stringify({ origen: routeOrigin }),
-      });
+      setScoutActionFeedback(
+        `Calculando ruta y gasolina desde ${routeOrigin}...`,
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-logistics`,
+        {
+          method: "POST",
+          body: JSON.stringify({ origen: routeOrigin }),
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Hoja de ruta y costes de furgoneta calculados.');
+        setScoutActionFeedback(
+          "✓ Hoja de ruta y costes de furgoneta calculados.",
+        );
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error al calcular ruta: ${err?.message}`);
@@ -389,14 +509,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsEnrichingSocial(true);
-      setScoutActionFeedback('Analizando Instagram & TikTok de la sala...');
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-social`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback("Analizando Instagram & TikTok de la sala...");
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-social`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Radar de redes sociales y co-promoción actualizado.');
+        setScoutActionFeedback(
+          "✓ Radar de redes sociales y co-promoción actualizado.",
+        );
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error al analizar redes: ${err?.message}`);
@@ -425,10 +550,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         gastosProduccionFijos: simGastosProd,
         numMusicos: simNumMusicos,
       };
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/calculate-break-even`, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/calculate-break-even`,
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
@@ -440,7 +568,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           setSimGastosProd(overrideData.gastosProduccionFijos);
           setSimNumMusicos(overrideData.numMusicos);
         }
-        setScoutActionFeedback('✓ P&L Financiero y Break-Even actualizados.');
+        setScoutActionFeedback("✓ P&L Financiero y Break-Even actualizados.");
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error en simulación: ${err?.message}`);
@@ -454,14 +582,21 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsEnrichingBookingWindow(true);
-      setScoutActionFeedback('Analizando ventana de programación y antelación ideal...');
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-booking-window`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback(
+        "Analizando ventana de programación y antelación ideal...",
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-booking-window`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Ventana de programación y lead time calculados.');
+        setScoutActionFeedback(
+          "✓ Ventana de programación y lead time calculados.",
+        );
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error ventana booking: ${err?.message}`);
@@ -475,14 +610,21 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsEnrichingLocalEvents(true);
-      setScoutActionFeedback(`Escaneando festivales y eventos locales en ${selectedLead.ciudad || 'la zona'}...`);
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-local-events`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback(
+        `Escaneando festivales y eventos locales en ${selectedLead.ciudad || "la zona"}...`,
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-local-events`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Radar de eventos locales y alertas de clash actualizadas.');
+        setScoutActionFeedback(
+          "✓ Radar de eventos locales y alertas de clash actualizadas.",
+        );
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error radar eventos: ${err?.message}`);
@@ -496,14 +638,21 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsEnrichingPressMedia(true);
-      setScoutActionFeedback(`Buscando radios, fanzines y prensa cultural en ${selectedLead.ciudad || 'la provincia'}...`);
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-press-media`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback(
+        `Buscando radios, fanzines y prensa cultural en ${selectedLead.ciudad || "la provincia"}...`,
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-press-media`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Medios locales y gancho para nota de prensa listos.');
+        setScoutActionFeedback(
+          "✓ Medios locales y gancho para nota de prensa listos.",
+        );
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error medios locales: ${err?.message}`);
@@ -517,14 +666,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsEnrichingCoBooking(true);
-      setScoutActionFeedback(`Buscando bandas locales afines para co-booking en ${selectedLead.ciudad || 'la ciudad'}...`);
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/enrich-co-booking`, {
-        method: 'POST',
-      });
+      setScoutActionFeedback(
+        `Buscando bandas locales afines para co-booking en ${selectedLead.ciudad || "la ciudad"}...`,
+      );
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/enrich-co-booking`,
+        {
+          method: "POST",
+        },
+      );
       if (res?.success && res.lead) {
         if (onUpdateLead) onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setScoutActionFeedback('✓ Bandas locales para co-booking encontradas.');
+        setScoutActionFeedback("✓ Bandas locales para co-booking encontradas.");
       }
     } catch (err: any) {
       setScoutActionFeedback(`Error bandas locales: ${err?.message}`);
@@ -538,7 +692,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   // de selectedLead.hilo_emails, que solo lo rellena el sync manual de Gmail del cliente. Sin esto,
   // los pitches enviados de verdad y las respuestas detectadas automáticamente nunca aparecían aquí.
   const [leadMessages, setLeadMessages] = useState<EmailMessage[]>([]);
-  const [isAnalyzingMessageSentiment, setIsAnalyzingMessageSentiment] = useState<string | null>(null);
+  const [isAnalyzingMessageSentiment, setIsAnalyzingMessageSentiment] =
+    useState<string | null>(null);
 
   useEffect(() => {
     if (!selectedLead?.id) {
@@ -559,14 +714,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     };
   }, [selectedLead?.id]);
 
-  const handleAnalyzeMessageSentiment = async (messageId: string, messageText: string) => {
+  const handleAnalyzeMessageSentiment = async (
+    messageId: string,
+    messageText: string,
+  ) => {
     if (!selectedLead || !messageText) return;
     try {
       setIsAnalyzingMessageSentiment(messageId);
-      const res: any = await apiFetch(`/api/leads/${selectedLead.id}/analyze-sentiment`, {
-        method: 'POST',
-        body: JSON.stringify({ messageText }),
-      });
+      const res: any = await apiFetch(
+        `/api/leads/${selectedLead.id}/analyze-sentiment`,
+        {
+          method: "POST",
+          body: JSON.stringify({ messageText }),
+        },
+      );
       if (res?.success && res.sentimentAnalysis) {
         const sa = res.sentimentAnalysis;
         setLeadMessages((prev) =>
@@ -586,8 +747,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   sugerencia_estrategia: sa.sugerencia_estrategia,
                   analisis_ia: sa,
                 }
-              : m
-          )
+              : m,
+          ),
         );
         if (onUpdateLead) {
           onUpdateLead(selectedLead.id, {
@@ -603,7 +764,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         }
       }
     } catch (err) {
-      console.error('Error analizando sentimiento:', err);
+      console.error("Error analizando sentimiento:", err);
     } finally {
       setIsAnalyzingMessageSentiment(null);
     }
@@ -615,25 +776,36 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const hiloCompleto = React.useMemo(() => {
     const manual = (selectedLead?.hilo_emails || []).map((m: any) => ({
       ...m,
-      _origen: 'manual' as const,
+      _origen: "manual" as const,
     }));
-    const real = leadMessages.map((m) => ({ ...m, _origen: 'real' as const }));
+    const real = leadMessages.map((m) => ({ ...m, _origen: "real" as const }));
     const todos = [...real, ...manual].filter(
-      (m, idx, arr) => arr.findIndex((o) => o.mensaje === m.mensaje && o.remitente === m.remitente) === idx
+      (m, idx, arr) =>
+        arr.findIndex(
+          (o) => o.mensaje === m.mensaje && o.remitente === m.remitente,
+        ) === idx,
     );
-    return todos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    return todos.sort(
+      (a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime(),
+    );
   }, [selectedLead?.hilo_emails, leadMessages]);
 
   // Clean helper for values like #ERROR!
   const cleanVal = (val?: string) => {
-    if (!val || val.includes('#ERROR!') || val.includes('#N/A') || val.includes('#VALUE!')) return '';
+    if (
+      !val ||
+      val.includes("#ERROR!") ||
+      val.includes("#N/A") ||
+      val.includes("#VALUE!")
+    )
+      return "";
     return val;
   };
 
   // Sync state when selected lead changes or pitch updates
   useEffect(() => {
     if (!selectedLead) return;
-    setEditedPitch(selectedLead.pitch_generado || '');
+    setEditedPitch(selectedLead.pitch_generado || "");
     setEditedLeadInfo({
       ...selectedLead,
       telefono: cleanVal(selectedLead.telefono),
@@ -643,32 +815,44 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       email_contacto: cleanVal(selectedLead.email_contacto),
       direccion: cleanVal(selectedLead.direccion),
     });
-  }, [selectedLead?.id, selectedLead?.pitch_generado, selectedLead?.imagen_url, selectedLead?.icono]);
+  }, [
+    selectedLead?.id,
+    selectedLead?.pitch_generado,
+    selectedLead?.imagen_url,
+    selectedLead?.icono,
+  ]);
 
   // Los hooks de arriba tienen que ejecutarse siempre en el mismo orden (ver
   // react-hooks/rules-of-hooks): este guard vivía ANTES de ellos, así que abrir el panel con
   // una sala nueva cambiaba cuántos hooks se ejecutaban entre un render y el siguiente.
   if (!selectedLead) return null;
 
-  const handleRegeneratePitchWithFeedback = async (targetProvider?: 'gemini' | 'deepseek') => {
+  const handleRegeneratePitchWithFeedback = async (
+    targetProvider?: "gemini" | "deepseek",
+  ) => {
     setIsRegeneratingPitch(true);
     setFeedbackSuccessMsg(null);
     const providerToUse = targetProvider || selectedAiModel;
     try {
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
+      const token =
+        localStorage.getItem("bakandeya_token") ||
+        localStorage.getItem("token") ||
+        "";
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        headers['x-auth-token'] = token;
+        headers["Authorization"] = `Bearer ${token}`;
+        headers["x-auth-token"] = token;
       }
       // En etapa de respuesta usa el endpoint del Contestador (prompt con el mensaje entrante
       // real y el hilo) en vez del de pitch inicial - antes ambos casos llamaban al mismo
       // endpoint de pitch, perdiendo el contexto de a qué estaba respondiendo la banda.
-      const endpoint = isReplyStage ? `/api/leads/${selectedLead.id}/regenerate-reply` : `/api/leads/${selectedLead.id}/regenerate-pitch`;
+      const endpoint = isReplyStage
+        ? `/api/leads/${selectedLead.id}/regenerate-reply`
+        : `/api/leads/${selectedLead.id}/regenerate-pitch`;
       const res = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers,
         body: JSON.stringify({
           tono_rating: toneRating || undefined,
@@ -682,7 +866,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
       const data = await res.json().catch(() => ({
         success: false,
-        error: 'Respuesta inválida del servidor',
+        error: "Respuesta inválida del servidor",
       }));
       if (res.ok && data.success && data.newPitchText) {
         setEditedPitch(data.newPitchText);
@@ -701,20 +885,27 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         // Reset feedback form after successful save & regenerate
         setToneRating(0);
         setContentRating(0);
-        setFeedbackComment('');
-        const modelLabel = providerToUse === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
-        if (feedbackScope === 'global') {
-          setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel}! Aprendizaje guardado en la memoria global.`);
+        setFeedbackComment("");
+        const modelLabel =
+          providerToUse === "deepseek" ? "DeepSeek V3" : "Gemini 3.7 Flash";
+        if (feedbackScope === "global") {
+          setFeedbackSuccessMsg(
+            `¡Pitch reescrito con ${modelLabel}! Aprendizaje guardado en la memoria global.`,
+          );
         } else {
-          setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel} aplicando tus notas a esta sala!`);
+          setFeedbackSuccessMsg(
+            `¡Pitch reescrito con ${modelLabel} aplicando tus notas a esta sala!`,
+          );
         }
         setTimeout(() => setFeedbackSuccessMsg(null), 4500);
       } else {
-        alert(data.error || 'No se pudo regenerar el pitch.');
+        alert(data.error || "No se pudo regenerar el pitch.");
       }
     } catch (err: any) {
-      console.error('Error al regenerar pitch:', err);
-      alert(`Error de conexión al reescribir el pitch con IA: ${err.message || 'Verifica la conexión'}`);
+      console.error("Error al regenerar pitch:", err);
+      alert(
+        `Error de conexión al reescribir el pitch con IA: ${err.message || "Verifica la conexión"}`,
+      );
     } finally {
       setIsRegeneratingPitch(false);
     }
@@ -724,23 +915,26 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     setIsRevertingPitch(true);
     try {
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
+      const token =
+        localStorage.getItem("bakandeya_token") ||
+        localStorage.getItem("token") ||
+        "";
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        headers['x-auth-token'] = token;
+        headers["Authorization"] = `Bearer ${token}`;
+        headers["x-auth-token"] = token;
       }
       const res = await fetch(`/api/leads/${selectedLead.id}/revert-pitch`, {
-        method: 'POST',
+        method: "POST",
         headers,
         body: JSON.stringify({ logId: targetLogId }),
       });
 
       const data = await res.json().catch(() => ({
         success: false,
-        error: 'Respuesta inválida del servidor',
+        error: "Respuesta inválida del servidor",
       }));
       if (res.ok && data.success && data.restoredPitch !== undefined) {
         const restored = data.restoredPitch;
@@ -748,8 +942,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setIsEditingPitch(false);
         selectedLead.pitch_generado = restored;
 
-        const updatedHistory = (selectedLead.historial_feedback_pitch || []).map((item) => {
-          if (item.id === (data.revertedLogId || targetLogId || selectedLead.historial_feedback_pitch?.[0]?.id)) {
+        const updatedHistory = (
+          selectedLead.historial_feedback_pitch || []
+        ).map((item) => {
+          if (
+            item.id ===
+            (data.revertedLogId ||
+              targetLogId ||
+              selectedLead.historial_feedback_pitch?.[0]?.id)
+          ) {
             return { ...item, deshecho: true };
           }
           return item;
@@ -761,14 +962,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           historial_feedback_pitch: updatedHistory,
         });
 
-        setFeedbackSuccessMsg('↩️ Entrenamiento deshecho: Se ha restaurado el pitch anterior.');
+        setFeedbackSuccessMsg(
+          "↩️ Entrenamiento deshecho: Se ha restaurado el pitch anterior.",
+        );
         setTimeout(() => setFeedbackSuccessMsg(null), 5000);
       } else {
-        alert(data.error || 'No se pudo restaurar el pitch anterior.');
+        alert(data.error || "No se pudo restaurar el pitch anterior.");
       }
     } catch (err) {
-      console.error('Error al deshacer entrenamiento del pitch:', err);
-      alert('Error de conexión al restaurar el pitch anterior.');
+      console.error("Error al deshacer entrenamiento del pitch:", err);
+      alert("Error de conexión al restaurar el pitch anterior.");
     } finally {
       setIsRevertingPitch(false);
     }
@@ -777,10 +980,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const handleEnrichLead = async () => {
     if (!selectedLead?.id) return;
     setIsEnrichingLead(true);
-    setEnrichStatusMsg('Investigando y completando datos oficiales sin inventar...');
+    setEnrichStatusMsg(
+      "Investigando y completando datos oficiales sin inventar...",
+    );
     try {
-      const res = await apiFetch('/api/leads/enrich-lead', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/enrich-lead", {
+        method: "POST",
         body: JSON.stringify({
           leadId: selectedLead.id,
           force: true,
@@ -789,15 +994,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       if (res.success && res.lead) {
         onUpdateLead(selectedLead.id, res.lead);
         setEditedLeadInfo(res.lead);
-        setEnrichStatusMsg('✨ ¡Datos completados y verificados con éxito!');
+        setEnrichStatusMsg("✨ ¡Datos completados y verificados con éxito!");
         setTimeout(() => setEnrichStatusMsg(null), 4000);
       } else {
-        setEnrichStatusMsg(res.error || 'No se encontraron datos nuevos verificables.');
+        setEnrichStatusMsg(
+          res.error || "No se encontraron datos nuevos verificables.",
+        );
         setTimeout(() => setEnrichStatusMsg(null), 4000);
       }
     } catch (err: any) {
-      console.error('Error enriqueciendo lead:', err);
-      setEnrichStatusMsg(err.message || 'Error al completar datos.');
+      console.error("Error enriqueciendo lead:", err);
+      setEnrichStatusMsg(err.message || "Error al completar datos.");
       setTimeout(() => setEnrichStatusMsg(null), 4000);
     } finally {
       setIsEnrichingLead(false);
@@ -805,12 +1012,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   };
 
   const handleAutoSearchLogo = async () => {
-    const venueName = (editedLeadInfo.nombre_sala || selectedLead.nombre_sala || '').trim();
+    const venueName = (
+      editedLeadInfo.nombre_sala ||
+      selectedLead.nombre_sala ||
+      ""
+    ).trim();
     if (!venueName) return;
     setIsSearchingLogo(true);
     try {
-      const res = await apiFetch('/api/leads/ai-lookup', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/ai-lookup", {
+        method: "POST",
         body: JSON.stringify({
           nombre_sala: venueName,
           ciudad: editedLeadInfo.ciudad || selectedLead.ciudad,
@@ -834,7 +1045,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         }
       }
     } catch (err) {
-      console.error('Error auto-searching logo:', err);
+      console.error("Error auto-searching logo:", err);
     } finally {
       setIsSearchingLogo(false);
     }
@@ -855,69 +1066,84 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!editedLeadInfo.nombre_sala) return;
     const finalInfo = {
       ...editedLeadInfo,
-      telefono: editedLeadInfo.telefono || editedLeadInfo.telefono_movil || editedLeadInfo.telefono_fijo || '',
+      telefono:
+        editedLeadInfo.telefono ||
+        editedLeadInfo.telefono_movil ||
+        editedLeadInfo.telefono_fijo ||
+        "",
     };
     onUpdateLead(selectedLead.id, finalInfo);
     setIsEditingLeadInfo(false);
   };
 
   const handleCorrectStatus = (newStatus: LeadStatus) => {
-    if (newStatus === 'confirmado') {
+    if (newStatus === "confirmado") {
       setShowBoloConfirmadoModal(true);
       return;
     }
     onUpdateLead(selectedLead.id, { estado: newStatus });
   };
 
-  const handleConfirmWithSetlist = async (data: { concertDate: string; cacheAmount?: number; setlistId: string; newSetlist?: Setlist }) => {
+  const handleConfirmWithSetlist = async (data: {
+    concertDate: string;
+    cacheAmount?: number;
+    setlistId: string;
+    newSetlist?: Setlist;
+  }) => {
     try {
       // 1. Si se generó un nuevo setlist automático a medida, guardarlo
       if (data.newSetlist) {
-        await apiFetch('/api/setlists', {
-          method: 'POST',
+        await apiFetch("/api/setlists", {
+          method: "POST",
           body: JSON.stringify(data.newSetlist),
-        }).catch((err) => console.warn('Error guardando setlist generado:', err));
+        }).catch((err) =>
+          console.warn("Error guardando setlist generado:", err),
+        );
       }
 
       // 2. Crear el concierto en el calendario con la vinculación al setlist y al bolo
-      const isFestival = selectedLead.tipo === 'festival' || selectedLead.tipo === 'ayuntamiento';
+      const isFestival =
+        selectedLead.tipo === "festival" ||
+        selectedLead.tipo === "ayuntamiento";
       const newConcert = {
         id: `concert-crm-${selectedLead.id}-${Date.now()}`,
         fecha: data.concertDate,
-        ciudad: selectedLead.ciudad || 'Ciudad por definir',
+        ciudad: selectedLead.ciudad || "Ciudad por definir",
         sala: selectedLead.nombre_sala,
-        direccion: selectedLead.direccion || '',
+        direccion: selectedLead.direccion || "",
         cache: data.cacheAmount || 0,
         aforo_vendido: 0,
         aforo_total: selectedLead.aforo || 0,
         contrato_firmado: true,
-        estado_pago: 'pendiente',
+        estado_pago: "pendiente",
         notas: `Bolo confirmado desde el CRM. Lead: ${selectedLead.nombre_sala}`,
-        tipo: isFestival ? 'festival' : 'sala',
+        tipo: isFestival ? "festival" : "sala",
         setlistId: data.setlistId,
       };
 
-      await apiFetch('/api/concerts', {
-        method: 'POST',
+      await apiFetch("/api/concerts", {
+        method: "POST",
         body: JSON.stringify(newConcert),
-      }).catch((err) => console.warn('Error creando concierto:', err));
+      }).catch((err) => console.warn("Error creando concierto:", err));
 
       // 3. Actualizar estado del lead en Supabase
-      onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+      onUpdateLead(selectedLead.id, { estado: "confirmado" });
       setShowBoloConfirmadoModal(false);
-      setFeedbackBoloMsg('🎉 ¡Bolo confirmado y repertorio asignado en el calendario!');
+      setFeedbackBoloMsg(
+        "🎉 ¡Bolo confirmado y repertorio asignado en el calendario!",
+      );
       setTimeout(() => setFeedbackBoloMsg(null), 5000);
     } catch (err) {
-      console.error('Error al confirmar bolo con setlist:', err);
-      onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+      console.error("Error al confirmar bolo con setlist:", err);
+      onUpdateLead(selectedLead.id, { estado: "confirmado" });
       setShowBoloConfirmadoModal(false);
     }
   };
 
   const handleConfirmWithoutSetlist = () => {
-    onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+    onUpdateLead(selectedLead.id, { estado: "confirmado" });
     setShowBoloConfirmadoModal(false);
-    setFeedbackBoloMsg('🎉 Concierto marcado como confirmado en el CRM.');
+    setFeedbackBoloMsg("🎉 Concierto marcado como confirmado en el CRM.");
     setTimeout(() => setFeedbackBoloMsg(null), 4000);
   };
 
@@ -928,7 +1154,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   //"en fase de respuesta" y el botón"Aprobar" mandaba aprobado_propuesta en vez de
   // aprobado_respuesta, haciendo que el Enviador lo tratase como pitch nuevo (asunto sin"Re:",
   // vuelta a'contactado' en vez de'negociando').
-  const isReplyStage = hiloCompleto.length > 0 || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
+  const isReplyStage =
+    hiloCompleto.length > 0 ||
+    selectedLead.estado === "respondido" ||
+    selectedLead.estado === "negociando";
 
   // Al aprobar se dispara el Agente Enviador en el servidor para este lead concreto
   // (POST /api/trigger-agent, el mismo endpoint que usa el scheduler) en vez de crear el
@@ -939,8 +1168,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   // lógica ni depender de Firebase/popup en el cliente. Si falla (sin email de contacto, sin
   // ninguna cuenta conectada...), el lead cae de todos modos en el estado de aprobado clásico
   // para no perder la aprobación humana.
-  const createDraftAndApprove = async (pitchText: string, alsoSavePitch: boolean) => {
-    const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
+  const createDraftAndApprove = async (
+    pitchText: string,
+    alsoSavePitch: boolean,
+  ) => {
+    const approvalState = isReplyStage
+      ? "aprobado_respuesta"
+      : "aprobado_propuesta";
 
     setIsCreatingDraft(true);
     setDraftError(null);
@@ -956,25 +1190,31 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (alsoSavePitch) updates.pitch_generado = pitchText;
     await onUpdateLead(selectedLead.id, updates);
 
-    let draftError = '';
+    let draftError = "";
     try {
-      const data = await apiFetch('/api/trigger-agent', {
-        method: 'POST',
+      const data = await apiFetch("/api/trigger-agent", {
+        method: "POST",
         body: JSON.stringify({
-          agentName: 'enviador',
-          params: { id: selectedLead.id, trigger_type: 'usuario_manual' },
+          agentName: "enviador",
+          params: { id: selectedLead.id, trigger_type: "usuario_manual" },
         }),
       });
 
-      const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === selectedLead.id) : null;
-      if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
-        onUpdateLead(selectedLead.id, { estado: 'borrador_creado' });
+      const leadResult = Array.isArray(data.results)
+        ? data.results.find((r: any) => r.id === selectedLead.id)
+        : null;
+      if (
+        leadResult?.status === "borrador" ||
+        leadResult?.status === "enviado"
+      ) {
+        onUpdateLead(selectedLead.id, { estado: "borrador_creado" });
       } else {
-        draftError = leadResult?.error || data.message || 'No se pudo crear el borrador.';
+        draftError =
+          leadResult?.error || data.message || "No se pudo crear el borrador.";
       }
     } catch (err: any) {
-      console.error('Error aprobando lead:', err);
-      draftError = err.message || 'Error al aprobar el lead.';
+      console.error("Error aprobando lead:", err);
+      draftError = err.message || "Error al aprobar el lead.";
     }
 
     if (draftError) {
@@ -992,14 +1232,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   };
 
   const handleApprovePitchDirectly = () => {
-    void createDraftAndApprove(selectedLead.pitch_generado || '', false);
+    void createDraftAndApprove(selectedLead.pitch_generado || "", false);
   };
 
   const handleAddInteractionLog = (e: React.FormEvent) => {
     e.preventDefault();
     if (!interactionNotes.trim()) return;
 
-    const nowStr = new Date().toISOString().replace('T', '').slice(0, 16);
+    const nowStr = new Date().toISOString().replace("T", "").slice(0, 16);
     const newLog: InteractionLog = {
       id: `log-${Date.now()}`,
       fecha: nowStr,
@@ -1013,12 +1253,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     const updatedLogs = [newLog, ...existingLogs];
 
     let newStatus = selectedLead.estado;
-    if (interactionResultado === 'Interesado') {
-      newStatus = 'negociando';
-    } else if (interactionResultado === 'Acuerdo cerrado') {
-      newStatus = 'confirmado';
-    } else if (interactionResultado === 'Rechazado') {
-      newStatus = 'no_interesado';
+    if (interactionResultado === "Interesado") {
+      newStatus = "negociando";
+    } else if (interactionResultado === "Acuerdo cerrado") {
+      newStatus = "confirmado";
+    } else if (interactionResultado === "Rechazado") {
+      newStatus = "no_interesado";
     }
 
     onUpdateLead(selectedLead.id, {
@@ -1027,12 +1267,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       fecha_ultima_respuesta: new Date().toISOString().slice(0, 10),
     });
 
-    setInteractionNotes('');
+    setInteractionNotes("");
   };
 
   const handleDeleteInteractionLog = (logId: string) => {
     if (!selectedLead.historial_contacto) return;
-    const updated = selectedLead.historial_contacto.filter((l) => l.id !== logId);
+    const updated = selectedLead.historial_contacto.filter(
+      (l) => l.id !== logId,
+    );
     onUpdateLead(selectedLead.id, { historial_contacto: updated });
   };
 
@@ -1044,9 +1286,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     }
   };
 
-  const phoneCleanMobile = selectedLead.telefono_movil ? selectedLead.telefono_movil.replace(/\D/g, '') : '';
-  const phoneCleanFijo = selectedLead.telefono_fijo ? selectedLead.telefono_fijo.replace(/\D/g, '') : '';
-  const phoneCleanLegacy = selectedLead.telefono ? selectedLead.telefono.replace(/\D/g, '') : '';
+  const phoneCleanMobile = selectedLead.telefono_movil
+    ? selectedLead.telefono_movil.replace(/\D/g, "")
+    : "";
+  const phoneCleanFijo = selectedLead.telefono_fijo
+    ? selectedLead.telefono_fijo.replace(/\D/g, "")
+    : "";
+  const phoneCleanLegacy = selectedLead.telefono
+    ? selectedLead.telefono.replace(/\D/g, "")
+    : "";
   // WhatsApp sólo está habilitado cuando existe teléfono móvil
   const phoneCleanForWhatsApp = phoneCleanMobile;
   const phoneClean = phoneCleanMobile || phoneCleanFijo || phoneCleanLegacy;
@@ -1060,7 +1308,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <Sparkles className="w-4 h-4 text-[var(--ok)]" />
             <span>{feedbackBoloMsg}</span>
           </div>
-          <button onClick={() => setFeedbackBoloMsg(null)} className="text-[var(--ok)] hover:text-[var(--ink)] cursor-pointer">
+          <button
+            onClick={() => setFeedbackBoloMsg(null)}
+            className="text-[var(--ok)] hover:text-[var(--ink)] cursor-pointer"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -1074,13 +1325,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <LeadAvatar lead={selectedLead} size="lg" showCameraHover={false} />
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-[var(--ink)] notranslate" translate="no">
+                <h3
+                  className="text-xl sm:text-2xl font-bold font-display tracking-tight text-[var(--ink)] notranslate"
+                  translate="no"
+                >
                   {selectedLead.nombre_sala}
                 </h3>
-                <VerifiedBadge isVerified={isLeadVerificado(selectedLead)} size="md" showLabel={true} />
+                <VerifiedBadge
+                  isVerified={isLeadVerificado(selectedLead)}
+                  size="md"
+                  showLabel={true}
+                />
               </div>
               <div className="flex items-center flex-wrap gap-1.5 mt-0.5 text-xs sm:text-sm font-sans text-zinc-300">
-                <span className="font-semibold text-zinc-200">{selectedLead.ciudad}</span>
+                <span className="font-semibold text-zinc-200">
+                  {selectedLead.ciudad}
+                </span>
                 {onFilterByRouteCity && selectedLead.ciudad && (
                   <button
                     type="button"
@@ -1095,35 +1355,53 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </button>
                 )}
                 <span>•</span>
-                <span>{selectedLead.genero || 'Variado'}</span>
+                <span>{selectedLead.genero || "Variado"}</span>
                 <span>•</span>
-                <span className={selectedLead.roster ? 'text-amber-300 font-medium' : ''}>
+                <span
+                  className={
+                    selectedLead.roster ? "text-amber-300 font-medium" : ""
+                  }
+                >
                   {selectedLead.roster
                     ? `Róster: ${selectedLead.roster}`
-                    : ['agencia', 'manager', 'productora', 'sello'].includes(String(selectedLead.tipo || '').toLowerCase())
-                      ? 'Agencia de Booking'
+                    : ["agencia", "manager", "productora", "sello"].includes(
+                          String(selectedLead.tipo || "").toLowerCase(),
+                        )
+                      ? "Agencia de Booking"
                       : selectedLead.aforo
                         ? `${selectedLead.aforo} pax`
-                        : 'Aforo n/d'}
+                        : "Aforo n/d"}
                 </span>
               </div>
-              {selectedLead.festival_start_date && selectedLead.festival_end_date && (
-                <div className="space-y-1 mt-1">
-                  <p className="text-xs sm:text-sm font-sans text-[var(--acc)] flex items-center gap-1.5">
-                    <span className="text-lg">🎪</span>
-                    <span className="font-semibold">Festival/Evento:</span>
-                    <span>{formatFestivalDateRange(selectedLead.festival_start_date, selectedLead.festival_end_date)}</span>
-                  </p>
-                  <HolidayDateWarning date={selectedLead.festival_start_date} city={selectedLead.ciudad} compact />
-                </div>
-              )}
+              {selectedLead.festival_start_date &&
+                selectedLead.festival_end_date && (
+                  <div className="space-y-1 mt-1">
+                    <p className="text-xs sm:text-sm font-sans text-[var(--acc)] flex items-center gap-1.5">
+                      <span className="text-lg">🎪</span>
+                      <span className="font-semibold">Festival/Evento:</span>
+                      <span>
+                        {formatFestivalDateRange(
+                          selectedLead.festival_start_date,
+                          selectedLead.festival_end_date,
+                        )}
+                      </span>
+                    </p>
+                    <HolidayDateWarning
+                      date={selectedLead.festival_start_date}
+                      city={selectedLead.ciudad}
+                      compact
+                    />
+                  </div>
+                )}
             </div>
           </div>
 
           <div className="flex items-center gap-1.5">
             <FavoriteButton
               isFavorite={!!selectedLead.es_favorito}
-              onToggle={(newVal) => onUpdateLead(selectedLead.id, { es_favorito: newVal })}
+              onToggle={(newVal) =>
+                onUpdateLead(selectedLead.id, { es_favorito: newVal })
+              }
               size="md"
             />
             <button
@@ -1135,7 +1413,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </button>
             {onDeleteLead && (
               <button
-                onClick={() => onDeleteLead(selectedLead.id, selectedLead.nombre_sala)}
+                onClick={() =>
+                  onDeleteLead(selectedLead.id, selectedLead.nombre_sala)
+                }
                 className="p-2 rounded-[var(--r-m)] bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 title="Eliminar y guardar en lista negra"
               >
@@ -1155,7 +1435,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         {/* Lead Health / Temperature Badge & Quality Indicator & Category Selector */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1800/80">
           <div className="flex flex-wrap items-center gap-2">
-            <LeadHealthBadge lead={selectedLead} showDescription={true} size="md" />
+            <LeadHealthBadge
+              lead={selectedLead}
+              showDescription={true}
+              size="md"
+            />
             <ReliabilityBadge item={selectedLead} size="md" />
             {selectedLead.ultimo_sentimiento && (
               <div
@@ -1166,19 +1450,24 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 }
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span className="font-bold">{selectedLead.ultimo_sentimiento_label || selectedLead.ultimo_sentimiento}</span>
+                <span className="font-bold">
+                  {selectedLead.ultimo_sentimiento_label ||
+                    selectedLead.ultimo_sentimiento}
+                </span>
                 {selectedLead.ultima_intencion_etiqueta && (
-                  <span className="text-zinc-400 font-mono text-[10px]">({selectedLead.ultima_intencion_etiqueta})</span>
+                  <span className="text-zinc-400 font-mono text-[10px]">
+                    ({selectedLead.ultima_intencion_etiqueta})
+                  </span>
                 )}
                 {selectedLead.temperatura_lead && (
                   <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono">
-                    {selectedLead.temperatura_lead === 'muy_caliente'
-                      ? '🔥 Muy Caliente'
-                      : selectedLead.temperatura_lead === 'caliente'
-                        ? '☀️ Caliente'
-                        : selectedLead.temperatura_lead === 'tibio'
-                          ? '🌤️ Tibio'
-                          : '❄️ Frío'}
+                    {selectedLead.temperatura_lead === "muy_caliente"
+                      ? "🔥 Muy Caliente"
+                      : selectedLead.temperatura_lead === "caliente"
+                        ? "☀️ Caliente"
+                        : selectedLead.temperatura_lead === "tibio"
+                          ? "🌤️ Tibio"
+                          : "❄️ Frío"}
                   </span>
                 )}
               </div>
@@ -1188,9 +1477,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             {/* Category / Type Recategorizer */}
             <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)]">
-              <span className="text-[10px] text-[var(--acc)] font-sans font-bold">Tipo:</span>
+              <span className="text-[10px] text-[var(--acc)] font-sans font-bold">
+                Tipo:
+              </span>
               <select
-                value={String(selectedLead.tipo || 'sala').toLowerCase()}
+                value={String(selectedLead.tipo || "sala").toLowerCase()}
                 onChange={(e) => {
                   const newType = e.target.value as LeadType;
                   onUpdateLead(selectedLead.id, { tipo: newType });
@@ -1198,34 +1489,64 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 className="text-xs font-sans font-bold text-[var(--acc)]/70 bg-transparent cursor-pointer focus:outline-none"
                 title="Cambiar categoría / tipo de este lead"
               >
-                <option value="sala" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="sala"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   🏟️ Sala de Conciertos
                 </option>
-                <option value="festival" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="festival"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   🎪 Festival
                 </option>
-                <option value="ayuntamiento" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="ayuntamiento"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   🏛️ Ayuntamiento / Fiestas
                 </option>
-                <option value="discoteca" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="discoteca"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   🪩 Discoteca / Club
                 </option>
-                <option value="grupo" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="grupo"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   🎸 Grupo / Banda Aliada
                 </option>
-                <option value="agencia" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="agencia"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   💼 Agencia de Booking
                 </option>
-                <option value="manager" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="manager"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   👔 Manager / Representante
                 </option>
-                <option value="productora" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="productora"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   🎬 Productora de Eventos
                 </option>
-                <option value="sello" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="sello"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   💿 Discográfica / Sello
                 </option>
-                <option value="medio" className="bg-[var(--bg)] text-[var(--ink)]">
+                <option
+                  value="medio"
+                  className="bg-[var(--bg)] text-[var(--ink)]"
+                >
                   📻 Medio / Prensa / Radio
                 </option>
               </select>
@@ -1233,10 +1554,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Status selector */}
             <div className="flex items-center gap-1.5 bg-[var(--bg)] px-2.5 py-1 rounded-[var(--r-m)]800">
-              <span className={`w-2 h-2 rounded-full ${getStatusDotColor(selectedLead.estado)}`} />
+              <span
+                className={`w-2 h-2 rounded-full ${getStatusDotColor(selectedLead.estado)}`}
+              />
               <select
                 value={normalizeStatus(selectedLead.estado)}
-                onChange={(e) => handleCorrectStatus(e.target.value as LeadStatus)}
+                onChange={(e) =>
+                  handleCorrectStatus(e.target.value as LeadStatus)
+                }
                 className="text-xs font-sans font-bold text-[var(--ink)] bg-transparent cursor-pointer focus:outline-none"
               >
                 <option value="nuevo" className="bg-[var(--bg)]">
@@ -1275,11 +1600,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             title={
               selectedLead.telefono_movil
                 ? `Abrir propuesta para WhatsApp (${selectedLead.telefono_movil})`
-                : 'Escribir propuesta por WhatsApp'
+                : "Escribir propuesta por WhatsApp"
             }
           >
             <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0 group-hover:scale-110 transition-transform" />
-            <span>WhatsApp {selectedLead.telefono_movil ? 'Móvil' : 'Directo'}</span>
+            <span>
+              WhatsApp {selectedLead.telefono_movil ? "Móvil" : "Directo"}
+            </span>
           </button>
 
           {selectedLead.telefono_movil ? (
@@ -1321,7 +1648,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <Compass className="w-3.5 h-3.5 text-amber-400" />
               Herramientas Agente Scout & Inteligencia Externa:
             </span>
-            <span className="text-[9px] text-zinc-500 font-sans">Datos verificados sin inventar</span>
+            <span className="text-[9px] text-zinc-500 font-sans">
+              Datos verificados sin inventar
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
@@ -1337,7 +1666,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               ) : (
                 <Globe className="w-3.5 h-3.5 text-amber-400" />
               )}
-              <span>{isScanningJina ? 'Leyendo web...' : '🔍 Jina Reader (Web & Teléfonos)'}</span>
+              <span>
+                {isScanningJina
+                  ? "Leyendo web..."
+                  : "🔍 Jina Reader (Web & Teléfonos)"}
+              </span>
             </button>
 
             <button
@@ -1352,7 +1685,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               ) : (
                 <Calendar className="w-3.5 h-3.5 text-sky-400" />
               )}
-              <span>{isDetectingDates ? 'Detectando fechas...' : '📡 Radar Wegow (Fechas Libres)'}</span>
+              <span>
+                {isDetectingDates
+                  ? "Detectando fechas..."
+                  : "📡 Radar Wegow (Fechas Libres)"}
+              </span>
             </button>
 
             {(selectedLead.instagram || editedLeadInfo.instagram) && (
@@ -1368,7 +1705,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 ) : (
                   <Instagram className="w-3.5 h-3.5 text-pink-400" />
                 )}
-                <span>{isEnrichingInstagram ? 'Extrayendo...' : 'Instagram (WhatsApp Business)'}</span>
+                <span>
+                  {isEnrichingInstagram
+                    ? "Extrayendo..."
+                    : "Instagram (WhatsApp Business)"}
+                </span>
               </button>
             )}
           </div>
@@ -1385,22 +1726,32 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {(() => {
             const targetDate =
               (selectedLead as any).fecha_posible_evento ||
-              (selectedLead.fechas_propuestas_sala && selectedLead.fechas_propuestas_sala[0]) ||
-              (selectedLead.fechas_libres_detectadas && selectedLead.fechas_libres_detectadas[0]) ||
+              (selectedLead.fechas_propuestas_sala &&
+                selectedLead.fechas_propuestas_sala[0]) ||
+              (selectedLead.fechas_libres_detectadas &&
+                selectedLead.fechas_libres_detectadas[0]) ||
               (selectedLead as any).fechas_libres_campana?.[0] ||
               (selectedLead as any).fechas_propuestas?.[0] ||
               (selectedLead as any).fechas_disponibles?.[0] ||
               activeCampaign?.fecha_inicio;
-            const conflictCheck = checkBandDateConflict(targetDate, concerts, selectedLead.ciudad);
+            const conflictCheck = checkBandDateConflict(
+              targetDate,
+              concerts,
+              selectedLead.ciudad,
+            );
 
-            if (conflictCheck.status === 'conflicto_directo') {
+            if (conflictCheck.status === "conflicto_directo") {
               return (
                 <div className="p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/80 text-rose-200 text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-base shrink-0">🔴</span>
                     <div className="min-w-0">
-                      <p className="font-bold text-rose-100 text-xs truncate">Conflicto en la agenda de {bandName || 'la banda'}</p>
-                      <p className="text-[11px] text-rose-300">{conflictCheck.mensaje}</p>
+                      <p className="font-bold text-rose-100 text-xs truncate">
+                        Conflicto en la agenda de {bandName || "la banda"}
+                      </p>
+                      <p className="text-[11px] text-rose-300">
+                        {conflictCheck.mensaje}
+                      </p>
                     </div>
                   </div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-900 border border-rose-500/50 text-rose-100 shrink-0">
@@ -1410,14 +1761,18 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               );
             }
 
-            if (conflictCheck.status === 'cercano_compatible') {
+            if (conflictCheck.status === "cercano_compatible") {
               return (
                 <div className="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/60 text-emerald-200 text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-base shrink-0">🚗</span>
                     <div className="min-w-0">
-                      <p className="font-bold text-emerald-200 text-xs truncate">Oportunidad de Enlace en Ruta (Doble Fecha)</p>
-                      <p className="text-[11px] text-emerald-300/90">{conflictCheck.mensaje}</p>
+                      <p className="font-bold text-emerald-200 text-xs truncate">
+                        Oportunidad de Enlace en Ruta (Doble Fecha)
+                      </p>
+                      <p className="text-[11px] text-emerald-300/90">
+                        {conflictCheck.mensaje}
+                      </p>
                     </div>
                   </div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-900 border border-emerald-500/50 text-emerald-200 shrink-0">
@@ -1427,14 +1782,18 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               );
             }
 
-            if (conflictCheck.status === 'cercano_aviso') {
+            if (conflictCheck.status === "cercano_aviso") {
               return (
                 <div className="p-2.5 rounded-xl bg-amber-950/60 border border-amber-500/60 text-amber-200 text-xs flex items-center justify-between gap-2.5 animate-fadeIn shadow-2xs">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-base shrink-0">⚠️</span>
                     <div className="min-w-0">
-                      <p className="font-bold text-amber-200 text-xs truncate">Concierto en fecha adyacente</p>
-                      <p className="text-[11px] text-amber-300/90">{conflictCheck.mensaje}</p>
+                      <p className="font-bold text-amber-200 text-xs truncate">
+                        Concierto en fecha adyacente
+                      </p>
+                      <p className="text-[11px] text-amber-300/90">
+                        {conflictCheck.mensaje}
+                      </p>
                     </div>
                   </div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-900 border border-amber-500/50 text-amber-200 shrink-0">
@@ -1449,7 +1808,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="p-2 rounded-xl bg-zinc-900/60 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   <span className="text-[11px]">
-                    Agenda de {bandName || 'la banda'} disponible para {targetDate}
+                    Agenda de {bandName || "la banda"} disponible para{" "}
+                    {targetDate}
                   </span>
                 </div>
               );
@@ -1460,7 +1820,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* 🏛️ HISTÓRICO DE BOLOS EN LA MISMA CIUDAD (Punto 4) */}
           {(() => {
-            const cityHistory = getCityTourHistory(selectedLead.ciudad || selectedLead.region, concerts);
+            const cityHistory = getCityTourHistory(
+              selectedLead.ciudad || selectedLead.region,
+              concerts,
+            );
             if (!cityHistory) return null;
 
             return (
@@ -1471,23 +1834,34 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs font-bold text-amber-300 block truncate">
-                      Histórico en {cityHistory.ciudad} ({cityHistory.totalConciertos}{' '}
-                      {cityHistory.totalConciertos === 1 ? 'concierto' : 'conciertos'})
+                      Histórico en {cityHistory.ciudad} (
+                      {cityHistory.totalConciertos}{" "}
+                      {cityHistory.totalConciertos === 1
+                        ? "concierto"
+                        : "conciertos"}
+                      )
                     </span>
-                    <span className="text-[11px] text-zinc-300 block">{cityHistory.resumenTexto}</span>
+                    <span className="text-[11px] text-zinc-300 block">
+                      {cityHistory.resumenTexto}
+                    </span>
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => {
-                    const current = editedPitch || selectedLead.pitch_generado || '';
+                    const current =
+                      editedPitch || selectedLead.pitch_generado || "";
                     if (!current.includes(cityHistory.pitchSnippet)) {
-                      const updated = current ? `${current}\n\n${cityHistory.pitchSnippet}` : cityHistory.pitchSnippet;
+                      const updated = current
+                        ? `${current}\n\n${cityHistory.pitchSnippet}`
+                        : cityHistory.pitchSnippet;
                       setEditedPitch(updated);
                       setIsEditingPitch(true);
                       if (onUpdateLead) {
-                        onUpdateLead(selectedLead.id, { pitch_generado: updated });
+                        onUpdateLead(selectedLead.id, {
+                          pitch_generado: updated,
+                        });
                       }
                     }
                   }}
@@ -1503,25 +1877,38 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* Display Fechas Libres Detectadas Pills if available */}
           {(() => {
-            const campaignIsActive = activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true);
+            const campaignIsActive =
+              activeCampaign &&
+              (activeCampaign.isActive ??
+                (activeCampaign as any).is_active ??
+                true);
             const fechasLibres =
               campaignIsActive && (editedLeadInfo as any)?.fechas_libres_campana
                 ? (editedLeadInfo as any).fechas_libres_campana
-                : editedLeadInfo?.fechas_libres_detectadas && editedLeadInfo.fechas_libres_detectadas.length > 0
+                : editedLeadInfo?.fechas_libres_detectadas &&
+                    editedLeadInfo.fechas_libres_detectadas.length > 0
                   ? editedLeadInfo.fechas_libres_detectadas
-                  : campaignIsActive && (selectedLead as any)?.fechas_libres_campana
+                  : campaignIsActive &&
+                      (selectedLead as any)?.fechas_libres_campana
                     ? (selectedLead as any).fechas_libres_campana
                     : selectedLead?.fechas_libres_detectadas || [];
 
             const hasVerifiedSources =
-              (Array.isArray(selectedLead?.radar_fuentes_verificadas) && selectedLead.radar_fuentes_verificadas.length > 0) ||
-              (Array.isArray((editedLeadInfo as any)?.radar_fuentes_verificadas) &&
+              (Array.isArray(selectedLead?.radar_fuentes_verificadas) &&
+                selectedLead.radar_fuentes_verificadas.length > 0) ||
+              (Array.isArray(
+                (editedLeadInfo as any)?.radar_fuentes_verificadas,
+              ) &&
                 (editedLeadInfo as any).radar_fuentes_verificadas.length > 0);
             const hasOccupied =
-              (selectedLead?.fechas_ocupadas?.length || 0) > 0 || ((editedLeadInfo as any)?.fechas_ocupadas?.length || 0) > 0;
-            const hasWegowOk = (selectedLead as any)?.radar_wegow_status === 'ok' || (editedLeadInfo as any)?.radar_wegow_status === 'ok';
+              (selectedLead?.fechas_ocupadas?.length || 0) > 0 ||
+              ((editedLeadInfo as any)?.fechas_ocupadas?.length || 0) > 0;
+            const hasWegowOk =
+              (selectedLead as any)?.radar_wegow_status === "ok" ||
+              (editedLeadInfo as any)?.radar_wegow_status === "ok";
             const hasBandsintownOk =
-              (selectedLead as any)?.radar_bandsintown_status === 'ok' || (editedLeadInfo as any)?.radar_bandsintown_status === 'ok';
+              (selectedLead as any)?.radar_bandsintown_status === "ok" ||
+              (editedLeadInfo as any)?.radar_bandsintown_status === "ok";
 
             const hasConcertsOrSources =
               selectedLead?.datos_fechas_encontrados === true ||
@@ -1536,10 +1923,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               (editedLeadInfo as any)?.datos_fechas_encontrados === false;
 
             const wegowStatus =
-              (selectedLead as any)?.radar_wegow_status || ((selectedLead?.fechas_ocupadas?.length || 0) > 0 ? 'ok' : 'sin_datos');
-            const bandsintownStatus = (selectedLead as any)?.radar_bandsintown_status || 'sin_datos';
+              (selectedLead as any)?.radar_wegow_status ||
+              ((selectedLead?.fechas_ocupadas?.length || 0) > 0
+                ? "ok"
+                : "sin_datos");
+            const bandsintownStatus =
+              (selectedLead as any)?.radar_bandsintown_status || "sin_datos";
             const contrastado = Boolean(
-              (selectedLead as any)?.contrastado_multi_fuente || (wegowStatus === 'ok' && bandsintownStatus === 'ok')
+              (selectedLead as any)?.contrastado_multi_fuente ||
+              (wegowStatus === "ok" && bandsintownStatus === "ok"),
             );
 
             if (hasNoData) {
@@ -1551,16 +1943,30 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </span>
                   <div className="flex items-center gap-2 text-[9px] font-mono text-zinc-400 pl-1">
                     <span>
-                      Wegow:{' '}
-                      <strong className={wegowStatus === 'ok' ? 'text-emerald-400' : 'text-zinc-500'}>
-                        {wegowStatus === 'ok' ? 'Conectado' : 'Sin cartelera'}
+                      Wegow:{" "}
+                      <strong
+                        className={
+                          wegowStatus === "ok"
+                            ? "text-emerald-400"
+                            : "text-zinc-500"
+                        }
+                      >
+                        {wegowStatus === "ok" ? "Conectado" : "Sin cartelera"}
                       </strong>
                     </span>
                     <span>•</span>
                     <span>
-                      Bandsintown:{' '}
-                      <strong className={bandsintownStatus === 'ok' ? 'text-sky-400' : 'text-zinc-500'}>
-                        {bandsintownStatus === 'ok' ? 'Contrastado' : 'Sin datos'}
+                      Bandsintown:{" "}
+                      <strong
+                        className={
+                          bandsintownStatus === "ok"
+                            ? "text-sky-400"
+                            : "text-zinc-500"
+                        }
+                      >
+                        {bandsintownStatus === "ok"
+                          ? "Contrastado"
+                          : "Sin datos"}
                       </strong>
                     </span>
                   </div>
@@ -1572,10 +1978,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="pt-1 border-t border-zinc-800/80 flex flex-col gap-1.5">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <span
-                    className={`text-[10px] font-mono font-bold flex items-center gap-1 ${campaignIsActive ? 'text-purple-300' : 'text-sky-400'}`}
+                    className={`text-[10px] font-mono font-bold flex items-center gap-1 ${campaignIsActive ? "text-purple-300" : "text-sky-400"}`}
                   >
                     <CalendarCheck className="w-3 h-3 text-current" />
-                    {campaignIsActive ? 'Fechas disponibles para la campaña:' : 'Fechas disponibles detectadas:'}
+                    {campaignIsActive
+                      ? "Fechas disponibles para la campaña:"
+                      : "Fechas disponibles detectadas:"}
                   </span>
                   {fechasLibres.map((fecha: string, idx: number) => (
                     <button
@@ -1584,8 +1992,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       onClick={() => setShowWhatsAppModal(true)}
                       className={`px-2 py-0.5 rounded-md border text-[10px] font-sans font-medium transition-colors cursor-pointer flex items-center gap-1 ${
                         campaignIsActive
-                          ? 'bg-purple-950/80 border-purple-500/70 text-purple-200 hover:bg-purple-900'
-                          : 'bg-sky-950/80 border-sky-600/60 text-sky-300 hover:bg-sky-900'
+                          ? "bg-purple-950/80 border-purple-500/70 text-purple-200 hover:bg-purple-900"
+                          : "bg-sky-950/80 border-sky-600/60 text-sky-300 hover:bg-sky-900"
                       }`}
                       title="Clic para proponer esta fecha por WhatsApp o Pitch"
                     >
@@ -1597,34 +2005,50 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="flex items-center gap-2 text-[9px] font-mono text-zinc-400 pl-0.5">
                   <a
-                    href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || '')}`}
+                    href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1 hover:text-emerald-300 transition-colors cursor-pointer"
                     title="Clic para ver cartelera en Wegow"
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full ${wegowStatus === 'ok' ? 'bg-emerald-400' : 'bg-zinc-600'}`}></span>
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${wegowStatus === "ok" ? "bg-emerald-400" : "bg-zinc-600"}`}
+                    ></span>
                     <span>
-                      Wegow:{' '}
-                      <strong className={wegowStatus === 'ok' ? 'text-emerald-400' : 'text-zinc-500'}>
-                        {wegowStatus === 'ok' ? '✓ OK' : 'Sin datos'}
+                      Wegow:{" "}
+                      <strong
+                        className={
+                          wegowStatus === "ok"
+                            ? "text-emerald-400"
+                            : "text-zinc-500"
+                        }
+                      >
+                        {wegowStatus === "ok" ? "✓ OK" : "Sin datos"}
                       </strong>
                     </span>
                     <ExternalLink className="w-2 h-2 opacity-60" />
                   </a>
                   <span>•</span>
                   <a
-                    href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || '')}`}
+                    href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1 hover:text-sky-300 transition-colors cursor-pointer"
                     title="Clic para ver cartelera en Bandsintown"
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full ${bandsintownStatus === 'ok' ? 'bg-sky-400' : 'bg-zinc-600'}`}></span>
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${bandsintownStatus === "ok" ? "bg-sky-400" : "bg-zinc-600"}`}
+                    ></span>
                     <span>
-                      Bandsintown:{' '}
-                      <strong className={bandsintownStatus === 'ok' ? 'text-sky-400' : 'text-zinc-500'}>
-                        {bandsintownStatus === 'ok' ? '✓ OK' : 'Sin datos'}
+                      Bandsintown:{" "}
+                      <strong
+                        className={
+                          bandsintownStatus === "ok"
+                            ? "text-sky-400"
+                            : "text-zinc-500"
+                        }
+                      >
+                        {bandsintownStatus === "ok" ? "✓ OK" : "Sin datos"}
                       </strong>
                     </span>
                     <ExternalLink className="w-2 h-2 opacity-60" />
@@ -1642,12 +2066,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         {/* Agent Workflow & Sub-status Banner (Option A 2-Dimensional Model) */}
         {(() => {
-          const rawStatus = String(selectedLead.estado || '');
+          const rawStatus = String(selectedLead.estado || "");
           const isPending =
-            rawStatus === 'pendiente_aprobacion' || (rawStatus === 'nuevo' && !!selectedLead.pitch_generado && !selectedLead.fecha_envio);
-          const isDraftCreated = rawStatus === 'borrador_creado';
-          const isApproved = rawStatus.startsWith('aprobado');
-          const isSent = normalizeStatus(rawStatus) === 'esperando_respuesta';
+            rawStatus === "pendiente_aprobacion" ||
+            (rawStatus === "nuevo" &&
+              !!selectedLead.pitch_generado &&
+              !selectedLead.fecha_envio);
+          const isDraftCreated = rawStatus === "borrador_creado";
+          const isApproved = rawStatus.startsWith("aprobado");
+          const isSent = normalizeStatus(rawStatus) === "esperando_respuesta";
 
           if (isPending) {
             return (
@@ -1659,13 +2086,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[var(--acc)]/70">
                       {isReplyStage
-                        ? '💬 Respuesta redactada por IA — Pendiente de aprobación'
-                        : '✉️ Pitch inicial redactado por IA — Pendiente de aprobación'}
+                        ? "💬 Respuesta redactada por IA — Pendiente de aprobación"
+                        : "✉️ Pitch inicial redactado por IA — Pendiente de aprobación"}
                     </p>
                     <p className="text-[10px] text-[var(--ink-2)] truncate">
                       {isReplyStage
-                        ? 'Revisa el borrador para responder a la sala y autorizar su envío.'
-                        : 'Revisa la propuesta inicial para autorizar al agente de envíos.'}
+                        ? "Revisa el borrador para responder a la sala y autorizar su envío."
+                        : "Revisa la propuesta inicial para autorizar al agente de envíos."}
                     </p>
                   </div>
                 </div>
@@ -1675,8 +2102,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   disabled={isCreatingDraft}
                   className="px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1 cursor-pointer disabled:opacity-50"
                 >
-                  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                  <span>{isCreatingDraft ? 'Creando borrador...' : 'Aprobar'}</span>
+                  {isCreatingDraft ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  )}
+                  <span>
+                    {isCreatingDraft ? "Creando borrador..." : "Aprobar"}
+                  </span>
                 </button>
               </div>
             );
@@ -1687,9 +2120,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="p-2.5 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center gap-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-[var(--acc)]/80 shrink-0 ml-1" />
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-[var(--acc)]/80">📝 Borrador creado en tu Gmail</p>
+                  <p className="text-xs font-bold text-[var(--acc)]/80">
+                    📝 Borrador creado en tu Gmail
+                  </p>
                   <p className="text-[10px] text-[var(--ink-2)]">
-                    Revísalo en tu bandeja de borradores y envíalo cuando quieras — no se ha enviado nada automáticamente.
+                    Revísalo en tu bandeja de borradores y envíalo cuando
+                    quieras — no se ha enviado nada automáticamente.
                   </p>
                 </div>
               </div>
@@ -1703,12 +2139,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="w-2.5 h-2.5 rounded-full bg-[var(--ok)] shrink-0 ml-1" />
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[var(--ink-2)]">
-                      🚀 {rawStatus === 'aprobado_respuesta' ? 'Respuesta Aprobada' : 'Propuesta Aprobada'} — En cola del Agente Enviador
+                      🚀{" "}
+                      {rawStatus === "aprobado_respuesta"
+                        ? "Respuesta Aprobada"
+                        : "Propuesta Aprobada"}{" "}
+                      — En cola del Agente Enviador
                     </p>
                     <p className="text-[10px] text-[var(--ink-2)]">
                       {draftError
                         ? `No se pudo crear el borrador en Gmail (${draftError}). El lead quedó en cola para el Agente Enviador por email.`
-                        : 'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
+                        : "El agente despachará este correo respetando las normas de envío y rate-limiting."}
                     </p>
                   </div>
                 </div>
@@ -1719,26 +2159,38 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     setIsCreatingDraft(true);
                     setDraftError(null);
                     try {
-                      const data = await apiFetch('/api/trigger-agent', {
-                        method: 'POST',
+                      const data = await apiFetch("/api/trigger-agent", {
+                        method: "POST",
                         body: JSON.stringify({
-                          agentName: 'enviador',
+                          agentName: "enviador",
                           params: {
                             id: selectedLead.id,
-                            trigger_type: 'usuario_manual',
+                            trigger_type: "usuario_manual",
                           },
                         }),
                       });
-                      const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === selectedLead.id) : null;
-                      if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
+                      const leadResult = Array.isArray(data.results)
+                        ? data.results.find(
+                            (r: any) => r.id === selectedLead.id,
+                          )
+                        : null;
+                      if (
+                        leadResult?.status === "borrador" ||
+                        leadResult?.status === "enviado"
+                      ) {
                         onUpdateLead(selectedLead.id, {
-                          estado: leadResult?.status === 'enviado' ? leadResult?.estado_nuevo || 'contactado' : 'borrador_creado',
+                          estado:
+                            leadResult?.status === "enviado"
+                              ? leadResult?.estado_nuevo || "contactado"
+                              : "borrador_creado",
                         });
                       } else if (leadResult?.error || data.message) {
                         setDraftError(leadResult?.error || data.message);
                       }
                     } catch (err: any) {
-                      setDraftError(err.message || 'Error al despachar el correo.');
+                      setDraftError(
+                        err.message || "Error al despachar el correo.",
+                      );
                     } finally {
                       setIsCreatingDraft(false);
                     }
@@ -1746,15 +2198,24 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   className="px-3 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] shrink-0 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                   title="Forzar el despacho inmediato de este correo por el Agente Enviador"
                 >
-                  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-                  <span>{isCreatingDraft ? 'Enviando...' : 'Despachar Ahora'}</span>
+                  {isCreatingDraft ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                  <span>
+                    {isCreatingDraft ? "Enviando..." : "Despachar Ahora"}
+                  </span>
                 </button>
               </div>
             );
           }
 
           if (isSent) {
-            const wasOpened = Boolean(selectedLead.email_abierto || (selectedLead.veces_abierto && selectedLead.veces_abierto > 0));
+            const wasOpened = Boolean(
+              selectedLead.email_abierto ||
+              (selectedLead.veces_abierto && selectedLead.veces_abierto > 0),
+            );
             const openCount = selectedLead.veces_abierto || 1;
             const clickCount = selectedLead.clics_epk || 0;
 
@@ -1763,17 +2224,25 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="p-2.5 bg-[#141d24] border border-sky-500/30 rounded-xl flex items-center justify-between gap-2 text-xs text-sky-200">
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-medium">
-                      📬 Email enviado {selectedLead.fecha_envio ? `el ${selectedLead.fecha_envio}` : ''}
+                      📬 Email enviado{" "}
+                      {selectedLead.fecha_envio
+                        ? `el ${selectedLead.fecha_envio}`
+                        : ""}
                     </span>
                   </div>
-                  <EmailDeliveryTicks lead={selectedLead} size="md" showLabel={true} />
+                  <EmailDeliveryTicks
+                    lead={selectedLead}
+                    size="md"
+                    showLabel={true}
+                  />
                 </div>
 
                 {clickCount > 0 && (
                   <div className="p-2 bg-purple-500/10 border border-purple-500/25 rounded-xl flex items-center gap-2 text-xs text-purple-300">
                     <MousePointerClick className="w-3.5 h-3.5 text-purple-400 shrink-0 ml-1" />
                     <span className="text-[11px] font-semibold">
-                      🔥 ¡Han pulsado en tu EPK / Dossier! ({clickCount} {clickCount === 1 ? 'clic' : 'clics'})
+                      🔥 ¡Han pulsado en tu EPK / Dossier! ({clickCount}{" "}
+                      {clickCount === 1 ? "clic" : "clics"})
                     </span>
                   </div>
                 )}
@@ -1788,7 +2257,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       {/* CONTACT & LOCATION CARD */}
       <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2.5800">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">Ficha de Contacto & Ubicación</p>
+          <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--ink-2)]">
+            Ficha de Contacto & Ubicación
+          </p>
           <div className="flex items-center gap-2 flex-wrap justify-end">
             {selectedLead.email_contacto && (
               <span
@@ -1833,23 +2304,29 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <span>{selectedLead.telefono_fijo}</span>
               </a>
             )}
-            {!selectedLead.telefono_movil && !selectedLead.telefono_fijo && selectedLead.telefono && (
-              <span
-                className="text-xs text-zinc-300 font-mono font-medium inline-flex items-center gap-1"
-                title={`Teléfono: ${selectedLead.telefono}`}
-              >
-                <PhoneCall className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                <span>{selectedLead.telefono}</span>
-              </span>
-            )}
+            {!selectedLead.telefono_movil &&
+              !selectedLead.telefono_fijo &&
+              selectedLead.telefono && (
+                <span
+                  className="text-xs text-zinc-300 font-mono font-medium inline-flex items-center gap-1"
+                  title={`Teléfono: ${selectedLead.telefono}`}
+                >
+                  <PhoneCall className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                  <span>{selectedLead.telefono}</span>
+                </span>
+              )}
             <button
               onClick={handleEnrichLead}
               disabled={isEnrichingLead}
               className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 text-[10px] rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               title="Scout Enriquecedor: Completa emails, webs y datos faltantes sin alucinaciones"
             >
-              <Sparkles className={`w-3 h-3 text-[var(--acc)] ${isEnrichingLead ? 'animate-spin' : ''}`} />
-              <span>{isEnrichingLead ? 'Completando...' : 'Scout Enriquecedor'}</span>
+              <Sparkles
+                className={`w-3 h-3 text-[var(--acc)] ${isEnrichingLead ? "animate-spin" : ""}`}
+              />
+              <span>
+                {isEnrichingLead ? "Completando..." : "Scout Enriquecedor"}
+              </span>
             </button>
           </div>
         </div>
@@ -1862,11 +2339,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         )}
 
         {selectedLead.direccion ? (
-          <p className="text-xs font-sans font-bold text-[var(--ink)]">{selectedLead.direccion}</p>
+          <p className="text-xs font-sans font-bold text-[var(--ink)]">
+            {selectedLead.direccion}
+          </p>
         ) : (
           <button
             onClick={() => {
-              const detected = autoDetectVenueAddress(selectedLead.nombre_sala, selectedLead.ciudad);
+              const detected = autoDetectVenueAddress(
+                selectedLead.nombre_sala,
+                selectedLead.ciudad,
+              );
               onUpdateLead(selectedLead.id, { direccion: detected });
             }}
             className="text-xs font-sans font-bold text-[var(--acc)] hover:text-[var(--acc)] cursor-pointer flex items-center gap-1.5"
@@ -1878,7 +2360,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         <div className="pt-1 flex justify-center">
           <DirectionsCard
-            query={selectedLead.direccion || `${selectedLead.nombre_sala}, ${selectedLead.ciudad}`}
+            query={
+              selectedLead.direccion ||
+              `${selectedLead.nombre_sala}, ${selectedLead.ciudad}`
+            }
             locationName={selectedLead.nombre_sala}
             address={selectedLead.direccion || selectedLead.ciudad}
           />
@@ -1887,7 +2372,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
       {/* ROSTER / ARTISTAS REPRESENTADOS (Si aplica) */}
       {(selectedLead.roster ||
-        ['agencia', 'manager', 'productora', 'sello', 'grupo'].includes(String(selectedLead.tipo || '').toLowerCase())) && (
+        ["agencia", "manager", "productora", "sello", "grupo"].includes(
+          String(selectedLead.tipo || "").toLowerCase(),
+        )) && (
         <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-2">
           <p className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
             <span>🎸</span> Róster de Artistas & Servicios de Representación
@@ -1898,7 +2385,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </p>
           ) : (
             <p className="text-[11px] font-sans text-[var(--ink-2)] italic">
-              Sin róster especificado. Haz clic en el botón de edición para añadir las bandas que gestiona.
+              Sin róster especificado. Haz clic en el botón de edición para
+              añadir las bandas que gestiona.
             </p>
           )}
         </div>
@@ -1908,9 +2396,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       <div className="flex800 gap-2 pt-1">
         <button
           type="button"
-          onClick={() => setActiveTab('info')}
+          onClick={() => setActiveTab("info")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide transition-all px-3 cursor-pointer ${
-            activeTab === 'info' ? 'border-b-2 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+            activeTab === "info"
+              ? "border-b-2 text-[var(--acc)]"
+              : "text-[var(--ink-2)] hover:text-[var(--ink)]"
           }`}
         >
           Propuesta / Pitch
@@ -1918,9 +2408,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         <button
           type="button"
-          onClick={() => setActiveTab('emails')}
+          onClick={() => setActiveTab("emails")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
-            activeTab === 'emails' ? 'border-b-2 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+            activeTab === "emails"
+              ? "border-b-2 text-[var(--acc)]"
+              : "text-[var(--ink-2)] hover:text-[var(--ink)]"
           }`}
         >
           <Mail className="w-3.5 h-3.5" />
@@ -1934,23 +2426,28 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         <button
           type="button"
-          onClick={() => setActiveTab('intelligence')}
+          onClick={() => setActiveTab("intelligence")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
-            activeTab === 'intelligence' ? 'border-b-2 border-sky-400 text-sky-400' : 'text-zinc-400 hover:text-zinc-200'
+            activeTab === "intelligence"
+              ? "border-b-2 border-sky-400 text-sky-400"
+              : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <Sparkles className="w-3.5 h-3.5 text-sky-400" />
           <span>Inteligencia & APIs</span>
-          {(selectedLead.spotify_city_demand || selectedLead.google_places_info) && (
+          {(selectedLead.spotify_city_demand ||
+            selectedLead.google_places_info) && (
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
           )}
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveTab('copilot')}
+          onClick={() => setActiveTab("copilot")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide uppercase transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
-            activeTab === 'copilot' ? 'border-b-2 border-emerald-400 text-emerald-400' : 'text-zinc-400 hover:text-zinc-200'
+            activeTab === "copilot"
+              ? "border-b-2 border-emerald-400 text-emerald-400"
+              : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
@@ -1959,9 +2456,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         <button
           type="button"
-          onClick={() => setActiveTab('bitacora')}
+          onClick={() => setActiveTab("bitacora")}
           className={`pb-2 text-xs font-sans font-bold tracking-wide transition-all px-3 flex items-center gap-1.5 cursor-pointer ${
-            activeTab === 'bitacora' ? 'border-b-2 text-[var(--acc)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+            activeTab === "bitacora"
+              ? "border-b-2 text-[var(--acc)]"
+              : "text-[var(--ink-2)] hover:text-[var(--ink)]"
           }`}
         >
           <History className="w-3.5 h-3.5" />
@@ -1970,14 +2469,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       </div>
 
       {/* TAB 1: PITCH & DIRECT EDITING FORM */}
-      {activeTab === 'info' && (
+      {activeTab === "info" && (
         <div className="space-y-4">
           {/* Edit Form Modal/Inline */}
           {isEditingLeadInfo && (
             <div className="p-4 rounded-[var(--r-m)] space-y-3 bg-[var(--surface)] text-[var(--ink)]">
               <div className="flex justify-between items-center pb-2800">
                 <span className="font-bold text-xs tracking-wider text-[var(--acc)] flex items-center gap-1.5">
-                  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha ({selectedLead.nombre_sala})
+                  <Edit3 className="w-3.5 h-3.5" /> Editar Ficha (
+                  {selectedLead.nombre_sala})
                 </span>
                 <div className="flex gap-2">
                   <button
@@ -1998,10 +2498,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="space-y-3 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Nombre Sala / Espacio / Contacto</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Nombre Sala / Espacio / Contacto
+                    </label>
                     <input
                       type="text"
-                      value={editedLeadInfo.nombre_sala || ''}
+                      value={editedLeadInfo.nombre_sala || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2013,9 +2515,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--acc)] font-bold mb-1">Tipo / Categoría de Lead</label>
+                    <label className="block text-[10px] font-sans text-[var(--acc)] font-bold mb-1">
+                      Tipo / Categoría de Lead
+                    </label>
                     <select
-                      value={String(editedLeadInfo.tipo || 'sala').toLowerCase()}
+                      value={String(
+                        editedLeadInfo.tipo || "sala",
+                      ).toLowerCase()}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2026,12 +2532,18 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     >
                       <option value="sala">🏟️ Sala de Conciertos</option>
                       <option value="festival">🎪 Festival</option>
-                      <option value="ayuntamiento">🏛️ Ayuntamiento / Fiestas</option>
+                      <option value="ayuntamiento">
+                        🏛️ Ayuntamiento / Fiestas
+                      </option>
                       <option value="discoteca">🪩 Discoteca / Club</option>
                       <option value="grupo">🎸 Grupo / Banda Aliada</option>
                       <option value="agencia">💼 Agencia de Booking</option>
-                      <option value="manager">👔 Manager / Representante</option>
-                      <option value="productora">🎬 Productora de Eventos</option>
+                      <option value="manager">
+                        👔 Manager / Representante
+                      </option>
+                      <option value="productora">
+                        🎬 Productora de Eventos
+                      </option>
                       <option value="sello">💿 Discográfica / Sello</option>
                       <option value="medio">📻 Medio / Prensa / Radio</option>
                     </select>
@@ -2041,7 +2553,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {/* Logo Selector */}
                 <div className="bg-[var(--bg)]/60 p-3 rounded-[var(--r-m)]800 space-y-2.5">
                   <div className="flex items-center justify-between flex-wrap gap-2">
-                    <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">Icono o Logo del Medio / Sala</label>
+                    <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)]">
+                      Icono o Logo del Medio / Sala
+                    </label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -2050,12 +2564,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all cursor-pointer disabled:opacity-50"
                       >
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-                        <span>{isSearchingLogo ? 'Buscando...' : '🔍 Buscar Logo'}</span>
+                        <span>
+                          {isSearchingLogo ? "Buscando..." : "🔍 Buscar Logo"}
+                        </span>
                       </button>
                       {onLeadLogoUpload && (
                         <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-[10px] rounded-[var(--r-s)] flex items-center gap-1.5 font-bold transition-all700">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
-                          <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir Logo'}</span>
+                          <span>
+                            {isUploadingLeadLogo ? "Subiendo..." : "Subir Logo"}
+                          </span>
                           <input
                             type="file"
                             accept="image/*"
@@ -2063,7 +2581,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             onChange={async (e) => {
                               if (e.target.files && e.target.files[0]) {
                                 const file = e.target.files[0];
-                                const uploadedUrl = await onLeadLogoUpload(file);
+                                const uploadedUrl =
+                                  await onLeadLogoUpload(file);
                                 if (uploadedUrl) {
                                   setEditedLeadInfo((prev) => ({
                                     ...prev,
@@ -2079,26 +2598,31 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </div>
                   </div>
 
-                  {editedLeadInfo.imagen_url && editedLeadInfo.imagen_url.trim() !== '' ? (
+                  {editedLeadInfo.imagen_url &&
+                  editedLeadInfo.imagen_url.trim() !== "" ? (
                     <div className="flex items-center gap-3 p-2 bg-[var(--bg)] rounded-[var(--r-s)]800">
                       <img
                         src={editedLeadInfo.imagen_url}
                         alt="Logo"
                         className="w-10 h-10 rounded-[var(--r-s)] object-contain bg-[var(--bg)] shrink-0"
                         onError={(e) => {
-                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.style.display = "none";
                         }}
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">{editedLeadInfo.imagen_url}</p>
-                        <p className="text-[9px] text-[var(--ink-2)]">Logo oficial guardado</p>
+                        <p className="text-[10px] text-[var(--ink-2)] font-bold truncate">
+                          {editedLeadInfo.imagen_url}
+                        </p>
+                        <p className="text-[9px] text-[var(--ink-2)]">
+                          Logo oficial guardado
+                        </p>
                       </div>
                       <button
                         type="button"
                         onClick={() =>
                           setEditedLeadInfo((prev) => ({
                             ...prev,
-                            imagen_url: '',
+                            imagen_url: "",
                           }))
                         }
                         className="text-[10px] text-[var(--alert)] hover:underline px-2 py-1 cursor-pointer"
@@ -2108,9 +2632,25 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </div>
                   ) : (
                     <div className="space-y-1.5">
-                      <p className="text-[9px] text-[var(--ink-2)]">O selecciona un emoji característico:</p>
+                      <p className="text-[9px] text-[var(--ink-2)]">
+                        O selecciona un emoji característico:
+                      </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {['📻', '📰', '🌐', '🎙️', '📺', '🏛️', '🎪', '🪩', '🎸', '💼', '🎆', '⚡', '🔥'].map((emoji) => (
+                        {[
+                          "📻",
+                          "📰",
+                          "🌐",
+                          "🎙️",
+                          "📺",
+                          "🏛️",
+                          "🎪",
+                          "🪩",
+                          "🎸",
+                          "💼",
+                          "🎆",
+                          "⚡",
+                          "🔥",
+                        ].map((emoji) => (
                           <button
                             key={emoji}
                             type="button"
@@ -2122,8 +2662,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                             }
                             className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
                               editedLeadInfo.icono === emoji
-                                ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110'
-                                : 'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
+                                ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold scale-110"
+                                : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60"
                             }`}
                           >
                             {emoji}
@@ -2142,7 +2682,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <input
                     type="text"
                     placeholder="Ej. Calle San Vicente Ferrer 33, 28004 Madrid"
-                    value={editedLeadInfo.direccion || ''}
+                    value={editedLeadInfo.direccion || ""}
                     onChange={(e) =>
                       setEditedLeadInfo({
                         ...editedLeadInfo,
@@ -2155,11 +2695,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Ciudad
+                    </label>
                     <input
                       type="text"
                       placeholder="Ej. Madrid"
-                      value={editedLeadInfo.ciudad || ''}
+                      value={editedLeadInfo.ciudad || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2170,11 +2712,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Región / Provincia</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Región / Provincia
+                    </label>
                     <input
                       type="text"
                       placeholder="Ej. Comunidad de Madrid"
-                      value={editedLeadInfo.region || ''}
+                      value={editedLeadInfo.region || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2188,11 +2732,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Persona de Contacto</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Persona de Contacto
+                    </label>
                     <input
                       type="text"
                       placeholder="Ej. Carlos (Programador)"
-                      value={editedLeadInfo.contacto_nombre || ''}
+                      value={editedLeadInfo.contacto_nombre || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2203,11 +2749,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Email Principal (Contratación)</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Email Principal (Contratación)
+                    </label>
                     <input
                       type="email"
                       placeholder="info@salanazcaconciertos.com"
-                      value={editedLeadInfo.email_contacto || ''}
+                      value={editedLeadInfo.email_contacto || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2226,7 +2774,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <input
                     type="email"
                     placeholder="info@magnetikproducciones.com (o varios separados por coma)"
-                    value={editedLeadInfo.email_secundario || ''}
+                    value={editedLeadInfo.email_secundario || ""}
                     onChange={(e) =>
                       setEditedLeadInfo({
                         ...editedLeadInfo,
@@ -2245,13 +2793,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <input
                       type="tel"
                       placeholder="Ej. +34 612 345 678"
-                      value={editedLeadInfo.telefono_movil || ''}
+                      value={editedLeadInfo.telefono_movil || ""}
                       onChange={(e) => {
                         const val = e.target.value;
                         setEditedLeadInfo({
                           ...editedLeadInfo,
                           telefono_movil: val,
-                          telefono: val || editedLeadInfo.telefono_fijo || editedLeadInfo.telefono || '',
+                          telefono:
+                            val ||
+                            editedLeadInfo.telefono_fijo ||
+                            editedLeadInfo.telefono ||
+                            "",
                         });
                       }}
                       className="w-full p-2 rounded bg-zinc-900 border border-emerald-500/50 text-emerald-100 focus:outline-none text-xs"
@@ -2264,13 +2816,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <input
                       type="tel"
                       placeholder="Ej. +34 912 345 678"
-                      value={editedLeadInfo.telefono_fijo || ''}
+                      value={editedLeadInfo.telefono_fijo || ""}
                       onChange={(e) => {
                         const val = e.target.value;
                         setEditedLeadInfo({
                           ...editedLeadInfo,
                           telefono_fijo: val,
-                          telefono: editedLeadInfo.telefono_movil || val || editedLeadInfo.telefono || '',
+                          telefono:
+                            editedLeadInfo.telefono_movil ||
+                            val ||
+                            editedLeadInfo.telefono ||
+                            "",
                         });
                       }}
                       className="w-full p-2 rounded bg-zinc-900 border border-sky-500/50 text-sky-100 focus:outline-none text-xs"
@@ -2280,7 +2836,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Aforo (personas)</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Aforo (personas)
+                    </label>
                     <input
                       type="number"
                       placeholder="Ej. 500"
@@ -2295,23 +2853,32 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">Contacto / Programador</label>
+                    <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+                      Contacto / Programador
+                    </label>
                     <input
                       type="text"
                       placeholder="Ej. Laura González (Directora Artística)"
-                      value={editedLeadInfo.contacto_nombre || ''}
-                      onChange={(e) => setEditedLeadInfo({ ...editedLeadInfo, contacto_nombre: e.target.value })}
+                      value={editedLeadInfo.contacto_nombre || ""}
+                      onChange={(e) =>
+                        setEditedLeadInfo({
+                          ...editedLeadInfo,
+                          contacto_nombre: e.target.value,
+                        })
+                      }
                       className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none text-xs"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--acc)] mb-1">Róster de Artistas / Bandas que representa</label>
+                  <label className="block text-[10px] font-sans text-[var(--acc)] mb-1">
+                    Róster de Artistas / Bandas que representa
+                  </label>
                   <input
                     type="text"
                     placeholder="Ej. Ska-P, Boikot, Zoo, La Raíz..."
-                    value={editedLeadInfo.roster || ''}
+                    value={editedLeadInfo.roster || ""}
                     onChange={(e) =>
                       setEditedLeadInfo({
                         ...editedLeadInfo,
@@ -2324,7 +2891,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-sans text-[var(--acc)]">🎪 Fechas del Festival (Inicio / Fin)</span>
+                    <span className="text-[10px] font-sans text-[var(--acc)]">
+                      🎪 Fechas del Festival (Inicio / Fin)
+                    </span>
                     <button
                       type="button"
                       onClick={handleAutoExtractFestivalDates}
@@ -2333,15 +2902,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       title="Buscar fechas del festival automáticamente con IA y base de datos de festivales"
                     >
                       <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-                      <span>{isExtractingDates ? 'Buscando fechas...' : '⚡ Rellenar Fechas con IA'}</span>
+                      <span>
+                        {isExtractingDates
+                          ? "Buscando fechas..."
+                          : "⚡ Rellenar Fechas con IA"}
+                      </span>
                     </button>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Inicio Festival (dd/mm/yyyy)</label>
+                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                        Inicio Festival (dd/mm/yyyy)
+                      </label>
                       <input
                         type="date"
-                        value={toIsoDateString(editedLeadInfo.festival_start_date)}
+                        value={toIsoDateString(
+                          editedLeadInfo.festival_start_date,
+                        )}
                         onChange={(e) =>
                           setEditedLeadInfo({
                             ...editedLeadInfo,
@@ -2352,10 +2929,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-sans text-[var(--acc)] mb-1">🎪 Fin Festival (dd/mm/yyyy)</label>
+                      <label className="block text-[10px] font-sans text-[var(--acc)] mb-1">
+                        🎪 Fin Festival (dd/mm/yyyy)
+                      </label>
                       <input
                         type="date"
-                        value={toIsoDateString(editedLeadInfo.festival_end_date)}
+                        value={toIsoDateString(
+                          editedLeadInfo.festival_end_date,
+                        )}
                         onChange={(e) =>
                           setEditedLeadInfo({
                             ...editedLeadInfo,
@@ -2370,11 +2951,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sitio Web</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Sitio Web
+                    </label>
                     <input
                       type="url"
                       placeholder="https://..."
-                      value={editedLeadInfo.website || ''}
+                      value={editedLeadInfo.website || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2385,11 +2968,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Instagram</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Instagram
+                    </label>
                     <input
                       type="text"
                       placeholder="@salaeltren"
-                      value={editedLeadInfo.instagram || ''}
+                      value={editedLeadInfo.instagram || ""}
                       onChange={(e) =>
                         setEditedLeadInfo({
                           ...editedLeadInfo,
@@ -2413,17 +2998,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 <div>
                   <span className="text-xs font-bold text-amber-300 font-sans block">
-                    ⏰ Seguimiento Pendiente ({getDaysSinceContact(selectedLead)} días sin respuesta)
+                    ⏰ Seguimiento Pendiente (
+                    {getDaysSinceContact(selectedLead)} días sin respuesta)
                   </span>
                   <span className="text-[11px] text-zinc-300 font-sans">
-                    Es el momento idóneo para un "Gentle Nudge" breve (&lt;50 palabras) y cordial.
+                    Es el momento idóneo para un "Gentle Nudge" breve (&lt;50
+                    palabras) y cordial.
                   </span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => {
-                  const draft = generateFollowupTemplate(selectedLead, bandName || 'Bakandeya');
+                  const draft = generateFollowupTemplate(
+                    selectedLead,
+                    bandName || "Bakandeya",
+                  );
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
                 }}
@@ -2447,7 +3037,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-3800">
             {/* Tactical Playbook & Entity Extraction Banner if Available */}
             {(selectedLead.estrategia_playbook ||
-              (selectedLead.fechas_propuestas_sala && selectedLead.fechas_propuestas_sala.length > 0) ||
+              (selectedLead.fechas_propuestas_sala &&
+                selectedLead.fechas_propuestas_sala.length > 0) ||
               selectedLead.condiciones_economicas_detectadas) && (
               <div className="p-3.5 bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/30 border border-amber-500/40 rounded-xl space-y-2.5 shadow-md">
                 <div className="flex items-center justify-between flex-wrap gap-2">
@@ -2458,7 +3049,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         Playbook Táctico & Extracción de Condiciones
                       </h4>
                       <p className="text-[11px] text-zinc-300 font-medium">
-                        {selectedLead.estrategia_playbook?.titulo || 'Análisis de Respuesta y Condiciones Extraídas'}
+                        {selectedLead.estrategia_playbook?.titulo ||
+                          "Análisis de Respuesta y Condiciones Extraídas"}
                       </p>
                     </div>
                   </div>
@@ -2466,7 +3058,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <button
                       type="button"
                       onClick={() => {
-                        const quick = selectedLead.estrategia_playbook?.propuesta_rapida;
+                        const quick =
+                          selectedLead.estrategia_playbook?.propuesta_rapida;
                         if (quick) {
                           setEditedPitch(quick);
                           setIsEditingPitch(true);
@@ -2483,21 +3076,25 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 {/* Detected Entities: Dates / Economics / Tech */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-amber-500/20 text-xs">
-                  {selectedLead.fechas_propuestas_sala && selectedLead.fechas_propuestas_sala.length > 0 && (
-                    <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
-                      <span className="text-[10px] font-mono text-sky-400 font-bold block flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-sky-400" />
-                        Fechas Propuestas:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedLead.fechas_propuestas_sala.map((f, i) => (
-                          <span key={i} className="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-200 text-[10px] font-mono">
-                            {f}
-                          </span>
-                        ))}
+                  {selectedLead.fechas_propuestas_sala &&
+                    selectedLead.fechas_propuestas_sala.length > 0 && (
+                      <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
+                        <span className="text-[10px] font-mono text-sky-400 font-bold block flex items-center gap-1">
+                          <Calendar className="w-3 h-3 text-sky-400" />
+                          Fechas Propuestas:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {selectedLead.fechas_propuestas_sala.map((f, i) => (
+                            <span
+                              key={i}
+                              className="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-200 text-[10px] font-mono"
+                            >
+                              {f}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {selectedLead.condiciones_economicas_detectadas && (
                     <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
@@ -2506,53 +3103,78 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         Economía Detectada:
                       </span>
                       <span className="text-[11px] text-zinc-200 font-mono block">
-                        {selectedLead.condiciones_economicas_detectadas.tipo || 'Modelo'}:{' '}
-                        {selectedLead.condiciones_economicas_detectadas.cifra || 'n/d'}
+                        {selectedLead.condiciones_economicas_detectadas.tipo ||
+                          "Modelo"}
+                        :{" "}
+                        {selectedLead.condiciones_economicas_detectadas.cifra ||
+                          "n/d"}
                       </span>
-                      {selectedLead.condiciones_economicas_detectadas.detalles && (
+                      {selectedLead.condiciones_economicas_detectadas
+                        .detalles && (
                         <span className="text-[9px] text-zinc-400 block leading-tight">
-                          {selectedLead.condiciones_economicas_detectadas.detalles}
+                          {
+                            selectedLead.condiciones_economicas_detectadas
+                              .detalles
+                          }
                         </span>
                       )}
                     </div>
                   )}
 
-                  {selectedLead.requisitos_tecnicos_detectados && selectedLead.requisitos_tecnicos_detectados.length > 0 && (
-                    <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
-                      <span className="text-[10px] font-mono text-purple-400 font-bold block flex items-center gap-1">
-                        <Sliders className="w-3 h-3 text-purple-400" />
-                        Requisitos Técnicos:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedLead.requisitos_tecnicos_detectados.map((r, i) => (
-                          <span key={i} className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-200 text-[10px]">
-                            {r}
-                          </span>
-                        ))}
+                  {selectedLead.requisitos_tecnicos_detectados &&
+                    selectedLead.requisitos_tecnicos_detectados.length > 0 && (
+                      <div className="p-2 bg-black/40 rounded-lg border border-zinc-800 space-y-1">
+                        <span className="text-[10px] font-mono text-purple-400 font-bold block flex items-center gap-1">
+                          <Sliders className="w-3 h-3 text-purple-400" />
+                          Requisitos Técnicos:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {selectedLead.requisitos_tecnicos_detectados.map(
+                            (r, i) => (
+                              <span
+                                key={i}
+                                className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-200 text-[10px]"
+                              >
+                                {r}
+                              </span>
+                            ),
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
 
-                {selectedLead.estrategia_playbook?.pasos && selectedLead.estrategia_playbook.pasos.length > 0 && (
-                  <div className="space-y-1 pt-1 border-t border-amber-500/20">
-                    <span className="text-[10px] font-mono text-zinc-400 uppercase font-bold block">Pasos Recomendados para Cerrar:</span>
-                    <ul className="space-y-0.5">
-                      {selectedLead.estrategia_playbook.pasos.map((paso, idx) => (
-                        <li key={idx} className="text-[11px] text-zinc-300 flex items-start gap-1.5">
-                          <span className="text-amber-400 font-bold">{idx + 1}.</span>
-                          <span>{paso}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {selectedLead.estrategia_playbook?.pasos &&
+                  selectedLead.estrategia_playbook.pasos.length > 0 && (
+                    <div className="space-y-1 pt-1 border-t border-amber-500/20">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase font-bold block">
+                        Pasos Recomendados para Cerrar:
+                      </span>
+                      <ul className="space-y-0.5">
+                        {selectedLead.estrategia_playbook.pasos.map(
+                          (paso, idx) => (
+                            <li
+                              key={idx}
+                              className="text-[11px] text-zinc-300 flex items-start gap-1.5"
+                            >
+                              <span className="text-amber-400 font-bold">
+                                {idx + 1}.
+                              </span>
+                              <span>{paso}</span>
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    </div>
+                  )}
               </div>
             )}
 
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-bold font-sans text-[var(--acc)] tracking-wider">
-                {isReplyStage ? '💬 Respuesta Redactada por IA' : '✉️ Propuesta de Pitch Redactada'}
+                {isReplyStage
+                  ? "💬 Respuesta Redactada por IA"
+                  : "✉️ Propuesta de Pitch Redactada"}
               </span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button
@@ -2571,7 +3193,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 rounded text-[11px] text-[var(--ink)] font-sans flex items-center gap-1 cursor-pointer"
                 >
                   <Copy className="w-3 h-3" />
-                  <span>{copiedPitch ? '¡Copiado! ' : 'Copiar'}</span>
+                  <span>{copiedPitch ? "¡Copiado! " : "Copiar"}</span>
                 </button>
 
                 <button
@@ -2584,15 +3206,26 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span>WhatsApp</span>
                 </button>
 
-                {selectedLead.estado === 'pendiente_aprobacion' || selectedLead.estado === 'nuevo' ? (
+                {selectedLead.estado === "pendiente_aprobacion" ||
+                selectedLead.estado === "nuevo" ? (
                   <button
                     type="button"
                     onClick={handleApprovePitchDirectly}
                     disabled={isCreatingDraft}
                     className="px-2.5 py-1 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold rounded text-xs flex items-center gap-1 cursor-pointer disabled:opacity-50"
                   >
-                    {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                    <span>{isCreatingDraft ? 'Creando borrador...' : isReplyStage ? 'Aprobar Respuesta' : 'Aprobar Pitch'}</span>
+                    {isCreatingDraft ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    )}
+                    <span>
+                      {isCreatingDraft
+                        ? "Creando borrador..."
+                        : isReplyStage
+                          ? "Aprobar Respuesta"
+                          : "Aprobar Pitch"}
+                    </span>
                   </button>
                 ) : null}
               </div>
@@ -2605,12 +3238,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-xs shrink-0">🎯</span>
                     <div className="min-w-0">
-                      <span className="text-[11px] font-bold text-[var(--acc)]/40 truncate block">Campaña: {activeCampaign.name}</span>
+                      <span className="text-[11px] font-bold text-[var(--acc)]/40 truncate block">
+                        Campaña: {activeCampaign.name}
+                      </span>
                       <span className="text-[10px] text-[var(--tentative)]/80/80 truncate block">
-                        Fechas objetivo:{' '}
+                        Fechas objetivo:{" "}
                         {activeCampaign.targetDatesText ||
-                          (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(',') : 'Próximos meses')}{' '}
-                        · Aforo: {activeCampaign.minCapacity || 0}-{activeCampaign.maxCapacity || 'sin límite'} pax
+                          (Array.isArray(activeCampaign.targetDates)
+                            ? activeCampaign.targetDates.join(",")
+                            : "Próximos meses")}{" "}
+                        · Aforo: {activeCampaign.minCapacity || 0}-
+                        {activeCampaign.maxCapacity || "sin límite"} pax
                       </span>
                     </div>
                   </div>
@@ -2627,20 +3265,28 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
 
                 {/* Chequeo de festivos en fechas de campaña para la ciudad de este lead */}
-                {Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 && selectedLead.ciudad && (
-                  <div className="flex flex-wrap gap-1 pt-1/20">
-                    {activeCampaign.targetDates.map((tDate) => (
-                      <HolidayDateWarning key={tDate} date={tDate} city={selectedLead.ciudad} compact />
-                    ))}
-                  </div>
-                )}
+                {Array.isArray(activeCampaign.targetDates) &&
+                  activeCampaign.targetDates.length > 0 &&
+                  selectedLead.ciudad && (
+                    <div className="flex flex-wrap gap-1 pt-1/20">
+                      {activeCampaign.targetDates.map((tDate) => (
+                        <HolidayDateWarning
+                          key={tDate}
+                          date={tDate}
+                          city={selectedLead.ciudad}
+                          compact
+                        />
+                      ))}
+                    </div>
+                  )}
               </div>
             )}
 
             {/* Quick Available Dates Insertion Pills */}
             {(() => {
               const fechasLibres =
-                editedLeadInfo?.fechas_libres_detectadas && editedLeadInfo.fechas_libres_detectadas.length > 0
+                editedLeadInfo?.fechas_libres_detectadas &&
+                editedLeadInfo.fechas_libres_detectadas.length > 0
                   ? editedLeadInfo.fechas_libres_detectadas
                   : selectedLead?.fechas_libres_detectadas || [];
               if (!fechasLibres || fechasLibres.length === 0) return null;
@@ -2651,7 +3297,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <CalendarCheck className="w-3.5 h-3.5 text-sky-400" />
                       Fechas Libres Detectadas por Radar (Insertar en 1 clic):
                     </span>
-                    <span className="text-[9px] text-sky-300/80 font-sans">Basado en agenda pública del recinto</span>
+                    <span className="text-[9px] text-sky-300/80 font-sans">
+                      Basado en agenda pública del recinto
+                    </span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {fechasLibres.map((fecha, idx) => (
@@ -2660,7 +3308,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         type="button"
                         onClick={() => {
                           const dateText = `\n\nHemos visto que tenéis disponible en vuestra programación el ${fecha}, así que esa fecha nos encajaría ideal para celebrar el concierto.`;
-                          const current = editedPitch || selectedLead?.pitch_generado || '';
+                          const current =
+                            editedPitch || selectedLead?.pitch_generado || "";
                           if (!current.includes(fecha)) {
                             const updated = (current + dateText).trim();
                             setEditedPitch(updated);
@@ -2685,21 +3334,31 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <Handshake className="w-3.5 h-3.5 text-emerald-400" />
                   Condiciones Comerciales (Insertar propuesta con 1 clic):
                 </span>
-                <span className="text-[9px] text-zinc-400 font-sans">Fórmulas estándar de mánager profesional</span>
+                <span className="text-[9px] text-zinc-400 font-sans">
+                  Fórmulas estándar de mánager profesional
+                </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
-                {getCommercialDealSnippets(bandName || 'la banda', selectedLead).map((deal) => (
+                {getCommercialDealSnippets(
+                  bandName || "la banda",
+                  selectedLead,
+                ).map((deal) => (
                   <button
                     key={deal.id}
                     type="button"
                     onClick={() => {
-                      const current = editedPitch || selectedLead.pitch_generado || '';
+                      const current =
+                        editedPitch || selectedLead.pitch_generado || "";
                       if (!current.includes(deal.textoCompleto.trim())) {
-                        const updated = current ? `${current}\n\n${deal.textoCompleto}` : deal.textoCompleto;
+                        const updated = current
+                          ? `${current}\n\n${deal.textoCompleto}`
+                          : deal.textoCompleto;
                         setEditedPitch(updated);
                         setIsEditingPitch(true);
                         if (onUpdateLead) {
-                          onUpdateLead(selectedLead.id, { pitch_generado: updated });
+                          onUpdateLead(selectedLead.id, {
+                            pitch_generado: updated,
+                          });
                         }
                       }
                     }}
@@ -2707,12 +3366,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     title={deal.descripcionCorta}
                   >
                     <div className="flex items-center justify-between mb-0.5">
-                      <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">{deal.label}</span>
+                      <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">
+                        {deal.label}
+                      </span>
                       <span className="text-[9px] font-medium px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300">
                         {deal.badge}
                       </span>
                     </div>
-                    <p className="text-[10px] text-zinc-400 line-clamp-1 group-hover:text-zinc-300">{deal.descripcionCorta}</p>
+                    <p className="text-[10px] text-zinc-400 line-clamp-1 group-hover:text-zinc-300">
+                      {deal.descripcionCorta}
+                    </p>
                   </button>
                 ))}
               </div>
@@ -2725,40 +3388,46 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
                   Salvaguardas de Mánager (Insertar cláusula con 1 clic):
                 </span>
-                <span className="text-[9px] text-zinc-400 font-sans">Protege a la banda antes de enviar</span>
+                <span className="text-[9px] text-zinc-400 font-sans">
+                  Protege a la banda antes de enviar
+                </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {[
                   {
-                    id: 'hold',
-                    label: '⏳ Pedir Pre-reserva (Hold 48h)',
-                    text: '\n\nPara dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold / Option 1) durante 48 horas? En cuanto lo coordinemos os damos confirmación definitiva para formalizar contrato y rider.',
-                    color: 'hover:border-amber-500/60 text-amber-300 bg-amber-500/10',
+                    id: "hold",
+                    label: "⏳ Pedir Pre-reserva (Hold 48h)",
+                    text: "\n\nPara dejarla asegurada mientras cuadramos la logística de viaje y disponibilidad de los músicos, ¿os parece bien dejar la fecha en Pre-reserva (Hold / Option 1) durante 48 horas? En cuanto lo coordinemos os damos confirmación definitiva para formalizar contrato y rider.",
+                    color:
+                      "hover:border-amber-500/60 text-amber-300 bg-amber-500/10",
                   },
                   {
-                    id: 'curfew',
-                    label: '⏰ Preguntar Curfew / Horarios',
-                    text: '\n\nPor coordinar bien la duración del pase y prueba de sonido: ¿cuál es el horario estricto de finalización de música en vivo (curfew) de la sala y tenéis limitador de decibelios?',
-                    color: 'hover:border-sky-500/60 text-sky-300 bg-sky-500/10',
+                    id: "curfew",
+                    label: "⏰ Preguntar Curfew / Horarios",
+                    text: "\n\nPor coordinar bien la duración del pase y prueba de sonido: ¿cuál es el horario estricto de finalización de música en vivo (curfew) de la sala y tenéis limitador de decibelios?",
+                    color: "hover:border-sky-500/60 text-sky-300 bg-sky-500/10",
                   },
                   {
-                    id: 'taquilla',
-                    label: '💰 Clarificar Gastos Taquilla',
-                    text: '\n\nRespecto a las condiciones de taquilla: ¿en el reparto pactado están ya incluidos el técnico de sonido de la sala y portería, o existe algún canon o gasto fijo deducible antes de la liquidación?',
-                    color: 'hover:border-emerald-500/60 text-emerald-300 bg-emerald-500/10',
+                    id: "taquilla",
+                    label: "💰 Clarificar Gastos Taquilla",
+                    text: "\n\nRespecto a las condiciones de taquilla: ¿en el reparto pactado están ya incluidos el técnico de sonido de la sala y portería, o existe algún canon o gasto fijo deducible antes de la liquidación?",
+                    color:
+                      "hover:border-emerald-500/60 text-emerald-300 bg-emerald-500/10",
                   },
                   {
-                    id: 'rider',
-                    label: '🎛️ Confirmar D.I. y Rider',
-                    text: '\n\nEn cuanto a producción: llevamos violín electroacústico, sintes y bases, por lo que requerimos 3 líneas directas D.I. activas y envíos para nuestros in-ears. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?',
-                    color: 'hover:border-purple-500/60 text-purple-300 bg-purple-500/10',
+                    id: "rider",
+                    label: "🎛️ Confirmar D.I. y Rider",
+                    text: "\n\nEn cuanto a producción: llevamos violín electroacústico, sintes y bases, por lo que requerimos 3 líneas directas D.I. activas y envíos para nuestros in-ears. ¿Nos podéis facilitar el rider técnico de la sala para revisarlo con el equipo?",
+                    color:
+                      "hover:border-purple-500/60 text-purple-300 bg-purple-500/10",
                   },
                 ].map((pill) => (
                   <button
                     key={pill.id}
                     type="button"
                     onClick={() => {
-                      const current = editedPitch || selectedLead.pitch_generado || '';
+                      const current =
+                        editedPitch || selectedLead.pitch_generado || "";
                       if (!current.includes(pill.text.trim())) {
                         const updated = (current + pill.text).trim();
                         setEditedPitch(updated);
@@ -2780,7 +3449,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   rows={6}
                   value={editedPitch}
                   onChange={(e) => setEditedPitch(e.target.value)}
-                  className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs text-[var(--ink)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--acc)]"
                 />
                 <div className="flex items-center justify-between gap-2">
                   <span
@@ -2808,12 +3477,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             ) : (
               <div
                 onClick={() => {
-                  setEditedPitch(editedPitch || selectedLead.pitch_generado || '');
+                  setEditedPitch(
+                    editedPitch || selectedLead.pitch_generado || "",
+                  );
                   setIsEditingPitch(true);
                 }}
                 className="p-3 bg-[var(--bg)] rounded-[var(--r-m)]800 text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
               >
-                {editedPitch || selectedLead.pitch_generado || 'Sin pitch generado.'}
+                {editedPitch ||
+                  selectedLead.pitch_generado ||
+                  "Sin pitch generado."}
                 <span className="absolute bottom-2 right-2 text-[10px] text-[var(--acc)] opacity-0 group-hover:opacity-100 transition-opacity font-bold">
                   Clic para editar ✏️
                 </span>
@@ -2832,22 +3505,29 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </span>
                   </span>
                 </div>
-                {selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setShowFeedbackHistory(!showFeedbackHistory)}
-                    className="text-[10px] text-[var(--acc)]/80 hover:text-[var(--acc)]/70 underline font-sans cursor-pointer"
-                  >
-                    {showFeedbackHistory ? 'Ocultar historial' : `Historial (${selectedLead.historial_feedback_pitch.length})`}
-                  </button>
-                )}
+                {selectedLead.historial_feedback_pitch &&
+                  selectedLead.historial_feedback_pitch.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowFeedbackHistory(!showFeedbackHistory)
+                      }
+                      className="text-[10px] text-[var(--acc)]/80 hover:text-[var(--acc)]/70 underline font-sans cursor-pointer"
+                    >
+                      {showFeedbackHistory
+                        ? "Ocultar historial"
+                        : `Historial (${selectedLead.historial_feedback_pitch.length})`}
+                    </button>
+                  )}
               </div>
 
               {/* Ratings for Tone and Content */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                 {/* Tono Rating */}
                 <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)]800 space-y-1.5">
-                  <span className="text-[11px] font-bold text-[var(--ink-2)] block">Tono e Intención</span>
+                  <span className="text-[11px] font-bold text-[var(--ink-2)] block">
+                    Tono e Intención
+                  </span>
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -2855,7 +3535,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         type="button"
                         onClick={() => setToneRating(star)}
                         className={`p-1 rounded hover:bg-[var(--surface)] transition-colors cursor-pointer ${
-                          toneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
+                          toneRating >= star
+                            ? "text-[var(--acc)]"
+                            : "text-[var(--ink-2)]"
                         }`}
                         title={`Calificar tono: ${star}/5`}
                       >
@@ -2863,14 +3545,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </button>
                     ))}
                     <span className="text-[10px] font-sans text-[var(--ink-2)] ml-1">
-                      {toneRating > 0 ? `${toneRating}/5` : 'Sin calificar'}
+                      {toneRating > 0 ? `${toneRating}/5` : "Sin calificar"}
                     </span>
                   </div>
                 </div>
 
                 {/* Content Rating */}
                 <div className="p-2.5 bg-[var(--sunken)] rounded-[var(--r-s)]800 space-y-1.5">
-                  <span className="text-[11px] font-bold text-[var(--ink-2)] block">Contenido y Estructura</span>
+                  <span className="text-[11px] font-bold text-[var(--ink-2)] block">
+                    Contenido y Estructura
+                  </span>
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -2878,7 +3562,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         type="button"
                         onClick={() => setContentRating(star)}
                         className={`p-1 rounded hover:bg-[var(--surface)] transition-colors cursor-pointer ${
-                          contentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
+                          contentRating >= star
+                            ? "text-[var(--acc)]"
+                            : "text-[var(--ink-2)]"
                         }`}
                         title={`Calificar contenido: ${star}/5`}
                       >
@@ -2886,7 +3572,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       </button>
                     ))}
                     <span className="text-[10px] font-sans text-[var(--ink-2)] ml-1">
-                      {contentRating > 0 ? `${contentRating}/5` : 'Sin calificar'}
+                      {contentRating > 0
+                        ? `${contentRating}/5`
+                        : "Sin calificar"}
                     </span>
                   </div>
                 </div>
@@ -2896,7 +3584,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="space-y-1">
                 <label className="text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
                   <MessageSquare className="w-3 h-3 text-[var(--acc)]" />
-                  <span>Sugerencias o comentarios para mejorar este pitch:</span>
+                  <span>
+                    Sugerencias o comentarios para mejorar este pitch:
+                  </span>
                 </label>
                 <textarea
                   rows={2}
@@ -2914,47 +3604,54 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <label
-                    onClick={() => setFeedbackScope('este_pitch')}
+                    onClick={() => setFeedbackScope("este_pitch")}
                     className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
-                      feedbackScope === 'este_pitch'
-                        ? 'bg-[var(--acc)]/15 /60 text-[var(--ink)]'
-                        : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700'
+                      feedbackScope === "este_pitch"
+                        ? "bg-[var(--acc)]/15 /60 text-[var(--ink)]"
+                        : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700"
                     }`}
                   >
                     <input
                       type="radio"
                       name="feedbackScope"
-                      checked={feedbackScope === 'este_pitch'}
-                      onChange={() => setFeedbackScope('este_pitch')}
-                      className="mt-0.5 accent-amber-500 shrink-0"
+                      checked={feedbackScope === "este_pitch"}
+                      onChange={() => setFeedbackScope("este_pitch")}
+                      className="mt-0.5 accent-[var(--acc)] shrink-0"
                     />
                     <div className="text-[11px] leading-tight">
-                      <span className="font-bold text-[var(--ink)] block">Solo para este pitch</span>
-                      <span className="text-[10px] opacity-80">Ajuste puntual exclusivo para {selectedLead.nombre_sala}.</span>
+                      <span className="font-bold text-[var(--ink)] block">
+                        Solo para este pitch
+                      </span>
+                      <span className="text-[10px] opacity-80">
+                        Ajuste puntual exclusivo para {selectedLead.nombre_sala}
+                        .
+                      </span>
                     </div>
                   </label>
 
                   <label
-                    onClick={() => setFeedbackScope('global')}
+                    onClick={() => setFeedbackScope("global")}
                     className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
-                      feedbackScope === 'global'
-                        ? 'bg-[var(--acc)]/15 /60 text-[var(--ink)]'
-                        : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700'
+                      feedbackScope === "global"
+                        ? "bg-[var(--acc)]/15 /60 text-[var(--ink)]"
+                        : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700"
                     }`}
                   >
                     <input
                       type="radio"
                       name="feedbackScope"
-                      checked={feedbackScope === 'global'}
-                      onChange={() => setFeedbackScope('global')}
-                      className="mt-0.5 accent-amber-500 shrink-0"
+                      checked={feedbackScope === "global"}
+                      onChange={() => setFeedbackScope("global")}
+                      className="mt-0.5 accent-[var(--acc)] shrink-0"
                     />
                     <div className="text-[11px] leading-tight">
                       <span className="font-bold text-[var(--acc)]/70 flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                         Memoria general (Futuros pitches)
                       </span>
-                      <span className="text-[10px] opacity-80">El Agente Redactor lo recordará como preferencia global.</span>
+                      <span className="text-[10px] opacity-80">
+                        El Agente Redactor lo recordará como preferencia global.
+                      </span>
                     </div>
                   </label>
                 </div>
@@ -2970,20 +3667,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
               {/* Model selection pills for single-click regenerate */}
               <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-[var(--sunken)] rounded-[var(--r-m)]800">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">🤖 Motor de Redacción & Coste:</span>
+                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold">
+                  🤖 Motor de Redacción & Coste:
+                </span>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   {[
                     {
-                      id: 'deepseek' as const,
-                      name: 'DeepSeek V3 (Recomendado)',
-                      cost: '~0,00014 €',
-                      icon: '🚀',
+                      id: "deepseek" as const,
+                      name: "DeepSeek V3 (Recomendado)",
+                      cost: "~0,00014 €",
+                      icon: "🚀",
                     },
                     {
-                      id: 'gemini' as const,
-                      name: 'Gemini Flash (Free Tier)',
-                      cost: '~0,00018 €',
-                      icon: '⚡',
+                      id: "gemini" as const,
+                      name: "Gemini Flash (Free Tier)",
+                      cost: "~0,00018 €",
+                      icon: "⚡",
                     },
                   ].map((m) => {
                     const isSelected = selectedAiModel === m.id;
@@ -2994,14 +3693,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         onClick={() => setSelectedAiModel(m.id)}
                         className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
-                            : 'bg-[var(--bg)]/60 text-[var(--ink-2)]800 hover:border-[var(--hair)]700'
+                            ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 /50"
+                            : "bg-[var(--bg)]/60 text-[var(--ink-2)]800 hover:border-[var(--hair)]700"
                         }`}
                         title={`Coste aproximado por pitch: ${m.cost}`}
                       >
                         <span>{m.icon}</span>
                         <span>{m.name}</span>
-                        <span className="font-sans text-[9px] text-[var(--ok)] bg-[var(--sunken)] px-1 py-0.2 rounded">{m.cost}</span>
+                        <span className="font-sans text-[9px] text-[var(--ok)] bg-[var(--sunken)] px-1 py-0.2 rounded">
+                          {m.cost}
+                        </span>
                       </button>
                     );
                   })}
@@ -3011,7 +3712,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {/* Action buttons */}
               <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-2 pt-1">
                 {selectedLead.historial_feedback_pitch &&
-                  selectedLead.historial_feedback_pitch.some((l) => !l.deshecho && l.pitch_previo) && (
+                  selectedLead.historial_feedback_pitch.some(
+                    (l) => !l.deshecho && l.pitch_previo,
+                  ) && (
                     <button
                       type="button"
                       onClick={() => handleRevertPitch()}
@@ -3038,86 +3741,109 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <span>
-                        Entrenando {selectedAiModel === 'deepseek' ? 'DeepSeek' : 'Gemini'}
+                        Entrenando{" "}
+                        {selectedAiModel === "deepseek" ? "DeepSeek" : "Gemini"}
                         ...
                       </span>
                     </>
                   ) : (
                     <>
                       <RefreshCw className="w-4 h-4" />
-                      <span>Reescribir con {selectedAiModel === 'deepseek' ? 'DeepSeek V3' : 'Gemini Flash'}</span>
+                      <span>
+                        Reescribir con{" "}
+                        {selectedAiModel === "deepseek"
+                          ? "DeepSeek V3"
+                          : "Gemini Flash"}
+                      </span>
                     </>
                   )}
                 </button>
               </div>
 
               {/* History drawer if enabled */}
-              {showFeedbackHistory && selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.length > 0 && (
-                <div className="mt-3 pt-3800 space-y-2">
-                  <span className="text-[11px] font-bold text-[var(--acc)] font-sans block">Historial de Aprendizaje e Iteraciones IA</span>
-                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                    {selectedLead.historial_feedback_pitch.map((log) => (
-                      <div
-                        key={log.id}
-                        className={`p-2.5 rounded-[var(--r-s)] text-[11px] space-y-1.5 transition-all ${
-                          log.deshecho ? 'bg-[var(--sunken)]800/50 opacity-60' : 'bg-[var(--sunken)]800/80'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between text-[var(--ink-2)] text-[10px] font-sans">
-                          <span>{new Date(log.fecha).toLocaleString()}</span>
-                          <div className="flex items-center gap-2">
-                            {log.alcance === 'global' ? (
-                              <span className="px-1.5 py-0.5 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded text-[9px] font-bold flex items-center gap-1">
-                                <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
-                                Memoria Global
+              {showFeedbackHistory &&
+                selectedLead.historial_feedback_pitch &&
+                selectedLead.historial_feedback_pitch.length > 0 && (
+                  <div className="mt-3 pt-3800 space-y-2">
+                    <span className="text-[11px] font-bold text-[var(--acc)] font-sans block">
+                      Historial de Aprendizaje e Iteraciones IA
+                    </span>
+                    <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                      {selectedLead.historial_feedback_pitch.map((log) => (
+                        <div
+                          key={log.id}
+                          className={`p-2.5 rounded-[var(--r-s)] text-[11px] space-y-1.5 transition-all ${
+                            log.deshecho
+                              ? "bg-[var(--sunken)]800/50 opacity-60"
+                              : "bg-[var(--sunken)]800/80"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-[var(--ink-2)] text-[10px] font-sans">
+                            <span>{new Date(log.fecha).toLocaleString()}</span>
+                            <div className="flex items-center gap-2">
+                              {log.alcance === "global" ? (
+                                <span className="px-1.5 py-0.5 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded text-[9px] font-bold flex items-center gap-1">
+                                  <Sparkles className="w-2.5 h-2.5 text-[var(--acc)]" />
+                                  Memoria Global
+                                </span>
+                              ) : (
+                                <span className="px-1.5 py-0.5 bg-[var(--sunken)] text-[var(--ink-2)]700 rounded text-[9px]">
+                                  Solo este pitch
+                                </span>
+                              )}
+                              <span>
+                                Tono:{" "}
+                                {log.tono_rating ? `${log.tono_rating}/5` : "-"}{" "}
+                                | Contenido:{" "}
+                                {log.contenido_rating
+                                  ? `${log.contenido_rating}/5`
+                                  : "-"}
                               </span>
-                            ) : (
-                              <span className="px-1.5 py-0.5 bg-[var(--sunken)] text-[var(--ink-2)]700 rounded text-[9px]">
-                                Solo este pitch
-                              </span>
-                            )}
-                            <span>
-                              Tono: {log.tono_rating ? `${log.tono_rating}/5` : '-'} | Contenido:{' '}
-                              {log.contenido_rating ? `${log.contenido_rating}/5` : '-'}
-                            </span>
-                            {log.deshecho && (
-                              <span className="px-1.5 py-0.5 bg-[var(--acc-soft)] text-[var(--acc)] rounded text-[9px] font-bold">
-                                [Deshecho]
-                              </span>
-                            )}
+                              {log.deshecho && (
+                                <span className="px-1.5 py-0.5 bg-[var(--acc-soft)] text-[var(--acc)] rounded text-[9px] font-bold">
+                                  [Deshecho]
+                                </span>
+                              )}
+                            </div>
                           </div>
+
+                          {log.comentario && (
+                            <p className="text-[var(--ink)]/90 italic font-sans">
+                              &ldquo;{log.comentario}&rdquo;
+                            </p>
+                          )}
+
+                          {log.pitch_previo && !log.deshecho && (
+                            <div className="flex items-center justify-between pt-1800/60">
+                              <span
+                                className="text-[10px] text-[var(--ink-2)] font-sans truncate max-w-[220px]"
+                                title={log.pitch_previo}
+                              >
+                                Pitch previo: {log.pitch_previo.slice(0, 38)}...
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleRevertPitch(log.id)}
+                                disabled={isRevertingPitch}
+                                className="text-[10px] text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans underline flex items-center gap-1 cursor-pointer shrink-0"
+                              >
+                                <RotateCcw className="w-3 h-3" />
+                                Volver a este pitch anterior
+                              </button>
+                            </div>
+                          )}
                         </div>
-
-                        {log.comentario && <p className="text-[var(--ink)]/90 italic font-sans">&ldquo;{log.comentario}&rdquo;</p>}
-
-                        {log.pitch_previo && !log.deshecho && (
-                          <div className="flex items-center justify-between pt-1800/60">
-                            <span className="text-[10px] text-[var(--ink-2)] font-sans truncate max-w-[220px]" title={log.pitch_previo}>
-                              Pitch previo: {log.pitch_previo.slice(0, 38)}...
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => handleRevertPitch(log.id)}
-                              disabled={isRevertingPitch}
-                              className="text-[10px] text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans underline flex items-center gap-1 cursor-pointer shrink-0"
-                            >
-                              <RotateCcw className="w-3 h-3" />
-                              Volver a este pitch anterior
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>
       )}
 
       {/* TAB 2: EMAIL THREAD & REPLY SIMULATION */}
-      {activeTab === 'emails' && (
+      {activeTab === "emails" && (
         <div className="space-y-3">
           {/* ⏰ Gentle Nudge / Seguimiento Recomendado Banner */}
           {isLeadNeedsFollowup(selectedLead) && (
@@ -3128,23 +3854,28 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
                 <div>
                   <span className="text-xs font-bold text-amber-300 font-sans block">
-                    ⏰ Seguimiento Pendiente ({getDaysSinceContact(selectedLead)} días sin respuesta)
+                    ⏰ Seguimiento Pendiente (
+                    {getDaysSinceContact(selectedLead)} días sin respuesta)
                   </span>
                   <span className="text-[11px] text-zinc-300 font-sans">
-                    Envía un recordatorio educado de 40 palabras para reactivar la conversación con la sala.
+                    Envía un recordatorio educado de 40 palabras para reactivar
+                    la conversación con la sala.
                   </span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => {
-                  const draft = generateFollowupTemplate(selectedLead, bandName || 'Bakandeya');
+                  const draft = generateFollowupTemplate(
+                    selectedLead,
+                    bandName || "Bakandeya",
+                  );
                   setEditedPitch(draft);
                   setIsEditingPitch(true);
                   if (onUpdateLead) {
                     onUpdateLead(selectedLead.id, { pitch_generado: draft });
                   }
-                  setActiveTab('info');
+                  setActiveTab("info");
                 }}
                 className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
               >
@@ -3157,7 +3888,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           {hiloCompleto.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 px-6">
               <PublicoSilhouette opacity={0.12} size="small" />
-              <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin correspondencia</p>
+              <p className="mt-4 font-medium text-[var(--ink)] text-xs">
+                Sin correspondencia
+              </p>
               <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs text-center">
                 Los correos y conversaciones con esta sala aparecerán aquí.
               </p>
@@ -3167,66 +3900,89 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div
                 key={msg.id}
                 className={`p-3.5 rounded-[var(--r-m)] space-y-2 text-xs font-sans transition-all ${
-                  msg.remitente === 'sala' ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'bg-[var(--bg)] text-[var(--ink)]'
+                  msg.remitente === "sala"
+                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
+                    : "bg-[var(--bg)] text-[var(--ink)]"
                 }`}
               >
                 <div className="flex items-center justify-between font-bold text-[11px]">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className={msg.remitente === 'sala' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}>
-                      {msg.remitente_nombre} ({msg.remitente === 'sala' ? 'Programador' : 'Bakandeya'})
+                    <span
+                      className={
+                        msg.remitente === "sala"
+                          ? "text-[var(--acc)]"
+                          : "text-[var(--ink-2)]"
+                      }
+                    >
+                      {msg.remitente_nombre} (
+                      {msg.remitente === "sala" ? "Programador" : "Bakandeya"})
                     </span>
-                    {msg.remitente === 'sala' && msg.sentimiento && (
+                    {msg.remitente === "sala" && msg.sentimiento && (
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 ${
-                          msg.sentimiento.includes('positivo')
-                            ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'
-                            : msg.sentimiento.includes('negativo')
-                              ? 'bg-rose-950/60 border-rose-500/50 text-rose-300'
-                              : 'bg-zinc-800 border-zinc-700 text-zinc-300'
+                          msg.sentimiento.includes("positivo")
+                            ? "bg-emerald-950/60 border-emerald-500/50 text-emerald-300"
+                            : msg.sentimiento.includes("negativo")
+                              ? "bg-rose-950/60 border-rose-500/50 text-rose-300"
+                              : "bg-zinc-800 border-zinc-700 text-zinc-300"
                         }`}
                       >
                         <Sparkles className="w-2.5 h-2.5" />
                         {msg.sentimiento_label || msg.sentimiento}
                         {msg.sentimiento_score !== undefined && (
                           <span className="font-mono text-[9px] opacity-80">
-                            ({msg.sentimiento_score > 0 ? `+${msg.sentimiento_score}` : msg.sentimiento_score})
+                            (
+                            {msg.sentimiento_score > 0
+                              ? `+${msg.sentimiento_score}`
+                              : msg.sentimiento_score}
+                            )
                           </span>
                         )}
                       </span>
                     )}
-                    {msg.remitente === 'sala' && msg.intencion_etiqueta && (
+                    {msg.remitente === "sala" && msg.intencion_etiqueta && (
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/20 border border-amber-500/30 text-amber-300">
                         {msg.intencion_etiqueta}
                       </span>
                     )}
-                    {msg.remitente === 'sala' && msg.temperatura && (
+                    {msg.remitente === "sala" && msg.temperatura && (
                       <span className="px-1.5 py-0.5 rounded text-[10px] bg-black/40 border border-zinc-800 text-zinc-300 font-mono">
-                        {msg.temperatura === 'muy_caliente'
-                          ? '🔥 Muy Caliente'
-                          : msg.temperatura === 'caliente'
-                            ? '☀️ Caliente'
-                            : msg.temperatura === 'tibio'
-                              ? '🌤️ Tibio'
-                              : '❄️ Frío'}
+                        {msg.temperatura === "muy_caliente"
+                          ? "🔥 Muy Caliente"
+                          : msg.temperatura === "caliente"
+                            ? "☀️ Caliente"
+                            : msg.temperatura === "tibio"
+                              ? "🌤️ Tibio"
+                              : "❄️ Frío"}
                       </span>
                     )}
                   </div>
-                  <span className="text-[var(--ink-2)] text-[10px] font-sans">{msg.fecha}</span>
+                  <span className="text-[var(--ink-2)] text-[10px] font-sans">
+                    {msg.fecha}
+                  </span>
                 </div>
 
                 <div className="font-bold text-[var(--ink)]">{msg.asunto}</div>
-                <p className="whitespace-pre-wrap text-[var(--ink-2)] leading-snug">{msg.mensaje}</p>
+                <p className="whitespace-pre-wrap text-[var(--ink-2)] leading-snug">
+                  {msg.mensaje}
+                </p>
 
                 {/* Sentiment & Intent Deep Dive for Sala Messages */}
-                {msg.remitente === 'sala' && (
+                {msg.remitente === "sala" && (
                   <div className="pt-2 border-t border-amber-500/20 space-y-2">
                     {msg.resumen_ejecutivo && (
                       <div className="p-2 rounded-lg bg-black/40 border border-amber-500/20 text-[11px] space-y-1">
                         <div className="flex items-center justify-between text-[10px] font-mono text-amber-400 font-bold">
                           <span>Resumen & Estrategia Lector IA</span>
                         </div>
-                        <p className="text-zinc-300 italic">{msg.resumen_ejecutivo}</p>
-                        {msg.sugerencia_estrategia && <p className="text-amber-300/90 font-medium">💡 {msg.sugerencia_estrategia}</p>}
+                        <p className="text-zinc-300 italic">
+                          {msg.resumen_ejecutivo}
+                        </p>
+                        {msg.sugerencia_estrategia && (
+                          <p className="text-amber-300/90 font-medium">
+                            💡 {msg.sugerencia_estrategia}
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -3247,7 +4003,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <div className="flex justify-end pt-1">
                         <button
                           type="button"
-                          onClick={() => handleAnalyzeMessageSentiment(msg.id, msg.mensaje)}
+                          onClick={() =>
+                            handleAnalyzeMessageSentiment(msg.id, msg.mensaje)
+                          }
                           disabled={isAnalyzingMessageSentiment === msg.id}
                           className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                         >
@@ -3276,35 +4034,51 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Handshake className="w-3.5 h-3.5 text-emerald-400" />
-                <span>¿La sala pide condiciones económicas? Inserta propuesta:</span>
+                <span>
+                  ¿La sala pide condiciones económicas? Inserta propuesta:
+                </span>
               </span>
-              <span className="text-[9px] text-zinc-400 font-sans">Carga borrador y pasa a revisión</span>
+              <span className="text-[9px] text-zinc-400 font-sans">
+                Carga borrador y pasa a revisión
+              </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
-              {getCommercialDealSnippets(bandName || 'la banda', selectedLead).map((deal) => (
+              {getCommercialDealSnippets(
+                bandName || "la banda",
+                selectedLead,
+              ).map((deal) => (
                 <button
                   key={deal.id}
                   type="button"
                   onClick={() => {
-                    const current = editedPitch || selectedLead.pitch_generado || '';
-                    const updated = current ? `${current}\n\n${deal.textoCompleto}` : deal.textoCompleto;
+                    const current =
+                      editedPitch || selectedLead.pitch_generado || "";
+                    const updated = current
+                      ? `${current}\n\n${deal.textoCompleto}`
+                      : deal.textoCompleto;
                     setEditedPitch(updated);
                     setIsEditingPitch(true);
                     if (onUpdateLead) {
-                      onUpdateLead(selectedLead.id, { pitch_generado: updated });
+                      onUpdateLead(selectedLead.id, {
+                        pitch_generado: updated,
+                      });
                     }
-                    setActiveTab('info');
+                    setActiveTab("info");
                   }}
                   className="p-2 rounded-lg bg-black/40 hover:bg-zinc-800/80 border border-zinc-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
                   title={deal.descripcionCorta}
                 >
                   <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">{deal.label}</span>
+                    <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">
+                      {deal.label}
+                    </span>
                     <span className="text-[9px] font-medium px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300">
                       {deal.badge}
                     </span>
                   </div>
-                  <p className="text-[10px] text-zinc-400 line-clamp-1 group-hover:text-zinc-300">{deal.descripcionCorta}</p>
+                  <p className="text-[10px] text-zinc-400 line-clamp-1 group-hover:text-zinc-300">
+                    {deal.descripcionCorta}
+                  </p>
                 </button>
               ))}
             </div>
@@ -3313,7 +4087,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       )}
 
       {/* TAB 2.5: INTELIGENCIA DE DATOS & APIS EXTERNAS */}
-      {activeTab === 'intelligence' && (
+      {activeTab === "intelligence" && (
         <div className="space-y-4 font-sans animate-fadeIn">
           {/* Top Bar with Refresh All APIs button */}
           <div className="p-3 bg-[#1A1918] border border-sky-500/30 rounded-xl flex items-center justify-between flex-wrap gap-2.5">
@@ -3329,7 +4103,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </span>
                 </h4>
                 <p className="text-[10px] text-zinc-400">
-                  Spotify • Google Places • Setlist.fm • DNS/MX • Rutas • Redes • Break-Even • Booking Window • Clash/Eventos • Medios •
+                  Spotify • Google Places • Setlist.fm • DNS/MX • Rutas • Redes
+                  • Break-Even • Booking Window • Clash/Eventos • Medios •
                   Co-Booking
                 </p>
               </div>
@@ -3342,8 +4117,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
               title="Volver a consultar todas las APIs en tiempo real"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isEnrichingApis ? 'animate-spin' : ''}`} />
-              <span>{isEnrichingApis ? 'Consultando APIs...' : 'Actualizar Todas las APIs'}</span>
+              <RefreshCw
+                className={`w-3.5 h-3.5 ${isEnrichingApis ? "animate-spin" : ""}`}
+              />
+              <span>
+                {isEnrichingApis
+                  ? "Consultando APIs..."
+                  : "Actualizar Todas las APIs"}
+              </span>
             </button>
           </div>
 
@@ -3356,7 +4137,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span>Spotify City Demand</span>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30 text-emerald-300">
-                  {selectedLead.ciudad || 'Madrid'}
+                  {selectedLead.ciudad || "Madrid"}
                 </span>
               </div>
 
@@ -3364,48 +4145,66 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="space-y-2.5 text-xs">
                   <div className="grid grid-cols-2 gap-2">
                     <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block font-medium">Oyentes en la Ciudad</span>
+                      <span className="text-[10px] text-zinc-400 block font-medium">
+                        Oyentes en la Ciudad
+                      </span>
                       <span className="text-base font-bold text-emerald-300 font-mono">
                         {selectedLead.spotify_city_demand.oyentes_ciudad.toLocaleString()}
                       </span>
                       <span className="text-[9px] text-zinc-500 block">
-                        Top #{selectedLead.spotify_city_demand.top_ciudades_ranking} audiencia
+                        Top #
+                        {selectedLead.spotify_city_demand.top_ciudades_ranking}{" "}
+                        audiencia
                       </span>
                     </div>
 
                     <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block font-medium">Afinidad de Género</span>
+                      <span className="text-[10px] text-zinc-400 block font-medium">
+                        Afinidad de Género
+                      </span>
                       <span className="text-base font-bold text-emerald-300 font-mono">
                         {selectedLead.spotify_city_demand.afinidad_genero}%
                       </span>
-                      <span className="text-[9px] text-zinc-500 block">Match con público local</span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        Match con público local
+                      </span>
                     </div>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1.5">
                     <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-zinc-400">Demanda Estimada de Entradas:</span>
+                      <span className="text-zinc-400">
+                        Demanda Estimada de Entradas:
+                      </span>
                       <span className="font-bold text-zinc-100 font-mono">
-                        {selectedLead.spotify_city_demand.prediccion_entradas} pax / {selectedLead.aforo || 300} aforo
+                        {selectedLead.spotify_city_demand.prediccion_entradas}{" "}
+                        pax / {selectedLead.aforo || 300} aforo
                       </span>
                     </div>
                     <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
                       <div
                         className="bg-emerald-400 h-full rounded-full transition-all"
-                        style={{ width: `${Math.min(100, selectedLead.spotify_city_demand.porcentaje_ocupacion_estimado)}%` }}
+                        style={{
+                          width: `${Math.min(100, selectedLead.spotify_city_demand.porcentaje_ocupacion_estimado)}%`,
+                        }}
                       />
                     </div>
                     <div className="flex justify-between items-center text-[10px] text-zinc-500">
                       <span>Ocupación calculada:</span>
                       <span className="font-bold text-emerald-400">
-                        {selectedLead.spotify_city_demand.porcentaje_ocupacion_estimado}% de aforo
+                        {
+                          selectedLead.spotify_city_demand
+                            .porcentaje_ocupacion_estimado
+                        }
+                        % de aforo
                       </span>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="py-4 text-center text-zinc-500 text-xs italic">
-                  Pulsa "Actualizar Todas las APIs" para calcular la demanda de Spotify en {selectedLead.ciudad || 'Madrid'}.
+                  Pulsa "Actualizar Todas las APIs" para calcular la demanda de
+                  Spotify en {selectedLead.ciudad || "Madrid"}.
                 </div>
               )}
             </div>
@@ -3420,55 +4219,73 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {selectedLead.google_places_info?.rating && (
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/30 text-amber-300 flex items-center gap-1 font-bold">
                     <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                    {selectedLead.google_places_info.rating} ({selectedLead.google_places_info.total_reviews})
+                    {selectedLead.google_places_info.rating} (
+                    {selectedLead.google_places_info.total_reviews})
                   </span>
                 )}
               </div>
 
               {selectedLead.google_places_info ? (
                 <div className="space-y-2 text-xs">
-                  {selectedLead.google_places_info.fotos && selectedLead.google_places_info.fotos.length > 0 && (
-                    <div className="grid grid-cols-2 gap-1.5 rounded-lg overflow-hidden border border-zinc-800">
-                      {selectedLead.google_places_info.fotos.slice(0, 2).map((url, i) => (
-                        <div key={i} className="h-20 bg-zinc-900 relative group overflow-hidden">
-                          <img
-                            src={url}
-                            alt={`${selectedLead.nombre_sala} foto ${i + 1}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            referrerPolicy="no-referrer"
-                            onError={(e: any) => {
-                              e.currentTarget.style.display = 'none';
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {selectedLead.google_places_info.fotos &&
+                    selectedLead.google_places_info.fotos.length > 0 && (
+                      <div className="grid grid-cols-2 gap-1.5 rounded-lg overflow-hidden border border-zinc-800">
+                        {selectedLead.google_places_info.fotos
+                          .slice(0, 2)
+                          .map((url, i) => (
+                            <div
+                              key={i}
+                              className="h-20 bg-zinc-900 relative group overflow-hidden"
+                            >
+                              <img
+                                src={url}
+                                alt={`${selectedLead.nombre_sala} foto ${i + 1}`}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                referrerPolicy="no-referrer"
+                                onError={(e: any) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    )}
 
                   <div className="space-y-1.5 text-[11px] bg-black/40 p-2.5 rounded-lg border border-zinc-800">
                     <div className="flex items-start gap-1.5">
-                      <span className="text-zinc-500 font-bold shrink-0">🔊 Acústica:</span>
+                      <span className="text-zinc-500 font-bold shrink-0">
+                        🔊 Acústica:
+                      </span>
                       <span className="text-zinc-300 leading-tight">
-                        {selectedLead.google_places_info.resumen_acustica || 'Sala con equipo de PA profesional instalado.'}
+                        {selectedLead.google_places_info.resumen_acustica ||
+                          "Sala con equipo de PA profesional instalado."}
                       </span>
                     </div>
                     <div className="flex items-start gap-1.5">
-                      <span className="text-zinc-500 font-bold shrink-0">🚛 Carga / Backline:</span>
+                      <span className="text-zinc-500 font-bold shrink-0">
+                        🚛 Carga / Backline:
+                      </span>
                       <span className="text-zinc-300 leading-tight">
-                        {selectedLead.google_places_info.acceso_backline || 'Acceso por calle peatonal / vado autorizado.'}
+                        {selectedLead.google_places_info.acceso_backline ||
+                          "Acceso por calle peatonal / vado autorizado."}
                       </span>
                     </div>
                     {selectedLead.google_places_info.horario_carga && (
                       <div className="flex items-start gap-1.5">
-                        <span className="text-zinc-500 font-bold shrink-0">⏰ Horario prueba:</span>
-                        <span className="text-zinc-300 leading-tight">{selectedLead.google_places_info.horario_carga}</span>
+                        <span className="text-zinc-500 font-bold shrink-0">
+                          ⏰ Horario prueba:
+                        </span>
+                        <span className="text-zinc-300 leading-tight">
+                          {selectedLead.google_places_info.horario_carga}
+                        </span>
                       </div>
                     )}
                   </div>
                 </div>
               ) : (
                 <div className="py-4 text-center text-zinc-500 text-xs italic">
-                  Pulsa "Actualizar Todas las APIs" para cargar la ficha técnica de Google Places.
+                  Pulsa "Actualizar Todas las APIs" para cargar la ficha técnica
+                  de Google Places.
                 </div>
               )}
             </div>
@@ -3488,16 +4305,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {selectedLead.setlist_history ? (
                 <div className="space-y-2 text-xs">
                   <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1.5">
-                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">Bandas Similares que han tocado:</span>
+                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                      Bandas Similares que han tocado:
+                    </span>
                     <div className="flex flex-wrap gap-1.5">
-                      {selectedLead.setlist_history.bandas_similares_recientes.map((banda, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-0.5 rounded-md bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[11px] font-medium"
-                        >
-                          🎸 {banda}
-                        </span>
-                      ))}
+                      {selectedLead.setlist_history.bandas_similares_recientes.map(
+                        (banda, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-0.5 rounded-md bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[11px] font-medium"
+                          >
+                            🎸 {banda}
+                          </span>
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -3508,18 +4329,29 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         Gancho Recomendado para el Pitch:
                       </span>
                       <p className="text-[11px] text-zinc-200 italic leading-snug">
-                        "{selectedLead.setlist_history.referencia_pitch_sugerida}"
+                        "
+                        {selectedLead.setlist_history.referencia_pitch_sugerida}
+                        "
                       </p>
                       <button
                         type="button"
                         onClick={() => {
-                          const hook = selectedLead.setlist_history?.referencia_pitch_sugerida;
+                          const hook =
+                            selectedLead.setlist_history
+                              ?.referencia_pitch_sugerida;
                           if (hook && selectedLead.pitch_generado) {
                             const newPitch = `${selectedLead.pitch_generado}\n\nPD: ${hook}`;
-                            onUpdateLead(selectedLead.id, { pitch_generado: newPitch });
+                            onUpdateLead(selectedLead.id, {
+                              pitch_generado: newPitch,
+                            });
                             setEditedPitch(newPitch);
-                            setScoutActionFeedback('✓ Gancho de Setlist.fm insertado en el borrador del pitch.');
-                            setTimeout(() => setScoutActionFeedback(null), 4000);
+                            setScoutActionFeedback(
+                              "✓ Gancho de Setlist.fm insertado en el borrador del pitch.",
+                            );
+                            setTimeout(
+                              () => setScoutActionFeedback(null),
+                              4000,
+                            );
                           }
                         }}
                         className="text-[10px] font-bold text-purple-300 hover:text-purple-200 underline cursor-pointer"
@@ -3530,7 +4362,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   )}
                 </div>
               ) : (
-                <div className="py-4 text-center text-zinc-500 text-xs italic">Sin histórico de Setlist.fm cargado aún.</div>
+                <div className="py-4 text-center text-zinc-500 text-xs italic">
+                  Sin histórico de Setlist.fm cargado aún.
+                </div>
               )}
             </div>
 
@@ -3541,17 +4375,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <ShieldCheck className="w-4 h-4" />
                   <span>Verificación de Email & DNS MX</span>
                 </div>
-                {selectedLead.email_verification?.entregabilidad_score !== undefined && (
+                {selectedLead.email_verification?.entregabilidad_score !==
+                  undefined && (
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
                       selectedLead.email_verification.entregabilidad_score >= 80
-                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
-                        : selectedLead.email_verification.entregabilidad_score >= 50
-                          ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
-                          : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                        ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
+                        : selectedLead.email_verification
+                              .entregabilidad_score >= 50
+                          ? "bg-amber-950/60 border-amber-500/40 text-amber-300"
+                          : "bg-rose-950/60 border-rose-500/40 text-rose-300"
                     }`}
                   >
-                    🛡️ {selectedLead.email_verification.entregabilidad_score}% Entregable
+                    🛡️ {selectedLead.email_verification.entregabilidad_score}%
+                    Entregable
                   </span>
                 )}
               </div>
@@ -3562,19 +4399,25 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="text-zinc-400">Estado del Buzón:</span>
                       <span className="font-bold text-zinc-200 capitalize">
-                        {selectedLead.email_verification.estado === 'valido' ? '✅ Buzón Válido' : selectedLead.email_verification.estado}
+                        {selectedLead.email_verification.estado === "valido"
+                          ? "✅ Buzón Válido"
+                          : selectedLead.email_verification.estado}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-zinc-400">Registros DNS MX:</span>
                       <span className="font-bold text-emerald-400">
-                        {selectedLead.email_verification.mx_valido ? '✓ Servidores de correo activos' : '⚠️ Sin registros MX'}
+                        {selectedLead.email_verification.mx_valido
+                          ? "✓ Servidores de correo activos"
+                          : "⚠️ Sin registros MX"}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-zinc-400">Tipo de Dirección:</span>
                       <span className="font-bold text-zinc-200">
-                        {selectedLead.email_verification.es_cuenta_rol ? 'Buzón de Booking / Programación' : 'Cuenta Personal Directa'}
+                        {selectedLead.email_verification.es_cuenta_rol
+                          ? "Buzón de Booking / Programación"
+                          : "Cuenta Personal Directa"}
                       </span>
                     </div>
                   </div>
@@ -3585,7 +4428,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="py-4 text-center text-zinc-500 text-xs italic">
-                  Pulsa "Actualizar Todas las APIs" para validar los registros DNS y entregabilidad del email.
+                  Pulsa "Actualizar Todas las APIs" para validar los registros
+                  DNS y entregabilidad del email.
                 </div>
               )}
             </div>
@@ -3621,7 +4465,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
                   title="Recalcular ruta y gasolina"
                 >
-                  <RefreshCw className={`w-3 h-3 ${isCalculatingRoute ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`w-3 h-3 ${isCalculatingRoute ? "animate-spin" : ""}`}
+                  />
                   <span>Calcular</span>
                 </button>
               </div>
@@ -3630,36 +4476,54 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="space-y-2.5 text-xs">
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Distancia</span>
-                      <span className="text-sm font-bold text-blue-300 font-mono">{selectedLead.tour_logistics.distancia_km} km</span>
-                      <span className="text-[9px] text-zinc-500 block">{selectedLead.tour_logistics.tiempo_conduccion}</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Distancia
+                      </span>
+                      <span className="text-sm font-bold text-blue-300 font-mono">
+                        {selectedLead.tour_logistics.distancia_km} km
+                      </span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        {selectedLead.tour_logistics.tiempo_conduccion}
+                      </span>
                     </div>
 
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Gasolina (Ida)</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Gasolina (Ida)
+                      </span>
                       <span className="text-sm font-bold text-amber-300 font-mono">
                         {selectedLead.tour_logistics.coste_gasolina_estimado} €
                       </span>
-                      <span className="text-[9px] text-zinc-500 block">9L/100km Diésel</span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        9L/100km Diésel
+                      </span>
                     </div>
 
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Total Viaje I/V</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Total Viaje I/V
+                      </span>
                       <span className="text-sm font-bold text-emerald-300 font-mono">
                         {selectedLead.tour_logistics.coste_total_viaje} €
                       </span>
-                      <span className="text-[9px] text-zinc-500 block">+{selectedLead.tour_logistics.peajes_estimados}€ peajes</span>
+                      <span className="text-[9px] text-zinc-500 block">
+                        +{selectedLead.tour_logistics.peajes_estimados}€ peajes
+                      </span>
                     </div>
                   </div>
 
                   <p className="text-[11px] text-zinc-300 bg-blue-950/20 p-2.5 rounded-lg border border-blue-500/20 leading-snug">
-                    🚐 <span className="font-semibold text-blue-200">Road Manager:</span>{' '}
+                    🚐{" "}
+                    <span className="font-semibold text-blue-200">
+                      Road Manager:
+                    </span>{" "}
                     {selectedLead.tour_logistics.recomendacion_logistica}
                   </p>
                 </div>
               ) : (
                 <div className="py-3 text-center text-zinc-500 text-xs italic">
-                  Introduce tu ciudad base y pulsa "Calcular" para obtener kilometraje y combustible.
+                  Introduce tu ciudad base y pulsa "Calcular" para obtener
+                  kilometraje y combustible.
                 </div>
               )}
             </div>
@@ -3674,14 +4538,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {selectedLead.social_engagement?.calidad_promo_sala && (
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
-                      selectedLead.social_engagement.calidad_promo_sala === 'alta'
-                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
-                        : selectedLead.social_engagement.calidad_promo_sala === 'media'
-                          ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
-                          : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                      selectedLead.social_engagement.calidad_promo_sala ===
+                      "alta"
+                        ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
+                        : selectedLead.social_engagement.calidad_promo_sala ===
+                            "media"
+                          ? "bg-amber-950/60 border-amber-500/40 text-amber-300"
+                          : "bg-rose-950/60 border-rose-500/40 text-rose-300"
                     }`}
                   >
-                    Promo: {selectedLead.social_engagement.calidad_promo_sala.toUpperCase()}
+                    Promo:{" "}
+                    {selectedLead.social_engagement.calidad_promo_sala.toUpperCase()}
                   </span>
                 )}
               </div>
@@ -3690,19 +4557,27 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="space-y-2.5 text-xs">
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Seguidores</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Seguidores
+                      </span>
                       <span className="text-sm font-bold text-pink-300 font-mono">
                         {selectedLead.social_engagement.instagram_followers.toLocaleString()}
                       </span>
                     </div>
 
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Engagement</span>
-                      <span className="text-sm font-bold text-pink-300 font-mono">{selectedLead.social_engagement.engagement_rate}%</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Engagement
+                      </span>
+                      <span className="text-sm font-bold text-pink-300 font-mono">
+                        {selectedLead.social_engagement.engagement_rate}%
+                      </span>
                     </div>
 
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Media Reels</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Media Reels
+                      </span>
                       <span className="text-sm font-bold text-pink-300 font-mono">
                         {selectedLead.social_engagement.promedio_views_reels.toLocaleString()}
                       </span>
@@ -3710,14 +4585,20 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
 
                   <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 flex items-center justify-between text-[11px]">
-                    <span className="text-zinc-400">¿Comparte a las bandas en Stories/Feed?</span>
+                    <span className="text-zinc-400">
+                      ¿Comparte a las bandas en Stories/Feed?
+                    </span>
                     <span className="font-bold text-zinc-100 flex items-center gap-1">
-                      {selectedLead.social_engagement.promociona_bandas_activo ? (
+                      {selectedLead.social_engagement
+                        .promociona_bandas_activo ? (
                         <span className="text-emerald-400 flex items-center gap-1">
-                          <CheckCircle2 className="w-3.5 h-3.5" /> Sí, sala activa
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Sí, sala
+                          activa
                         </span>
                       ) : (
-                        <span className="text-zinc-400">Pasivo / Solo cartel mensual</span>
+                        <span className="text-zinc-400">
+                          Pasivo / Solo cartel mensual
+                        </span>
                       )}
                     </span>
                   </div>
@@ -3728,15 +4609,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-4 space-y-2">
-                  <p className="text-zinc-500 text-xs italic">Sin datos de radar en redes aún.</p>
+                  <p className="text-zinc-500 text-xs italic">
+                    Sin datos de radar en redes aún.
+                  </p>
                   <button
                     type="button"
                     onClick={handleFetchSocial}
                     disabled={isEnrichingSocial}
                     className="px-3 py-1 bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <RefreshCw className={`w-3 h-3 ${isEnrichingSocial ? 'animate-spin' : ''}`} />
-                    <span>{isEnrichingSocial ? 'Escaneando...' : 'Escanear Redes de la Sala'}</span>
+                    <RefreshCw
+                      className={`w-3 h-3 ${isEnrichingSocial ? "animate-spin" : ""}`}
+                    />
+                    <span>
+                      {isEnrichingSocial
+                        ? "Escaneando..."
+                        : "Escanear Redes de la Sala"}
+                    </span>
                   </button>
                 </div>
               )}
@@ -3749,17 +4638,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <CalendarDays className="w-4 h-4" />
                   <span>Ventana de Programación & Lead Time</span>
                 </div>
-                {selectedLead.booking_window_info?.estado_calendario_estimado && (
+                {selectedLead.booking_window_info
+                  ?.estado_calendario_estimado && (
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
-                      selectedLead.booking_window_info.estado_calendario_estimado === 'abierto'
-                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
-                        : selectedLead.booking_window_info.estado_calendario_estimado === 'llenandose'
-                          ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
-                          : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
+                      selectedLead.booking_window_info
+                        .estado_calendario_estimado === "abierto"
+                        ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
+                        : selectedLead.booking_window_info
+                              .estado_calendario_estimado === "llenandose"
+                          ? "bg-amber-950/60 border-amber-500/40 text-amber-300"
+                          : "bg-rose-950/60 border-rose-500/40 text-rose-300"
                     }`}
                   >
-                    Estado: {selectedLead.booking_window_info.estado_calendario_estimado.replace('_', ' ').toUpperCase()}
+                    Estado:{" "}
+                    {selectedLead.booking_window_info.estado_calendario_estimado
+                      .replace("_", " ")
+                      .toUpperCase()}
                   </span>
                 )}
               </div>
@@ -3768,23 +4663,37 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <div className="space-y-2.5 text-xs">
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Antelación Ideal</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Antelación Ideal
+                      </span>
                       <span className="text-sm font-bold text-amber-300 font-mono">
-                        {selectedLead.booking_window_info.antelacion_meses_recomendada} meses
+                        {
+                          selectedLead.booking_window_info
+                            .antelacion_meses_recomendada
+                        }{" "}
+                        meses
                       </span>
                     </div>
 
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Días Fuertes</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Días Fuertes
+                      </span>
                       <span className="text-xs font-bold text-zinc-200">
-                        {selectedLead.booking_window_info.dias_semana_ideales?.join(', ') || 'Viernes, Sábado'}
+                        {selectedLead.booking_window_info.dias_semana_ideales?.join(
+                          ", ",
+                        ) || "Viernes, Sábado"}
                       </span>
                     </div>
 
                     <div className="p-2 rounded-lg bg-black/40 border border-zinc-800">
-                      <span className="text-[10px] text-zinc-400 block">Cierre / Vacaciones</span>
+                      <span className="text-[10px] text-zinc-400 block">
+                        Cierre / Vacaciones
+                      </span>
                       <span className="text-xs font-bold text-rose-300">
-                        {selectedLead.booking_window_info.meses_cierre_temporada?.join(', ') || 'Ninguno'}
+                        {selectedLead.booking_window_info.meses_cierre_temporada?.join(
+                          ", ",
+                        ) || "Ninguno"}
                       </span>
                     </div>
                   </div>
@@ -3792,7 +4701,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {selectedLead.booking_window_info.consejo_antelacion && (
                     <div className="p-2.5 rounded-lg bg-amber-950/20 border border-amber-500/20 space-y-1.5">
                       <p className="text-[11px] text-zinc-300 leading-snug">
-                        💡 <strong className="text-amber-300">Consejo Táctico:</strong>{' '}
+                        💡{" "}
+                        <strong className="text-amber-300">
+                          Consejo Táctico:
+                        </strong>{" "}
                         {selectedLead.booking_window_info.consejo_antelacion}
                       </p>
                     </div>
@@ -3800,15 +4712,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-4 space-y-2">
-                  <p className="text-zinc-500 text-xs italic">Sin análisis de ventana de programación aún.</p>
+                  <p className="text-zinc-500 text-xs italic">
+                    Sin análisis de ventana de programación aún.
+                  </p>
                   <button
                     type="button"
                     onClick={handleFetchBookingWindow}
                     disabled={isEnrichingBookingWindow}
                     className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <RefreshCw className={`w-3 h-3 ${isEnrichingBookingWindow ? 'animate-spin' : ''}`} />
-                    <span>{isEnrichingBookingWindow ? 'Calculando...' : 'Calcular Lead Time & Ventana'}</span>
+                    <RefreshCw
+                      className={`w-3 h-3 ${isEnrichingBookingWindow ? "animate-spin" : ""}`}
+                    />
+                    <span>
+                      {isEnrichingBookingWindow
+                        ? "Calculando..."
+                        : "Calcular Lead Time & Ventana"}
+                    </span>
                   </button>
                 </div>
               )}
@@ -3824,71 +4744,90 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 {selectedLead.local_events_clash_info?.eventos_detectados && (
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold border ${
-                      selectedLead.local_events_clash_info.eventos_detectados.some((e) => e.nivel_riesgo_solapamiento === 'alto')
-                        ? 'bg-rose-950/60 border-rose-500/40 text-rose-300'
-                        : selectedLead.local_events_clash_info.eventos_detectados.some((e) => e.nivel_riesgo_solapamiento === 'medio')
-                          ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
-                          : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                      selectedLead.local_events_clash_info.eventos_detectados.some(
+                        (e) => e.nivel_riesgo_solapamiento === "alto",
+                      )
+                        ? "bg-rose-950/60 border-rose-500/40 text-rose-300"
+                        : selectedLead.local_events_clash_info.eventos_detectados.some(
+                              (e) => e.nivel_riesgo_solapamiento === "medio",
+                            )
+                          ? "bg-amber-950/60 border-amber-500/40 text-amber-300"
+                          : "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
                     }`}
                   >
-                    Riesgo Clash:{' '}
-                    {selectedLead.local_events_clash_info.eventos_detectados.some((e) => e.nivel_riesgo_solapamiento === 'alto')
-                      ? 'ALTO'
-                      : selectedLead.local_events_clash_info.eventos_detectados.some((e) => e.nivel_riesgo_solapamiento === 'medio')
-                        ? 'MEDIO'
-                        : 'BAJO'}
+                    Riesgo Clash:{" "}
+                    {selectedLead.local_events_clash_info.eventos_detectados.some(
+                      (e) => e.nivel_riesgo_solapamiento === "alto",
+                    )
+                      ? "ALTO"
+                      : selectedLead.local_events_clash_info.eventos_detectados.some(
+                            (e) => e.nivel_riesgo_solapamiento === "medio",
+                          )
+                        ? "MEDIO"
+                        : "BAJO"}
                   </span>
                 )}
               </div>
 
               {selectedLead.local_events_clash_info ? (
                 <div className="space-y-2.5 text-xs">
-                  {selectedLead.local_events_clash_info.fechas_favorables_sugeridas?.length > 0 && (
+                  {selectedLead.local_events_clash_info
+                    .fechas_favorables_sugeridas?.length > 0 && (
                     <div className="p-2.5 rounded-lg bg-black/40 border border-zinc-800 space-y-1.5">
                       <span className="text-[10px] text-zinc-400 font-bold uppercase block">
-                        Ventanas Recomendadas en {selectedLead.ciudad || 'la ciudad'}:
+                        Ventanas Recomendadas en{" "}
+                        {selectedLead.ciudad || "la ciudad"}:
                       </span>
                       <div className="flex flex-wrap gap-1.5">
-                        {selectedLead.local_events_clash_info.fechas_favorables_sugeridas.map((v, i) => (
-                          <span
-                            key={i}
-                            className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] font-medium"
-                          >
-                            ✓ {v}
-                          </span>
-                        ))}
+                        {selectedLead.local_events_clash_info.fechas_favorables_sugeridas.map(
+                          (v, i) => (
+                            <span
+                              key={i}
+                              className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] font-medium"
+                            >
+                              ✓ {v}
+                            </span>
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
 
-                  {selectedLead.local_events_clash_info.eventos_detectados?.length > 0 && (
+                  {selectedLead.local_events_clash_info.eventos_detectados
+                    ?.length > 0 && (
                     <div className="space-y-1.5">
-                      <span className="text-[10px] text-zinc-400 font-bold uppercase block">Eventos masivos detectados en la zona:</span>
+                      <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                        Eventos masivos detectados en la zona:
+                      </span>
                       <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
-                        {selectedLead.local_events_clash_info.eventos_detectados.map((ev, i) => (
-                          <div
-                            key={i}
-                            className="p-2 rounded-lg bg-black/50 border border-zinc-800/80 flex items-center justify-between text-[11px]"
-                          >
-                            <div>
-                              <strong className="text-zinc-200 block">{ev.nombre}</strong>
-                              <span className="text-[10px] text-zinc-400 font-mono">
-                                📅 {ev.fecha_aproximada} • {ev.tipo}
+                        {selectedLead.local_events_clash_info.eventos_detectados.map(
+                          (ev, i) => (
+                            <div
+                              key={i}
+                              className="p-2 rounded-lg bg-black/50 border border-zinc-800/80 flex items-center justify-between text-[11px]"
+                            >
+                              <div>
+                                <strong className="text-zinc-200 block">
+                                  {ev.nombre}
+                                </strong>
+                                <span className="text-[10px] text-zinc-400 font-mono">
+                                  📅 {ev.fecha_aproximada} • {ev.tipo}
+                                </span>
+                              </div>
+                              <span
+                                className={`text-[9px] px-1.5 py-0.5 rounded font-bold border shrink-0 ${
+                                  ev.nivel_riesgo_solapamiento === "alto"
+                                    ? "bg-rose-950/80 text-rose-300 border-rose-500/40"
+                                    : ev.nivel_riesgo_solapamiento === "medio"
+                                      ? "bg-amber-950/80 text-amber-300 border-amber-500/40"
+                                      : "bg-emerald-950/80 text-emerald-300 border-emerald-500/40"
+                                }`}
+                              >
+                                Solape {ev.nivel_riesgo_solapamiento}
                               </span>
                             </div>
-                            <span
-                              className={`text-[9px] px-1.5 py-0.5 rounded font-bold border shrink-0 ${
-                                ev.nivel_riesgo_solapamiento === 'alto'
-                                  ? 'bg-rose-950/80 text-rose-300 border-rose-500/40'
-                                  : ev.nivel_riesgo_solapamiento === 'medio'
-                                    ? 'bg-amber-950/80 text-amber-300 border-amber-500/40'
-                                    : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
-                              }`}
-                            >
-                              Solape {ev.nivel_riesgo_solapamiento}
-                            </span>
-                          </div>
-                        ))}
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
@@ -3901,15 +4840,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-4 space-y-2">
-                  <p className="text-zinc-500 text-xs italic">Sin escaneo de eventos locales aún.</p>
+                  <p className="text-zinc-500 text-xs italic">
+                    Sin escaneo de eventos locales aún.
+                  </p>
                   <button
                     type="button"
                     onClick={handleFetchLocalEvents}
                     disabled={isEnrichingLocalEvents}
                     className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <RefreshCw className={`w-3 h-3 ${isEnrichingLocalEvents ? 'animate-spin' : ''}`} />
-                    <span>{isEnrichingLocalEvents ? 'Escaneando...' : 'Escanear Eventos Locales'}</span>
+                    <RefreshCw
+                      className={`w-3 h-3 ${isEnrichingLocalEvents ? "animate-spin" : ""}`}
+                    />
+                    <span>
+                      {isEnrichingLocalEvents
+                        ? "Escaneando..."
+                        : "Escanear Eventos Locales"}
+                    </span>
                   </button>
                 </div>
               )}
@@ -3923,7 +4870,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span>Medios, Radios & Prensa Cultural Local</span>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 font-bold">
-                  {selectedLead.ciudad || 'Provincial'}
+                  {selectedLead.ciudad || "Provincial"}
                 </span>
               </div>
 
@@ -3936,9 +4883,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         className="p-2 rounded-lg bg-black/40 border border-zinc-800 flex items-center justify-between text-[11px]"
                       >
                         <div>
-                          <strong className="text-cyan-200 block">{m.nombre}</strong>
+                          <strong className="text-cyan-200 block">
+                            {m.nombre}
+                          </strong>
                           <span className="text-[10px] text-zinc-400">
-                            {m.tipo.replace('_', ' ')} • {m.alcance}
+                            {m.tipo.replace("_", " ")} • {m.alcance}
                           </span>
                         </div>
                         <span className="text-[10px] font-mono text-zinc-300 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-700">
@@ -3948,23 +4897,36 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     ))}
                   </div>
 
-                  {selectedLead.local_press_media_info.plantilla_nota_prensa_hook && (
+                  {selectedLead.local_press_media_info
+                    .plantilla_nota_prensa_hook && (
                     <div className="p-2.5 rounded-lg bg-cyan-950/30 border border-cyan-500/30 space-y-1.5">
                       <span className="text-[10px] text-cyan-300 font-bold uppercase flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-cyan-400" />
                         Gancho Titular para Medios / Radio:
                       </span>
                       <p className="text-[11px] text-zinc-200 italic leading-snug">
-                        "{selectedLead.local_press_media_info.plantilla_nota_prensa_hook}"
+                        "
+                        {
+                          selectedLead.local_press_media_info
+                            .plantilla_nota_prensa_hook
+                        }
+                        "
                       </p>
                       <button
                         type="button"
                         onClick={() => {
-                          const hook = selectedLead.local_press_media_info?.plantilla_nota_prensa_hook;
+                          const hook =
+                            selectedLead.local_press_media_info
+                              ?.plantilla_nota_prensa_hook;
                           if (hook) {
                             navigator.clipboard.writeText(hook);
-                            setScoutActionFeedback('✓ Titular de nota de prensa copiado al portapapeles.');
-                            setTimeout(() => setScoutActionFeedback(null), 3500);
+                            setScoutActionFeedback(
+                              "✓ Titular de nota de prensa copiado al portapapeles.",
+                            );
+                            setTimeout(
+                              () => setScoutActionFeedback(null),
+                              3500,
+                            );
                           }
                         }}
                         className="text-[10px] font-bold text-cyan-300 hover:text-cyan-200 underline cursor-pointer"
@@ -3982,15 +4944,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-4 space-y-2">
-                  <p className="text-zinc-500 text-xs italic">Sin medios locales detectados aún.</p>
+                  <p className="text-zinc-500 text-xs italic">
+                    Sin medios locales detectados aún.
+                  </p>
                   <button
                     type="button"
                     onClick={handleFetchPressMedia}
                     disabled={isEnrichingPressMedia}
                     className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <RefreshCw className={`w-3 h-3 ${isEnrichingPressMedia ? 'animate-spin' : ''}`} />
-                    <span>{isEnrichingPressMedia ? 'Buscando...' : 'Buscar Medios & Radios'}</span>
+                    <RefreshCw
+                      className={`w-3 h-3 ${isEnrichingPressMedia ? "animate-spin" : ""}`}
+                    />
+                    <span>
+                      {isEnrichingPressMedia
+                        ? "Buscando..."
+                        : "Buscar Medios & Radios"}
+                    </span>
                   </button>
                 </div>
               )}
@@ -4011,43 +4981,69 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               {selectedLead.local_band_partners_info ? (
                 <div className="space-y-2.5 text-xs">
                   <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                    {selectedLead.local_band_partners_info.bandas_compatibles?.map((b, i) => (
-                      <div key={i} className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1 text-[11px]">
-                        <div className="flex items-center justify-between">
-                          <strong className="text-indigo-200">🎸 {b.nombre}</strong>
-                          {b.oyentes_estimados !== undefined && (
-                            <span className="text-[10px] font-mono text-zinc-400">{b.oyentes_estimados.toLocaleString()} oyentes</span>
-                          )}
+                    {selectedLead.local_band_partners_info.bandas_compatibles?.map(
+                      (b, i) => (
+                        <div
+                          key={i}
+                          className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1 text-[11px]"
+                        >
+                          <div className="flex items-center justify-between">
+                            <strong className="text-indigo-200">
+                              🎸 {b.nombre}
+                            </strong>
+                            {b.oyentes_estimados !== undefined && (
+                              <span className="text-[10px] font-mono text-zinc-400">
+                                {b.oyentes_estimados.toLocaleString()} oyentes
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                            <span>
+                              {b.genero} {b.instagram ? `• ${b.instagram}` : ""}
+                            </span>
+                            <span className="text-indigo-300 font-medium text-[10px]">
+                              {b.motivo_afinidad}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-[10px] text-zinc-400">
-                          <span>
-                            {b.genero} {b.instagram ? `• ${b.instagram}` : ''}
-                          </span>
-                          <span className="text-indigo-300 font-medium text-[10px]">{b.motivo_afinidad}</span>
-                        </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
 
-                  {selectedLead.local_band_partners_info.gancho_propuesta_sala && (
+                  {selectedLead.local_band_partners_info
+                    .gancho_propuesta_sala && (
                     <div className="p-2.5 rounded-lg bg-indigo-950/30 border border-indigo-500/30 space-y-1.5">
                       <span className="text-[10px] text-indigo-300 font-bold uppercase flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-indigo-400" />
                         Propuesta Co-Booking para el Programador:
                       </span>
                       <p className="text-[11px] text-zinc-200 italic leading-snug">
-                        "{selectedLead.local_band_partners_info.gancho_propuesta_sala}"
+                        "
+                        {
+                          selectedLead.local_band_partners_info
+                            .gancho_propuesta_sala
+                        }
+                        "
                       </p>
                       <button
                         type="button"
                         onClick={() => {
-                          const cobooking = selectedLead.local_band_partners_info?.gancho_propuesta_sala;
+                          const cobooking =
+                            selectedLead.local_band_partners_info
+                              ?.gancho_propuesta_sala;
                           if (cobooking && selectedLead.pitch_generado) {
                             const newPitch = `${selectedLead.pitch_generado}\n\nPD: ${cobooking}`;
-                            onUpdateLead(selectedLead.id, { pitch_generado: newPitch });
+                            onUpdateLead(selectedLead.id, {
+                              pitch_generado: newPitch,
+                            });
                             setEditedPitch(newPitch);
-                            setScoutActionFeedback('✓ Propuesta de co-booking añadida al pitch.');
-                            setTimeout(() => setScoutActionFeedback(null), 4000);
+                            setScoutActionFeedback(
+                              "✓ Propuesta de co-booking añadida al pitch.",
+                            );
+                            setTimeout(
+                              () => setScoutActionFeedback(null),
+                              4000,
+                            );
                           }
                         }}
                         className="text-[10px] font-bold text-indigo-300 hover:text-indigo-200 underline cursor-pointer"
@@ -4059,15 +5055,23 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-4 space-y-2">
-                  <p className="text-zinc-500 text-xs italic">Sin bandas locales para co-booking cargadas.</p>
+                  <p className="text-zinc-500 text-xs italic">
+                    Sin bandas locales para co-booking cargadas.
+                  </p>
                   <button
                     type="button"
                     onClick={handleFetchCoBooking}
                     disabled={isEnrichingCoBooking}
                     className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <RefreshCw className={`w-3 h-3 ${isEnrichingCoBooking ? 'animate-spin' : ''}`} />
-                    <span>{isEnrichingCoBooking ? 'Buscando...' : 'Buscar Bandas para Co-Booking'}</span>
+                    <RefreshCw
+                      className={`w-3 h-3 ${isEnrichingCoBooking ? "animate-spin" : ""}`}
+                    />
+                    <span>
+                      {isEnrichingCoBooking
+                        ? "Buscando..."
+                        : "Buscar Bandas para Co-Booking"}
+                    </span>
                   </button>
                 </div>
               )}
@@ -4079,7 +5083,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2 flex-wrap gap-2">
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
                 <Calculator className="w-4 h-4" />
-                <span className="text-sm">Simulador de Taquilla, Caché y Break-Even (P&L por Concierto)</span>
+                <span className="text-sm">
+                  Simulador de Taquilla, Caché y Break-Even (P&L por Concierto)
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -4088,7 +5094,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   disabled={isRecalculatingFinancial}
                   className="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`w-3.5 h-3.5 ${isRecalculatingFinancial ? "animate-spin" : ""}`}
+                  />
                   <span>Recalcular & Guardar P&L</span>
                 </button>
               </div>
@@ -4097,7 +5105,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {/* Inputs de simulación */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs">
               <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
-                <label className="text-[10px] text-zinc-400 block font-medium">🎟️ Anticipada (€)</label>
+                <label className="text-[10px] text-zinc-400 block font-medium">
+                  🎟️ Anticipada (€)
+                </label>
                 <input
                   type="number"
                   value={simAnticipada}
@@ -4107,7 +5117,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
-                <label className="text-[10px] text-zinc-400 block font-medium">🚪 Puerta (€)</label>
+                <label className="text-[10px] text-zinc-400 block font-medium">
+                  🚪 Puerta (€)
+                </label>
                 <input
                   type="number"
                   value={simTaquilla}
@@ -4117,7 +5129,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
-                <label className="text-[10px] text-zinc-400 block font-medium">🏢 Alquiler Sala (€)</label>
+                <label className="text-[10px] text-zinc-400 block font-medium">
+                  🏢 Alquiler Sala (€)
+                </label>
                 <input
                   type="number"
                   value={simAlquiler}
@@ -4127,7 +5141,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
-                <label className="text-[10px] text-zinc-400 block font-medium">% Sala / Taquilla</label>
+                <label className="text-[10px] text-zinc-400 block font-medium">
+                  % Sala / Taquilla
+                </label>
                 <input
                   type="number"
                   value={simPctSala}
@@ -4137,7 +5153,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
-                <label className="text-[10px] text-zinc-400 block font-medium">🚐 Gastos Viaje/Prod (€)</label>
+                <label className="text-[10px] text-zinc-400 block font-medium">
+                  🚐 Gastos Viaje/Prod (€)
+                </label>
                 <input
                   type="number"
                   value={simGastosProd}
@@ -4147,7 +5165,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               <div className="p-2 rounded-lg bg-black/40 border border-zinc-800 space-y-1">
-                <label className="text-[10px] text-zinc-400 block font-medium">🎸 Nº Músicos</label>
+                <label className="text-[10px] text-zinc-400 block font-medium">
+                  🎸 Nº Músicos
+                </label>
                 <input
                   type="number"
                   value={simNumMusicos}
@@ -4162,36 +5182,66 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               <div className="space-y-3">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-center">
-                    <span className="text-[10px] text-emerald-300 font-bold uppercase block">Punto de Equilibrio</span>
+                    <span className="text-[10px] text-emerald-300 font-bold uppercase block">
+                      Punto de Equilibrio
+                    </span>
                     <span className="text-xl font-extrabold text-emerald-400 font-mono block">
                       {selectedLead.financial_break_even.entradas_break_even}
                     </span>
-                    <span className="text-[10px] text-zinc-400 block">entradas para no perder (€0)</span>
+                    <span className="text-[10px] text-zinc-400 block">
+                      entradas para no perder (€0)
+                    </span>
                   </div>
 
                   <div className="p-3 rounded-xl bg-black/50 border border-zinc-800 text-center">
-                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">% Aforo Requerido</span>
+                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                      % Aforo Requerido
+                    </span>
                     <span className="text-xl font-bold text-zinc-100 font-mono block">
-                      {Math.round(((selectedLead.financial_break_even.entradas_break_even || 1) / (selectedLead.aforo || 250)) * 100)}%
+                      {Math.round(
+                        ((selectedLead.financial_break_even
+                          .entradas_break_even || 1) /
+                          (selectedLead.aforo || 250)) *
+                          100,
+                      )}
+                      %
                     </span>
-                    <span className="text-[10px] text-zinc-500 block">de {selectedLead.aforo || 250} aforo máx.</span>
+                    <span className="text-[10px] text-zinc-500 block">
+                      de {selectedLead.aforo || 250} aforo máx.
+                    </span>
                   </div>
 
                   <div className="p-3 rounded-xl bg-black/50 border border-zinc-800 text-center">
-                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">Beneficio Banda (80% lleno)</span>
-                    <span className="text-xl font-bold text-emerald-300 font-mono block">
-                      {selectedLead.financial_break_even.beneficio_estimado_lleno} €
+                    <span className="text-[10px] text-zinc-400 font-bold uppercase block">
+                      Beneficio Banda (80% lleno)
                     </span>
-                    <span className="text-[10px] text-zinc-500 block">margen neto total</span>
+                    <span className="text-xl font-bold text-emerald-300 font-mono block">
+                      {
+                        selectedLead.financial_break_even
+                          .beneficio_estimado_lleno
+                      }{" "}
+                      €
+                    </span>
+                    <span className="text-[10px] text-zinc-500 block">
+                      margen neto total
+                    </span>
                   </div>
 
                   <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/50 text-center">
-                    <span className="text-[10px] text-emerald-300 font-bold uppercase block">Limpio por Músico</span>
+                    <span className="text-[10px] text-emerald-300 font-bold uppercase block">
+                      Limpio por Músico
+                    </span>
                     <span className="text-xl font-extrabold text-emerald-300 font-mono block">
-                      {selectedLead.financial_break_even.beneficio_por_musico_estimado} €
+                      {
+                        selectedLead.financial_break_even
+                          .beneficio_por_musico_estimado
+                      }{" "}
+                      €
                     </span>
                     <span className="text-[10px] text-emerald-400/80 block">
-                      / cada uno ({selectedLead.financial_break_even.num_musicos} integrantes)
+                      / cada uno (
+                      {selectedLead.financial_break_even.num_musicos}{" "}
+                      integrantes)
                     </span>
                   </div>
                 </div>
@@ -4200,16 +5250,24 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <div className="flex items-center gap-2">
                     <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span className="text-zinc-200 text-[11px]">
-                      Con <strong className="text-emerald-300">{selectedLead.financial_break_even.entradas_break_even} entradas</strong>{' '}
-                      cubrís íntegramente el alquiler de la sala ({simAlquiler}€) y los gastos de furgoneta/sonido ({simGastosProd}€).
+                      Con{" "}
+                      <strong className="text-emerald-300">
+                        {selectedLead.financial_break_even.entradas_break_even}{" "}
+                        entradas
+                      </strong>{" "}
+                      cubrís íntegramente el alquiler de la sala ({simAlquiler}
+                      €) y los gastos de furgoneta/sonido ({simGastosProd}€).
                     </span>
                   </div>
-                  <span className="font-bold text-emerald-400 font-mono shrink-0 ml-2">✓ Margen Positivo</span>
+                  <span className="font-bold text-emerald-400 font-mono shrink-0 ml-2">
+                    ✓ Margen Positivo
+                  </span>
                 </div>
               </div>
             ) : (
               <div className="py-3 text-center text-zinc-500 text-xs italic">
-                Ajusta los precios y pulsa "Recalcular & Guardar P&L" para simular la rentabilidad del concierto.
+                Ajusta los precios y pulsa "Recalcular & Guardar P&L" para
+                simular la rentabilidad del concierto.
               </div>
             )}
           </div>
@@ -4217,11 +5275,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       )}
 
       {/* TAB 3: COPILOTO DE CIERRE, LOGÍSTICA & P&L */}
-      {activeTab === 'copilot' && (
+      {activeTab === "copilot" && (
         <DealAndLogisticsCopilot
           lead={selectedLead}
           latestIncomingMessage={
-            hiloCompleto.filter((m) => m.remitente === 'sala').slice(-1)[0]?.mensaje || selectedLead.ultimo_mensaje_recibido
+            hiloCompleto.filter((m) => m.remitente === "sala").slice(-1)[0]
+              ?.mensaje || selectedLead.ultimo_mensaje_recibido
           }
           isStitchLight={isStitchLight}
           onOpenRoadbookModal={onOpenRoadbookModal}
@@ -4229,34 +5288,51 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       )}
 
       {/* TAB 4: CONTACT BITÁCORA */}
-      {activeTab === 'bitacora' && (
+      {activeTab === "bitacora" && (
         <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-[var(--acc)]" />
-              <h4 className="text-xs font-bold text-[var(--ink)] tracking-wider font-sans">Bitácora de Contacto y Llamadas</h4>
+              <h4 className="text-xs font-bold text-[var(--ink)] tracking-wider font-sans">
+                Bitácora de Contacto y Llamadas
+              </h4>
             </div>
-            <span className="text-[10px] text-[var(--acc)]/80 font-sans">{(selectedLead.historial_contacto || []).length} registros</span>
+            <span className="text-[10px] text-[var(--acc)]/80 font-sans">
+              {(selectedLead.historial_contacto || []).length} registros
+            </span>
           </div>
 
           {/* Log Form */}
-          <form onSubmit={handleAddInteractionLog} className="space-y-3 bg-[var(--bg)] p-3 rounded-[var(--r-m)]800">
+          <form
+            onSubmit={handleAddInteractionLog}
+            className="space-y-3 bg-[var(--bg)] p-3 rounded-[var(--r-m)]800"
+          >
             <div className="flex flex-wrap items-center justify-between gap-2">
               {/* Interaction Type Selector */}
               <div className="flex items-center gap-1 bg-[var(--sunken)] p-1 rounded-[var(--r-s)]800">
-                {(['Llamada', 'WhatsApp', 'Email', 'Reunión', 'Otro'] as const).map((type) => (
+                {(
+                  ["Llamada", "WhatsApp", "Email", "Reunión", "Otro"] as const
+                ).map((type) => (
                   <button
                     key={type}
                     type="button"
                     onClick={() => setInteractionType(type)}
                     className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
                       interactionType === type
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                        : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
-                    {type === 'Llamada' ? '📞' : type === 'WhatsApp' ? '💬' : type === 'Email' ? '✉️' : type === 'Reunión' ? '🤝' : '📝'}
-                    {''}
+                    {type === "Llamada"
+                      ? "📞"
+                      : type === "WhatsApp"
+                        ? "💬"
+                        : type === "Email"
+                          ? "✉️"
+                          : type === "Reunión"
+                            ? "🤝"
+                            : "📝"}
+                    {""}
                     {type}
                   </button>
                 ))}
@@ -4274,10 +5350,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Result Outcome Pills */}
             <div className="space-y-1">
-              <span className="text-[9px] tracking-wider text-[var(--ink-2)] font-sans">Resultado del contacto:</span>
+              <span className="text-[9px] tracking-wider text-[var(--ink-2)] font-sans">
+                Resultado del contacto:
+              </span>
               <div className="flex flex-wrap gap-1">
                 {(
-                  ['Interesado', 'Enviar propuesta', 'Seguimiento pendiente', 'Acuerdo cerrado', 'Rechazado', 'Info recibida'] as const
+                  [
+                    "Interesado",
+                    "Enviar propuesta",
+                    "Seguimiento pendiente",
+                    "Acuerdo cerrado",
+                    "Rechazado",
+                    "Info recibida",
+                  ] as const
                 ).map((res) => (
                   <button
                     key={res}
@@ -4285,12 +5370,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     onClick={() => setInteractionResultado(res)}
                     className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all cursor-pointer ${
                       interactionResultado === res
-                        ? res === 'Interesado' || res === 'Acuerdo cerrado'
-                          ? 'bg-[var(--ok)]/30 text-[var(--ink-2)] font-bold'
-                          : res === 'Rechazado'
-                            ? 'bg-[var(--alert)]/30 text-[var(--ink-2)] font-bold'
-                            : 'bg-[var(--acc)]/30 text-[var(--ink-3)] font-bold'
-                        : 'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800'
+                        ? res === "Interesado" || res === "Acuerdo cerrado"
+                          ? "bg-[var(--ok)]/30 text-[var(--ink-2)] font-bold"
+                          : res === "Rechazado"
+                            ? "bg-[var(--alert)]/30 text-[var(--ink-2)] font-bold"
+                            : "bg-[var(--acc)]/30 text-[var(--ink-3)] font-bold"
+                        : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800"
                     }`}
                   >
                     {res}
@@ -4323,31 +5408,40 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {(selectedLead.historial_contacto || []).length === 0 ? (
               <div className="flex flex-col items-center justify-center py-6">
                 <PublicoSilhouette opacity={0.12} size="small" />
-                <p className="mt-3 font-medium text-[var(--ink)] text-[11px]">Sin interacciones</p>
+                <p className="mt-3 font-medium text-[var(--ink)] text-[11px]">
+                  Sin interacciones
+                </p>
                 <p className="mt-1.5 text-[var(--ink-2)] text-[10px] max-w-xs text-center">
                   Registra llamadas y mensajes desde la entrada de contacto.
                 </p>
               </div>
             ) : (
               (selectedLead.historial_contacto || []).map((log) => (
-                <div key={log.id} className="p-2.5 rounded-[var(--r-s)] bg-[var(--bg)]800 space-y-1.5 text-xs font-sans relative group">
+                <div
+                  key={log.id}
+                  className="p-2.5 rounded-[var(--r-s)] bg-[var(--bg)]800 space-y-1.5 text-xs font-sans relative group"
+                >
                   <div className="flex items-center justify-between text-[10px]">
                     <div className="flex items-center gap-1.5 font-bold">
                       <span className="px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--acc)]/70">
-                        {log.tipo === 'Llamada'
-                          ? '📞 Llamada'
-                          : log.tipo === 'WhatsApp'
-                            ? '💬 WhatsApp'
-                            : log.tipo === 'Email'
-                              ? '✉️ Email'
-                              : log.tipo === 'Reunión'
-                                ? '🤝 Reunión'
-                                : '📝 Nota'}
+                        {log.tipo === "Llamada"
+                          ? "📞 Llamada"
+                          : log.tipo === "WhatsApp"
+                            ? "💬 WhatsApp"
+                            : log.tipo === "Email"
+                              ? "✉️ Email"
+                              : log.tipo === "Reunión"
+                                ? "🤝 Reunión"
+                                : "📝 Nota"}
                       </span>
-                      <span className="text-[var(--ink-2)]">{log.autor || 'Agente'}</span>
+                      <span className="text-[var(--ink-2)]">
+                        {log.autor || "Agente"}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[var(--ink-2)] font-sans">{log.fecha}</span>
+                      <span className="text-[var(--ink-2)] font-sans">
+                        {log.fecha}
+                      </span>
                       <button
                         type="button"
                         onClick={() => handleDeleteInteractionLog(log.id)}
@@ -4363,11 +5457,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     <div>
                       <span
                         className={`inline-block text-[9px] px-1.5 py-0.2 rounded font-bold ${
-                          log.resultado === 'Interesado' || log.resultado === 'Acuerdo cerrado'
-                            ? 'bg-[var(--ok)]/20 text-[var(--ok)]'
-                            : log.resultado === 'Rechazado'
-                              ? 'bg-[var(--alert)]/20 text-[var(--alert)]'
-                              : 'bg-[var(--acc)]/20 text-[var(--ink-2)]'
+                          log.resultado === "Interesado" ||
+                          log.resultado === "Acuerdo cerrado"
+                            ? "bg-[var(--ok)]/20 text-[var(--ok)]"
+                            : log.resultado === "Rechazado"
+                              ? "bg-[var(--alert)]/20 text-[var(--alert)]"
+                              : "bg-[var(--acc)]/20 text-[var(--ink-2)]"
                         }`}
                       >
                         {log.resultado}
@@ -4375,7 +5470,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </div>
                   )}
 
-                  <p className="text-[var(--ink)] text-[11px] leading-snug whitespace-pre-wrap select-text">{log.notas}</p>
+                  <p className="text-[var(--ink)] text-[11px] leading-snug whitespace-pre-wrap select-text">
+                    {log.notas}
+                  </p>
                 </div>
               ))
             )}
@@ -4393,8 +5490,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           setEditedPitch(text);
           selectedLead.pitch_generado = text;
           onUpdateLead(selectedLead.id, { pitch_generado: text });
-          const label = providerName === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
-          setFeedbackSuccessMsg(`¡Propuesta de ${label} seleccionada y aplicada a la sala!`);
+          const label =
+            providerName === "deepseek" ? "DeepSeek V3" : "Gemini 3.7 Flash";
+          setFeedbackSuccessMsg(
+            `¡Propuesta de ${label} seleccionada y aplicada a la sala!`,
+          );
           setTimeout(() => setFeedbackSuccessMsg(null), 5000);
         }}
       />
@@ -4416,14 +5516,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           lead={selectedLead}
           isStitchLight={isStitchLight}
           onLogInteraction={(leadId, logData) => {
-            const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
+            const nowStr = new Date()
+              .toISOString()
+              .replace("T", " ")
+              .slice(0, 16);
             const newLog: InteractionLog = {
               id: `log-${Date.now()}`,
               fecha: nowStr,
-              tipo: 'WhatsApp',
-              autor: interactionAutor || 'Mánager / Booking',
+              tipo: "WhatsApp",
+              autor: interactionAutor || "Mánager / Booking",
               notas: logData.notas,
-              resultado: (logData.resultado as any) || 'Interesado',
+              resultado: (logData.resultado as any) || "Interesado",
             };
             const existingLogs = selectedLead.historial_contacto || [];
             onUpdateLead(leadId, {

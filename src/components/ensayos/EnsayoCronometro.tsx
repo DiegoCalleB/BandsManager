@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from 'lucide-react';
-import { ThemeColors } from '../../types';
+import React, { useState, useEffect, useRef } from "react";
+import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from "lucide-react";
+import { ThemeColors } from "../../types";
 
 interface EnsayoCronometroProps {
   totalEstimatedMin?: number;
@@ -15,9 +15,9 @@ export function formatTime(seconds: number): string {
   const mins = Math.floor((seconds % 3600) / 60);
   const secs = seconds % 60;
   if (hrs > 0) {
-    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
 export function EnsayoCronometro({
@@ -64,7 +64,7 @@ export function EnsayoCronometro({
   };
 
   const resetTimer = () => {
-    if (window.confirm('¿Reiniciar el cronómetro del ensayo a 00:00?')) {
+    if (window.confirm("¿Reiniciar el cronómetro del ensayo a 00:00?")) {
       setIsActive(false);
       setSeconds(0);
       if (onTimeUpdate) onTimeUpdate(0);
@@ -72,26 +72,37 @@ export function EnsayoCronometro({
   };
 
   const totalTargetSec = (totalEstimatedMin || 120) * 60;
-  const progressPct = Math.min(100, Math.round((seconds / totalTargetSec) * 100));
+  const progressPct = Math.min(
+    100,
+    Math.round((seconds / totalTargetSec) * 100),
+  );
   const isOvertime = seconds > totalTargetSec;
 
   if (isCompact) {
     return (
       <div className="flex items-center gap-2 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-1.5">
-        <Clock className={`w-3.5 h-3.5 ${isActive ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
-        <span className={`font-sans font-bold text-sm tracking-wider ${isOvertime ? 'text-[var(--alert)]' : 'text-[var(--ink)]'}`}>
+        <Clock
+          className={`w-3.5 h-3.5 ${isActive ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+        />
+        <span
+          className={`font-sans font-bold text-sm tracking-wider ${isOvertime ? "text-[var(--alert)]" : "text-[var(--ink)]"}`}
+        >
           {formatTime(seconds)}
         </span>
         <button
           onClick={toggleTimer}
           className={`p-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
             isActive
-              ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30'
-              : 'bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30'
+              ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30"
+              : "bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30"
           }`}
-          title={isActive ? 'Pausar Cronómetro' : 'Iniciar Cronómetro'}
+          title={isActive ? "Pausar Cronómetro" : "Iniciar Cronómetro"}
         >
-          {isActive ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 fill-current" />}
+          {isActive ? (
+            <Pause className="w-3 h-3" />
+          ) : (
+            <Play className="w-3 h-3 fill-current" />
+          )}
         </button>
       </div>
     );
@@ -100,18 +111,24 @@ export function EnsayoCronometro({
   return (
     <div className="p-4 rounded-[var(--r-l)] bg-gradient-to-br from-[var(--surface)] to-[var(--bg)] relative overflow-hidden">
       {/* Background soft when running */}
-      {isActive && <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />}
+      {isActive && (
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
+      )}
 
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <div
-            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? 'bg-[var(--acc)]/60/15 text-[var(--acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)]'}`}
+            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)]/60/15 text-[var(--acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
           >
-            <Clock className={`w-4 h-4 ${isActive ? 'animate-pulse' : ''}`} />
+            <Clock className={`w-4 h-4 ${isActive ? "animate-pulse" : ""}`} />
           </div>
           <div>
-            <h4 className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">Cronómetro de Ensayo</h4>
-            <p className="text-[10px] font-sans text-[var(--ink-2)]">Objetivo: {totalEstimatedMin} min planificados</p>
+            <h4 className="text-xs font-sans font-bold text-[var(--ink)] tracking-wider">
+              Cronómetro de Ensayo
+            </h4>
+            <p className="text-[10px] font-sans text-[var(--ink-2)]">
+              Objetivo: {totalEstimatedMin} min planificados
+            </p>
           </div>
         </div>
 
@@ -127,12 +144,18 @@ export function EnsayoCronometro({
         <div className="flex items-baseline gap-2">
           <span
             className={`text-3xl sm:text-4xl font-sans font-black tracking-tight ${
-              isOvertime ? 'text-[var(--alert)]' : isActive ? 'text-[var(--acc)]' : 'text-[var(--ink)]'
+              isOvertime
+                ? "text-[var(--alert)]"
+                : isActive
+                  ? "text-[var(--acc)]"
+                  : "text-[var(--ink)]"
             }`}
           >
             {formatTime(seconds)}
           </span>
-          <span className="text-xs font-sans text-[var(--ink-2)]">/ {formatTime(totalTargetSec)}</span>
+          <span className="text-xs font-sans text-[var(--ink-2)]">
+            / {formatTime(totalTargetSec)}
+          </span>
         </div>
 
         {/* Action Controls */}
@@ -141,8 +164,8 @@ export function EnsayoCronometro({
             onClick={toggleTimer}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95 ${
               isActive
-                ? 'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60'
-                : 'bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]'
+                ? "bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60"
+                : "bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]"
             }`}
           >
             {isActive ? (
@@ -174,17 +197,20 @@ export function EnsayoCronometro({
           <div
             className={`h-full rounded-full transition-all duration-300 ${
               isOvertime
-                ? 'bg-gradient-to-r from-rose-500 to-red-600'
+                ? "bg-gradient-to-r from-rose-500 to-red-600"
                 : progressPct > 80
-                  ? 'bg-gradient-to-r from-amber-400 to-orange-500'
-                  : 'bg-gradient-to-r from-emerald-400 to-teal-500'
+                  ? "bg-gradient-to-r from-[var(--acc)] to-orange-500"
+                  : "bg-gradient-to-r from-emerald-400 to-teal-500"
             }`}
             style={{ width: `${progressPct}%` }}
           />
         </div>
         <div className="flex justify-between items-center text-[10px] font-sans text-[var(--ink-2)] mt-1">
           <span>{progressPct}% completado</span>
-          <span>{Math.max(0, Math.round((totalTargetSec - seconds) / 60))} min restantes</span>
+          <span>
+            {Math.max(0, Math.round((totalTargetSec - seconds) / 60))} min
+            restantes
+          </span>
         </div>
       </div>
     </div>

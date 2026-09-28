@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Heart,
   Flame,
@@ -23,8 +23,8 @@ import {
   Megaphone,
   Pin,
   Star,
-} from 'lucide-react';
-import { Fan, Concert, ThemeColors } from '../../types';
+} from "lucide-react";
+import { Fan, Concert, ThemeColors } from "../../types";
 
 interface BandAnnouncement {
   id: string;
@@ -67,7 +67,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   // Local announcements from the band
   const [announcements, setAnnouncements] = useState<BandAnnouncement[]>(() => {
     try {
-      const saved = localStorage.getItem(`bakandeya_community_announcements_${effectiveBandName}`);
+      const saved = localStorage.getItem(
+        `bakandeya_community_announcements_${effectiveBandName}`,
+      );
       if (saved) return JSON.parse(saved);
     } catch {}
     // Sin comunicados propios el muro arranca vacío. Antes se sembraba un comunicado de
@@ -77,15 +79,23 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   });
 
   const [showNewPostModal, setShowNewPostModal] = useState(false);
-  const [newPostTitle, setNewPostTitle] = useState('');
-  const [newPostContent, setNewPostContent] = useState('');
+  const [newPostTitle, setNewPostTitle] = useState("");
+  const [newPostContent, setNewPostContent] = useState("");
 
   // Local reaction states for instant reactive feedback
-  const [userReactions, setUserReactions] = useState<Record<string, Record<string, boolean>>>({});
+  const [userReactions, setUserReactions] = useState<
+    Record<string, Record<string, boolean>>
+  >({});
   const [fanReactionCounts, setFanReactionCounts] = useState<
-    Record<string, { likes: number; fire: number; applause: number; guitars: number }>
+    Record<
+      string,
+      { likes: number; fire: number; applause: number; guitars: number }
+    >
   >(() => {
-    const initial: Record<string, { likes: number; fire: number; applause: number; guitars: number }> = {};
+    const initial: Record<
+      string,
+      { likes: number; fire: number; applause: number; guitars: number }
+    > = {};
     fans.forEach((f) => {
       initial[f.id] = {
         likes: f.reacciones?.likes ?? 0,
@@ -97,7 +107,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
     return initial;
   });
 
-  const handleReactFan = (fanId: string, type: 'likes' | 'fire' | 'applause' | 'guitars') => {
+  const handleReactFan = (
+    fanId: string,
+    type: "likes" | "fire" | "applause" | "guitars",
+  ) => {
     const isAlreadyReacted = userReactions[fanId]?.[type];
 
     setUserReactions((prev) => ({
@@ -109,7 +122,12 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
     }));
 
     setFanReactionCounts((prev) => {
-      const current = prev[fanId] || { likes: 0, fire: 0, applause: 0, guitars: 0 };
+      const current = prev[fanId] || {
+        likes: 0,
+        fire: 0,
+        applause: 0,
+        guitars: 0,
+      };
       const delta = isAlreadyReacted ? -1 : 1;
       const updated = {
         ...current,
@@ -127,7 +145,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
     });
   };
 
-  const handleReactAnnouncement = (annId: string, type: 'likes' | 'fire' | 'applause' | 'guitars') => {
+  const handleReactAnnouncement = (
+    annId: string,
+    type: "likes" | "fire" | "applause" | "guitars",
+  ) => {
     setAnnouncements((prev) => {
       const updated = prev.map((a) => {
         if (a.id === annId) {
@@ -142,7 +163,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         return a;
       });
       try {
-        localStorage.setItem(`bakandeya_community_announcements_${effectiveBandName}`, JSON.stringify(updated));
+        localStorage.setItem(
+          `bakandeya_community_announcements_${effectiveBandName}`,
+          JSON.stringify(updated),
+        );
       } catch {}
       return updated;
     });
@@ -154,9 +178,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
     const newAnn: BandAnnouncement = {
       id: `ann-${Date.now()}`,
-      fecha: new Date().toISOString().split('T')[0],
+      fecha: new Date().toISOString().split("T")[0],
       autor: effectiveBandName,
-      titulo: newPostTitle.trim() || 'Comunicado Oficial',
+      titulo: newPostTitle.trim() || "Comunicado Oficial",
       contenido: newPostContent.trim(),
       fijado: false,
       reacciones: { likes: 1, fire: 1, applause: 0, guitars: 0 },
@@ -165,56 +189,64 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
     const updated = [newAnn, ...announcements];
     setAnnouncements(updated);
     try {
-      localStorage.setItem(`bakandeya_community_announcements_${effectiveBandName}`, JSON.stringify(updated));
+      localStorage.setItem(
+        `bakandeya_community_announcements_${effectiveBandName}`,
+        JSON.stringify(updated),
+      );
     } catch {}
 
-    setNewPostTitle('');
-    setNewPostContent('');
+    setNewPostTitle("");
+    setNewPostContent("");
     setShowNewPostModal(false);
   };
 
   const getFanLevelBadge = (fan: Fan) => {
-    const level = fan.nivelFan || (fan.conciertoOrigenId || fan.comoConocio?.toLowerCase().includes('concierto') ? 'superfan' : 'fiel');
+    const level =
+      fan.nivelFan ||
+      (fan.conciertoOrigenId ||
+      fan.comoConocio?.toLowerCase().includes("concierto")
+        ? "superfan"
+        : "fiel");
     switch (level) {
-      case 'fundador':
+      case "fundador":
         return {
-          label: 'Fan Fundador',
+          label: "Fan Fundador",
           icon: Star,
-          bg: 'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
-          dot: 'bg-[var(--acc)]/60',
+          bg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 /30",
+          dot: "bg-[var(--acc)]/60",
         };
-      case 'superfan':
+      case "superfan":
         return {
-          label: 'Superfan Directos',
+          label: "Superfan Directos",
           icon: Flame,
-          bg: 'bg-[var(--alert)]/15 text-[var(--ink-2)]/30',
-          dot: 'bg-[var(--alert)]',
+          bg: "bg-[var(--alert)]/15 text-[var(--ink-2)]/30",
+          dot: "bg-[var(--alert)]",
         };
-      case 'backstage':
+      case "backstage":
         return {
-          label: 'Backstage VIP',
+          label: "Backstage VIP",
           icon: Award,
-          bg: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30',
-          dot: 'bg-[var(--acc)]',
+          bg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30",
+          dot: "bg-[var(--acc)]",
         };
       default:
         return {
-          label: 'Oyente Fiel',
+          label: "Oyente Fiel",
           icon: Music,
-          bg: 'bg-[var(--ok)]/15 text-[var(--ink-2)]/30',
-          dot: 'bg-[var(--ok)]',
+          bg: "bg-[var(--ok)]/15 text-[var(--ink-2)]/30",
+          dot: "bg-[var(--ok)]",
         };
     }
   };
 
   const getRandomGradient = (name: string) => {
     const gradients = [
-      'from-amber-600 to-amber-400',
-      'from-rose-600 to-amber-500',
-      'from-emerald-600 to-teal-400',
-      'from-indigo-600 to-[var(--acc-soft)]',
-      'from-blue-600 to-cyan-400',
-      'from-fuchsia-600 to-rose-400',
+      "from-[var(--acc)] to-[var(--acc)]",
+      "from-rose-600 to-[var(--acc)]",
+      "from-emerald-600 to-teal-400",
+      "from-indigo-600 to-[var(--acc-soft)]",
+      "from-blue-600 to-cyan-400",
+      "from-fuchsia-600 to-rose-400",
     ];
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -237,17 +269,21 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               />
             ) : (
               <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center font-black font-display text-lg shrink-0">
-                {effectiveBandName[0] || 'B'}
+                {effectiveBandName[0] || "B"}
               </div>
             )}
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">Muro Oficial de la Banda</span>
+                <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)]">
+                  Muro Oficial de la Banda
+                </span>
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
                   <Megaphone className="w-2.5 h-2.5" /> Oficial
                 </span>
               </div>
-              <h3 className="text-[var(--ink)] font-bold text-base font-display">Comunidad & Red Social de {effectiveBandName}</h3>
+              <h3 className="text-[var(--ink)] font-bold text-base font-display">
+                Comunidad & Red Social de {effectiveBandName}
+              </h3>
             </div>
           </div>
 
@@ -274,15 +310,21 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           <div className="w-10 h-10 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
             <Megaphone className="w-5 h-5" />
           </div>
-          <h4 className="text-[var(--ink)] font-bold text-sm">Todavía no has publicado ningún comunicado</h4>
+          <h4 className="text-[var(--ink)] font-bold text-sm">
+            Todavía no has publicado ningún comunicado
+          </h4>
           <p className="text-[var(--ink-2)] text-xs font-sans max-w-sm mx-auto">
-            Usa «Publicar Comunicado» para contarle a tu comunidad las próximas fechas, lanzamientos o sorteos.
+            Usa «Publicar Comunicado» para contarle a tu comunidad las próximas
+            fechas, lanzamientos o sorteos.
           </p>
         </div>
       )}
 
       {announcements.map((ann) => (
-        <div key={ann.id} className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-5 space-y-3.5 relative group transition hover:">
+        <div
+          key={ann.id}
+          className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-5 space-y-3.5 relative group transition hover:"
+        >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-[var(--acc)] font-bold">
@@ -290,53 +332,71 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[var(--ink)] text-sm">{ann.autor}</span>
+                  <span className="font-bold text-[var(--ink)] text-sm">
+                    {ann.autor}
+                  </span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)] font-sans font-bold">
                     Noticia Banda
                   </span>
                 </div>
-                <span className="text-[11px] text-[var(--ink-2)] font-sans">{ann.fecha}</span>
+                <span className="text-[11px] text-[var(--ink-2)] font-sans">
+                  {ann.fecha}
+                </span>
               </div>
             </div>
           </div>
 
           <div className="space-y-1.5 pl-1">
-            <h4 className="text-[var(--ink)] font-bold text-sm">{ann.titulo}</h4>
-            <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed whitespace-pre-line">{ann.contenido}</p>
+            <h4 className="text-[var(--ink)] font-bold text-sm">
+              {ann.titulo}
+            </h4>
+            <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed whitespace-pre-line">
+              {ann.contenido}
+            </p>
           </div>
 
           <div className="flex items-center justify-between pt-2 /80">
             <div className="flex items-center gap-2">
               <button
-                onClick={() => handleReactAnnouncement(ann.id, 'likes')}
+                onClick={() => handleReactAnnouncement(ann.id, "likes")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-95"
               >
                 <span>❤️</span>
-                <span className="font-bold text-[var(--ink-2)]">{ann.reacciones.likes}</span>
+                <span className="font-bold text-[var(--ink-2)]">
+                  {ann.reacciones.likes}
+                </span>
               </button>
               <button
-                onClick={() => handleReactAnnouncement(ann.id, 'fire')}
+                onClick={() => handleReactAnnouncement(ann.id, "fire")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-95"
               >
                 <span>🔥</span>
-                <span className="font-bold text-[var(--ink-2)]">{ann.reacciones.fire}</span>
+                <span className="font-bold text-[var(--ink-2)]">
+                  {ann.reacciones.fire}
+                </span>
               </button>
               <button
-                onClick={() => handleReactAnnouncement(ann.id, 'guitars')}
+                onClick={() => handleReactAnnouncement(ann.id, "guitars")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-95"
               >
                 <span>🎸</span>
-                <span className="font-bold text-[var(--ink-2)]">{ann.reacciones.guitars}</span>
+                <span className="font-bold text-[var(--ink-2)]">
+                  {ann.reacciones.guitars}
+                </span>
               </button>
               <button
-                onClick={() => handleReactAnnouncement(ann.id, 'applause')}
+                onClick={() => handleReactAnnouncement(ann.id, "applause")}
                 className="px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 transition active:scale-95"
               >
                 <span>👏</span>
-                <span className="font-bold text-[var(--ink-2)]">{ann.reacciones.applause}</span>
+                <span className="font-bold text-[var(--ink-2)]">
+                  {ann.reacciones.applause}
+                </span>
               </button>
             </div>
-            <span className="text-[10px] text-[var(--ink-2)] font-sans">Fijado en cabecera</span>
+            <span className="text-[10px] text-[var(--ink-2)] font-sans">
+              Fijado en cabecera
+            </span>
           </div>
         </div>
       ))}
@@ -349,7 +409,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             Muro de Fans & Mensajes de la Comunidad ({fans.length})
           </h4>
           <span className="text-[11px] text-[var(--ink-2)] font-sans">
-            {selectedCityFilter ? `Filtrando por: ${selectedCityFilter}` : 'Mostrando todos'}
+            {selectedCityFilter
+              ? `Filtrando por: ${selectedCityFilter}`
+              : "Mostrando todos"}
           </span>
         </div>
 
@@ -358,9 +420,12 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             <div className="w-12 h-12 mx-auto rounded-full bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)]">
               <MessageCircle className="w-6 h-6" />
             </div>
-            <h4 className="text-[var(--ink)] font-bold text-sm">Aún no hay fans en el muro</h4>
+            <h4 className="text-[var(--ink)] font-bold text-sm">
+              Aún no hay fans en el muro
+            </h4>
             <p className="text-[var(--ink-2)] text-xs font-sans max-w-sm mx-auto">
-              Comparte el código QR o el enlace público de captura en tus conciertos y redes para que tus seguidores se unan a la comunidad.
+              Comparte el código QR o el enlace público de captura en tus
+              conciertos y redes para que tus seguidores se unan a la comunidad.
             </p>
             <button
               onClick={onOpenAddModal}
@@ -373,19 +438,28 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           fans.map((fan) => {
             const badge = getFanLevelBadge(fan);
             const BadgeIcon = badge.icon;
-            const fanReactions = fanReactionCounts[fan.id] || { likes: 0, fire: 0, applause: 0, guitars: 0 };
+            const fanReactions = fanReactionCounts[fan.id] || {
+              likes: 0,
+              fire: 0,
+              applause: 0,
+              guitars: 0,
+            };
             const fanUserReactions = userReactions[fan.id] || {};
-            const initialLetter = fan.nombre?.charAt(0)?.toUpperCase() || 'F';
-            const gradient = getRandomGradient(fan.nombre || 'fan');
+            const initialLetter = fan.nombre?.charAt(0)?.toUpperCase() || "F";
+            const gradient = getRandomGradient(fan.nombre || "fan");
 
             // El muro solo puede enseñar lo que el fan escribió de verdad en el formulario. Antes,
             // si dejaba el mensaje en blanco, se pintaba entre comillas una frase inventada
             // ("¡Directo brutal en...!") como si fuera suya: la banda leía testimonios que nadie
             // había escrito. Si no hay mensaje, se dice claramente que no lo dejó.
-            const mensajeFan = typeof fan.mensaje === 'string' ? fan.mensaje.trim() : '';
+            const mensajeFan =
+              typeof fan.mensaje === "string" ? fan.mensaje.trim() : "";
 
             return (
-              <div key={fan.id} className="bg-[var(--surface)] hover: rounded-[var(--r-l)] p-5 space-y-3.5 transition-all group">
+              <div
+                key={fan.id}
+                className="bg-[var(--surface)] hover: rounded-[var(--r-l)] p-5 space-y-3.5 transition-all group"
+              >
                 {/* Header with Avatar & Details */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
@@ -396,7 +470,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                     </div>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-[var(--ink)] text-sm truncate">{fan.nombre}</span>
+                        <span className="font-bold text-[var(--ink)] text-sm truncate">
+                          {fan.nombre}
+                        </span>
                         <span
                           className={`inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-full font-bold ${badge.bg}`}
                         >
@@ -450,7 +526,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                     {onDeleteFan && (
                       <button
                         onClick={() => {
-                          if (confirm(`¿Eliminar a ${fan.nombre} del Fan Club?`)) {
+                          if (
+                            confirm(`¿Eliminar a ${fan.nombre} del Fan Club?`)
+                          ) {
                             onDeleteFan(fan.id);
                           }
                         }}
@@ -468,7 +546,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--acc)]/10 rounded-[var(--r-m)] text-xs font-sans text-[var(--acc)]/70">
                     <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
                     <span>
-                      Tema favorito: <strong className="text-[var(--ink)]">{fan.cancionFavorita}</strong>
+                      Tema favorito:{" "}
+                      <strong className="text-[var(--ink)]">
+                        {fan.cancionFavorita}
+                      </strong>
                     </span>
                   </div>
                 )}
@@ -476,7 +557,9 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 {/* Fan Post / Message / Shout */}
                 <div className="bg-[var(--surface)]/70 rounded-[var(--r-m)] p-3.5">
                   {mensajeFan ? (
-                    <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed">"{mensajeFan}"</p>
+                    <p className="text-[var(--ink-2)] text-xs font-sans leading-relaxed">
+                      "{mensajeFan}"
+                    </p>
                   ) : (
                     <p className="text-[var(--ink-2)] text-xs font-sans italic leading-relaxed">
                       Sin mensaje: este fan no escribió nada al registrarse.
@@ -484,7 +567,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   )}
                   <div className="flex items-center justify-between mt-2 pt-2 text-[10px] text-[var(--ink-2)] font-sans">
                     <span>
-                      Origen: {fan.conciertoOrigenNombre ? `Concierto ${fan.conciertoOrigenNombre}` : fan.comoConocio || 'Fan Club Web'}
+                      Origen:{" "}
+                      {fan.conciertoOrigenNombre
+                        ? `Concierto ${fan.conciertoOrigenNombre}`
+                        : fan.comoConocio || "Fan Club Web"}
                     </span>
                     <span>ID: {fan.id.slice(-6)}</span>
                   </div>
@@ -495,11 +581,11 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <div className="flex flex-wrap items-center gap-1.5">
                     <button
                       type="button"
-                      onClick={() => handleReactFan(fan.id, 'likes')}
+                      onClick={() => handleReactFan(fan.id, "likes")}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.likes
-                          ? 'bg-[var(--alert)]/20 text-[var(--ink-2)] font-bold'
-                          : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
+                          ? "bg-[var(--alert)]/20 text-[var(--ink-2)] font-bold"
+                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Me gusta"
                     >
@@ -509,11 +595,11 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => handleReactFan(fan.id, 'fire')}
+                      onClick={() => handleReactFan(fan.id, "fire")}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.fire
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
-                          : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
+                          ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold"
+                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Fuego / Brutal"
                     >
@@ -523,11 +609,11 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => handleReactFan(fan.id, 'guitars')}
+                      onClick={() => handleReactFan(fan.id, "guitars")}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.guitars
-                          ? 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-bold'
-                          : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
+                          ? "bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-bold"
+                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Púa de Oro / Rock On"
                     >
@@ -537,11 +623,11 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => handleReactFan(fan.id, 'applause')}
+                      onClick={() => handleReactFan(fan.id, "applause")}
                       className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
                         fanUserReactions.applause
-                          ? 'bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold'
-                          : 'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
+                          ? "bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold"
+                          : "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                       }`}
                       title="Aplausos"
                     >
@@ -554,10 +640,15 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   <div className="flex items-center gap-1 text-[11px] font-sans text-[var(--ink-2)]">
                     <span className="hidden sm:inline">Nivel:</span>
                     <select
-                      value={fan.nivelFan || (fan.conciertoOrigenId ? 'superfan' : 'fiel')}
+                      value={
+                        fan.nivelFan ||
+                        (fan.conciertoOrigenId ? "superfan" : "fiel")
+                      }
                       onChange={(e) => {
                         if (onUpdateFan) {
-                          onUpdateFan(fan.id, { nivelFan: e.target.value as any });
+                          onUpdateFan(fan.id, {
+                            nivelFan: e.target.value as any,
+                          });
                         }
                       }}
                       className="bg-[var(--surface)] rounded-[var(--r-s)] px-2 py-0.5 text-[10px] text-[var(--acc)] font-sans outline-none cursor-pointer"
@@ -584,14 +675,19 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                 <Megaphone className="w-5 h-5 text-[var(--acc)]" />
                 Publicar Comunicado en el Muro Social
               </h3>
-              <button onClick={() => setShowNewPostModal(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1">
+              <button
+                onClick={() => setShowNewPostModal(false)}
+                className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1"
+              >
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleCreateAnnouncement} className="space-y-3.5">
               <div>
-                <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">Título o Titular *</label>
+                <label className="text-[10px] font-bold text-[var(--acc)] font-sans tracking-widest mb-1.5 block">
+                  Título o Titular *
+                </label>
                 <input
                   type="text"
                   required

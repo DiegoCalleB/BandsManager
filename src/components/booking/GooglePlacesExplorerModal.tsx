@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Search,
   MapPin,
@@ -24,12 +24,12 @@ import {
   Trash2,
   RotateCcw,
   Target,
-} from 'lucide-react';
-import { Lead, LeadType, BookingCampaign } from '../../types';
-import { apiFetch } from '../../utils/api';
-import { api } from '../../services/api';
-import { ModalPortal } from '../common/ModalPortal';
-import { PublicoSilhouette } from '../ui/PublicoSilhouette';
+} from "lucide-react";
+import { Lead, LeadType, BookingCampaign } from "../../types";
+import { apiFetch } from "../../utils/api";
+import { api } from "../../services/api";
+import { ModalPortal } from "../common/ModalPortal";
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 
 export interface PlaceResult {
   place_id: string;
@@ -68,7 +68,7 @@ export interface DiscardedPlace {
   discarded_at: string;
 }
 
-const DISCARDED_STORAGE_KEY = 'bandmanager_scout_discarded_places';
+const DISCARDED_STORAGE_KEY = "bandmanager_scout_discarded_places";
 
 function getStoredDiscarded(): DiscardedPlace[] {
   try {
@@ -97,20 +97,20 @@ interface GooglePlacesExplorerModalProps {
 }
 
 const QUICK_CITIES = [
-  'Madrid',
-  'Barcelona',
-  'Sevilla',
-  'Valencia',
-  'Málaga',
-  'Bilbao',
-  'Granada',
-  'Zaragoza',
-  'Huelva',
-  'Alicante',
-  'Santiago',
-  'Vigo',
-  'Salamanca',
-  'Murcia',
+  "Madrid",
+  "Barcelona",
+  "Sevilla",
+  "Valencia",
+  "Málaga",
+  "Bilbao",
+  "Granada",
+  "Zaragoza",
+  "Huelva",
+  "Alicante",
+  "Santiago",
+  "Vigo",
+  "Salamanca",
+  "Murcia",
 ];
 
 const CATEGORIES: {
@@ -122,68 +122,70 @@ const CATEGORIES: {
   searchPrefix: string;
 }[] = [
   {
-    id: 'sala',
-    label: 'Sala / Teatro',
-    icon: '🏛️',
-    desc: 'Salas de conciertos, directos y teatros con programación regular',
-    placeholder: 'Ej. salas rock, cafés concierto, teatros...',
-    searchPrefix: 'Salas de conciertos y recintos con música en directo',
+    id: "sala",
+    label: "Sala / Teatro",
+    icon: "🏛️",
+    desc: "Salas de conciertos, directos y teatros con programación regular",
+    placeholder: "Ej. salas rock, cafés concierto, teatros...",
+    searchPrefix: "Salas de conciertos y recintos con música en directo",
   },
   {
-    id: 'ayuntamiento',
-    label: 'Ayuntamiento / Fiestas',
-    icon: '🏛️',
-    desc: 'Concejalías de festejos, fiestas patronales y cultura municipal',
-    placeholder: 'Ej. festejos, fiestas patronales, concejalía de cultura...',
-    searchPrefix: 'Ayuntamientos, concejalías de festejos y fiestas patronales',
+    id: "ayuntamiento",
+    label: "Ayuntamiento / Fiestas",
+    icon: "🏛️",
+    desc: "Concejalías de festejos, fiestas patronales y cultura municipal",
+    placeholder: "Ej. festejos, fiestas patronales, concejalía de cultura...",
+    searchPrefix: "Ayuntamientos, concejalías de festejos y fiestas patronales",
   },
   {
-    id: 'festival',
-    label: 'Festival / Feria',
-    icon: '🎪',
-    desc: 'Festivales de música, ferias de cerveza o eventos con conciertos en vivo',
-    placeholder: 'Ej. festivales indie, ferias de cerveza, fiestas gastronómicas...',
-    searchPrefix: 'Festivales de música y ferias con conciertos en directo',
+    id: "festival",
+    label: "Festival / Feria",
+    icon: "🎪",
+    desc: "Festivales de música, ferias de cerveza o eventos con conciertos en vivo",
+    placeholder:
+      "Ej. festivales indie, ferias de cerveza, fiestas gastronómicas...",
+    searchPrefix: "Festivales de música y ferias con conciertos en directo",
   },
   {
-    id: 'discoteca',
-    label: 'Discoteca / Club',
-    icon: '🪩',
-    desc: 'Clubs nocturnos y salas de baile con sesiones o directo',
-    placeholder: 'Ej. clubs música electrónica, salas de baile, DJs...',
-    searchPrefix: 'Clubs nocturnos y discotecas con música en directo o DJs',
+    id: "discoteca",
+    label: "Discoteca / Club",
+    icon: "🪩",
+    desc: "Clubs nocturnos y salas de baile con sesiones o directo",
+    placeholder: "Ej. clubs música electrónica, salas de baile, DJs...",
+    searchPrefix: "Clubs nocturnos y discotecas con música en directo o DJs",
   },
   {
-    id: 'grupo',
-    label: 'Grupo / Banda',
-    icon: '🎸',
-    desc: 'Bandas y grupos de música afines para bolos conjuntos, giras o intercambio',
-    placeholder: 'Ej. bandas de rock, grupos indie, bandas locales en activo...',
-    searchPrefix: 'Grupos y bandas de música en activo',
+    id: "grupo",
+    label: "Grupo / Banda",
+    icon: "🎸",
+    desc: "Bandas y grupos de música afines para bolos conjuntos, giras o intercambio",
+    placeholder:
+      "Ej. bandas de rock, grupos indie, bandas locales en activo...",
+    searchPrefix: "Grupos y bandas de música en activo",
   },
   {
-    id: 'agencia',
-    label: 'Agencia / Booking',
-    icon: '💼',
-    desc: 'Agencias de contratación, managers y promotores musicales',
-    placeholder: 'Ej. agencias de contratación artística, management...',
-    searchPrefix: 'Agencias de booking musical y management de bandas',
+    id: "agencia",
+    label: "Agencia / Booking",
+    icon: "💼",
+    desc: "Agencias de contratación, managers y promotores musicales",
+    placeholder: "Ej. agencias de contratación artística, management...",
+    searchPrefix: "Agencias de booking musical y management de bandas",
   },
   {
-    id: 'sello',
-    label: 'Sello Discográfico',
-    icon: '💿',
-    desc: 'Discográficas y distribuidoras independientes',
-    placeholder: 'Ej. sellos independientes, discográficas rock/pop/urban...',
-    searchPrefix: 'Sellos discográficos y editoriales de música independiente',
+    id: "sello",
+    label: "Sello Discográfico",
+    icon: "💿",
+    desc: "Discográficas y distribuidoras independientes",
+    placeholder: "Ej. sellos independientes, discográficas rock/pop/urban...",
+    searchPrefix: "Sellos discográficos y editoriales de música independiente",
   },
   {
-    id: 'medio',
-    label: 'Medio / Radio',
-    icon: '📻',
-    desc: 'Radios, podcasts, fanzines y prensa especializada',
-    placeholder: 'Ej. emisoras de radio, programas musicales, fanzines...',
-    searchPrefix: 'Medios de comunicación musical, programas de radio y prensa',
+    id: "medio",
+    label: "Medio / Radio",
+    icon: "📻",
+    desc: "Radios, podcasts, fanzines y prensa especializada",
+    placeholder: "Ej. emisoras de radio, programas musicales, fanzines...",
+    searchPrefix: "Medios de comunicación musical, programas de radio y prensa",
   },
 ];
 
@@ -193,23 +195,29 @@ export function GooglePlacesExplorerModal({
   onImportLeads,
   activeCampaign,
   existingLeads = [],
-  bandGenre = '',
-  bandName = '',
+  bandGenre = "",
+  bandName = "",
   similarBands = [],
 }: GooglePlacesExplorerModalProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState(activeCampaign?.targetCities[0] || '');
-  const [selectedType, setSelectedType] = useState<LeadType>('sala');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCity, setSelectedCity] = useState(
+    activeCampaign?.targetCities[0] || "",
+  );
+  const [selectedType, setSelectedType] = useState<LeadType>("sala");
   const [searchLimit, setSearchLimit] = useState<number>(6); // Between 1 and 10
-  const [aforoMin, setAforoMin] = useState<string>(activeCampaign?.minCapacity?.toString() || '');
-  const [aforoMax, setAforoMax] = useState<string>(activeCampaign?.maxCapacity?.toString() || '');
+  const [aforoMin, setAforoMin] = useState<string>(
+    activeCampaign?.minCapacity?.toString() || "",
+  );
+  const [aforoMax, setAforoMax] = useState<string>(
+    activeCampaign?.maxCapacity?.toString() || "",
+  );
 
   // Keep state synced if campaign changes while modal is open
   useEffect(() => {
     if (activeCampaign && isOpen) {
-      setSelectedCity(activeCampaign.targetCities[0] || '');
-      setAforoMin(activeCampaign.minCapacity?.toString() || '');
-      setAforoMax(activeCampaign.maxCapacity?.toString() || '');
+      setSelectedCity(activeCampaign.targetCities[0] || "");
+      setAforoMin(activeCampaign.minCapacity?.toString() || "");
+      setAforoMax(activeCampaign.maxCapacity?.toString() || "");
     }
   }, [activeCampaign, isOpen]);
 
@@ -217,48 +225,61 @@ export function GooglePlacesExplorerModal({
 
   const [isSearching, setIsSearching] = useState(false);
   const [isMassCampaignSearching, setIsMassCampaignSearching] = useState(false);
-  const [massFilterTipos, setMassFilterTipos] = useState<string[]>(['sala', 'local', 'discoteca', 'teatro']);
+  const [massFilterTipos, setMassFilterTipos] = useState<string[]>([
+    "sala",
+    "local",
+    "discoteca",
+    "teatro",
+  ]);
   const [places, setPlaces] = useState<PlaceResult[]>([]);
-  const [searchSource, setSearchSource] = useState('');
-  const [searchError, setSearchError] = useState('');
+  const [searchSource, setSearchSource] = useState("");
+  const [searchError, setSearchError] = useState("");
 
   const [isExtractingBatch, setIsExtractingBatch] = useState(false);
-  const [extractStatus, setExtractStatus] = useState('');
+  const [extractStatus, setExtractStatus] = useState("");
   const [isImporting, setIsImporting] = useState(false);
-  const [importSuccessMsg, setImportSuccessMsg] = useState('');
+  const [importSuccessMsg, setImportSuccessMsg] = useState("");
 
   // Discarded places state
-  const [discardedList, setDiscardedList] = useState<DiscardedPlace[]>(() => getStoredDiscarded());
+  const [discardedList, setDiscardedList] = useState<DiscardedPlace[]>(() =>
+    getStoredDiscarded(),
+  );
   const [showDiscardedModal, setShowDiscardedModal] = useState(false);
-  const [discardToast, setDiscardToast] = useState('');
+  const [discardToast, setDiscardToast] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSearch = async (overrideQuery?: string, overrideCity?: string) => {
+  const handleSearch = async (
+    overrideQuery?: string,
+    overrideCity?: string,
+  ) => {
     const cityToUse = overrideCity !== undefined ? overrideCity : selectedCity;
     const catObj = CATEGORIES.find((c) => c.id === selectedType);
     let q = overrideQuery || searchQuery;
 
     if (!q.trim() && cityToUse.trim()) {
       q = `${catObj?.searchPrefix || catObj?.label || selectedType} en ${cityToUse.trim()}, España`;
-    } else if (cityToUse.trim() && !q.toLowerCase().includes(cityToUse.toLowerCase().trim())) {
+    } else if (
+      cityToUse.trim() &&
+      !q.toLowerCase().includes(cityToUse.toLowerCase().trim())
+    ) {
       q = `${q.trim()} en ${cityToUse.trim()}, España`;
     }
 
     if (!q.trim() && !cityToUse.trim()) {
-      setSearchError('Por favor introduce una ciudad o término de búsqueda.');
+      setSearchError("Por favor introduce una ciudad o término de búsqueda.");
       return;
     }
 
     setIsSearching(true);
-    setSearchError('');
-    setImportSuccessMsg('');
-    setExtractStatus('');
-    setDiscardToast('');
+    setSearchError("");
+    setImportSuccessMsg("");
+    setExtractStatus("");
+    setDiscardToast("");
 
     try {
-      const res = await apiFetch('/api/leads/places-search', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/places-search", {
+        method: "POST",
         body: JSON.stringify({
           query: q,
           ciudad: cityToUse,
@@ -272,27 +293,36 @@ export function GooglePlacesExplorerModal({
       if (res.success && Array.isArray(res.results)) {
         const currentDiscarded = getStoredDiscarded();
         const isDiscarded = (p: any) => {
-          const normName = (p.nombre_sala || '').toLowerCase().trim();
+          const normName = (p.nombre_sala || "").toLowerCase().trim();
           return currentDiscarded.some(
-            (d) => (p.place_id && d.place_id && d.place_id === p.place_id) || (normName && d.nombre_sala.toLowerCase().trim() === normName)
+            (d) =>
+              (p.place_id && d.place_id && d.place_id === p.place_id) ||
+              (normName && d.nombre_sala.toLowerCase().trim() === normName),
           );
         };
 
         const mapped: PlaceResult[] = res.results
           .filter((p: any) => !isDiscarded(p))
           .map((p: any) => {
-            const normName = (p.nombre_sala || '').toLowerCase().trim();
+            const normName = (p.nombre_sala || "").toLowerCase().trim();
             const existingMatch = existingLeads.find((l) => {
               if (!l.nombre_sala) return false;
               const lNorm = l.nombre_sala.toLowerCase().trim();
               const sameName = lNorm === normName;
               const sameEmail =
-                p.email_contacto && l.email_contacto && l.email_contacto.toLowerCase().trim() === p.email_contacto.toLowerCase().trim();
+                p.email_contacto &&
+                l.email_contacto &&
+                l.email_contacto.toLowerCase().trim() ===
+                  p.email_contacto.toLowerCase().trim();
               return sameName || sameEmail;
             });
             const cap = p.aforo ? Number(p.aforo) : null;
-            const minCap = aforoMin ? Number(aforoMin) : activeCampaign?.minCapacity || null;
-            const maxCap = aforoMax ? Number(aforoMax) : activeCampaign?.maxCapacity || null;
+            const minCap = aforoMin
+              ? Number(aforoMin)
+              : activeCampaign?.minCapacity || null;
+            const maxCap = aforoMax
+              ? Number(aforoMax)
+              : activeCampaign?.maxCapacity || null;
             let capacityMatch = true;
             if (cap) {
               if (minCap && cap < minCap) capacityMatch = false;
@@ -310,13 +340,23 @@ export function GooglePlacesExplorerModal({
             };
           });
         setPlaces(mapped);
-        setSearchSource(res.source || (res.isPlacesApi ? 'Google Places API Direct' : 'Buscador Agéntico Gemini con Grounding'));
+        setSearchSource(
+          res.source ||
+            (res.isPlacesApi
+              ? "Google Places API Direct"
+              : "Buscador Agéntico Gemini con Grounding"),
+        );
       } else {
-        setSearchError(res.error || 'No se encontraron resultados verificados para la búsqueda.');
+        setSearchError(
+          res.error ||
+            "No se encontraron resultados verificados para la búsqueda.",
+        );
       }
     } catch (err: any) {
-      console.error('Error en Buscador de Salas:', err);
-      setSearchError(err.message || 'Error de conexión al buscar nuevos contactos.');
+      console.error("Error en Buscador de Salas:", err);
+      setSearchError(
+        err.message || "Error de conexión al buscar nuevos contactos.",
+      );
     } finally {
       setIsSearching(false);
     }
@@ -325,10 +365,10 @@ export function GooglePlacesExplorerModal({
   // Búsqueda Masiva de Recintos, Locales y Discotecas según Campaña, Aforo, Localización y Estilo
   const handleMassCampaignSearch = async () => {
     setIsMassCampaignSearching(true);
-    setSearchError('');
-    setImportSuccessMsg('');
-    setExtractStatus('');
-    setDiscardToast('');
+    setSearchError("");
+    setImportSuccessMsg("");
+    setExtractStatus("");
+    setDiscardToast("");
 
     try {
       const citiesToSearch =
@@ -336,18 +376,29 @@ export function GooglePlacesExplorerModal({
           ? activeCampaign.targetCities
           : selectedCity.trim()
             ? [selectedCity.trim()]
-            : ['Madrid', 'Barcelona', 'Valencia', 'Granada', 'Sevilla', 'Bilbao'];
+            : [
+                "Madrid",
+                "Barcelona",
+                "Valencia",
+                "Granada",
+                "Sevilla",
+                "Bilbao",
+              ];
 
-      const res = await apiFetch('/api/leads/campaign-mass-search', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/campaign-mass-search", {
+        method: "POST",
         body: JSON.stringify({
           targetCities: citiesToSearch,
-          minCapacity: aforoMin ? Number(aforoMin) : activeCampaign?.minCapacity || undefined,
-          maxCapacity: aforoMax ? Number(aforoMax) : activeCampaign?.maxCapacity || undefined,
+          minCapacity: aforoMin
+            ? Number(aforoMin)
+            : activeCampaign?.minCapacity || undefined,
+          maxCapacity: aforoMax
+            ? Number(aforoMax)
+            : activeCampaign?.maxCapacity || undefined,
           targetDates: activeCampaign?.targetDates,
           targetDatesText: activeCampaign?.targetDatesText,
           tipos: massFilterTipos,
-          campaignName: activeCampaign?.name || 'Campaña Activa',
+          campaignName: activeCampaign?.name || "Campaña Activa",
           campaignId: activeCampaign?.id,
           limitPerCity: 12,
           bandGenre: bandGenre || undefined,
@@ -358,27 +409,36 @@ export function GooglePlacesExplorerModal({
       if (res.success && Array.isArray(res.results)) {
         const currentDiscarded = getStoredDiscarded();
         const isDiscarded = (p: any) => {
-          const normName = (p.nombre_sala || '').toLowerCase().trim();
+          const normName = (p.nombre_sala || "").toLowerCase().trim();
           return currentDiscarded.some(
-            (d) => (p.place_id && d.place_id && d.place_id === p.place_id) || (normName && d.nombre_sala.toLowerCase().trim() === normName)
+            (d) =>
+              (p.place_id && d.place_id && d.place_id === p.place_id) ||
+              (normName && d.nombre_sala.toLowerCase().trim() === normName),
           );
         };
 
         const mapped: PlaceResult[] = res.results
           .filter((p: any) => !isDiscarded(p))
           .map((p: any) => {
-            const normName = (p.nombre_sala || '').toLowerCase().trim();
+            const normName = (p.nombre_sala || "").toLowerCase().trim();
             const existingMatch = existingLeads.find((l) => {
               if (!l.nombre_sala) return false;
               const lNorm = l.nombre_sala.toLowerCase().trim();
               const sameName = lNorm === normName;
               const sameEmail =
-                p.email_contacto && l.email_contacto && l.email_contacto.toLowerCase().trim() === p.email_contacto.toLowerCase().trim();
+                p.email_contacto &&
+                l.email_contacto &&
+                l.email_contacto.toLowerCase().trim() ===
+                  p.email_contacto.toLowerCase().trim();
               return sameName || sameEmail;
             });
             const cap = p.aforo ? Number(p.aforo) : null;
-            const minCap = aforoMin ? Number(aforoMin) : activeCampaign?.minCapacity || null;
-            const maxCap = aforoMax ? Number(aforoMax) : activeCampaign?.maxCapacity || null;
+            const minCap = aforoMin
+              ? Number(aforoMin)
+              : activeCampaign?.minCapacity || null;
+            const maxCap = aforoMax
+              ? Number(aforoMax)
+              : activeCampaign?.maxCapacity || null;
             let capacityMatch = true;
             if (cap) {
               if (minCap && cap < minCap) capacityMatch = false;
@@ -397,14 +457,20 @@ export function GooglePlacesExplorerModal({
 
         setPlaces(mapped);
         setSearchSource(
-          `Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre || 'Banda'} · Tipos: ${massFilterTipos.join(',')})`
+          `Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre || "Banda"} · Tipos: ${massFilterTipos.join(",")})`,
         );
       } else {
-        setSearchError(res.error || 'No se obtuvieron resultados para la prospección masiva.');
+        setSearchError(
+          res.error ||
+            "No se obtuvieron resultados para la prospección masiva.",
+        );
       }
     } catch (err: any) {
-      console.error('Error en prospección masiva de campaña:', err);
-      setSearchError(err.message || 'Error al ejecutar la búsqueda masiva de recintos de campaña.');
+      console.error("Error en prospección masiva de campaña:", err);
+      setSearchError(
+        err.message ||
+          "Error al ejecutar la búsqueda masiva de recintos de campaña.",
+      );
     } finally {
       setIsMassCampaignSearching(false);
     }
@@ -412,25 +478,29 @@ export function GooglePlacesExplorerModal({
 
   const handleSearchSimilarBands = async (targetBand?: string) => {
     setIsSearching(true);
-    setSearchError('');
-    setImportSuccessMsg('');
-    setExtractStatus('');
-    setDiscardToast('');
+    setSearchError("");
+    setImportSuccessMsg("");
+    setExtractStatus("");
+    setDiscardToast("");
 
-    const bandsToQuery = targetBand ? [targetBand] : similarBands && similarBands.length > 0 ? similarBands : ['Macaco', 'La Pegatina'];
+    const bandsToQuery = targetBand
+      ? [targetBand]
+      : similarBands && similarBands.length > 0
+        ? similarBands
+        : ["Macaco", "La Pegatina"];
 
     try {
-      const res = await apiFetch('/api/leads/similar-artists-venues', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/similar-artists-venues", {
+        method: "POST",
         body: JSON.stringify({
-          bandName: bandName || 'Tu Banda',
-          genre: bandGenre || 'Música en directo',
+          bandName: bandName || "Tu Banda",
+          genre: bandGenre || "Música en directo",
           similarArtists: bandsToQuery,
           targetCities: selectedCity
             ? [selectedCity]
             : activeCampaign?.targetCities?.length
               ? activeCampaign.targetCities
-              : ['Madrid', 'Barcelona', 'Valencia', 'Sevilla'],
+              : ["Madrid", "Barcelona", "Valencia", "Sevilla"],
           limit: searchLimit || 8,
         }),
       });
@@ -438,29 +508,35 @@ export function GooglePlacesExplorerModal({
       if (res.success && Array.isArray(res.matches)) {
         const currentDiscarded = getStoredDiscarded();
         const isDiscarded = (name: string) => {
-          const norm = (name || '').toLowerCase().trim();
-          return currentDiscarded.some((d) => d.nombre_sala.toLowerCase().trim() === norm);
+          const norm = (name || "").toLowerCase().trim();
+          return currentDiscarded.some(
+            (d) => d.nombre_sala.toLowerCase().trim() === norm,
+          );
         };
 
         const mapped: PlaceResult[] = res.matches
           .filter((m: any) => !isDiscarded(m.nombre_sala))
           .map((m: any, idx: number) => {
-            const normName = (m.nombre_sala || '').toLowerCase().trim();
-            const existingMatch = existingLeads.find((l) => l.nombre_sala && l.nombre_sala.toLowerCase().trim() === normName);
+            const normName = (m.nombre_sala || "").toLowerCase().trim();
+            const existingMatch = existingLeads.find(
+              (l) =>
+                l.nombre_sala &&
+                l.nombre_sala.toLowerCase().trim() === normName,
+            );
             return {
               place_id: `similar-${Date.now()}-${idx}`,
               nombre_sala: m.nombre_sala,
-              ciudad: m.ciudad || selectedCity || 'España',
-              region: 'España',
-              direccion: m.ciudad || '',
-              telefono: '',
-              website: '',
-              tipo: 'sala',
+              ciudad: m.ciudad || selectedCity || "España",
+              region: "España",
+              direccion: m.ciudad || "",
+              telefono: "",
+              website: "",
+              tipo: "sala",
               aforo: m.aforo_estimado,
               genero: m.genero_predominante,
-              descripcion: `${m.razon_recomendacion || ''} (Artistas afines: ${(m.bandas_similares_que_tocaron || []).join(', ')})`,
-              email_contacto: m.contacto_sugerido || '',
-              fuente: `Radar Afinidad (${m.fuente || 'Bandsintown & Setlist.fm'})`,
+              descripcion: `${m.razon_recomendacion || ""} (Artistas afines: ${(m.bandas_similares_que_tocaron || []).join(", ")})`,
+              email_contacto: m.contacto_sugerido || "",
+              fuente: `Radar Afinidad (${m.fuente || "Bandsintown & Setlist.fm"})`,
               selected: !existingMatch,
               alreadyInCrm: !!existingMatch,
               crmStatus: existingMatch ? existingMatch.estado : null,
@@ -471,13 +547,19 @@ export function GooglePlacesExplorerModal({
           });
 
         setPlaces(mapped);
-        setSearchSource(`Efecto Espejo: Recintos donde han tocado ${bandsToQuery.join(', ')} (${res.matches.length} salas encontradas)`);
+        setSearchSource(
+          `Efecto Espejo: Recintos donde han tocado ${bandsToQuery.join(", ")} (${res.matches.length} salas encontradas)`,
+        );
       } else {
-        setSearchError(res.error || 'No se obtuvieron recintos para las bandas afines.');
+        setSearchError(
+          res.error || "No se obtuvieron recintos para las bandas afines.",
+        );
       }
     } catch (err: any) {
-      console.error('Error en búsqueda de bandas afines:', err);
-      setSearchError(err.message || 'Fallo de conexión en el radar de afinidad.');
+      console.error("Error en búsqueda de bandas afines:", err);
+      setSearchError(
+        err.message || "Fallo de conexión en el radar de afinidad.",
+      );
     } finally {
       setIsSearching(false);
     }
@@ -485,20 +567,21 @@ export function GooglePlacesExplorerModal({
 
   const handleSearchMultiSource = async () => {
     setIsSearching(true);
-    setSearchError('');
-    setImportSuccessMsg('');
-    setExtractStatus('');
-    setDiscardToast('');
+    setSearchError("");
+    setImportSuccessMsg("");
+    setExtractStatus("");
+    setDiscardToast("");
 
-    const queryCity = selectedCity || activeCampaign?.targetCities?.[0] || 'Madrid';
+    const queryCity =
+      selectedCity || activeCampaign?.targetCities?.[0] || "Madrid";
 
     try {
-      const res = await apiFetch('/api/leads/multi-source-venues', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/multi-source-venues", {
+        method: "POST",
         body: JSON.stringify({
           query: searchQuery || `Salas de conciertos y música en vivo`,
           ciudad: queryCity,
-          tipo: selectedType || 'sala',
+          tipo: selectedType || "sala",
           limit: searchLimit || 10,
         }),
       });
@@ -506,31 +589,43 @@ export function GooglePlacesExplorerModal({
       if (res.success && Array.isArray(res.venues)) {
         const currentDiscarded = getStoredDiscarded();
         const isDiscarded = (name: string) => {
-          const norm = (name || '').toLowerCase().trim();
-          return currentDiscarded.some((d) => d.nombre_sala.toLowerCase().trim() === norm);
+          const norm = (name || "").toLowerCase().trim();
+          return currentDiscarded.some(
+            (d) => d.nombre_sala.toLowerCase().trim() === norm,
+          );
         };
 
         const mapped: PlaceResult[] = res.venues
           .filter((v: any) => !isDiscarded(v.nombre))
           .map((v: any, idx: number) => {
-            const normName = (v.nombre || '').toLowerCase().trim();
-            const existingMatch = existingLeads.find((l) => l.nombre_sala && l.nombre_sala.toLowerCase().trim() === normName);
+            const normName = (v.nombre || "").toLowerCase().trim();
+            const existingMatch = existingLeads.find(
+              (l) =>
+                l.nombre_sala &&
+                l.nombre_sala.toLowerCase().trim() === normName,
+            );
             const verifiedBadges =
-              Array.isArray(v.fuentes_verificadas) && v.fuentes_verificadas.length > 0 ? v.fuentes_verificadas.join(', ') : v.fuente;
+              Array.isArray(v.fuentes_verificadas) &&
+              v.fuentes_verificadas.length > 0
+                ? v.fuentes_verificadas.join(", ")
+                : v.fuente;
 
             return {
               place_id: `multisource-${Date.now()}-${idx}`,
               nombre_sala: v.nombre,
               ciudad: v.ciudad || queryCity,
-              region: v.pais || 'España',
-              direccion: v.direccion || v.ciudad || '',
-              telefono: v.telefono || '',
-              website: v.url_oficial || '',
-              tipo: v.tipo || 'sala',
+              region: v.pais || "España",
+              direccion: v.direccion || v.ciudad || "",
+              telefono: v.telefono || "",
+              website: v.url_oficial || "",
+              tipo: v.tipo || "sala",
               aforo: v.capacidad,
-              genero: Array.isArray(v.generos_frecuentes) ? v.generos_frecuentes.join(', ') : '',
-              descripcion: v.detalles_tecnicos || `Verificado en ${verifiedBadges}`,
-              email_contacto: v.email || '',
+              genero: Array.isArray(v.generos_frecuentes)
+                ? v.generos_frecuentes.join(", ")
+                : "",
+              descripcion:
+                v.detalles_tecnicos || `Verificado en ${verifiedBadges}`,
+              email_contacto: v.email || "",
               fuente: `Radar Multi-Fuente (${verifiedBadges})`,
               selected: !existingMatch,
               alreadyInCrm: !!existingMatch,
@@ -543,14 +638,16 @@ export function GooglePlacesExplorerModal({
 
         setPlaces(mapped);
         setSearchSource(
-          `Radar Multi-Fuente: ${res.venues.length} recintos encontrados (${(res.fuentes_consultadas || ['Wegow', 'Songkick', 'Ticketmaster', 'MusicBrainz']).join(' • ')})`
+          `Radar Multi-Fuente: ${res.venues.length} recintos encontrados (${(res.fuentes_consultadas || ["Wegow", "Songkick", "Ticketmaster", "MusicBrainz"]).join(" • ")})`,
         );
       } else {
-        setSearchError(res.error || 'No se obtuvieron recintos con el radar multi-fuente.');
+        setSearchError(
+          res.error || "No se obtuvieron recintos con el radar multi-fuente.",
+        );
       }
     } catch (err: any) {
-      console.error('Error en búsqueda multi-fuente:', err);
-      setSearchError(err.message || 'Fallo al ejecutar el radar multi-fuente.');
+      console.error("Error en búsqueda multi-fuente:", err);
+      setSearchError(err.message || "Fallo al ejecutar el radar multi-fuente.");
     } finally {
       setIsSearching(false);
     }
@@ -558,20 +655,21 @@ export function GooglePlacesExplorerModal({
 
   const handleSearchPublicCultural = async () => {
     setIsSearching(true);
-    setSearchError('');
-    setImportSuccessMsg('');
-    setExtractStatus('');
-    setDiscardToast('');
+    setSearchError("");
+    setImportSuccessMsg("");
+    setExtractStatus("");
+    setDiscardToast("");
 
-    const queryRegion = selectedCity || activeCampaign?.targetCities?.[0] || 'Madrid';
+    const queryRegion =
+      selectedCity || activeCampaign?.targetCities?.[0] || "Madrid";
 
     try {
-      const res = await apiFetch('/api/leads/public-cultural-radar', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/public-cultural-radar", {
+        method: "POST",
         body: JSON.stringify({
           provinciaOrRegion: queryRegion,
-          estiloMusical: bandGenre || 'Música en directo',
-          bandName: bandName || 'Tu Banda',
+          estiloMusical: bandGenre || "Música en directo",
+          bandName: bandName || "Tu Banda",
           limit: searchLimit || 8,
         }),
       });
@@ -579,30 +677,38 @@ export function GooglePlacesExplorerModal({
       if (res.success && Array.isArray(res.oportunidades)) {
         const currentDiscarded = getStoredDiscarded();
         const isDiscarded = (name: string) => {
-          const norm = (name || '').toLowerCase().trim();
-          return currentDiscarded.some((d) => d.nombre_sala.toLowerCase().trim() === norm);
+          const norm = (name || "").toLowerCase().trim();
+          return currentDiscarded.some(
+            (d) => d.nombre_sala.toLowerCase().trim() === norm,
+          );
         };
 
         const mapped: PlaceResult[] = res.oportunidades
           .filter((op: any) => !isDiscarded(op.entidad_o_evento))
           .map((op: any, idx: number) => {
-            const normName = (op.entidad_o_evento || '').toLowerCase().trim();
-            const existingMatch = existingLeads.find((l) => l.nombre_sala && l.nombre_sala.toLowerCase().trim() === normName);
+            const normName = (op.entidad_o_evento || "").toLowerCase().trim();
+            const existingMatch = existingLeads.find(
+              (l) =>
+                l.nombre_sala &&
+                l.nombre_sala.toLowerCase().trim() === normName,
+            );
 
             return {
               place_id: `cultural-${Date.now()}-${idx}`,
               nombre_sala: op.entidad_o_evento,
               ciudad: op.municipio || queryRegion,
               region: op.provincia || queryRegion,
-              direccion: op.municipio || '',
-              telefono: op.telefono || '',
-              website: op.url_registro || '',
-              tipo: (op.tipo === 'ayuntamiento' ? 'ayuntamiento' : 'sala') as any,
+              direccion: op.municipio || "",
+              telefono: op.telefono || "",
+              website: op.url_registro || "",
+              tipo: (op.tipo === "ayuntamiento"
+                ? "ayuntamiento"
+                : "sala") as any,
               aforo: undefined,
-              genero: bandGenre || 'Cultural',
-              descripcion: `${op.programa_o_ciclo || ''} · ${op.requisitos_o_perfil || ''} (${op.plazo_presentacion || 'Convocatoria'})`,
-              email_contacto: op.email_contacto || '',
-              fuente: `Radar Cultural Público (${op.fuente_datos || 'Datos Abiertos & Municipios'})`,
+              genero: bandGenre || "Cultural",
+              descripcion: `${op.programa_o_ciclo || ""} · ${op.requisitos_o_perfil || ""} (${op.plazo_presentacion || "Convocatoria"})`,
+              email_contacto: op.email_contacto || "",
+              fuente: `Radar Cultural Público (${op.fuente_datos || "Datos Abiertos & Municipios"})`,
               selected: !existingMatch,
               alreadyInCrm: !!existingMatch,
               crmStatus: existingMatch ? existingMatch.estado : null,
@@ -613,13 +719,17 @@ export function GooglePlacesExplorerModal({
           });
 
         setPlaces(mapped);
-        setSearchSource(`Radar Cultural Público: ${res.oportunidades.length} teatros, auditorios y convocatorias en ${queryRegion}`);
+        setSearchSource(
+          `Radar Cultural Público: ${res.oportunidades.length} teatros, auditorios y convocatorias en ${queryRegion}`,
+        );
       } else {
-        setSearchError(res.error || 'No se obtuvieron convocatorias en el radar cultural.');
+        setSearchError(
+          res.error || "No se obtuvieron convocatorias en el radar cultural.",
+        );
       }
     } catch (err: any) {
-      console.error('Error en radar cultural público:', err);
-      setSearchError(err.message || 'Fallo de conexión con el radar cultural.');
+      console.error("Error en radar cultural público:", err);
+      setSearchError(err.message || "Fallo de conexión con el radar cultural.");
     } finally {
       setIsSearching(false);
     }
@@ -631,33 +741,45 @@ export function GooglePlacesExplorerModal({
       place_id: place.place_id,
       nombre_sala: place.nombre_sala,
       ciudad: place.ciudad,
-      tipo: String(place.tipo || ''),
+      tipo: String(place.tipo || ""),
       discarded_at: new Date().toISOString(),
     };
     const updated = [
       newItem,
       ...current.filter(
         (d) =>
-          (d.place_id && place.place_id ? d.place_id !== place.place_id : true) &&
-          d.nombre_sala.toLowerCase().trim() !== place.nombre_sala.toLowerCase().trim()
+          (d.place_id && place.place_id
+            ? d.place_id !== place.place_id
+            : true) &&
+          d.nombre_sala.toLowerCase().trim() !==
+            place.nombre_sala.toLowerCase().trim(),
       ),
     ];
     saveStoredDiscarded(updated);
     setDiscardedList(updated);
     setPlaces((prev) => prev.filter((p) => p.place_id !== place.place_id));
-    setDiscardToast(`"${place.nombre_sala}" descartada. No volverá a aparecer en las sugerencias.`);
-    setTimeout(() => setDiscardToast(''), 4000);
+    setDiscardToast(
+      `"${place.nombre_sala}" descartada. No volverá a aparecer en las sugerencias.`,
+    );
+    setTimeout(() => setDiscardToast(""), 4000);
   };
 
   const handleRestorePlace = (placeName: string) => {
     const current = getStoredDiscarded();
-    const updated = current.filter((d) => d.nombre_sala.toLowerCase().trim() !== placeName.toLowerCase().trim());
+    const updated = current.filter(
+      (d) =>
+        d.nombre_sala.toLowerCase().trim() !== placeName.toLowerCase().trim(),
+    );
     saveStoredDiscarded(updated);
     setDiscardedList(updated);
   };
 
   const handleClearAllDiscarded = () => {
-    if (window.confirm('¿Deseas restablecer todas las sugerencias no deseadas? Volverán a aparecer en futuras búsquedas.')) {
+    if (
+      window.confirm(
+        "¿Deseas restablecer todas las sugerencias no deseadas? Volverán a aparecer en futuras búsquedas.",
+      )
+    ) {
       saveStoredDiscarded([]);
       setDiscardedList([]);
       setShowDiscardedModal(false);
@@ -682,7 +804,11 @@ export function GooglePlacesExplorerModal({
   };
 
   const toggleSelectPlace = (placeId: string) => {
-    setPlaces((prev) => prev.map((p) => (p.place_id === placeId ? { ...p, selected: !p.selected } : p)));
+    setPlaces((prev) =>
+      prev.map((p) =>
+        p.place_id === placeId ? { ...p, selected: !p.selected } : p,
+      ),
+    );
   };
 
   const toggleSelectAll = () => {
@@ -692,7 +818,13 @@ export function GooglePlacesExplorerModal({
 
   const handlePlaceCategoryChange = (placeId: string, newType: LeadType) => {
     const catObj = CATEGORIES.find((c) => c.id === newType);
-    setPlaces((prev) => prev.map((p) => (p.place_id === placeId ? { ...p, tipo: newType, icono: catObj?.icon || p.icono } : p)));
+    setPlaces((prev) =>
+      prev.map((p) =>
+        p.place_id === placeId
+          ? { ...p, tipo: newType, icono: catObj?.icon || p.icono }
+          : p,
+      ),
+    );
   };
 
   // Single venue email extraction (Completador / Enriquecedor de Contactos)
@@ -700,11 +832,15 @@ export function GooglePlacesExplorerModal({
     const target = places.find((p) => p.place_id === placeId);
     if (!target) return;
 
-    setPlaces((prev) => prev.map((p) => (p.place_id === placeId ? { ...p, extractingEmail: true } : p)));
+    setPlaces((prev) =>
+      prev.map((p) =>
+        p.place_id === placeId ? { ...p, extractingEmail: true } : p,
+      ),
+    );
 
     try {
-      const res = await apiFetch('/api/leads/extract-emails', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/extract-emails", {
+        method: "POST",
         body: JSON.stringify({
           places: [
             {
@@ -717,25 +853,34 @@ export function GooglePlacesExplorerModal({
         }),
       });
 
-      if (res.success && Array.isArray(res.extracted) && res.extracted.length > 0) {
+      if (
+        res.success &&
+        Array.isArray(res.extracted) &&
+        res.extracted.length > 0
+      ) {
         const item = res.extracted[0];
         setPlaces((prev) =>
           prev.map((p) =>
             p.place_id === placeId
               ? {
                   ...p,
-                  email_contacto: item.email_contacto || p.email_contacto || '',
-                  instagram: item.instagram || p.instagram || '',
-                  contacto_nombre: item.contacto_nombre || p.contacto_nombre || '',
+                  email_contacto: item.email_contacto || p.email_contacto || "",
+                  instagram: item.instagram || p.instagram || "",
+                  contacto_nombre:
+                    item.contacto_nombre || p.contacto_nombre || "",
                   extractingEmail: false,
                 }
-              : p
-          )
+              : p,
+          ),
         );
       }
     } catch (err) {
-      console.error('Error completando datos de contacto:', err);
-      setPlaces((prev) => prev.map((p) => (p.place_id === placeId ? { ...p, extractingEmail: false } : p)));
+      console.error("Error completando datos de contacto:", err);
+      setPlaces((prev) =>
+        prev.map((p) =>
+          p.place_id === placeId ? { ...p, extractingEmail: false } : p,
+        ),
+      );
     }
   };
 
@@ -745,7 +890,9 @@ export function GooglePlacesExplorerModal({
     if (selectedPlaces.length === 0) return;
 
     setIsExtractingBatch(true);
-    setExtractStatus(`Iniciando Agente Enriquecedor para ${selectedPlaces.length} contactos...`);
+    setExtractStatus(
+      `Iniciando Agente Enriquecedor para ${selectedPlaces.length} contactos...`,
+    );
 
     const CHUNK_SIZE = 3;
     let totalExtractedCount = 0;
@@ -755,12 +902,12 @@ export function GooglePlacesExplorerModal({
         const chunk = selectedPlaces.slice(i, i + CHUNK_SIZE);
         const currentProgress = Math.min(i + CHUNK_SIZE, selectedPlaces.length);
         setExtractStatus(
-          `⚡ Investigando webs oficiales (${currentProgress}/${selectedPlaces.length}): ${chunk.map((c) => c.nombre_sala).join(',')}...`
+          `⚡ Investigando webs oficiales (${currentProgress}/${selectedPlaces.length}): ${chunk.map((c) => c.nombre_sala).join(",")}...`,
         );
 
         try {
-          const res = await apiFetch('/api/leads/extract-emails', {
-            method: 'POST',
+          const res = await apiFetch("/api/leads/extract-emails", {
+            method: "POST",
             body: JSON.stringify({
               places: chunk.map((p) => ({
                 place_id: p.place_id,
@@ -775,14 +922,21 @@ export function GooglePlacesExplorerModal({
             const emailMap = new Map<string, any>();
             res.extracted.forEach((item: any) => {
               if (item.id) emailMap.set(item.id, item);
-              if (item.nombre_sala) emailMap.set(item.nombre_sala.toLowerCase().trim(), item);
+              if (item.nombre_sala)
+                emailMap.set(item.nombre_sala.toLowerCase().trim(), item);
             });
 
             let newFoundInChunk = 0;
             setPlaces((prev) =>
               prev.map((p) => {
-                const match = emailMap.get(p.place_id) || emailMap.get(p.nombre_sala.toLowerCase().trim());
-                if (match && match.email_contacto && match.email_contacto.trim() !== '') {
+                const match =
+                  emailMap.get(p.place_id) ||
+                  emailMap.get(p.nombre_sala.toLowerCase().trim());
+                if (
+                  match &&
+                  match.email_contacto &&
+                  match.email_contacto.trim() !== ""
+                ) {
                   newFoundInChunk++;
                   return {
                     ...p,
@@ -792,22 +946,29 @@ export function GooglePlacesExplorerModal({
                   };
                 }
                 return p;
-              })
+              }),
             );
             totalExtractedCount += res.extractedCount || newFoundInChunk;
           }
         } catch (chunkErr: any) {
-          console.warn(`[Batch Enriquecedor] Advertencia en sub-lote ${i / CHUNK_SIZE + 1}:`, chunkErr);
+          console.warn(
+            `[Batch Enriquecedor] Advertencia en sub-lote ${i / CHUNK_SIZE + 1}:`,
+            chunkErr,
+          );
         }
       }
 
-      setExtractStatus(`✨ Proceso completado: Extraídos ${totalExtractedCount} correos oficiales verificados.`);
+      setExtractStatus(
+        `✨ Proceso completado: Extraídos ${totalExtractedCount} correos oficiales verificados.`,
+      );
       setTimeout(() => {
-        setExtractStatus('');
+        setExtractStatus("");
       }, 7000);
     } catch (err: any) {
-      console.error('Error completando lote de contactos:', err);
-      setExtractStatus(`⚠️ Enriquecimiento completado parcialmente: ${err.message || 'Verifica la conexión'}`);
+      console.error("Error completando lote de contactos:", err);
+      setExtractStatus(
+        `⚠️ Enriquecimiento completado parcialmente: ${err.message || "Verifica la conexión"}`,
+      );
     } finally {
       setIsExtractingBatch(false);
     }
@@ -819,18 +980,20 @@ export function GooglePlacesExplorerModal({
     if (selectedPlaces.length === 0) return;
 
     setIsImporting(true);
-    setImportSuccessMsg('');
+    setImportSuccessMsg("");
 
     try {
-      const res = await apiFetch('/api/leads/import-places', {
-        method: 'POST',
+      const res = await apiFetch("/api/leads/import-places", {
+        method: "POST",
         body: JSON.stringify({
           leads: selectedPlaces,
         }),
       });
 
       if (res.success) {
-        setImportSuccessMsg(`🎉 ¡${res.importedCount} contactos clasificados e importados con éxito a tu CRM!`);
+        setImportSuccessMsg(
+          `🎉 ¡${res.importedCount} contactos clasificados e importados con éxito a tu CRM!`,
+        );
         if (Array.isArray(res.leads)) {
           onImportLeads(res.leads);
         }
@@ -839,15 +1002,19 @@ export function GooglePlacesExplorerModal({
         }, 1600);
       }
     } catch (err: any) {
-      console.error('Error al importar recintos:', err);
-      setSearchError(`Error al guardar en el CRM: ${err.message || 'Fallo del servidor'}`);
+      console.error("Error al importar recintos:", err);
+      setSearchError(
+        `Error al guardar en el CRM: ${err.message || "Fallo del servidor"}`,
+      );
     } finally {
       setIsImporting(false);
     }
   };
 
   const selectedCount = places.filter((p) => p.selected).length;
-  const emailsFoundCount = places.filter((p) => p.email_contacto && p.email_contacto.trim() !== '').length;
+  const emailsFoundCount = places.filter(
+    (p) => p.email_contacto && p.email_contacto.trim() !== "",
+  ).length;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -871,7 +1038,8 @@ export function GooglePlacesExplorerModal({
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                  Busca y categoriza nuevas salas, ayuntamientos, festivales, grupos y agencias en cualquier ciudad y enriquece sus correos
+                  Busca y categoriza nuevas salas, ayuntamientos, festivales,
+                  grupos y agencias en cualquier ciudad y enriquece sus correos
                   sin alucinar.
                 </p>
               </div>
@@ -920,9 +1088,11 @@ export function GooglePlacesExplorerModal({
                       )}
                     </div>
                     <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
-                      Descubre simultáneamente todos los recintos, salas, locales y discotecas del aforo (
-                      {aforoMin || activeCampaign?.minCapacity || '0'} - {aforoMax || activeCampaign?.maxCapacity || '∞'} pax), adaptados a
-                      las ciudades objetivo y estilo de la banda.
+                      Descubre simultáneamente todos los recintos, salas,
+                      locales y discotecas del aforo (
+                      {aforoMin || activeCampaign?.minCapacity || "0"} -{" "}
+                      {aforoMax || activeCampaign?.maxCapacity || "∞"} pax),
+                      adaptados a las ciudades objetivo y estilo de la banda.
                     </p>
                   </div>
                 </div>
@@ -931,7 +1101,7 @@ export function GooglePlacesExplorerModal({
                   type="button"
                   onClick={handleMassCampaignSearch}
                   disabled={isMassCampaignSearching || isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-[var(--acc)] via-amber-400 to-amber-500 hover:from-amber-400 hover:to-[var(--acc-soft)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all hover:shadow-amber-0/20 cursor-pointer disabled:opacity-50 shrink-0"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc-soft)] text-[var(--acc-ink)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all hover:shadow-[var(--acc)]/20 cursor-pointer disabled:opacity-50 shrink-0"
                 >
                   {isMassCampaignSearching ? (
                     <>
@@ -950,17 +1120,19 @@ export function GooglePlacesExplorerModal({
               {/* Selector de Tipos de Espacio para la prospección masiva */}
               <div className="pt-2800/80 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-1">Espacios a rastrear:</span>
+                  <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-1">
+                    Espacios a rastrear:
+                  </span>
                   {[
-                    { id: 'sala', label: 'Salas & Recintos', icon: '🏛️' },
-                    { id: 'local', label: 'Locales & Bares', icon: '☕' },
+                    { id: "sala", label: "Salas & Recintos", icon: "🏛️" },
+                    { id: "local", label: "Locales & Bares", icon: "☕" },
                     {
-                      id: 'discoteca',
-                      label: 'Discotecas & Clubs',
-                      icon: '🪩',
+                      id: "discoteca",
+                      label: "Discotecas & Clubs",
+                      icon: "🪩",
                     },
-                    { id: 'teatro', label: 'Teatros & Auditorios', icon: '🎭' },
-                    { id: 'grupo', label: 'Bandas & Co-booking', icon: '🎸' },
+                    { id: "teatro", label: "Teatros & Auditorios", icon: "🎭" },
+                    { id: "grupo", label: "Bandas & Co-booking", icon: "🎸" },
                   ].map((item) => {
                     const isChecked = massFilterTipos.includes(item.id);
                     return (
@@ -970,7 +1142,9 @@ export function GooglePlacesExplorerModal({
                         onClick={() => {
                           if (isChecked) {
                             if (massFilterTipos.length > 1) {
-                              setMassFilterTipos(massFilterTipos.filter((t) => t !== item.id));
+                              setMassFilterTipos(
+                                massFilterTipos.filter((t) => t !== item.id),
+                              );
                             }
                           } else {
                             setMassFilterTipos([...massFilterTipos, item.id]);
@@ -978,8 +1152,8 @@ export function GooglePlacesExplorerModal({
                         }}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
                           isChecked
-                            ? 'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50'
-                            : 'bg-[var(--bg)]/80 text-[var(--ink-2)]800 hover:text-[var(--ink-2)]'
+                            ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50"
+                            : "bg-[var(--bg)]/80 text-[var(--ink-2)]800 hover:text-[var(--ink-2)]"
                         }`}
                       >
                         <span>{item.icon}</span>
@@ -989,12 +1163,15 @@ export function GooglePlacesExplorerModal({
                   })}
                 </div>
 
-                {activeCampaign?.targetCities && activeCampaign.targetCities.length > 0 && (
-                  <span className="text-[10px] text-[var(--ink-2)] font-sans">
-                    Ciudades ({activeCampaign.targetCities.length}):{' '}
-                    <strong className="text-[var(--ink)]">{activeCampaign.targetCities.join(',')}</strong>
-                  </span>
-                )}
+                {activeCampaign?.targetCities &&
+                  activeCampaign.targetCities.length > 0 && (
+                    <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                      Ciudades ({activeCampaign.targetCities.length}):{" "}
+                      <strong className="text-[var(--ink)]">
+                        {activeCampaign.targetCities.join(",")}
+                      </strong>
+                    </span>
+                  )}
               </div>
             </div>
 
@@ -1005,7 +1182,10 @@ export function GooglePlacesExplorerModal({
                   <Ban className="w-4 h-4 text-[var(--alert)] shrink-0" />
                   <span>{discardToast}</span>
                 </div>
-                <button onClick={() => setDiscardToast('')} className="text-[var(--alert)] hover:text-[var(--ink)] p-1 cursor-pointer">
+                <button
+                  onClick={() => setDiscardToast("")}
+                  className="text-[var(--alert)] hover:text-[var(--ink)] p-1 cursor-pointer"
+                >
                   <X className="w-3 h-3" />
                 </button>
               </div>
@@ -1016,7 +1196,9 @@ export function GooglePlacesExplorerModal({
               {/* Category Selector Pills (8 Categorías) */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] font-bold">Categoría a Descubrir:</label>
+                  <label className="block text-[10px] font-sans text-[var(--ink-2)] font-bold">
+                    Categoría a Descubrir:
+                  </label>
                   {discardedList.length > 0 && (
                     <button
                       type="button"
@@ -1038,13 +1220,15 @@ export function GooglePlacesExplorerModal({
                         onClick={() => handleCategoryChange(cat.id)}
                         className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                            : 'bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                            ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                            : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                         }`}
                         title={cat.desc}
                       >
                         <span>{cat.icon}</span>
-                        <span className="truncate">{cat.label.split('')[0]}</span>
+                        <span className="truncate">
+                          {cat.label.split("")[0]}
+                        </span>
                       </button>
                     );
                   })}
@@ -1060,13 +1244,13 @@ export function GooglePlacesExplorerModal({
                     type="text"
                     value={selectedCity}
                     onChange={(e) => setSelectedCity(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     placeholder="Ciudad (ej. Granada, Madrid...)"
                     className="w-full pl-9 pr-7 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                   {selectedCity && (
                     <button
-                      onClick={() => setSelectedCity('')}
+                      onClick={() => setSelectedCity("")}
                       className="absolute right-2.5 top-2.5 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                       title="Limpiar ciudad"
                     >
@@ -1082,15 +1266,20 @@ export function GooglePlacesExplorerModal({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                    placeholder={CATEGORIES.find((c) => c.id === selectedType)?.placeholder || 'Búsqueda opcional...'}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                    placeholder={
+                      CATEGORIES.find((c) => c.id === selectedType)
+                        ?.placeholder || "Búsqueda opcional..."
+                    }
                     className="w-full pl-9 pr-3 py-2 text-xs rounded-[var(--r-m)] bg-[var(--bg)]800 text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none"
                   />
                 </div>
 
                 {/* Number of Venues limit (1 a 10) */}
                 <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--bg)] px-3 py-1 rounded-[var(--r-m)]800">
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">Cantidad:</span>
+                  <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">
+                    Cantidad:
+                  </span>
                   <input
                     type="range"
                     min="1"
@@ -1099,7 +1288,9 @@ export function GooglePlacesExplorerModal({
                     onChange={(e) => setSearchLimit(Number(e.target.value))}
                     className="w-full accent-[var(--acc)] cursor-pointer"
                   />
-                  <span className="text-xs font-bold font-sans text-[var(--acc)] w-4 text-center">{searchLimit}</span>
+                  <span className="text-xs font-bold font-sans text-[var(--acc)] w-4 text-center">
+                    {searchLimit}
+                  </span>
                 </div>
               </div>
 
@@ -1111,7 +1302,11 @@ export function GooglePlacesExplorerModal({
                   className="text-[11px] text-[var(--ink-2)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-sans"
                 >
                   <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>{showAdvancedFilters ? 'Ocultar Filtros de Aforo' : 'Filtros de Aforo'}</span>
+                  <span>
+                    {showAdvancedFilters
+                      ? "Ocultar Filtros de Aforo"
+                      : "Filtros de Aforo"}
+                  </span>
                 </button>
 
                 <div className="flex flex-wrap items-center gap-2 ml-auto">
@@ -1143,8 +1338,16 @@ export function GooglePlacesExplorerModal({
                     disabled={isSearching}
                     className="px-4 py-2 bg-[#f2ca50] hover:bg-[#d8b03e] text-[#2c2200] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
                   >
-                    {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                    <span>{isSearching ? 'Buscando...' : `Google Places (${searchLimit})`}</span>
+                    {isSearching ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Search className="w-4 h-4" />
+                    )}
+                    <span>
+                      {isSearching
+                        ? "Buscando..."
+                        : `Google Places (${searchLimit})`}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -1152,7 +1355,9 @@ export function GooglePlacesExplorerModal({
               {showAdvancedFilters && (
                 <div className="p-3 bg-[var(--bg)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Aforo Mínimo (personas)</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Aforo Mínimo (personas)
+                    </label>
                     <input
                       type="number"
                       placeholder="Ej. 150"
@@ -1162,7 +1367,9 @@ export function GooglePlacesExplorerModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Aforo Máximo (personas)</label>
+                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                      Aforo Máximo (personas)
+                    </label>
                     <input
                       type="number"
                       placeholder="Ej. 800"
@@ -1176,15 +1383,17 @@ export function GooglePlacesExplorerModal({
 
               {/* Quick City Chips */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[10px] text-[var(--ink-2)] font-bold tracking-wider mr-1">Ciudades rápidas:</span>
+                <span className="text-[10px] text-[var(--ink-2)] font-bold tracking-wider mr-1">
+                  Ciudades rápidas:
+                </span>
                 {QUICK_CITIES.map((city) => (
                   <button
                     key={city}
                     onClick={() => handleQuickCityClick(city)}
                     className={`px-2.5 py-0.5 text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer font-medium ${
                       selectedCity === city
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                        : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]'
+                        ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                        : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
                     }`}
                   >
                     {city}
@@ -1227,11 +1436,16 @@ export function GooglePlacesExplorerModal({
             {searchSource && (
               <div className="flex items-center justify-between text-[11px] px-2 text-[var(--ink-2)]">
                 <span>
-                  Fuente: <strong className="text-[var(--acc)]">{searchSource}</strong>
+                  Fuente:{" "}
+                  <strong className="text-[var(--acc)]">{searchSource}</strong>
                 </span>
                 <span>
-                  Encontrados: <strong className="text-[var(--ink)]">{places.length}</strong> | Con email:{' '}
-                  <strong className="text-[var(--ok)]">{emailsFoundCount}</strong>
+                  Encontrados:{" "}
+                  <strong className="text-[var(--ink)]">{places.length}</strong>{" "}
+                  | Con email:{" "}
+                  <strong className="text-[var(--ok)]">
+                    {emailsFoundCount}
+                  </strong>
                 </span>
               </div>
             )}
@@ -1269,7 +1483,9 @@ export function GooglePlacesExplorerModal({
                     >
                       <input
                         type="checkbox"
-                        checked={places.length > 0 && places.every((p) => p.selected)}
+                        checked={
+                          places.length > 0 && places.every((p) => p.selected)
+                        }
                         onChange={toggleSelectAll}
                         className="rounded accent-[var(--acc)] cursor-pointer"
                       />
@@ -1299,7 +1515,11 @@ export function GooglePlacesExplorerModal({
                       disabled={isImporting || selectedCount === 0}
                       className="px-3.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     >
-                      {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PlusCircle className="w-3.5 h-3.5" />}
+                      {isImporting ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <PlusCircle className="w-3.5 h-3.5" />
+                      )}
                       <span>📥 Incluir en mis Leads ({selectedCount})</span>
                     </button>
                   </div>
@@ -1311,7 +1531,9 @@ export function GooglePlacesExplorerModal({
                     <div
                       key={place.place_id}
                       className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-2.5 ${
-                        place.selected ? 'bg-[var(--bg)]/50' : 'bg-[var(--bg)]/60800/80 opacity-70'
+                        place.selected
+                          ? "bg-[var(--bg)]/50"
+                          : "bg-[var(--bg)]/60800/80 opacity-70"
                       }`}
                     >
                       <div className="space-y-2">
@@ -1331,18 +1553,20 @@ export function GooglePlacesExplorerModal({
                               />
                             ) : (
                               <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--sunken)]700 flex items-center justify-center text-lg shrink-0">
-                                {place.icono || '🏛️'}
+                                {place.icono || "🏛️"}
                               </div>
                             )}
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5 flex-wrap">
-                                <h4 className="text-xs font-bold text-[var(--ink)] truncate">{place.nombre_sala}</h4>
+                                <h4 className="text-xs font-bold text-[var(--ink)] truncate">
+                                  {place.nombre_sala}
+                                </h4>
                                 {place.alreadyInCrm && (
                                   <span
                                     className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold tracking-wider shrink-0"
                                     title="Este contacto ya existe en tu CRM de Leads"
                                   >
-                                    En CRM ({place.crmStatus || 'Registrado'})
+                                    En CRM ({place.crmStatus || "Registrado"})
                                   </span>
                                 )}
                                 {place.capacityMatch === false && (
@@ -1366,10 +1590,12 @@ export function GooglePlacesExplorerModal({
                           <div className="flex items-center gap-1.5 shrink-0">
                             {place.rating && (
                               <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc)] rounded-md text-[10px] font-bold">
-                                <Star className="w-3 h-3 fill-amber-400" />
+                                <Star className="w-3 h-3 fill-[var(--acc)]" />
                                 <span>{place.rating}</span>
                                 {place.user_ratings_total && (
-                                  <span className="text-[8px] text-[var(--ink-2)]">({place.user_ratings_total})</span>
+                                  <span className="text-[8px] text-[var(--ink-2)]">
+                                    ({place.user_ratings_total})
+                                  </span>
                                 )}
                               </div>
                             )}
@@ -1388,10 +1614,17 @@ export function GooglePlacesExplorerModal({
                         {/* Category & Tags Row */}
                         <div className="flex flex-wrap items-center justify-between gap-1.5 pt-0.5 text-[10px]">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[var(--ink-2)] font-sans">Categoría:</span>
+                            <span className="text-[var(--ink-2)] font-sans">
+                              Categoría:
+                            </span>
                             <select
-                              value={String(place.tipo || 'sala').toLowerCase()}
-                              onChange={(e) => handlePlaceCategoryChange(place.place_id, e.target.value as LeadType)}
+                              value={String(place.tipo || "sala").toLowerCase()}
+                              onChange={(e) =>
+                                handlePlaceCategoryChange(
+                                  place.place_id,
+                                  e.target.value as LeadType,
+                                )
+                              }
                               className="bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
                             >
                               {CATEGORIES.map((c) => (
@@ -1406,7 +1639,9 @@ export function GooglePlacesExplorerModal({
                             {place.genero && (
                               <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
                                 <Music2 className="w-2.5 h-2.5 shrink-0" />
-                                <span className="truncate max-w-[130px]">{place.genero}</span>
+                                <span className="truncate max-w-[130px]">
+                                  {place.genero}
+                                </span>
                               </span>
                             )}
                             {place.aforo ? (
@@ -1423,17 +1658,26 @@ export function GooglePlacesExplorerModal({
                           <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)]/80 text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
                             <div className="flex items-start gap-1.5">
                               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
-                              <p className="line-clamp-2">{place.descripcion}</p>
+                              <p className="line-clamp-2">
+                                {place.descripcion}
+                              </p>
                             </div>
                           </div>
                         )}
 
                         {/* Address & Phone */}
                         <div className="text-[10px] text-[var(--ink-2)] space-y-1 bg-[var(--bg)] p-2 rounded-[var(--r-s)] font-sans">
-                          {place.direccion && <p className="truncate text-[var(--ink-2)]">{place.direccion}</p>}
+                          {place.direccion && (
+                            <p className="truncate text-[var(--ink-2)]">
+                              {place.direccion}
+                            </p>
+                          )}
                           <div className="flex flex-wrap items-center gap-3 text-[var(--ink-2)]">
                             {place.telefono && (
-                              <a href={`tel:${place.telefono}`} className="flex items-center gap-1 hover:text-[var(--ink)]">
+                              <a
+                                href={`tel:${place.telefono}`}
+                                className="flex items-center gap-1 hover:text-[var(--ink)]"
+                              >
                                 <Phone className="w-3 h-3 text-[var(--ok)]" />
                                 <span>{place.telefono}</span>
                               </a>
@@ -1446,7 +1690,9 @@ export function GooglePlacesExplorerModal({
                                 className="flex items-center gap-1 text-[var(--ink-2)] hover:underline truncate max-w-[200px]"
                               >
                                 <Globe className="w-3 h-3" />
-                                <span className="truncate">{place.website.replace(/^https?:\/\//, '')}</span>
+                                <span className="truncate">
+                                  {place.website.replace(/^https?:\/\//, "")}
+                                </span>
                               </a>
                             )}
                           </div>
@@ -1458,7 +1704,9 @@ export function GooglePlacesExplorerModal({
                             <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)] text-[11px] flex items-center justify-between font-sans">
                               <div className="flex items-center gap-1.5 truncate">
                                 <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                                <span className="font-bold truncate">{place.email_contacto}</span>
+                                <span className="font-bold truncate">
+                                  {place.email_contacto}
+                                </span>
                               </div>
                               <span className="text-[9px] px-1.5 py-0.5 bg-[var(--ok)]/20 text-[var(--ink-2)] rounded font-bold shrink-0">
                                 Verificado
@@ -1466,9 +1714,13 @@ export function GooglePlacesExplorerModal({
                             </div>
                           ) : (
                             <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)]800 text-[10px] flex items-center justify-between gap-2">
-                              <span className="text-[var(--ink-2)] italic">Sin correo extraído aún</span>
+                              <span className="text-[var(--ink-2)] italic">
+                                Sin correo extraído aún
+                              </span>
                               <button
-                                onClick={() => handleExtractSingleEmail(place.place_id)}
+                                onClick={() =>
+                                  handleExtractSingleEmail(place.place_id)
+                                }
                                 disabled={place.extractingEmail}
                                 className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-md font-bold text-[10px] flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50 shrink-0"
                                 title="Agente Enriquecedor: Buscar email oficial verificado en la web de esta propuesta"
@@ -1478,7 +1730,11 @@ export function GooglePlacesExplorerModal({
                                 ) : (
                                   <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                                 )}
-                                <span>{place.extractingEmail ? 'Buscando...' : '⚡ Enriquecer'}</span>
+                                <span>
+                                  {place.extractingEmail
+                                    ? "Buscando..."
+                                    : "⚡ Enriquecer"}
+                                </span>
                               </button>
                             </div>
                           )}
@@ -1491,10 +1747,14 @@ export function GooglePlacesExplorerModal({
             ) : !isSearching ? (
               <div className="p-10 text-center space-y-3 bg-[var(--bg)]/40 rounded-[var(--r-l)]">
                 <Building2 className="w-12 h-12 text-[var(--ink-2)] mx-auto" />
-                <h3 className="text-sm font-bold text-[var(--ink-2)]">Descubre nuevas oportunidades de booking</h3>
+                <h3 className="text-sm font-bold text-[var(--ink-2)]">
+                  Descubre nuevas oportunidades de booking
+                </h3>
                 <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
-                  Selecciona la categoría deseada (Salas, Ayuntamientos, Festivales, Grupos, Agencias, Sellos o Medios), la ciudad y la
-                  cantidad a buscar (1 a 10). Revisa los resultados y añádelos a tu base de datos de leads con un solo clic.
+                  Selecciona la categoría deseada (Salas, Ayuntamientos,
+                  Festivales, Grupos, Agencias, Sellos o Medios), la ciudad y la
+                  cantidad a buscar (1 a 10). Revisa los resultados y añádelos a
+                  tu base de datos de leads con un solo clic.
                 </p>
               </div>
             ) : null}
@@ -1507,7 +1767,9 @@ export function GooglePlacesExplorerModal({
                 <div className="p-4800 flex items-center justify-between bg-[var(--bg)]/60">
                   <div className="flex items-center gap-2">
                     <Ban className="w-4 h-4 text-[var(--alert)]" />
-                    <h3 className="text-sm font-bold text-[var(--ink)]">Sugerencias No Deseadas ({discardedList.length})</h3>
+                    <h3 className="text-sm font-bold text-[var(--ink)]">
+                      Sugerencias No Deseadas ({discardedList.length})
+                    </h3>
                   </div>
                   <button
                     onClick={() => setShowDiscardedModal(false)}
@@ -1521,8 +1783,12 @@ export function GooglePlacesExplorerModal({
                   {discardedList.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-8">
                       <PublicoSilhouette opacity={0.12} size="small" />
-                      <p className="mt-4 font-medium text-[var(--ink)] text-xs">Sin sugerencias descartadas</p>
-                      <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">Las salas que descartes aparecerán aquí.</p>
+                      <p className="mt-4 font-medium text-[var(--ink)] text-xs">
+                        Sin sugerencias descartadas
+                      </p>
+                      <p className="mt-1.5 text-[var(--ink-2)] text-xs max-w-xs text-center">
+                        Las salas que descartes aparecerán aquí.
+                      </p>
                     </div>
                   ) : (
                     discardedList.map((item) => (
@@ -1531,9 +1797,13 @@ export function GooglePlacesExplorerModal({
                         className="p-2.5 rounded-[var(--r-m)] bg-[var(--bg)] flex items-center justify-between gap-3 text-xs"
                       >
                         <div className="min-w-0">
-                          <p className="font-bold text-[var(--ink)] truncate">{item.nombre_sala}</p>
+                          <p className="font-bold text-[var(--ink)] truncate">
+                            {item.nombre_sala}
+                          </p>
                           <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                            {item.ciudad ? `${item.ciudad} • ` : ''}Descartada el {new Date(item.discarded_at).toLocaleDateString()}
+                            {item.ciudad ? `${item.ciudad} • ` : ""}Descartada
+                            el{" "}
+                            {new Date(item.discarded_at).toLocaleDateString()}
                           </p>
                         </div>
                         <button

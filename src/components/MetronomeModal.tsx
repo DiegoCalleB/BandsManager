@@ -1,7 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from 'lucide-react';
-import { Song, ThemeColors } from '../types';
-import { ModalPortal } from './common/ModalPortal';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  X,
+  Play,
+  Pause,
+  Disc,
+  Zap,
+  Volume2,
+  VolumeX,
+  Music,
+  Clock,
+} from "lucide-react";
+import { Song, ThemeColors } from "../types";
+import { ModalPortal } from "./common/ModalPortal";
 
 interface MetronomeModalProps {
   isOpen: boolean;
@@ -11,14 +21,20 @@ interface MetronomeModalProps {
   initialBpm?: number;
 }
 
-export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm = 120 }: MetronomeModalProps) {
+export function MetronomeModal({
+  isOpen,
+  onClose,
+  songs = [],
+  colors,
+  initialBpm = 120,
+}: MetronomeModalProps) {
   const [bpm, setBpm] = useState<number>(initialBpm);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeSignature, setTimeSignature] = useState<number>(4); // Beats per bar: 4 = 4/4, 3 = 3/4, 6 = 6/8, 2 = 2/4
   const [currentBeat, setCurrentBeat] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0.8);
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [selectedSongId, setSelectedSongId] = useState<string>('');
+  const [selectedSongId, setSelectedSongId] = useState<string>("");
 
   // Tap tempo state
   const tapTimesRef = useRef<number[]>([]);
@@ -64,7 +80,8 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
       for (let i = 1; i < tapTimesRef.current.length; i++) {
         intervals.push(tapTimesRef.current[i] - tapTimesRef.current[i - 1]);
       }
-      const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      const avgInterval =
+        intervals.reduce((a, b) => a + b, 0) / intervals.length;
       const calculatedBpm = Math.round(60000 / avgInterval);
 
       if (calculatedBpm >= 30 && calculatedBpm <= 280) {
@@ -94,7 +111,7 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
       gain.gain.value = volume * 0.6;
     }
 
-    osc.type = 'sine';
+    osc.type = "sine";
 
     // Fast exponential decay for clean click sound
     gain.gain.setValueAtTime(gain.gain.value, time);
@@ -113,7 +130,10 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
 
     const scheduleAheadTime = 0.15;
 
-    while (nextNoteTimeRef.current < audioCtxRef.current.currentTime + scheduleAheadTime) {
+    while (
+      nextNoteTimeRef.current <
+      audioCtxRef.current.currentTime + scheduleAheadTime
+    ) {
       scheduleClick(currentBeatRef.current, nextNoteTimeRef.current);
 
       // Advance beat
@@ -122,7 +142,7 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
         () => {
           setCurrentBeat(currentBeatVal);
         },
-        (nextNoteTimeRef.current - audioCtxRef.current!.currentTime) * 1000
+        (nextNoteTimeRef.current - audioCtxRef.current!.currentTime) * 1000,
       );
 
       const secondsPerBeat = 60.0 / bpm;
@@ -137,9 +157,11 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
     if (!isPlaying) {
       // Start audio context
       if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        audioCtxRef.current = new (
+          window.AudioContext || (window as any).webkitAudioContext
+        )();
       }
-      if (audioCtxRef.current.state === 'suspended') {
+      if (audioCtxRef.current.state === "suspended") {
         audioCtxRef.current.resume();
       }
 
@@ -170,7 +192,7 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
         setIsPlaying(false);
         setCurrentBeat(0);
       }
-      if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
+      if (audioCtxRef.current && audioCtxRef.current.state === "running") {
         audioCtxRef.current.suspend().catch(() => {});
       }
     }
@@ -207,7 +229,9 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                     WebAudio API
                   </span>
                 </h3>
-                <p className="text-xs text-[var(--ink-2)]">Click de alta precisión para ensayos y estudio</p>
+                <p className="text-xs text-[var(--ink-2)]">
+                  Click de alta precisión para ensayos y estudio
+                </p>
               </div>
             </div>
             <button
@@ -235,7 +259,8 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                   <option value="">-- Seleccionar Canción --</option>
                   {songs.map((song) => (
                     <option key={song.id} value={song.id}>
-                      {song.titulo} {song.bpm ? `(${song.bpm} BPM)` : '(Sin BPM definido)'}
+                      {song.titulo}{" "}
+                      {song.bpm ? `(${song.bpm} BPM)` : "(Sin BPM definido)"}
                     </option>
                   ))}
                 </select>
@@ -265,8 +290,12 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                 </button>
 
                 <div className="flex flex-col items-center">
-                  <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)]">{bpm}</span>
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">Pulsaciones por Minuto</span>
+                  <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)]">
+                    {bpm}
+                  </span>
+                  <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
+                    Pulsaciones por Minuto
+                  </span>
                 </div>
 
                 <button
@@ -292,16 +321,18 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                 max="260"
                 value={bpm}
                 onChange={(e) => setBpm(Number(e.target.value))}
-                className="w-full mt-5 accent-amber-500 cursor-pointer"
+                className="w-full mt-5 accent-[var(--acc)] cursor-pointer"
               />
             </div>
 
             {/* Animated Beat Visualizer Bar */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-[var(--ink-2)]">
-                <span className="font-semibold flex items-center gap-1">Compás ({timeSignature}/4):</span>
+                <span className="font-semibold flex items-center gap-1">
+                  Compás ({timeSignature}/4):
+                </span>
                 <span className="font-sans text-[var(--acc)]/70 font-bold">
-                  Golpe {isPlaying ? currentBeat + 1 : '-'} / {timeSignature}
+                  Golpe {isPlaying ? currentBeat + 1 : "-"} / {timeSignature}
                 </span>
               </div>
 
@@ -316,9 +347,9 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                       className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-all duration-75 ${
                         isActive
                           ? isAccent
-                            ? 'bg-[var(--acc)]/60 text-[var(--ink)] scale-105'
-                            : 'bg-[var(--ok)] text-[var(--ink)] scale-105'
-                          : 'bg-[var(--ink)]/5 text-[var(--ink-2)]'
+                            ? "bg-[var(--acc)]/60 text-[var(--ink)] scale-105"
+                            : "bg-[var(--ok)] text-[var(--ink)] scale-105"
+                          : "bg-[var(--ink)]/5 text-[var(--ink-2)]"
                       }`}
                     >
                       {idx + 1}
@@ -332,7 +363,9 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
             <div className="grid grid-cols-2 gap-3">
               {/* Compás selector */}
               <div className="bg-[var(--ink)]/5 rounded-[var(--r-m)] p-2.5">
-                <label className="text-[11px] font-semibold text-[var(--ink-2)] block mb-1.5">Métrica:</label>
+                <label className="text-[11px] font-semibold text-[var(--ink-2)] block mb-1.5">
+                  Métrica:
+                </label>
                 <div className="grid grid-cols-3 gap-1">
                   {[4, 3, 2].map((sig) => (
                     <button
@@ -340,8 +373,8 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                       onClick={() => setTimeSignature(sig)}
                       className={`py-1 text-xs font-bold rounded-[var(--r-s)] transition-colors cursor-pointer ${
                         timeSignature === sig
-                          ? 'bg-[var(--acc)] text-[var(--ink)]'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
+                          ? "bg-[var(--acc)] text-[var(--ink)]"
+                          : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                       }`}
                     >
                       {sig}/4
@@ -358,28 +391,32 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                 <span className="text-xs font-black text-[var(--acc)]/70 tracking-wider group-hover:scale-105 transition-transform">
                   👆 TAP TEMPO
                 </span>
-                <span className="text-[10px] text-[var(--ink-2)]">Toca el ritmo 4 veces</span>
+                <span className="text-[10px] text-[var(--ink-2)]">
+                  Toca el ritmo 4 veces
+                </span>
               </button>
             </div>
 
             {/* Quick BPM Presets */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-semibold text-[var(--ink-2)] block">Presets Rápidos:</span>
+              <span className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                Presets Rápidos:
+              </span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 {[
-                  { label: 'Balada (75)', val: 75 },
-                  { label: 'Pop/Mid (105)', val: 105 },
-                  { label: 'Ska/Disco (124)', val: 124 },
-                  { label: 'Rock (140)', val: 140 },
-                  { label: 'Punk (165)', val: 165 },
+                  { label: "Balada (75)", val: 75 },
+                  { label: "Pop/Mid (105)", val: 105 },
+                  { label: "Ska/Disco (124)", val: 124 },
+                  { label: "Rock (140)", val: 140 },
+                  { label: "Punk (165)", val: 165 },
                 ].map((p) => (
                   <button
                     key={p.val}
                     onClick={() => setBpm(p.val)}
                     className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
                       bpm === p.val
-                        ? 'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 font-bold'
-                        : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
+                        ? "bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 font-bold"
+                        : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                     }`}
                   >
                     {p.label}
@@ -394,8 +431,8 @@ export function MetronomeModal({ isOpen, onClose, songs = [], colors, initialBpm
                 onClick={togglePlay}
                 className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98 ${
                   isPlaying
-                    ? 'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)]'
-                    : 'bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)]'
+                    ? "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)]"
+                    : "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)]"
                 }`}
               >
                 {isPlaying ? (

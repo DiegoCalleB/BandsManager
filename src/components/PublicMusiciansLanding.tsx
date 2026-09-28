@@ -260,7 +260,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           {/* Official BandManager Brand Logo */}
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--acc)]/30 via-yellow-400/20 to-[var(--acc)]/30 rounded-[var(--r-l)] blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--acc)]/30 via-yellow-400/20 to-[var(--acc)]/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-black p-1 flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
@@ -283,7 +283,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--ink)] max-w-3xl mx-auto leading-[1.15]">
             {t.heroTitle}
             {""}
-            <span className="bg-gradient-to-r from-[var(--acc)] via-amber-300 to-yellow-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-yellow-500 bg-clip-text text-transparent">
               {t.heroHighlight}
             </span>
           </h1>

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BandContact } from '../../types';
+import React, { useState } from "react";
+import { BandContact } from "../../types";
 import {
   Sparkles,
   X,
@@ -23,26 +23,26 @@ import {
   Users,
   Briefcase,
   Landmark,
-} from 'lucide-react';
-import { ModalPortal } from '../common/ModalPortal';
-import { PublicoSilhouette } from '../ui/PublicoSilhouette';
-import { apiFetch } from '../../utils/api';
-import { api } from '../../services/api';
-import { ExampleThreadsSection } from '../booking/ExampleThreadsSection';
-import type { TemplateCategory } from '../booking/TemplateConfigSection';
+} from "lucide-react";
+import { ModalPortal } from "../common/ModalPortal";
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { apiFetch } from "../../utils/api";
+import { api } from "../../services/api";
+import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
+import type { TemplateCategory } from "../booking/TemplateConfigSection";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
 const isStitchLight = false;
 
 const CATEGORY_LABELS: Record<string, string> = {
-  salas: '🏛️ Salas',
-  festivales: '🎪 Festivales',
-  discotecas: '🪩 Discotecas',
-  medios: '📻 Medios',
-  grupos: '🎸 Grupos',
-  managements: '💼 Managements',
-  ayuntamientos: '🎉 Ayuntamientos',
+  salas: "🏛️ Salas",
+  festivales: "🎪 Festivales",
+  discotecas: "🪩 Discotecas",
+  medios: "📻 Medios",
+  grupos: "🎸 Grupos",
+  managements: "💼 Managements",
+  ayuntamientos: "🎉 Ayuntamientos",
 };
 
 export interface ToneAnalysisData {
@@ -112,18 +112,20 @@ interface ToneDraft {
 
 function toDraft(toneData: ToneAnalysisData | null): ToneDraft {
   return {
-    tono_comunicacion: toneData?.tono_comunicacion || '',
-    tratamiento_habitual: toneData?.tratamiento_habitual || '',
-    nivel_energia: toneData?.nivel_energia || '',
-    vocabulario_clave: (toneData?.vocabulario_clave || []).join(','),
-    frases_emblematicas_extraidas: (toneData?.frases_emblematicas_extraidas || []).join('\n'),
-    emojis_frecuentes: (toneData?.emojis_frecuentes || []).join(''),
-    matiz_instagram: toneData?.matices_por_red?.instagram || '',
-    matiz_tiktok: toneData?.matices_por_red?.tiktok || '',
-    matiz_youtube: toneData?.matices_por_red?.youtube || '',
-    matiz_facebook: toneData?.matices_por_red?.facebook || '',
-    puntos_fuertes_para_conectar: toneData?.puntos_fuertes_para_conectar || '',
-    recomendacion_pitch: toneData?.recomendacion_pitch || '',
+    tono_comunicacion: toneData?.tono_comunicacion || "",
+    tratamiento_habitual: toneData?.tratamiento_habitual || "",
+    nivel_energia: toneData?.nivel_energia || "",
+    vocabulario_clave: (toneData?.vocabulario_clave || []).join(","),
+    frases_emblematicas_extraidas: (
+      toneData?.frases_emblematicas_extraidas || []
+    ).join("\n"),
+    emojis_frecuentes: (toneData?.emojis_frecuentes || []).join(""),
+    matiz_instagram: toneData?.matices_por_red?.instagram || "",
+    matiz_tiktok: toneData?.matices_por_red?.tiktok || "",
+    matiz_youtube: toneData?.matices_por_red?.youtube || "",
+    matiz_facebook: toneData?.matices_por_red?.facebook || "",
+    puntos_fuertes_para_conectar: toneData?.puntos_fuertes_para_conectar || "",
+    recomendacion_pitch: toneData?.recomendacion_pitch || "",
   };
 }
 
@@ -178,8 +180,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isTraining, setIsTraining] = useState(false);
   const [trainMessage, setTrainMessage] = useState<string | null>(null);
-  const [activeModalTab, setActiveModalTab] = useState<'tone' | 'threads'>('tone');
-  const [selectedCategoryThread, setSelectedCategoryThread] = useState<TemplateCategory>('salas');
+  const [activeModalTab, setActiveModalTab] = useState<"tone" | "threads">(
+    "tone",
+  );
+  const [selectedCategoryThread, setSelectedCategoryThread] =
+    useState<TemplateCategory>("salas");
   // Edición manual de reglas aprendidas: clave compuesta "mode:categoria" (ej. "reply:salas")
   // para poder tener en curso ediciones de pitch y de respuesta a la vez sin pisarse.
   const [savingRuleKey, setSavingRuleKey] = useState<string | null>(null);
@@ -187,15 +192,23 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
   if (!isOpen || !band) return null;
 
-  const getLearnedBucket = (mode: 'pitch' | 'reply') =>
-    (mode === 'reply' ? toneData?.reglas_por_categoria_respuesta : toneData?.reglas_por_categoria) || {};
+  const getLearnedBucket = (mode: "pitch" | "reply") =>
+    (mode === "reply"
+      ? toneData?.reglas_por_categoria_respuesta
+      : toneData?.reglas_por_categoria) || {};
 
   //'auto' = reglas_estilo_aprendidas (las infiere la IA, se fusionan - no se sobreescriben -
   // en cada refinamiento automático).'manual' = reglas_manuales (las escribe el mánager, el
   // refinamiento automático nunca las toca ni las borra por su cuenta).
-  const handleDeleteLearnedRule = async (mode: 'pitch' | 'reply', category: string, source: 'auto' | 'manual', ruleIndex: number) => {
+  const handleDeleteLearnedRule = async (
+    mode: "pitch" | "reply",
+    category: string,
+    source: "auto" | "manual",
+    ruleIndex: number,
+  ) => {
     const bucket = getLearnedBucket(mode)[category];
-    const field = source === 'manual' ? 'reglas_manuales' : 'reglas_estilo_aprendidas';
+    const field =
+      source === "manual" ? "reglas_manuales" : "reglas_estilo_aprendidas";
     const current = bucket?.[field] || [];
     const updated = current.filter((_, i) => i !== ruleIndex);
     const key = `${mode}:${category}:${source}`;
@@ -204,7 +217,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
       await api.updateLearnedToneRules({ mode, category, [field]: updated });
       await onRefreshLearnedRules?.();
     } catch (err) {
-      console.error('Error borrando regla aprendida:', err);
+      console.error("Error borrando regla aprendida:", err);
     } finally {
       setSavingRuleKey(null);
     }
@@ -213,9 +226,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   // Añadir siempre escribe en reglas_manuales, nunca en reglas_estilo_aprendidas: así lo que el
   // mánager mete a mano queda protegido del refinamiento automático para siempre, en vez de
   // arriesgarse a que la IA lo sustituya en el siguiente"Entrenar ADN de tono ahora".
-  const handleAddLearnedRule = async (mode: 'pitch' | 'reply', category: string) => {
+  const handleAddLearnedRule = async (
+    mode: "pitch" | "reply",
+    category: string,
+  ) => {
     const key = `${mode}:${category}:manual`;
-    const text = (newRuleText[key] || '').trim();
+    const text = (newRuleText[key] || "").trim();
     if (!text) return;
     const current = getLearnedBucket(mode)[category]?.reglas_manuales || [];
     setSavingRuleKey(key);
@@ -225,10 +241,10 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         category,
         reglas_manuales: [...current, text],
       });
-      setNewRuleText((prev) => ({ ...prev, [key]: '' }));
+      setNewRuleText((prev) => ({ ...prev, [key]: "" }));
       await onRefreshLearnedRules?.();
     } catch (err) {
-      console.error('Error añadiendo regla manual:', err);
+      console.error("Error añadiendo regla manual:", err);
     } finally {
       setSavingRuleKey(null);
     }
@@ -239,11 +255,18 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
     setTrainMessage(null);
     try {
       const res = await api.trainToneDna();
-      setTrainMessage(res.message || (res.success ? 'Entrenamiento ejecutado.' : 'No se pudo entrenar el ADN de tono.'));
+      setTrainMessage(
+        res.message ||
+          (res.success
+            ? "Entrenamiento ejecutado."
+            : "No se pudo entrenar el ADN de tono."),
+      );
       if (res.success) await onRefreshLearnedRules?.();
     } catch (err: any) {
-      console.error('Error entrenando el ADN de tono:', err);
-      setTrainMessage(err?.message || 'Error de conexión al entrenar el ADN de tono.');
+      console.error("Error entrenando el ADN de tono:", err);
+      setTrainMessage(
+        err?.message || "Error de conexión al entrenar el ADN de tono.",
+      );
     } finally {
       setIsTraining(false);
     }
@@ -275,7 +298,10 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         tratamiento_habitual: draft.tratamiento_habitual.trim(),
         nivel_energia: draft.nivel_energia.trim(),
         vocabulario_clave: partirLista(draft.vocabulario_clave, /[,\n]/),
-        frases_emblematicas_extraidas: partirLista(draft.frases_emblematicas_extraidas, /\n/),
+        frases_emblematicas_extraidas: partirLista(
+          draft.frases_emblematicas_extraidas,
+          /\n/,
+        ),
         emojis_frecuentes: partirLista(draft.emojis_frecuentes, /[\s,]+/),
         matices_por_red: {
           instagram: draft.matiz_instagram.trim(),
@@ -286,9 +312,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         puntos_fuertes_para_conectar: draft.puntos_fuertes_para_conectar.trim(),
         recomendacion_pitch: draft.recomendacion_pitch.trim(),
       };
-      const res = await apiFetch('/api/bands/tone-dna', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await apiFetch("/api/bands/tone-dna", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cambios),
       });
       const json = res as any;
@@ -296,24 +322,25 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         onSaved?.(json.data);
         setIsEditing(false);
       } else {
-        setSaveError(json?.error || 'No se pudo guardar la edición.');
+        setSaveError(json?.error || "No se pudo guardar la edición.");
       }
     } catch (err: any) {
-      console.error('Error guardando edición del ADN de tono:', err);
-      setSaveError(err?.message || 'Error de conexión al guardar.');
+      console.error("Error guardando edición del ADN de tono:", err);
+      setSaveError(err?.message || "Error de conexión al guardar.");
     } finally {
       setIsSaving(false);
     }
   };
 
-  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-500/50 bg-[var(--surface)] text-[var(--ink)]`;
-  const labelClass = 'text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)] block mb-1';
+  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 bg-[var(--surface)] text-[var(--ink)]`;
+  const labelClass =
+    "text-[9px] font-sans font-bold tracking-wider text-[var(--ink-2)] block mb-1";
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
         <div
-          className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+          className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-3 /10">
@@ -326,7 +353,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   Análisis de ADN de Expresión y Tono: {band.nombre_banda}
                 </h3>
                 <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                  Rastreo IA Grounding de redes sociales y notas de prensa oficiales
+                  Rastreo IA Grounding de redes sociales y notas de prensa
+                  oficiales
                 </p>
                 {!isLoading &&
                   toneData &&
@@ -334,11 +362,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   isSaved !== undefined &&
                   (isSaved ? (
                     <p className="text-[10px] text-[var(--ok)] font-sans flex items-center gap-1 mt-0.5">
-                      <Check className="w-3 h-3" /> Guardado: la IA usará este tono en tus próximos Reels, Shorts y TikToks
+                      <Check className="w-3 h-3" /> Guardado: la IA usará este
+                      tono en tus próximos Reels, Shorts y TikToks
                     </p>
                   ) : (
                     <p className="text-[10px] text-[var(--acc)] font-sans mt-0.5">
-                      ⚠️ No se pudo guardar de forma permanente. Vuelve a analizarlo antes de usarlo en tus próximos posts.
+                      ⚠️ No se pudo guardar de forma permanente. Vuelve a
+                      analizarlo antes de usarlo en tus próximos posts.
                     </p>
                   ))}
               </div>
@@ -362,7 +392,10 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   <Pencil className="w-4 h-4" />
                 </button>
               )}
-              <button onClick={onClose} className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer">
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors cursor-pointer"
+              >
                 <X className="w-5 h-5 text-[var(--ink-2)]" />
               </button>
             </div>
@@ -372,13 +405,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
           <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/5">
             <button
               type="button"
-              onClick={() => setActiveModalTab('tone')}
+              onClick={() => setActiveModalTab("tone")}
               className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                activeModalTab === 'tone'
+                activeModalTab === "tone"
                   ? isStitchLight
-                    ? 'bg-amber-500 text-stone-950 shadow-md font-extrabold'
-                    : 'bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-md font-extrabold'
-                  : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                    ? "bg-amber-500 text-stone-950 shadow-md font-extrabold"
+                    : "bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-md font-extrabold"
+                  : "text-neutral-400 hover:text-white hover:bg-white/5"
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -386,13 +419,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setActiveModalTab('threads')}
+              onClick={() => setActiveModalTab("threads")}
               className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                activeModalTab === 'threads'
+                activeModalTab === "threads"
                   ? isStitchLight
-                    ? 'bg-amber-500 text-stone-950 shadow-md font-extrabold'
-                    : 'bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-md font-extrabold'
-                  : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                    ? "bg-amber-500 text-stone-950 shadow-md font-extrabold"
+                    : "bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-md font-extrabold"
+                  : "text-neutral-400 hover:text-white hover:bg-white/5"
               }`}
             >
               <MessageSquareText className="w-3.5 h-3.5" />
@@ -400,37 +433,44 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             </button>
           </div>
 
-          {activeModalTab === 'threads' ? (
+          {activeModalTab === "threads" ? (
             <div className="space-y-4 animate-in fade-in duration-150">
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-sans space-y-1">
                 <div className="font-bold flex items-center gap-1.5 text-amber-400">
-                  <Brain className="w-4 h-4" /> Aprendizaje Few-Shot con Conversaciones Reales
+                  <Brain className="w-4 h-4" /> Aprendizaje Few-Shot con
+                  Conversaciones Reales
                 </div>
                 <p className="text-[11px] text-amber-200/90 leading-relaxed">
-                  Pega aquí correos y conversaciones reales (tanto iniciales como respuestas a negociaciones) que representen exactamente
-                  cómo habla tu banda. La IA usará estos ejemplos reales para replicar tu vocabulario, cercanía y forma de negociar.
+                  Pega aquí correos y conversaciones reales (tanto iniciales
+                  como respuestas a negociaciones) que representen exactamente
+                  cómo habla tu banda. La IA usará estos ejemplos reales para
+                  replicar tu vocabulario, cercanía y forma de negociar.
                 </p>
               </div>
 
               {/* Category selector */}
               <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-black/40 border border-white/5">
                 {[
-                  { id: 'salas', label: '🏛️ Salas' },
-                  { id: 'festivales', label: '🎪 Festivales' },
-                  { id: 'discotecas', label: '🪩 Discotecas' },
-                  { id: 'medios', label: '📻 Medios' },
-                  { id: 'grupos', label: '🎸 Grupos' },
-                  { id: 'managements', label: '💼 Managements' },
-                  { id: 'ayuntamientos', label: '🎉 Ayuntamientos' },
+                  { id: "salas", label: "🏛️ Salas" },
+                  { id: "festivales", label: "🎪 Festivales" },
+                  { id: "discotecas", label: "🪩 Discotecas" },
+                  { id: "medios", label: "📻 Medios" },
+                  { id: "grupos", label: "🎸 Grupos" },
+                  { id: "managements", label: "💼 Managements" },
+                  { id: "ayuntamientos", label: "🎉 Ayuntamientos" },
                 ].map((cat) => {
                   const isActive = selectedCategoryThread === cat.id;
                   return (
                     <button
                       key={cat.id}
                       type="button"
-                      onClick={() => setSelectedCategoryThread(cat.id as TemplateCategory)}
+                      onClick={() =>
+                        setSelectedCategoryThread(cat.id as TemplateCategory)
+                      }
                       className={`py-1 px-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                        isActive ? 'bg-amber-400 text-black shadow-sm font-extrabold' : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                        isActive
+                          ? "bg-amber-400 text-black shadow-sm font-extrabold"
+                          : "text-neutral-400 hover:text-white hover:bg-white/5"
                       }`}
                     >
                       {cat.label}
@@ -442,7 +482,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <ExampleThreadsSection
                 category={selectedCategoryThread}
                 isStitchLight={isStitchLight}
-                textSub={isStitchLight ? 'text-slate-500' : 'text-neutral-400'}
+                textSub={isStitchLight ? "text-slate-500" : "text-neutral-400"}
               />
             </div>
           ) : (
@@ -458,7 +498,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       Scrapeando redes sociales de {band.nombre_banda}...
                     </h4>
                     <p className="text-[10px] text-neutral-400 font-mono max-w-md">
-                      Analizando publicaciones de Instagram, TikTok, estilo de comunicación, muletillas y tono de voz con Gemini Search
+                      Analizando publicaciones de Instagram, TikTok, estilo de
+                      comunicación, muletillas y tono de voz con Gemini Search
                       Grounding...
                     </p>
                   </div>
@@ -471,7 +512,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       <input
                         className={inputClass}
                         value={draft.tono_comunicacion}
-                        onChange={(e) => setDraft({ ...draft, tono_comunicacion: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            tono_comunicacion: e.target.value,
+                          })
+                        }
                         placeholder="Cercano, directo, gamberro..."
                       />
                     </div>
@@ -480,7 +526,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       <input
                         className={inputClass}
                         value={draft.tratamiento_habitual}
-                        onChange={(e) => setDraft({ ...draft, tratamiento_habitual: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            tratamiento_habitual: e.target.value,
+                          })
+                        }
                         placeholder="Tú / Vosotros..."
                       />
                     </div>
@@ -489,70 +540,106 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       <input
                         className={inputClass}
                         value={draft.nivel_energia}
-                        onChange={(e) => setDraft({ ...draft, nivel_energia: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, nivel_energia: e.target.value })
+                        }
                         placeholder="Alta / Explosiva..."
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className={labelClass}>Vocabulario Clave & Muletillas (separadas por comas)</label>
+                    <label className={labelClass}>
+                      Vocabulario Clave & Muletillas (separadas por comas)
+                    </label>
                     <input
                       className={inputClass}
                       value={draft.vocabulario_clave}
-                      onChange={(e) => setDraft({ ...draft, vocabulario_clave: e.target.value })}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          vocabulario_clave: e.target.value,
+                        })
+                      }
                       placeholder="familia, pogo, aúpa..."
                     />
                   </div>
 
                   <div>
-                    <label className={labelClass}>Emojis que usáis (separados por espacios)</label>
+                    <label className={labelClass}>
+                      Emojis que usáis (separados por espacios)
+                    </label>
                     <input
                       className={inputClass}
                       value={draft.emojis_frecuentes}
-                      onChange={(e) => setDraft({ ...draft, emojis_frecuentes: e.target.value })}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          emojis_frecuentes: e.target.value,
+                        })
+                      }
                       placeholder="🔥 ⚡ 🎷"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className={labelClass}>Matices de tono por red (no hablan igual en todas)</label>
+                    <label className={labelClass}>
+                      Matices de tono por red (no hablan igual en todas)
+                    </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       <input
                         className={inputClass}
                         value={draft.matiz_instagram}
-                        onChange={(e) => setDraft({ ...draft, matiz_instagram: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({
+                            ...draft,
+                            matiz_instagram: e.target.value,
+                          })
+                        }
                         placeholder="Instagram: igual que el tono general..."
                       />
                       <input
                         className={inputClass}
                         value={draft.matiz_tiktok}
-                        onChange={(e) => setDraft({ ...draft, matiz_tiktok: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, matiz_tiktok: e.target.value })
+                        }
                         placeholder="TikTok: más gamberro y directo..."
                       />
                       <input
                         className={inputClass}
                         value={draft.matiz_youtube}
-                        onChange={(e) => setDraft({ ...draft, matiz_youtube: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, matiz_youtube: e.target.value })
+                        }
                         placeholder="YouTube: más explicativo..."
                       />
                       <input
                         className={inputClass}
                         value={draft.matiz_facebook}
-                        onChange={(e) => setDraft({ ...draft, matiz_facebook: e.target.value })}
+                        onChange={(e) =>
+                          setDraft({ ...draft, matiz_facebook: e.target.value })
+                        }
                         placeholder="Facebook: más institucional..."
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className={labelClass}>Expresiones reales suyas (una por línea)</label>
+                    <label className={labelClass}>
+                      Expresiones reales suyas (una por línea)
+                    </label>
                     <textarea
                       rows={3}
                       className={inputClass}
                       value={draft.frases_emblematicas_extraidas}
-                      onChange={(e) => setDraft({ ...draft, frases_emblematicas_extraidas: e.target.value })}
-                      placeholder={'nos vemos en las trincheras\naúpa familia'}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          frases_emblematicas_extraidas: e.target.value,
+                        })
+                      }
+                      placeholder={"nos vemos en las trincheras\naúpa familia"}
                     />
                   </div>
 
@@ -562,21 +649,37 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       rows={2}
                       className={inputClass}
                       value={draft.puntos_fuertes_para_conectar}
-                      onChange={(e) => setDraft({ ...draft, puntos_fuertes_para_conectar: e.target.value })}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          puntos_fuertes_para_conectar: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
                   <div>
-                    <label className={labelClass}>Recomendación de Contacto</label>
+                    <label className={labelClass}>
+                      Recomendación de Contacto
+                    </label>
                     <textarea
                       rows={2}
                       className={inputClass}
                       value={draft.recomendacion_pitch}
-                      onChange={(e) => setDraft({ ...draft, recomendacion_pitch: e.target.value })}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          recomendacion_pitch: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
-                  {saveError && <p className="text-[10px] font-mono text-red-400">{saveError}</p>}
+                  {saveError && (
+                    <p className="text-[10px] font-mono text-red-400">
+                      {saveError}
+                    </p>
+                  )}
 
                   <div className="flex items-center gap-2 pt-1">
                     <button
@@ -584,7 +687,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       disabled={isSaving}
                       className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
                     >
-                      <Save className="w-3.5 h-3.5" /> {isSaving ? 'Guardando...' : 'Guardar cambios'}
+                      <Save className="w-3.5 h-3.5" />{" "}
+                      {isSaving ? "Guardando..." : "Guardar cambios"}
                     </button>
                     <button
                       onClick={handleCancelEdit}
@@ -600,53 +704,64 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 1. Main Tone Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
                     <div
-                      className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}
+                      className={`p-3 rounded-xl border ${isStitchLight ? "bg-slate-50 border-slate-200" : "bg-neutral-900 border-neutral-800"}`}
                     >
-                      <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tono General</span>
+                      <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">
+                        Tono General
+                      </span>
                       <span className="font-bold text-amber-400 block text-xs mt-0.5">
-                        {toneData.tono_comunicacion || 'No especificado'}
+                        {toneData.tono_comunicacion || "No especificado"}
                       </span>
                     </div>
 
                     <div
-                      className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}
+                      className={`p-3 rounded-xl border ${isStitchLight ? "bg-slate-50 border-slate-200" : "bg-neutral-900 border-neutral-800"}`}
                     >
-                      <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Tratamiento</span>
+                      <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">
+                        Tratamiento
+                      </span>
                       <span className="font-bold text-sky-400 block text-xs mt-0.5">
-                        {toneData.tratamiento_habitual || 'Tú / Informal'}
+                        {toneData.tratamiento_habitual || "Tú / Informal"}
                       </span>
                     </div>
 
                     <div
-                      className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}
+                      className={`p-3 rounded-xl border ${isStitchLight ? "bg-slate-50 border-slate-200" : "bg-neutral-900 border-neutral-800"}`}
                     >
-                      <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">Nivel de Energía</span>
+                      <span className="text-neutral-500 uppercase tracking-wider block text-[9px]">
+                        Nivel de Energía
+                      </span>
                       <span className="font-bold text-emerald-400 block text-xs mt-0.5">
-                        {toneData.nivel_energia || 'Alta / Explosiva'}
+                        {toneData.nivel_energia || "Alta / Explosiva"}
                       </span>
                     </div>
                   </div>
 
                   {/* 2. Key Vocabulary, Quotes & Emojis */}
                   <div
-                    className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}
+                    className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? "bg-slate-50 border-slate-200" : "bg-neutral-900/60 border-neutral-800"}`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                        <MessageSquare className="w-3.5 h-3.5 text-amber-400" /> Vocabulario Clave & Muletillas
+                        <MessageSquare className="w-3.5 h-3.5 text-amber-400" />{" "}
+                        Vocabulario Clave & Muletillas
                       </span>
-                      {toneData.emojis_frecuentes && toneData.emojis_frecuentes.length > 0 && (
-                        <div className="flex items-center gap-1 text-sm">
-                          <span className="text-[9px] font-mono text-neutral-500 uppercase mr-1">Emojis:</span>
-                          {toneData.emojis_frecuentes.map((e, idx) => (
-                            <span key={idx}>{e}</span>
-                          ))}
-                        </div>
-                      )}
+                      {toneData.emojis_frecuentes &&
+                        toneData.emojis_frecuentes.length > 0 && (
+                          <div className="flex items-center gap-1 text-sm">
+                            <span className="text-[9px] font-mono text-neutral-500 uppercase mr-1">
+                              Emojis:
+                            </span>
+                            {toneData.emojis_frecuentes.map((e, idx) => (
+                              <span key={idx}>{e}</span>
+                            ))}
+                          </div>
+                        )}
                     </div>
 
                     <div className="flex flex-wrap gap-1.5">
-                      {toneData.vocabulario_clave && toneData.vocabulario_clave.length > 0 ? (
+                      {toneData.vocabulario_clave &&
+                      toneData.vocabulario_clave.length > 0 ? (
                         toneData.vocabulario_clave.map((word, idx) => (
                           <span
                             key={idx}
@@ -656,98 +771,117 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           </span>
                         ))
                       ) : (
-                        <span className="text-[10px] font-mono text-neutral-500">No se detectaron términos específicos.</span>
+                        <span className="text-[10px] font-mono text-neutral-500">
+                          No se detectaron términos específicos.
+                        </span>
                       )}
                     </div>
 
                     {/* Extracted Quotes from Reels/Posts */}
-                    {toneData.frases_emblematicas_extraidas && toneData.frases_emblematicas_extraidas.length > 0 && (
-                      <div className="pt-1.5 border-t border-neutral-800 space-y-1">
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-amber-400/90 block">
-                          💬 Expresiones extraídas de sus Reels & Posts:
-                        </span>
-                        <div className="space-y-1">
-                          {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
-                            <p
-                              key={idx}
-                              className="text-[10px] font-mono italic text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60"
-                            >
-                              "{quote}"
-                            </p>
-                          ))}
+                    {toneData.frases_emblematicas_extraidas &&
+                      toneData.frases_emblematicas_extraidas.length > 0 && (
+                        <div className="pt-1.5 border-t border-neutral-800 space-y-1">
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-amber-400/90 block">
+                            💬 Expresiones extraídas de sus Reels & Posts:
+                          </span>
+                          <div className="space-y-1">
+                            {toneData.frases_emblematicas_extraidas.map(
+                              (quote, idx) => (
+                                <p
+                                  key={idx}
+                                  className="text-[10px] font-mono italic text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60"
+                                >
+                                  "{quote}"
+                                </p>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
                     {/* Frases reales de directo: se acumulan solas desde transcripciones de conciertos, no se editan aquí. */}
-                    {toneData.frases_directo_extraidas && toneData.frases_directo_extraidas.length > 0 && (
-                      <div className="pt-1.5 border-t border-neutral-800 space-y-1">
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-emerald-400/90 block">
-                          🎤 Frases reales dichas en directo (de vuestros propios conciertos):
-                        </span>
-                        <div className="space-y-1">
-                          {toneData.frases_directo_extraidas.map((quote, idx) => (
-                            <p
-                              key={idx}
-                              className="text-[10px] font-mono italic text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60"
-                            >
-                              "{quote}"
-                            </p>
-                          ))}
+                    {toneData.frases_directo_extraidas &&
+                      toneData.frases_directo_extraidas.length > 0 && (
+                        <div className="pt-1.5 border-t border-neutral-800 space-y-1">
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-emerald-400/90 block">
+                            🎤 Frases reales dichas en directo (de vuestros
+                            propios conciertos):
+                          </span>
+                          <div className="space-y-1">
+                            {toneData.frases_directo_extraidas.map(
+                              (quote, idx) => (
+                                <p
+                                  key={idx}
+                                  className="text-[10px] font-mono italic text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60"
+                                >
+                                  "{quote}"
+                                </p>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
                     {/* Per-platform tone nuances: el tono no es idéntico en todas las redes. */}
-                    {toneData.matices_por_red && Object.values(toneData.matices_por_red).some((v) => v && v.trim()) && (
-                      <div className="pt-1.5 border-t border-neutral-800 space-y-1.5">
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-400/90 block">
-                          🎚️ Matices de tono según la red:
-                        </span>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                          {(
-                            [
-                              ['instagram', 'Instagram'],
-                              ['tiktok', 'TikTok'],
-                              ['youtube', 'YouTube'],
-                              ['facebook', 'Facebook'],
-                            ] as const
-                          ).map(([key, label]) =>
-                            toneData.matices_por_red?.[key] ? (
-                              <p
-                                key={key}
-                                className="text-[10px] font-mono text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60"
-                              >
-                                <span className="text-sky-400 font-bold">{label}:</span> {toneData.matices_por_red[key]}
-                              </p>
-                            ) : null
-                          )}
+                    {toneData.matices_por_red &&
+                      Object.values(toneData.matices_por_red).some(
+                        (v) => v && v.trim(),
+                      ) && (
+                        <div className="pt-1.5 border-t border-neutral-800 space-y-1.5">
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-400/90 block">
+                            🎚️ Matices de tono según la red:
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                            {(
+                              [
+                                ["instagram", "Instagram"],
+                                ["tiktok", "TikTok"],
+                                ["youtube", "YouTube"],
+                                ["facebook", "Facebook"],
+                              ] as const
+                            ).map(([key, label]) =>
+                              toneData.matices_por_red?.[key] ? (
+                                <p
+                                  key={key}
+                                  className="text-[10px] font-mono text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60"
+                                >
+                                  <span className="text-sky-400 font-bold">
+                                    {label}:
+                                  </span>{" "}
+                                  {toneData.matices_por_red[key]}
+                                </p>
+                              ) : null,
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
 
                   {/* 3. Pitch Recommendation & Connection Points */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
                     <div
-                      className={`p-3 rounded-xl border space-y-1 ${isStitchLight ? 'bg-amber-50/50 border-amber-200 text-amber-900' : 'bg-amber-950/20 border-amber-900/40 text-amber-200'}`}
+                      className={`p-3 rounded-xl border space-y-1 ${isStitchLight ? "bg-amber-50/50 border-amber-200 text-amber-900" : "bg-amber-950/20 border-amber-900/40 text-amber-200"}`}
                     >
                       <span className="font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1 text-[9px]">
-                        <Flame className="w-3 h-3" /> Punto de Conexión con Bakandeya
+                        <Flame className="w-3 h-3" /> Punto de Conexión con
+                        Bakandeya
                       </span>
                       <p className="font-sans leading-relaxed text-[11px]">
-                        {toneData.puntos_fuertes_para_conectar || 'Intercambio de público festivo y potencia en directo.'}
+                        {toneData.puntos_fuertes_para_conectar ||
+                          "Intercambio de público festivo y potencia en directo."}
                       </p>
                     </div>
 
                     <div
-                      className={`p-3 rounded-xl border space-y-1 ${isStitchLight ? 'bg-sky-50/50 border-sky-200 text-sky-900' : 'bg-sky-950/20 border-sky-900/40 text-sky-200'}`}
+                      className={`p-3 rounded-xl border space-y-1 ${isStitchLight ? "bg-sky-50/50 border-sky-200 text-sky-900" : "bg-sky-950/20 border-sky-900/40 text-sky-200"}`}
                     >
                       <span className="font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1 text-[9px]">
-                        <HeartHandshake className="w-3 h-3" /> Recomendación de Contacto
+                        <HeartHandshake className="w-3 h-3" /> Recomendación de
+                        Contacto
                       </span>
                       <p className="font-sans leading-relaxed text-[11px]">
-                        {toneData.recomendacion_pitch || 'Escríbeles con energía, sin rodeos y proponiendo directo compartido.'}
+                        {toneData.recomendacion_pitch ||
+                          "Escríbeles con energía, sin rodeos y proponiendo directo compartido."}
                       </p>
                     </div>
                   </div>
@@ -757,14 +891,23 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div className="space-y-1.5 pt-1">
                       <div className="flex items-center justify-between">
                         <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                          <MessageCircle className="w-3.5 h-3.5" /> Pitch Adaptado a su Forma de Expresarse
+                          <MessageCircle className="w-3.5 h-3.5" /> Pitch
+                          Adaptado a su Forma de Expresarse
                         </label>
                         <button
-                          onClick={() => handleCopy(toneData.pitch_personalizado_ejemplo || '')}
+                          onClick={() =>
+                            handleCopy(
+                              toneData.pitch_personalizado_ejemplo || "",
+                            )
+                          }
                           className="px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
                         >
-                          {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                          {copied ? '¡Copiado!' : 'Copiar Texto'}
+                          {copied ? (
+                            <Check className="w-3 h-3 text-emerald-400" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                          {copied ? "¡Copiado!" : "Copiar Texto"}
                         </button>
                       </div>
 
@@ -774,20 +917,23 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         value={toneData.pitch_personalizado_ejemplo}
                         className={`w-full p-3 rounded-xl font-mono text-[10px] leading-relaxed focus:outline-none ${
                           isStitchLight
-                            ? 'bg-slate-50 border border-slate-200 text-slate-800'
-                            : 'bg-black/60 border border-neutral-800 text-neutral-200'
+                            ? "bg-slate-50 border border-slate-200 text-slate-800"
+                            : "bg-black/60 border border-neutral-800 text-neutral-200"
                         }`}
                       />
 
                       {onUseTailoredPitch && (
                         <button
                           onClick={() => {
-                            onUseTailoredPitch(toneData.pitch_personalizado_ejemplo || '');
+                            onUseTailoredPitch(
+                              toneData.pitch_personalizado_ejemplo || "",
+                            );
                             onClose();
                           }}
                           className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-900/20 transition-all"
                         >
-                          <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch Personalizado en Co-Booking
+                          <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch
+                          Personalizado en Co-Booking
                         </button>
                       )}
                     </div>
@@ -796,11 +942,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
                   {editable && (
                     <div
-                      className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? 'bg-violet-50/50 border-violet-200' : 'bg-violet-950/20 border-violet-900/40'}`}
+                      className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? "bg-violet-50/50 border-violet-200" : "bg-violet-950/20 border-violet-900/40"}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
-                          <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus Correcciones (Self-Refining Tone DNA)
+                          <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de
+                          tus Correcciones (Self-Refining Tone DNA)
                         </span>
                         <button
                           onClick={handleTrainToneDna}
@@ -808,110 +955,171 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                           title="Fuerza el análisis de tus correcciones acumuladas ahora mismo, en vez de esperar al refinamiento automático"
                         >
-                          {isTraining ? <RefreshCw className="w-3 h-3 animate-spin" /> : <GraduationCap className="w-3 h-3" />}
-                          {isTraining ? 'Entrenando...' : 'Entrenar ADN de tono ahora'}
+                          {isTraining ? (
+                            <RefreshCw className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <GraduationCap className="w-3 h-3" />
+                          )}
+                          {isTraining
+                            ? "Entrenando..."
+                            : "Entrenar ADN de tono ahora"}
                         </button>
                       </div>
 
-                      {trainMessage && <p className="text-[10px] font-mono text-violet-300/90">{trainMessage}</p>}
+                      {trainMessage && (
+                        <p className="text-[10px] font-mono text-violet-300/90">
+                          {trainMessage}
+                        </p>
+                      )}
 
-                      {toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0 ? (
+                      {toneData.reglas_por_categoria &&
+                      Object.keys(toneData.reglas_por_categoria).length > 0 ? (
                         <div className="space-y-2">
-                          {Object.entries(toneData.reglas_por_categoria).map(([cat, reglas]) => {
-                            const autoKey = `pitch:${cat}:auto`;
-                            const manualKey = `pitch:${cat}:manual`;
-                            const savingAuto = savingRuleKey === autoKey;
-                            const savingManual = savingRuleKey === manualKey;
-                            return (
-                              <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-violet-900/30 space-y-1.5">
-                                <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
-                                  {CATEGORY_LABELS[cat] || cat}
-                                </span>
-                                {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
-                                  <ul className="space-y-0.5">
-                                    {reglas.reglas_manuales.map((r, idx) => (
-                                      <li
-                                        key={idx}
-                                        className="text-[10px] font-sans text-amber-200 flex items-start justify-between gap-1.5 group"
-                                      >
-                                        <span>🔒 {r}</span>
-                                        <button
-                                          onClick={() => handleDeleteLearnedRule('pitch', cat, 'manual', idx)}
-                                          disabled={savingManual}
-                                          title="Quitar esta regla manual"
-                                          className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
-                                        >
-                                          ✕
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                                {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
-                                  <ul className="space-y-0.5">
-                                    {reglas.reglas_estilo_aprendidas.map((r, idx) => (
-                                      <li
-                                        key={idx}
-                                        className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group"
-                                      >
-                                        <span>⭐ {r}</span>
-                                        <button
-                                          onClick={() => handleDeleteLearnedRule('pitch', cat, 'auto', idx)}
-                                          disabled={savingAuto}
-                                          title="Quitar esta regla (p. ej. si contradice tu configuración manual)"
-                                          className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
-                                        >
-                                          ✕
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                                {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
-                                  <p className="text-[9px] font-mono text-emerald-400/80">
-                                    Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
-                                  </p>
-                                )}
-                                {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
-                                  <p className="text-[9px] font-mono text-red-400/80">
-                                    Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
-                                  </p>
-                                )}
-                                <div className="flex items-center gap-1.5 pt-1">
-                                  <input
-                                    type="text"
-                                    value={newRuleText[manualKey] || ''}
-                                    onChange={(e) => setNewRuleText((prev) => ({ ...prev, [manualKey]: e.target.value }))}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleAddLearnedRule('pitch', cat);
-                                    }}
-                                    placeholder="🔒 + añadir regla manual (protegida)..."
-                                    disabled={savingManual}
-                                    className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-violet-500 disabled:opacity-50"
-                                  />
-                                  <button
-                                    onClick={() => handleAddLearnedRule('pitch', cat)}
-                                    disabled={savingManual || !(newRuleText[manualKey] || '').trim()}
-                                    className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
-                                  >
-                                    {savingManual ? '...' : 'Añadir'}
-                                  </button>
+                          {Object.entries(toneData.reglas_por_categoria).map(
+                            ([cat, reglas]) => {
+                              const autoKey = `pitch:${cat}:auto`;
+                              const manualKey = `pitch:${cat}:manual`;
+                              const savingAuto = savingRuleKey === autoKey;
+                              const savingManual = savingRuleKey === manualKey;
+                              return (
+                                <div
+                                  key={cat}
+                                  className="p-2.5 rounded-lg bg-black/30 border border-violet-900/30 space-y-1.5"
+                                >
+                                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
+                                    {CATEGORY_LABELS[cat] || cat}
+                                  </span>
+                                  {reglas.reglas_manuales &&
+                                    reglas.reglas_manuales.length > 0 && (
+                                      <ul className="space-y-0.5">
+                                        {reglas.reglas_manuales.map(
+                                          (r, idx) => (
+                                            <li
+                                              key={idx}
+                                              className="text-[10px] font-sans text-amber-200 flex items-start justify-between gap-1.5 group"
+                                            >
+                                              <span>🔒 {r}</span>
+                                              <button
+                                                onClick={() =>
+                                                  handleDeleteLearnedRule(
+                                                    "pitch",
+                                                    cat,
+                                                    "manual",
+                                                    idx,
+                                                  )
+                                                }
+                                                disabled={savingManual}
+                                                title="Quitar esta regla manual"
+                                                className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                              >
+                                                ✕
+                                              </button>
+                                            </li>
+                                          ),
+                                        )}
+                                      </ul>
+                                    )}
+                                  {reglas.reglas_estilo_aprendidas &&
+                                    reglas.reglas_estilo_aprendidas.length >
+                                      0 && (
+                                      <ul className="space-y-0.5">
+                                        {reglas.reglas_estilo_aprendidas.map(
+                                          (r, idx) => (
+                                            <li
+                                              key={idx}
+                                              className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group"
+                                            >
+                                              <span>⭐ {r}</span>
+                                              <button
+                                                onClick={() =>
+                                                  handleDeleteLearnedRule(
+                                                    "pitch",
+                                                    cat,
+                                                    "auto",
+                                                    idx,
+                                                  )
+                                                }
+                                                disabled={savingAuto}
+                                                title="Quitar esta regla (p. ej. si contradice tu configuración manual)"
+                                                className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                              >
+                                                ✕
+                                              </button>
+                                            </li>
+                                          ),
+                                        )}
+                                      </ul>
+                                    )}
+                                  {reglas.vocabulario_aprendido &&
+                                    reglas.vocabulario_aprendido.length > 0 && (
+                                      <p className="text-[9px] font-mono text-emerald-400/80">
+                                        Vocabulario favorito:{" "}
+                                        {reglas.vocabulario_aprendido.join(
+                                          ", ",
+                                        )}
+                                      </p>
+                                    )}
+                                  {reglas.terminos_a_evitar &&
+                                    reglas.terminos_a_evitar.length > 0 && (
+                                      <p className="text-[9px] font-mono text-red-400/80">
+                                        Términos prohibidos:{" "}
+                                        {reglas.terminos_a_evitar.join(", ")}
+                                      </p>
+                                    )}
+                                  <div className="flex items-center gap-1.5 pt-1">
+                                    <input
+                                      type="text"
+                                      value={newRuleText[manualKey] || ""}
+                                      onChange={(e) =>
+                                        setNewRuleText((prev) => ({
+                                          ...prev,
+                                          [manualKey]: e.target.value,
+                                        }))
+                                      }
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter")
+                                          handleAddLearnedRule("pitch", cat);
+                                      }}
+                                      placeholder="🔒 + añadir regla manual (protegida)..."
+                                      disabled={savingManual}
+                                      className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-violet-500 disabled:opacity-50"
+                                    />
+                                    <button
+                                      onClick={() =>
+                                        handleAddLearnedRule("pitch", cat)
+                                      }
+                                      disabled={
+                                        savingManual ||
+                                        !(newRuleText[manualKey] || "").trim()
+                                      }
+                                      className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                                    >
+                                      {savingManual ? "..." : "Añadir"}
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            },
+                          )}
                         </div>
                       ) : (
                         <p className="text-[10px] font-mono text-neutral-500">
-                          Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se
-                          generarán solas, o pulsa "Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente
-                          conversaciones reales buenas en{' '}
-                          <strong className="text-violet-300">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
+                          Todavía no hay reglas aprendidas. Corrige al menos 2
+                          pitches para la misma categoría (Salas, Festivales...)
+                          y se generarán solas, o pulsa "Entrenar ADN de tono
+                          ahora". Para no esperar a eso, puedes pegar
+                          directamente conversaciones reales buenas en{" "}
+                          <strong className="text-violet-300">
+                            Booking CRM → Plantillas de Email → Hilos de Email
+                            de Ejemplo
+                          </strong>
+                          .
                         </p>
                       )}
                       <p className="text-[9px] font-mono text-neutral-600">
-                        🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo
-                        anterior en cada re-entrenamiento
+                        🔒 = regla escrita a mano, nunca se pierde al
+                        re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se
+                        fusiona con lo anterior en cada re-entrenamiento
                       </p>
                     </div>
                   )}
@@ -921,10 +1129,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 redactar mal el primer contacto, y viceversa. Mismo botón de entrenar sirve para
                 ambos (refineAllToneDnaCategoriesForBand refina las dos bolsas de una vez). */}
                   {editable && (
-                    <div className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--bg)]/20/40'}`}>
+                    <div
+                      className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--bg)]/20/40"}`}
+                    >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
-                          <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus RESPUESTAS a salas (Self-Refining Tone DNA)
+                          <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de
+                          tus RESPUESTAS a salas (Self-Refining Tone DNA)
                         </span>
                         <button
                           onClick={handleTrainToneDna}
@@ -932,91 +1143,138 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           className="px-2 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                           title="Fuerza el análisis de tus correcciones acumuladas ahora mismo (pitches y respuestas), en vez de esperar al refinamiento automático"
                         >
-                          {isTraining ? <RefreshCw className="w-3 h-3 animate-spin" /> : <GraduationCap className="w-3 h-3" />}
-                          {isTraining ? 'Entrenando...' : 'Entrenar ADN de tono ahora'}
+                          {isTraining ? (
+                            <RefreshCw className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <GraduationCap className="w-3 h-3" />
+                          )}
+                          {isTraining
+                            ? "Entrenando..."
+                            : "Entrenar ADN de tono ahora"}
                         </button>
                       </div>
 
-                      {toneData.reglas_por_categoria_respuesta && Object.keys(toneData.reglas_por_categoria_respuesta).length > 0 ? (
+                      {toneData.reglas_por_categoria_respuesta &&
+                      Object.keys(toneData.reglas_por_categoria_respuesta)
+                        .length > 0 ? (
                         <div className="space-y-2">
-                          {Object.entries(toneData.reglas_por_categoria_respuesta).map(([cat, reglas]) => {
+                          {Object.entries(
+                            toneData.reglas_por_categoria_respuesta,
+                          ).map(([cat, reglas]) => {
                             const autoKey = `reply:${cat}:auto`;
                             const manualKey = `reply:${cat}:manual`;
                             const savingAuto = savingRuleKey === autoKey;
                             const savingManual = savingRuleKey === manualKey;
                             return (
-                              <div key={cat} className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5">
+                              <div
+                                key={cat}
+                                className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5"
+                              >
                                 <span className="text-[9px] font-sans font-bold tracking-wider text-[var(--ink-3)]">
                                   {CATEGORY_LABELS[cat] || cat}
                                 </span>
-                                {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
-                                  <ul className="space-y-0.5">
-                                    {reglas.reglas_manuales.map((r, idx) => (
-                                      <li
-                                        key={idx}
-                                        className="text-[10px] font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group"
-                                      >
-                                        <span>🔒 {r}</span>
-                                        <button
-                                          onClick={() => handleDeleteLearnedRule('reply', cat, 'manual', idx)}
-                                          disabled={savingManual}
-                                          title="Quitar esta regla manual"
-                                          className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                {reglas.reglas_manuales &&
+                                  reglas.reglas_manuales.length > 0 && (
+                                    <ul className="space-y-0.5">
+                                      {reglas.reglas_manuales.map((r, idx) => (
+                                        <li
+                                          key={idx}
+                                          className="text-[10px] font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group"
                                         >
-                                          ✕
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                                {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
-                                  <ul className="space-y-0.5">
-                                    {reglas.reglas_estilo_aprendidas.map((r, idx) => (
-                                      <li
-                                        key={idx}
-                                        className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group"
-                                      >
-                                        <span>⭐ {r}</span>
-                                        <button
-                                          onClick={() => handleDeleteLearnedRule('reply', cat, 'auto', idx)}
-                                          disabled={savingAuto}
-                                          title="Quitar esta regla (p. ej. si contradice tu configuración manual de Estrategias de Respuesta)"
-                                          className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
-                                        >
-                                          ✕
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                                {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
-                                  <p className="text-[9px] font-mono text-emerald-400/80">
-                                    Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
-                                  </p>
-                                )}
-                                {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
-                                  <p className="text-[9px] font-mono text-red-400/80">
-                                    Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
-                                  </p>
-                                )}
+                                          <span>🔒 {r}</span>
+                                          <button
+                                            onClick={() =>
+                                              handleDeleteLearnedRule(
+                                                "reply",
+                                                cat,
+                                                "manual",
+                                                idx,
+                                              )
+                                            }
+                                            disabled={savingManual}
+                                            title="Quitar esta regla manual"
+                                            className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                          >
+                                            ✕
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                {reglas.reglas_estilo_aprendidas &&
+                                  reglas.reglas_estilo_aprendidas.length >
+                                    0 && (
+                                    <ul className="space-y-0.5">
+                                      {reglas.reglas_estilo_aprendidas.map(
+                                        (r, idx) => (
+                                          <li
+                                            key={idx}
+                                            className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group"
+                                          >
+                                            <span>⭐ {r}</span>
+                                            <button
+                                              onClick={() =>
+                                                handleDeleteLearnedRule(
+                                                  "reply",
+                                                  cat,
+                                                  "auto",
+                                                  idx,
+                                                )
+                                              }
+                                              disabled={savingAuto}
+                                              title="Quitar esta regla (p. ej. si contradice tu configuración manual de Estrategias de Respuesta)"
+                                              className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                            >
+                                              ✕
+                                            </button>
+                                          </li>
+                                        ),
+                                      )}
+                                    </ul>
+                                  )}
+                                {reglas.vocabulario_aprendido &&
+                                  reglas.vocabulario_aprendido.length > 0 && (
+                                    <p className="text-[9px] font-mono text-emerald-400/80">
+                                      Vocabulario favorito:{" "}
+                                      {reglas.vocabulario_aprendido.join(", ")}
+                                    </p>
+                                  )}
+                                {reglas.terminos_a_evitar &&
+                                  reglas.terminos_a_evitar.length > 0 && (
+                                    <p className="text-[9px] font-mono text-red-400/80">
+                                      Términos prohibidos:{" "}
+                                      {reglas.terminos_a_evitar.join(", ")}
+                                    </p>
+                                  )}
                                 <div className="flex items-center gap-1.5 pt-1">
                                   <input
                                     type="text"
-                                    value={newRuleText[manualKey] || ''}
-                                    onChange={(e) => setNewRuleText((prev) => ({ ...prev, [manualKey]: e.target.value }))}
+                                    value={newRuleText[manualKey] || ""}
+                                    onChange={(e) =>
+                                      setNewRuleText((prev) => ({
+                                        ...prev,
+                                        [manualKey]: e.target.value,
+                                      }))
+                                    }
                                     onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleAddLearnedRule('reply', cat);
+                                      if (e.key === "Enter")
+                                        handleAddLearnedRule("reply", cat);
                                     }}
                                     placeholder="🔒 + añadir regla manual (protegida)..."
                                     disabled={savingManual}
                                     className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-sky-500 disabled:opacity-50"
                                   />
                                   <button
-                                    onClick={() => handleAddLearnedRule('reply', cat)}
-                                    disabled={savingManual || !(newRuleText[manualKey] || '').trim()}
+                                    onClick={() =>
+                                      handleAddLearnedRule("reply", cat)
+                                    }
+                                    disabled={
+                                      savingManual ||
+                                      !(newRuleText[manualKey] || "").trim()
+                                    }
                                     className="px-2 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                                   >
-                                    {savingManual ? '...' : 'Añadir'}
+                                    {savingManual ? "..." : "Añadir"}
                                   </button>
                                 </div>
                               </div>
@@ -1025,15 +1283,23 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         </div>
                       ) : (
                         <p className="text-[10px] font-mono text-neutral-500">
-                          Todavía no hay reglas aprendidas de respuestas. Corrige al menos 2 respuestas para la misma categoría (Salas,
-                          Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar
-                          directamente conversaciones reales buenas en{' '}
-                          <strong className="text-sky-300">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
+                          Todavía no hay reglas aprendidas de respuestas.
+                          Corrige al menos 2 respuestas para la misma categoría
+                          (Salas, Festivales...) y se generarán solas, o pulsa
+                          "Entrenar ADN de tono ahora". Para no esperar a eso,
+                          puedes pegar directamente conversaciones reales buenas
+                          en{" "}
+                          <strong className="text-sky-300">
+                            Booking CRM → Plantillas de Email → Hilos de Email
+                            de Ejemplo
+                          </strong>
+                          .
                         </p>
                       )}
                       <p className="text-[9px] font-mono text-neutral-600">
-                        🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo
-                        anterior en cada re-entrenamiento
+                        🔒 = regla escrita a mano, nunca se pierde al
+                        re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se
+                        fusiona con lo anterior en cada re-entrenamiento
                       </p>
                     </div>
                   )}
@@ -1042,8 +1308,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 <div className="py-8 text-center space-y-4 flex flex-col items-center">
                   <PublicoSilhouette opacity={0.12} size="medium" />
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-[var(--ink)]">Sin análisis de tono</p>
-                    <p className="text-xs text-[var(--ink-2)]">Analiza el perfil de tu banda para entender mejor a tu audiencia.</p>
+                    <p className="text-sm font-medium text-[var(--ink)]">
+                      Sin análisis de tono
+                    </p>
+                    <p className="text-xs text-[var(--ink-2)]">
+                      Analiza el perfil de tu banda para entender mejor a tu
+                      audiencia.
+                    </p>
                   </div>
                   <button
                     onClick={onReAnalyze}

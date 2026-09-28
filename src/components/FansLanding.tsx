@@ -1131,7 +1131,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         <div
           className={`max-w-md w-full bg-[var(--surface)] rounded-[var(--r-l)] ${isPreview ? "p-4 sm:p-6" : "p-6 sm:p-8"} text-center space-y-5 relative overflow-hidden`}
         >
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600" />
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[var(--acc)] to-[var(--acc)]" />
 
           {isPreview && (
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans flex items-center justify-between gap-2">
@@ -1389,7 +1389,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Banner para músicos y bandas */}
           <div className="pt-4 text-left">
-            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/20 space-y-2.5">
+            <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-[var(--acc)]/20 space-y-2.5">
               <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span>{t("musicianBannerTitle")}</span>
@@ -1502,7 +1502,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     ? t("audioPreviewPause") || "Pausar audio"
                     : t("audioPreviewPlay") || "Reproducir audio"
                 }
-                className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[var(--ink)] flex items-center justify-center shrink-0 transition-all active:scale-95"
+                className="w-10 h-10 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0 transition-all active:scale-95"
               >
                 {isPlayingAudioPreview ? (
                   <Pause className="w-5 h-5 fill-bg-[var(--surface)]" />
@@ -1553,7 +1553,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             onClick={() => setActiveTab("redes")}
             className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
               activeTab === "redes"
-                ? "bg-gradient-to-r from-[var(--acc)] to-amber-400 text-[var(--ink)] font-black"
+                ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] font-black"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -1564,7 +1564,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             onClick={() => setActiveTab("form")}
             className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
               activeTab === "form"
-                ? "bg-gradient-to-r from-[var(--acc)] to-amber-400 text-[var(--ink)] font-black"
+                ? "bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] font-black"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -2000,7 +2000,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {contactoBooking &&
           (contactoBooking.email || contactoBooking.telefono) && (
             <div className="pt-5 space-y-3">
-              <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/30 space-y-3">
+              <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-[var(--acc)]/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[var(--acc)]">
                     <Briefcase className="w-4 h-4 text-[var(--acc)]" />
@@ -2073,7 +2073,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Banner para músicos y bandas al final del formulario */}
         <div className="pt-4 text-left">
-          <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-amber-950/20 space-y-2.5">
+          <div className="p-4 rounded-[var(--r-m)] bg-gradient-to-br from-[var(--surface)] via-[var(--surface)] to-[var(--acc)]/20 space-y-2.5">
             <div className="flex items-center gap-2 text-[var(--acc)] text-xs font-sans font-bold tracking-wider">
               <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>{t("musicianBannerTitle")}</span>

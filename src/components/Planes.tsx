@@ -606,7 +606,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
       {/* 1. Banner superior */}
       {showBanner && currentPlan === "ensayo" && (
-        <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-emerald-500/20 p-4 sm:p-5 text-[var(--ink)] shadow-black/40">
+        <div className="relative overflow-hidden rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/10 to-emerald-500/20 p-4 sm:p-5 text-[var(--ink)] shadow-black/40">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3.5 text-center sm:text-left">
               <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/60/20 flex items-center justify-center text-[var(--acc)]/70 shrink-0">
@@ -631,7 +631,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   if (deGiraBtn)
                     deGiraBtn.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[var(--ink)] text-xs font-black tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] text-xs font-black tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
               </button>
@@ -657,7 +657,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-[var(--ink)]">
           Planes diseñados para{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)]">
             músicos independientes
           </span>
         </h1>
@@ -733,7 +733,7 @@ export const Planes: React.FC<PlanesProps> = ({
               case "silver":
                 return "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]";
               case "gold":
-                return "bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:brightness-110 text-[var(--ink)] font-black";
+                return "bg-gradient-to-r from-[var(--acc)] via-[var(--acc)] to-[var(--acc)] hover:brightness-110 text-[var(--ink)] font-black";
               case "emerald":
                 return "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black";
             }
@@ -751,7 +751,7 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Popular Floating Badge */}
               {plan.isPopular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-[var(--ink)] text-[10px] font-black font-sans tracking-widest">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] text-[var(--ink)] text-[10px] font-black font-sans tracking-widest">
                     <Star className="w-3 h-3 fill-[var(--ink)]" />
                     <span>MÁS POPULAR</span>
                   </span>
@@ -828,7 +828,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   <div
                     className={`p-3 rounded-[var(--r-l)] transition-all relative overflow-hidden ${
                       plan.isPopular
-                        ? "bg-gradient-to-r from-amber-0/20 via-amber-400/10 to-amber-0/15 /50"
+                        ? "bg-gradient-to-r from-[var(--acc)]/20 via-[var(--acc)]/10 to-[var(--acc)]/15 "
                         : plan.id === "cabeza_de_cartel"
                           ? "bg-gradient-to-r from-[var(--ok)]/20 via-emerald-400/10 to-emerald-500/15/50"
                           : "bg-gradient-to-r from-neutral-500/20 viabg-[var(--surface)] to-neutral-500/10 /30"

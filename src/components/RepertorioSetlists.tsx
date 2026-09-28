@@ -5596,7 +5596,9 @@ export default function RepertorioSetlists({
                       }
                       className={`rounded-[var(--r-s)] transition-all cursor-pointer ${typeConfig.bg} ${
                         isDragging ? "opacity-40 scale-[0.98]" : ""
-                      } ${isDragOver ? "border-2 scale-[1.01]" : ""} ${isSelected ? "ring-2 ring-amber-400/60" : ""}`}
+                      } ${isDragOver ? "border-2 scale-[1.01]" : ""} ${
+                        isSelected ? "ring-2 ring-[var(--acc)]/60" : ""
+                      }`}
                     >
                       <div className="flex items-center gap-2 px-2.5 py-1.5">
                         {/* Drag Handle */}

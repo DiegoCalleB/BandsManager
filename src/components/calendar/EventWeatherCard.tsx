@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Droplets, Thermometer, AlertTriangle, RefreshCw, Calendar, ShieldAlert, ChevronDown, ChevronUp, Wind } from 'lucide-react';
-import { fetchEventWeather, EventWeatherData, WeatherAlert } from '../../services/weatherService';
-import { AnimatedWeatherIcon } from './AnimatedWeatherIcon';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Droplets,
+  Thermometer,
+  AlertTriangle,
+  RefreshCw,
+  Calendar,
+  ShieldAlert,
+  ChevronDown,
+  ChevronUp,
+  Wind,
+} from "lucide-react";
+import {
+  fetchEventWeather,
+  EventWeatherData,
+  WeatherAlert,
+} from "../../services/weatherService";
+import { AnimatedWeatherIcon } from "./AnimatedWeatherIcon";
 
 interface EventWeatherCardProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -23,14 +37,19 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
   collapsible = false,
   defaultExpanded = false,
 }) => {
-  const [selectedSlot, setSelectedSlot] = useState<'show' | 'soundcheck'>('show');
+  const [selectedSlot, setSelectedSlot] = useState<"show" | "soundcheck">(
+    "show",
+  );
   const [weatherData, setWeatherData] = useState<EventWeatherData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [expandedAlerts, setExpandedAlerts] = useState<Record<string, boolean>>({});
+  const [expandedAlerts, setExpandedAlerts] = useState<Record<string, boolean>>(
+    {},
+  );
   const [isExpanded, setIsExpanded] = useState<boolean>(defaultExpanded);
 
   // Calcular la hora a consultar según la pestaña
-  const activeTimeStr = selectedSlot === 'soundcheck' ? '18:00' : timeStr || '21:00';
+  const activeTimeStr =
+    selectedSlot === "soundcheck" ? "18:00" : timeStr || "21:00";
 
   const toggleAlertExpand = (alertId: string) => {
     setExpandedAlerts((prev) => ({
@@ -55,11 +74,11 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       if (data.alerts && onAlertsDetected) {
         onAlertsDetected(data.alerts);
       }
-      if (data.alerts && data.alerts.some((a) => a.severity === 'danger')) {
+      if (data.alerts && data.alerts.some((a) => a.severity === "danger")) {
         setIsExpanded(true);
       }
     } catch (err) {
-      console.warn('[EventWeatherCard] Failed to load weather:', err);
+      console.warn("[EventWeatherCard] Failed to load weather:", err);
     } finally {
       setIsLoading(false);
     }
@@ -69,24 +88,24 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
     loadWeather();
   }, [city, dateStr, activeTimeStr]);
 
-  const getWeatherIconBackdrop = (iconType?: EventWeatherData['iconType']) => {
+  const getWeatherIconBackdrop = (iconType?: EventWeatherData["iconType"]) => {
     switch (iconType) {
-      case 'sun':
-        return 'from-amber-0/30 via-amber-400/10 to-transparent /50';
-      case 'cloud-sun':
-        return 'from-amber-0/25 via-neutral-700/25 to-transparent /35';
-      case 'cloud':
-        return 'from-neutral-600/35 via-neutral-800/25 to-transparent /40';
-      case 'rain':
-        return 'from-sky-500/30 via-blue-600/20 to-transparent/50';
-      case 'lightning':
-        return 'from-yellow-500/35 via-purple-900/35 to-transparent /60';
-      case 'snow':
-        return 'from-cyan-500/30 via-blue-900/25 to-transparent/50';
-      case 'fog':
-        return 'from-neutral-500/25 via-neutral-700/25 to-transparent /35';
+      case "sun":
+        return "from-[var(--acc)]/30 via-[var(--acc)]/10 to-transparent ";
+      case "cloud-sun":
+        return "from-amber-0/25 via-neutral-700/25 to-transparent /35";
+      case "cloud":
+        return "from-neutral-600/35 via-neutral-800/25 to-transparent /40";
+      case "rain":
+        return "from-sky-500/30 via-blue-600/20 to-transparent/50";
+      case "lightning":
+        return "from-yellow-500/35 via-purple-900/35 to-transparent /60";
+      case "snow":
+        return "from-cyan-500/30 via-blue-900/25 to-transparent/50";
+      case "fog":
+        return "from-neutral-500/25 via-neutral-700/25 to-transparent /35";
       default:
-        return 'from-amber-0/20 to-transparent /30';
+        return "from-amber-0/20 to-transparent /30";
     }
   };
 
@@ -95,28 +114,43 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
     return null;
   }
 
-  const hasAlerts = Boolean(weatherData?.alerts && weatherData.alerts.length > 0);
-  const dangerAlertsCount = weatherData?.alerts?.filter((a) => a.severity === 'danger').length || 0;
+  const hasAlerts = Boolean(
+    weatherData?.alerts && weatherData.alerts.length > 0,
+  );
+  const dangerAlertsCount =
+    weatherData?.alerts?.filter((a) => a.severity === "danger").length || 0;
 
   // Modo compacto y simplificado para móvil / modal
   if (collapsible && !isExpanded) {
     return (
       <div
         className={`rounded-[var(--r-m)] px-3.5 py-2.5 transition-all duration-200 flex items-center justify-between gap-3 ${
-          hasAlerts ? 'bg-[var(--acc-soft)] /40 text-[var(--ink-2)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+          hasAlerts
+            ? "bg-[var(--acc-soft)] /40 text-[var(--ink-2)]"
+            : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          <div className={`p-1.5 rounded-[var(--r-s)] bg-gradient-to-br shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}>
+          <div
+            className={`p-1.5 rounded-[var(--r-s)] bg-gradient-to-br shrink-0 ${getWeatherIconBackdrop(weatherData?.iconType)}`}
+          >
             <AnimatedWeatherIcon iconType={weatherData?.iconType} size="sm" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-bold font-sans text-[var(--acc)]">
-                {isLoading ? '...' : weatherData?.temperature !== undefined ? `${weatherData.temperature}°C` : '--'}
+                {isLoading
+                  ? "..."
+                  : weatherData?.temperature !== undefined
+                    ? `${weatherData.temperature}°C`
+                    : "--"}
               </span>
-              <span className={`text-xs font-medium truncate ${'text-[var(--ink-2)]'}`}>
-                {isLoading ? 'Consultando tiempo...' : weatherData?.conditionText || 'Clima'}
+              <span
+                className={`text-xs font-medium truncate ${"text-[var(--ink-2)]"}`}
+              >
+                {isLoading
+                  ? "Consultando tiempo..."
+                  : weatherData?.conditionText || "Clima"}
               </span>
               {weatherData?.rainProbability !== undefined && (
                 <span className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-0.5 font-semibold">
@@ -124,24 +158,29 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                   {weatherData.rainProbability}% lluvia
                 </span>
               )}
-              {weatherData?.windGusts !== undefined && weatherData.windGusts >= 25 && (
-                <span className="text-[11px] font-sans text-[var(--acc)] flex items-center gap-0.5">
-                  <Wind className="w-3 h-3" />
-                  {weatherData.windGusts} km/h
-                </span>
-              )}
+              {weatherData?.windGusts !== undefined &&
+                weatherData.windGusts >= 25 && (
+                  <span className="text-[11px] font-sans text-[var(--acc)] flex items-center gap-0.5">
+                    <Wind className="w-3 h-3" />
+                    {weatherData.windGusts} km/h
+                  </span>
+                )}
               {hasAlerts && (
                 <span
                   className={`px-1.5 py-0.5 rounded text-[10px] font-sans font-bold ${
-                    dangerAlertsCount > 0 ? 'bg-[var(--alert)] text-[var(--ink)]' : 'bg-[var(--acc)] text-[var(--on-acc)]'
+                    dangerAlertsCount > 0
+                      ? "bg-[var(--alert)] text-[var(--ink)]"
+                      : "bg-[var(--acc)] text-[var(--on-acc)]"
                   }`}
                 >
-                  {dangerAlertsCount > 0 ? '⚠️ Alerta Clima' : 'Aviso Meteo'}
+                  {dangerAlertsCount > 0 ? "⚠️ Alerta Clima" : "Aviso Meteo"}
                 </span>
               )}
             </div>
-            <span className={`text-[10px] font-sans block truncate ${'text-[var(--ink-2)]'}`}>
-              {weatherData?.cityName || city} · Show {timeStr || '21:00'}
+            <span
+              className={`text-[10px] font-sans block truncate ${"text-[var(--ink-2)]"}`}
+            >
+              {weatherData?.cityName || city} · Show {timeStr || "21:00"}
             </span>
           </div>
         </div>
@@ -164,10 +203,10 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
     <div
       className={`rounded-[var(--r-m)] p-4 transition-all duration-200 ${
         hasAlerts && dangerAlertsCount > 0
-          ? 'bg-[var(--alert)]/15 text-[var(--ink)]'
+          ? "bg-[var(--alert)]/15 text-[var(--ink)]"
           : hasAlerts
-            ? 'bg-[var(--ok)]/15 text-[var(--ink)]'
-            : 'bg-[var(--surface)] text-[var(--ink-2)]'
+            ? "bg-[var(--ok)]/15 text-[var(--ink)]"
+            : "bg-[var(--surface)] text-[var(--ink-2)]"
       }`}
     >
       {/* Barra superior del widget del tiempo */}
@@ -177,27 +216,37 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             className={`p-1 rounded-md ${
               hasAlerts
                 ? dangerAlertsCount > 0
-                  ? 'bg-[var(--alert)]/20 text-[var(--alert)]'
-                  : 'bg-[var(--acc)]/20 text-[var(--acc)]'
-                : 'bg-[var(--acc)]/15 text-[var(--acc)]'
+                  ? "bg-[var(--alert)]/20 text-[var(--alert)]"
+                  : "bg-[var(--acc)]/20 text-[var(--acc)]"
+                : "bg-[var(--acc)]/15 text-[var(--acc)]"
             }`}
           >
-            {hasAlerts ? <AlertTriangle className="w-3.5 h-3.5" /> : <Thermometer className="w-3.5 h-3.5" />}
+            {hasAlerts ? (
+              <AlertTriangle className="w-3.5 h-3.5" />
+            ) : (
+              <Thermometer className="w-3.5 h-3.5" />
+            )}
           </span>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] font-sans font-bold tracking-wide text-[var(--acc)]">Previsión Meteorológica</span>
+              <span className="text-[11px] font-sans font-bold tracking-wide text-[var(--acc)]">
+                Previsión Meteorológica
+              </span>
               {hasAlerts && (
                 <span
                   className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold tracking-wider ${
-                    dangerAlertsCount > 0 ? 'bg-[var(--alert)] text-[var(--ink)]' : 'bg-[var(--acc)] text-[var(--on-acc)]'
+                    dangerAlertsCount > 0
+                      ? "bg-[var(--alert)] text-[var(--ink)]"
+                      : "bg-[var(--acc)] text-[var(--on-acc)]"
                   }`}
                 >
-                  {dangerAlertsCount > 0 ? 'Alerta Activa' : 'Aviso Meteo'}
+                  {dangerAlertsCount > 0 ? "Alerta Activa" : "Aviso Meteo"}
                 </span>
               )}
             </div>
-            <span className={`text-[10px] font-sans block ${'text-[var(--ink-2)]'}`}>
+            <span
+              className={`text-[10px] font-sans block ${"text-[var(--ink-2)]"}`}
+            >
               {weatherData?.cityName || city} · {dateStr}
             </span>
           </div>
@@ -207,18 +256,22 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
         <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)]">
           <button
             type="button"
-            onClick={() => setSelectedSlot('show')}
+            onClick={() => setSelectedSlot("show")}
             className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
-              selectedSlot === 'show' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
+              selectedSlot === "show"
+                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
           >
-            <span>Show ({timeStr || '21:00'})</span>
+            <span>Show ({timeStr || "21:00"})</span>
           </button>
           <button
             type="button"
-            onClick={() => setSelectedSlot('soundcheck')}
+            onClick={() => setSelectedSlot("soundcheck")}
             className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold transition-colors cursor-pointer flex items-center gap-1 ${
-              selectedSlot === 'soundcheck' ? 'bg-[var(--acc)] text-[var(--on-acc)]' : 'text-[var(--ink-2)] hover:text-[var(--acc)]/70'
+              selectedSlot === "soundcheck"
+                ? "bg-[var(--acc)] text-[var(--on-acc)]"
+                : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
           >
             <span>Prueba (18:00)</span>
@@ -229,7 +282,9 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             title="Actualizar previsión"
             className="p-1 text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors cursor-pointer"
           >
-            <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin text-[var(--acc)]' : ''}`} />
+            <RefreshCw
+              className={`w-3 h-3 ${isLoading ? "animate-spin text-[var(--acc)]" : ""}`}
+            />
           </button>
           {collapsible && (
             <button
@@ -251,19 +306,25 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
           <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
           <span>Consultando satélites meteorológicos en directo...</span>
         </div>
-      ) : weatherData?.status === 'future' ? (
+      ) : weatherData?.status === "future" ? (
         <div className="flex items-center gap-3 py-2 px-3 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[11px] font-sans">
           <Calendar className="w-5 h-5 text-[var(--acc)] shrink-0" />
           <div>
-            <span className="font-bold text-[var(--acc)]/70 block">Previsión a 14 días vista</span>
-            <p className={'text-[var(--ink-2)] text-[10px]'}>{weatherData.conditionText}</p>
+            <span className="font-bold text-[var(--acc)]/70 block">
+              Previsión a 14 días vista
+            </span>
+            <p className={"text-[var(--ink-2)] text-[10px]"}>
+              {weatherData.conditionText}
+            </p>
           </div>
         </div>
-      ) : weatherData?.status === 'past' ? (
-        <div className="text-[11px] font-sans text-[var(--ink-2)] py-1">✓ {weatherData.conditionText}</div>
-      ) : weatherData?.status === 'error' ? (
+      ) : weatherData?.status === "past" ? (
+        <div className="text-[11px] font-sans text-[var(--ink-2)] py-1">
+          ✓ {weatherData.conditionText}
+        </div>
+      ) : weatherData?.status === "error" ? (
         <div className="text-[10px] font-sans text-[var(--ink-2)] py-1">
-          {weatherData.error || 'Previsión no disponible para esta ubicación'}
+          {weatherData.error || "Previsión no disponible para esta ubicación"}
         </div>
       ) : weatherData ? (
         <div className="space-y-3">
@@ -272,21 +333,30 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             <div className="flex items-center gap-3">
               <motion.div
                 whileHover={{ scale: 1.08 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 className={`p-2 rounded-[var(--r-l)] bg-gradient-to-br relative ${getWeatherIconBackdrop(weatherData.iconType)}`}
               >
-                <AnimatedWeatherIcon iconType={weatherData.iconType} size="lg" />
+                <AnimatedWeatherIcon
+                  iconType={weatherData.iconType}
+                  size="lg"
+                />
               </motion.div>
               <div>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold font-sans tracking-tight text-[var(--acc)]">{weatherData.temperature}°C</span>
+                  <span className="text-2xl font-bold font-sans tracking-tight text-[var(--acc)]">
+                    {weatherData.temperature}°C
+                  </span>
                   {weatherData.apparentTemperature !== undefined && (
-                    <span className={`text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>
+                    <span
+                      className={`text-[10px] font-sans ${"text-[var(--ink-2)]"}`}
+                    >
                       (sensación {weatherData.apparentTemperature}°C)
                     </span>
                   )}
                 </div>
-                <p className={`text-xs font-medium flex items-center gap-1.5 ${'text-[var(--ink-2)]'}`}>
+                <p
+                  className={`text-xs font-medium flex items-center gap-1.5 ${"text-[var(--ink-2)]"}`}
+                >
                   <span>{weatherData.conditionText}</span>
                 </p>
               </div>
@@ -298,8 +368,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
                   (weatherData.rainProbability || 0) >= 40
-                    ? 'bg-[var(--acc)]/20/50 text-[var(--ink-3)]'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                    ? "bg-[var(--acc)]/20/50 text-[var(--ink-3)]"
+                    : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >
                 <div className="flex items-center gap-1 text-[10px] font-sans">
@@ -310,9 +380,13 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                   )}
                   <span>Lluvia</span>
                 </div>
-                <span className="text-xs font-bold font-sans text-[var(--ink-2)] mt-0.5">{weatherData.rainProbability}%</span>
+                <span className="text-xs font-bold font-sans text-[var(--ink-2)] mt-0.5">
+                  {weatherData.rainProbability}%
+                </span>
                 {(weatherData.rainVolumeMm || 0) > 0 && (
-                  <span className="text-[9px] font-sans text-[var(--ink-2)]/80">{weatherData.rainVolumeMm} mm</span>
+                  <span className="text-[9px] font-sans text-[var(--ink-2)]/80">
+                    {weatherData.rainVolumeMm} mm
+                  </span>
                 )}
               </motion.div>
 
@@ -320,20 +394,28 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
                   (weatherData.windGusts || 0) >= 40
-                    ? 'bg-[var(--acc)]/20 /50 text-[var(--acc)]/70'
-                    : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                    ? "bg-[var(--acc)]/20 /50 text-[var(--acc)]/70"
+                    : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >
                 <div className="flex items-center gap-1 text-[10px] font-sans">
                   {(weatherData.windGusts || 0) >= 40 ? (
-                    <AnimatedWeatherIcon iconType="wind" size="xs" severity="warning" />
+                    <AnimatedWeatherIcon
+                      iconType="wind"
+                      size="xs"
+                      severity="warning"
+                    />
                   ) : (
                     <Wind className="w-3 h-3 text-[var(--acc)]" />
                   )}
                   <span>Viento</span>
                 </div>
-                <span className="text-xs font-bold font-sans text-[var(--acc)] mt-0.5">{weatherData.windGusts} km/h</span>
-                <span className="text-[9px] font-sans text-[var(--ink-2)]">rachas</span>
+                <span className="text-xs font-bold font-sans text-[var(--acc)] mt-0.5">
+                  {weatherData.windGusts} km/h
+                </span>
+                <span className="text-[9px] font-sans text-[var(--ink-2)]">
+                  rachas
+                </span>
               </motion.div>
             </div>
           </div>
@@ -346,13 +428,15 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                   <AlertTriangle className="w-3 h-3 text-[var(--alert)]" />
                   Alertas de Escenario y Directo ({weatherData.alerts.length})
                 </span>
-                <span className="text-[9px] font-sans text-[var(--ink-2)]">Recomendaciones para rider y banda</span>
+                <span className="text-[9px] font-sans text-[var(--ink-2)]">
+                  Recomendaciones para rider y banda
+                </span>
               </div>
 
               <div className="space-y-2">
                 {weatherData.alerts.map((alert) => {
                   const isExpanded = expandedAlerts[alert.id] ?? false;
-                  const isDanger = alert.severity === 'danger';
+                  const isDanger = alert.severity === "danger";
 
                   return (
                     <motion.div
@@ -360,30 +444,44 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
-                        isDanger ? 'bg-[var(--alert-soft)]/50 text-[var(--alert)]/40' : 'bg-[var(--acc-soft)] /40 text-[var(--acc)]'
+                        isDanger
+                          ? "bg-[var(--alert-soft)]/50 text-[var(--alert)]/40"
+                          : "bg-[var(--acc-soft)] /40 text-[var(--acc)]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-start gap-2.5">
                           <div
                             className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 ${
-                              isDanger ? 'bg-[var(--alert)]/20/40' : 'bg-[var(--acc)]/20 /40'
+                              isDanger
+                                ? "bg-[var(--alert)]/20/40"
+                                : "bg-[var(--acc)]/20 /40"
                             }`}
                           >
-                            <AnimatedWeatherIcon iconType={alert.icon} size="sm" severity={alert.severity} />
+                            <AnimatedWeatherIcon
+                              iconType={alert.icon}
+                              size="sm"
+                              severity={alert.severity}
+                            />
                           </div>
                           <div>
                             <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                              <span className="font-bold font-sans text-xs text-[var(--ink-2)] tracking-tight">{alert.title}</span>
+                              <span className="font-bold font-sans text-xs text-[var(--ink-2)] tracking-tight">
+                                {alert.title}
+                              </span>
                               <span
                                 className={`px-1.5 py-0.2 rounded text-[9px] font-sans font-bold tracking-wider ${
-                                  isDanger ? 'bg-[var(--alert)] text-[var(--ink)]' : 'bg-[var(--acc)] text-[var(--on-acc)]'
+                                  isDanger
+                                    ? "bg-[var(--alert)] text-[var(--ink)]"
+                                    : "bg-[var(--acc)] text-[var(--on-acc)]"
                                 }`}
                               >
-                                {isDanger ? 'Peligro Extremo' : 'Precaución'}
+                                {isDanger ? "Peligro Extremo" : "Precaución"}
                               </span>
                             </div>
-                            <p className="text-[11px] leading-relaxed opacity-90 font-sans">{alert.shortAdvice}</p>
+                            <p className="text-[11px] leading-relaxed opacity-90 font-sans">
+                              {alert.shortAdvice}
+                            </p>
                           </div>
                         </div>
 
@@ -391,40 +489,59 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                           type="button"
                           onClick={() => toggleAlertExpand(alert.id)}
                           className={`p-1 rounded-md text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0 cursor-pointer ${
-                            isDanger ? 'hover:bg-[var(--alert-soft)]' : 'hover:bg-[var(--acc-soft)]'
+                            isDanger
+                              ? "hover:bg-[var(--alert-soft)]"
+                              : "hover:bg-[var(--acc-soft)]"
                           }`}
-                          title={isExpanded ? 'Ocultar recomendaciones' : 'Ver recomendaciones técnicas'}
+                          title={
+                            isExpanded
+                              ? "Ocultar recomendaciones"
+                              : "Ver recomendaciones técnicas"
+                          }
                         >
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          {isExpanded ? (
+                            <ChevronUp className="w-4 h-4" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4" />
+                          )}
                         </button>
                       </div>
 
                       {/* Consejos técnicos y medidas de seguridad detalladas con micro-animación fluida */}
                       <AnimatePresence>
-                        {isExpanded && alert.fullAdvice && alert.fullAdvice.length > 0 && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${
-                              isDanger ? 'border-[var(--alert)]/20 text-[var(--ink)]/90' : '/20 text-[var(--ink)]/90'
-                            }`}
-                          >
-                            <div className="font-sans tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
-                              <ShieldAlert className="w-3 h-3 text-[var(--acc)]" />
-                              <span>Protocolo técnico recomendado:</span>
-                            </div>
-                            <ul className="space-y-1 pl-1">
-                              {alert.fullAdvice.map((tip, idx) => (
-                                <li key={idx} className="flex items-start gap-1.5 leading-tight">
-                                  <span className="text-[var(--acc)] font-bold shrink-0 mt-0.5">•</span>
-                                  <span>{tip}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </motion.div>
-                        )}
+                        {isExpanded &&
+                          alert.fullAdvice &&
+                          alert.fullAdvice.length > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${
+                                isDanger
+                                  ? "border-[var(--alert)]/20 text-[var(--ink)]/90"
+                                  : "/20 text-[var(--ink)]/90"
+                              }`}
+                            >
+                              <div className="font-sans tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
+                                <ShieldAlert className="w-3 h-3 text-[var(--acc)]" />
+                                <span>Protocolo técnico recomendado:</span>
+                              </div>
+                              <ul className="space-y-1 pl-1">
+                                {alert.fullAdvice.map((tip, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="flex items-start gap-1.5 leading-tight"
+                                  >
+                                    <span className="text-[var(--acc)] font-bold shrink-0 mt-0.5">
+                                      •
+                                    </span>
+                                    <span>{tip}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                          )}
                       </AnimatePresence>
                     </motion.div>
                   );

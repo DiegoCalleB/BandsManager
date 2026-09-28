@@ -724,7 +724,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           }
                         >
                           <Star
-                            className={`w-3.5 h-3.5 ${isMain ? "fill-amber-400 text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+                            className={`w-3.5 h-3.5 ${isMain ? "fill-[var(--acc)] text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
                           />
                         </button>
 
@@ -1079,7 +1079,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           !newBandName.trim() ||
                           (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)
                         }
-                        className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] text-xs font-bold transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
                           isCreatingBand ? (
@@ -1598,8 +1598,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
             return (
               <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 animate-in fade-in duration-200 text-left">
-                <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)] /30 text-[var(--ink-2)] overflow-hidden flex flex-col">
-                  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-[var(--surface)] to-[var(--surface)] /20 flex justify-between items-center">
+                <div className="w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)]  text-[var(--ink-2)] overflow-hidden flex flex-col">
+                  <div className="px-6 py-4 bg-gradient-to-r from-[var(--acc)]/60 via-[var(--surface)] to-[var(--surface)]  flex justify-between items-center">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/20 flex items-center justify-center">
                         <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -1757,7 +1757,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                         );
                                       }
                                     }}
-                                    className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
+                                    className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-[var(--acc)] hover:from-[var(--acc)] hover:to-[var(--acc)] text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
                                   >
                                     <Sparkles className="w-3 h-3 fill-neutral-950" />
                                     <span>Seleccionar {plan.name}</span>
