@@ -48,15 +48,15 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
         <div
           className={`w-full max-w-md p-5 sm:p-6 rounded-3xl shadow-2xl border ${
-            isStitchLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#16161a] border-neutral-800 text-zinc-100'
+            isStitchLight ? 'bg-white border-[var(--hair)] text-slate-800' : 'bg-[#16161a] borderbg-[var(--surface)] text-zinc-100'
           } my-auto max-h-[90vh] overflow-y-auto`}
         >
-          <div className="flex justify-between items-center pb-3.5 border-b border-white/10">
+          <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-[var(--acc)]/30 flex items-center justify-center text-amber-400 shrink-0">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
@@ -106,8 +106,8 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
                 placeholder="ej. Repertorio de ritmo alto pensado para festivales..."
                 className={`w-full p-3 rounded-xl border font-medium text-xs focus:outline-none ${
                   isStitchLight
-                    ? 'bg-white text-slate-900 border-slate-300 focus:border-amber-500'
-                    : 'bg-neutral-900 text-white border-neutral-800 focus:border-amber-500/50'
+                    ? 'bg-[var(--surface)] text-slate-900 border-[var(--hair)] focus:border-[var(--acc)]'
+                    : 'bg-neutral-900 text-white borderbg-[var(--surface)] focus:border-[var(--acc)]/50'
                 }`}
               />
             </div>

@@ -74,7 +74,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
 
   return (
     <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+      <div className="fixed inset-0 bg-[var(--scrim)]/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div
           className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
             isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
@@ -82,7 +82,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
         >
           <button
             onClick={() => setViewingConcert(null)}
-            className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
           >
             ✕
           </button>
@@ -180,7 +180,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
 
             <div>
               <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
-                <span className="flex items-center gap-1 text-[#d1b375]">
+                <span className="flex items-center gap-1 text-[var(--acc)]">
                   <Music className="w-3 h-3" />
                   <span>Repertorio / Setlist</span>
                 </span>
@@ -190,8 +190,8 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, setlistId: e.target.value } : prev))}
                 className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
                   isStitchLight
-                    ? 'bg-slate-50 text-slate-900 border border-slate-300'
-                    : 'bg-neutral-900 text-white border border-neutral-800'
+                    ? 'bg-slate-50 text-slate-900 border border-[var(--hair)]'
+                    : 'bg-neutral-900 text-white border borderbg-[var(--surface)]'
                 }`}
               >
                 <option value="">-- Sin repertorio asignado --</option>
@@ -203,7 +203,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               </select>
             </div>
 
-            <div className="flex items-center gap-2 py-1 px-2 rounded-lg bg-purple-950/20 border border-purple-500/30">
+            <div className="flex items-center gap-2 py-1 px-2 rounded-lg bg-purple-950/20 border border-[var(--acc)]/30">
               <input
                 type="checkbox"
                 id="editConcIsPosibleCheck"
@@ -231,7 +231,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               />
             </div>
 
-            <div className="pt-2 flex items-center justify-between border-t border-neutral-800">
+            <div className="pt-2 flex items-center justify-between border-t borderbg-[var(--surface)]">
               {onDeleteConcert && (
                 <button
                   type="button"
@@ -241,7 +241,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                       setViewingConcert(null);
                     }
                   }}
-                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-[var(--alert)]/30 flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3 h-3" />
                   <span>Eliminar</span>
@@ -251,7 +251,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 <button
                   type="button"
                   onClick={() => setViewingConcert(null)}
-                  className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+                  className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>

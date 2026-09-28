@@ -93,8 +93,8 @@ const StageMetronomeDot: React.FC<{ isPlaying: boolean; bpm: number }> =
         className={`w-2 h-2 rounded-full transition-all duration-75 ${
           isPlaying
             ? tick
-              ? "bg-amber-400 scale-125 shadow-[0_0_8px_#f59e0b]"
-              : "bg-amber-950 scale-90"
+              ? "bg-[var(--acc)] scale-125 shadow-[0_0_8px_#f59e0b]"
+              : "bg-[var(--acc)] scale-90"
             : "bg-zinc-600"
         }`}
       />

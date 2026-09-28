@@ -94,7 +94,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div
         className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
           isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
@@ -107,7 +107,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
             </h3>
           </div>
-          <button onClick={() => onClose()} className="p-1 hover:bg-neutral-800 rounded-lg transition-colors">
+          <button onClick={() => onClose()} className="p-1 hover:bgbg-[var(--surface)] rounded-lg transition-colors">
             <X className="w-5 h-5 text-neutral-400" />
           </button>
         </div>
@@ -156,7 +156,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             )}
 
             {aiError && (
-              <div className="md:col-span-2 p-3 bg-rose-950/40 border border-rose-800/50 rounded-xl flex items-center justify-between text-xs text-rose-300 font-mono">
+              <div className="md:col-span-2 p-3 bg-rose-950/40 border border-[var(--alert)]/50 rounded-xl flex items-center justify-between text-xs text-rose-300 font-mono">
                 <span>⚠️ {aiError}</span>
                 <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-rose-900/50 rounded">
                   <X className="w-3.5 h-3.5" />
@@ -166,7 +166,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {aiProposal && (
               <div className="md:col-span-2 p-3.5 bg-zinc-900 border border-[#f2ca50]/40 rounded-xl space-y-3 text-xs font-mono shadow-xl">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                <div className="flex items-center justify-between border-b border-[var(--hair)] pb-2">
                   <div className="flex items-center gap-1.5 text-[#f2ca50] font-bold">
                     <Sparkles className="w-4 h-4" />
                     <span>Propuesta de la IA (Revisa antes de confirmar):</span>
@@ -175,7 +175,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <button
                       type="button"
                       onClick={handleApplyAllAiData}
-                      className="px-3 py-1 bg-[#f2ca50] text-[#3c2f00] font-bold rounded-lg text-[10px] hover:bg-[#e0b83e] transition-all cursor-pointer flex items-center gap-1 shadow"
+                      className="px-3 py-1 bg-[#f2ca50] text-[#3c2f00] font-bold rounded-lg text-[10px] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex items-center gap-1 shadow"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Aplicar Todo</span>
@@ -193,7 +193,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-zinc-300">
                   {aiProposal.estilo_musical && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)]">
                       <div className="truncate pr-2">
                         <span className="text-zinc-500 font-bold">Estilo:</span> {aiProposal.estilo_musical}
                       </div>
@@ -208,7 +208,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.localizacion && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)]">
                       <div className="truncate pr-2">
                         <span className="text-zinc-500 font-bold">Origen:</span> {aiProposal.localizacion}
                       </div>
@@ -223,7 +223,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.contacto_nombre && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)]">
                       <div className="truncate pr-2">
                         <span className="text-zinc-500 font-bold">Contacto:</span> {aiProposal.contacto_nombre}
                       </div>
@@ -238,7 +238,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.email && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)]">
                       <div className="truncate pr-2">
                         <span className="text-zinc-500 font-bold">Email:</span> {aiProposal.email}
                       </div>
@@ -253,7 +253,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.telefono && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)]">
                       <div className="truncate pr-2">
                         <span className="text-zinc-500 font-bold">Tel:</span> {aiProposal.telefono}
                       </div>
@@ -268,7 +268,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.instagram && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)]">
                       <div className="truncate pr-2">
                         <span className="text-zinc-500 font-bold">Instagram:</span> {aiProposal.instagram}
                       </div>
@@ -283,7 +283,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {(aiProposal.spotify_url || aiProposal.youtube_url) && (
-                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-zinc-800 sm:col-span-2">
+                    <div className="flex items-center justify-between bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)] sm:col-span-2">
                       <div className="truncate max-w-[80%]">
                         <span className="text-zinc-500 font-bold">Música / Media:</span> {aiProposal.spotify_url || aiProposal.youtube_url}
                       </div>
@@ -298,7 +298,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   )}
 
                   {aiProposal.biografia && (
-                    <div className="bg-zinc-950/70 p-2 rounded-lg border border-zinc-800 sm:col-span-2 space-y-1">
+                    <div className="bg-zinc-950/70 p-2 rounded-lg border border-[var(--hair)] sm:col-span-2 space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-500 font-bold">Resumen / Bio:</span>
                         <button
@@ -319,12 +319,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             )}
 
             {/* Icono o Imagen / Logo de la Banda */}
-            <div className="space-y-2 sm:col-span-2 p-3 bg-neutral-900/60 rounded-xl border border-neutral-800">
+            <div className="space-y-2 sm:col-span-2 p-3 bg-neutral-900/60 rounded-xl border borderbg-[var(--surface)]">
               <label className="block text-[10px] font-mono uppercase text-[#f2ca50] font-bold">Icono o Logo / Foto de la Banda</label>
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Preview current avatar */}
-                <div className="w-10 h-10 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-10 h-10 rounded-full bgbg-[var(--surface)] border border-[var(--hair)] flex items-center justify-center overflow-hidden shrink-0">
                   {formImageUrl ? (
                     <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
                   ) : (
@@ -346,7 +346,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                         className={`w-7 h-7 rounded-lg text-sm flex items-center justify-center transition-all cursor-pointer ${
                           formIcon === emoji && !formImageUrl
                             ? 'bg-[#f2ca50]/20 border border-[#f2ca50] text-white scale-110'
-                            : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
+                            : 'bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-300'
                         }`}
                       >
                         {emoji}
@@ -358,7 +358,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 {/* Upload file button */}
                 <div className="shrink-0 space-y-1">
                   <span className="text-[10px] text-neutral-400 block font-mono">O subir logo (Supabase):</span>
-                  <label className="cursor-pointer px-2.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-xl text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
+                  <label className="cursor-pointer px-2.5 py-1.5 bgbg-[var(--surface)] hover:bg-neutral-700 border border-[var(--hair)] rounded-xl text-[10px] font-mono text-zinc-200 flex items-center gap-1.5 transition-all active:scale-95">
                     {isUploadingLogo ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[#f2ca50]" />
                     ) : (
@@ -534,7 +534,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             <button
               type="button"
               onClick={() => onClose()}
-              className="px-2 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-mono text-[10px] rounded-xl transition-colors cursor-pointer"
+              className="px-2 py-1 bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-300 font-mono text-[10px] rounded-xl transition-colors cursor-pointer"
             >
               Cancelar
             </button>

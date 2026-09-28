@@ -144,7 +144,7 @@ export function ConvocarEnsayoModal({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-neutral-200 mb-1">
-                  Fecha <span className="text-amber-400">*</span>
+                  Fecha <span className="text-[var(--acc)]">*</span>
                 </label>
                 <input
                   type="date"
@@ -156,14 +156,14 @@ export function ConvocarEnsayoModal({
               </div>
               <div>
                 <label className="block text-xs font-semibold text-neutral-200 mb-1">
-                  Hora de Inicio <span className="text-amber-400">*</span>
+                  Hora de Inicio <span className="text-[var(--acc)]">*</span>
                 </label>
                 <input
                   type="time"
                   required
                   value={hora}
                   onChange={(e) => setHora(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus:border-amber-400 outline-none font-medium"
+                  className="w-full px-3 py-2 rounded-xl bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus:border-[var(--acc)] outline-none font-medium"
                 />
               </div>
             </div>
@@ -171,7 +171,7 @@ export function ConvocarEnsayoModal({
             {/* Lugar / Local */}
             <div>
               <label className="block text-xs font-semibold text-neutral-200 mb-1">
-                Lugar / Local de Ensayo <span className="text-amber-400">*</span>
+                Lugar / Local de Ensayo <span className="text-[var(--acc)]">*</span>
               </label>
               <div className="relative">
                 <MapPin className="w-3.5 h-3.5 absolute left-3 top-2.5 text-neutral-400" />
@@ -181,7 +181,7 @@ export function ConvocarEnsayoModal({
                   placeholder="Ej. Local 4 - Rock Palace, Madrid"
                   value={lugar}
                   onChange={(e) => setLugar(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus:border-amber-400 outline-none font-medium"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#1a1918] border border-[#2a2825] text-zinc-100 text-xs focus:border-[var(--acc)] outline-none font-medium"
                 />
               </div>
             </div>
@@ -211,10 +211,10 @@ export function ConvocarEnsayoModal({
               <button
                 type="button"
                 onClick={() => setShowAdvanced((prev) => !prev)}
-                className="w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors hover:bg-neutral-800/60 cursor-pointer text-zinc-300"
+                className="w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors hover:bgbg-[var(--surface)]/60 cursor-pointer text-zinc-300"
               >
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span className="font-semibold">Más opciones de ensayo</span>
                   <span className="text-[10px] text-zinc-500 font-normal">(Horario fin, músicos, objetivos...)</span>
                 </div>
@@ -222,7 +222,7 @@ export function ConvocarEnsayoModal({
               </button>
 
               {showAdvanced && (
-                <div className="p-3.5 pt-1 space-y-3 border-t border-white/5">
+                <div className="p-3.5 pt-1 space-y-3 border-t border-[var(--hair)]/5">
                   {/* Hora Fin & Duración */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -231,7 +231,7 @@ export function ConvocarEnsayoModal({
                         type="time"
                         value={horaFin}
                         onChange={(e) => setHoraFin(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-amber-400"
+                        className="w-full px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-[var(--acc)]"
                       />
                     </div>
                     <div>
@@ -243,7 +243,7 @@ export function ConvocarEnsayoModal({
                         step="15"
                         value={duracionEstimadaMin}
                         onChange={(e) => setDuracionEstimadaMin(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-amber-400"
+                        className="w-full px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-[var(--acc)]"
                       />
                     </div>
                   </div>
@@ -262,8 +262,8 @@ export function ConvocarEnsayoModal({
                               onClick={() => toggleConvocado(u.id)}
                               className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${
                                 isSelected
-                                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold'
-                                  : 'bg-neutral-800/60 text-neutral-400 hover:border-neutral-700'
+                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 font-bold'
+                                  : 'bgbg-[var(--surface)]/60 text-neutral-400 hover:border-[var(--hair)]'
                               }`}
                             >
                               <Users className="w-3 h-3" />
@@ -289,13 +289,13 @@ export function ConvocarEnsayoModal({
                           className="flex items-center justify-between gap-2 p-1.5 rounded-lg bg-[#141413] border border-[#2a2825] text-xs text-zinc-200"
                         >
                           <div className="flex items-center gap-1.5 truncate">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)] shrink-0" />
                             <span className="truncate">{obj.texto}</span>
                           </div>
                           <button
                             type="button"
                             onClick={() => handleRemoveObjetivo(obj.id)}
-                            className="text-neutral-500 hover:text-rose-400 p-0.5 shrink-0"
+                            className="text-neutral-500 hover:text-[var(--alert)] p-0.5 shrink-0"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
@@ -315,12 +315,12 @@ export function ConvocarEnsayoModal({
                             handleAddObjetivo();
                           }
                         }}
-                        className="flex-1 px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none focus:border-amber-400"
+                        className="flex-1 px-3 py-1.5 rounded-xl bg-[#141413] border border-[#2a2825] text-xs text-zinc-100 outline-none focus:border-[var(--acc)]"
                       />
                       <button
                         type="button"
                         onClick={handleAddObjetivo}
-                        className="px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200 text-xs font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
@@ -335,7 +335,7 @@ export function ConvocarEnsayoModal({
                       placeholder="Ej. Traer juego nuevo de cuerdas..."
                       value={notas}
                       onChange={(e) => setNotas(e.target.value)}
-                      className="w-full p-2.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-amber-400 resize-none"
+                      className="w-full p-2.5 rounded-xl bg-[#141413] border border-[#2a2825] text-zinc-100 text-xs outline-none focus:border-[var(--acc)] resize-none"
                     />
                   </div>
                 </div>

@@ -426,14 +426,14 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             />
           </div>
           {/* PARÁMETROS OPERATIVOS PARA EL AGENTE DE BOOKING (ANTI-ALUCINACIONES) */}
-          <div className="pt-4 border-t border-slate-800/80">
+          <div className="pt-4 border-t border-[var(--hair)]/80">
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span className="w-2 h-2 rounded-full bg-[var(--ok)]"></span>
               Operativa Real para el Agente de IA (Anti-Alucinaciones)
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {/* Técnico de sonido propio vs sala */}
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
+              <div className="bg-slate-950/60 border border-[var(--hair)]/80 rounded-xl p-3.5 space-y-2">
                 <span className="text-xs font-semibold text-slate-300 block">
                   Técnico de sonido en directo
                 </span>
@@ -443,7 +443,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneTecnicoSonidoPropio", false)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${!config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-amber-500/20 text-amber-300 border-amber-500/40" : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${!config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)] hover:text-white"}`}
                   >
                     De la sala / casa
                   </button>
@@ -452,7 +452,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneTecnicoSonidoPropio", true)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.tieneTecnicoSonidoPropio ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)] hover:text-white"}`}
                   >
                     Propio de la banda
                   </button>
@@ -462,7 +462,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 </p>
               </div>
               {/* Merchandising */}
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
+              <div className="bg-slate-950/60 border border-[var(--hair)]/80 rounded-xl p-3.5 space-y-2">
                 <span className="text-xs font-semibold text-slate-300 block">
                   Merchandising físico en bolos
                 </span>
@@ -472,7 +472,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneMerchandising", false)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${!config.datosContratacion?.tieneMerchandising ? "bg-amber-500/20 text-amber-300 border-amber-500/40" : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${!config.datosContratacion?.tieneMerchandising ? "bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)] hover:text-white"}`}
                   >
                     No disponemos
                   </button>
@@ -481,7 +481,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     onClick={() =>
                       editarDatoContratacion("tieneMerchandising", true)
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.tieneMerchandising ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.tieneMerchandising ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)] hover:text-white"}`}
                   >
                     Sí (tenemos stock)
                   </button>
@@ -499,12 +499,12 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       )
                     }
                     placeholder="Ej: Camisetas y vinilos con TPV propio"
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-slate-600 focus:border-amber-500 outline-none"
+                    className="w-full bg-slate-900 border border-[var(--hair)] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-[var(--ink-2)] focus:border-[var(--acc)] outline-none"
                   />
                 )}
               </div>
               {/* Transporte y Hospedaje */}
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
+              <div className="bg-slate-950/60 border border-[var(--hair)]/80 rounded-xl p-3.5 space-y-2">
                 <span className="text-xs font-semibold text-slate-300 block">
                   Transporte & Logística
                 </span>
@@ -517,7 +517,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         !config.datosContratacion?.transportePropio,
                       )
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.transportePropio ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.transportePropio ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)] hover:text-white"}`}
                   >
                     {config.datosContratacion?.transportePropio
                       ? "Furgoneta propia"
@@ -531,7 +531,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         !config.datosContratacion?.hospedajeRequerido,
                       )
                     }
-                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.hospedajeRequerido ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"}`}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.hospedajeRequerido ? "bg-[var(--ok)]/20 text-[var(--ok)] border-[var(--ok)]/40" : "bg-slate-900 text-slate-400 border-[var(--hair)] hover:text-white"}`}
                   >
                     {config.datosContratacion?.hospedajeRequerido
                       ? "Pide hotel"

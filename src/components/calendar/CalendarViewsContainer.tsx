@@ -153,7 +153,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
         {/* Weekday Labels */}
         <div
-          className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold uppercase ${textSub} bg-slate-950/60 p-2 rounded-xl border border-slate-800/80`}
+          className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono mb-2.5 font-bold uppercase ${textSub} bg-slate-950/60 p-2 rounded-xl border border-[var(--hair)]/80`}
         >
           {weekdays.map((day) => (
             <div key={day} className="py-0.5 tracking-wider">
@@ -189,27 +189,27 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             let borderAndBgClass = '';
             if (isSelected) {
               borderAndBgClass = isStitchLight
-                ? 'bg-sky-500 text-white font-extrabold border-2 border-sky-300 shadow-xl shadow-sky-500/20 scale-[1.05] z-20'
-                : 'bg-amber-500 text-slate-950 font-black border-2 border-amber-300 shadow-xl shadow-amber-500/25 scale-[1.05] z-20';
+                ? 'bg-sky-500 text-white font-extrabold border-2 border-[var(--acc)] shadow-xl shadow-sky-500/20 scale-[1.05] z-20'
+                : 'bg-amber-500 text-slate-950 font-black border-2 border-[var(--acc)] shadow-xl shadow-amber-500/25 scale-[1.05] z-20';
             } else if (isToday) {
               borderAndBgClass =
-                'bg-amber-500/15 text-amber-300 font-bold border-2 border-amber-500/80 shadow-md shadow-amber-500/10 hover:border-amber-400 z-10';
+                'bg-amber-500/15 text-amber-300 font-bold border-2 border-[var(--acc)]/80 shadow-md shadow-amber-500/10 hover:border-[var(--acc)] z-10';
             } else if (hasConcert && hasRehearsal) {
               borderAndBgClass =
-                'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 border border-amber-500/50 hover:border-amber-400 hover:shadow-md hover:shadow-amber-500/10 text-white';
+                'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-amber-500/10 text-white';
             } else if (hasConcert) {
               borderAndBgClass =
-                'bg-amber-950/20 border border-amber-500/40 hover:border-amber-400 hover:shadow-md hover:shadow-amber-500/10 text-amber-200';
+                'bg-amber-950/20 border border-[var(--acc)]/40 hover:border-[var(--acc)] hover:shadow-md hover:shadow-amber-500/10 text-amber-200';
             } else if (hasRehearsal) {
               borderAndBgClass =
-                'bg-emerald-950/20 border border-emerald-500/40 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-500/10 text-emerald-200';
+                'bg-emerald-950/20 border border-[var(--ok)]/40 hover:border-[var(--ok)] hover:shadow-md hover:shadow-emerald-500/10 text-emerald-200';
             } else if (hasCampaign) {
               borderAndBgClass =
-                'bg-purple-950/30 border border-purple-500/50 hover:border-purple-400 hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
+                'bg-purple-950/30 border border-[var(--acc)]/50 hover:border-[var(--acc)] hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
             } else {
               borderAndBgClass = isStitchLight
-                ? 'bg-white border border-slate-200 hover:border-sky-400 hover:bg-slate-50 text-slate-800 shadow-xs'
-                : 'bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 hover:bg-slate-800/80 hover:shadow-md hover:shadow-amber-500/10 text-slate-200 shadow-xs';
+                ? 'bg-[var(--surface)] border border-[var(--hair)] hover:border-[var(--acc)] hover:bg-slate-50 text-slate-800 shadow-xs'
+                : 'bg-slate-900/80 border border-[var(--hair)] hover:border-[var(--acc)]/60 hover:bg-slate-800/80 hover:shadow-md hover:shadow-amber-500/10 text-slate-200 shadow-xs';
             }
 
             return (
@@ -252,8 +252,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           isSelected
                             ? 'bg-stone-950/25 text-stone-950 font-black'
                             : isPosible
-                              ? 'bg-purple-500/25 text-purple-200 border border-purple-500/40 hover:bg-purple-500/35 hover:text-white shadow-xs'
-                              : 'bg-amber-500/25 text-amber-200 border border-amber-500/40 hover:bg-amber-500/35 hover:text-white shadow-xs'
+                              ? 'bg-purple-500/25 text-purple-200 border border-[var(--acc)]/40 hover:bg-purple-500/35 hover:text-white shadow-xs'
+                              : 'bg-amber-500/25 text-amber-200 border border-[var(--acc)]/40 hover:bg-amber-500/35 hover:text-white shadow-xs'
                         }`}
                         title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
@@ -285,8 +285,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           isSelected
                             ? 'bg-stone-950/25 text-stone-950 font-black'
                             : isReu
-                              ? 'bg-indigo-500/25 text-indigo-200 border border-indigo-500/40 hover:bg-indigo-500/35 hover:text-white shadow-xs'
-                              : 'bg-emerald-500/25 text-emerald-200 border border-emerald-500/40 hover:bg-emerald-500/35 hover:text-white shadow-xs'
+                              ? 'bg-indigo-500/25 text-indigo-200 border border-[var(--acc)]/40 hover:bg-indigo-500/35 hover:text-white shadow-xs'
+                              : 'bg-emerald-500/25 text-emerald-200 border border-[var(--ok)]/40 hover:bg-emerald-500/35 hover:text-white shadow-xs'
                         }`}
                         title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
                       >
@@ -330,13 +330,13 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all cursor-pointer border ${
                   isSelected
                     ? isStitchLight
-                      ? 'bg-sky-500 text-white border-sky-400 shadow-md font-bold'
-                      : 'bg-amber-500 text-stone-950 border-amber-300 shadow-lg font-black'
+                      ? 'bg-sky-500 text-white border-[var(--acc)] shadow-md font-bold'
+                      : 'bg-amber-500 text-stone-950 border-[var(--acc)] shadow-lg font-black'
                     : isToday
-                      ? 'bg-amber-500/15 text-amber-300 border-amber-500/60 font-bold'
+                      ? 'bg-amber-500/15 text-amber-300 border-[var(--acc)]/60 font-bold'
                       : isStitchLight
-                        ? 'bg-white border-slate-200 text-slate-700 hover:border-sky-300'
-                        : 'bg-slate-900/90 border-slate-800 text-slate-300 hover:border-amber-500/50'
+                        ? 'bg-[var(--surface)] border-[var(--hair)] text-slate-700 hover:border-[var(--acc)]'
+                        : 'bg-slate-900/90 border-[var(--hair)] text-slate-300 hover:border-[var(--acc)]/50'
                 }`}
               >
                 <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
@@ -344,7 +344,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 {totalEvents > 0 && (
                   <span
                     className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
-                      isSelected ? 'bg-black/20 text-inherit' : 'bg-[#d1b375]/20 text-[#d1b375]'
+                      isSelected ? 'bg-[var(--sunken)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc)]'
                     }`}
                   >
                     {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}
@@ -372,18 +372,18 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   className={`flex flex-col rounded-xl p-2 sm:p-2.5 transition-all border min-w-0 ${
                     isSelected
                       ? isStitchLight
-                        ? 'bg-sky-50/50 border-sky-300 ring-1 ring-sky-400'
-                        : 'bg-slate-900/90 border-amber-500/60 ring-1 ring-amber-500/40'
+                        ? 'bg-sky-50/50 border-[var(--acc)] ring-1 ring-sky-400'
+                        : 'bg-slate-900/90 border-[var(--acc)]/60 ring-1 ring-amber-500/40'
                       : isToday
                         ? isStitchLight
-                          ? 'bg-amber-50/40 border-amber-300'
-                          : 'bg-slate-900/60 border-amber-500/30'
+                          ? 'bg-amber-50/40 border-[var(--acc)]'
+                          : 'bg-slate-900/60 border-[var(--acc)]/30'
                         : isStitchLight
-                          ? 'bg-white border-slate-200'
-                          : 'bg-slate-900/50 border-slate-800/80'
+                          ? 'bg-[var(--surface)] border-[var(--hair)]'
+                          : 'bg-slate-900/50 border-[var(--hair)]/80'
                   }`}
                 >
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/50">
+                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--hair)]/50">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span
                         className={`text-xs font-mono font-bold truncate ${isSelected ? 'text-amber-400' : isToday ? 'text-amber-300' : 'text-slate-400'}`}
@@ -406,7 +406,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         setShowCreateModal('concert');
                       }}
                       title="Añadir evento a este día"
-                      className="p-1 rounded hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer shrink-0"
+                      className="p-1 rounded hover:bg-[var(--ink)]/10 text-slate-400 hover:text-white transition-all cursor-pointer shrink-0"
                     >
                       <Plus className="w-3 h-3" />
                     </button>
@@ -428,11 +428,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
                             isEvtSelected
                               ? isPosible
-                                ? 'bg-purple-500/25 border-purple-400 ring-1 ring-purple-400/50 shadow-md'
-                                : 'bg-amber-500/25 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                                ? 'bg-purple-500/25 border-[var(--acc)] ring-1 ring-purple-400/50 shadow-md'
+                                : 'bg-amber-500/25 border-[var(--acc)] ring-1 ring-amber-400/50 shadow-md'
                               : isPosible
-                                ? 'bg-purple-950/30 border-purple-500/40 hover:border-purple-400 hover:bg-purple-900/30 text-purple-200'
-                                : 'bg-amber-950/30 border-amber-500/40 hover:border-amber-400 hover:bg-amber-900/30'
+                                ? 'bg-purple-950/30 border-[var(--acc)]/40 hover:border-[var(--acc)] hover:bg-purple-900/30 text-purple-200'
+                                : 'bg-amber-950/30 border-[var(--acc)]/40 hover:border-[var(--acc)] hover:bg-amber-900/30'
                           }`}
                         >
                           <div className="flex items-center gap-1.5 mb-1 min-w-0">
@@ -440,7 +440,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               <img
                                 src={bandInfo.logoUrl}
                                 alt={bandInfo.name}
-                                className={`w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isPosible ? 'border-purple-400/60' : 'border-amber-400/60'}`}
+                                className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 border ${isPosible ? 'border-[var(--acc)]/60' : 'border-[var(--acc)]/60'}`}
                                 onError={(e) => {
                                   (e.currentTarget as HTMLElement).style.display = 'none';
                                   const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -460,7 +460,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               {bandInfo.name}
                             </span>
                             {isPosible && (
-                              <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200 border border-purple-500/40">
+                              <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200 border border-[var(--acc)]/40">
                                 Posible
                               </span>
                             )}
@@ -494,11 +494,11 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
                             isEvtSelected
                               ? isReu
-                                ? 'bg-indigo-500/25 border-indigo-400 ring-1 ring-indigo-400/50 shadow-md'
-                                : 'bg-emerald-500/25 border-emerald-400 ring-1 ring-emerald-400/50 shadow-md'
+                                ? 'bg-indigo-500/25 border-[var(--acc)] ring-1 ring-indigo-400/50 shadow-md'
+                                : 'bg-emerald-500/25 border-[var(--ok)] ring-1 ring-emerald-400/50 shadow-md'
                               : isReu
-                                ? 'bg-indigo-950/30 border-indigo-500/40 hover:border-indigo-400 hover:bg-indigo-900/30'
-                                : 'bg-emerald-950/30 border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-900/30'
+                                ? 'bg-indigo-950/30 border-[var(--acc)]/40 hover:border-[var(--acc)] hover:bg-indigo-900/30'
+                                : 'bg-emerald-950/30 border-[var(--ok)]/40 hover:border-[var(--ok)] hover:bg-emerald-900/30'
                           }`}
                         >
                           <div className="flex items-center gap-1.5 mb-1 min-w-0">
@@ -506,7 +506,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               <img
                                 src={bandInfo.logoUrl}
                                 alt={bandInfo.name}
-                                className={`w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isReu ? 'border-indigo-400/60' : 'border-emerald-400/60'}`}
+                                className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 border ${isReu ? 'border-[var(--acc)]/60' : 'border-[var(--ok)]/60'}`}
                                 onError={(e) => {
                                   (e.currentTarget as HTMLElement).style.display = 'none';
                                   const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -537,14 +537,14 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                     {campaigns.map((camp) => (
                       <div
                         key={camp.id}
-                        className="p-1.5 rounded-lg border border-purple-500/40 bg-purple-950/25 text-[10px] text-purple-200"
+                        className="p-1.5 rounded-lg border border-[var(--acc)]/40 bg-purple-950/25 text-[10px] text-purple-200"
                       >
                         🎯 {camp.name}
                       </div>
                     ))}
 
                     {dayConcerts.length === 0 && dayRehearsals.length === 0 && campaigns.length === 0 && (
-                      <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded border border-dashed border-slate-800/60 text-slate-600">
+                      <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded border border-dashed border-[var(--hair)]/60 text-slate-600">
                         <span className="text-[10px]">Sin eventos</span>
                       </div>
                     )}
@@ -626,14 +626,14 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
     return (
       <div className="w-full flex flex-col gap-4">
         {/* Agenda Sub-Header con Filtro de Pasados / Futuros y Añadir Evento */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]/80">
           <div className="flex items-center gap-2 flex-wrap">
-            <List className="w-4 h-4 text-[#d1b375]" />
+            <List className="w-4 h-4 text-[var(--acc)]" />
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
               Agenda Cronológica ({allEventsList.length} eventos)
             </span>
             {calendarSearchTerm.trim() && (
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-[var(--acc)]/40">
                 Filtrado por: "{calendarSearchTerm}"
               </span>
             )}
@@ -643,7 +643,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             {/* Selector de periodo para ver conciertos pasados y futuros en la agenda */}
             <div
               className={`flex items-center rounded-lg p-0.5 border text-xs font-mono font-bold ${
-                isStitchLight ? 'bg-slate-200 border-slate-300 text-slate-800' : 'bg-neutral-900 border-zinc-800 text-neutral-300'
+                isStitchLight ? 'bg-slate-200 border-[var(--hair)] text-slate-800' : 'bg-neutral-900 border-[var(--hair)] text-neutral-300'
               }`}
             >
               <button
@@ -652,8 +652,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
                   agendaFilterPast === 'all'
                     ? isStitchLight
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'bg-[#d1b375] text-stone-950 font-black'
+                      ? 'bg-[var(--surface)] text-slate-900 shadow-xs'
+                      : 'bg-[var(--acc)] text-stone-950 font-black'
                     : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
@@ -665,8 +665,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
                   agendaFilterPast === 'future'
                     ? isStitchLight
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'bg-[#d1b375] text-stone-950 font-black'
+                      ? 'bg-[var(--surface)] text-slate-900 shadow-xs'
+                      : 'bg-[var(--acc)] text-stone-950 font-black'
                     : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
@@ -678,8 +678,8 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 className={`px-2.5 py-1 rounded transition-all cursor-pointer flex items-center gap-1 ${
                   agendaFilterPast === 'past'
                     ? isStitchLight
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'bg-[#d1b375] text-stone-950 font-black'
+                      ? 'bg-[var(--surface)] text-slate-900 shadow-xs'
+                      : 'bg-[var(--acc)] text-stone-950 font-black'
                     : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
@@ -690,7 +690,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             <button
               onClick={() => setShowCreateModal('concert')}
-              className="px-2.5 py-1 rounded-lg text-xs font-bold font-mono bg-[#d1b375] text-stone-950 hover:bg-[#d1b375]/90 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+              className="px-2.5 py-1 rounded-lg text-xs font-bold font-mono bg-[var(--acc)] text-stone-950 hover:bg-[var(--acc)]/90 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Añadir Evento</span>
@@ -699,7 +699,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
         </div>
 
         {dateKeys.length === 0 ? (
-          <div className="p-8 text-center rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/40">
+          <div className="p-8 text-center rounded-2xl border border-dashed border-[var(--hair)]/80 bg-slate-950/40">
             <Calendar className="w-8 h-8 text-slate-600 mx-auto mb-2" />
             <p className="text-sm font-bold text-slate-400">No hay eventos en este periodo</p>
             <p className="text-xs text-slate-500 mt-1">
@@ -710,7 +710,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             {agendaFilterPast !== 'all' && (
               <button
                 onClick={() => setAgendaFilterPast('all')}
-                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-all border border-amber-500/30"
+                className="mt-3 px-3 py-1 text-xs font-mono font-bold rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-all border border-[var(--acc)]/30"
               >
                 Ver todos los eventos
               </button>
@@ -731,15 +731,15 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   key={dateStr}
                   className={`rounded-xl border transition-all p-3 ${
                     isSelected
-                      ? 'bg-slate-900/90 border-amber-500/60 ring-1 ring-amber-500/30'
+                      ? 'bg-slate-900/90 border-[var(--acc)]/60 ring-1 ring-amber-500/30'
                       : isToday
-                        ? 'bg-slate-900/70 border-amber-500/40'
+                        ? 'bg-slate-900/70 border-[var(--acc)]/40'
                         : isDatePast
-                          ? 'bg-slate-950/50 border-slate-800/50 opacity-95'
-                          : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
+                          ? 'bg-slate-950/50 border-[var(--hair)]/50 opacity-95'
+                          : 'bg-slate-900/40 border-[var(--hair)]/80 hover:border-[var(--hair)]'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-800/60">
+                  <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-[var(--hair)]/60">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
                         className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
@@ -759,7 +759,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         </span>
                       )}
                       {isDatePast && !isToday && (
-                        <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                        <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-[var(--ok)]/30 flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                           <span>Realizado</span>
                         </span>
@@ -792,14 +792,14 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           onClick={() => handleSelectEvent(evt)}
                           className={`flex items-center justify-between p-2.5 rounded-lg cursor-pointer border transition-all ${
                             isEvtSelected
-                              ? 'bg-amber-500/20 border-amber-400 shadow-md ring-1 ring-amber-400/50'
+                              ? 'bg-amber-500/20 border-[var(--acc)] shadow-md ring-1 ring-amber-400/50'
                               : isConcert
                                 ? isPast
-                                  ? 'bg-amber-950/15 border-amber-500/20 hover:border-amber-400/60 hover:bg-amber-900/20'
-                                  : 'bg-amber-950/20 border-amber-500/30 hover:border-amber-400/80 hover:bg-amber-900/20'
+                                  ? 'bg-amber-950/15 border-[var(--acc)]/20 hover:border-[var(--acc)]/60 hover:bg-amber-900/20'
+                                  : 'bg-amber-950/20 border-[var(--acc)]/30 hover:border-[var(--acc)]/80 hover:bg-amber-900/20'
                                 : isReu
-                                  ? 'bg-indigo-950/20 border-indigo-500/30 hover:border-indigo-400/80 hover:bg-indigo-900/20'
-                                  : 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-400/80 hover:bg-emerald-900/20'
+                                  ? 'bg-indigo-950/20 border-[var(--acc)]/30 hover:border-[var(--acc)]/80 hover:bg-indigo-900/20'
+                                  : 'bg-emerald-950/20 border-[var(--ok)]/30 hover:border-[var(--ok)]/80 hover:bg-emerald-900/20'
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
@@ -808,7 +808,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                               <img
                                 src={bandInfo.logoUrl}
                                 alt={bandInfo.name}
-                                className="w-8 h-8 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-white/20 shadow-xs"
+                                className="w-8 h-8 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 border border-[var(--hair)]/20 shadow-xs"
                                 onError={(e) => {
                                   (e.currentTarget as HTMLElement).style.display = 'none';
                                   const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -828,17 +828,17 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded border ${
                                     isConcert
                                       ? isPast
-                                        ? 'bg-amber-500/15 text-amber-200 border-amber-500/30'
-                                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                        ? 'bg-amber-500/15 text-amber-200 border-[var(--acc)]/30'
+                                        : 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/40'
                                       : isReu
-                                        ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
-                                        : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                        ? 'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/40'
+                                        : 'bg-emerald-500/20 text-emerald-300 border-[var(--ok)]/40'
                                   }`}
                                 >
                                   {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
                                 </span>
                                 {isPast && (
-                                  <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                                  <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/40 flex items-center gap-1">
                                     <CheckCircle2 className="w-2.5 h-2.5" />
                                     <span>Realizado</span>
                                   </span>
@@ -884,7 +884,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                                   setViewingRehearsal(r);
                                 }
                               }}
-                              className="px-2 py-1 text-[11px] font-mono font-bold rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 flex items-center gap-1 transition-all cursor-pointer"
+                              className="px-2 py-1 text-[11px] font-mono font-bold rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-[var(--acc)]/30 flex items-center gap-1 transition-all cursor-pointer"
                               title={isPast ? 'Editar datos, notas o caché del bolo realizado' : 'Editar evento'}
                             >
                               <Edit className="w-3 h-3" />

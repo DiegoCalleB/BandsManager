@@ -31,9 +31,9 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
   const targetIdea = showMoisesStemsModal;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-zinc-900 border border-amber-500/40 rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-white max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
+    <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-zinc-900 border border-[var(--acc)]/40 rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-white max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
           <div className="flex items-center gap-2 text-amber-400 font-mono font-bold text-sm">
             <Sliders className="w-5 h-5 text-amber-400" />
             <span>Iris Espectro — Separador de Pistas con IA</span>
@@ -47,7 +47,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           </button>
         </div>
 
-        <div className="flex items-center gap-2 border-b border-white/10 pb-2 font-mono text-xs">
+        <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
           <button
             type="button"
             onClick={() => setMoisesTab('stems')}
@@ -81,7 +81,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
 
         {moisesTab === 'stems' && (
           <div className="space-y-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-amber-950/30 border border-amber-500/30 space-y-1">
+            <div className="p-3.5 rounded-xl bg-amber-950/30 border border-[var(--acc)]/30 space-y-1">
               <p className="font-bold text-amber-300 font-mono">Pista a procesar: {targetIdea.titulo}</p>
               <p className="text-[11px] text-neutral-300 font-sans">
                 Aislamiento de voz, batería, bajo e instrumentos utilizando red neuronal en la nube.
@@ -102,8 +102,8 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                       onClick={() => setMoisesPreset && setMoisesPreset(presetKey)}
                       className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                         moisesPreset === presetKey
-                          ? 'bg-amber-500/20 border-amber-500 text-white shadow-md'
-                          : 'bg-zinc-800/60 border-zinc-700 text-neutral-300 hover:bg-zinc-800'
+                          ? 'bg-amber-500/20 border-[var(--acc)] text-white shadow-md'
+                          : 'bg-zinc-800/60 border-[var(--hair)] text-neutral-300 hover:bg-zinc-800'
                       }`}
                     >
                       <p className="font-bold text-amber-300">{cfg.label}</p>
@@ -114,7 +114,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--hair)]/10">
               <button
                 type="button"
                 onClick={() => setShowMoisesStemsModal(null)}
@@ -160,7 +160,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <input
               type="file"
               accept="audio/*"
-              className="w-full bg-black/60 border border-neutral-700 rounded-xl p-2.5 text-neutral-300 text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-zinc-950 hover:file:bg-emerald-400"
+              className="w-full bg-[var(--sunken)] border border-[var(--hair)] rounded-xl p-2.5 text-neutral-300 text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-zinc-950 hover:file:bg-emerald-400"
             />
           </div>
         )}

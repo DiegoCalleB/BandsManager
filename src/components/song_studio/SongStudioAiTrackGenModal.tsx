@@ -33,9 +33,9 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
   };
 
   return (
-    <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
-      <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-purple-500/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-purple-500/20 pb-3">
+    <div className="fixed inset-0 z-[120] bg-[var(--scrim)]/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
+      <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-[var(--acc)]/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-[var(--acc)]/20 pb-3">
           <div className="flex items-center gap-2.5 text-purple-300 font-mono font-bold text-sm">
             <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
             <span>Generador de Pista de Acompañamiento IA</span>
@@ -54,7 +54,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
         </div>
 
         <div className="space-y-4 text-xs">
-          <div className="p-3.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200 space-y-1">
+          <div className="p-3.5 rounded-xl bg-purple-950/40 border border-[var(--acc)]/30 text-purple-200 space-y-1">
             <p className="font-bold font-mono flex items-center gap-1.5 text-purple-300">
               <Music className="w-4 h-4 text-purple-400" /> Pista base: {idea.titulo}
             </p>
@@ -80,8 +80,8 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                   onClick={() => setAiTrackGenInstrument(item.id)}
                   className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer font-bold ${
                     aiTrackGenInstrument === item.id
-                      ? 'bg-purple-600 text-white border-purple-400 shadow-md'
-                      : 'bg-black/40 border-neutral-800 text-neutral-300 hover:bg-black/70'
+                      ? 'bg-purple-600 text-white border-[var(--acc)] shadow-md'
+                      : 'bg-[var(--sunken)] borderbg-[var(--surface)] text-neutral-300 hover:bg-[var(--sunken)]'
                   }`}
                 >
                   {item.label}
@@ -98,18 +98,18 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               value={aiTrackGenPrompt}
               onChange={(e) => setAiTrackGenPrompt(e.target.value)}
               placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
-              className="w-full h-20 bg-black/60 border border-purple-500/40 rounded-xl p-2.5 text-white placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-purple-400 resize-none"
+              className="w-full h-20 bg-[var(--sunken)] border border-[var(--acc)]/40 rounded-xl p-2.5 text-white placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-[var(--acc)] resize-none"
             />
           </div>
 
           {aiTrackGenError && (
-            <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-[11px] font-mono">
+            <div className="p-3 rounded-xl bg-red-950/40 border border-[var(--alert)]/40 text-red-300 text-[11px] font-mono">
               ⚠️ {aiTrackGenError}
             </div>
           )}
 
           {aiTrackGenPreview && (
-            <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/40 space-y-2.5 animate-in fade-in duration-200">
+            <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-[var(--ok)]/40 space-y-2.5 animate-in fade-in duration-200">
               <div className="flex items-center gap-1.5 text-emerald-300 font-mono font-bold text-[11px]">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {aiTrackGenPreview.trackName}
               </div>
@@ -122,7 +122,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-2 border-t border-purple-500/20">
+        <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--acc)]/20">
           <button
             type="button"
             onClick={() => {
@@ -130,7 +130,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
               setAiTrackGenPreview(null);
               setAiTrackGenError(null);
             }}
-            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-xs font-bold cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-neutral-300 font-mono text-xs font-bold cursor-pointer"
           >
             Cancelar
           </button>
@@ -146,7 +146,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
             type="button"
             disabled={isGeneratingAiTrack}
             onClick={handleSubmit}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
           >
             {isGeneratingAiTrack ? (
               <>

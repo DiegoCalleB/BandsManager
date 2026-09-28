@@ -1650,13 +1650,13 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
-                <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-3">
+                <div className="p-4 rounded-xl bg-neutral-950 border borderbg-[var(--surface)] space-y-3">
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                     <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja
                     de Entrada (Agente Lector)
                   </h4>
 
-                  <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-3">
+                  <div className="p-3.5 rounded-xl bg-neutral-900 border borderbg-[var(--surface)] space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
@@ -1668,7 +1668,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             markAsReadInInbox: e.target.checked,
                           })
                         }
-                        className="mt-0.5 rounded border-neutral-700 bg-neutral-950 text-amber-500 focus:ring-amber-500 disabled:opacity-60"
+                        className="mt-0.5 rounded border-[var(--hair)] bg-neutral-950 text-amber-500 focus:ring-amber-500 disabled:opacity-60"
                       />
                       <div className="space-y-1">
                         <span className="text-xs font-bold text-zinc-100 block">

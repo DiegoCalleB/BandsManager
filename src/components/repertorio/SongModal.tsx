@@ -120,16 +120,16 @@ export function SongModal({
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
         <div
           className={`w-full max-w-lg p-5 sm:p-6 rounded-3xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
-            isStitchLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#16161a] border-neutral-800 text-zinc-100'
+            isStitchLight ? 'bg-white border-[var(--hair)] text-slate-800' : 'bg-[#16161a] borderbg-[var(--surface)] text-zinc-100'
           }`}
         >
           {/* Header */}
-          <div className="flex justify-between items-center pb-3.5 border-b border-white/10">
+          <div className="flex justify-between items-center pb-3.5 border-b border-[var(--hair)]/10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <div className="w-8 h-8 rounded-xl bg-[var(--ok)]/15 border border-[var(--ok)]/30 flex items-center justify-center text-[var(--ok)]">
                 <Music className="w-4 h-4" />
               </div>
               <div>
@@ -153,13 +153,13 @@ export function SongModal({
               <div
                 className={`p-3 rounded-2xl border transition-all ${
                   isStitchLight
-                    ? 'bg-slate-50 border-slate-200 hover:border-emerald-300'
-                    : 'bg-neutral-900/80 border-neutral-800 hover:border-neutral-700'
+                    ? 'bg-slate-50 border-[var(--hair)] hover:border-[var(--ok)]'
+                    : 'bg-neutral-900/80 borderbg-[var(--surface)] hover:border-[var(--hair)]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-[var(--ok)]/10 text-[var(--ok)] flex items-center justify-center shrink-0">
                       <Upload className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
@@ -186,13 +186,13 @@ export function SongModal({
                   className="hidden"
                 />
                 {audioFileName && (
-                  <div className="mt-2 text-xs text-emerald-400 flex items-center gap-1.5 font-medium bg-emerald-500/10 p-2 rounded-xl border border-emerald-500/20">
+                  <div className="mt-2 text-xs text-[var(--ok)] flex items-center gap-1.5 font-medium bg-[var(--ok)]/10 p-2 rounded-xl border border-[var(--ok)]/20">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span className="truncate">{audioFileName}</span>
                   </div>
                 )}
                 {detectedDurationMsg && (
-                  <div className="mt-1.5 text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
+                  <div className="mt-1.5 text-[11px] font-semibold text-[var(--ok)] flex items-center gap-1">
                     <Sparkles className="w-3 h-3" />
                     <span>{detectedDurationMsg}</span>
                   </div>
@@ -202,7 +202,7 @@ export function SongModal({
               {/* Title Field (Main Essential Field) */}
               <div>
                 <label className="block text-zinc-300 font-semibold mb-1">
-                  Título de la Canción <span className="text-emerald-400">*</span>
+                  Título de la Canción <span className="text-[var(--ok)]">*</span>
                 </label>
                 <input
                   name="titulo"
@@ -223,7 +223,7 @@ export function SongModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-zinc-300 font-semibold mb-1 flex items-center gap-1.5">
-                    <Disc3 className="w-3.5 h-3.5 text-emerald-400" />
+                    <Disc3 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>Álbum / Disco</span>
                   </label>
                   <select
@@ -248,7 +248,7 @@ export function SongModal({
                       value={customAlbumInput}
                       onChange={(e) => setCustomAlbumInput(e.target.value)}
                       placeholder="Nombre del nuevo disco..."
-                      className={`w-full mt-2 px-3 py-2 rounded-xl focus:outline-none border border-emerald-500/50 ${
+                      className={`w-full mt-2 px-3 py-2 rounded-xl focus:outline-none border border-[var(--ok)]/50 ${
                         isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                       }`}
                     />
@@ -264,8 +264,8 @@ export function SongModal({
                       min="0"
                       value={minutos}
                       onChange={(e) => setMinutos(parseInt(e.target.value) || 0)}
-                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-emerald-400 ${
-                        isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-[var(--ok)] ${
+                        isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
                       }`}
                       placeholder="3"
                     />
@@ -277,8 +277,8 @@ export function SongModal({
                       max="59"
                       value={segundos}
                       onChange={(e) => setSegundos(parseInt(e.target.value) || 0)}
-                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-emerald-400 ${
-                        isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                      className={`w-1/2 px-3 py-2 rounded-xl focus:outline-none border text-center font-bold text-[var(--ok)] ${
+                        isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
                       }`}
                       placeholder="30"
                     />
@@ -295,7 +295,7 @@ export function SongModal({
                     type="text"
                     defaultValue={editingSong?.tonalidad || ''}
                     className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                      isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                      isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
                     }`}
                     placeholder="ej. Am"
                   />
@@ -308,7 +308,7 @@ export function SongModal({
                     type="number"
                     defaultValue={editingSong?.bpm || 120}
                     className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                      isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-900 text-white border-neutral-800'
+                      isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-900 text-white borderbg-[var(--surface)]'
                     }`}
                     placeholder="120"
                   />
@@ -332,18 +332,18 @@ export function SongModal({
               {/* Collapsible Accordion: Advanced Options & Notes */}
               <div
                 className={`rounded-2xl border transition-all overflow-hidden ${
-                  isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'
+                  isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-neutral-900/60 borderbg-[var(--surface)]'
                 }`}
               >
                 <button
                   type="button"
                   onClick={() => setShowAdvancedOptions((prev) => !prev)}
                   className={`w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors cursor-pointer ${
-                    isStitchLight ? 'hover:bg-slate-100 text-slate-800' : 'hover:bg-neutral-800/80 text-zinc-300'
+                    isStitchLight ? 'hover:bg-slate-100 text-slate-800' : 'hover:bgbg-[var(--surface)]/80 text-zinc-300'
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span className="font-semibold">Opciones avanzadas y notas</span>
                     <span className="text-[10px] text-zinc-400 font-normal">(Género, afinación, partitura, notas por miembro)</span>
                   </div>
@@ -355,7 +355,7 @@ export function SongModal({
                 </button>
 
                 {showAdvancedOptions && (
-                  <div className="p-3.5 pt-1 space-y-3 border-t border-white/5">
+                  <div className="p-3.5 pt-1 space-y-3 border-t border-[var(--hair)]/5">
                     {/* Style & Type */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
@@ -365,7 +365,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.genero || ''}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                           }`}
                           placeholder="ej. Rock, Rumba"
                         />
@@ -377,7 +377,7 @@ export function SongModal({
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
-                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                           }`}
                         >
                           <option value="propio">Propio / Original</option>
@@ -395,7 +395,7 @@ export function SongModal({
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border cursor-pointer ${
-                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                           }`}
                         >
                           <option value="listo">⚡ Listo para Directo</option>
@@ -412,7 +412,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.cantantePrincipal || ''}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                           }`}
                           placeholder="Cantante"
                         />
@@ -428,7 +428,7 @@ export function SongModal({
                           type="text"
                           defaultValue={editingSong?.afinacion || 'E Standard'}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                           }`}
                           placeholder="E Standard"
                         />
@@ -441,7 +441,7 @@ export function SongModal({
                           type="url"
                           defaultValue={editingSong?.enlaceAcordes || ''}
                           className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border ${
-                            isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                            isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                           }`}
                           placeholder="https://drive.google.com/..."
                         />
@@ -456,7 +456,7 @@ export function SongModal({
                         rows={2}
                         defaultValue={editingSong?.notasInternas || ''}
                         className={`w-full p-2.5 rounded-xl focus:outline-none border text-xs ${
-                          isStitchLight ? 'bg-white text-slate-900 border-slate-300' : 'bg-neutral-950 text-white border-neutral-800'
+                          isStitchLight ? 'bg-white text-slate-900 border-[var(--hair)]' : 'bg-neutral-950 text-white borderbg-[var(--surface)]'
                         }`}
                         placeholder="ej. Entrar directos tras el solo de batería..."
                       />
@@ -465,10 +465,10 @@ export function SongModal({
                     {/* Member Notes Section */}
                     <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
 
-                    <div className="pt-2 border-t border-white/5 space-y-2">
+                    <div className="pt-2 border-t border-[var(--hair)]/5 space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                          <Users className="w-3.5 h-3.5 text-emerald-400" />
+                          <Users className="w-3.5 h-3.5 text-[var(--ok)]" />
                           <span>Notas por Miembro de la Banda ({resolvedMembers.length})</span>
                         </span>
                         <button
@@ -490,7 +490,7 @@ export function SongModal({
                               defaultValue={editingSong?.notasRepertorio || ''}
                               placeholder="ej. Parón en seco antes del último coro"
                               className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
-                                isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+                                isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
                               }`}
                             />
                           </div>
@@ -513,8 +513,8 @@ export function SongModal({
                                   placeholder={`Notas para ${member.name}...`}
                                   className={`w-full px-2.5 py-1.5 rounded-xl focus:outline-none border text-xs ${
                                     isStitchLight
-                                      ? 'bg-white border-slate-300 text-slate-900'
-                                      : 'bg-neutral-950 border-neutral-800 text-white'
+                                      ? 'bg-[var(--surface)] border-[var(--hair)] text-slate-900'
+                                      : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
                                   }`}
                                 />
                               </div>
@@ -529,7 +529,7 @@ export function SongModal({
             </div>
 
             {/* Actions Bar */}
-            <div className="pt-3 border-t border-white/10 flex justify-end gap-2.5 shrink-0">
+            <div className="pt-3 border-t border-[var(--hair)]/10 flex justify-end gap-2.5 shrink-0">
               <button
                 type="button"
                 onClick={onClose}

@@ -100,7 +100,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         }}
         className={`relative p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center ${
           isOpen
-            ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-xs'
+            ? 'bg-amber-500/20 text-amber-400 border border-[var(--acc)]/40 shadow-xs'
             : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80'
         }`}
         title="Centro de Notificaciones Push"
@@ -110,7 +110,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
         {/* Unread badge count */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black font-mono text-black shadow-md animate-pulse">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black font-mono text-[var(--ink)] shadow-md animate-pulse">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -126,15 +126,15 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
         <div
           className={`absolute ${
             variant === 'mobile' ? 'right-0 top-12 w-[300px] sm:w-[360px]' : 'right-0 md:left-0 top-12 w-[320px] sm:w-[380px]'
-          } z-50 bg-[#141312] border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
+          } z-50 bg-[#141312] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200`}
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-zinc-800 bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312] flex items-center justify-between">
+          <div className="p-3.5 border-b border-[var(--hair)] bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BellRing className="w-4 h-4 text-amber-400" />
               <span className="font-bold text-xs text-zinc-100 font-display">Notificaciones</span>
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 border border-amber-500/40 text-[10px] font-mono text-amber-300 font-bold">
+                <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 border border-[var(--acc)]/40 text-[10px] font-mono text-amber-300 font-bold">
                   {unreadCount} nuevas
                 </span>
               )}
@@ -168,7 +168,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
           {/* Permission Prompt Banner if needed */}
           {permission !== 'granted' && (
-            <div className="p-2.5 bg-amber-950/40 border-b border-amber-500/30 flex items-center justify-between gap-2 text-xs">
+            <div className="p-2.5 bg-amber-950/40 border-b border-[var(--acc)]/30 flex items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-1.5 text-amber-300 min-w-0">
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                 <span className="text-[11px] truncate">
@@ -179,7 +179,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-2 py-0.5 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] shrink-0 cursor-pointer shadow-xs"
+                  className="px-2 py-0.5 rounded bg-amber-500 hover:bg-amber-400 text-[var(--ink)] font-bold text-[10px] shrink-0 cursor-pointer shadow-xs"
                 >
                   Activar
                 </button>
@@ -215,7 +215,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     item.read ? 'bg-transparent hover:bg-zinc-900/60 opacity-80' : 'bg-amber-500/5 hover:bg-amber-500/10'
                   }`}
                 >
-                  <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-[var(--hair)] flex items-center justify-center shrink-0 mt-0.5">
                     {renderCategoryIcon(item.category)}
                   </div>
                   <div className="flex-1 min-w-0 space-y-0.5">
@@ -227,7 +227,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     </div>
                     <p className="text-[11px] text-zinc-400 line-clamp-2 leading-tight">{item.body}</p>
                     {item.leadName && (
-                      <span className="inline-block text-[9px] font-mono text-amber-400/90 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20 mt-1">
+                      <span className="inline-block text-[9px] font-mono text-amber-400/90 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-[var(--acc)]/20 mt-1">
                         📍 {item.leadName}
                       </span>
                     )}
@@ -247,7 +247,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="p-2.5 border-t border-zinc-800 bg-[#121110] flex items-center justify-between text-[11px]">
+          <div className="p-2.5 border-t border-[var(--hair)] bg-[#121110] flex items-center justify-between text-[11px]">
             {history.length > 0 ? (
               <button
                 type="button"
@@ -267,7 +267,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 setIsOpen(false);
                 onOpenSettings();
               }}
-              className="text-[10px] font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30"
+              className="text-[10px] font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 border border-[var(--acc)]/30"
             >
               <Settings className="w-3 h-3" />
               <span>Configurar avisos</span>

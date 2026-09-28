@@ -543,7 +543,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           {config.bandasSimilares &&
             config.bandasSimilares.length > 0 &&
             config.mostrarBandasSimilares !== false && (
-              <div className="pt-4 border-t border-white/10 space-y-2.5">
+              <div className="pt-4 border-t border-[var(--hair)]/10 space-y-2.5">
                 <div className="flex items-center gap-2">
                   <Music2 className="w-4 h-4 text-amber-400 shrink-0" />
                   <span className="text-xs font-bold uppercase tracking-wider font-mono opacity-80">
@@ -556,7 +556,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   {config.bandasSimilares.map((band, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 backdrop-blur-xs"
+                      className="px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-[var(--acc)]/30 backdrop-blur-xs"
                     >
                       {band}
                     </span>

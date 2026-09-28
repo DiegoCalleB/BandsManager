@@ -31,13 +31,13 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 bg-[var(--scrim)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
       <div
         className={`max-w-lg w-full rounded-2xl border p-5 shadow-2xl relative ${
-          isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+          isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-neutral-950 borderbg-[var(--surface)] text-white'
         }`}
       >
-        <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+        <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
               <Calendar className="w-5 h-5" />
@@ -56,7 +56,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
         <div className="py-4 space-y-4 text-xs">
           <div
-            className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/80 border-neutral-800'}`}
+            className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-neutral-900/80 borderbg-[var(--surface)]'}`}
           >
             <label className="block text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-1 font-bold">
               URL de Suscripción iCal (Privada)
@@ -67,7 +67,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
                 readOnly
                 value={rutaFeed}
                 className={`flex-1 p-2 text-xs rounded-xl border outline-none font-mono ${
-                  isStitchLight ? 'bg-white border-slate-300 text-slate-800' : 'bg-neutral-950 border-neutral-800 text-amber-300'
+                  isStitchLight ? 'bg-white border-[var(--hair)] text-slate-800' : 'bg-neutral-950 borderbg-[var(--surface)] text-amber-300'
                 }`}
               />
               <button
@@ -95,7 +95,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webCalFeed)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-[var(--acc)]/30 text-sky-300 flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Calendar className="w-4 h-4 text-sky-400" />
               <span>Añadir a Google Calendar</span>
@@ -103,14 +103,14 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
             <a
               href={webCalFeed}
-              className="p-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-[var(--ok)]/30 text-emerald-300 flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
             >
               <Radio className="w-4 h-4 text-emerald-400" />
               <span>Suscribir en iPhone / Mac</span>
             </a>
           </div>
 
-          <div className="p-3 rounded-xl bg-neutral-950/60 border border-white/5 space-y-1.5 text-[11px] text-neutral-300">
+          <div className="p-3 rounded-xl bg-neutral-950/60 border border-[var(--hair)]/5 space-y-1.5 text-[11px] text-neutral-300">
             <p className="font-bold text-neutral-200">Pasos en Google Calendar (1 minuto):</p>
             <ol className="list-decimal list-inside space-y-1 text-neutral-400">
               <li>
@@ -125,7 +125,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           </div>
         </div>
 
-        <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
+        <div className="mt-5 pt-3 border-t border-[var(--hair)]/10 flex items-center justify-between">
           <a
             href={rutaFeed || undefined}
             download={`calendar-${activeBandId || 'band'}.ics`}
@@ -136,7 +136,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           </a>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-xs font-bold text-white transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-lg bgbg-[var(--surface)] hover:bg-neutral-700 text-xs font-bold text-white transition-colors cursor-pointer"
           >
             Cerrar
           </button>

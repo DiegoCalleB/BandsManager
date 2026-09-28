@@ -23,11 +23,11 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
   const channelPlaybooks = growthPlan?.channelPlaybooks || [];
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-2xl bg-[#18181b]/95 border borderbg-[var(--surface)]/90 shadow-sm space-y-4">
       {/* Widget Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+      <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400 border border-purple-500/30">
+          <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400 border border-[var(--acc)]/30">
             <Rocket className="w-5 h-5" />
           </div>
           <div>
@@ -35,7 +35,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <h3 className="text-base font-bold font-display uppercase tracking-wider text-neutral-100">
                 Guía de Crecimiento & Promoción
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30">
                 {growthPlan?.horizonDays || 30}D
               </span>
             </div>
@@ -66,7 +66,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
 
       {/* Action Recommendation Banner */}
       {todayBlueprint ? (
-        <div className="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/30 via-neutral-900 to-transparent border border-purple-500/30 flex items-start justify-between gap-3">
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/30 via-neutral-900 to-transparent border border-[var(--acc)]/30 flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold uppercase">
@@ -95,24 +95,24 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
           </div>
         </div>
       ) : (
-        <div className="p-3.5 rounded-xl bg-[#121214] border border-neutral-800 text-xs text-neutral-400">
+        <div className="p-3.5 rounded-xl bg-[#121214] border borderbg-[var(--surface)] text-xs text-neutral-400">
           Recomendaciones estratégicas personalizadas para el crecimiento de {activeBandName}.
         </div>
       )}
 
       {/* 3 Pillars / Quick metrics status */}
       <div className="grid grid-cols-3 gap-2.5 pt-1">
-        <div className="p-3 rounded-xl bg-[#121214] border border-neutral-800 text-center">
+        <div className="p-3 rounded-xl bg-[#121214] border borderbg-[var(--surface)] text-center">
           <span className="text-base font-bold font-mono text-purple-400">{channelPlaybooks.length || 3}</span>
           <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider mt-0.5">Canales Activos</p>
         </div>
 
-        <div className="p-3 rounded-xl bg-[#121214] border border-neutral-800 text-center">
+        <div className="p-3 rounded-xl bg-[#121214] border borderbg-[var(--surface)] text-center">
           <span className="text-base font-bold font-mono text-amber-400">{growthPlan?.weeklyBlueprint?.length || 7}</span>
           <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider mt-0.5">Hitos Semanales</p>
         </div>
 
-        <div className="p-3 rounded-xl bg-[#121214] border border-neutral-800 text-center">
+        <div className="p-3 rounded-xl bg-[#121214] border borderbg-[var(--surface)] text-center">
           <span className="text-base font-bold font-mono text-emerald-400">{totalPillars}</span>
           <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider mt-0.5">Pilares Clave</p>
         </div>

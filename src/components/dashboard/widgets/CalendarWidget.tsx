@@ -209,17 +209,17 @@ export function CalendarWidget({
   });
 
   const cardContainerBg = isStitchLight
-    ? "bg-white border border-zinc-200 shadow-xs"
-    : "bg-[#18181b]/95 border border-neutral-800/90 shadow-sm";
+    ? "bg-[var(--surface)] border border-[var(--hair)] shadow-xs"
+    : "bg-[#18181b]/95 border borderbg-[var(--surface)]/90 shadow-sm";
   const subCardBg = isStitchLight
-    ? "bg-zinc-50 border border-zinc-200/80 text-zinc-900 hover:border-indigo-400"
-    : "bg-[#121214] border border-neutral-800/90 text-neutral-100 hover:border-amber-500/40";
+    ? "bg-zinc-50 border border-[var(--hair)]/80 text-zinc-900 hover:border-[var(--acc)]"
+    : "bg-[#121214] border borderbg-[var(--surface)]/90 text-neutral-100 hover:border-[var(--acc)]/40";
   const textTitleColor = isStitchLight ? "text-zinc-900" : "text-neutral-100";
   const textSubColor = isStitchLight ? "text-zinc-500" : "text-neutral-400";
   const dividerColor = isStitchLight
-    ? "border-zinc-200"
-    : "border-neutral-800/80";
-  const accentColor = isStitchLight ? "text-indigo-600" : "text-amber-400";
+    ? "border-[var(--hair)]"
+    : "borderbg-[var(--surface)]/80";
+  const accentColor = isStitchLight ? "text-[var(--acc)]" : "text-[var(--acc)]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-all space-y-4">
@@ -514,13 +514,13 @@ export function CalendarWidget({
                   <div className="flex items-center gap-0.5 mt-1">
                     {hasConcert && (
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${isStitchLight ? "bg-indigo-500" : "bg-amber-400"} shadow-xs`}
+                        className={`w-1.5 h-1.5 rounded-full ${isStitchLight ? "bg-[var(--acc)]" : "bg-[var(--acc)]"} shadow-xs`}
                         title="Concierto"
                       />
                     )}
                     {hasRehearsal && (
                       <span
-                        className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-xs"
+                        className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] shadow-xs"
                         title="Ensayo"
                       />
                     )}

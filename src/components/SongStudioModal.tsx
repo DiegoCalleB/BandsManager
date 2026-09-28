@@ -441,7 +441,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎤',
     tag: 'Acapella / Melodía',
     desc: 'Voz aislada en alta pureza espectral. Permite silenciar la voz original para ensayar cantando o directos.',
-    badgeBg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+    badgeBg: 'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/40',
   },
   {
     id: 'Instrumental',
@@ -450,7 +450,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎵',
     tag: 'Karaoke / Backing Track',
     desc: 'Mezcla musical completa sin voz principal. La opción predilecta para directos con playback o práctica vocal.',
-    badgeBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+    badgeBg: 'bg-rose-500/20 text-rose-300 border-[var(--alert)]/40',
   },
   {
     id: 'Batería',
@@ -459,7 +459,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🥁',
     tag: 'Ritmo & Platos',
     desc: 'Aislamiento de bombo, caja, timbales y platos (>1800Hz) para practicar con metrónomo y batería real.',
-    badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    badgeBg: 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/40',
   },
   {
     id: 'Bajo',
@@ -468,7 +468,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎸',
     tag: 'Sub-Bass & Graves',
     desc: 'Frecuencias fundamentales y transitorios de bajo (<180Hz) para estudiar la línea o tocar encima.',
-    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-[var(--ok)]/40',
   },
   {
     id: 'Guitarras',
@@ -477,7 +477,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎸',
     tag: 'Eléctricas & Acústicas',
     desc: 'Guitarras eléctricas, distorsiones y acústicas sin bleed de voz ni percusión.',
-    badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+    badgeBg: 'bg-purple-500/20 text-purple-300 border-[var(--acc)]/40',
   },
   {
     id: 'Teclados',
@@ -486,7 +486,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎹',
     tag: 'Pianos & Sintes',
     desc: 'Pianos acústicos, sintetizadores polifónicos y teclados aislados para acompañamiento armónico.',
-    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-[var(--acc)]/40',
   },
   {
     id: 'Arreglos',
@@ -495,7 +495,7 @@ export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
     icon: '🎺',
     tag: 'Metales & Efectos',
     desc: 'Secciones de viento metal, cuartetos de cuerda, solos y efectos secundarios de mezcla.',
-    badgeBg: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+    badgeBg: 'bg-orange-500/20 text-orange-300 border-[var(--acc)]/40',
   },
 ];
 
@@ -3979,7 +3979,7 @@ export default function SongStudioModal({
                             setShowToolsMenu(false);
                             openTutorial();
                           }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-3)] flex items-center gap-2"
+                          className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
                         >
                           <Info className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
                         </button>
@@ -4601,7 +4601,7 @@ export default function SongStudioModal({
                             <button
                               type="button"
                               onClick={(e) => handleDeleteIdea(e, idea.id)}
-                              className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 transition-all cursor-pointer"
+                              className="p-2 rounded-xl bg-[var(--ink)]/5 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-[var(--hair)]/10 hover:border-[var(--alert)]/30 transition-all cursor-pointer"
                               title="Eliminar idea"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -4650,7 +4650,7 @@ export default function SongStudioModal({
                                       setOpenIdeaActionsMenuId(null);
                                       handleDuplicateIdea(e, idea.id);
                                     }}
-                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-3)] flex items-center gap-2"
+                                    className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] flex items-center gap-2"
                                   >
                                     <Copy className="w-4 h-4 text-[var(--ink-2)]" /> Duplicar como nueva versión
                                   </button>
@@ -5448,7 +5448,7 @@ export default function SongStudioModal({
                             {isAddingTrack && (
                               <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/20 space-y-3 animate-in fade-in duration-150">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-xs font-sans font-bold text-[var(--ink-3)] flex items-center gap-1.5">
+                                  <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                                     <Radio className="w-4 h-4 text-[var(--ink-2)]" />
                                     Añadir Nueva Pista (Overdub / Superponer Audio)
                                   </span>
@@ -5473,7 +5473,7 @@ export default function SongStudioModal({
                                   </p>
 
                                   <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
-                                    <span className="text-[10px] font-sans text-[var(--ink-3)] font-bold flex items-center gap-1">
+                                    <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold flex items-center gap-1">
                                       <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" /> Filtros Anti-Ruido Studio:
                                     </span>
 

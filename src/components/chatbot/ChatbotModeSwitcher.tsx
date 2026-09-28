@@ -21,11 +21,11 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
       className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono transition-colors ${
         agentsEnabled
           ? isStitchLight
-            ? 'bg-amber-50/80 text-amber-900 border-b border-amber-200/80'
-            : 'bg-amber-500/10 text-amber-300 border-b border-amber-500/20'
+            ? 'bg-amber-50/80 text-amber-900 border-b border-[var(--acc)]/80'
+            : 'bg-amber-500/10 text-amber-300 border-b border-[var(--acc)]/20'
           : isStitchLight
-            ? 'bg-emerald-50/80 text-emerald-900 border-b border-emerald-200/80'
-            : 'bg-emerald-500/10 text-emerald-300 border-b border-emerald-500/20'
+            ? 'bg-emerald-50/80 text-emerald-900 border-b border-[var(--ok)]/80'
+            : 'bg-emerald-500/10 text-emerald-300 border-b border-[var(--ok)]/20'
       }`}
     >
       <div className="flex items-center gap-2 min-w-0">
@@ -48,8 +48,8 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             onClick={onOpenAutonomyModal}
             className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
               isStitchLight
-                ? 'bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300'
-                : 'bg-purple-500/25 hover:bg-purple-500/40 text-purple-200 border border-purple-500/50'
+                ? 'bg-purple-100 hover:bg-purple-200 text-purple-800 border border-[var(--acc)]'
+                : 'bg-purple-500/25 hover:bg-purple-500/40 text-purple-200 border border-[var(--acc)]/50'
             }`}
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
           >
@@ -70,11 +70,11 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-sm active:scale-95 ${
             agentsEnabled
               ? isStitchLight
-                ? 'bg-amber-200 hover:bg-[#d1b375]/15 text-[#d1b375] border border-amber-300'
-                : 'bg-amber-500/20 hover:bg-[#d1b375]/15 text-[#d1b375] border border-amber-500/40'
+                ? 'bg-amber-200 hover:bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]'
+                : 'bg-amber-500/20 hover:bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/40'
               : isStitchLight
-                ? 'bg-emerald-200 hover:bg-[#10b981]/15 text-[#10b981] border border-emerald-300'
-                : 'bg-emerald-500/20 hover:bg-[#10b981]/15 text-[#10b981] border border-emerald-500/40'
+                ? 'bg-emerald-200 hover:bg-[#10b981]/15 text-[#10b981] border border-[var(--ok)]'
+                : 'bg-emerald-500/20 hover:bg-[#10b981]/15 text-[#10b981] border border-[var(--ok)]/40'
           }`}
           title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}
         >

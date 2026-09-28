@@ -61,12 +61,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
   return (
     <ModalPortal>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs">
-        <div className="relative w-full max-w-lg bg-[#141312] border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 backdrop-blur-xs">
+        <div className="relative w-full max-w-lg bg-[#141312] border border-[var(--acc)]/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
           {/* Header */}
-          <div className="p-4 sm:p-5 border-b border-zinc-800 flex items-center justify-between bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312]">
+          <div className="p-4 sm:p-5 border-b border-[var(--hair)] flex items-center justify-between bg-gradient-to-r from-amber-950/30 via-zinc-900 to-[#141312]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-[var(--acc)]/40 text-amber-400 flex items-center justify-center">
                 <BellRing className="w-5 h-5" />
               </div>
               <div>
@@ -86,7 +86,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           <div className="p-4 sm:p-6 overflow-y-auto space-y-5 text-xs text-zinc-300">
             {/* Permission Banner */}
             {permission === 'granted' ? (
-              <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-start gap-3 text-emerald-300">
+              <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-[var(--ok)]/40 flex items-start gap-3 text-emerald-300">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <span className="font-bold block text-sm">Permiso concedido en este navegador</span>
@@ -96,7 +96,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
               </div>
             ) : permission === 'denied' ? (
-              <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 flex items-start gap-3 text-rose-300">
+              <div className="p-3.5 rounded-xl bg-rose-950/40 border border-[var(--alert)]/40 flex items-start gap-3 text-rose-300">
                 <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-1">
                   <span className="font-bold block text-sm">Permiso bloqueado en el navegador</span>
@@ -107,7 +107,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
               </div>
             ) : (
-              <div className="p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/40 flex items-start justify-between gap-3 text-amber-300">
+              <div className="p-3.5 rounded-xl bg-amber-950/40 border border-[var(--acc)]/40 flex items-start justify-between gap-3 text-amber-300">
                 <div className="flex items-start gap-3">
                   <Bell className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                   <div>
@@ -120,7 +120,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs shrink-0 transition-colors cursor-pointer shadow-md"
+                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-[var(--ink)] font-bold text-xs shrink-0 transition-colors cursor-pointer shadow-md"
                 >
                   Solicitar Permiso
                 </button>
@@ -128,9 +128,9 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             )}
 
             {/* Master Switches */}
-            <div className="space-y-3 bg-[#1A1918] p-4 rounded-xl border border-zinc-800">
+            <div className="space-y-3 bg-[#1A1918] p-4 rounded-xl border border-[var(--hair)]">
               {/* Master toggle */}
-              <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
                     {config.enabled ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4 text-zinc-500" />}
@@ -142,7 +142,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={config.enabled} onChange={handleToggleMaster} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                  <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
                 </label>
               </div>
 
@@ -161,7 +161,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <button
                     type="button"
                     onClick={onTriggerTestSound}
-                    className="text-[10px] text-zinc-400 hover:text-amber-300 px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded-md border border-zinc-700 transition-colors cursor-pointer"
+                    className="text-[10px] text-zinc-400 hover:text-amber-300 px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded-md border border-[var(--hair)] transition-colors cursor-pointer"
                     title="Reproducir sonido de prueba"
                   >
                     🔊 Probar
@@ -174,7 +174,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                       disabled={!config.enabled}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500 peer-disabled:opacity-40"></div>
+                    <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-[var(--hair)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--surface)] after:border-[var(--hair)] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500 peer-disabled:opacity-40"></div>
                   </label>
                 </div>
               </div>
@@ -186,7 +186,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 Eventos a Notificar
               </span>
 
-              <div className="space-y-2 bg-[#1A1918] p-3 rounded-xl border border-zinc-800">
+              <div className="space-y-2 bg-[#1A1918] p-3 rounded-xl border border-[var(--hair)]">
                 {/* 1. Lead Status Changed */}
                 <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors">
                   <div className="flex items-start gap-2.5">
@@ -201,12 +201,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.leadStatusChanged}
                     onChange={() => handleToggleEvent('leadStatusChanged')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-zinc-700 focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-[var(--hair)] focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
                 {/* 2. New Message */}
-                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-zinc-800/60">
+                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-[var(--hair)]/60">
                   <div className="flex items-start gap-2.5">
                     <MessageSquare className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
                     <div>
@@ -221,12 +221,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.leadNewMessage}
                     onChange={() => handleToggleEvent('leadNewMessage')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-zinc-700 focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-[var(--hair)] focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
                 {/* 3. Agent Pending Approval */}
-                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-zinc-800/60">
+                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-[var(--hair)]/60">
                   <div className="flex items-start gap-2.5">
                     <Sparkles className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
                     <div>
@@ -241,12 +241,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.agentPendingApproval}
                     onChange={() => handleToggleEvent('agentPendingApproval')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-zinc-700 focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-[var(--hair)] focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
                 {/* 4. Concert Confirmed */}
-                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-zinc-800/60">
+                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-[var(--hair)]/60">
                   <div className="flex items-start gap-2.5">
                     <PartyPopper className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
                     <div>
@@ -259,12 +259,12 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.concertConfirmed}
                     onChange={() => handleToggleEvent('concertConfirmed')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-zinc-700 focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-[var(--hair)] focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
 
                 {/* 5. Lead Discovered */}
-                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-zinc-800/60">
+                <div className="flex items-start justify-between p-2 rounded-lg hover:bg-zinc-800/40 transition-colors border-t border-[var(--hair)]/60">
                   <div className="flex items-start gap-2.5">
                     <Radio className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                     <div>
@@ -279,7 +279,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     checked={config.events.leadDiscovered}
                     onChange={() => handleToggleEvent('leadDiscovered')}
                     disabled={!config.enabled}
-                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-zinc-700 focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
+                    className="w-4 h-4 rounded text-amber-500 bg-zinc-900 border-[var(--hair)] focus:ring-amber-400 cursor-pointer disabled:opacity-40 mt-1"
                   />
                 </div>
               </div>
@@ -287,11 +287,11 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-zinc-800 bg-[#121110] flex items-center justify-between gap-3">
+          <div className="p-4 border-t border-[var(--hair)] bg-[#121110] flex items-center justify-between gap-3">
             <button
               type="button"
               onClick={onTriggerTest}
-              className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-zinc-700"
+              className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-[var(--hair)]"
             >
               <Bell className="w-3.5 h-3.5 text-amber-400" />
               <span>Probar Notificación Push</span>
@@ -300,7 +300,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs transition-colors cursor-pointer shadow-md"
+              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer shadow-md"
             >
               Guardar y Cerrar
             </button>

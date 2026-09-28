@@ -20,7 +20,7 @@ import {
 
 const IrisPrismBanner: React.FC = () => {
   return (
-    <div className="relative w-full h-20 bg-black overflow-hidden flex items-center justify-center border-b border-white/10 select-none">
+    <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-900 via-black to-black opacity-80" />
       <svg className="w-full h-full absolute inset-0 text-white" viewBox="0 0 400 80" preserveAspectRatio="none">
         <path d="M 0,40 L 160,40" stroke="white" strokeWidth="2" strokeDasharray="4 2" opacity="0.6" className="animate-pulse" />
@@ -33,7 +33,7 @@ const IrisPrismBanner: React.FC = () => {
         <path d="M 195,43 L 400,58" stroke="#06b6d4" strokeWidth="2" opacity="0.8" />
         <path d="M 195,43 L 400,70" stroke="#a855f7" strokeWidth="2" opacity="0.8" />
       </svg>
-      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[10px] font-mono text-neutral-300 backdrop-blur-xs">
+      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-[var(--hair)]/10 text-[10px] font-mono text-neutral-300 backdrop-blur-xs">
         <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
         <span>Iris Espectro · Separación Multicapa por IA</span>
       </div>
@@ -71,10 +71,10 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
         onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: false } : null))}
         className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-md shadow-2xl p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
           !terminado
-            ? 'border border-amber-500/40 hover:border-amber-400/70'
+            ? 'border border-[var(--acc)]/40 hover:border-[var(--acc)]/70'
             : esError
-              ? 'border-2 border-rose-500/70 hover:border-rose-400 animate-pulse'
-              : 'border-2 border-emerald-500/70 hover:border-emerald-400 animate-pulse'
+              ? 'border-2 border-[var(--alert)]/70 hover:border-[var(--alert)] animate-pulse'
+              : 'border-2 border-[var(--ok)]/70 hover:border-[var(--ok)] animate-pulse'
         }`}
         title={terminado ? 'Iris ha terminado — toca para ver el resultado' : 'Reabrir el progreso de Iris'}
       >
@@ -99,10 +99,10 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
           <Maximize2 className="w-3 h-3 text-neutral-500 shrink-0" />
         </div>
-        <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-white/10">
+        <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-[var(--hair)]/10">
           <div
             className={`h-full rounded-full transition-all duration-300 ${
-              !terminado ? 'bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400' : esError ? 'bg-rose-500' : 'bg-emerald-400'
+              !terminado ? 'bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400' : esError ? 'bg-rose-500' : 'bg-emerald-400'
             }`}
             style={{ width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct || 0)}%` }}
           />
@@ -112,23 +112,23 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
   }
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
-      <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md md:max-w-2xl w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 bg-[var(--scrim)]/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
+      <div className="bg-zinc-950 border border-[var(--acc)]/40 rounded-2xl max-w-md md:max-w-2xl w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
         {!terminado && (
           <div className="-mx-6">
             <IrisPrismBanner />
           </div>
         )}
 
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]/10">
           <div className="flex items-center gap-3">
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center relative border ${
                 terminado
                   ? esError
-                    ? 'bg-rose-500/20 border-rose-500/50'
-                    : 'bg-emerald-500/20 border-emerald-500/50'
-                  : 'bg-amber-500/20 border-amber-500/50'
+                    ? 'bg-rose-500/20 border-[var(--alert)]/50'
+                    : 'bg-emerald-500/20 border-[var(--ok)]/50'
+                  : 'bg-amber-500/20 border-[var(--acc)]/50'
               }`}
             >
               {terminado ? (
@@ -151,7 +151,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           <button
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
-            className="p-1 text-neutral-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+            className="p-1 text-neutral-400 hover:text-white rounded-lg hover:bg-[var(--ink)]/10 transition-colors"
             title="Minimizar a segundo plano"
           >
             <X className="w-5 h-5" />
@@ -165,9 +165,9 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
                 <span className="text-amber-300 font-bold">Progreso: {Math.round(stemProgressModal.progressPct || 0)}%</span>
                 <span className="text-neutral-400 animate-pulse">Procesando frecuencia de audio...</span>
               </div>
-              <div className="w-full h-2.5 bg-zinc-900 rounded-full overflow-hidden border border-amber-500/30">
+              <div className="w-full h-2.5 bg-zinc-900 rounded-full overflow-hidden border border-[var(--acc)]/30">
                 <div
-                  className="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400 transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400 transition-all duration-300"
                   style={{ width: `${Math.max(5, stemProgressModal.progressPct || 0)}%` }}
                 />
               </div>
@@ -175,7 +175,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
 
           {terminado && !esError && (
-            <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 space-y-3">
+            <div className="p-4 rounded-xl bg-emerald-950/40 border border-[var(--ok)]/40 space-y-3">
               <p className="text-emerald-300 font-bold flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" /> Las pistas aisladas ya están disponibles en la vista multicanal.
               </p>
@@ -186,7 +186,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
 
           {esError && (
-            <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 space-y-3">
+            <div className="p-4 rounded-xl bg-rose-950/40 border border-[var(--alert)]/40 space-y-3">
               <p className="text-rose-300 font-bold flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-rose-400" />
                 {stemProgressModal.errorType === 'billing_required' ? 'Plan o cuota agotada' : 'No se pudo completar la separación'}
@@ -195,7 +195,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
                 {stemProgressModal.errorDetail || 'Ocurrió un error inesperado al comunicarse con el servidor de Iris Espectro.'}
               </p>
               {stemProgressModal.errorDetail && (
-                <div className="pt-2 border-t border-rose-500/20">
+                <div className="pt-2 border-t border-[var(--alert)]/20">
                   <button
                     type="button"
                     onClick={() => {
@@ -214,7 +214,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-white/10">
+        <div className="flex items-center justify-between pt-3 border-t border-[var(--hair)]/10">
           <button
             type="button"
             onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}

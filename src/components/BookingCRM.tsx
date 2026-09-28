@@ -1589,7 +1589,7 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-emerald-300 border border-emerald-500/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-emerald-300 border border-[var(--ok)]/40 transition-all cursor-pointer active:scale-98 shadow-sm"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
@@ -1611,7 +1611,7 @@ export default function BookingCRM({
                           document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 60);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
                         <MessageSquareText className="w-4 h-4 text-amber-400" />
@@ -1627,7 +1627,7 @@ export default function BookingCRM({
                         setRoadbookModalLead(selectedLead || leads[0] || null);
                         setIsRoadbookModalOpen(true);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-[var(--acc)]/40 transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-amber-400" />
@@ -1942,7 +1942,7 @@ export default function BookingCRM({
                   </span>
                 )}
                 {onlyVerifiedFilter && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-3)] shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] shrink-0">
                     ✔ Verificados
                     <button type="button" onClick={() => setOnlyVerifiedFilter(false)} className="hover:text-[var(--ink)] cursor-pointer">
                       <X className="w-3 h-3" />
@@ -2049,7 +2049,7 @@ export default function BookingCRM({
 
             {/* Route Anchor Active Filter Banner */}
             {routeAnchorCity && (
-              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-sky-950/50 border border-sky-500/40 text-sky-200 text-xs">
+              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-sky-950/50 border border-[var(--acc)]/40 text-sky-200 text-xs">
                 <div className="flex items-center gap-2">
                   <Compass className="w-4 h-4 text-sky-400 shrink-0" />
                   <span>
@@ -2060,7 +2060,7 @@ export default function BookingCRM({
                 <button
                   type="button"
                   onClick={() => setRouteAnchorCity(null)}
-                  className="text-sky-300 hover:text-white text-xs font-bold px-2 py-0.5 rounded bg-sky-900/60 border border-sky-500/30 cursor-pointer transition-colors"
+                  className="text-sky-300 hover:text-white text-xs font-bold px-2 py-0.5 rounded bg-sky-900/60 border border-[var(--acc)]/30 cursor-pointer transition-colors"
                 >
                   ✕ Quitar filtro de ruta
                 </button>

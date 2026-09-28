@@ -1314,7 +1314,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchMultiSource()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border border-indigo-500/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border border-[var(--acc)]/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-indigo-400" />
@@ -1325,7 +1325,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchPublicCultural()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border border-emerald-500/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border border-[var(--ok)]/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -1336,7 +1336,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[#f2ca50] hover:bg-[#d8b03e] text-[#2c2200] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-[#f2ca50] hover:bg-[var(--acc-soft)] text-[#2c2200] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1403,7 +1403,7 @@ export function GooglePlacesExplorerModal({
 
               {/* Quick Similar Bands / FFO Mirror Chips from Dossier */}
               {similarBands && similarBands.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-zinc-800/60">
+                <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[var(--hair)]/60">
                   <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider mr-1 flex items-center gap-1">
                     <Music2 className="w-3 h-3 text-amber-400" />
                     Efecto Espejo (Dossier):
@@ -1414,7 +1414,7 @@ export function GooglePlacesExplorerModal({
                       type="button"
                       onClick={() => handleSearchSimilarBands(band)}
                       disabled={isSearching}
-                      className="px-2.5 py-0.5 text-[10px] rounded-lg transition-all cursor-pointer font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 disabled:opacity-50"
+                      className="px-2.5 py-0.5 text-[10px] rounded-lg transition-all cursor-pointer font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30 disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
                       🔍 {band}
@@ -1424,7 +1424,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-[10px] rounded-lg font-bold transition-all cursor-pointer bg-gradient-to-r from-amber-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-200 border border-amber-400/40 ml-auto"
+                    className="px-2.5 py-0.5 text-[10px] rounded-lg font-bold transition-all cursor-pointer bg-gradient-to-r from-[var(--acc)]/20 to-purple-500/20 hover:from-[var(--acc)]/30 hover:to-purple-500/30 text-amber-200 border border-[var(--acc)]/40 ml-auto"
                   >
                     ⚡ Rastrear Todas
                   </button>

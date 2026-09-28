@@ -252,16 +252,16 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         </div>
 
         {/* IDENTIDAD SONORA, GÉNERO & BANDAS AFINES (FFO) */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-slate-900 border border-[var(--hair)] rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--hair)] pb-3">
             <div className="flex items-center gap-2">
-              <Music2 className="w-5 h-5 text-amber-400" />
-              <h3 className="text-base sm:text-lg font-bold text-amber-400">
+              <Music2 className="w-5 h-5 text-[var(--acc)]" />
+              <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
                 Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
               </h3>
             </div>
-            <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] border border-[var(--acc)]/30 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               Agentes IA & Radar de Booking
             </span>
           </div>
@@ -270,7 +270,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             {/* Género musical */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Tag className="w-3.5 h-3.5 text-amber-400" />
+                <Tag className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Género / Estilo Musical Principal
               </label>
               <input
@@ -280,7 +280,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   setConfig({ ...config, genero: e.target.value })
                 }
                 placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión..."
-                className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-200 outline-none"
+                className="w-full bg-slate-950 border border-[var(--hair)] focus:border-[var(--acc)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-200 outline-none"
               />
               <p className="text-[11px] text-slate-400">
                 Estilo sonoro representativo de vuestro show en vivo.
@@ -290,10 +290,10 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             {/* Toggle mostrar en EPK público */}
             <div className="space-y-1.5 flex flex-col justify-between">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5 text-amber-400" />
+                <Globe className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Visibilidad en el Dossier Público
               </label>
-              <label className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+              <label className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-950/70 border border-[var(--hair)] cursor-pointer hover:border-[var(--hair)] transition">
                 <input
                   type="checkbox"
                   checked={config.mostrarBandasSimilares !== false}
@@ -303,7 +303,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       mostrarBandasSimilares: e.target.checked,
                     })
                   }
-                  className="rounded border-slate-700 text-amber-400 focus:ring-amber-400 h-4 w-4 bg-slate-900 cursor-pointer"
+                  className="rounded border-[var(--hair)] text-[var(--acc)] focus:ring-amber-400 h-4 w-4 bg-slate-900 cursor-pointer"
                 />
                 <div className="text-xs">
                   <span className="font-semibold text-slate-200">
@@ -321,10 +321,10 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </div>
 
           {/* Bandas similares / FFO Tag manager */}
-          <div className="space-y-2.5 pt-2 border-t border-slate-800/80">
+          <div className="space-y-2.5 pt-2 border-t border-[var(--hair)]/80">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-amber-400" />
+                <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
                 Grupos y Artistas de Sonido Afín / Referencias (&quot;Para fans
                 de...&quot;)
               </label>
@@ -343,7 +343,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </p>
 
             {/* Chip tags list */}
-            <div className="flex flex-wrap items-center gap-2 min-h-[36px] p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+            <div className="flex flex-wrap items-center gap-2 min-h-[36px] p-2.5 rounded-xl bg-slate-950 border border-[var(--hair)]">
               {!config.bandasSimilares ||
               config.bandasSimilares.length === 0 ? (
                 <span className="text-xs text-slate-500 italic">
@@ -354,13 +354,13 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 config.bandasSimilares.map((band, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30 shadow-sm"
                   >
                     <span>{band}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveSimilarBand(band)}
-                      className="text-amber-400 hover:text-red-400 transition cursor-pointer p-0.5 rounded-full hover:bg-red-500/20"
+                      className="text-[var(--acc)] hover:text-[var(--alert)] transition cursor-pointer p-0.5 rounded-full hover:bg-[var(--alert)]/20"
                       title={`Eliminar ${band}`}
                     >
                       <X className="w-3 h-3" />
@@ -384,14 +384,14 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     }
                   }}
                   placeholder="Escribe el nombre de un grupo similar (ej. Vetusta Morla, Cala Vento, La Pegatina) y pulsa Enter..."
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-200 outline-none placeholder:text-slate-600 font-sans"
+                  className="w-full bg-slate-950 border border-[var(--hair)] focus:border-[var(--acc)] rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-200 outline-none placeholder:text-slate-600 font-sans"
                 />
               </div>
               <button
                 type="button"
                 onClick={handleAddSimilarBand}
                 disabled={!similarBandInput.trim()}
-                className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-40 disabled:hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-sm cursor-pointer shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-40 disabled:hover:bg-[var(--acc)] text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-sm cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir</span>

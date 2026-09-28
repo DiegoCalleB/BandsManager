@@ -400,7 +400,7 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
         return {
           bg: isDanger
             ? "bg-[var(--alert)]/25 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20 text-[var(--ink-3)]",
+            : "bg-[var(--acc)]/20 text-[var(--ink-2)]",
         };
       case "snow":
         return {

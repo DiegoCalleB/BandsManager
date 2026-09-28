@@ -822,11 +822,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       {/* Quick Logo Upload Button on Hover */}
                       <label
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute inset-0 bg-black/70 backdrop-blur-xs opacity-0 group-hover/avatar:opacity-100 flex flex-col items-center justify-center text-amber-300 transition-opacity cursor-pointer z-20 gap-0.5"
+                        className="absolute inset-0 bg-[var(--scrim)]/70 backdrop-blur-xs opacity-0 group-hover/avatar:opacity-100 flex flex-col items-center justify-center text-[var(--acc)] transition-opacity cursor-pointer z-20 gap-0.5"
                         title="Haz clic para cambiar el logotipo de esta banda"
                       >
-                        <Upload className="w-4 h-4 text-amber-400 animate-bounce" />
-                        <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-amber-200">
+                        <Upload className="w-4 h-4 text-[var(--acc)] animate-bounce" />
+                        <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]">
                           {uploadingBandId === band.band_id
                             ? "Subiendo..."
                             : "Logo"}
@@ -852,7 +852,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         isLeavingThis ||
                         uploadingBandId === band.band_id) && (
                         <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc)] gap-1 z-30">
-                          <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
+                          <Loader2 className="w-5 h-5 animate-spin text-[var(--acc)]" />
                           <span className="text-[9px] font-sans text-[var(--acc)]/70 font-bold">
                             {uploadingBandId === band.band_id
                               ? "Subiendo"

@@ -66,18 +66,18 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
   const channelData = growthPlan.channelPlaybooks?.find((c) => c.platform === selectedChannel) || growthPlan.channelPlaybooks?.[0];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
-      <div className="bg-[#141416] border border-neutral-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
+    <div className="fixed inset-0 z-50 bg-[var(--scrim)]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in overflow-y-auto">
+      <div className="bg-[#141416] border borderbg-[var(--surface)] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
         {/* Modal Header */}
-        <div className="p-5 border-b border-neutral-800 flex items-center justify-between bg-gradient-to-r from-amber-500/10 via-neutral-900 to-purple-500/10">
+        <div className="p-5 border-b borderbg-[var(--surface)] flex items-center justify-between bg-gradient-to-r from-[var(--acc)]/10 via-neutral-900 to-purple-500/10">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-[var(--acc)]/30">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold font-display text-neutral-100">Plan Estratégico de Crecimiento & Promoción</h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30">
                   {growthPlan.horizonDays} Días
                 </span>
               </div>
@@ -90,21 +90,21 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-neutral-800/80 transition-all cursor-pointer"
+            className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bgbg-[var(--surface)]/80 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Navigation Tabs */}
-        <div className="px-5 py-2.5 bg-[#101012] border-b border-neutral-800/80 flex items-center justify-between gap-2 overflow-x-auto">
+        <div className="px-5 py-2.5 bg-[#101012] border-b borderbg-[var(--surface)]/80 flex items-center justify-between gap-2 overflow-x-auto">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('blueprint')}
               className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'blueprint'
                   ? 'bg-amber-500 text-stone-950 shadow-sm'
-                  : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                  : 'text-neutral-400 hover:text-neutral-200 hover:bgbg-[var(--surface)]/60'
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
@@ -116,7 +116,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'channels'
                   ? 'bg-amber-500 text-stone-950 shadow-sm'
-                  : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                  : 'text-neutral-400 hover:text-neutral-200 hover:bgbg-[var(--surface)]/60'
               }`}
             >
               <Radio className="w-3.5 h-3.5" />
@@ -128,7 +128,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'pillars'
                   ? 'bg-amber-500 text-stone-950 shadow-sm'
-                  : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                  : 'text-neutral-400 hover:text-neutral-200 hover:bgbg-[var(--surface)]/60'
               }`}
             >
               <Target className="w-3.5 h-3.5" />
@@ -146,7 +146,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 1: BLUEPRINT SEMANAL */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-neutral-900 to-transparent border border-amber-500/25 flex items-start gap-3">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--acc)]/10 via-neutral-900 to-transparent border border-[var(--acc)]/25 flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono">
@@ -163,16 +163,16 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 {growthPlan.weeklyBlueprint?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-[#18181b] border border-neutral-800/90 hover:border-neutral-700 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="p-3.5 rounded-xl bg-[#18181b] border borderbg-[var(--surface)]/90 hover:border-[var(--hair)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="flex items-start sm:items-center gap-3">
-                      <span className="px-2.5 py-1 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-mono font-bold text-amber-400 shrink-0 min-w-[75px] text-center">
+                      <span className="px-2.5 py-1 rounded-lg bg-neutral-900 border borderbg-[var(--surface)] text-xs font-mono font-bold text-amber-400 shrink-0 min-w-[75px] text-center">
                         {item.day}
                       </span>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-bold text-neutral-100">{item.focus}</span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-900 text-neutral-400 border border-neutral-800 uppercase">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-900 text-neutral-400 border borderbg-[var(--surface)] uppercase">
                             {item.recommendedPlatform}
                           </span>
                         </div>
@@ -180,8 +180,8 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-neutral-800">
-                      <span className="text-[11px] font-mono text-neutral-400 flex items-center gap-1 bg-neutral-900 px-2 py-1 rounded-lg border border-neutral-800">
+                    <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 borderbg-[var(--surface)]">
+                      <span className="text-[11px] font-mono text-neutral-400 flex items-center gap-1 bg-neutral-900 px-2 py-1 rounded-lg border borderbg-[var(--surface)]">
                         <Zap className="w-3 h-3 text-amber-400" />
                         {item.optimalPostingTime}
                       </span>
@@ -206,7 +206,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
                           ? 'bg-amber-500 text-stone-950 shadow-sm'
-                          : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-neutral-200'
+                          : 'bg-neutral-900 border borderbg-[var(--surface)] text-neutral-400 hover:text-neutral-200'
                       }`}
                     >
                       {platform === 'instagram' && <Instagram className="w-3.5 h-3.5" />}
@@ -222,10 +222,10 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
               {channelData && (
                 <div className="space-y-4 animate-fade-in">
                   {/* Channel Summary Card */}
-                  <div className="p-4 rounded-xl bg-[#18181b] border border-neutral-800 space-y-2">
+                  <div className="p-4 rounded-xl bg-[#18181b] border borderbg-[var(--surface)] space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-bold text-neutral-100 font-display">Estrategia para {channelData.name}</h4>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-[var(--acc)]/30">
                         {channelData.growthStage}
                       </span>
                     </div>
@@ -249,8 +249,8 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                             onClick={() => toggleAction(action.id)}
                             className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
                               isDone
-                                ? 'bg-emerald-950/20 border-emerald-500/30 opacity-75'
-                                : 'bg-[#18181b] border-neutral-800 hover:border-neutral-700'
+                                ? 'bg-emerald-950/20 border-[var(--ok)]/30 opacity-75'
+                                : 'bg-[#18181b] borderbg-[var(--surface)] hover:border-[var(--hair)]'
                             }`}
                           >
                             <div className="flex items-start gap-3">
@@ -262,7 +262,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                                   <span className={`text-xs font-bold ${isDone ? 'line-through text-neutral-400' : 'text-neutral-200'}`}>
                                     {action.title}
                                   </span>
-                                  <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-neutral-900 border border-neutral-800 text-amber-400 font-bold">
+                                  <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-neutral-900 border borderbg-[var(--surface)] text-amber-400 font-bold">
                                     {action.impact}
                                   </span>
                                 </div>
@@ -277,13 +277,13 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
                   {/* Hook Formulas */}
                   {channelData.hookFormulas && channelData.hookFormulas.length > 0 && (
-                    <div className="p-4 rounded-xl bg-neutral-900/60 border border-neutral-800/80 space-y-2">
+                    <div className="p-4 rounded-xl bg-neutral-900/60 border borderbg-[var(--surface)]/80 space-y-2">
                       <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" /> Fórmulas de Gancho Probadas
                       </h5>
                       <ul className="space-y-1.5">
                         {channelData.hookFormulas.map((hook, hIdx) => (
-                          <li key={hIdx} className="text-xs text-neutral-300 font-mono italic pl-3 border-l-2 border-purple-500/40">
+                          <li key={hIdx} className="text-xs text-neutral-300 font-mono italic pl-3 border-l-2 border-[var(--acc)]/40">
                             {hook}
                           </li>
                         ))}
@@ -298,7 +298,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           {/* TAB 3: DIAGNÓSTICO & PILARES */}
           {activeTab === 'pillars' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-[#18181b] border border-neutral-800 space-y-2">
+              <div className="p-4 rounded-xl bg-[#18181b] border borderbg-[var(--surface)] space-y-2">
                 <h4 className="text-sm font-bold text-neutral-100 font-display">Resumen Ejecutivo & Diagnóstico</h4>
                 <p className="text-xs text-neutral-300 leading-relaxed">{growthPlan.executiveSummary}</p>
               </div>
@@ -309,7 +309,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 </h5>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {growthPlan.overallPillars?.map((p, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-[#18181b] border border-neutral-800 space-y-2">
+                    <div key={idx} className="p-3.5 rounded-xl bg-[#18181b] border borderbg-[var(--surface)] space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-amber-400">{p.pillar}</span>
                         <span className="text-xs font-mono font-bold text-neutral-400">{p.weightPercentage}%</span>
@@ -327,7 +327,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
         </div>
 
         {/* Modal Footer Quick Navigation */}
-        <div className="p-4 border-t border-neutral-800 bg-[#101012] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 border-t borderbg-[var(--surface)] bg-[#101012] flex flex-col sm:flex-row items-center justify-between gap-3">
           <span className="text-xs text-neutral-500">
             Aplica estas recomendaciones directas para impulsar tu venta de entradas y repercusión.
           </span>
@@ -340,7 +340,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   onClose();
                   onNavigate('reels');
                 }}
-                className="px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bgbg-[var(--surface)] hover:bg-neutral-700 text-neutral-200 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer"
               >
                 <span>Ir al Radar de Redes</span>
                 <ArrowRight className="w-3.5 h-3.5" />

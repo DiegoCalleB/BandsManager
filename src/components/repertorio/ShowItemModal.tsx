@@ -68,9 +68,9 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className={`w-full max-w-lg p-6 rounded-2xl space-y-4 shadow-2xl ${colors.card} border border-sky-500/30`}>
-        <div className="flex justify-between items-center pb-3 border-b border-neutral-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
+      <div className={`w-full max-w-lg p-6 rounded-2xl space-y-4 shadow-2xl ${colors.card} border border-[var(--acc)]/30`}>
+        <div className="flex justify-between items-center pb-3 border-b borderbg-[var(--surface)]">
           <div className="flex items-center gap-2">
             <span className="p-2 bg-sky-500/20 text-sky-400 rounded-xl">⚡</span>
             <div>
@@ -87,7 +87,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               onClose();
               setEditingShowItem(null);
             }}
-            className="text-neutral-400 hover:text-white p-1 rounded-lg hover:bg-neutral-800 cursor-pointer"
+            className="text-neutral-400 hover:text-white p-1 rounded-lg hover:bgbg-[var(--surface)] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -180,14 +180,14 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-neutral-800">
+          <div className="flex justify-end gap-2 pt-3 border-t borderbg-[var(--surface)]">
             <button
               type="button"
               onClick={() => {
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-xl border border-neutral-700 text-xs font-bold text-neutral-300 hover:bg-neutral-800 cursor-pointer"
+              className="px-4 py-2 rounded-xl border border-[var(--hair)] text-xs font-bold text-neutral-300 hover:bgbg-[var(--surface)] cursor-pointer"
             >
               Cancelar
             </button>

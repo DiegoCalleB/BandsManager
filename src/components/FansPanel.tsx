@@ -1219,7 +1219,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <th className="p-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-800/50">
+                <tbody className="divide-y dividebg-[var(--surface)]/50">
                   {filteredFans.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="p-12">
@@ -1417,7 +1417,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           handleDownloadSvg();
                         }}
                         disabled={isExportingDirect}
-                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-3)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
+                        className="w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition cursor-pointer flex items-center gap-2"
                       >
                         <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG
                         (imprenta/lonas)

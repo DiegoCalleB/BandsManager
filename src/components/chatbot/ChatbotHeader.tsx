@@ -56,13 +56,13 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
   return (
     <div
       className={`px-5 py-4 flex items-center justify-between border-b ${
-        isStitchLight ? 'bg-slate-50 border-slate-200/80' : 'bg-[#050507]/90 border-neutral-900/60'
+        isStitchLight ? 'bg-slate-50 border-[var(--hair)]/80' : 'bg-[#050507]/90 border-[var(--hair)]/60'
       }`}
     >
       <div className="flex items-center gap-3">
         <div
           className={`p-1.5 rounded-lg border ${
-            isStitchLight ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+            isStitchLight ? 'bg-indigo-50 border-[var(--acc)] text-indigo-600' : 'bg-cyan-500/10 border-[var(--acc)]/20 text-cyan-400'
           }`}
         >
           <Guitar className="w-4 h-4" />
@@ -76,7 +76,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             Mánager Virtual AI{' '}
             <span
               className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${
-                isStitchLight ? 'bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.8)]' : 'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]'
+                isStitchLight ? 'bg-indigo-600 shadow-[0_0_8px_rgba(79, 70, 229, 0.8)]' : 'bg-cyan-500 shadow-[0_0_8px_rgba(6, 182, 212, 0.8)]'
               }`}
             />
           </h4>
@@ -91,8 +91,8 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             onClick={onOpenAutonomyModal}
             className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
               isStitchLight
-                ? 'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-300 shadow-sm'
-                : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-purple-500/40 shadow-sm'
+                ? 'bg-purple-100 hover:bg-purple-200 text-purple-800 border-[var(--acc)] shadow-sm'
+                : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border-[var(--acc)]/40 shadow-sm'
             }`}
             title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
           >
@@ -105,7 +105,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
         ) : (
           <div
             className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border font-semibold opacity-80 ${
-              isStitchLight ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-purple-500/15 text-purple-300 border-purple-500/30'
+              isStitchLight ? 'bg-purple-50 text-purple-700 border-[var(--acc)]' : 'bg-purple-500/15 text-purple-300 border-[var(--acc)]/30'
             }`}
             title="Límites de autonomía configurados (Configuración restringida a Administradores)"
           >
@@ -131,8 +131,8 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             onClick={onClose}
             className={`p-1.5 rounded border transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
               isStitchLight
-                ? 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-500 hover:text-slate-800'
-                : 'bg-neutral-900 hover:bg-neutral-800 border-neutral-800 text-neutral-400 hover:text-white'
+                ? 'bg-slate-100 hover:bg-slate-200 border-[var(--hair)] text-slate-500 hover:text-slate-800'
+                : 'bg-neutral-900 hover:bgbg-[var(--surface)] borderbg-[var(--surface)] text-neutral-400 hover:text-white'
             }`}
             title="Cerrar Chat"
           >

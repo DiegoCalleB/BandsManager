@@ -63,24 +63,24 @@ export function GenerateAllTemplatesModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--scrim)]/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div
         className={`w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border overflow-hidden ${
-          isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#181818] border-white/10 text-white'
+          isStitchLight ? 'bg-white border-[var(--hair)] text-slate-900' : 'bg-[#181818] border-[var(--hair)]/10 text-white'
         }`}
       >
         {/* Header */}
         <div
           className={`p-5 flex items-center justify-between border-b ${
-            isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-[#1e1e1e] border-white/5'
+            isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-[#1e1e1e] border-[var(--hair)]/5'
           }`}
         >
           <div className="flex items-center gap-2.5">
             <div
               className={`w-9 h-9 rounded-xl flex items-center justify-center font-black shadow-md ${
                 isCampaign
-                  ? 'bg-gradient-to-tr from-purple-500 to-purple-400 text-white shadow-purple-500/20'
-                  : 'bg-gradient-to-tr from-amber-500 to-amber-300 text-stone-950 shadow-amber-500/20'
+                  ? 'bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-white shadow-purple-500/20'
+                  : 'bg-gradient-to-tr from-[var(--acc)] to-[var(--acc-soft)] text-stone-950 shadow-amber-500/20'
               }`}
             >
               <Wand2 className="w-5 h-5" />
@@ -91,8 +91,8 @@ export function GenerateAllTemplatesModal({
                 <span
                   className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold border ${
                     isCampaign
-                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
-                      : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                      ? 'bg-purple-500/20 text-purple-300 border-[var(--acc)]/30'
+                      : 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/30'
                   }`}
                 >
                   7 Categorías en 1 Clic
@@ -120,7 +120,7 @@ export function GenerateAllTemplatesModal({
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1">
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between">
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-[var(--alert)]/30 text-rose-300 text-xs flex items-center justify-between">
               <span>{errorMsg}</span>
               <button type="button" onClick={() => setErrorMsg(null)} className="font-bold text-rose-400 hover:text-white">
                 ✕
@@ -130,24 +130,24 @@ export function GenerateAllTemplatesModal({
 
           {/* Campaign Context Pill (if in campaign mode) */}
           {isCampaign && campaignContext && (
-            <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/25 text-purple-200 text-xs space-y-1.5">
+            <div className="p-3.5 rounded-xl bg-purple-500/10 border border-[var(--acc)]/25 text-purple-200 text-xs space-y-1.5">
               <div className="flex items-center gap-2 font-bold text-purple-300">
                 <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Contexto de Campaña detectado:</span>
               </div>
               <div className="flex flex-wrap gap-2 text-[11px] pt-1">
                 {campaignContext.targetCities?.length ? (
-                  <span className="px-2 py-0.5 rounded bg-purple-500/20 border border-purple-500/30">
+                  <span className="px-2 py-0.5 rounded bg-purple-500/20 border border-[var(--acc)]/30">
                     📍 Ciudades: {campaignContext.targetCities.join(', ')}
                   </span>
                 ) : null}
                 {campaignContext.targetDates?.length ? (
-                  <span className="px-2 py-0.5 rounded bg-purple-500/20 border border-purple-500/30">
+                  <span className="px-2 py-0.5 rounded bg-purple-500/20 border border-[var(--acc)]/30">
                     📅 Fechas: {campaignContext.targetDates.join(', ')}
                   </span>
                 ) : null}
                 {campaignContext.minCapacity || campaignContext.maxCapacity ? (
-                  <span className="px-2 py-0.5 rounded bg-purple-500/20 border border-purple-500/30">
+                  <span className="px-2 py-0.5 rounded bg-purple-500/20 border border-[var(--acc)]/30">
                     👥 Aforo: {campaignContext.minCapacity || 100} - {campaignContext.maxCapacity || 500} pax
                   </span>
                 ) : null}
@@ -159,10 +159,10 @@ export function GenerateAllTemplatesModal({
           <div
             className={`p-4 rounded-xl border text-xs leading-relaxed space-y-2 ${
               isCampaign
-                ? 'bg-purple-950/30 border-purple-500/20 text-purple-200'
+                ? 'bg-purple-950/30 border-[var(--acc)]/20 text-purple-200'
                 : isStitchLight
-                  ? 'bg-amber-50 border-amber-200 text-amber-900'
-                  : 'bg-amber-500/10 border-amber-500/20 text-amber-200'
+                  ? 'bg-amber-50 border-[var(--acc)] text-amber-900'
+                  : 'bg-amber-500/10 border-[var(--acc)]/20 text-amber-200'
             }`}
           >
             <div className={`flex items-center gap-2 font-bold ${isCampaign ? 'text-purple-400' : 'text-amber-400'}`}>
@@ -196,8 +196,8 @@ export function GenerateAllTemplatesModal({
               disabled={isGenerating}
               className={`w-full p-4 rounded-xl text-xs font-sans leading-relaxed focus:outline-none transition-all resize-y ${
                 isStitchLight
-                  ? 'bg-slate-50 border border-slate-200 text-slate-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500'
-                  : 'bg-[#121212] border border-white/10 text-neutral-200 focus:border-purple-400/50'
+                  ? 'bg-slate-50 border border-[var(--hair)] text-slate-800 focus:border-[var(--acc)] focus:ring-1 focus:ring-purple-500'
+                  : 'bg-[#121212] border border-[var(--hair)]/10 text-neutral-200 focus:border-[var(--acc)]/50'
               }`}
               placeholder={
                 isCampaign
@@ -221,7 +221,7 @@ export function GenerateAllTemplatesModal({
                   <div
                     key={idx}
                     className={`p-2.5 rounded-xl border flex items-start gap-2.5 ${
-                      isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-[#141414] border-white/5'
+                      isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-[#141414] border-[var(--hair)]/5'
                     }`}
                   >
                     <div
@@ -245,7 +245,7 @@ export function GenerateAllTemplatesModal({
         {/* Footer */}
         <div
           className={`p-4 px-6 flex items-center justify-between border-t ${
-            isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-[#1e1e1e] border-white/5'
+            isStitchLight ? 'bg-slate-50 border-[var(--hair)]' : 'bg-[#1e1e1e] border-[var(--hair)]/5'
           }`}
         >
           <button
@@ -266,7 +266,7 @@ export function GenerateAllTemplatesModal({
             className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg hover:brightness-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
               isCampaign
                 ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-purple-500/25'
-                : 'bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 shadow-amber-500/20'
+                : 'bg-gradient-to-r from-[var(--acc)] to-amber-400 text-stone-950 shadow-amber-500/20'
             }`}
           >
             {isGenerating ? (

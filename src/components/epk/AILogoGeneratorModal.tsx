@@ -84,9 +84,9 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-slate-900 border border-[var(--hair)] rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+        <div className="px-6 py-4 border-b border-[var(--hair)] flex items-center justify-between bg-slate-950/50">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md">
               <Sparkles className="w-5 h-5" />
@@ -94,7 +94,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
             <div>
               <h3 className="font-bold text-base text-white flex items-center gap-2">
                 Diseñador de Logotipos con IA
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-[var(--acc)]/20">
                   Amateur & Indie
                 </span>
               </h3>
@@ -109,7 +109,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
         {/* Content */}
         <div className="p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
           {error && (
-            <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-xl text-red-200 text-xs flex items-center gap-2">
+            <div className="p-3 bg-red-950/80 border border-[var(--alert)]/50 rounded-xl text-red-200 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
               <span>{error}</span>
             </div>
@@ -130,8 +130,8 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                     onClick={() => setSelectedStyle(style.id)}
                     className={`p-3 rounded-xl border text-left transition flex items-start gap-2.5 ${
                       isSelected
-                        ? 'bg-amber-500/10 border-amber-500/60 ring-1 ring-amber-500/40'
-                        : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950'
+                        ? 'bg-amber-500/10 border-[var(--acc)]/60 ring-1 ring-amber-500/40'
+                        : 'bg-slate-950/60 border-[var(--hair)] hover:border-[var(--hair)] hover:bg-slate-950'
                     }`}
                   >
                     <span className="text-xl shrink-0 mt-0.5">{style.icon}</span>
@@ -155,13 +155,13 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Ej: añadir forma de rayo, tonos dorados y negros, aire psicodélico..."
-              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+              className="w-full bg-slate-950 border border-[var(--hair)] focus:border-[var(--acc)] rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
             />
           </div>
 
           {/* Preview Canvas */}
           {generatedLogo && (
-            <div className="p-4 bg-slate-950/80 border border-amber-500/30 rounded-2xl flex flex-col items-center gap-3">
+            <div className="p-4 bg-slate-950/80 border border-[var(--acc)]/30 rounded-2xl flex flex-col items-center gap-3">
               <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-emerald-400" /> Logotipo generado con éxito
               </div>
@@ -169,7 +169,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                 <img
                   src={generatedLogo}
                   alt="Logo generado con IA"
-                  className="w-44 h-44 rounded-2xl object-contain p-2 bg-slate-900 border-2 border-amber-500/50 shadow-xl"
+                  className="w-44 h-44 rounded-2xl object-contain p-2 bg-slate-900 border-2 border-[var(--acc)]/50 shadow-xl"
                 />
               </div>
             </div>
@@ -177,7 +177,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-800 bg-slate-950/50 flex items-center justify-between gap-3">
+        <div className="px-6 py-4 border-t border-[var(--hair)] bg-slate-950/50 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}
@@ -191,7 +191,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               type="button"
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 border border-amber-500/20"
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs flex items-center gap-2 transition disabled:opacity-50 border border-[var(--acc)]/20"
             >
               {isGenerating ? (
                 <>
@@ -212,7 +212,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
               <button
                 type="button"
                 onClick={handleApplyLogo}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition shadow-lg"
               >
                 <Check className="w-4 h-4" /> Aplicar al EPK
               </button>

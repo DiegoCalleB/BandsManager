@@ -2247,8 +2247,8 @@ export default function CalendarView({
               <div
                 className={`relative flex-1 flex items-center rounded-xl border transition-all ${
                   isStitchLight
-                    ? 'bg-white border-slate-300 focus-within:border-sky-500 shadow-xs'
-                    : 'bg-neutral-900/90 border-zinc-800 focus-within:border-amber-500/80 shadow-inner'
+                    ? 'bg-[var(--surface)] border-[var(--hair)] focus-within:border-[var(--acc)] shadow-xs'
+                    : 'bg-neutral-900/90 border-[var(--hair)] focus-within:border-[var(--acc)]/80 shadow-inner'
                 }`}
               >
                 <Search className="w-4 h-4 ml-3 text-neutral-400 shrink-0" />
@@ -2273,7 +2273,7 @@ export default function CalendarView({
                 )}
               </div>
               {calendarSearchTerm && (
-                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-[var(--acc)]/30">
                   {filteredConcerts.length + filteredRehearsals.length} resultados
                 </div>
               )}
@@ -2925,7 +2925,7 @@ export default function CalendarView({
                               setModalActiveTab('tecnica');
                               setShowEventFichaModal(true);
                             }}
-                            className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ink-3)]/10 hover:bg-[var(--ink-3)]/15 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                            className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ink-3)]/10 hover:bg-[var(--ink-3)]/15 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                             title="1. Logística técnica y rider"
                           >
                             <Wrench className="w-3 h-3" />
@@ -2996,7 +2996,7 @@ export default function CalendarView({
                             setReminderErrorMsg(null);
                             setShowReminderModal(true);
                           }}
-                          className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
                         >
                           <Bell className="w-3 h-3 text-[var(--ink-2)]" />
                           <span>Notificar Banda</span>
@@ -3132,7 +3132,7 @@ export default function CalendarView({
                             setReminderErrorMsg(null);
                             setShowReminderModal(true);
                           }}
-                          className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-3)] flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-md text-[10px] font-sans font-bold bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] flex items-center gap-1 cursor-pointer"
                         >
                           <Bell className="w-3 h-3 text-[var(--ink-2)]" />
                           <span>Notificar Convocatoria</span>

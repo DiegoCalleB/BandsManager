@@ -122,22 +122,22 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
       id="manager-alerts-container"
       className={`mb-4 rounded-2xl ${
         isStitchLight
-          ? 'bg-white border border-zinc-200 shadow-xs text-zinc-900'
-          : 'bg-slate-900/80 border border-slate-800/90 shadow-xl text-slate-100'
+          ? 'bg-[var(--surface)] border border-[var(--hair)] shadow-xs text-zinc-900'
+          : 'bg-slate-900/80 border border-[var(--hair)]/90 shadow-xl text-slate-100'
       } overflow-hidden transition-all`}
     >
       {/* Panel Header */}
       <div
         className={`px-3.5 py-2.5 ${
-          isStitchLight ? 'bg-zinc-50/80 border-b border-zinc-200' : 'bg-slate-950/60 border-b border-slate-800/80'
+          isStitchLight ? 'bg-zinc-50/80 border-b border-[var(--hair)]' : 'bg-slate-950/60 border-b border-[var(--hair)]/80'
         } flex items-center justify-between gap-2`}
       >
         <div className="flex items-center gap-2.5">
           <div
             className={`p-1.5 rounded-lg ${
               isStitchLight
-                ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
-                : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                ? 'bg-indigo-50 text-indigo-600 border border-[var(--acc)]'
+                : 'bg-amber-500/15 text-amber-400 border border-[var(--acc)]/30'
             } relative shrink-0`}
           >
             <Bell className="w-3.5 h-3.5" />
@@ -153,8 +153,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
                 isStitchLight
-                  ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                  ? 'bg-indigo-50 text-indigo-700 border border-[var(--acc)]'
+                  : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30'
               }`}
             >
               {activeAlerts.length}
@@ -197,7 +197,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           {/* Subheader Filter Bar */}
           <div
             className={`px-4 py-2.5 ${
-              isStitchLight ? 'bg-zinc-50/40 border-b border-zinc-200' : 'bg-slate-950/30 border-b border-slate-800/60'
+              isStitchLight ? 'bg-zinc-50/40 border-b border-[var(--hair)]' : 'bg-slate-950/30 border-b border-[var(--hair)]/60'
             } flex items-center justify-between gap-2 overflow-x-auto`}
           >
             <div className="flex items-center gap-1.5 text-xs">
@@ -212,7 +212,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                   filterMode === 'all'
                     ? isStitchLight
                       ? 'bg-zinc-200 text-zinc-900 font-semibold'
-                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold'
+                      : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30 font-semibold'
                     : isStitchLight
                       ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -228,7 +228,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                   filterMode === 'unread'
                     ? isStitchLight
                       ? 'bg-zinc-200 text-zinc-900 font-semibold'
-                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold'
+                      : 'bg-amber-500/20 text-amber-300 border border-[var(--acc)]/30 font-semibold'
                     : isStitchLight
                       ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -244,8 +244,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'urgent'
                     ? isStitchLight
-                      ? 'bg-rose-50 text-rose-700 border border-rose-200 font-semibold'
-                      : 'bg-red-500/20 text-red-300 border border-red-500/30 font-semibold'
+                      ? 'bg-rose-50 text-rose-700 border border-[var(--alert)] font-semibold'
+                      : 'bg-red-500/20 text-red-300 border border-[var(--alert)]/30 font-semibold'
                     : isStitchLight
                       ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -267,8 +267,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
                   filterMode === 'booking'
                     ? isStitchLight
-                      ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold'
-                      : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold'
+                      ? 'bg-indigo-50 text-indigo-700 border border-[var(--acc)] font-semibold'
+                      : 'bg-indigo-500/20 text-indigo-300 border border-[var(--acc)]/30 font-semibold'
                     : isStitchLight
                       ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -283,8 +283,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs cursor-pointer ${
                   filterMode === 'finanzas'
                     ? isStitchLight
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold'
-                      : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold'
+                      ? 'bg-emerald-50 text-emerald-700 border border-[var(--ok)] font-semibold'
+                      : 'bg-emerald-500/20 text-emerald-300 border border-[var(--ok)]/30 font-semibold'
                     : isStitchLight
                       ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -309,7 +309,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {filteredAlerts.length === 0 ? (
               <div
-                className={`col-span-full py-8 text-center text-xs ${isStitchLight ? 'text-zinc-400 bg-zinc-50/50 border-zinc-200' : 'text-slate-500 bg-slate-950/20 border-slate-800/40'} rounded-xl border`}
+                className={`col-span-full py-8 text-center text-xs ${isStitchLight ? 'text-zinc-400 bg-zinc-50/50 border-[var(--hair)]' : 'text-slate-500 bg-slate-950/20 border-[var(--hair)]/40'} rounded-xl border`}
               >
                 No hay alertas que coincidan con el filtro seleccionado.
               </div>
@@ -321,38 +321,38 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                 const cardBg = isStitchLight
                   ? isRead
-                    ? 'bg-zinc-50/70 border-zinc-200 text-zinc-500'
+                    ? 'bg-zinc-50/70 border-[var(--hair)] text-zinc-500'
                     : isUrgent
-                      ? 'bg-rose-50/60 border-rose-200 text-zinc-900'
+                      ? 'bg-rose-50/60 border-[var(--alert)] text-zinc-900'
                       : isWarning
-                        ? 'bg-amber-50/60 border-amber-200 text-zinc-900'
-                        : 'bg-white border-zinc-200 text-zinc-900'
+                        ? 'bg-amber-50/60 border-[var(--acc)] text-zinc-900'
+                        : 'bg-[var(--surface)] border-[var(--hair)] text-zinc-900'
                   : isRead
-                    ? 'bg-slate-950/40 border-slate-800/60 opacity-80 text-slate-300'
+                    ? 'bg-slate-950/40 border-[var(--hair)]/60 opacity-80 text-slate-300'
                     : isUrgent
-                      ? 'bg-gradient-to-r from-red-950/30 via-slate-900/90 to-slate-900/90 border-red-500/30 text-slate-100'
+                      ? 'bg-gradient-to-r from-red-950/30 via-slate-900/90 to-slate-900/90 border-[var(--alert)]/30 text-slate-100'
                       : isWarning
-                        ? 'bg-gradient-to-r from-amber-950/25 via-slate-900/90 to-slate-900/90 border-amber-500/30 text-slate-100'
-                        : 'bg-slate-900/90 border-slate-800 text-slate-100';
+                        ? 'bg-gradient-to-r from-amber-950/25 via-slate-900/90 to-slate-900/90 border-[var(--acc)]/30 text-slate-100'
+                        : 'bg-slate-900/90 border-[var(--hair)] text-slate-100';
 
                 const badgeStyle = isStitchLight
                   ? isUrgent
-                    ? 'bg-rose-100 text-rose-700 border-rose-200'
+                    ? 'bg-rose-100 text-rose-700 border-[var(--alert)]'
                     : isWarning
-                      ? 'bg-amber-100 text-amber-800 border-amber-200'
-                      : 'bg-indigo-100 text-indigo-700 border-indigo-200'
+                      ? 'bg-amber-100 text-amber-800 border-[var(--acc)]'
+                      : 'bg-indigo-100 text-indigo-700 border-[var(--acc)]'
                   : isUrgent
-                    ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                    ? 'bg-red-500/20 text-red-300 border-[var(--alert)]/30'
                     : isWarning
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                      : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30';
+                      ? 'bg-amber-500/20 text-amber-300 border-[var(--acc)]/30'
+                      : 'bg-indigo-500/20 text-indigo-300 border-[var(--acc)]/30';
 
                 return (
                   <div
                     key={alert.id}
                     id={`alert-card-${alert.id}`}
                     className={`p-4 rounded-xl border transition-all duration-200 relative group flex flex-col justify-between ${cardBg} ${
-                      !isRead ? 'shadow-xs hover:border-indigo-400' : ''
+                      !isRead ? 'shadow-xs hover:border-[var(--acc)]' : ''
                     }`}
                   >
                     <div>
@@ -416,7 +416,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                     {/* Quick action button footer */}
                     <div
-                      className={`pt-2.5 border-t ${isStitchLight ? 'border-zinc-200' : 'border-slate-800/70'} flex flex-col sm:flex-row sm:items-center justify-between gap-2`}
+                      className={`pt-2.5 border-t ${isStitchLight ? 'border-[var(--hair)]' : 'border-[var(--hair)]/70'} flex flex-col sm:flex-row sm:items-center justify-between gap-2`}
                     >
                       <span
                         className={`text-[10px] font-mono ${isStitchLight ? 'text-zinc-400' : 'text-slate-500'} flex items-center gap-1`}
@@ -440,8 +440,8 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer ${
                                 act.variant === 'secondary'
                                   ? isStitchLight
-                                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-zinc-200'
-                                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/80'
+                                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border border-[var(--hair)]'
+                                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-[var(--hair)]/80'
                                   : isStitchLight
                                     ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
                                     : 'bg-amber-500 hover:bg-amber-400 text-stone-950'
@@ -481,7 +481,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           {/* Footer toggle for compact vs expanded list */}
           {filteredAlerts.length > 2 && (
             <div
-              className={`px-4 py-2.5 ${isStitchLight ? 'bg-zinc-50/60 border-t border-zinc-200' : 'bg-slate-950/50 border-t border-slate-800/60'} flex items-center justify-center`}
+              className={`px-4 py-2.5 ${isStitchLight ? 'bg-zinc-50/60 border-t border-[var(--hair)]' : 'bg-slate-950/50 border-t border-[var(--hair)]/60'} flex items-center justify-center`}
             >
               <button
                 id="toggle-compact-alerts-mode-btn"

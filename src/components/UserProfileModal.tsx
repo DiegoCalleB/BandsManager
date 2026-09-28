@@ -1255,7 +1255,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             )}
 
             {onOpenNotificationSettings && (
-              <div className="pt-3 border-t border-neutral-800/80">
+              <div className="pt-3 border-t borderbg-[var(--surface)]/80">
                 <button
                   type="button"
                   onClick={() => {
@@ -1264,8 +1264,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   }}
                   className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
                     isStitchLight
-                      ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
-                      : "bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700"
+                      ? "bg-slate-50 border-[var(--hair)] text-slate-700 hover:bg-slate-100"
+                      : "bg-neutral-950 borderbg-[var(--surface)] text-neutral-300 hover:border-[var(--hair)]"
                   }`}
                 >
                   <div className="flex items-center gap-2">

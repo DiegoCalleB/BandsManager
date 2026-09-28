@@ -24,8 +24,8 @@ export function TemplateRecommendationsCard({
     <div
       className={`rounded-xl border p-4 transition-all duration-200 ${
         isStitchLight
-          ? 'bg-amber-50/70 border-amber-200 text-stone-900 shadow-sm'
-          : 'bg-[#181510] border-amber-500/30 text-amber-100 shadow-md'
+          ? 'bg-amber-50/70 border-[var(--acc)] text-stone-900 shadow-sm'
+          : 'bg-[#181510] border-[var(--acc)]/30 text-amber-100 shadow-md'
       }`}
     >
       {/* Header with category badge & toggle */}
@@ -33,7 +33,7 @@ export function TemplateRecommendationsCard({
         <div className="flex items-center gap-2.5 min-w-0">
           <div
             className={`p-1.5 rounded-lg flex items-center justify-center shrink-0 ${
-              isStitchLight ? 'bg-amber-500 text-stone-950 font-bold' : 'bg-amber-400/20 text-amber-300 border border-amber-400/40'
+              isStitchLight ? 'bg-amber-500 text-stone-950 font-bold' : 'bg-amber-400/20 text-amber-300 border border-[var(--acc)]/40'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -43,7 +43,7 @@ export function TemplateRecommendationsCard({
               <span className="text-xs font-extrabold uppercase tracking-wide text-amber-400">Recomendaciones del Agente</span>
               <span
                 className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                  isStitchLight ? 'bg-amber-200 text-amber-900' : 'bg-amber-400/15 text-amber-300 border border-amber-400/20'
+                  isStitchLight ? 'bg-amber-200 text-amber-900' : 'bg-amber-400/15 text-amber-300 border border-[var(--acc)]/20'
                 }`}
               >
                 {rec.badge}
@@ -86,11 +86,11 @@ export function TemplateRecommendationsCard({
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="mt-4 pt-3.5 border-t border-amber-500/20 space-y-3.5 animate-in fade-in duration-200">
+        <div className="mt-4 pt-3.5 border-t border-[var(--acc)]/20 space-y-3.5 animate-in fade-in duration-200">
           {/* Quick AI Tip / Secret */}
           <div
             className={`p-2.5 rounded-lg flex items-start gap-2 text-[11px] leading-relaxed ${
-              isStitchLight ? 'bg-white text-stone-800 border border-amber-200' : 'bg-black/40 text-amber-200/90 border border-amber-500/20'
+              isStitchLight ? 'bg-white text-stone-800 border border-[var(--acc)]' : 'bg-black/40 text-amber-200/90 border border-[var(--acc)]/20'
             }`}
           >
             <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
@@ -105,7 +105,7 @@ export function TemplateRecommendationsCard({
             {/* DOs */}
             <div
               className={`p-3 rounded-lg border space-y-1.5 ${
-                isStitchLight ? 'bg-emerald-50/70 border-emerald-200' : 'bg-emerald-950/20 border-emerald-500/30'
+                isStitchLight ? 'bg-emerald-50/70 border-[var(--ok)]' : 'bg-emerald-950/20 border-[var(--ok)]/30'
               }`}
             >
               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
@@ -125,7 +125,7 @@ export function TemplateRecommendationsCard({
             {/* DON'Ts */}
             <div
               className={`p-3 rounded-lg border space-y-1.5 ${
-                isStitchLight ? 'bg-rose-50/70 border-rose-200' : 'bg-rose-950/20 border-rose-500/30'
+                isStitchLight ? 'bg-rose-50/70 border-[var(--alert)]' : 'bg-rose-950/20 border-[var(--alert)]/30'
               }`}
             >
               <div className="flex items-center gap-1.5 text-xs font-bold text-rose-400">
@@ -147,7 +147,7 @@ export function TemplateRecommendationsCard({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px]">
             <div
               className={`p-2.5 rounded-lg border space-y-1 ${
-                isStitchLight ? 'bg-white border-amber-200' : 'bg-black/30 border-amber-500/20'
+                isStitchLight ? 'bg-white border-[var(--acc)]' : 'bg-black/30 border-[var(--acc)]/20'
               }`}
             >
               <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">
@@ -158,7 +158,7 @@ export function TemplateRecommendationsCard({
 
             <div
               className={`p-2.5 rounded-lg border space-y-1 ${
-                isStitchLight ? 'bg-white border-amber-200' : 'bg-black/30 border-amber-500/20'
+                isStitchLight ? 'bg-white border-[var(--acc)]' : 'bg-black/30 border-[var(--acc)]/20'
               }`}
             >
               <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">⚡ Ganchos Clave</span>
@@ -174,7 +174,7 @@ export function TemplateRecommendationsCard({
 
             <div
               className={`p-2.5 rounded-lg border space-y-1 ${
-                isStitchLight ? 'bg-white border-amber-200' : 'bg-black/30 border-amber-500/20'
+                isStitchLight ? 'bg-white border-[var(--acc)]' : 'bg-black/30 border-[var(--acc)]/20'
               }`}
             >
               <span className="font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider text-[9px]">

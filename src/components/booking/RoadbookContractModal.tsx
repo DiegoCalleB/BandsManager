@@ -156,21 +156,21 @@ Firmado en conformidad por ambas partes.`;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[var(--scrim)]/80 backdrop-blur-md overflow-y-auto">
         <div
           id="roadbook-contract-modal"
-          className="relative w-full max-w-4xl bg-[#141414] border border-zinc-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-zinc-100"
+          className="relative w-full max-w-4xl bg-[#141414] border border-[var(--hair)]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-zinc-100"
         >
           {/* HEADER DEL MODAL */}
-          <div className="p-4 sm:p-5 border-b border-zinc-800 bg-[#1A1918] flex items-center justify-between gap-3">
+          <div className="p-4 sm:p-5 border-b border-[var(--hair)] bg-[#1A1918] flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-[var(--acc)]/40 flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5 text-amber-400" />
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-zinc-100 font-display flex items-center gap-2">
                   <span>Hoja de Ruta (Roadbook) & Contrato Pro</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 border border-[var(--acc)]/40 text-amber-300 font-mono">
                     Gira {bandName}
                   </span>
                 </h3>
@@ -190,14 +190,14 @@ Firmado en conformidad por ambas partes.`;
           </div>
 
           {/* BARRA DE SELECTOR DE SALA Y PESTAÑAS */}
-          <div className="p-3 sm:px-5 bg-zinc-950/80 border-b border-zinc-800/80 flex flex-wrap items-center justify-between gap-3">
+          <div className="p-3 sm:px-5 bg-zinc-950/80 border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
             {/* Selector de sala activa */}
             <div className="flex items-center gap-2 text-xs">
               <span className="text-zinc-400 font-mono uppercase text-[10px]">Evento / Sala:</span>
               <select
                 value={currentLead.id}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
-                className="bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-amber-500"
+                className="bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--acc)]"
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -208,7 +208,7 @@ Firmado en conformidad por ambas partes.`;
             </div>
 
             {/* Pestañas */}
-            <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800">
+            <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-xl border border-[var(--hair)]">
               <button
                 type="button"
                 onClick={() => setActiveTab('roadbook')}
@@ -248,14 +248,14 @@ Firmado en conformidad por ambas partes.`;
             {activeTab === 'roadbook' && (
               <div className="space-y-4">
                 {/* Controles rápidos de edición de horarios */}
-                <div className="p-3.5 bg-[#1A1918] rounded-xl border border-zinc-800 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3.5 bg-[#1A1918] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Fecha Evento</label>
                     <input
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
@@ -264,7 +264,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={departureTime}
                       onChange={(e) => setDepartureTime(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
@@ -273,7 +273,7 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={soundcheckTime}
                       onChange={(e) => setSoundcheckTime(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
@@ -282,15 +282,15 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       value={showTime}
                       onChange={(e) => setShowTime(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización de la Hoja de Ruta Pro */}
-                <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4 font-sans print:bg-white print:text-black print:border-none">
+                <div className="bg-zinc-950 p-5 rounded-2xl border border-[var(--hair)] space-y-4 font-sans print:bg-white print:text-[var(--ink)] print:border-none">
                   {/* Cabecera del documento */}
-                  <div className="flex items-start justify-between border-b border-zinc-800 pb-3">
+                  <div className="flex items-start justify-between border-b border-[var(--hair)] pb-3">
                     <div>
                       <span className="text-[10px] font-mono uppercase text-amber-400 block font-bold">DOCUMENTO OPERATIVO DE GIRA</span>
                       <h2 className="text-xl font-black text-white tracking-tight">{venueName}</h2>
@@ -318,31 +318,31 @@ Firmado en conformidad por ambas partes.`;
                   {/* Cronograma visual en dos columnas */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2.5">
-                      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 block border-b border-zinc-800/80 pb-1">
+                      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 block border-b border-[var(--hair)]/80 pb-1">
                         Timeline de Operaciones
                       </span>
                       <div className="space-y-2">
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-zinc-800">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
                           <span className="text-xs font-mono font-bold text-amber-400 w-12">{departureTime}</span>
                           <span className="text-zinc-300">Salida furgoneta desde {originCity}</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-zinc-800">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
                           <span className="text-xs font-mono font-bold text-amber-400 w-12">{arrivalTime}</span>
                           <span className="text-zinc-300">Llegada, descarga y carga en camerino</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-amber-500/10 border border-[var(--acc)]/30">
                           <span className="text-xs font-mono font-bold text-amber-300 w-12">{soundcheckTime}</span>
                           <span className="text-zinc-200 font-medium">Prueba sonido (D.I.s violín acústico, sintes, voces & IEMs)</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-zinc-800">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
                           <span className="text-xs font-mono font-bold text-amber-400 w-12">{dinnerTime}</span>
                           <span className="text-zinc-300">Cena de banda / descanso previo</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-emerald-500/10 border border-[var(--ok)]/30">
                           <span className="text-xs font-mono font-bold text-emerald-400 w-12">{showTime}</span>
                           <span className="text-zinc-100 font-bold">⚡ INICIO CONCIERTO (Show 75 min)</span>
                         </div>
-                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-zinc-800">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/60 border border-[var(--hair)]">
                           <span className="text-xs font-mono font-bold text-amber-400 w-12">{curfewTime}</span>
                           <span className="text-zinc-300">Cierre, recogida, firmas y salida</span>
                         </div>
@@ -350,10 +350,10 @@ Firmado en conformidad por ambas partes.`;
                     </div>
 
                     <div className="space-y-2.5">
-                      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 block border-b border-zinc-800/80 pb-1">
+                      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 block border-b border-[var(--hair)]/80 pb-1">
                         Contactos y Especificaciones
                       </span>
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2">
+                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[var(--hair)] space-y-2">
                         <div>
                           <span className="text-[10px] text-zinc-400 block">Responsable de Sala / Programador:</span>
                           <span className="font-medium text-zinc-200">{contactPerson}</span>
@@ -361,7 +361,7 @@ Firmado en conformidad por ambas partes.`;
                             {contactPhone} • {contactEmail}
                           </span>
                         </div>
-                        <div className="pt-2 border-t border-zinc-800">
+                        <div className="pt-2 border-t border-[var(--hair)]">
                           <span className="text-[10px] text-zinc-400 block">Rider Rápido en Escenario:</span>
                           <ul className="list-disc list-inside text-zinc-300 space-y-0.5 text-[11px]">
                             <li>2x D.I. activas para violín acústico (Canales 1-2)</li>
@@ -370,7 +370,7 @@ Firmado en conformidad por ambas partes.`;
                             <li>Toma de corriente Schuko 220V en puesto de escenario</li>
                           </ul>
                         </div>
-                        <div className="pt-2 border-t border-zinc-800">
+                        <div className="pt-2 border-t border-[var(--hair)]">
                           <span className="text-[10px] text-zinc-400 block">Hospitalidad & Parking:</span>
                           <span className="text-zinc-300 text-[11px]">
                             Agua sin gas en escenario, camerino con llave y espacio reservado para estacionamiento de furgoneta.
@@ -387,13 +387,13 @@ Firmado en conformidad por ambas partes.`;
             {activeTab === 'contract' && (
               <div className="space-y-4">
                 {/* Parámetros de negociación del contrato */}
-                <div className="p-3.5 bg-[#1A1918] rounded-xl border border-zinc-800 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-3.5 bg-[#1A1918] rounded-xl border border-[var(--hair)] grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
                   <div>
                     <label className="text-[9px] font-mono text-zinc-400 uppercase block mb-1">Régimen Económico</label>
                     <select
                       value={dealType}
                       onChange={(e: any) => setDealType(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 focus:outline-none focus:border-[var(--acc)]"
                     >
                       <option value="taquilla">Taquilla (%)</option>
                       <option value="cache">Caché Fijo (€)</option>
@@ -412,7 +412,7 @@ Firmado en conformidad por ambas partes.`;
                         if (dealType === 'cache') setCacheAmount(val);
                         else setTicketPrice(val);
                       }}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
@@ -421,7 +421,7 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={splitPercent}
                       onChange={(e) => setSplitPercent(Number(e.target.value))}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-amber-500"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-200 text-xs rounded p-1 font-mono focus:outline-none focus:border-[var(--acc)]"
                     />
                   </div>
                   <div>
@@ -430,13 +430,13 @@ Firmado en conformidad por ambas partes.`;
                       type="number"
                       value={venueCapacity}
                       disabled
-                      className="w-full bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs rounded p-1 font-mono"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-400 text-xs rounded p-1 font-mono"
                     />
                   </div>
                 </div>
 
                 {/* Previsualización del Contrato */}
-                <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-3 font-mono text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+                <div className="bg-zinc-950 p-5 rounded-2xl border border-[var(--hair)] space-y-3 font-mono text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
                   {contractText}
                 </div>
               </div>
@@ -445,10 +445,10 @@ Firmado en conformidad por ambas partes.`;
             {/* PESTAÑA 3: ENLACE WEB DIGITAL */}
             {activeTab === 'weblink' && (
               <div className="space-y-4">
-                <div className="p-4 bg-[#1A1918] rounded-2xl border border-zinc-800 space-y-3 text-center sm:text-left">
+                <div className="p-4 bg-[#1A1918] rounded-2xl border border-[var(--hair)] space-y-3 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-sky-500 flex items-center justify-center shrink-0 shadow-lg">
-                      <Share2 className="w-7 h-7 text-black" />
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[var(--acc)] to-sky-500 flex items-center justify-center shrink-0 shadow-lg">
+                      <Share2 className="w-7 h-7 text-[var(--ink)]" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-white font-display">Hoja de Ruta Digital para Móvil (Sin Login)</h4>
@@ -464,12 +464,12 @@ Firmado en conformidad por ambas partes.`;
                       type="text"
                       readOnly
                       value={`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`}
-                      className="w-full bg-zinc-900 border border-zinc-700 text-zinc-300 text-xs rounded-xl px-3 py-2 font-mono"
+                      className="w-full bg-zinc-900 border border-[var(--hair)] text-zinc-300 text-xs rounded-xl px-3 py-2 font-mono"
                     />
                     <button
                       type="button"
                       onClick={() => handleCopy(`https://bandmanager.io/roadbook/${currentLead.id}?date=${eventDate}`, setCopiedLink)}
-                      className="w-full sm:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition-all cursor-pointer"
+                      className="w-full sm:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-[var(--ink)] font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition-all cursor-pointer"
                     >
                       {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedLink ? '¡Enlace Copiado!' : 'Copiar Enlace'}</span>
@@ -477,7 +477,7 @@ Firmado en conformidad por ambas partes.`;
                   </div>
                 </div>
 
-                <div className="p-3 bg-black/40 rounded-xl border border-zinc-800/80 flex items-center gap-2 text-xs text-zinc-400">
+                <div className="p-3 bg-[var(--sunken)] rounded-xl border border-[var(--hair)]/80 flex items-center gap-2 text-xs text-zinc-400">
                   <Info className="w-4 h-4 text-sky-400 shrink-0" />
                   <span>
                     El enlace web no expone datos sensibles ni contraseñas; solo los datos operacionales de este concierto específico.
@@ -488,7 +488,7 @@ Firmado en conformidad por ambas partes.`;
           </div>
 
           {/* FOOTER DE ACCIONES */}
-          <div className="p-4 border-t border-zinc-800 bg-[#1A1918] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 border-t border-[var(--hair)] bg-[#1A1918] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <span className="font-mono text-[11px] text-amber-400 font-bold">
                 {currentLead.nombre_sala} • {currentLead.ciudad}
@@ -500,7 +500,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(whatsAppMessage, setCopiedWhatsApp)}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-[var(--ok)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                   title="Copiar texto formateado listo para WhatsApp"
                 >
                   {copiedWhatsApp ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -512,7 +512,7 @@ Firmado en conformidad por ambas partes.`;
                 <button
                   type="button"
                   onClick={() => handleCopy(contractText, setCopiedContract)}
-                  className="px-3 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-purple-500/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-[var(--acc)]/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedContract ? '¡Contrato Copiado!' : 'Copiar Contrato'}</span>
@@ -522,7 +522,7 @@ Firmado en conformidad por ambas partes.`;
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-[var(--hair)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                 title="Imprimir documento o guardar como PDF"
               >
                 <Printer className="w-3.5 h-3.5 text-zinc-400" />

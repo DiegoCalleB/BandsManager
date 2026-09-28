@@ -1150,7 +1150,7 @@ export default function Dashboard({
                   </span>
                   <button
                     onClick={() => setIsDashboardSettingsOpen(false)}
-                    className="p-0.5 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer"
+                    className="p-0.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -1168,7 +1168,7 @@ export default function Dashboard({
                   className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
                 >
                   <div className="flex items-center gap-2">
-                    <Eye className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+                    <Eye className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     <span>Modo Vista</span>
                   </div>
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
@@ -1186,7 +1186,7 @@ export default function Dashboard({
                   className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
                 >
                   <div className="flex items-center gap-2">
-                    <Sliders className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+                    <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     <span>Personalizar / Reordenar</span>
                   </div>
                   {isEditDashboardMode && (
@@ -1203,7 +1203,7 @@ export default function Dashboard({
                   }}
                   className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center gap-2 font-medium transition-colors cursor-pointer`}
                 >
-                  <Sliders className="w-3.5 h-3.5 text-[var(--ink-3)]" />
+                  <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                   <span>Alertas del Mánager</span>
                 </button>
               </div>
