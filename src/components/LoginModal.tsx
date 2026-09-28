@@ -570,7 +570,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
   return (
     <ModalPortal isOpen={true}>
-      <div className="fixed inset-0 z-[9999] p-4 bg-[var(--bg)] text-[var(--ink-2)] overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+      <div
+        data-theme="dark"
+        className="fixed inset-0 z-[9999] p-4 bg-[var(--bg)] text-[var(--ink-2)] overflow-y-auto overscroll-contain animate-in fade-in duration-300"
+      >
         <div className="min-h-full flex items-center justify-center py-6 md:py-8">
           <div
             className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === "plans" ? "max-w-6xl" : "max-w-md space-y-6"}`}

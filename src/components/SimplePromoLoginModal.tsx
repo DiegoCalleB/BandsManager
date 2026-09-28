@@ -352,7 +352,10 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
   return (
     <ModalPortal isOpen={true}>
-      <div className="fixed inset-0 z-[9999] p-4 bg-[var(--bg)] text-[var(--ink)] overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+      <div
+        data-theme="dark"
+        className="fixed inset-0 z-[9999] p-4 bg-[var(--bg)] text-[var(--ink)] overflow-y-auto overscroll-contain animate-in fade-in duration-300"
+      >
         <div className="min-h-full flex items-center justify-center py-6 md:py-8">
           <div className="w-full max-w-md space-y-6 relative z-10 flex flex-col items-center">
             {error && (
