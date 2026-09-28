@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   X,
   ChevronLeft,
@@ -27,10 +27,10 @@ import {
   MousePointer,
   Maximize2,
   Minimize2,
-} from 'lucide-react';
-import { ModuleTutorialConfig, ModuleTutorialId } from '../../types/tutorial';
-import { MODULE_TUTORIALS } from '../../config/moduleTutorials';
-import { ModalPortal } from './ModalPortal';
+} from "lucide-react";
+import { ModuleTutorialConfig, ModuleTutorialId } from "../../types/tutorial";
+import { MODULE_TUTORIALS } from "../../config/moduleTutorials";
+import { ModalPortal } from "./ModalPortal";
 
 interface ModuleTutorialModalProps {
   moduleId: ModuleTutorialId;
@@ -58,12 +58,19 @@ const ICON_MAP = {
   Printer,
 };
 
-export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ moduleId, isOpen, onClose }) => {
-  const tutorialConfig: ModuleTutorialConfig | undefined = MODULE_TUTORIALS[moduleId];
+export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
+  moduleId,
+  isOpen,
+  onClose,
+}) => {
+  const tutorialConfig: ModuleTutorialConfig | undefined =
+    MODULE_TUTORIALS[moduleId];
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [dontShowAgain, setDontShowAgain] = useState(true);
   const [isFloatingMode, setIsFloatingMode] = useState(true);
-  const [isDesktop, setIsDesktop] = useState(() => (typeof window !== 'undefined' ? window.innerWidth >= 768 : true));
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth >= 768 : true,
+  );
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [targetFound, setTargetFound] = useState(false);
   const [isHighlighting, setIsHighlighting] = useState(false);
@@ -73,8 +80,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Reset step index and default directly to floating mode whenever modal opens
@@ -97,7 +104,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
         return null;
       }
 
-      const selectors = currentStep.uiTarget.selector.split(',').map((s) => s.trim());
+      const selectors = currentStep.uiTarget.selector
+        .split(",")
+        .map((s) => s.trim());
       let el: Element | null = null;
       for (const sel of selectors) {
         try {
@@ -117,7 +126,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
         setTargetFound(true);
 
         if (shouldScroll) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+          el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
         }
 
         setIsHighlighting(true);
@@ -129,7 +142,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
         return null;
       }
     },
-    [currentStep?.uiTarget?.selector]
+    [currentStep?.uiTarget?.selector],
   );
 
   // Monitor position and scroll to target when step changes or floating mode is active
@@ -144,39 +157,47 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
       locateTargetElement(false);
     };
 
-    window.addEventListener('scroll', handleScrollOrResize, true);
-    window.addEventListener('resize', handleScrollOrResize);
+    window.addEventListener("scroll", handleScrollOrResize, true);
+    window.addEventListener("resize", handleScrollOrResize);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('scroll', handleScrollOrResize, true);
-      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener("scroll", handleScrollOrResize, true);
+      window.removeEventListener("resize", handleScrollOrResize);
     };
-  }, [isOpen, currentStepIndex, effectiveFloatingMode, locateTargetElement, currentStep]);
+  }, [
+    isOpen,
+    currentStepIndex,
+    effectiveFloatingMode,
+    locateTargetElement,
+    currentStep,
+  ]);
 
   // Keyboard navigation: Escape to close, Left/Right arrows to step
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose(dontShowAgain);
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         e.preventDefault();
         handleNext();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         e.preventDefault();
         handlePrev();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   });
 
   // Reposicionar automáticamente la tarjeta flotante si coincide con la posición del elemento señalado en pantalla
-  const dockPosition = useMemo<'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'>(() => {
-    if (!targetRect || typeof window === 'undefined') return 'bottom-right';
+  const dockPosition = useMemo<
+    "bottom-right" | "bottom-left" | "top-right" | "top-left"
+  >(() => {
+    if (!targetRect || typeof window === "undefined") return "bottom-right";
 
     const winW = window.innerWidth;
     const winH = window.innerHeight;
@@ -184,7 +205,12 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
     const cardH = 490;
     const buffer = 40;
 
-    const checkCollision = (area: { left: number; right: number; top: number; bottom: number }) => {
+    const checkCollision = (area: {
+      left: number;
+      right: number;
+      top: number;
+      bottom: number;
+    }) => {
       return (
         targetRect.left - buffer < area.right &&
         targetRect.right + buffer > area.left &&
@@ -201,7 +227,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
       bottom: winH,
     };
     if (!checkCollision(bottomRightArea)) {
-      return 'bottom-right';
+      return "bottom-right";
     }
 
     // 2. Si tapa el control en la esquina inferior derecha, mover a la esquina inferior izquierda
@@ -212,7 +238,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
       bottom: winH,
     };
     if (!checkCollision(bottomLeftArea)) {
-      return 'bottom-left';
+      return "bottom-left";
     }
 
     // 3. Si ambos lados inferiores colisionan, mover a la esquina superior derecha
@@ -223,11 +249,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
       bottom: cardH,
     };
     if (!checkCollision(topRightArea)) {
-      return 'top-right';
+      return "top-right";
     }
 
     // 4. Último recurso: esquina superior izquierda
-    return 'top-left';
+    return "top-left";
   }, [targetRect]);
 
   if (!isOpen || !tutorialConfig || !currentStep) return null;
@@ -251,69 +277,82 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
   // Color accents based on module
   const accentStyles = {
     purple: {
-      badgeBg: 'bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30',
-      iconBox: 'bg-[var(--tentative)]/20 text-[var(--acc)]/30',
-      activeDot: 'bg-[var(--acc)] w-7',
-      primaryBtn: 'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]',
-      hookBorder: 'border-[var(--acc)]/25 bg-[var(--tentative)]/10 text-[var(--ink)]',
-      highlightText: 'text-[var(--acc)]',
-      targetCard: 'border-[var(--acc)]/40 bg-[var(--tentative)]/5',
-      targetBadge: 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30',
-      targetBtn: 'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80/40',
+      badgeBg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30",
+      iconBox: "bg-[var(--tentative)]/20 text-[var(--acc)]/30",
+      activeDot: "bg-[var(--acc)] w-7",
+      primaryBtn:
+        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]",
+      hookBorder:
+        "border-[var(--acc)]/25 bg-[var(--tentative)]/10 text-[var(--ink)]",
+      highlightText: "text-[var(--acc)]",
+      targetCard: "border-[var(--acc)]/40 bg-[var(--tentative)]/5",
+      targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30",
+      targetBtn:
+        "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80/40",
     },
     amber: {
-      badgeBg: 'bg-[var(--acc)]/15 text-[var(--acc)]/70 /30',
-      iconBox: 'bg-[var(--acc)]/20 text-[var(--acc)] /30',
-      activeDot: 'bg-[var(--acc)]/60 w-7',
-      primaryBtn: 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black',
-      hookBorder: '/25 bg-[var(--acc)]/10 text-[var(--acc)]',
-      highlightText: 'text-[var(--acc)]',
-      targetCard: '/40 bg-[var(--acc)]/5',
-      targetBadge: 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /30',
-      targetBtn: 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40',
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 /30",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] /30",
+      activeDot: "bg-[var(--acc)]/60 w-7",
+      primaryBtn:
+        "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black",
+      hookBorder: "/25 bg-[var(--acc)]/10 text-[var(--acc)]",
+      highlightText: "text-[var(--acc)]",
+      targetCard: "/40 bg-[var(--acc)]/5",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc)]/70 /30",
+      targetBtn:
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40",
     },
     blue: {
-      badgeBg: 'bg-[var(--acc)]/15 text-[var(--ink-3)]/30',
-      iconBox: 'bg-[var(--acc)]/20 text-[var(--ink-2)]/30',
-      activeDot: 'bg-[var(--tentative)] w-7',
-      primaryBtn: 'bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold',
-      hookBorder: 'border-[var(--acc)]/25 bg-[var(--acc)]/10 text-[var(--tentative)]/40',
-      highlightText: 'text-[var(--ink-2)]',
-      targetCard: 'border-[var(--acc)]/40 bg-[var(--acc)]/5',
-      targetBadge: 'bg-[var(--acc)]/20 text-[var(--ink-3)]/30',
-      targetBtn: 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)]/40',
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--ink-3)]/30",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
+      activeDot: "bg-[var(--tentative)] w-7",
+      primaryBtn:
+        "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
+      hookBorder:
+        "border-[var(--acc)]/25 bg-[var(--acc)]/10 text-[var(--tentative)]/40",
+      highlightText: "text-[var(--ink-2)]",
+      targetCard: "border-[var(--acc)]/40 bg-[var(--acc)]/5",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-3)]/30",
+      targetBtn:
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)]/40",
     },
     emerald: {
-      badgeBg: 'bg-[var(--ok)]/15 text-[var(--ink-2)]/30',
-      iconBox: 'bg-[var(--ok)]/20 text-[var(--ok)]/30',
-      activeDot: 'bg-[var(--ok)] w-7',
-      primaryBtn: 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black',
-      hookBorder: 'border-[var(--ok)]/25 bg-[var(--ok)]/10 text-[var(--ok)]/40',
-      highlightText: 'text-[var(--ok)]',
-      targetCard: 'border-[var(--ok)]/40 bg-[var(--ok)]/5',
-      targetBadge: 'bg-[var(--ok)]/20 text-[var(--ink-2)]/30',
-      targetBtn: 'bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]/40',
+      badgeBg: "bg-[var(--ok)]/15 text-[var(--ink-2)]/30",
+      iconBox: "bg-[var(--ok)]/20 text-[var(--ok)]/30",
+      activeDot: "bg-[var(--ok)] w-7",
+      primaryBtn:
+        "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black",
+      hookBorder: "border-[var(--ok)]/25 bg-[var(--ok)]/10 text-[var(--ok)]/40",
+      highlightText: "text-[var(--ok)]",
+      targetCard: "border-[var(--ok)]/40 bg-[var(--ok)]/5",
+      targetBadge: "bg-[var(--ok)]/20 text-[var(--ink-2)]/30",
+      targetBtn:
+        "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]/40",
     },
     rose: {
-      badgeBg: 'bg-[var(--alert)]/15 text-[var(--ink-2)]/30',
-      iconBox: 'bg-[var(--alert)]/20 text-[var(--alert)]/30',
-      activeDot: 'bg-[var(--alert)] w-7',
-      primaryBtn: 'bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold',
-      hookBorder: 'border-[var(--alert)]/25 bg-[var(--alert)]/10 text-[var(--alert)]/40',
-      highlightText: 'text-[var(--alert)]',
-      targetCard: 'border-[var(--alert)]/40 bg-[var(--alert)]/5',
-      targetBadge: 'bg-[var(--alert)]/20 text-[var(--ink-2)]/30',
-      targetBtn: 'bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]/40',
+      badgeBg: "bg-[var(--alert)]/15 text-[var(--ink-2)]/30",
+      iconBox: "bg-[var(--alert)]/20 text-[var(--alert)]/30",
+      activeDot: "bg-[var(--alert)] w-7",
+      primaryBtn:
+        "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold",
+      hookBorder:
+        "border-[var(--alert)]/25 bg-[var(--alert)]/10 text-[var(--alert)]/40",
+      highlightText: "text-[var(--alert)]",
+      targetCard: "border-[var(--alert)]/40 bg-[var(--alert)]/5",
+      targetBadge: "bg-[var(--alert)]/20 text-[var(--ink-2)]/30",
+      targetBtn:
+        "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]/40",
     },
   }[tutorialConfig.accent];
 
   const CurrentIcon = ICON_MAP[currentStep.iconName] || BookOpen;
 
   const dockClass = {
-    'bottom-right': 'items-end justify-end',
-    'bottom-left': 'items-end justify-start',
-    'top-right': 'items-start justify-end',
-    'top-left': 'items-start justify-start',
+    "bottom-right": "items-end justify-end",
+    "bottom-left": "items-end justify-start",
+    "top-right": "items-start justify-end",
+    "top-left": "items-start justify-start",
   }[dockPosition];
 
   return (
@@ -338,9 +377,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
 
             {/* Target Tooltip Badge */}
             <div
-              className={`absolute ${targetRect.top < 36 ? '-bottom-7' : '-top-7'} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 whitespace-nowrap`}
+              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-md bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] tracking-wider flex items-center gap-1 whitespace-nowrap`}
             >
-              <span>👉 {currentStep.uiTarget?.label || 'Aquí'}</span>
+              <span>👉 {currentStep.uiTarget?.label || "Aquí"}</span>
             </div>
           </div>
         </div>
@@ -351,7 +390,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
         className={
           effectiveFloatingMode
             ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-all duration-300`
-            : 'fixed inset-0 z-[10000] bg-[var(--scrim)]/85 flex items-center justify-center p-0 md:p-4 overflow-y-auto'
+            : "fixed inset-0 z-[10000] bg-[var(--scrim)]/85 flex items-center justify-center p-0 md:p-4 overflow-y-auto"
         }
         onClick={(e) => {
           if (!effectiveFloatingMode && e.target === e.currentTarget) {
@@ -365,17 +404,19 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
           initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 12 }}
-          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+          transition={{ type: "spring", stiffness: 350, damping: 30 }}
           className={
             effectiveFloatingMode
-              ? 'pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95 /50 rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col'
-              : 'relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto'
+              ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95  rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
+              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] rounded-none md:rounded-[var(--r-l)] shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
           }
         >
           {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
           <div className="p-3.5 sm:p-4/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
             <div className="flex items-center gap-2">
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-sans font-bold tracking-wider ${accentStyles.badgeBg}`}>
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-sans font-bold tracking-wider ${accentStyles.badgeBg}`}
+              >
                 {tutorialConfig.badge}
               </span>
               <span className="text-[11px] font-sans text-[var(--ink-2)] hidden xs:inline">
@@ -396,7 +437,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                     }
                   }}
                   className="p-1.5 px-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-sans"
-                  title={isFloatingMode ? 'Expandir a tarjeta centrada' : 'Fijar como tarjeta flotante en esquina para ver la pantalla'}
+                  title={
+                    isFloatingMode
+                      ? "Expandir a tarjeta centrada"
+                      : "Fijar como tarjeta flotante en esquina para ver la pantalla"
+                  }
                 >
                   {isFloatingMode ? (
                     <>
@@ -420,7 +465,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
                     className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                      idx === currentStepIndex ? accentStyles.activeDot : 'w-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]'
+                      idx === currentStepIndex
+                        ? accentStyles.activeDot
+                        : "w-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]"
                     }`}
                     title={`Ir al paso ${idx + 1}`}
                   />
@@ -441,7 +488,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
 
           {/* MAIN STEP CONTENT */}
           <div
-            className={`p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 ${effectiveFloatingMode ? 'max-h-[60vh]' : 'max-h-none md:max-h-[70vh]'}`}
+            className={`p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 ${effectiveFloatingMode ? "max-h-[60vh]" : "max-h-none md:max-h-[70vh]"}`}
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -454,7 +501,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
               >
                 {/* Step Header with Icon */}
                 <div className="flex items-start gap-3">
-                  <div className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${accentStyles.iconBox}`}>
+                  <div
+                    className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${accentStyles.iconBox}`}
+                  >
                     <CurrentIcon className="w-5 h-5" />
                   </div>
                   <div className="space-y-0.5 min-w-0">
@@ -468,13 +517,17 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                 </div>
 
                 {/* Practical Takeaway / Musician Hook */}
-                <div className={`p-3 rounded-[var(--r-m)] text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}>
+                <div
+                  className={`p-3 rounded-[var(--r-m)] text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}
+                >
                   <p className="font-medium">{currentStep.musicianHook}</p>
                 </div>
 
                 {/* TARJETITA DE REFERENCIA AL BOTÓN O SECCIÓN EN LA APP */}
                 {currentStep.uiTarget && (
-                  <div className={`rounded-[var(--r-l)] p-3.5 space-y-2.5 ${accentStyles.targetCard}`}>
+                  <div
+                    className={`rounded-[var(--r-l)] p-3.5 space-y-2.5 ${accentStyles.targetCard}`}
+                  >
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
@@ -482,15 +535,15 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
                         <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70">
-                          {currentStep.uiTarget.type === 'button'
-                            ? '🔘 Botón en pantalla'
-                            : currentStep.uiTarget.type === 'tab'
-                              ? '📑 Pestaña / Vista'
-                              : currentStep.uiTarget.type === 'menu'
-                                ? '⚙️ Menú de opciones'
-                                : currentStep.uiTarget.type === 'section'
-                                  ? '📦 Bloque / Sección'
-                                  : '🎯 Control en pantalla'}
+                          {currentStep.uiTarget.type === "button"
+                            ? "🔘 Botón en pantalla"
+                            : currentStep.uiTarget.type === "tab"
+                              ? "📑 Pestaña / Vista"
+                              : currentStep.uiTarget.type === "menu"
+                                ? "⚙️ Menú de opciones"
+                                : currentStep.uiTarget.type === "section"
+                                  ? "📦 Bloque / Sección"
+                                  : "🎯 Control en pantalla"}
                         </span>
                       </div>
 
@@ -514,9 +567,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                     {/* Nombre del elemento simulando botón o control */}
                     <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 text-xs">
                       <span className="text-[var(--acc)] font-sans font-black text-xs shrink-0">
-                        {currentStep.uiTarget.type === 'button' ? '▶' : '▪'}
+                        {currentStep.uiTarget.type === "button" ? "▶" : "▪"}
                       </span>
-                      <span className="font-bold text-[var(--ink)] font-sans truncate">{currentStep.uiTarget.label}</span>
+                      <span className="font-bold text-[var(--ink)] font-sans truncate">
+                        {currentStep.uiTarget.label}
+                      </span>
                     </div>
 
                     {/* Ubicación y Para qué sirve */}
@@ -524,13 +579,18 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                       <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
                         <MapPin className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
                         <span className="leading-tight">
-                          <strong className="text-[var(--ink-2)]/80 font-semibold">Dónde está:</strong> {currentStep.uiTarget.location}
+                          <strong className="text-[var(--ink-2)]/80 font-semibold">
+                            Dónde está:
+                          </strong>{" "}
+                          {currentStep.uiTarget.location}
                         </span>
                       </div>
                       <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
                         <MousePointer className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
                         <span className="leading-tight">
-                          <strong className="text-[var(--ink-2)]/80 font-semibold">Para qué sirve:</strong>{' '}
+                          <strong className="text-[var(--ink-2)]/80 font-semibold">
+                            Para qué sirve:
+                          </strong>{" "}
                           {currentStep.uiTarget.actionHint}
                         </span>
                       </div>
@@ -539,20 +599,30 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                 )}
 
                 {/* Step Description */}
-                <p className="text-xs sm:text-sm text-[var(--ink-2)]/80 leading-relaxed">{currentStep.description}</p>
+                <p className="text-xs sm:text-sm text-[var(--ink-2)]/80 leading-relaxed">
+                  {currentStep.description}
+                </p>
 
                 {/* Key takeaways pills / cards */}
-                <div className={`grid gap-2 pt-0.5 ${effectiveFloatingMode ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
+                <div
+                  className={`grid gap-2 pt-0.5 ${effectiveFloatingMode ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}
+                >
                   {currentStep.keyPoints.map((point, i) => (
                     <div
                       key={i}
                       className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:border-[var(--hair)]/80 transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
-                        <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
-                        <h4 className="text-xs font-bold text-[var(--ink)] font-sans">{point.title}</h4>
+                        <Check
+                          className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`}
+                        />
+                        <h4 className="text-xs font-bold text-[var(--ink)] font-sans">
+                          {point.title}
+                        </h4>
                       </div>
-                      <p className="text-[11px] text-[var(--ink-2)] leading-normal pl-5">{point.desc}</p>
+                      <p className="text-[11px] text-[var(--ink-2)] leading-normal pl-5">
+                        {point.desc}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -571,7 +641,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ module
                 onChange={(e) => setDontShowAgain(e.target.checked)}
                 className="rounded bg-[var(--surface)]/80 text-[var(--acc)] focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
               />
-              <span className="truncate">No volver a abrir automáticamente</span>
+              <span className="truncate">
+                No volver a abrir automáticamente
+              </span>
             </label>
 
             {/* Nav buttons */}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Calendar,
   Clock,
@@ -16,15 +16,15 @@ import {
   Filter,
   Edit3,
   Trash2,
-} from 'lucide-react';
-import { Rehearsal, Song, Setlist, Concert, ThemeColors } from '../../types';
-import { EnsayoCronometro } from './EnsayoCronometro';
-import { OrdenDelDiaTab } from './OrdenDelDiaTab';
-import { ModoLocalEnVivoTab } from './ModoLocalEnVivoTab';
-import { GrabacionActaTab } from './GrabacionActaTab';
-import { ConvocarEnsayoModal } from './ConvocarEnsayoModal';
-import { api } from '../../services/api';
-import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../../config/sampleRepertoire';
+} from "lucide-react";
+import { Rehearsal, Song, Setlist, Concert, ThemeColors } from "../../types";
+import { EnsayoCronometro } from "./EnsayoCronometro";
+import { OrdenDelDiaTab } from "./OrdenDelDiaTab";
+import { ModoLocalEnVivoTab } from "./ModoLocalEnVivoTab";
+import { GrabacionActaTab } from "./GrabacionActaTab";
+import { ConvocarEnsayoModal } from "./ConvocarEnsayoModal";
+import { api } from "../../services/api";
+import { SAMPLER_SONGS, SAMPLER_SETLISTS } from "../../config/sampleRepertoire";
 
 interface EnsayosManagerProps {
   rehearsals: Rehearsal[];
@@ -52,10 +52,13 @@ export function EnsayosManager({
   onUpdateSong,
 }: EnsayosManagerProps) {
   const [loadedSongs, setLoadedSongs] = useState<Song[]>(initialSongs);
-  const [loadedSetlists, setLoadedSetlists] = useState<Setlist[]>(initialSetlists);
+  const [loadedSetlists, setLoadedSetlists] =
+    useState<Setlist[]>(initialSetlists);
 
   const handleUpdateSongInternal = (updatedSong: Song) => {
-    setLoadedSongs((prev) => prev.map((s) => (s.id === updatedSong.id ? updatedSong : s)));
+    setLoadedSongs((prev) =>
+      prev.map((s) => (s.id === updatedSong.id ? updatedSong : s)),
+    );
     if (onUpdateSong) {
       onUpdateSong(updatedSong);
     }
@@ -73,8 +76,14 @@ export function EnsayosManager({
           api.getSetlists().catch(() => ({ setlists: [] })),
         ]);
         if (isMounted) {
-          const s = songsRes?.songs && songsRes.songs.length > 0 ? songsRes.songs : SAMPLER_SONGS;
-          const st = setlistsRes?.setlists && setlistsRes.setlists.length > 0 ? setlistsRes.setlists : SAMPLER_SETLISTS;
+          const s =
+            songsRes?.songs && songsRes.songs.length > 0
+              ? songsRes.songs
+              : SAMPLER_SONGS;
+          const st =
+            setlistsRes?.setlists && setlistsRes.setlists.length > 0
+              ? setlistsRes.setlists
+              : SAMPLER_SETLISTS;
           setLoadedSongs(s);
           setLoadedSetlists(st);
         }
@@ -91,39 +100,67 @@ export function EnsayosManager({
     };
   }, [currentBandId]);
 
-  const effectiveSongs = loadedSongs.length > 0 ? loadedSongs : initialSongs.length > 0 ? initialSongs : SAMPLER_SONGS;
-  const effectiveSetlists = loadedSetlists.length > 0 ? loadedSetlists : initialSetlists.length > 0 ? initialSetlists : SAMPLER_SETLISTS;
+  const effectiveSongs =
+    loadedSongs.length > 0
+      ? loadedSongs
+      : initialSongs.length > 0
+        ? initialSongs
+        : SAMPLER_SONGS;
+  const effectiveSetlists =
+    loadedSetlists.length > 0
+      ? loadedSetlists
+      : initialSetlists.length > 0
+        ? initialSetlists
+        : SAMPLER_SETLISTS;
   // Sort rehearsals: upcoming first, then past
   const sortedRehearsals = useMemo(() => {
-    return [...rehearsals].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+    return [...rehearsals].sort(
+      (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
+    );
   }, [rehearsals]);
 
   // Find next upcoming rehearsal or active rehearsal
   const nextRehearsal = useMemo(() => {
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = new Date().toISOString().split("T")[0];
     const upcoming = sortedRehearsals
-      .filter((r) => r.fecha >= todayStr && r.estado !== 'completado')
-      .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      .filter((r) => r.fecha >= todayStr && r.estado !== "completado")
+      .sort(
+        (a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime(),
+      );
     return upcoming[0] || sortedRehearsals[0] || null;
   }, [sortedRehearsals]);
 
-  const [selectedRehearsalId, setSelectedRehearsalId] = useState<string | null>(nextRehearsal?.id || null);
+  const [selectedRehearsalId, setSelectedRehearsalId] = useState<string | null>(
+    nextRehearsal?.id || null,
+  );
 
   const currentRehearsal = useMemo(() => {
-    return sortedRehearsals.find((r) => r.id === selectedRehearsalId) || nextRehearsal || null;
+    return (
+      sortedRehearsals.find((r) => r.id === selectedRehearsalId) ||
+      nextRehearsal ||
+      null
+    );
   }, [sortedRehearsals, selectedRehearsalId, nextRehearsal]);
 
   // View tabs
-  const [activeTab, setActiveTab] = useState<'orden_del_dia' | 'modo_local' | 'grabacion_acta'>('orden_del_dia');
+  const [activeTab, setActiveTab] = useState<
+    "orden_del_dia" | "modo_local" | "grabacion_acta"
+  >("orden_del_dia");
 
   // Modal
   const [showConvocarModal, setShowConvocarModal] = useState(false);
-  const [editingRehearsal, setEditingRehearsal] = useState<Rehearsal | null>(null);
+  const [editingRehearsal, setEditingRehearsal] = useState<Rehearsal | null>(
+    null,
+  );
 
   // Next upcoming concert
   const nextConcert = useMemo(() => {
-    const todayStr = new Date().toISOString().split('T')[0];
-    const upcoming = concerts.filter((c) => c.fecha >= todayStr).sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    const todayStr = new Date().toISOString().split("T")[0];
+    const upcoming = concerts
+      .filter((c) => c.fecha >= todayStr)
+      .sort(
+        (a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime(),
+      );
     return upcoming[0] || null;
   }, [concerts]);
 
@@ -138,14 +175,17 @@ export function EnsayosManager({
   if (rehearsals.length === 0) {
     return (
       <div className="p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-        <div className="w-16 h-16 rounded-3xl bg-[var(--acc)]/60/15 flex items-center justify-center text-[var(--acc)] mx-auto">
+        <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)] mx-auto">
           <Mic className="w-8 h-8" />
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl sm:text-3xl font-display font-black text-[var(--ink)]">Módulo de Ensayos & Local en Vivo</h2>
+          <h2 className="text-2xl sm:text-3xl font-display font-black text-[var(--ink)]">
+            Módulo de Ensayos & Local en Vivo
+          </h2>
           <p className="text-sm text-[var(--ink-2)] max-w-lg mx-auto">
-            Planifica el orden del día, cronometra tus sesiones, usa el metrónomo en el local y genera actas con IA para tu grupo de
+            Planifica el orden del día, cronometra tus sesiones, usa el
+            metrónomo en el local y genera actas con IA para tu grupo de
             WhatsApp.
           </p>
         </div>
@@ -182,7 +222,7 @@ export function EnsayosManager({
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       {/* Top Header Card: Active Rehearsal Details & Session Selector */}
-      <div className="p-4 sm:p-6 rounded-3xl bg-[var(--surface)] space-y-4">
+      <div className="p-4 sm:p-6 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Left: Rehearsal Picker & Title */}
           <div className="space-y-2">
@@ -190,13 +230,14 @@ export function EnsayosManager({
               {/* Session Selector Dropdown */}
               <div className="relative">
                 <select
-                  value={currentRehearsal?.id || ''}
+                  value={currentRehearsal?.id || ""}
                   onChange={(e) => setSelectedRehearsalId(e.target.value)}
                   className="appearance-none bg-[var(--surface)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover: focus: outline-none cursor-pointer"
                 >
                   {sortedRehearsals.map((r) => (
                     <option key={r.id} value={r.id}>
-                      {r.fecha} • {r.lugar} ({r.hora || '19:30'}) {r.estado === 'completado' ? '✓' : ''}
+                      {r.fecha} • {r.lugar} ({r.hora || "19:30"}){" "}
+                      {r.estado === "completado" ? "✓" : ""}
                     </option>
                   ))}
                 </select>
@@ -206,18 +247,18 @@ export function EnsayosManager({
               {/* Status Badge */}
               <span
                 className={`px-2.5 py-1 rounded-full text-[10px] font-sans font-bold tracking-wider ${
-                  currentRehearsal?.estado === 'completado'
-                    ? 'bg-[var(--ok)]/15 text-[var(--ink-2)]/30'
-                    : currentRehearsal?.estado === 'en_curso'
-                      ? 'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40'
-                      : 'bg-[var(--surface)]/80 text-[var(--ink-2)]'
+                  currentRehearsal?.estado === "completado"
+                    ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
+                    : currentRehearsal?.estado === "en_curso"
+                      ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40"
+                      : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 }`}
               >
-                {currentRehearsal?.estado === 'completado'
-                  ? '✓ Ensayo Finalizado'
-                  : currentRehearsal?.estado === 'en_curso'
-                    ? '● Ensayo en Curso'
-                    : '📅 Ensayo Programado'}
+                {currentRehearsal?.estado === "completado"
+                  ? "✓ Ensayo Finalizado"
+                  : currentRehearsal?.estado === "en_curso"
+                    ? "● Ensayo en Curso"
+                    : "📅 Ensayo Programado"}
               </span>
 
               {/* Edit Rehearsal */}
@@ -239,19 +280,20 @@ export function EnsayosManager({
             <div className="flex flex-wrap items-center gap-4 text-xs font-sans text-[var(--ink-2)]">
               <span className="flex items-center gap-1.5 text-[var(--ink)] font-bold">
                 <Calendar className="w-4 h-4 text-[var(--acc)]" />
-                {currentRehearsal?.fecha} ({currentRehearsal?.hora || '19:30'} - {currentRehearsal?.horaFin || '21:30'})
+                {currentRehearsal?.fecha} ({currentRehearsal?.hora || "19:30"} -{" "}
+                {currentRehearsal?.horaFin || "21:30"})
               </span>
 
               <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
                 <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                {currentRehearsal?.lugar || 'Local de ensayo'}
+                {currentRehearsal?.lugar || "Local de ensayo"}
               </span>
 
               {currentRehearsal?.convocados_nombres && (
                 <span className="flex items-center gap-1.5 text-[var(--ink-2)]">
                   <Users className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                   {Array.isArray(currentRehearsal.convocados_nombres)
-                    ? currentRehearsal.convocados_nombres.join(',')
+                    ? currentRehearsal.convocados_nombres.join(",")
                     : String(currentRehearsal.convocados_nombres)}
                 </span>
               )}
@@ -262,7 +304,11 @@ export function EnsayosManager({
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {/* Embedded Rehearsal Timer */}
             {currentRehearsal && (
-              <EnsayoCronometro totalEstimatedMin={currentRehearsal.duracionEstimadaMin || 120} initialElapsedSeg={0} isCompact />
+              <EnsayoCronometro
+                totalEstimatedMin={currentRehearsal.duracionEstimadaMin || 120}
+                initialElapsedSeg={0}
+                isCompact
+              />
             )}
 
             <button
@@ -281,48 +327,54 @@ export function EnsayosManager({
         {/* Master Navigation Tabs - 100% Mobile Responsive */}
         <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--surface)] rounded-[var(--r-l)]">
           <button
-            onClick={() => setActiveTab('orden_del_dia')}
+            onClick={() => setActiveTab("orden_del_dia")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
-              activeTab === 'orden_del_dia'
-                ? 'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
-                : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+              activeTab === "orden_del_dia"
+                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
             <ListOrdered className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-[11px] leading-tight font-bold">1. Agenda</span>
+            <span className="sm:hidden text-[11px] leading-tight font-bold">
+              1. Agenda
+            </span>
             <span className="hidden sm:inline">1. Orden del Día</span>
           </button>
 
           <button
-            onClick={() => setActiveTab('modo_local')}
+            onClick={() => setActiveTab("modo_local")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
-              activeTab === 'modo_local'
-                ? 'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
-                : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+              activeTab === "modo_local"
+                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
             <Radio className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-[11px] leading-tight font-bold">2. En Vivo</span>
+            <span className="sm:hidden text-[11px] leading-tight font-bold">
+              2. En Vivo
+            </span>
             <span className="hidden sm:inline">2. Modo Local en Vivo</span>
           </button>
 
           <button
-            onClick={() => setActiveTab('grabacion_acta')}
+            onClick={() => setActiveTab("grabacion_acta")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
-              activeTab === 'grabacion_acta'
-                ? 'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
-                : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
+              activeTab === "grabacion_acta"
+                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
             <Mic className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-[11px] leading-tight font-bold">3. Acta IA</span>
+            <span className="sm:hidden text-[11px] leading-tight font-bold">
+              3. Acta IA
+            </span>
             <span className="hidden sm:inline">3. Grabación & Acta</span>
           </button>
         </div>
       </div>
 
       {/* Tab Content */}
-      {currentRehearsal && activeTab === 'orden_del_dia' && (
+      {currentRehearsal && activeTab === "orden_del_dia" && (
         <OrdenDelDiaTab
           rehearsal={currentRehearsal}
           onUpdateRehearsal={handleUpdateRehearsal}
@@ -330,11 +382,11 @@ export function EnsayosManager({
           setlists={effectiveSetlists}
           nextConcert={nextConcert}
           colors={colors}
-          onGoToLiveMode={() => setActiveTab('modo_local')}
+          onGoToLiveMode={() => setActiveTab("modo_local")}
         />
       )}
 
-      {currentRehearsal && activeTab === 'modo_local' && (
+      {currentRehearsal && activeTab === "modo_local" && (
         <ModoLocalEnVivoTab
           rehearsal={currentRehearsal}
           onUpdateRehearsal={handleUpdateRehearsal}
@@ -344,8 +396,13 @@ export function EnsayosManager({
         />
       )}
 
-      {currentRehearsal && activeTab === 'grabacion_acta' && (
-        <GrabacionActaTab rehearsal={currentRehearsal} onUpdateRehearsal={handleUpdateRehearsal} songs={effectiveSongs} colors={colors} />
+      {currentRehearsal && activeTab === "grabacion_acta" && (
+        <GrabacionActaTab
+          rehearsal={currentRehearsal}
+          onUpdateRehearsal={handleUpdateRehearsal}
+          songs={effectiveSongs}
+          colors={colors}
+        />
       )}
 
       {/* Convocar Ensayo Modal */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   Play,
   Pause,
@@ -27,17 +27,23 @@ import {
   Edit3,
   X,
   Eye,
-} from 'lucide-react';
-import { Rehearsal, RehearsalAgendaItem, Song, ThemeColors, SongSubstituteGuide } from '../../types';
-import { formatTime } from './EnsayoCronometro';
+} from "lucide-react";
+import {
+  Rehearsal,
+  RehearsalAgendaItem,
+  Song,
+  ThemeColors,
+  SongSubstituteGuide,
+} from "../../types";
+import { formatTime } from "./EnsayoCronometro";
 import {
   processChordText,
   extractUniqueChords,
   GUITAR_CHORD_DATABASE,
   GuitarChordShape,
   transposeChordToken,
-} from '../../utils/chordUtils';
-import { SongChordsViewerModal } from '../SongChordsViewerModal';
+} from "../../utils/chordUtils";
+import { SongChordsViewerModal } from "../SongChordsViewerModal";
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -47,15 +53,23 @@ interface ModoLocalEnVivoTabProps {
   onUpdateSong?: (updated: Song) => void;
 }
 
-export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], colors, onUpdateSong }: ModoLocalEnVivoTabProps) {
+export function ModoLocalEnVivoTab({
+  rehearsal,
+  onUpdateRehearsal,
+  songs = [],
+  colors,
+  onUpdateSong,
+}: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
   const [activeIndex, setActiveIndex] = useState(0);
 
   const currentItem = agenda[activeIndex] || null;
-  const currentSong = currentItem?.songId ? songs.find((s) => s.id === currentItem.songId) : null;
+  const currentSong = currentItem?.songId
+    ? songs.find((s) => s.id === currentItem.songId)
+    : null;
 
   // View Mode:'escenario' (metrics, structure, notes) vs'atril' (chords & lyrics teleprompter)
-  const [viewMode, setViewMode] = useState<'escenario' | 'atril'>('escenario');
+  const [viewMode, setViewMode] = useState<"escenario" | "atril">("escenario");
 
   // Fullscreen state
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -70,7 +84,9 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
   // Metronome State
   const [bpm, setBpm] = useState(currentSong?.bpm || 120);
   const [isMetronomeActive, setIsMetronomeActive] = useState(false);
-  const [timeSignature, setTimeSignature] = useState<'4/4' | '3/4' | '6/8' | '2/4'>('4/4');
+  const [timeSignature, setTimeSignature] = useState<
+    "4/4" | "3/4" | "6/8" | "2/4"
+  >("4/4");
   const [currentBeat, setCurrentBeat] = useState(0);
 
   // Web Audio Context for Metronome
@@ -81,12 +97,13 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
 
   // Atril Mode State: Transpose, Notation, Font Size, Auto-Scroll, Diagrams
   const [transpose, setTranspose] = useState<number>(0);
-  const [notation, setNotation] = useState<'ES' | 'EN'>('ES');
+  const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
   const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
   const [scrollSpeed, setScrollSpeed] = useState<number>(1); // 1, 2, 3
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
-  const [showSubstituteGuideTab, setShowSubstituteGuideTab] = useState<boolean>(false);
+  const [showSubstituteGuideTab, setShowSubstituteGuideTab] =
+    useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
   const atrilScrollRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +112,10 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
   const touchStartY = useRef<number | null>(null);
   const touchDeltaX = useRef<number>(0);
   const touchDeltaY = useRef<number>(0);
-  const [swipeToast, setSwipeToast] = useState<{ text: string; dir: 'left' | 'right' } | null>(null);
+  const [swipeToast, setSwipeToast] = useState<{
+    text: string;
+    dir: "left" | "right";
+  } | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length !== 1) return;
@@ -122,13 +142,19 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
         // Swipe Left -> Next Song
         const nextIdx = activeIndex + 1;
         setActiveIndex(nextIdx);
-        setSwipeToast({ text: `Pista ${nextIdx + 1}: ${agenda[nextIdx]?.titulo || ''}`, dir: 'left' });
+        setSwipeToast({
+          text: `Pista ${nextIdx + 1}: ${agenda[nextIdx]?.titulo || ""}`,
+          dir: "left",
+        });
         setTimeout(() => setSwipeToast(null), 1000);
       } else if (dx > 0 && activeIndex > 0) {
         // Swipe Right -> Previous Song
         const prevIdx = activeIndex - 1;
         setActiveIndex(prevIdx);
-        setSwipeToast({ text: `Pista ${prevIdx + 1}: ${agenda[prevIdx]?.titulo || ''}`, dir: 'right' });
+        setSwipeToast({
+          text: `Pista ${prevIdx + 1}: ${agenda[prevIdx]?.titulo || ""}`,
+          dir: "right",
+        });
         setTimeout(() => setSwipeToast(null), 1000);
       }
     }
@@ -142,42 +168,45 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
   // Keyboard navigation (pedals, arrows, space)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
+      if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
+        return;
 
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      if (e.key === "ArrowRight" || e.key === "PageDown") {
         if (activeIndex < agenda.length - 1) {
           e.preventDefault();
           setActiveIndex((prev) => prev + 1);
         }
-      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
         if (activeIndex > 0) {
           e.preventDefault();
           setActiveIndex((prev) => prev - 1);
         }
-      } else if (e.key === '' && viewMode === 'atril') {
+      } else if (e.key === "" && viewMode === "atril") {
         e.preventDefault();
         setIsAutoScrolling((prev) => !prev);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeIndex, agenda.length, viewMode]);
 
   // Font sizes classes for Atril mode
   const FONT_SIZE_CLASSES = [
-    'text-xs sm:text-sm leading-relaxed',
-    'text-sm sm:text-base leading-relaxed',
-    'text-base sm:text-xl leading-relaxed',
-    'text-lg sm:text-2xl leading-loose font-medium',
+    "text-xs sm:text-sm leading-relaxed",
+    "text-sm sm:text-base leading-relaxed",
+    "text-base sm:text-xl leading-relaxed",
+    "text-lg sm:text-2xl leading-loose font-medium",
   ];
 
   // Wake Lock handler to prevent phone screen from turning off in rehearsals
   useEffect(() => {
     async function requestWakeLock() {
-      if ('wakeLock' in navigator && (isFullscreen || isTrackTimerActive)) {
+      if ("wakeLock" in navigator && (isFullscreen || isTrackTimerActive)) {
         try {
-          wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+          wakeLockRef.current = await (navigator as any).wakeLock.request(
+            "screen",
+          );
         } catch {
           // Wake lock rejected or unsupported
         }
@@ -219,7 +248,14 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
   }, [isTrackTimerActive]);
 
   // Metronome Scheduler
-  const beatsPerBar = timeSignature === '3/4' ? 3 : timeSignature === '6/8' ? 6 : timeSignature === '2/4' ? 2 : 4;
+  const beatsPerBar =
+    timeSignature === "3/4"
+      ? 3
+      : timeSignature === "6/8"
+        ? 6
+        : timeSignature === "2/4"
+          ? 2
+          : 4;
 
   const playClick = (time: number, isAccent: boolean) => {
     if (!audioCtxRef.current) return;
@@ -245,10 +281,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
     }
 
     if (!audioCtxRef.current) {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext || (window as any).webkitAudioContext;
       audioCtxRef.current = new AudioCtx();
     }
-    if (audioCtxRef.current.state === 'suspended') {
+    if (audioCtxRef.current.state === "suspended") {
       audioCtxRef.current.resume();
     }
 
@@ -278,10 +315,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
   // Auto-scroll effect for Atril Mode
   useEffect(() => {
     let scrollInterval: any = null;
-    if (isAutoScrolling && viewMode === 'atril') {
+    if (isAutoScrolling && viewMode === "atril") {
       scrollInterval = setInterval(() => {
         if (atrilScrollRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } = atrilScrollRef.current;
+          const { scrollTop, scrollHeight, clientHeight } =
+            atrilScrollRef.current;
           if (scrollTop + clientHeight >= scrollHeight - 10) {
             setIsAutoScrolling(false);
           } else {
@@ -307,7 +345,8 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
       for (let i = 1; i < taps.length; i++) {
         intervals.push(taps[i] - taps[i - 1]);
       }
-      const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      const avgInterval =
+        intervals.reduce((a, b) => a + b, 0) / intervals.length;
       const calculatedBpm = Math.round(60000 / avgInterval);
       if (calculatedBpm >= 40 && calculatedBpm <= 280) {
         setBpm(calculatedBpm);
@@ -316,16 +355,22 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
   };
 
   // Evaluation Handler
-  const handleSetEvaluation = (evaluacion: 'bordada' | 'regular' | 'repetir') => {
+  const handleSetEvaluation = (
+    evaluacion: "bordada" | "regular" | "repetir",
+  ) => {
     if (!currentItem) return;
-    const newAgenda = agenda.map((a) => (a.id === currentItem.id ? { ...a, evaluacion } : a));
+    const newAgenda = agenda.map((a) =>
+      a.id === currentItem.id ? { ...a, evaluacion } : a,
+    );
     onUpdateRehearsal({ agenda: newAgenda });
   };
 
   // Note handler for current item
   const handleUpdateCurrentNote = (nota: string) => {
     if (!currentItem) return;
-    const newAgenda = agenda.map((a) => (a.id === currentItem.id ? { ...a, enfoque: nota } : a));
+    const newAgenda = agenda.map((a) =>
+      a.id === currentItem.id ? { ...a, enfoque: nota } : a,
+    );
     onUpdateRehearsal({ agenda: newAgenda });
   };
 
@@ -346,11 +391,14 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
 
   if (agenda.length === 0) {
     return (
-      <div className="p-8 sm:p-12 text-center bg-[var(--surface)] rounded-3xl space-y-4">
+      <div className="p-8 sm:p-12 text-center bg-[var(--surface)] rounded-[var(--r-l)] space-y-4">
         <Disc3 className="w-12 h-12 text-[var(--ink-2)] mx-auto animate-spin-slow" />
-        <h3 className="text-base font-bold text-[var(--ink)]">No hay temas en el orden del día</h3>
+        <h3 className="text-base font-bold text-[var(--ink)]">
+          No hay temas en el orden del día
+        </h3>
         <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
-          Ve a la pestaña"1. Orden del Día" para añadir canciones y bloques antes de activar el modo local.
+          Ve a la pestaña"1. Orden del Día" para añadir canciones y bloques
+          antes de activar el modo local.
         </p>
       </div>
     );
@@ -358,11 +406,21 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
 
   // Get structure pills
   const estructuraPills = currentSong?.guiaSustituto?.estructura
-    ? currentSong.guiaSustituto.estructura.split(',').map((s) => s.trim())
-    : ['Intro', 'Estrofa 1', 'Estribillo', 'Estrofa 2', 'Solo', 'Estribillo Final', 'Outro'];
+    ? currentSong.guiaSustituto.estructura.split(",").map((s) => s.trim())
+    : [
+        "Intro",
+        "Estrofa 1",
+        "Estribillo",
+        "Estrofa 2",
+        "Solo",
+        "Estribillo Final",
+        "Outro",
+      ];
 
   // Current chord text
-  const rawChordText = currentSong?.cifradoTexto || getSampleCifrado(currentSong?.titulo || currentItem?.titulo || 'Tema');
+  const rawChordText =
+    currentSong?.cifradoTexto ||
+    getSampleCifrado(currentSong?.titulo || currentItem?.titulo || "Tema");
   const uniqueChords = extractUniqueChords(rawChordText);
 
   return (
@@ -373,25 +431,27 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
       onTouchEnd={handleTouchEnd}
       className={`animate-fade-in select-none ${
         isFullscreen
-          ? 'fixed inset-0 z-[9999] bg-[var(--bg)] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between'
-          : 'space-y-4'
+          ? "fixed inset-0 z-[9999] bg-[var(--bg)] h-[100dvh] max-h-[100dvh] w-screen max-w-full overflow-hidden flex flex-col p-2 sm:p-3 justify-between"
+          : "space-y-4"
       }`}
     >
       {/* Swipe Feedback Toast */}
       {swipeToast && (
         <div
           className={`fixed top-16 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-[var(--r-l)] font-sans text-xs font-bold flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 ${
-            swipeToast.dir === 'left' ? 'bg-[var(--acc)]/60 text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--ink)]'
+            swipeToast.dir === "left"
+              ? "bg-[var(--acc)]/60 text-[var(--ink)]"
+              : "bg-[var(--ok)] text-[var(--ink)]"
           }`}
         >
-          <span>{swipeToast.dir === 'left' ? '⏩' : '⏪'}</span>
+          <span>{swipeToast.dir === "left" ? "⏩" : "⏪"}</span>
           <span>{swipeToast.text}</span>
         </div>
       )}
 
       {/* Top Session Progress Bar & Track Selector Carousel */}
       <div
-        className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[var(--surface)] ${isFullscreen ? 'shrink-0 mb-1.5' : ''}`}
+        className={`flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-[var(--r-l)] bg-[var(--surface)] ${isFullscreen ? "shrink-0 mb-1.5" : ""}`}
       >
         <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 px-1 scrollbar-none flex-1">
           {agenda.map((item, idx) => {
@@ -402,19 +462,21 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 onClick={() => setActiveIndex(idx)}
                 className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-[var(--r-m)] font-sans text-xs whitespace-nowrap transition-all cursor-pointer ${
                   isCurrent
-                    ? 'bg-[var(--acc)]/60 text-[var(--ink)] font-black scale-102'
-                    : item.evaluacion === 'bordada'
-                      ? 'bg-[var(--ok)]/20 text-[var(--ink-2)]'
-                      : item.evaluacion === 'repetir'
-                        ? 'bg-[var(--alert)]/20 text-[var(--ink-2)]'
-                        : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black scale-102"
+                    : item.evaluacion === "bordada"
+                      ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
+                      : item.evaluacion === "repetir"
+                        ? "bg-[var(--alert)]/20 text-[var(--ink-2)]"
+                        : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
                 <span>{idx + 1}.</span>
-                <span className="truncate max-w-[90px] sm:max-w-[140px]">{item.titulo}</span>
-                {item.evaluacion === 'bordada' && <span>🟢</span>}
-                {item.evaluacion === 'regular' && <span>🟡</span>}
-                {item.evaluacion === 'repetir' && <span>🔴</span>}
+                <span className="truncate max-w-[90px] sm:max-w-[140px]">
+                  {item.titulo}
+                </span>
+                {item.evaluacion === "bordada" && <span>🟢</span>}
+                {item.evaluacion === "regular" && <span>🟡</span>}
+                {item.evaluacion === "repetir" && <span>🔴</span>}
               </button>
             );
           })}
@@ -425,9 +487,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
           {/* Toggle Escenario vs Atril */}
           <div className="flex items-center p-0.5 bg-[var(--surface)] rounded-[var(--r-m)]">
             <button
-              onClick={() => setViewMode('escenario')}
+              onClick={() => setViewMode("escenario")}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                viewMode === 'escenario' ? 'bg-[var(--acc)]/60 text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === "escenario"
+                  ? "bg-[var(--acc)]/60 text-[var(--ink)]"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
               title="Vista Escenario & Estructura"
             >
@@ -436,9 +500,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
             </button>
 
             <button
-              onClick={() => setViewMode('atril')}
+              onClick={() => setViewMode("atril")}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                viewMode === 'atril' ? 'bg-[var(--acc)]/60 text-[var(--ink)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                viewMode === "atril"
+                  ? "bg-[var(--acc)]/60 text-[var(--ink)]"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
               title="Modo Atril / Acordes & Letra (Teleprompter)"
             >
@@ -451,16 +517,24 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
           <button
             onClick={toggleFullscreen}
             className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:/40 transition-all cursor-pointer"
-            title={isFullscreen ? 'Salir de pantalla completa' : 'Ver a pantalla completa'}
+            title={
+              isFullscreen
+                ? "Salir de pantalla completa"
+                : "Ver a pantalla completa"
+            }
           >
-            {isFullscreen ? <Minimize2 className="w-4 h-4 text-[var(--acc)]" /> : <Maximize2 className="w-4 h-4" />}
+            {isFullscreen ? (
+              <Minimize2 className="w-4 h-4 text-[var(--acc)]" />
+            ) : (
+              <Maximize2 className="w-4 h-4" />
+            )}
           </button>
         </div>
       </div>
 
       {/* VIEW MODE 1: FICHA DE ESCENARIO & DINÁMICA */}
-      {viewMode === 'escenario' && (
-        <div className="p-4 sm:p-7 rounded-3xl bg-[var(--surface)] relative overflow-hidden space-y-6">
+      {viewMode === "escenario" && (
+        <div className="p-4 sm:p-7 rounded-[var(--r-l)] bg-[var(--surface)] relative overflow-hidden space-y-6">
           {/* Subtle stage spotlight effect */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-[var(--acc)]/10 blur-3xl pointer-events-none" />
 
@@ -471,7 +545,9 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-sans font-bold bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
                   Pista {activeIndex + 1} de {agenda.length}
                 </span>
-                <span className="text-xs font-sans text-[var(--ink-2)]">{currentItem?.tipo.replace('_', '')}</span>
+                <span className="text-xs font-sans text-[var(--ink-2)]">
+                  {currentItem?.tipo.replace("_", "")}
+                </span>
               </div>
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-display font-black text-[var(--ink)] tracking-tight truncate">
                 {currentItem?.titulo}
@@ -481,14 +557,23 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
             {/* Key, BPM & Stopwatch Badges (Grid on Mobile) */}
             <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-3">
               <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] text-center min-w-[75px] sm:min-w-[90px]">
-                <span className="block text-[9px] sm:text-[10px] font-sans text-[var(--ink-2)] font-bold">Tonalidad</span>
-                <span className="text-lg sm:text-3xl font-sans font-black text-[var(--acc)]">{currentSong?.tonalidad || '—'}</span>
+                <span className="block text-[9px] sm:text-[10px] font-sans text-[var(--ink-2)] font-bold">
+                  Tonalidad
+                </span>
+                <span className="text-lg sm:text-3xl font-sans font-black text-[var(--acc)]">
+                  {currentSong?.tonalidad || "—"}
+                </span>
               </div>
 
               <div className="p-2.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] text-center min-w-[75px] sm:min-w-[90px]">
-                <span className="block text-[9px] sm:text-[10px] font-sans text-[var(--ink-2)] font-bold">Tempo</span>
+                <span className="block text-[9px] sm:text-[10px] font-sans text-[var(--ink-2)] font-bold">
+                  Tempo
+                </span>
                 <span className="text-lg sm:text-3xl font-sans font-black text-[var(--acc)]">
-                  {bpm} <span className="text-[10px] text-[var(--ink-2)] font-normal">BPM</span>
+                  {bpm}{" "}
+                  <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                    BPM
+                  </span>
                 </span>
               </div>
 
@@ -496,7 +581,9 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 <span className="block text-[9px] sm:text-[10px] font-sans text-[var(--ink-2)] font-bold flex items-center justify-center gap-1">
                   <Clock className="w-3 h-3 text-[var(--acc)]" /> Tiempo
                 </span>
-                <span className="text-lg sm:text-3xl font-sans font-black text-[var(--ink)]">{formatTime(trackSeconds)}</span>
+                <span className="text-lg sm:text-3xl font-sans font-black text-[var(--ink)]">
+                  {formatTime(trackSeconds)}
+                </span>
               </div>
             </div>
           </div>
@@ -510,7 +597,7 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               </span>
             </div>
             <button
-              onClick={() => setViewMode('atril')}
+              onClick={() => setViewMode("atril")}
               className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-black cursor-pointer transition-all active:scale-95"
             >
               Abrir Atril 📜
@@ -530,9 +617,13 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                     key={sIdx}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans font-bold text-[var(--ink)]"
                   >
-                    <span className="text-[var(--acc)] text-[10px]">0{sIdx + 1}</span>
+                    <span className="text-[var(--acc)] text-[10px]">
+                      0{sIdx + 1}
+                    </span>
                     <span>{sec}</span>
-                    {sIdx < estructuraPills.length - 1 && <span className="text-[var(--ink-2)] font-normal">→</span>}
+                    {sIdx < estructuraPills.length - 1 && (
+                      <span className="text-[var(--ink-2)] font-normal">→</span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -543,12 +634,13 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               {/* Focus Note */}
               <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
                 <label className="text-xs font-sans font-bold text-[var(--acc)] tracking-wider flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5" /> Enfoque / Detalle para este ensayo
+                  <Flame className="w-3.5 h-3.5" /> Enfoque / Detalle para este
+                  ensayo
                 </label>
                 <textarea
                   rows={2}
                   placeholder="Escribe anotaciones para la banda (ej. entrada con slap, cuidar coros, acento al final)..."
-                  value={currentItem?.enfoque || ''}
+                  value={currentItem?.enfoque || ""}
                   onChange={(e) => handleUpdateCurrentNote(e.target.value)}
                   className="w-full bg-transparent text-sm text-[var(--ink)] font-sans outline-none resize-none focus: transition-colors"
                 />
@@ -557,17 +649,26 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               {/* Quick Musician Cheatsheet */}
               <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2">
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center gap-1.5">
-                  <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Afinación & Arreglos
+                  <Music className="w-3.5 h-3.5 text-[var(--acc)]" /> Afinación
+                  & Arreglos
                 </label>
                 <p className="text-xs text-[var(--ink-2)] font-sans">
-                  {currentSong?.afinacion ? `Afinación: ${currentSong.afinacion}` : 'Afinación estándar (E A D G B E)'}
-                  {currentSong?.guiaSustituto?.capoTraste ? ` • Capo: ${currentSong.guiaSustituto.capoTraste}` : ''}
+                  {currentSong?.afinacion
+                    ? `Afinación: ${currentSong.afinacion}`
+                    : "Afinación estándar (E A D G B E)"}
+                  {currentSong?.guiaSustituto?.capoTraste
+                    ? ` • Capo: ${currentSong.guiaSustituto.capoTraste}`
+                    : ""}
                 </p>
                 {currentSong?.guiaSustituto?.progresionClave && (
-                  <p className="text-xs text-[var(--acc)]/70 font-sans truncate">Progresión: {currentSong.guiaSustituto.progresionClave}</p>
+                  <p className="text-xs text-[var(--acc)]/70 font-sans truncate">
+                    Progresión: {currentSong.guiaSustituto.progresionClave}
+                  </p>
                 )}
                 {currentSong?.notasInternas && (
-                  <p className="text-xs text-[var(--ink-2)] italic line-clamp-2">"{currentSong.notasInternas}"</p>
+                  <p className="text-xs text-[var(--ink-2)] italic line-clamp-2">
+                    "{currentSong.notasInternas}"
+                  </p>
                 )}
               </div>
             </div>
@@ -580,12 +681,16 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
                 className={`flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[var(--r-m)] font-sans font-bold text-xs tracking-wider transition-all cursor-pointer ${
                   isMetronomeActive
-                    ? 'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
-                    : 'bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]'
+                    ? "bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]"
+                    : "bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]"
                 }`}
               >
-                {isMetronomeActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                <span>{isMetronomeActive ? 'Parar Clic' : 'Activar Clic'}</span>
+                {isMetronomeActive ? (
+                  <VolumeX className="w-4 h-4" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
+                <span>{isMetronomeActive ? "Parar Clic" : "Activar Clic"}</span>
               </button>
 
               {/* Visual Beat Indicator Dots */}
@@ -596,9 +701,9 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                     className={`w-3 h-3 rounded-full transition-all duration-75 ${
                       isMetronomeActive && currentBeat === bIdx
                         ? bIdx === 0
-                          ? 'bg-[var(--alert)] scale-125'
-                          : 'bg-[var(--acc)]/60 scale-125'
-                        : 'bg-[var(--surface)]/70'
+                          ? "bg-[var(--alert)] scale-125"
+                          : "bg-[var(--acc)]/60 scale-125"
+                        : "bg-[var(--surface)]/70"
                     }`}
                   />
                 ))}
@@ -621,7 +726,8 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               </button>
 
               <span className="font-sans font-black text-base sm:text-lg text-[var(--acc)] px-1 sm:px-2">
-                {bpm} <span className="text-[10px] text-[var(--ink-2)]">BPM</span>
+                {bpm}{" "}
+                <span className="text-[10px] text-[var(--ink-2)]">BPM</span>
               </span>
 
               <button
@@ -650,14 +756,16 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
             {/* 1-Tap Evaluation Buttons */}
             <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-              <span className="text-xs font-sans text-[var(--ink-2)] mr-1 hidden xs:inline">Evaluación:</span>
+              <span className="text-xs font-sans text-[var(--ink-2)] mr-1 hidden xs:inline">
+                Evaluación:
+              </span>
 
               <button
-                onClick={() => handleSetEvaluation('bordada')}
+                onClick={() => handleSetEvaluation("bordada")}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                  currentItem?.evaluacion === 'bordada'
-                    ? 'bg-[var(--ok)] text-[var(--ink)]'
-                    : 'bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25'
+                  currentItem?.evaluacion === "bordada"
+                    ? "bg-[var(--ok)] text-[var(--ink)]"
+                    : "bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25"
                 }`}
               >
                 <span>🟢</span>
@@ -665,11 +773,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               </button>
 
               <button
-                onClick={() => handleSetEvaluation('regular')}
+                onClick={() => handleSetEvaluation("regular")}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                  currentItem?.evaluacion === 'regular'
-                    ? 'bg-[var(--acc)]/60 text-[var(--ink)]'
-                    : 'bg-[var(--acc)]/60/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60/25'
+                  currentItem?.evaluacion === "regular"
+                    ? "bg-[var(--acc)]/60 text-[var(--ink)]"
+                    : "bg-[var(--acc)]/60/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60/25"
                 }`}
               >
                 <span>🟡</span>
@@ -677,11 +785,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               </button>
 
               <button
-                onClick={() => handleSetEvaluation('repetir')}
+                onClick={() => handleSetEvaluation("repetir")}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                  currentItem?.evaluacion === 'repetir'
-                    ? 'bg-[var(--alert)] text-[var(--ink)]'
-                    : 'bg-[var(--alert)]/15 text-[var(--ink-2)] hover:bg-[var(--alert)]/25'
+                  currentItem?.evaluacion === "repetir"
+                    ? "bg-[var(--alert)] text-[var(--ink)]"
+                    : "bg-[var(--alert)]/15 text-[var(--ink-2)] hover:bg-[var(--alert)]/25"
                 }`}
               >
                 <span>🔴</span>
@@ -714,8 +822,10 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
       )}
 
       {/* VIEW MODE 2: MODO ATRIL COMPLETO (TELEPROMPTER / CIFRADO & LETRA) */}
-      {viewMode === 'atril' && (
-        <div className={`flex flex-col ${isFullscreen ? 'flex-1 min-h-0 overflow-hidden space-y-2' : 'space-y-4'}`}>
+      {viewMode === "atril" && (
+        <div
+          className={`flex flex-col ${isFullscreen ? "flex-1 min-h-0 overflow-hidden space-y-2" : "space-y-4"}`}
+        >
           {/* Atril Control Toolbar (100% Mobile Responsive) */}
           <div className="p-2 sm:p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-wrap items-center justify-between gap-2 shrink-0">
             {/* Left: Metronome click & Tempo pulse */}
@@ -723,11 +833,17 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
               <button
                 onClick={() => setIsMetronomeActive(!isMetronomeActive)}
                 className={`p-2 rounded-[var(--r-m)] font-sans text-xs font-bold cursor-pointer transition-all ${
-                  isMetronomeActive ? 'bg-[var(--alert)] text-[var(--ink)]' : 'bg-[var(--ok)] text-[var(--ink)]'
+                  isMetronomeActive
+                    ? "bg-[var(--alert)] text-[var(--ink)]"
+                    : "bg-[var(--ok)] text-[var(--ink)]"
                 }`}
                 title="Metrónomo Clic"
               >
-                {isMetronomeActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                {isMetronomeActive ? (
+                  <VolumeX className="w-4 h-4" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
               </button>
 
               {/* Visual Flash */}
@@ -736,10 +852,10 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 <div
                   className={`w-2.5 h-2.5 rounded-full transition-all ${
                     isMetronomeActive && currentBeat === 0
-                      ? 'bg-[var(--alert)] scale-125'
+                      ? "bg-[var(--alert)] scale-125"
                       : isMetronomeActive
-                        ? 'bg-[var(--acc)]/60'
-                        : 'bg-[var(--surface)]/70'
+                        ? "bg-[var(--acc)]/60"
+                        : "bg-[var(--surface)]/70"
                   }`}
                 />
               </div>
@@ -751,12 +867,16 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 onClick={() => setIsAutoScrolling(!isAutoScrolling)}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold cursor-pointer transition-all ${
                   isAutoScrolling
-                    ? 'bg-[var(--acc)]/60 text-[var(--ink)]'
-                    : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    ? "bg-[var(--acc)]/60 text-[var(--ink)]"
+                    : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
-                {isAutoScrolling ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                <span>{isAutoScrolling ? 'Pausar' : 'Auto-Scroll'}</span>
+                {isAutoScrolling ? (
+                  <Pause className="w-3.5 h-3.5" />
+                ) : (
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                )}
+                <span>{isAutoScrolling ? "Pausar" : "Auto-Scroll"}</span>
               </button>
 
               {/* Speed Switcher */}
@@ -766,7 +886,9 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                     key={spd}
                     onClick={() => setScrollSpeed(spd)}
                     className={`px-2 py-1 rounded-md text-[10px] font-sans font-bold cursor-pointer ${
-                      scrollSpeed === spd ? 'bg-[var(--acc)]/60/20 text-[var(--acc)]/70' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+                      scrollSpeed === spd
+                        ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70"
+                        : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >
                     {spd}x
@@ -779,7 +901,9 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
             <div className="flex items-center gap-2">
               {/* Transpose */}
               <div className="flex items-center gap-1 bg-[var(--surface)] px-2 py-1 rounded-[var(--r-m)]">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-0.5">Tono:</span>
+                <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-0.5">
+                  Tono:
+                </span>
                 <button
                   onClick={() => setTranspose((t) => t - 1)}
                   className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans font-bold cursor-pointer"
@@ -787,7 +911,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                   -1
                 </button>
                 <span className="text-xs font-sans font-bold text-[var(--acc)] px-1">
-                  {transpose === 0 ? 'Orig' : transpose > 0 ? `+${transpose}` : transpose}
+                  {transpose === 0
+                    ? "Orig"
+                    : transpose > 0
+                      ? `+${transpose}`
+                      : transpose}
                 </span>
                 <button
                   onClick={() => setTranspose((t) => t + 1)}
@@ -799,7 +927,7 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
 
               {/* Notation ES/EN */}
               <button
-                onClick={() => setNotation((n) => (n === 'ES' ? 'EN' : 'ES'))}
+                onClick={() => setNotation((n) => (n === "ES" ? "EN" : "ES"))}
                 className="px-2 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink)] font-bold cursor-pointer"
                 title="Cambiar notación Do-Re-Mi vs C-D-E"
               >
@@ -816,7 +944,11 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                   A-
                 </button>
                 <button
-                  onClick={() => setFontSizeIndex((i) => Math.min(FONT_SIZE_CLASSES.length - 1, i + 1))}
+                  onClick={() =>
+                    setFontSizeIndex((i) =>
+                      Math.min(FONT_SIZE_CLASSES.length - 1, i + 1),
+                    )
+                  }
                   className="px-1.5 py-0.5 text-xs font-sans text-[var(--acc)] font-bold hover:text-[var(--acc)]/70 cursor-pointer"
                   title="Aumentar fuente"
                 >
@@ -829,8 +961,8 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                 onClick={() => setShowChordDiagrams(!showChordDiagrams)}
                 className={`p-2 rounded-[var(--r-m)] text-xs font-sans cursor-pointer transition-all ${
                   showChordDiagrams
-                    ? 'bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40'
-                    : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                    ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40"
+                    : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
                 title="Ver diagramas de acordes de guitarra"
               >
@@ -854,8 +986,13 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
           {showChordDiagrams && uniqueChords.length > 0 && (
             <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2 animate-fade-in shrink-0">
               <div className="flex items-center justify-between text-xs font-sans font-bold text-[var(--acc)]">
-                <span>Diagramas de Acordes de este Tema ({uniqueChords.length})</span>
-                <button onClick={() => setShowChordDiagrams(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
+                <span>
+                  Diagramas de Acordes de este Tema ({uniqueChords.length})
+                </span>
+                <button
+                  onClick={() => setShowChordDiagrams(false)}
+                  className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+                >
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -869,7 +1006,7 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
 
           {/* Teleprompter Chords Sheet Card */}
           <div
-            className={`rounded-[var(--r-l)] sm:rounded-3xl bg-[var(--bg)] p-3.5 sm:p-6 relative flex flex-col ${isFullscreen ? 'flex-1 min-h-0 overflow-hidden' : ''}`}
+            className={`rounded-[var(--r-l)] sm:rounded-[var(--r-l)] bg-[var(--bg)] p-3.5 sm:p-6 relative flex flex-col ${isFullscreen ? "flex-1 min-h-0 overflow-hidden" : ""}`}
           >
             {/* Header Song Info */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 shrink-0">
@@ -882,24 +1019,28 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
                     (Desliza o pulsa flechas para pasar de tema)
                   </span>
                 </div>
-                <h2 className="text-lg sm:text-2xl font-display font-black text-[var(--ink)]">{currentItem?.titulo}</h2>
+                <h2 className="text-lg sm:text-2xl font-display font-black text-[var(--ink)]">
+                  {currentItem?.titulo}
+                </h2>
               </div>
 
               <div className="flex items-center gap-2 text-xs font-sans">
                 <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--acc)] font-bold">
-                  Tonalidad: {currentSong?.tonalidad || 'Am'}
+                  Tonalidad: {currentSong?.tonalidad || "Am"}
                 </span>
                 <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)]">
-                  {currentSong?.afinacion || 'Standard E'}
+                  {currentSong?.afinacion || "Standard E"}
                 </span>
-                <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)]">⏱ {formatTime(trackSeconds)}</span>
+                <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)]">
+                  ⏱ {formatTime(trackSeconds)}
+                </span>
               </div>
             </div>
 
             {/* Scrollable Chord Content Container */}
             <div
               ref={atrilScrollRef}
-              className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? 'flex-1 min-h-0' : 'max-h-[60vh]'}`}
+              className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
             >
               {renderFormattedChords(rawChordText, transpose, notation)}
             </div>
@@ -908,33 +1049,33 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 shrink-0">
               <div className="flex items-center gap-1.5 w-full sm:w-auto">
                 <button
-                  onClick={() => handleSetEvaluation('bordada')}
+                  onClick={() => handleSetEvaluation("bordada")}
                   className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                    currentItem?.evaluacion === 'bordada'
-                      ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
-                      : 'bg-[var(--ok)]/15 text-[var(--ink-2)]'
+                    currentItem?.evaluacion === "bordada"
+                      ? "bg-[var(--ok)] text-[var(--ink)] font-black"
+                      : "bg-[var(--ok)]/15 text-[var(--ink-2)]"
                   }`}
                 >
                   <span>🟢 Bordada</span>
                 </button>
 
                 <button
-                  onClick={() => handleSetEvaluation('regular')}
+                  onClick={() => handleSetEvaluation("regular")}
                   className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                    currentItem?.evaluacion === 'regular'
-                      ? 'bg-[var(--acc)]/60 text-[var(--ink)] font-black'
-                      : 'bg-[var(--acc)]/60/15 text-[var(--acc)]/70'
+                    currentItem?.evaluacion === "regular"
+                      ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                      : "bg-[var(--acc)]/60/15 text-[var(--acc)]/70"
                   }`}
                 >
                   <span>🟡 Regular</span>
                 </button>
 
                 <button
-                  onClick={() => handleSetEvaluation('repetir')}
+                  onClick={() => handleSetEvaluation("repetir")}
                   className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
-                    currentItem?.evaluacion === 'repetir'
-                      ? 'bg-[var(--alert)] text-[var(--ink)] font-black'
-                      : 'bg-[var(--alert)]/15 text-[var(--ink-2)]'
+                    currentItem?.evaluacion === "repetir"
+                      ? "bg-[var(--alert)] text-[var(--ink)] font-black"
+                      : "bg-[var(--alert)]/15 text-[var(--ink-2)]"
                   }`}
                 >
                   <span>🔴 Repetir</span>
@@ -986,10 +1127,14 @@ export function ModoLocalEnVivoTab({ rehearsal, onUpdateRehearsal, songs = [], c
 }
 
 // RENDER CHORDS WITH HIGHLIGHTING & SECTION BADGES
-function renderFormattedChords(text: string, transpose: number, notation: 'ES' | 'EN') {
+function renderFormattedChords(
+  text: string,
+  transpose: number,
+  notation: "ES" | "EN",
+) {
   if (!text) return null;
 
-  const lines = text.split('\n');
+  const lines = text.split("\n");
 
   return lines.map((rawLine, idx) => {
     const line = rawLine.trimEnd();
@@ -1000,7 +1145,7 @@ function renderFormattedChords(text: string, transpose: number, notation: 'ES' |
     }
 
     // Section header e.g. [Intro], [Verso 1], [Estribillo], [Solo], [Puente], [Outro]
-    if (line.trim().startsWith('[') && line.trim().endsWith(']')) {
+    if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
       return (
         <div key={idx} className="pt-3 pb-1">
           <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)]/70 text-xs font-sans font-black tracking-wider">
@@ -1037,10 +1182,12 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
         <div className="flex justify-center pt-0.5">
           <div className="w-20 bg-[var(--surface)] p-1 rounded text-[8px] font-sans">
             {shape.baseFret && shape.baseFret > 1 && (
-              <div className="text-[7px] text-[var(--acc)] font-bold text-left pl-0.5">Tr. {shape.baseFret}</div>
+              <div className="text-[7px] text-[var(--acc)] font-bold text-left pl-0.5">
+                Tr. {shape.baseFret}
+              </div>
             )}
             <div className="grid grid-cols-6 gap-0.5 my-0.5 text-[var(--ink-2)] pb-0.5 text-[7px]">
-              {['E', 'A', 'D', 'G', 'B', 'E'].map((s, i) => (
+              {["E", "A", "D", "G", "B", "E"].map((s, i) => (
                 <span key={i} className="text-center">
                   {s}
                 </span>
@@ -1052,10 +1199,14 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
                 <div key={stringIdx} className="flex flex-col items-center">
                   <span
                     className={`font-bold ${
-                      fret === -1 ? 'text-[var(--alert)]' : fret === 0 ? 'text-[var(--ok)]' : 'text-[var(--acc)]/70'
+                      fret === -1
+                        ? "text-[var(--alert)]"
+                        : fret === 0
+                          ? "text-[var(--ok)]"
+                          : "text-[var(--acc)]/70"
                     }`}
                   >
-                    {fret === -1 ? 'x' : fret === 0 ? 'o' : fret}
+                    {fret === -1 ? "x" : fret === 0 ? "o" : fret}
                   </span>
                 </div>
               ))}

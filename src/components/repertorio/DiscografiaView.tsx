@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Song, ThemeColors } from '../../types';
+import React, { useState } from "react";
+import { Song, ThemeColors } from "../../types";
 import {
   Disc,
   Disc3,
@@ -26,16 +26,22 @@ import {
   Search,
   X,
   Download,
-} from 'lucide-react';
-import { AlbumCover } from '../AlbumCover';
-import { PublicoSilhouette } from '../ui/PublicoSilhouette';
-import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
-import { apiFetch } from '../../utils/api';
-import { LiveConcertToAlbumModal, TrackCutItem } from './LiveConcertToAlbumModal';
-import { SpotifyDiscographyModal } from './SpotifyDiscographyModal';
-import { BulkAlbumAudioUploaderModal } from './BulkAlbumAudioUploaderModal';
-import { ExportAlbumSongsModal } from './ExportAlbumSongsModal';
-import { SongCardRow } from './SongCardRow';
+} from "lucide-react";
+import { AlbumCover } from "../AlbumCover";
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import {
+  uploadFileToServer,
+  saveSongsToLocalStorageSafely,
+} from "../../utils/audioStorage";
+import { apiFetch } from "../../utils/api";
+import {
+  LiveConcertToAlbumModal,
+  TrackCutItem,
+} from "./LiveConcertToAlbumModal";
+import { SpotifyDiscographyModal } from "./SpotifyDiscographyModal";
+import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
+import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
+import { SongCardRow } from "./SongCardRow";
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -48,7 +54,11 @@ interface DiscografiaViewProps {
   toggleFavoriteSong: (id: string) => void;
   activePlayerSong?: Song | null;
   isPlayerPlaying?: boolean;
-  onSelectSong?: (song: Song | null, autoPlay?: boolean, queue?: Song[] | null) => void;
+  onSelectSong?: (
+    song: Song | null,
+    autoPlay?: boolean,
+    queue?: Song[] | null,
+  ) => void;
   onRequestDeleteAlbum?: (albumName: string, songCount: number) => void;
   onEditAlbum?: (albumName: string) => void;
   onCreateAlbum?: () => void;
@@ -62,11 +72,11 @@ interface DiscografiaViewProps {
 
 const formatTotalDuration = (songs: Song[]): string => {
   const totalSeconds = songs.reduce((acc, s) => {
-    if (typeof s.duracionSegundos === 'number' && s.duracionSegundos > 0) {
+    if (typeof s.duracionSegundos === "number" && s.duracionSegundos > 0) {
       return acc + s.duracionSegundos;
     }
-    if (s.duracion && s.duracion.includes(':')) {
-      const parts = s.duracion.split(':');
+    if (s.duracion && s.duracion.includes(":")) {
+      const parts = s.duracion.split(":");
       const m = parseInt(parts[0], 10) || 0;
       const sec = parseInt(parts[1], 10) || 0;
       return acc + (m * 60 + sec);
@@ -74,7 +84,7 @@ const formatTotalDuration = (songs: Song[]): string => {
     return acc;
   }, 0);
 
-  if (totalSeconds <= 0) return '0 min';
+  if (totalSeconds <= 0) return "0 min";
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;
   if (mins >= 60) {
@@ -82,7 +92,7 @@ const formatTotalDuration = (songs: Song[]): string => {
     const remMins = mins % 60;
     return `${hrs} h ${remMins} min`;
   }
-  return `${mins} min ${secs > 0 ? `${secs} s` : ''}`;
+  return `${mins} min ${secs > 0 ? `${secs} s` : ""}`;
 };
 
 export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
@@ -107,11 +117,18 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   onDeleteSong,
   onShareSong,
 }) => {
-  const [activeFilterTab, setActiveFilterTab] = useState<'todos' | 'albumes' | 'singles'>('todos');
-  const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>({});
+  const [activeFilterTab, setActiveFilterTab] = useState<
+    "todos" | "albumes" | "singles"
+  >("todos");
+  const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>(
+    {},
+  );
   const [isLiveConcertModalOpen, setIsLiveConcertModalOpen] = useState(false);
   const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
-  const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{ name: string; songs: Song[] } | null>(null);
+  const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{
+    name: string;
+    songs: Song[];
+  } | null>(null);
   const [dynamicsAnalysis, setDynamicsAnalysis] = useState<{
     running: boolean;
     done: number;
@@ -123,22 +140,34 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   // visita. Un solo punto de entrada"+ Nuevo disco" con las 4 opciones explicadas, mismo patrón
   // que el"🧠 Asistente IA" de RepertorioSetlists.tsx (AGENTS.md §6).
   const [showCreateAlbumMenu, setShowCreateAlbumMenu] = useState(false);
-  const [draggedItem, setDraggedItem] = useState<{ album: string; index: number } | null>(null);
-  const [dragOverItem, setDragOverItem] = useState<{ album: string; index: number } | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [exportModalData, setExportModalData] = useState<{ isOpen: boolean; albumName?: string }>({ isOpen: false });
+  const [draggedItem, setDraggedItem] = useState<{
+    album: string;
+    index: number;
+  } | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<{
+    album: string;
+    index: number;
+  } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [exportModalData, setExportModalData] = useState<{
+    isOpen: boolean;
+    albumName?: string;
+  }>({ isOpen: false });
 
-  const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
+  const handleSaveLiveConcertAlbum = (
+    albumTitle: string,
+    tracks: TrackCutItem[],
+  ) => {
     const createdSongs: Song[] = tracks.map((t) => {
       const mins = Math.floor(t.duration / 60);
       const secs = Math.floor(t.duration % 60);
-      const durationStr = `${mins}:${String(secs).padStart(2, '0')}`;
-      const songAudioUrl = t.audioUrl || '';
+      const durationStr = `${mins}:${String(secs).padStart(2, "0")}`;
+      const songAudioUrl = t.audioUrl || "";
 
       return {
         id: `live_song_${Date.now()}_${t.index}`,
         titulo: t.title,
-        artista: 'Nuestra Banda',
+        artista: "Nuestra Banda",
         album: albumTitle,
         albumDisco: albumTitle,
         duracion: durationStr,
@@ -149,31 +178,34 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           ? [
               {
                 id: `idea_live_${Date.now()}_${t.index}`,
-                titulo: 'Audio Recortado Directo',
-                seccion: 'general' as const,
+                titulo: "Audio Recortado Directo",
+                seccion: "general" as const,
                 audioUrl: songAudioUrl,
-                subidoPor: 'Concierto en Directo',
+                subidoPor: "Concierto en Directo",
                 fecha: new Date().toISOString(),
               },
             ]
           : [],
-        tipo: t.type === 'musica' ? 'cancion' : 'interludio',
+        tipo: t.type === "musica" ? "cancion" : "interludio",
         ordenAlbum: t.index,
-        speechTranscription: t.speechTranscription || '',
-        cifradoTexto: t.lyricsWithChords || '',
-        tonalidad: t.tonalidad || 'Mim',
+        speechTranscription: t.speechTranscription || "",
+        cifradoTexto: t.lyricsWithChords || "",
+        tonalidad: t.tonalidad || "Mim",
         bpm: t.bpm || 120,
         favorite: false,
         cueIn: t.cueIn,
         cueOut: t.cueOut,
-        trimSilenceDetectedAt: t.cueIn || t.cueOut ? new Date().toISOString() : undefined,
+        trimSilenceDetectedAt:
+          t.cueIn || t.cueOut ? new Date().toISOString() : undefined,
         applauseDetected:
           t.hasApplauseIntro || t.hasApplauseOutro
             ? {
                 intro: Boolean(t.hasApplauseIntro),
                 outro: Boolean(t.hasApplauseOutro),
                 introDurationSec: t.cueIn || 0,
-                outroDurationSec: t.cueOut ? Math.max(0, t.duration - t.cueOut) : 0,
+                outroDurationSec: t.cueOut
+                  ? Math.max(0, t.duration - t.cueOut)
+                  : 0,
               }
             : undefined,
       };
@@ -185,39 +217,51 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
     // Save each new song to backend API
     createdSongs.forEach((song) => {
-      apiFetch('/api/songs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      apiFetch("/api/songs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(song),
-      }).catch((err) => console.warn('Could not persist live song to backend:', err));
+      }).catch((err) =>
+        console.warn("Could not persist live song to backend:", err),
+      );
     });
 
     // Auto expand new album in UI
     setExpandedAlbums((prev) => ({ ...prev, [albumTitle]: true }));
   };
 
-  const safeSongs = (songs || []).filter((s): s is Song => Boolean(s && typeof s === 'object' && s.id));
-  const safeAlbumsList = (albumsList || []).filter((a): a is string => Boolean(a && typeof a === 'string'));
+  const safeSongs = (songs || []).filter((s): s is Song =>
+    Boolean(s && typeof s === "object" && s.id),
+  );
+  const safeAlbumsList = (albumsList || []).filter((a): a is string =>
+    Boolean(a && typeof a === "string"),
+  );
 
-  const allNonEmptyAlbums = safeAlbumsList.filter((a) => a !== 'todos');
+  const allNonEmptyAlbums = safeAlbumsList.filter((a) => a !== "todos");
 
   const cleanSearchQuery = searchQuery.trim().toLowerCase();
 
   const songMatchesSearch = (s: Song, query: string): boolean => {
     if (!query) return true;
-    const title = (s.titulo || '').toLowerCase();
-    const artist = (s.artista || '').toLowerCase();
-    const key = (s.tonalidad || '').toLowerCase();
-    const albumName = (s.albumDisco || s.album || '').toLowerCase();
-    const speech = (s.speechTranscription || '').toLowerCase();
-    return title.includes(query) || artist.includes(query) || key.includes(query) || albumName.includes(query) || speech.includes(query);
+    const title = (s.titulo || "").toLowerCase();
+    const artist = (s.artista || "").toLowerCase();
+    const key = (s.tonalidad || "").toLowerCase();
+    const albumName = (s.albumDisco || s.album || "").toLowerCase();
+    const speech = (s.speechTranscription || "").toLowerCase();
+    return (
+      title.includes(query) ||
+      artist.includes(query) ||
+      key.includes(query) ||
+      albumName.includes(query) ||
+      speech.includes(query)
+    );
   };
 
   const filteredAlbums = allNonEmptyAlbums.filter((album) => {
-    if (activeFilterTab === 'albumes' && album === 'Singles / Sin Disco') {
+    if (activeFilterTab === "albumes" && album === "Singles / Sin Disco") {
       return false;
     }
-    if (activeFilterTab === 'singles' && album !== 'Singles / Sin Disco') {
+    if (activeFilterTab === "singles" && album !== "Singles / Sin Disco") {
       return false;
     }
 
@@ -228,12 +272,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
     // O si alguna de sus canciones coincide con la búsqueda
     const albumSongs = safeSongs.filter((s) => {
-      const songAlbum = (s.albumDisco || s.album || '').trim();
+      const songAlbum = (s.albumDisco || s.album || "").trim();
       const albumClean = album.trim();
-      if (albumClean === 'Singles / Sin Disco') {
-        return !songAlbum || songAlbum === 'Singles / Sin Disco';
+      if (albumClean === "Singles / Sin Disco") {
+        return !songAlbum || songAlbum === "Singles / Sin Disco";
       }
-      return songAlbum === albumClean || songAlbum.toLowerCase() === albumClean.toLowerCase();
+      return (
+        songAlbum === albumClean ||
+        songAlbum.toLowerCase() === albumClean.toLowerCase()
+      );
     });
 
     return albumSongs.some((s) => songMatchesSearch(s, cleanSearchQuery));
@@ -246,7 +293,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     }));
   };
 
-  const areAllExpanded = filteredAlbums.length > 0 && filteredAlbums.every((a) => expandedAlbums[a] === true);
+  const areAllExpanded =
+    filteredAlbums.length > 0 &&
+    filteredAlbums.every((a) => expandedAlbums[a] === true);
 
   const toggleAllAlbums = () => {
     const nextState = !areAllExpanded;
@@ -257,10 +306,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     setExpandedAlbums(newMap);
   };
 
-  const handleMoveSongInAlbum = (albumName: string, sortedAlbumSongs: Song[], songId: string, direction: 'up' | 'down') => {
+  const handleMoveSongInAlbum = (
+    albumName: string,
+    sortedAlbumSongs: Song[],
+    songId: string,
+    direction: "up" | "down",
+  ) => {
     const index = sortedAlbumSongs.findIndex((s) => s.id === songId);
     if (index < 0) return;
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= sortedAlbumSongs.length) return;
 
     const newAlbumSongs = [...sortedAlbumSongs];
@@ -288,15 +342,28 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
       const newOrd = updatedSongsOrder.get(s.id);
       const updatedSong = { ...s, ordenAlbum: newOrd };
       apiFetch(`/api/songs/${s.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedSong),
-      }).catch((err) => console.error('Error updating song order in album on server:', err));
+      }).catch((err) =>
+        console.error("Error updating song order in album on server:", err),
+      );
     });
   };
 
-  const handleDropSongInAlbum = (albumName: string, sortedAlbumSongs: Song[], sourceIndex: number, targetIndex: number) => {
-    if (sourceIndex === targetIndex || sourceIndex < 0 || targetIndex < 0 || targetIndex >= sortedAlbumSongs.length) return;
+  const handleDropSongInAlbum = (
+    albumName: string,
+    sortedAlbumSongs: Song[],
+    sourceIndex: number,
+    targetIndex: number,
+  ) => {
+    if (
+      sourceIndex === targetIndex ||
+      sourceIndex < 0 ||
+      targetIndex < 0 ||
+      targetIndex >= sortedAlbumSongs.length
+    )
+      return;
 
     const newAlbumSongs = [...sortedAlbumSongs];
     const [movedSong] = newAlbumSongs.splice(sourceIndex, 1);
@@ -322,10 +389,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
       const newOrd = updatedSongsOrder.get(s.id);
       const updatedSong = { ...s, ordenAlbum: newOrd };
       apiFetch(`/api/songs/${s.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedSong),
-      }).catch((err) => console.error('Error updating song order in album on server:', err));
+      }).catch((err) =>
+        console.error("Error updating song order in album on server:", err),
+      );
     });
   };
 
@@ -339,14 +408,24 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   // pulse mil veces.
   const songsPendingDynamicsAnalysis = safeSongs.filter((s) => {
     const audio = s.audioPrincipalUrl || (s as any).audioUrl;
-    return Boolean(audio) && (!s.energiaVariacionCalculadaEn || !s.bpmDetectadoEn || !s.tonalidadDetectadaEn);
+    return (
+      Boolean(audio) &&
+      (!s.energiaVariacionCalculadaEn ||
+        !s.bpmDetectadoEn ||
+        !s.tonalidadDetectadaEn)
+    );
   });
 
   const handleAnalyzeAllDynamics = async () => {
     const pending = songsPendingDynamicsAnalysis;
     if (pending.length === 0 || dynamicsAnalysis?.running) return;
 
-    setDynamicsAnalysis({ running: true, done: 0, total: pending.length, failedTitles: [] });
+    setDynamicsAnalysis({
+      running: true,
+      done: 0,
+      total: pending.length,
+      failedTitles: [],
+    });
 
     const CONCURRENCIA = 2;
     let siguiente = 0;
@@ -364,15 +443,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             bpmDetectado: number | null;
             tonalidadDetectada: string | null;
           }>(`/api/songs/${song.id}/analizar-dinamica`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ audioUrl: audio }),
           });
           // El backend no marca"analizado" cuando el audio no fue analizable (por ejemplo si
           // la descarga falló) — aquí tampoco: si se hiciera, la canción quedaría marcada como
           // analizada para siempre y la próxima repesca nunca la reintentaría.
           if (!result.audioAnalizable) {
-            throw new Error('El audio no se pudo analizar (no accesible o formato no soportado)');
+            throw new Error(
+              "El audio no se pudo analizar (no accesible o formato no soportado)",
+            );
           }
           const ahora = new Date().toISOString();
           setSongs((prev) =>
@@ -382,31 +463,57 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     ...s,
                     energiaVariacion: result.variacionDetectada,
                     energiaVariacionCalculadaEn: ahora,
-                    ...(result.bpmDetectado !== null ? { bpm: result.bpmDetectado, bpmDetectadoEn: ahora } : {}),
-                    ...(result.tonalidadDetectada ? { tonalidad: result.tonalidadDetectada, tonalidadDetectadaEn: ahora } : {}),
+                    ...(result.bpmDetectado !== null
+                      ? { bpm: result.bpmDetectado, bpmDetectadoEn: ahora }
+                      : {}),
+                    ...(result.tonalidadDetectada
+                      ? {
+                          tonalidad: result.tonalidadDetectada,
+                          tonalidadDetectadaEn: ahora,
+                        }
+                      : {}),
                   }
-                : s
-            )
+                : s,
+            ),
           );
         } catch (err) {
-          console.warn(`No se pudo analizar la dinámica interna de"${song.titulo}":`, err);
+          console.warn(
+            `No se pudo analizar la dinámica interna de"${song.titulo}":`,
+            err,
+          );
           fallidas.push(song.titulo);
         }
         completadas++;
-        setDynamicsAnalysis({ running: true, done: completadas, total: pending.length, failedTitles: fallidas });
+        setDynamicsAnalysis({
+          running: true,
+          done: completadas,
+          total: pending.length,
+          failedTitles: fallidas,
+        });
       }
     };
 
-    await Promise.all(Array.from({ length: Math.min(CONCURRENCIA, pending.length) }, trabajador));
-    setDynamicsAnalysis({ running: false, done: pending.length, total: pending.length, failedTitles: fallidas });
+    await Promise.all(
+      Array.from(
+        { length: Math.min(CONCURRENCIA, pending.length) },
+        trabajador,
+      ),
+    );
+    setDynamicsAnalysis({
+      running: false,
+      done: pending.length,
+      total: pending.length,
+      failedTitles: fallidas,
+    });
   };
 
   return (
     <div className="w-full flex flex-col gap-4" data-modulo="discografia">
       {/* Header: Stats */}
-      <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-3xl transition-all bg-[var(--surface)]">
+      <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] transition-all bg-[var(--surface)]">
         <p className="text-[var(--ink-2)] text-xs">
-          {safeSongs.length > 1 ? 'lanzamientos' : 'lanzamiento'} • {safeSongs.length} temas
+          {safeSongs.length > 1 ? "lanzamientos" : "lanzamiento"} •{" "}
+          {safeSongs.length} temas
         </p>
       </div>
 
@@ -414,8 +521,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
         <button
           type="button"
-          onClick={() => setExportModalData({ isOpen: true, albumName: 'all' })}
-          className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]'}`}
+          onClick={() => setExportModalData({ isOpen: true, albumName: "all" })}
+          className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
           title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
         >
           <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -433,9 +540,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           </button>
           {showCreateAlbumMenu && (
             <>
-              <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
               <div
-                className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                className="fixed inset-0 z-30"
+                onClick={() => setShowCreateAlbumMenu(false)}
+              />
+              <div
+                className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               >
                 {onCreateAlbum && (
                   <button
@@ -444,11 +554,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       setShowCreateAlbumMenu(false);
                       onCreateAlbum();
                     }}
-                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${'hover:bg-[var(--surface)]'}`}
+                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                   >
                     <Plus className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                     <span>
-                      <span className="text-xs font-semibold text-[var(--ink)] block">Disco vacío</span>
+                      <span className="text-xs font-semibold text-[var(--ink)] block">
+                        Disco vacío
+                      </span>
                       <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
                         Crea el disco y añade canciones después, una a una.
                       </span>
@@ -459,14 +571,18 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   type="button"
                   onClick={() => {
                     setShowCreateAlbumMenu(false);
-                    setBulkUploadAlbum({ name: '', songs: [] });
+                    setBulkUploadAlbum({ name: "", songs: [] });
                   }}
-                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${'hover:bg-[var(--surface)]'}`}
+                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                 >
                   <FolderUp className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
-                    <span className="text-xs font-semibold text-[var(--ok)] block">Subir Disco (MP3/WAV)</span>
-                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">Arrastra archivos de audio desde tu ordenador.</span>
+                    <span className="text-xs font-semibold text-[var(--ok)] block">
+                      Subir Disco (MP3/WAV)
+                    </span>
+                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
+                      Arrastra archivos de audio desde tu ordenador.
+                    </span>
                   </span>
                 </button>
                 <button
@@ -475,12 +591,16 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     setShowCreateAlbumMenu(false);
                     setIsSpotifyModalOpen(true);
                   }}
-                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${'hover:bg-[var(--surface)]'}`}
+                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                 >
                   <Disc className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
-                    <span className="text-xs font-semibold text-[var(--ok)] block">🟢 Traer de Spotify</span>
-                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">Importa la discografía completa de la banda.</span>
+                    <span className="text-xs font-semibold text-[var(--ok)] block">
+                      🟢 Traer de Spotify
+                    </span>
+                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
+                      Importa la discografía completa de la banda.
+                    </span>
                   </span>
                 </button>
                 <button
@@ -489,13 +609,16 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     setShowCreateAlbumMenu(false);
                     setIsLiveConcertModalOpen(true);
                   }}
-                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${'hover:bg-[var(--surface)]'}`}
+                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                 >
                   <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                   <span>
-                    <span className="text-xs font-semibold text-[var(--acc)] block">🔴 Concierto en Vivo a Disco</span>
+                    <span className="text-xs font-semibold text-[var(--acc)] block">
+                      🔴 Concierto en Vivo a Disco
+                    </span>
                     <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
-                      Recorta y cataloga a partir del vídeo o audio de un concierto en vivo.
+                      Recorta y cataloga a partir del vídeo o audio de un
+                      concierto en vivo.
                     </span>
                   </span>
                 </button>
@@ -515,12 +638,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar canción, tono, letra..."
-            className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-0/40 ${'bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]'}`}
+            className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-0/40 ${"bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]"}`}
           />
           {searchQuery && (
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
+              onClick={() => setSearchQuery("")}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--ink-2)] hover:text-[var(--ink)] p-0.5 rounded-full transition-colors cursor-pointer"
               title="Limpiar búsqueda"
             >
@@ -531,36 +654,38 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
         {/* Quick Filter Tabs + Action Icons */}
         <div className="w-full flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}>
+          <div
+            className={`p-0.5 rounded-[var(--r-m)] flex items-center gap-0.5 shrink-0 bg-[var(--sunken)]`}
+          >
             <button
               type="button"
-              onClick={() => setActiveFilterTab('todos')}
+              onClick={() => setActiveFilterTab("todos")}
               className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
-                activeFilterTab === 'todos'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                activeFilterTab === "todos"
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
             >
               Todos
             </button>
             <button
               type="button"
-              onClick={() => setActiveFilterTab('albumes')}
+              onClick={() => setActiveFilterTab("albumes")}
               className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
-                activeFilterTab === 'albumes'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                activeFilterTab === "albumes"
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
             >
               Álbumes
             </button>
             <button
               type="button"
-              onClick={() => setActiveFilterTab('singles')}
+              onClick={() => setActiveFilterTab("singles")}
               className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
-                activeFilterTab === 'singles'
-                  ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                activeFilterTab === "singles"
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
+                  : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
             >
               Singles
@@ -573,8 +698,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               <button
                 type="button"
                 onClick={toggleAllAlbums}
-                className={`p-1.5 rounded-[var(--r-m)] transition-all cursor-pointer ${'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'}`}
-                title={areAllExpanded ? 'Plegar todos los discos' : 'Desplegar todos los discos'}
+                className={`p-1.5 rounded-[var(--r-m)] transition-all cursor-pointer ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                title={
+                  areAllExpanded
+                    ? "Plegar todos los discos"
+                    : "Desplegar todos los discos"
+                }
               >
                 <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               </button>
@@ -614,31 +743,43 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         <div className="w-full flex flex-col gap-4">
           {filteredAlbums.map((album) => {
             const rawAlbumSongs = safeSongs.filter((s) => {
-              const songAlbum = (s.albumDisco || s.album || '').trim();
+              const songAlbum = (s.albumDisco || s.album || "").trim();
               const albumClean = album.trim();
               const belongsToAlbum =
-                albumClean === 'Singles / Sin Disco'
-                  ? !songAlbum || songAlbum === 'Singles / Sin Disco'
-                  : songAlbum === albumClean || songAlbum.toLowerCase() === albumClean.toLowerCase();
+                albumClean === "Singles / Sin Disco"
+                  ? !songAlbum || songAlbum === "Singles / Sin Disco"
+                  : songAlbum === albumClean ||
+                    songAlbum.toLowerCase() === albumClean.toLowerCase();
 
               if (!belongsToAlbum) return false;
 
-              if (cleanSearchQuery && !album.toLowerCase().includes(cleanSearchQuery)) {
+              if (
+                cleanSearchQuery &&
+                !album.toLowerCase().includes(cleanSearchQuery)
+              ) {
                 return songMatchesSearch(s, cleanSearchQuery);
               }
               return true;
             });
 
             const sortedAlbumSongs = [...rawAlbumSongs].sort((a, b) => {
-              const oA = typeof a.ordenAlbum === 'number' ? a.ordenAlbum : 999;
-              const oB = typeof b.ordenAlbum === 'number' ? b.ordenAlbum : 999;
+              const oA = typeof a.ordenAlbum === "number" ? a.ordenAlbum : 999;
+              const oB = typeof b.ordenAlbum === "number" ? b.ordenAlbum : 999;
               return oA - oB;
             });
 
-            const coverUrl = rawAlbumSongs.find((s) => s.portadaUrl)?.portadaUrl || bandLogoUrl;
-            const isExpanded = cleanSearchQuery ? true : expandedAlbums[album] === true;
+            const coverUrl =
+              rawAlbumSongs.find((s) => s.portadaUrl)?.portadaUrl ||
+              bandLogoUrl;
+            const isExpanded = cleanSearchQuery
+              ? true
+              : expandedAlbums[album] === true;
 
-            const isPlayingAlbum = !!(activePlayerSong && isPlayerPlaying && rawAlbumSongs.some((s) => s.id === activePlayerSong.id));
+            const isPlayingAlbum = !!(
+              activePlayerSong &&
+              isPlayerPlaying &&
+              rawAlbumSongs.some((s) => s.id === activePlayerSong.id)
+            );
 
             const handlePlayAlbum = (e?: React.MouseEvent) => {
               if (e) e.stopPropagation();
@@ -652,15 +793,21 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             };
 
             return (
-              <div key={album} className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${'bg-[var(--bg)]'}`}>
+              <div
+                key={album}
+                className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${"bg-[var(--bg)]"}`}
+              >
                 {/* Compact Album Header Bar */}
                 <div
                   onClick={() => toggleAlbumExpand(album)}
-                  className={`p-3.5 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${'hover:bg-[var(--sunken)]/80'}`}
+                  className={`p-3.5 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${"hover:bg-[var(--sunken)]/80"}`}
                 >
                   {/* Left: Cover & Information */}
                   <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1 w-full">
-                    <div className="shrink-0 relative group" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="shrink-0 relative group"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <AlbumCover
                         url={coverUrl}
                         onPlay={onSelectSong ? handlePlayAlbum : undefined}
@@ -673,7 +820,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       <div className="flex items-center gap-1.5 mb-1 flex-wrap">
                         <span className="px-2 py-0.5 rounded-md bg-[var(--acc)]/10 text-[var(--acc)]/70 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
                           <Disc3 className="w-3 h-3 text-[var(--acc)]" />
-                          {album === 'Singles / Sin Disco' ? 'SENCILLOS & INÉDITAS' : 'ÁLBUM OFICIAL'}
+                          {album === "Singles / Sin Disco"
+                            ? "SENCILLOS & INÉDITAS"
+                            : "ÁLBUM OFICIAL"}
                         </span>
                       </div>
 
@@ -685,10 +834,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       </h3>
 
                       <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-[var(--ink-2)] mt-1 flex-wrap">
-                        <span className="font-medium text-[var(--ink-2)] truncate max-w-[140px]">{bandName || 'Banda'}</span>
+                        <span className="font-medium text-[var(--ink-2)] truncate max-w-[140px]">
+                          {bandName || "Banda"}
+                        </span>
                         <span>•</span>
                         <span>
-                          {sortedAlbumSongs.length} {sortedAlbumSongs.length === 1 ? 'canción' : 'canciones'}
+                          {sortedAlbumSongs.length}{" "}
+                          {sortedAlbumSongs.length === 1
+                            ? "canción"
+                            : "canciones"}
                         </span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
@@ -700,13 +854,18 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   </div>
 
                   {/* Right: Controls & Fold/Unfold Chevron */}
-                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className="flex items-center gap-2 shrink-0 self-end sm:self-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {sortedAlbumSongs.length > 0 && onSelectSong && (
                       <button
                         type="button"
                         onClick={handlePlayAlbum}
                         className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1 transition-all cursor-pointer"
-                        title={isPlayingAlbum ? 'Pausar disco' : 'Reproducir disco'}
+                        title={
+                          isPlayingAlbum ? "Pausar disco" : "Reproducir disco"
+                        }
                       >
                         {isPlayingAlbum ? (
                           <>
@@ -726,7 +885,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       <button
                         type="button"
                         onClick={() => onEditAlbum(album)}
-                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'}`}
+                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${"bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                         title="Gestionar las canciones de este álbum"
                       >
                         <Edit3 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -740,9 +899,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setExportModalData({ isOpen: true, albumName: album });
+                          setExportModalData({
+                            isOpen: true,
+                            albumName: album,
+                          });
                         }}
-                        className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${'bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]'}`}
+                        className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${"bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]"}`}
                         title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
                       >
                         <Download className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -754,8 +916,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     {sortedAlbumSongs.length > 0 && (
                       <button
                         type="button"
-                        onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
-                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${'bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20'}`}
+                        onClick={() =>
+                          setBulkUploadAlbum({
+                            name: album,
+                            songs: sortedAlbumSongs,
+                          })
+                        }
+                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${"bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"}`}
                         title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
                       >
                         <FolderUp className="w-3.5 h-3.5" />
@@ -763,16 +930,19 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       </button>
                     )}
 
-                    {onRequestDeleteAlbum && album !== 'Singles / Sin Disco' && (
-                      <button
-                        type="button"
-                        onClick={() => onRequestDeleteAlbum(album, sortedAlbumSongs.length)}
-                        className="p-1.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors cursor-pointer shrink-0"
-                        title="Eliminar álbum"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
+                    {onRequestDeleteAlbum &&
+                      album !== "Singles / Sin Disco" && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            onRequestDeleteAlbum(album, sortedAlbumSongs.length)
+                          }
+                          className="p-1.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)] transition-colors cursor-pointer shrink-0"
+                          title="Eliminar álbum"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
 
                     {/* Expand / Collapse Toggle Button */}
                     <button
@@ -783,12 +953,20 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       }}
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                         isExpanded
-                          ? 'bg-[var(--acc)]/15 /30 text-[var(--acc)]/70'
-                          : 'bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                          ? "bg-[var(--acc)]/15 /30 text-[var(--acc)]/70"
+                          : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                       }`}
                     >
-                      <span className="hidden xs:inline">{isExpanded ? 'Ocultar' : `Temas (${sortedAlbumSongs.length})`}</span>
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                      <span className="hidden xs:inline">
+                        {isExpanded
+                          ? "Ocultar"
+                          : `Temas (${sortedAlbumSongs.length})`}
+                      </span>
+                      {isExpanded ? (
+                        <ChevronUp className="w-3.5 h-3.5" />
+                      ) : (
+                        <ChevronDown className="w-3.5 h-3.5" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -798,8 +976,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <div className={`p-3 sm:p-4 space-y-1.5 bg-[var(--bg)]/70`}>
                     {sortedAlbumSongs.map((s, idx) => {
                       const isCurrentTrack = activePlayerSong?.id === s.id;
-                      const isDraggingThis = draggedItem?.album === album && draggedItem?.index === idx;
-                      const isDragOverThis = dragOverItem?.album === album && dragOverItem?.index === idx;
+                      const isDraggingThis =
+                        draggedItem?.album === album &&
+                        draggedItem?.index === idx;
+                      const isDragOverThis =
+                        dragOverItem?.album === album &&
+                        dragOverItem?.index === idx;
 
                       return (
                         <SongCardRow
@@ -808,40 +990,69 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                           index={idx + 1}
                           isPlayingCurrent={isCurrentTrack}
                           isPlayerPlaying={isPlayerPlaying}
-                          onPlay={() => onSelectSong?.(s, true, sortedAlbumSongs)}
-                          onSelect={() => onSelectSong?.(s, false, sortedAlbumSongs)}
+                          onPlay={() =>
+                            onSelectSong?.(s, true, sortedAlbumSongs)
+                          }
+                          onSelect={() =>
+                            onSelectSong?.(s, false, sortedAlbumSongs)
+                          }
                           onToggleFavorite={() => toggleFavoriteSong(s.id)}
-                          onOpenChords={onOpenChords ? () => onOpenChords(s) : undefined}
-                          onOpenMemberNotes={onOpenMemberNotes ? () => onOpenMemberNotes(s) : undefined}
-                          onOpenStudio={onOpenStudio ? () => onOpenStudio(s) : undefined}
-                          onEditSong={onEditSong ? () => onEditSong(s) : undefined}
-                          onDeleteSong={onDeleteSong ? () => onDeleteSong(s.id) : undefined}
-                          onShareSong={onShareSong ? () => onShareSong(s) : undefined}
+                          onOpenChords={
+                            onOpenChords ? () => onOpenChords(s) : undefined
+                          }
+                          onOpenMemberNotes={
+                            onOpenMemberNotes
+                              ? () => onOpenMemberNotes(s)
+                              : undefined
+                          }
+                          onOpenStudio={
+                            onOpenStudio ? () => onOpenStudio(s) : undefined
+                          }
+                          onEditSong={
+                            onEditSong ? () => onEditSong(s) : undefined
+                          }
+                          onDeleteSong={
+                            onDeleteSong ? () => onDeleteSong(s.id) : undefined
+                          }
+                          onShareSong={
+                            onShareSong ? () => onShareSong(s) : undefined
+                          }
                           externalLink={s.enlaceAcordes}
                           showAlbumBadge={false}
                           draggable={sortedAlbumSongs.length > 1}
                           isDragging={isDraggingThis}
                           isDragOver={isDragOverThis}
                           onDragStart={(e) => {
-                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.effectAllowed = "move";
                             setDraggedItem({ album, index: idx });
                           }}
                           onDragOver={(e) => {
                             e.preventDefault();
-                            e.dataTransfer.dropEffect = 'move';
-                            if (draggedItem?.album === album && dragOverItem?.index !== idx) {
+                            e.dataTransfer.dropEffect = "move";
+                            if (
+                              draggedItem?.album === album &&
+                              dragOverItem?.index !== idx
+                            ) {
                               setDragOverItem({ album, index: idx });
                             }
                           }}
                           onDragLeave={() => {
-                            if (dragOverItem?.album === album && dragOverItem?.index === idx) {
+                            if (
+                              dragOverItem?.album === album &&
+                              dragOverItem?.index === idx
+                            ) {
                               setDragOverItem(null);
                             }
                           }}
                           onDrop={(e) => {
                             e.preventDefault();
                             if (draggedItem && draggedItem.album === album) {
-                              handleDropSongInAlbum(album, sortedAlbumSongs, draggedItem.index, idx);
+                              handleDropSongInAlbum(
+                                album,
+                                sortedAlbumSongs,
+                                draggedItem.index,
+                                idx,
+                              );
                             }
                             setDraggedItem(null);
                             setDragOverItem(null);
@@ -853,8 +1064,22 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                           showReorder={sortedAlbumSongs.length > 1}
                           canMoveUp={idx > 0}
                           canMoveDown={idx < sortedAlbumSongs.length - 1}
-                          onMoveUp={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id, 'up')}
-                          onMoveDown={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id, 'down')}
+                          onMoveUp={() =>
+                            handleMoveSongInAlbum(
+                              album,
+                              sortedAlbumSongs,
+                              s.id,
+                              "up",
+                            )
+                          }
+                          onMoveDown={() =>
+                            handleMoveSongInAlbum(
+                              album,
+                              sortedAlbumSongs,
+                              s.id,
+                              "down",
+                            )
+                          }
                           colors={colors}
                         />
                       );
@@ -862,7 +1087,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     {sortedAlbumSongs.length === 0 && (
                       <div className="text-center py-6 text-[var(--ink-2)] text-xs italic font-sans bg-[var(--ink)]/5 rounded-[var(--r-l)]">
-                        Disco sin canciones asignadas. Haz clic en"Gestionar" para añadir temas a este álbum.
+                        Disco sin canciones asignadas. Haz clic en"Gestionar"
+                        para añadir temas a este álbum.
                       </div>
                     )}
                   </div>
@@ -873,21 +1099,27 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
           {filteredAlbums.length === 0 && (
             <div className="text-center py-12 space-y-4">
-              <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto" />
+              <PublicoSilhouette
+                opacity={0.12}
+                size="medium"
+                className="mx-auto"
+              />
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-[var(--ink)]">
-                  {cleanSearchQuery ? 'No encontramos coincidencias' : 'La discografía está vacía'}
+                  {cleanSearchQuery
+                    ? "No encontramos coincidencias"
+                    : "La discografía está vacía"}
                 </p>
                 <p className="text-xs text-[var(--ink-2)] max-w-sm mx-auto">
                   {cleanSearchQuery
                     ? `Ningún disco o tema coincide con"${searchQuery}". Prueba otras palabras clave.`
-                    : 'Graba tu primer álbum para llevarlo al directo. Cada disco es una historia.'}
+                    : "Graba tu primer álbum para llevarlo al directo. Cada disco es una historia."}
                 </p>
               </div>
               {cleanSearchQuery && (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery("")}
                   className="mt-3 px-3 py-1.5 rounded-full bg-[var(--surface)]/20 text-[var(--ok)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -902,12 +1134,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         <LiveConcertToAlbumModal
           isOpen={isLiveConcertModalOpen}
           onClose={() => setIsLiveConcertModalOpen(false)}
-          bandName={bandName || 'Nuestra Banda'}
+          bandName={bandName || "Nuestra Banda"}
           colors={colors}
           onSaveAlbumToCatalog={handleSaveLiveConcertAlbum}
           onSaveSetlist={(newSetlist) => {
             if (setSetlists) {
-              setSetlists((prev: any[]) => [newSetlist, ...(Array.isArray(prev) ? prev : [])]);
+              setSetlists((prev: any[]) => [
+                newSetlist,
+                ...(Array.isArray(prev) ? prev : []),
+              ]);
             }
           }}
         />
@@ -916,7 +1151,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         <SpotifyDiscographyModal
           isOpen={isSpotifyModalOpen}
           onClose={() => setIsSpotifyModalOpen(false)}
-          bandName={bandName || 'Tu Banda'}
+          bandName={bandName || "Tu Banda"}
           existingSongs={songs}
           colors={colors}
           onSongsImported={(updatedSongs) => {
@@ -932,7 +1167,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             albumName={bulkUploadAlbum.name}
             albumSongs={bulkUploadAlbum.songs}
             colors={colors}
-            bandId={bandName || 'Tu Banda'}
+            bandId={bandName || "Tu Banda"}
             onSaveUpdatedSongs={(updatedAlbumSongs, newAlbumName) => {
               const existingIds = new Set(songs.map((s) => s.id));
               const updatedMap = new Map<string, Song>();
@@ -946,13 +1181,19 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 }
               });
 
-              const mergedSongs = [...songs.map((s) => updatedMap.get(s.id) || s), ...newlyCreated];
+              const mergedSongs = [
+                ...songs.map((s) => updatedMap.get(s.id) || s),
+                ...newlyCreated,
+              ];
 
               setSongs(mergedSongs);
               saveSongsToLocalStorageSafely(mergedSongs);
 
               if (newAlbumName) {
-                setExpandedAlbums((prev) => ({ ...prev, [newAlbumName]: true }));
+                setExpandedAlbums((prev) => ({
+                  ...prev,
+                  [newAlbumName]: true,
+                }));
               }
             }}
           />
@@ -965,7 +1206,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           albumName={exportModalData.albumName}
           songs={songs}
           albumsList={allNonEmptyAlbums}
-          bandName={bandName || 'Tu Banda'}
+          bandName={bandName || "Tu Banda"}
           colors={colors}
         />
       </div>

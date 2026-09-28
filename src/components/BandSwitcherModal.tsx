@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Guitar,
   Check,
@@ -28,14 +28,18 @@ import {
   ArrowDownCircle,
   Settings,
   Users,
-} from 'lucide-react';
-import { User } from '../types';
-import { cleanBandId, isSameBandId } from '../utils/bandUtils';
-import { uploadFileToServer } from '../utils/audioStorage';
-import { api, getAuthHeaders } from '../services/api';
-import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
-import { BandNameStylerHelper } from './common/BandNameStylerHelper';
-import { ModalPortal } from './common/ModalPortal';
+} from "lucide-react";
+import { User } from "../types";
+import { cleanBandId, isSameBandId } from "../utils/bandUtils";
+import { uploadFileToServer } from "../utils/audioStorage";
+import { api, getAuthHeaders } from "../services/api";
+import {
+  getPlanDefinition,
+  getPlanChangeType,
+  PLANS,
+} from "../utils/planPermissions";
+import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
+import { ModalPortal } from "./common/ModalPortal";
 
 // Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
 // parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de
@@ -79,7 +83,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   onRefreshData,
 }) => {
   const [switchingBandId, setSwitchingBandId] = useState<string | null>(null);
-  const [settingMainBandId, setSettingMainBandId] = useState<string | null>(null);
+  const [settingMainBandId, setSettingMainBandId] = useState<string | null>(
+    null,
+  );
   const [leavingBandId, setLeavingBandId] = useState<string | null>(null);
   const [uploadingBandId, setUploadingBandId] = useState<string | null>(null);
   const [customLogos, setCustomLogos] = useState<Record<string, string>>({});
@@ -87,26 +93,35 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [selectedBandForUpgrade, setSelectedBandForUpgrade] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBandForUpgrade, setSelectedBandForUpgrade] =
+    useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [draggedBandId, setDraggedBandId] = useState<string | null>(null);
 
   // Create new band state (2-step flow identical to Login registration)
   const [showCreateBandModal, setShowCreateBandModal] = useState(false);
   const [createBandStep, setCreateBandStep] = useState<1 | 2>(1);
-  const [newBandName, setNewBandName] = useState('');
-  const [newBandLeaderName, setNewBandLeaderName] = useState('');
-  const [newBandStyle, setNewBandStyle] = useState('');
-  const [newBandLocation, setNewBandLocation] = useState('España');
-  const [newBandFeatureCategory, setNewBandFeatureCategory] = useState<'all' | 'booking' | 'media' | 'finance'>('all');
+  const [newBandName, setNewBandName] = useState("");
+  const [newBandLeaderName, setNewBandLeaderName] = useState("");
+  const [newBandStyle, setNewBandStyle] = useState("");
+  const [newBandLocation, setNewBandLocation] = useState("España");
+  const [newBandFeatureCategory, setNewBandFeatureCategory] = useState<
+    "all" | "booking" | "media" | "finance"
+  >("all");
   const [isCreatingBand, setIsCreatingBand] = useState(false);
   const [creatingPlanKey, setCreatingPlanKey] = useState<string | null>(null);
   const [bandOrder, setBandOrder] = useState<string[]>(() => {
-    if (currentUser?.band_order && Array.isArray(currentUser.band_order) && currentUser.band_order.length > 0) {
+    if (
+      currentUser?.band_order &&
+      Array.isArray(currentUser.band_order) &&
+      currentUser.band_order.length > 0
+    ) {
       return currentUser.band_order;
     }
     try {
-      const saved = localStorage.getItem(`bandmanager_band_order_${currentUser?.id || 'default'}`);
+      const saved = localStorage.getItem(
+        `bandmanager_band_order_${currentUser?.id || "default"}`,
+      );
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -118,12 +133,16 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
     name: string;
   } | null>(null);
 
-  const mainBandId = currentUser?.main_band_id || currentUser?.band_id || '';
+  const mainBandId = currentUser?.main_band_id || currentUser?.band_id || "";
   const [localMainBandId, setLocalMainBandId] = useState<string>(mainBandId);
 
   // Sync if currentUser updates
   useEffect(() => {
-    if (currentUser?.band_order && Array.isArray(currentUser.band_order) && currentUser.band_order.length > 0) {
+    if (
+      currentUser?.band_order &&
+      Array.isArray(currentUser.band_order) &&
+      currentUser.band_order.length > 0
+    ) {
       setBandOrder(currentUser.band_order);
     }
   }, [currentUser?.band_order]);
@@ -139,20 +158,23 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   const saveOrder = async (newOrder: string[]) => {
     setBandOrder(newOrder);
     try {
-      localStorage.setItem(`bandmanager_band_order_${currentUser?.id || 'default'}`, JSON.stringify(newOrder));
+      localStorage.setItem(
+        `bandmanager_band_order_${currentUser?.id || "default"}`,
+        JSON.stringify(newOrder),
+      );
     } catch (e) {
-      console.warn('Could not save band order locally:', e);
+      console.warn("Could not save band order locally:", e);
     }
     try {
       await api.setBandOrder(newOrder);
     } catch (e) {
-      console.warn('Could not sync band order to database:', e);
+      console.warn("Could not sync band order to database:", e);
     }
   };
 
   if (!isOpen) return null;
 
-  const currentActiveBandId = currentUser?.band_id || '';
+  const currentActiveBandId = currentUser?.band_id || "";
   const activeClean = cleanBandId(currentActiveBandId);
 
   const handleRequestLeaveBand = (bandId: string, bandName: string) => {
@@ -172,7 +194,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       const res = await api.leaveBand(bandId);
       if (res && res.success) {
         if (res.user) {
-          localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
+          localStorage.setItem("bakandeya_user", JSON.stringify(res.user));
           if (res.user.band_id && onSwitchBand) {
             await onSwitchBand(res.user.band_id);
           }
@@ -183,20 +205,26 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           window.location.reload();
         }, 400);
       } else {
-        setErrorMessage(res?.message || 'Error al eliminar la banda');
+        setErrorMessage(res?.message || "Error al eliminar la banda");
         setLeavingBandId(null);
       }
     } catch (err: any) {
-      console.error('Error al eliminar banda', err);
+      console.error("Error al eliminar banda", err);
       try {
-        const response = await fetch(`/api/users/leave-band/${encodeURIComponent(bandId)}`, {
-          method: 'DELETE',
-          headers: getAuthHeaders() as Record<string, string>,
-        });
+        const response = await fetch(
+          `/api/users/leave-band/${encodeURIComponent(bandId)}`,
+          {
+            method: "DELETE",
+            headers: getAuthHeaders() as Record<string, string>,
+          },
+        );
         if (response.ok) {
           const resData = await response.json();
           if (resData?.user) {
-            localStorage.setItem('bakandeya_user', JSON.stringify(resData.user));
+            localStorage.setItem(
+              "bakandeya_user",
+              JSON.stringify(resData.user),
+            );
             if (resData.user.band_id && onSwitchBand) {
               await onSwitchBand(resData.user.band_id);
             }
@@ -209,11 +237,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           return;
         }
       } catch {}
-      const rawMsg = err?.message || '';
-      const isNetworkErr = rawMsg === 'Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
+      const rawMsg = err?.message || "";
+      const isNetworkErr =
+        rawMsg === "Failed to fetch" ||
+        rawMsg.includes("NetworkError") ||
+        rawMsg.includes("fetch");
       const userFriendlyMsg = isNetworkErr
-        ? 'Error de conexión con el servidor. Por favor, reintenta en unos instantes.'
-        : rawMsg || 'Error al eliminar la banda de tu usuario';
+        ? "Error de conexión con el servidor. Por favor, reintenta en unos instantes."
+        : rawMsg || "Error al eliminar la banda de tu usuario";
       setErrorMessage(userFriendlyMsg);
       setLeavingBandId(null);
     }
@@ -221,11 +252,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
   const openCreateBandModal = () => {
     setCreateBandStep(1);
-    setNewBandName('');
-    setNewBandLeaderName(currentUser?.name || currentUser?.username || '');
-    setNewBandStyle('');
-    setNewBandLocation('España');
-    setNewBandFeatureCategory('all');
+    setNewBandName("");
+    setNewBandLeaderName(currentUser?.name || currentUser?.username || "");
+    setNewBandStyle("");
+    setNewBandLocation("España");
+    setNewBandFeatureCategory("all");
     setCreatingPlanKey(null);
     setErrorMessage(null);
     setSuccessMessage(null);
@@ -235,12 +266,12 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newBandName.trim()) {
-      setErrorMessage('Por favor, introduce el nombre del proyecto o banda');
+      setErrorMessage("Por favor, introduce el nombre del proyecto o banda");
       return;
     }
     setErrorMessage(null);
     if (SIMPLE_PROMO_ONLY_BAND_CREATION) {
-      handleSelectPlanForCreation('promo');
+      handleSelectPlanForCreation("promo");
       return;
     }
     setCreateBandStep(2);
@@ -249,7 +280,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   const handleSelectPlanForCreation = async (planKey: string) => {
     if (isCreatingBand) return;
     if (!newBandName.trim()) {
-      setErrorMessage('Por favor, introduce el nombre del proyecto');
+      setErrorMessage("Por favor, introduce el nombre del proyecto");
       setCreateBandStep(1);
       return;
     }
@@ -262,7 +293,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
     try {
       const res = await api.createBand({
         bandName: newBandName.trim(),
-        leaderName: newBandLeaderName.trim() || currentUser?.name || 'Líder',
+        leaderName: newBandLeaderName.trim() || currentUser?.name || "Líder",
         plan: planKey,
         estilo_musical: newBandStyle.trim() || undefined,
         localizacion: newBandLocation.trim() || undefined,
@@ -270,20 +301,28 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
       if (res && res.success) {
         if (res.user) {
-          localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
+          localStorage.setItem("bakandeya_user", JSON.stringify(res.user));
         }
         if (onSwitchBand && res.band_id) {
           await onSwitchBand(res.band_id);
         }
 
         // If paid plan, redirect to Stripe Checkout!
-        if (planKey !== 'ensayo' && planKey !== 'promo' && planKey !== 'promo_plus' && res.band_id) {
+        if (
+          planKey !== "ensayo" &&
+          planKey !== "promo" &&
+          planKey !== "promo_plus" &&
+          res.band_id
+        ) {
           try {
             await api.startCheckout({
               planId: planKey,
-              billingInterval: 'monthly',
+              billingInterval: "monthly",
               bandId: res.band_id,
-              userEmail: currentUser?.email && currentUser.email.includes('@') ? currentUser.email : undefined,
+              userEmail:
+                currentUser?.email && currentUser.email.includes("@")
+                  ? currentUser.email
+                  : undefined,
             });
             setShowCreateBandModal(false);
             setCreateBandStep(1);
@@ -291,36 +330,44 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
             setCreatingPlanKey(null);
             return;
           } catch (stripeErr: any) {
-            console.error('Error initiating Stripe checkout on band creation:', stripeErr);
+            console.error(
+              "Error initiating Stripe checkout on band creation:",
+              stripeErr,
+            );
           }
         }
 
-        setSuccessMessage(`¡Proyecto"${newBandName.trim()}" creado y configurado correctamente!`);
+        setSuccessMessage(
+          `¡Proyecto"${newBandName.trim()}" creado y configurado correctamente!`,
+        );
         setShowCreateBandModal(false);
         setCreateBandStep(1);
-        setNewBandName('');
-        setNewBandLeaderName('');
-        setNewBandStyle('');
-        setNewBandLocation('España');
+        setNewBandName("");
+        setNewBandLeaderName("");
+        setNewBandStyle("");
+        setNewBandLocation("España");
 
         if (onRefreshData) await onRefreshData();
         setTimeout(() => {
           window.location.reload();
         }, 400);
       } else {
-        setErrorMessage((res as any)?.error || 'Error al crear el proyecto');
+        setErrorMessage((res as any)?.error || "Error al crear el proyecto");
         setIsCreatingBand(false);
         setCreatingPlanKey(null);
       }
     } catch (err: any) {
-      console.error('Error creating band in modal:', err);
-      setErrorMessage(err.message || 'Error al crear el proyecto musical');
+      console.error("Error creating band in modal:", err);
+      setErrorMessage(err.message || "Error al crear el proyecto musical");
       setIsCreatingBand(false);
       setCreatingPlanKey(null);
     }
   };
 
-  const handleSetMainBandAction = async (e: React.MouseEvent, bandId: string) => {
+  const handleSetMainBandAction = async (
+    e: React.MouseEvent,
+    bandId: string,
+  ) => {
     e.stopPropagation();
     e.preventDefault();
     if (settingMainBandId) return;
@@ -334,11 +381,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       } else {
         await api.setMainBand(bandId);
       }
-      setSuccessMessage('¡Banda establecida como tu Proyecto Principal!');
+      setSuccessMessage("¡Banda establecida como tu Proyecto Principal!");
       if (onRefreshData) await onRefreshData();
     } catch (err: any) {
-      console.error('Error setting main band:', err);
-      setErrorMessage(err.message || 'Error al establecer la banda principal');
+      console.error("Error setting main band:", err);
+      setErrorMessage(err.message || "Error al establecer la banda principal");
     } finally {
       setSettingMainBandId(null);
     }
@@ -351,18 +398,18 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
     try {
       const uploadedUrl = await uploadFileToServer(file, {
         bandId,
-        category: 'logo',
+        category: "logo",
       });
       const clean = cleanBandId(bandId);
 
       // Persist to EPK and upload-logo endpoints
       const authHeaders = getAuthHeaders() as Record<string, string>;
-      const res = await fetch('/api/users/upload-logo', {
-        method: 'POST',
+      const res = await fetch("/api/users/upload-logo", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...authHeaders,
-          'x-band-id': bandId,
+          "x-band-id": bandId,
         },
         body: JSON.stringify({
           bandId,
@@ -372,7 +419,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Error al guardar el logotipo en el servidor');
+        throw new Error(
+          data.error || "Error al guardar el logotipo en el servidor",
+        );
       }
 
       setCustomLogos((prev) => ({ ...prev, [clean]: uploadedUrl }));
@@ -385,10 +434,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         onRefreshData();
       }
 
-      setSuccessMessage('¡Logo actualizado correctamente!');
+      setSuccessMessage("¡Logo actualizado correctamente!");
     } catch (err: any) {
-      console.error('Error uploading logo in BandSwitcherModal:', err);
-      setErrorMessage('Error al subir el logo. Inténtalo de nuevo.');
+      console.error("Error uploading logo in BandSwitcherModal:", err);
+      setErrorMessage("Error al subir el logo. Inténtalo de nuevo.");
     } finally {
       setUploadingBandId(null);
     }
@@ -411,20 +460,33 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       const bid = b.band_id;
       if (bid) {
         const clean = cleanBandId(bid);
-        let logo = customLogos[clean] || b.logoUrl || (b as any).logo_url || (b as any).imagen_url || '';
-        if (isSameBandId(bid, currentActiveBandId) && epkConfig?.logoUrl && !customLogos[clean]) {
+        let logo =
+          customLogos[clean] ||
+          b.logoUrl ||
+          (b as any).logo_url ||
+          (b as any).imagen_url ||
+          "";
+        if (
+          isSameBandId(bid, currentActiveBandId) &&
+          epkConfig?.logoUrl &&
+          !customLogos[clean]
+        ) {
           logo = epkConfig.logoUrl;
         }
-        if (!logo && clean === 'bakandeya') {
-          logo = '/logo_bakandeya_bueno_sin_fondo.png';
+        if (!logo && clean === "bakandeya") {
+          logo = "/logo_bakandeya_bueno_sin_fondo.png";
         }
         if (!bandListMap.has(clean)) {
           bandListMap.set(clean, {
             band_id: bid,
-            bandName: b.bandName || 'Banda',
-            role: b.role || 'member',
+            bandName: b.bandName || "Banda",
+            role: b.role || "member",
             logoUrl: logo,
-            plan: b.plan || (isSameBandId(bid, currentActiveBandId) ? currentUser?.plan : 'emergente'),
+            plan:
+              b.plan ||
+              (isSameBandId(bid, currentActiveBandId)
+                ? currentUser?.plan
+                : "emergente"),
           });
         }
       }
@@ -433,16 +495,16 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
   // Ensure active band is present
   if (!bandListMap.has(activeClean)) {
-    let logo = customLogos[activeClean] || epkConfig?.logoUrl || '';
-    if (!logo && activeClean === 'bakandeya') {
-      logo = '/logo_bakandeya_bueno_sin_fondo.png';
+    let logo = customLogos[activeClean] || epkConfig?.logoUrl || "";
+    if (!logo && activeClean === "bakandeya") {
+      logo = "/logo_bakandeya_bueno_sin_fondo.png";
     }
     bandListMap.set(activeClean, {
       band_id: currentActiveBandId,
-      bandName: currentUser?.bandName || currentUser?.name || 'BAKANDEYA',
-      role: currentUser?.role || 'leader',
+      bandName: currentUser?.bandName || currentUser?.name || "BAKANDEYA",
+      role: currentUser?.role || "leader",
       logoUrl: logo,
-      plan: currentUser?.plan || 'ensayo',
+      plan: currentUser?.plan || "ensayo",
     });
   }
 
@@ -461,14 +523,18 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
     return a.bandName.localeCompare(b.bandName);
   });
 
-  const handleMoveBand = (bandId: string, direction: 'left' | 'right', e: React.MouseEvent) => {
+  const handleMoveBand = (
+    bandId: string,
+    direction: "left" | "right",
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation();
     const currentCleanIds = uniqueBands.map((b) => cleanBandId(b.band_id));
     const cleanId = cleanBandId(bandId);
     const idx = currentCleanIds.indexOf(cleanId);
     if (idx === -1) return;
 
-    const targetIdx = direction === 'left' ? idx - 1 : idx + 1;
+    const targetIdx = direction === "left" ? idx - 1 : idx + 1;
     if (targetIdx < 0 || targetIdx >= currentCleanIds.length) return;
 
     const newOrder = [...currentCleanIds];
@@ -478,7 +544,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   };
 
   const handleDragStart = (bandId: string, e: React.DragEvent) => {
-    e.dataTransfer.setData('text/plain', bandId);
+    e.dataTransfer.setData("text/plain", bandId);
     setDraggedBandId(bandId);
   };
 
@@ -488,7 +554,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
   const handleDrop = (targetBandId: string, e: React.DragEvent) => {
     e.preventDefault();
-    const sourceBandId = e.dataTransfer.getData('text/plain') || draggedBandId;
+    const sourceBandId = e.dataTransfer.getData("text/plain") || draggedBandId;
     setDraggedBandId(null);
     if (!sourceBandId || sourceBandId === targetBandId) return;
 
@@ -520,8 +586,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       setSwitchingBandId(null);
       onClose();
     } catch (err: any) {
-      console.error('Error switching band:', err);
-      setErrorMessage(err.message || 'Error al cambiar de banda');
+      console.error("Error switching band:", err);
+      setErrorMessage(err.message || "Error al cambiar de banda");
       setSwitchingBandId(null);
     }
   };
@@ -533,7 +599,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--acc)]/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Main Container */}
-        <div className="relative w-full max-w-4xl bg-[var(--bg)] rounded-3xl overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">
+        <div className="relative w-full max-w-4xl bg-[var(--bg)] rounded-[var(--r-l)] overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -550,10 +616,15 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               <Sparkles className="w-3.5 h-3.5" />
               <span>Perfil & Selección de Banda</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-black font-display tracking-tight text-[var(--ink)]">¿Quién toca hoy?</h2>
+            <h2 className="text-3xl md:text-4xl font-black font-display tracking-tight text-[var(--ink)]">
+              ¿Quién toca hoy?
+            </h2>
             <p className="text-[var(--ink-2)] text-xs md:text-sm font-sans max-w-lg mt-2">
-              Elige tu proyecto musical activo, marca tu <strong className="text-[var(--acc)] font-semibold">Banda Principal</strong> o
-              reordena tus proyectos arrastrándolos o con las flechas.
+              Elige tu proyecto musical activo, marca tu{" "}
+              <strong className="text-[var(--acc)] font-semibold">
+                Banda Principal
+              </strong>{" "}
+              o reordena tus proyectos arrastrándolos o con las flechas.
             </p>
 
             {/* Search bar if multiple bands */}
@@ -572,7 +643,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           </div>
 
           {errorMessage && (
-            <div className="mb-4 p-3 bg-[var(--alert)]/15 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] font-medium">{errorMessage}</div>
+            <div className="mb-4 p-3 bg-[var(--alert)]/15 text-[var(--ink-2)] text-xs rounded-[var(--r-m)] font-medium">
+              {errorMessage}
+            </div>
           )}
 
           {successMessage && (
@@ -585,10 +658,22 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           {/* Band Cards Grid (Sleek Profile Switcher) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 justify-center items-stretch max-h-[55vh] overflow-y-auto p-2 no-scrollbar">
             {uniqueBands
-              .filter((band) => !searchQuery || band.bandName.toLowerCase().includes(searchQuery.toLowerCase()))
+              .filter(
+                (band) =>
+                  !searchQuery ||
+                  band.bandName
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()),
+              )
               .map((band, index, array) => {
-                const isActive = isSameBandId(band.band_id, currentActiveBandId);
-                const isMain = isSameBandId(band.band_id, localMainBandId || mainBandId);
+                const isActive = isSameBandId(
+                  band.band_id,
+                  currentActiveBandId,
+                );
+                const isMain = isSameBandId(
+                  band.band_id,
+                  localMainBandId || mainBandId,
+                );
                 const isSwitching = switchingBandId === band.band_id;
                 const isSettingMain = settingMainBandId === band.band_id;
                 const isLeavingThis = leavingBandId === band.band_id;
@@ -602,14 +687,19 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     onDragStart={(e) => handleDragStart(band.band_id, e)}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(band.band_id, e)}
-                    onClick={() => !switchingBandId && !isSettingMain && !isLeavingThis && handleSelectBand(band.band_id)}
+                    onClick={() =>
+                      !switchingBandId &&
+                      !isSettingMain &&
+                      !isLeavingThis &&
+                      handleSelectBand(band.band_id)
+                    }
                     className={`group relative flex flex-col items-center p-3 sm:p-4 rounded-[var(--r-l)] min-h-[175px] transition-all duration-300 cursor-pointer select-none ${
-                      isDragged ? 'opacity-30 scale-95' : ''
+                      isDragged ? "opacity-30 scale-95" : ""
                     } ${
                       isActive
-                        ? 'bg-gradient-to-b from-amber-0/20 via-[var(--surface)] to-[var(--bg)] /80 ring-1 ring-amber-0/40'
-                        : 'bg-[var(--surface)] hover:/70 hover:bg-[var(--surface)] hover:shadow-lg'
-                    } ${switchingBandId && !isSwitching ? 'opacity-40 grayscale pointer-events-none' : ''}`}
+                        ? "bg-gradient-to-b from-[var(--acc)]/20 via-[var(--surface)] to-[var(--bg)]  ring-1 ring-[var(--acc)]/40"
+                        : "bg-[var(--surface)] hover:bg-[var(--sunken)]"
+                    } ${switchingBandId && !isSwitching ? "opacity-40 grayscale pointer-events-none" : ""}`}
                   >
                     {/* Top Bar on Card: Star (Principal) + Reorder arrows on left, Settings + Delete on right */}
                     <div className="w-full flex items-center justify-between gap-1 z-20 mb-2 shrink-0">
@@ -618,16 +708,24 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         {/* Star Button (Principal) */}
                         <button
                           type="button"
-                          onClick={(e) => handleSetMainBandAction(e, band.band_id)}
+                          onClick={(e) =>
+                            handleSetMainBandAction(e, band.band_id)
+                          }
                           disabled={isMain || !!settingMainBandId}
                           className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer flex items-center justify-center z-30 ${
                             isMain
-                              ? 'text-[var(--acc)] bg-[var(--acc)]/60/20'
-                              : 'text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:/60'
+                              ? "text-[var(--acc)] bg-[var(--acc)]/60/20"
+                              : "text-[var(--ink-2)] hover:text-[var(--acc)]/70 bg-[var(--sunken)] hover:bg-[var(--surface)]/80 hover:/60"
                           }`}
-                          title={isMain ? 'Banda Principal por defecto' : 'Fijar como Banda Principal'}
+                          title={
+                            isMain
+                              ? "Banda Principal por defecto"
+                              : "Fijar como Banda Principal"
+                          }
                         >
-                          <Star className={`w-3.5 h-3.5 ${isMain ? 'fill-amber-400 text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
+                          <Star
+                            className={`w-3.5 h-3.5 ${isMain ? "fill-amber-400 text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+                          />
                         </button>
 
                         {/* Quick Reorder (left/right) */}
@@ -637,7 +735,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                               <button
                                 type="button"
                                 disabled={index === 0}
-                                onClick={(e) => handleMoveBand(band.band_id, 'left', e)}
+                                onClick={(e) =>
+                                  handleMoveBand(band.band_id, "left", e)
+                                }
                                 className="p-1 rounded-md bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                                 title="Mover a la izquierda"
                               >
@@ -646,7 +746,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                               <button
                                 type="button"
                                 disabled={index === array.length - 1}
-                                onClick={(e) => handleMoveBand(band.band_id, 'right', e)}
+                                onClick={(e) =>
+                                  handleMoveBand(band.band_id, "right", e)
+                                }
                                 className="p-1 rounded-md bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                                 title="Mover a la derecha"
                               >
@@ -700,7 +802,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <img
                           src={band.logoUrl}
                           alt={band.bandName}
-                          onError={() => setFailedLogos((prev) => new Set(prev).add(band.band_id))}
+                          onError={() =>
+                            setFailedLogos((prev) =>
+                              new Set(prev).add(band.band_id),
+                            )
+                          }
                           className="w-full h-full object-contain filter group-hover:scale-105 transition-transform duration-300"
                           referrerPolicy="no-referrer"
                         />
@@ -721,7 +827,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       >
                         <Upload className="w-4 h-4 text-amber-400 animate-bounce" />
                         <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-amber-200">
-                          {uploadingBandId === band.band_id ? 'Subiendo...' : 'Logo'}
+                          {uploadingBandId === band.band_id
+                            ? "Subiendo..."
+                            : "Logo"}
                         </span>
                         <input
                           type="file"
@@ -733,23 +841,26 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                             if (file) {
                               handleUploadLogo(band.band_id, file);
                             }
-                            e.target.value = '';
+                            e.target.value = "";
                           }}
                         />
                       </label>
 
                       {/* Loading Spinner Overlay */}
-                      {(isSwitching || isSettingMain || isLeavingThis || uploadingBandId === band.band_id) && (
+                      {(isSwitching ||
+                        isSettingMain ||
+                        isLeavingThis ||
+                        uploadingBandId === band.band_id) && (
                         <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc)] gap-1 z-30">
                           <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
                           <span className="text-[9px] font-sans text-[var(--acc)]/70 font-bold">
                             {uploadingBandId === band.band_id
-                              ? 'Subiendo'
+                              ? "Subiendo"
                               : isSettingMain
-                                ? 'Guardando'
+                                ? "Guardando"
                                 : isLeavingThis
-                                  ? 'Eliminando'
-                                  : 'Cambiando'}
+                                  ? "Eliminando"
+                                  : "Cambiando"}
                           </span>
                         </div>
                       )}
@@ -767,7 +878,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                     {/* Plan Badge */}
                     <div className="mt-1 flex items-center justify-center shrink-0">
-                      {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' || band.plan === 'promo_plus' ? (
+                      {SIMPLE_PROMO_ONLY_BAND_CREATION ||
+                      band.plan === "promo" ||
+                      band.plan === "promo_plus" ? (
                         <span
                           className="inline-flex items-center gap-1 text-[9px] font-sans font-semibold px-2 py-0.5 rounded-md"
                           style={{
@@ -825,15 +938,22 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)] group-hover:/50 flex items-center justify-center text-[var(--ink-2)] group-hover:text-[var(--acc)] transition-all mb-2">
                 <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </div>
-              <span className="text-xs font-bold font-display tracking-wider text-center">Añadir Proyecto</span>
-              <span className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 text-center">Registrar otra banda</span>
+              <span className="text-xs font-bold font-display tracking-wider text-center">
+                Añadir Proyecto
+              </span>
+              <span className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5 text-center">
+                Registrar otra banda
+              </span>
             </div>
           </div>
 
           {/* Modal Footer */}
           <div className="mt-8 pt-4/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--ink-2)]">
             <span className="font-sans">
-              {uniqueBands.length} {uniqueBands.length === 1 ? 'proyecto disponible' : 'proyectos disponibles'}
+              {uniqueBands.length}{" "}
+              {uniqueBands.length === 1
+                ? "proyecto disponible"
+                : "proyectos disponibles"}
             </span>
             <button
               onClick={onClose}
@@ -848,7 +968,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         {showCreateBandModal && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-[var(--scrim)]/85 animate-in fade-in duration-150 overflow-y-auto">
             <div
-              className={`w-full ${createBandStep === 1 ? 'max-w-lg' : 'max-w-5xl'} rounded-3xl bg-[var(--bg)] text-[var(--ink-2)] p-6 sm:p-8 space-y-6 transition-all duration-300 my-auto`}
+              className={`w-full ${createBandStep === 1 ? "max-w-lg" : "max-w-5xl"} rounded-[var(--r-l)] bg-[var(--bg)] text-[var(--ink-2)] p-6 sm:p-8 space-y-6 transition-all duration-300 my-auto`}
             >
               {/* Step 1: Band Details */}
               {createBandStep === 1 && (
@@ -859,9 +979,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <Guitar className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-base text-[var(--ink)] font-display tracking-wide">Añadir Nuevo Proyecto Musical</h3>
+                        <h3 className="font-bold text-base text-[var(--ink)] font-display tracking-wide">
+                          Añadir Nuevo Proyecto Musical
+                        </h3>
                         <p className="text-xs text-[var(--acc)]/80 font-sans">
-                          {SIMPLE_PROMO_ONLY_BAND_CREATION ? 'Información del proyecto' : 'Paso 1 de 2 • Información del proyecto'}
+                          {SIMPLE_PROMO_ONLY_BAND_CREATION
+                            ? "Información del proyecto"
+                            : "Paso 1 de 2 • Información del proyecto"}
                         </p>
                       </div>
                     </div>
@@ -881,7 +1005,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                           <Guitar className="w-3.5 h-3.5 text-[var(--acc)]" />
                           <span>Nombre del Proyecto / Banda *</span>
                         </label>
-                        <BandNameStylerHelper value={newBandName} onChange={(styled) => setNewBandName(styled)} />
+                        <BandNameStylerHelper
+                          value={newBandName}
+                          onChange={(styled) => setNewBandName(styled)}
+                        />
                       </div>
                       <input
                         type="text"
@@ -948,7 +1075,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       </button>
                       <button
                         type="submit"
-                        disabled={!newBandName.trim() || (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)}
+                        disabled={
+                          !newBandName.trim() ||
+                          (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)
+                        }
                         className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] text-xs font-bold transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
@@ -1000,54 +1130,58 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                   <div className="text-center space-y-2">
                     <h2 className="text-2xl sm:text-3xl font-bold text-[var(--ink-2)] tracking-tight">
-                      Elige el plan para <span className="text-[var(--acc)]">{newBandName.trim() || 'tu Proyecto'}</span>
+                      Elige el plan para{" "}
+                      <span className="text-[var(--acc)]">
+                        {newBandName.trim() || "tu Proyecto"}
+                      </span>
                     </h2>
                     <p className="text-[var(--ink-2)] max-w-xl mx-auto text-xs sm:text-sm">
-                      Sube de nivel tu carrera musical. Puedes cambiar de plan en cualquier momento.
+                      Sube de nivel tu carrera musical. Puedes cambiar de plan
+                      en cualquier momento.
                     </p>
 
                     {/* Filter category pills */}
                     <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
                       <button
                         type="button"
-                        onClick={() => setNewBandFeatureCategory('all')}
+                        onClick={() => setNewBandFeatureCategory("all")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
-                          newBandFeatureCategory === 'all'
-                            ? 'bg-[var(--acc)] text-[var(--ink)]/20'
-                            : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                          newBandFeatureCategory === "all"
+                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
                         Todas las funciones
                       </button>
                       <button
                         type="button"
-                        onClick={() => setNewBandFeatureCategory('booking')}
+                        onClick={() => setNewBandFeatureCategory("booking")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
-                          newBandFeatureCategory === 'booking'
-                            ? 'bg-[var(--acc)] text-[var(--ink)]/20'
-                            : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                          newBandFeatureCategory === "booking"
+                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
                         🎯 Booking & Salas
                       </button>
                       <button
                         type="button"
-                        onClick={() => setNewBandFeatureCategory('media')}
+                        onClick={() => setNewBandFeatureCategory("media")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
-                          newBandFeatureCategory === 'media'
-                            ? 'bg-[var(--acc)] text-[var(--ink)]/20'
-                            : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                          newBandFeatureCategory === "media"
+                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
                         📱 Redes, EPK & Fans
                       </button>
                       <button
                         type="button"
-                        onClick={() => setNewBandFeatureCategory('finance')}
+                        onClick={() => setNewBandFeatureCategory("finance")}
                         className={`px-3.5 py-1.5 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
-                          newBandFeatureCategory === 'finance'
-                            ? 'bg-[var(--acc)] text-[var(--ink)]/20'
-                            : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                          newBandFeatureCategory === "finance"
+                            ? "bg-[var(--acc)] text-[var(--ink)]/20"
+                            : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                         }`}
                       >
                         💼 Finanzas & Agentes 360
@@ -1058,38 +1192,55 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   {/* 4 Pricing & Plan Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch pt-2">
                     {/* PLAN 1: ENSAYO */}
-                    <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover: transition-colors">
+                    <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 flex flex-col hover:transition-colors">
                       <div className="mb-3">
                         <div className="flex items-center justify-between gap-1 mb-1">
                           <span className="text-[10px] font-sans font-bold px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">
                             Gratis
                           </span>
                         </div>
-                        <h3 className="text-base font-bold text-[var(--ink-2)]">Ensayo</h3>
+                        <h3 className="text-base font-bold text-[var(--ink-2)]">
+                          Ensayo
+                        </h3>
                         <div className="mt-1.5 flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-[var(--ink)]">0€</span>
-                          <span className="text-[11px] text-[var(--ink-2)] font-medium">/ siempre</span>
+                          <span className="text-2xl font-black text-[var(--ink)]">
+                            0€
+                          </span>
+                          <span className="text-[11px] text-[var(--ink-2)] font-medium">
+                            / siempre
+                          </span>
                         </div>
-                        <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">Para proyectos noveles que arrancan su local.</p>
+                        <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">
+                          Para proyectos noveles que arrancan su local.
+                        </p>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
                         {[
-                          { text: '10 salas en CRM', cat: 'booking' },
-                          { text: 'Calendario y bolos', cat: 'booking' },
-                          { text: 'EPK Dossier básico', cat: 'media' },
-                          { text: 'Repertorio y afinador', cat: 'media' },
+                          { text: "10 salas en CRM", cat: "booking" },
+                          { text: "Calendario y bolos", cat: "booking" },
+                          { text: "EPK Dossier básico", cat: "media" },
+                          { text: "Repertorio y afinador", cat: "media" },
                         ].map((f, i) => {
-                          const isHighlighted = newBandFeatureCategory === 'all' || newBandFeatureCategory === f.cat;
+                          const isHighlighted =
+                            newBandFeatureCategory === "all" ||
+                            newBandFeatureCategory === f.cat;
                           return (
                             <li
                               key={i}
-                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-[var(--ink-2)] opacity-100' : 'text-[var(--ink-2)] opacity-40'}`}
+                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? "text-[var(--ink-2)] opacity-100" : "text-[var(--ink-2)] opacity-40"}`}
                             >
                               <Check
-                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}
+                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
                               />
-                              <span className={isHighlighted && newBandFeatureCategory !== 'all' ? 'font-bold text-[var(--acc)]' : ''}>
+                              <span
+                                className={
+                                  isHighlighted &&
+                                  newBandFeatureCategory !== "all"
+                                    ? "font-bold text-[var(--acc)]"
+                                    : ""
+                                }
+                              >
                                 {f.text}
                               </span>
                             </li>
@@ -1099,11 +1250,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <button
                         type="button"
-                        onClick={() => handleSelectPlanForCreation('ensayo')}
+                        onClick={() => handleSelectPlanForCreation("ensayo")}
                         disabled={isCreatingBand}
                         className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isCreatingBand && creatingPlanKey === 'ensayo' ? (
+                        {isCreatingBand && creatingPlanKey === "ensayo" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
                             <span>Configurando...</span>
@@ -1115,20 +1266,27 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
 
                     {/* PLAN 2: LOCAL */}
-                    <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover: transition-colors relative">
+                    <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 flex flex-col hover:transition-colors relative">
                       <div className="mb-3">
                         <div className="flex items-center justify-between gap-1 mb-1">
                           <span className="text-[10px] font-sans font-bold px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--ink-2)]">
                             Iniciación
                           </span>
                         </div>
-                        <h3 className="text-base font-bold text-[var(--ink-2)]">Local</h3>
+                        <h3 className="text-base font-bold text-[var(--ink-2)]">
+                          Local
+                        </h3>
                         <div className="mt-1.5 flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-[var(--ink)]">12€</span>
-                          <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
+                          <span className="text-2xl font-black text-[var(--ink)]">
+                            12€
+                          </span>
+                          <span className="text-[11px] text-[var(--ink-2)]">
+                            / mes
+                          </span>
                         </div>
                         <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">
-                          El kit esencial para bandas tocando en su circuito local.
+                          El kit esencial para bandas tocando en su circuito
+                          local.
                         </p>
                       </div>
 
@@ -1139,21 +1297,30 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
                         {[
-                          { text: '50 salas de conciertos', cat: 'booking' },
-                          { text: '20 medios y radios', cat: 'booking' },
-                          { text: '100 fans con QR', cat: 'media' },
-                          { text: 'Reels & Social Center', cat: 'media' },
+                          { text: "50 salas de conciertos", cat: "booking" },
+                          { text: "20 medios y radios", cat: "booking" },
+                          { text: "100 fans con QR", cat: "media" },
+                          { text: "Reels & Social Center", cat: "media" },
                         ].map((f, i) => {
-                          const isHighlighted = newBandFeatureCategory === 'all' || newBandFeatureCategory === f.cat;
+                          const isHighlighted =
+                            newBandFeatureCategory === "all" ||
+                            newBandFeatureCategory === f.cat;
                           return (
                             <li
                               key={i}
-                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-[var(--ink-2)] opacity-100' : 'text-[var(--ink-2)] opacity-40'}`}
+                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? "text-[var(--ink-2)] opacity-100" : "text-[var(--ink-2)] opacity-40"}`}
                             >
                               <Check
-                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}
+                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
                               />
-                              <span className={isHighlighted && newBandFeatureCategory !== 'all' ? 'font-bold text-[var(--acc)]' : ''}>
+                              <span
+                                className={
+                                  isHighlighted &&
+                                  newBandFeatureCategory !== "all"
+                                    ? "font-bold text-[var(--acc)]"
+                                    : ""
+                                }
+                              >
                                 {f.text}
                               </span>
                             </li>
@@ -1163,11 +1330,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <button
                         type="button"
-                        onClick={() => handleSelectPlanForCreation('local')}
+                        onClick={() => handleSelectPlanForCreation("local")}
                         disabled={isCreatingBand}
                         className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isCreatingBand && creatingPlanKey === 'local' ? (
+                        {isCreatingBand && creatingPlanKey === "local" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
                             <span>Configurando...</span>
@@ -1179,20 +1346,27 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
 
                     {/* PLAN 3: DE GIRA (Destacado) */}
-                    <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col relative">
+                    <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 flex flex-col relative">
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--acc)] text-[var(--ink)] text-[9px] font-bold tracking-wider py-0.5 px-2.5 rounded-full flex items-center gap-1 whitespace-nowrap">
                         <Star className="w-2.5 h-2.5 fill-current" />
                         Más Popular
                       </div>
 
                       <div className="mb-3 mt-1">
-                        <h3 className="text-base font-bold text-[var(--acc)]">De Gira</h3>
+                        <h3 className="text-base font-bold text-[var(--acc)]">
+                          De Gira
+                        </h3>
                         <div className="mt-1.5 flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-[var(--ink)]">29€</span>
-                          <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
+                          <span className="text-2xl font-black text-[var(--ink)]">
+                            29€
+                          </span>
+                          <span className="text-[11px] text-[var(--ink-2)]">
+                            / mes
+                          </span>
                         </div>
                         <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">
-                          Para bandas que tocan con frecuencia y automatizan con IA.
+                          Para bandas que tocan con frecuencia y automatizan con
+                          IA.
                         </p>
                       </div>
 
@@ -1203,24 +1377,33 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
                         {[
-                          { text: 'Salas & medios ilimitados', cat: 'booking' },
+                          { text: "Salas & medios ilimitados", cat: "booking" },
                           {
-                            text: 'Agente Booking IA en batch',
-                            cat: 'booking',
+                            text: "Agente Booking IA en batch",
+                            cat: "booking",
                           },
-                          { text: 'Rutas de Gira & Dietas', cat: 'booking' },
-                          { text: 'Fans & Reels ilimitados', cat: 'media' },
+                          { text: "Rutas de Gira & Dietas", cat: "booking" },
+                          { text: "Fans & Reels ilimitados", cat: "media" },
                         ].map((f, i) => {
-                          const isHighlighted = newBandFeatureCategory === 'all' || newBandFeatureCategory === f.cat;
+                          const isHighlighted =
+                            newBandFeatureCategory === "all" ||
+                            newBandFeatureCategory === f.cat;
                           return (
                             <li
                               key={i}
-                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-[var(--ink-2)] opacity-100' : 'text-[var(--ink-2)] opacity-40'}`}
+                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? "text-[var(--ink-2)] opacity-100" : "text-[var(--ink-2)] opacity-40"}`}
                             >
                               <Zap
-                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`}
+                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
                               />
-                              <span className={isHighlighted && newBandFeatureCategory !== 'all' ? 'font-bold text-[var(--acc)]' : ''}>
+                              <span
+                                className={
+                                  isHighlighted &&
+                                  newBandFeatureCategory !== "all"
+                                    ? "font-bold text-[var(--acc)]"
+                                    : ""
+                                }
+                              >
                                 {f.text}
                               </span>
                             </li>
@@ -1230,11 +1413,11 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <button
                         type="button"
-                        onClick={() => handleSelectPlanForCreation('de_gira')}
+                        onClick={() => handleSelectPlanForCreation("de_gira")}
                         disabled={isCreatingBand}
                         className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer/20 flex items-center justify-center gap-1.5 disabled:opacity-50"
                       >
-                        {isCreatingBand && creatingPlanKey === 'de_gira' ? (
+                        {isCreatingBand && creatingPlanKey === "de_gira" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
                             <span>Configurando...</span>
@@ -1249,17 +1432,23 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
 
                     {/* PLAN 4: CABEZA DE CARTEL */}
-                    <div className="bg-[var(--surface)] rounded-3xl p-5 flex flex-col hover:border-[var(--ok)] transition-colors">
+                    <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 flex flex-col hover:bg-[var(--ok-soft)] transition-colors">
                       <div className="mb-3">
                         <div className="flex items-center justify-between gap-1 mb-1">
                           <span className="text-[10px] font-sans font-bold px-2 py-0.5 rounded bg-[var(--ok-soft)] text-[var(--ink-2)]">
                             Élite 360
                           </span>
                         </div>
-                        <h3 className="text-base font-bold text-[var(--ink-2)]">Cabeza de Cartel</h3>
+                        <h3 className="text-base font-bold text-[var(--ink-2)]">
+                          Cabeza de Cartel
+                        </h3>
                         <div className="mt-1.5 flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-[var(--ink)]">79€</span>
-                          <span className="text-[11px] text-[var(--ink-2)]">/ mes</span>
+                          <span className="text-2xl font-black text-[var(--ink)]">
+                            79€
+                          </span>
+                          <span className="text-[11px] text-[var(--ink-2)]">
+                            / mes
+                          </span>
                         </div>
                         <p className="text-[11px] text-[var(--ink-2)] mt-1.5 min-h-[32px]">
                           Control total para proyectos profesionales y agencias.
@@ -1273,27 +1462,36 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
                         {[
-                          { text: 'Hasta 5 bandas multi-proyecto', cat: 'all' },
-                          { text: 'Finanzas & Balances Pro', cat: 'finance' },
+                          { text: "Hasta 5 bandas multi-proyecto", cat: "all" },
+                          { text: "Finanzas & Balances Pro", cat: "finance" },
                           {
-                            text: 'Taller Merchan & Inventario',
-                            cat: 'finance',
+                            text: "Taller Merchan & Inventario",
+                            cat: "finance",
                           },
                           {
-                            text: 'IA Multi-Agente & Soporte VIP',
-                            cat: 'finance',
+                            text: "IA Multi-Agente & Soporte VIP",
+                            cat: "finance",
                           },
                         ].map((f, i) => {
-                          const isHighlighted = newBandFeatureCategory === 'all' || newBandFeatureCategory === f.cat;
+                          const isHighlighted =
+                            newBandFeatureCategory === "all" ||
+                            newBandFeatureCategory === f.cat;
                           return (
                             <li
                               key={i}
-                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-[var(--ink-2)] opacity-100' : 'text-[var(--ink-2)] opacity-40'}`}
+                              className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? "text-[var(--ink-2)] opacity-100" : "text-[var(--ink-2)] opacity-40"}`}
                             >
                               <Shield
-                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? 'text-[var(--ok)]' : 'text-[var(--ink-2)]'}`}
+                                className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isHighlighted ? "text-[var(--ok)]" : "text-[var(--ink-2)]"}`}
                               />
-                              <span className={isHighlighted && newBandFeatureCategory !== 'all' ? 'font-bold text-[var(--acc)]' : ''}>
+                              <span
+                                className={
+                                  isHighlighted &&
+                                  newBandFeatureCategory !== "all"
+                                    ? "font-bold text-[var(--acc)]"
+                                    : ""
+                                }
+                              >
                                 {f.text}
                               </span>
                             </li>
@@ -1303,11 +1501,14 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                       <button
                         type="button"
-                        onClick={() => handleSelectPlanForCreation('cabeza_de_cartel')}
+                        onClick={() =>
+                          handleSelectPlanForCreation("cabeza_de_cartel")
+                        }
                         disabled={isCreatingBand}
                         className="w-full py-2.5 rounded-[var(--r-l)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isCreatingBand && creatingPlanKey === 'cabeza_de_cartel' ? (
+                        {isCreatingBand &&
+                        creatingPlanKey === "cabeza_de_cartel" ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-[var(--ink)]" />
                             <span>Configurando...</span>
@@ -1333,14 +1534,22 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   <Trash2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm text-[var(--ink)] font-sans">¿Eliminar proyecto?</h3>
-                  <p className="text-xs text-[var(--ink-2)]">Desvincular de tu usuario</p>
+                  <h3 className="font-bold text-sm text-[var(--ink)] font-sans">
+                    ¿Eliminar proyecto?
+                  </h3>
+                  <p className="text-xs text-[var(--ink-2)]">
+                    Desvincular de tu usuario
+                  </p>
                 </div>
               </div>
 
               <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                ¿Estás seguro de que deseas eliminar <strong className="text-[var(--ink)]">"{bandToDelete.name}"</strong> de tu cuenta?
-                Perderás el acceso a sus salas, eventos y repertorio.
+                ¿Estás seguro de que deseas eliminar{" "}
+                <strong className="text-[var(--ink)]">
+                  "{bandToDelete.name}"
+                </strong>{" "}
+                de tu cuenta? Perderás el acceso a sus salas, eventos y
+                repertorio.
               </p>
 
               <div className="flex items-center justify-end gap-2 pt-2">
@@ -1368,14 +1577,23 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         {showUpgradeModal &&
           (() => {
             const targetBand = selectedBandForUpgrade ||
-              availableBands.find((b) => isSameBandId(b.band_id, currentUser?.band_id)) || {
+              availableBands.find((b) =>
+                isSameBandId(b.band_id, currentUser?.band_id),
+              ) || {
                 band_id: currentUser?.band_id,
                 bandName: currentUser?.bandName,
                 plan: currentUser?.plan,
               };
-            const targetBandName = targetBand.bandName || targetBand.nombre_banda || currentUser?.bandName || 'tu banda';
+            const targetBandName =
+              targetBand.bandName ||
+              targetBand.nombre_banda ||
+              currentUser?.bandName ||
+              "tu banda";
             const targetBandPlan =
-              targetBand.plan || (isSameBandId(targetBand.band_id, currentUser?.band_id) ? currentUser?.plan : 'ensayo');
+              targetBand.plan ||
+              (isSameBandId(targetBand.band_id, currentUser?.band_id)
+                ? currentUser?.plan
+                : "ensayo");
             const currentPlanDef = getPlanDefinition(targetBandPlan);
 
             return (
@@ -1390,7 +1608,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         <h3 className="font-bold text-sm text-[var(--acc)]/70 font-sans tracking-wider">
                           Planes & Upgrade — {targetBandName}
                         </h3>
-                        <p className="text-[10px] text-[var(--ink-2)] font-sans">Plan independiente para {targetBandName}</p>
+                        <p className="text-[10px] text-[var(--ink-2)] font-sans">
+                          Plan independiente para {targetBandName}
+                        </p>
                       </div>
                     </div>
                     <button
@@ -1404,31 +1624,46 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                   <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                     <div className="space-y-3">
                       {Object.values(PLANS)
-                        .filter((p) => !SIMPLE_PROMO_ONLY_BAND_CREATION || p.id === 'promo')
+                        .filter(
+                          (p) =>
+                            !SIMPLE_PROMO_ONLY_BAND_CREATION ||
+                            p.id === "promo",
+                        )
                         .map((plan) => {
                           const isCurrent = currentPlanDef.id === plan.id;
                           return (
                             <div
                               key={plan.id}
                               className={`p-4 rounded-[var(--r-m)] transition-all ${
-                                isCurrent ? 'bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30' : 'bg-[var(--surface)]/60 hover:'
+                                isCurrent
+                                  ? "bg-[var(--acc)]/10 /50 ring-1 ring-amber-0/30"
+                                  : "bg-[var(--surface)]/60 hover:"
                               }`}
                             >
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                  <span className="font-bold text-xs text-[var(--ink)] font-sans">{plan.name}</span>
+                                  <span className="font-bold text-xs text-[var(--ink)] font-sans">
+                                    {plan.name}
+                                  </span>
                                   {isCurrent && (
                                     <span className="text-[9px] font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
                                       Plan Actual
                                     </span>
                                   )}
                                 </div>
-                                <span className="text-xs font-bold font-sans text-[var(--acc)]">{plan.price}</span>
+                                <span className="text-xs font-bold font-sans text-[var(--acc)]">
+                                  {plan.price}
+                                </span>
                               </div>
-                              <p className="text-[11px] text-[var(--ink-2)] mt-1">{plan.description}</p>
+                              <p className="text-[11px] text-[var(--ink-2)] mt-1">
+                                {plan.description}
+                              </p>
                               <ul className="mt-2.5 space-y-1 font-sans">
                                 {plan.features.map((feat, idx) => (
-                                  <li key={idx} className="text-[10.5px] text-[var(--ink-2)] flex items-center gap-1.5">
+                                  <li
+                                    key={idx}
+                                    className="text-[10.5px] text-[var(--ink-2)] flex items-center gap-1.5"
+                                  >
                                     <Check className="w-3 h-3 text-[var(--ok)] shrink-0" />
                                     <span>{feat}</span>
                                   </li>
@@ -1437,7 +1672,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                               <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 /80">
                                 <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                                  {isCurrent ? 'Plan activo para esta banda' : 'Cambio de plan inmediato'}
+                                  {isCurrent
+                                    ? "Plan activo para esta banda"
+                                    : "Cambio de plan inmediato"}
                                 </span>
                                 {isCurrent ? (
                                   <span className="text-[10px] font-sans font-bold px-2.5 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
@@ -1449,27 +1686,32 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     type="button"
                                     onClick={async () => {
                                       const isLeaderOrAdmin =
-                                        targetBand?.role === 'leader' ||
-                                        targetBand?.role === 'admin' ||
-                                        currentUser?.role === 'leader' ||
-                                        currentUser?.role === 'admin';
+                                        targetBand?.role === "leader" ||
+                                        targetBand?.role === "admin" ||
+                                        currentUser?.role === "leader" ||
+                                        currentUser?.role === "admin";
                                       if (!isLeaderOrAdmin) {
                                         alert(
-                                          'Sólo los administradores o líderes de esta banda pueden cambiar o mejorar su plan de suscripción.'
+                                          "Sólo los administradores o líderes de esta banda pueden cambiar o mejorar su plan de suscripción.",
                                         );
                                         return;
                                       }
                                       try {
-                                        const targetBandId = targetBand.band_id || currentUser?.band_id;
+                                        const targetBandId =
+                                          targetBand.band_id ||
+                                          currentUser?.band_id;
 
                                         // If it's a paid plan, initiate Stripe Checkout session!
-                                        if (plan.id !== 'ensayo') {
+                                        if (plan.id !== "ensayo") {
                                           await api.startCheckout({
                                             planId: plan.id,
-                                            billingInterval: 'monthly',
+                                            billingInterval: "monthly",
                                             bandId: targetBandId,
                                             userEmail:
-                                              currentUser?.email && currentUser.email.includes('@') ? currentUser.email : undefined,
+                                              currentUser?.email &&
+                                              currentUser.email.includes("@")
+                                                ? currentUser.email
+                                                : undefined,
                                           });
                                           setShowUpgradeModal(false);
                                           return;
@@ -1482,19 +1724,37 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                             band_id: targetBandId,
                                           } as any);
                                         }
-                                        if (isSameBandId(targetBandId, currentUser?.band_id) && currentUser) {
+                                        if (
+                                          isSameBandId(
+                                            targetBandId,
+                                            currentUser?.band_id,
+                                          ) &&
+                                          currentUser
+                                        ) {
                                           const updatedUser = {
                                             ...currentUser,
                                             plan: plan.id,
                                           };
-                                          localStorage.setItem('bakandeya_user', JSON.stringify(updatedUser));
+                                          localStorage.setItem(
+                                            "bakandeya_user",
+                                            JSON.stringify(updatedUser),
+                                          );
                                         }
                                         setShowUpgradeModal(false);
-                                        setSuccessMessage(`¡Plan de ${targetBandName} cambiado a ${plan.name}!`);
-                                        if (onRefreshData) await onRefreshData();
+                                        setSuccessMessage(
+                                          `¡Plan de ${targetBandName} cambiado a ${plan.name}!`,
+                                        );
+                                        if (onRefreshData)
+                                          await onRefreshData();
                                       } catch (e: any) {
-                                        console.error('Error al cambiar plan:', e);
-                                        alert(e?.message || 'No se pudo actualizar el plan. Reintenta en unos instantes.');
+                                        console.error(
+                                          "Error al cambiar plan:",
+                                          e,
+                                        );
+                                        alert(
+                                          e?.message ||
+                                            "No se pudo actualizar el plan. Reintenta en unos instantes.",
+                                        );
                                       }
                                     }}
                                     className="px-3 py-1.5 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--acc-ink)] font-bold font-sans text-xs transition-all hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"

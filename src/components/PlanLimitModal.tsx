@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Sparkles, X, Lock, Check, ExternalLink, ArrowRight } from 'lucide-react';
-import { PlanDefinition, getPlanDefinition, normalizePlan, getPlanLimits } from '../utils/planPermissions';
-import { CheckoutButton } from './CheckoutButton';
-import { User } from '../types';
-import { ModalPortal } from './common/ModalPortal';
+import React, { useState } from "react";
+import {
+  ShieldCheck,
+  Sparkles,
+  X,
+  Lock,
+  Check,
+  ExternalLink,
+  ArrowRight,
+} from "lucide-react";
+import {
+  PlanDefinition,
+  getPlanDefinition,
+  normalizePlan,
+  getPlanLimits,
+} from "../utils/planPermissions";
+import { CheckoutButton } from "./CheckoutButton";
+import { User } from "../types";
+import { ModalPortal } from "./common/ModalPortal";
 
 interface PlanLimitModalProps {
   isOpen: boolean;
@@ -11,7 +24,7 @@ interface PlanLimitModalProps {
   onNavigateToPlanes: () => void;
   currentUser?: User;
   activeBandName?: string;
-  resourceType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands';
+  resourceType: "leads" | "medios" | "fans" | "songs" | "bands";
   currentCount: number;
 }
 
@@ -24,28 +37,53 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
   resourceType,
   currentCount,
 }) => {
-  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
+    "monthly",
+  );
 
   if (!isOpen) return null;
 
-  const currentPlan = normalizePlan(currentUser?.plan || 'ensayo');
+  const currentPlan = normalizePlan(currentUser?.plan || "ensayo");
   const currentPlanDef = getPlanDefinition(currentPlan);
 
-  const resourceLabels: Record<string, { singular: string; plural: string; suggestedPlan: 'local' | 'de_gira' | 'cabeza_de_cartel' }> = {
-    leads: { singular: 'sala de conciertos', plural: 'salas de conciertos', suggestedPlan: 'de_gira' },
-    medios: { singular: 'contacto de prensa', plural: 'contactos de prensa', suggestedPlan: 'de_gira' },
-    fans: { singular: 'fan', plural: 'fans', suggestedPlan: 'local' },
-    songs: { singular: 'canción', plural: 'canciones', suggestedPlan: 'local' },
-    bands: { singular: 'banda o proyecto', plural: 'bandas o proyectos', suggestedPlan: 'cabeza_de_cartel' },
+  const resourceLabels: Record<
+    string,
+    {
+      singular: string;
+      plural: string;
+      suggestedPlan: "local" | "de_gira" | "cabeza_de_cartel";
+    }
+  > = {
+    leads: {
+      singular: "sala de conciertos",
+      plural: "salas de conciertos",
+      suggestedPlan: "de_gira",
+    },
+    medios: {
+      singular: "contacto de prensa",
+      plural: "contactos de prensa",
+      suggestedPlan: "de_gira",
+    },
+    fans: { singular: "fan", plural: "fans", suggestedPlan: "local" },
+    songs: { singular: "canción", plural: "canciones", suggestedPlan: "local" },
+    bands: {
+      singular: "banda o proyecto",
+      plural: "bandas o proyectos",
+      suggestedPlan: "cabeza_de_cartel",
+    },
   };
 
-  const info = resourceLabels[resourceType] || { singular: 'registro', plural: 'registros', suggestedPlan: 'de_gira' };
+  const info = resourceLabels[resourceType] || {
+    singular: "registro",
+    plural: "registros",
+    suggestedPlan: "de_gira",
+  };
   const targetPlanDef = getPlanDefinition(info.suggestedPlan);
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain animate-fade-in">
-        <div className="relative w-full max-w-lg rounded-3xl bg-[var(--surface)] p-6 sm:p-8 space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
+        <div className="relative w-full max-w-lg rounded-[var(--r-l)] bg-[var(--surface)] p-6 sm:p-8 space-y-6 text-[var(--ink)] font-sans my-auto max-h-[90vh] overflow-y-auto">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -76,9 +114,13 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               <span>Tus datos actuales están 100% seguros y protegidos</span>
             </div>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-              Puedes consultar, editar, filtrar y exportar todas tus {currentCount} {info.plural} creadas sin ninguna limitación. Para
-              añadir nuevas {info.plural}, mejora tu plan a{' '}
-              <strong className="text-[var(--acc)]/70 font-semibold">{targetPlanDef.name}</strong>.
+              Puedes consultar, editar, filtrar y exportar todas tus{" "}
+              {currentCount} {info.plural} creadas sin ninguna limitación. Para
+              añadir nuevas {info.plural}, mejora tu plan a{" "}
+              <strong className="text-[var(--acc)]/70 font-semibold">
+                {targetPlanDef.name}
+              </strong>
+              .
             </p>
           </div>
 
@@ -96,7 +138,9 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               </span>
             </div>
 
-            <p className="text-xs text-[var(--ink-2)]">{targetPlanDef.description}</p>
+            <p className="text-xs text-[var(--ink-2)]">
+              {targetPlanDef.description}
+            </p>
 
             <ul className="space-y-1.5 text-xs text-[var(--ink-2)]">
               {targetPlanDef.features.slice(0, 3).map((feat, idx) => (
