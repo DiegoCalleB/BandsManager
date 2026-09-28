@@ -181,7 +181,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
                 exportScope === "filtered"
                   ? "bg-[var(--acc)]/20  text-[var(--ink)]"
-                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
               }`}
             >
               <Filter
@@ -210,7 +210,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
                 exportScope === "all"
                   ? "bg-[var(--acc)]/20  text-[var(--ink)]"
-                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
               }`}
             >
               <Layers
@@ -240,7 +240,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                 className={`p-3 rounded-[var(--r-m)] text-left flex items-start gap-3 transition cursor-pointer ${
                   exportScope === "selected"
                     ? "bg-[var(--acc)]/20  text-[var(--ink)]"
-                    : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
+                    : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
                 }`}
               >
                 <CheckSquare
@@ -277,7 +277,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
                 exportFormat === "csv"
                   ? "bg-[var(--ok)]/20 text-[var(--ink)] font-bold"
-                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
               }`}
             >
               <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
@@ -295,7 +295,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               className={`p-3 rounded-[var(--r-m)] text-left flex items-center gap-2.5 transition cursor-pointer ${
                 exportFormat === "json"
                   ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40 font-bold"
-                  : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)]"
+                  : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700 hover:text-[var(--ink)]"
               }`}
             >
               <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />

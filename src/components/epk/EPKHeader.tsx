@@ -148,7 +148,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                 className={`p-1.5 rounded-[var(--r-s)] text-xs transition cursor-pointer ${
                   showMobileMenu
                     ? "bg-[var(--surface)]/60 text-[var(--acc)]/70"
-                    : "bg-[var(--surface)]/80/80 text-[var(--ink-2)]/80 hover:text-[var(--ink)]"
+                    : "bg-[var(--surface)]/80 text-[var(--ink-2)]/80 hover:text-[var(--ink)]"
                 }`}
                 aria-label="Más acciones del dossier"
               >
@@ -266,7 +266,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <select
             value={activeBlock}
             onChange={(e) => onSelectBlock(e.target.value as EPKBlockId)}
-            className="w-full appearance-none bg-[var(--surface)]/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-sans text-[var(--acc)]/70 focus:outline-none focus: cursor-pointer"
+            className="w-full appearance-none bg-[var(--surface)]/80 rounded-[var(--r-s)] py-1.5 pl-2.5 pr-7 text-xs font-bold font-sans text-[var(--acc)]/70 focus:outline-none focus:cursor-pointer"
           >
             {EPK_BLOCKS.map((block) => (
               <option
@@ -465,7 +465,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             onClick={() => onSelectBlock("donaciones")}
             className={`px-2 py-0.5 rounded-md shrink-0 transition ${
               health.numTraducciones > 0
-                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80/20"
+                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]/80"
             }`}
             title="Versiones en otros idiomas (Bloque Donaciones & Idiomas)"
@@ -481,7 +481,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             onClick={() => setShowAiNotice(!showAiNotice)}
             className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-semibold flex items-center gap-1.5 transition ${
               showAiNotice
-                ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 /30"
+                ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             }`}
             title="Ver integración con Chatbot y Agentes de IA"

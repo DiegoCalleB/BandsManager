@@ -174,7 +174,7 @@ export function AIBandScoutModal({
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="Ej: Barcelona, Valencia..."
-                    className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
+                    className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-amber-500 ${textColor}`}
                   />
                 </div>
               </div>
@@ -192,7 +192,7 @@ export function AIBandScoutModal({
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
                     placeholder="Ej: Balkan Ska, Punk Rock..."
-                    className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
+                    className={`w-full pl-9 pr-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-amber-500 ${textColor}`}
                   />
                 </div>
               </div>
@@ -206,7 +206,7 @@ export function AIBandScoutModal({
                 <select
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
-                  className={`w-full px-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-[var(--acc)] ${textColor}`}
+                  className={`w-full px-3 py-2 ${inputBg} ${borderColor} rounded-[var(--r-m)] text-sm focus:focus:ring-1 focus:ring-amber-500 ${textColor}`}
                 >
                   <option value={3}>3 bandas</option>
                   <option value={5}>5 bandas</option>

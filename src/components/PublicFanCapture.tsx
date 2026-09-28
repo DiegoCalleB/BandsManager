@@ -139,7 +139,7 @@ export const PublicFanCapture: React.FC = () => {
                 className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto object-cover"
               />
             ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)] /80 flex items-center justify-center text-[var(--acc)]">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[var(--r-l)] mx-auto bg-[var(--surface)]  flex items-center justify-center text-[var(--acc)]">
                 <Music className="w-10 h-10" />
               </div>
             )}
@@ -177,7 +177,7 @@ export const PublicFanCapture: React.FC = () => {
             className="bg-[var(--surface)]/90 rounded-[var(--r-l)] p-6 space-y-4"
           >
             {errorMsg && (
-              <div className="p-3 bg-[var(--alert)]/90/80 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
+              <div className="p-3 bg-[var(--alert)]/90 text-[var(--alert)]/40 text-xs rounded-[var(--r-m)] font-medium">
                 ⚠️ {errorMsg}
               </div>
             )}
@@ -192,7 +192,7 @@ export const PublicFanCapture: React.FC = () => {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Ej: Laura García"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
               />
             </div>
 
@@ -206,7 +206,7 @@ export const PublicFanCapture: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tuemail@ejemplo.com"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3.5 py-2.5 text-sm text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
               />
             </div>
 
@@ -220,7 +220,7 @@ export const PublicFanCapture: React.FC = () => {
                   value={ciudad}
                   onChange={(e) => setCiudad(e.target.value)}
                   placeholder="Ej: Madrid"
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
                 />
               </div>
 
@@ -233,13 +233,13 @@ export const PublicFanCapture: React.FC = () => {
                   value={comoConocio}
                   onChange={(e) => setComoConocio(e.target.value)}
                   placeholder="Ej: Directo / Instagram"
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] placeholder-[var(--ink-2)] outline-none transition"
                 />
               </div>
             </div>
 
             {/* MANDATORY GDPR CHECKBOX */}
-            <div className="pt-2 /80">
+            <div className="pt-2 ">
               <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[var(--ink-2)] leading-relaxed select-none">
                 <input
                   type="checkbox"
@@ -302,7 +302,7 @@ export const PublicFanCapture: React.FC = () => {
         <div className="pt-2">
           <a
             href="/musicos"
-            className="group block p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:/40 transition-all text-left"
+            className="group block p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80  transition-all text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">

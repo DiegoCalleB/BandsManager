@@ -1131,8 +1131,33 @@ export default function PracticeModePanel({
                     })}
                   </div>
 
-                  {/* Claqueta / Metrónomo */}
-                  <div className="flex items-center gap-1.5 pt-1">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setMetronomeOn((v) => !v)}
+                    title={`Metrónomo (claqueta) — sigue el tempo de arriba, sube y baja a la vez con la canción. Ahora mismo: ${targetBpm} BPM`}
+                    className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
+                      metronomeOn
+                        ? "bg-[var(--acc)]/20  text-[var(--acc)]/70"
+                        : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
+                    }`}
+                  >
+                    <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
+                  </button>
+                  <button
+                    onClick={markBeatAnchor}
+                    title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
+                    className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
+                      beatAnchorSec > 0
+                        ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
+                        : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
+                    }`}
+                  >
+                    <Target className="w-3.5 h-3.5" />{" "}
+                    {beatAnchorSec > 0
+                      ? `Compás ${formatTime(beatAnchorSec)}`
+                      : "Marcar beat de compás"}
+                  </button>
+                  {beatAnchorSec > 0 && (
                     <button
                       onClick={() => setMetronomeOn((v) => !v)}
                       title={`Metrónomo sincronizado: ${targetBpm} BPM`}

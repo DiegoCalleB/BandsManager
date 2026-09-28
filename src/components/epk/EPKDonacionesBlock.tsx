@@ -302,7 +302,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     }
                     className={`p-2 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer ${
                       config.donacionRevolut?.metodoPorDefecto === "paypal"
-                        ? "bg-[var(--tentative)]/50/20 text-[var(--acc)]/80"
+                        ? "bg-[var(--tentative)]/50 text-[var(--acc)]/80"
                         : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                   >
@@ -577,7 +577,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                 )
                               }
                               rows={f.filas}
-                              className="w-full bg-[var(--surface)] rounded-[var(--r-s)] p-3 text-xs text-[var(--ink)] focus: focus:outline-none"
+                              className="w-full bg-[var(--surface)] rounded-[var(--r-s)] p-3 text-xs text-[var(--ink)] focus:focus:outline-none"
                             />
                           </div>
                         </div>
@@ -621,7 +621,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                       )
                                     }
                                     placeholder={`Instrumento en ${idioma.label}`}
-                                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus: focus:outline-none"
+                                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
                                   />
                                 </div>
                               )}
@@ -644,7 +644,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                                     }
                                     rows={2}
                                     placeholder={`Trayectoria en ${idioma.label}`}
-                                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus: focus:outline-none"
+                                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-2.5 py-1.5 text-xs text-[var(--ink)] focus:focus:outline-none"
                                   />
                                 </div>
                               )}

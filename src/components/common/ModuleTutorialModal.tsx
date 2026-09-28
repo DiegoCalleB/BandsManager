@@ -277,30 +277,30 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
   // Color accents based on module
   const accentStyles = {
     purple: {
-      badgeBg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30",
+      badgeBg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
       iconBox: "bg-[var(--tentative)]/20 text-[var(--acc)]/30",
       activeDot: "bg-[var(--acc)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]",
       hookBorder: "bg-[var(--tentative)]/10 text-[var(--ink)]",
       highlightText: "text-[var(--acc)]",
-      targetCard: "bg-[var(--tentative)]/5",
+      targetCard: "border-[var(--acc)]/40 bg-[var(--tentative)]/5",
       targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
       targetBtn:
-        "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80/40",
+        "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80",
     },
     amber: {
-      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 /30",
-      iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] /30",
+      badgeBg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 ",
+      iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] ",
       activeDot: "bg-[var(--acc)]/60 w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black",
-      hookBorder: "/25 bg-[var(--acc)]/10 text-[var(--acc)]",
+      hookBorder: " bg-[var(--acc)]/10 text-[var(--acc)]",
       highlightText: "text-[var(--acc)]",
-      targetCard: "/40 bg-[var(--acc)]/5",
-      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc)]/70 /30",
+      targetCard: " bg-[var(--acc)]/5",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
       targetBtn:
-        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 /40",
+        "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 ",
     },
     blue: {
       badgeBg: "bg-[var(--acc)]/15 text-[var(--ink-2)]/30",
@@ -405,7 +405,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           className={
             effectiveFloatingMode
               ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95  rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
-              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] md:border md:border-[var(--hair)]/90 rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
           }
         >
           {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}

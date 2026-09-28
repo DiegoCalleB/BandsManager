@@ -406,7 +406,7 @@ export function OrdenDelDiaTab({
       <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
+            <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc)]">
               <ListOrdered className="w-4 h-4" />
             </span>
             <h3 className="text-sm font-sans font-bold text-[var(--ink)] tracking-wider">
@@ -495,7 +495,7 @@ export function OrdenDelDiaTab({
                     key={obj.id}
                     className={`flex items-start justify-between gap-2 p-2.5 rounded-[var(--r-m)] transition-all ${
                       obj.completado
-                        ? "bg-[var(--ok)]/10/30 text-[var(--ink-2)]"
+                        ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
                         : "bg-[var(--surface)] text-[var(--ink)] hover:"
                     }`}
                   >
@@ -545,7 +545,7 @@ export function OrdenDelDiaTab({
               <button
                 type="button"
                 onClick={handleAddObjetivo}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60/20 hover:bg-[var(--acc)]/60/30 text-[var(--acc)]/70 text-xs font-sans font-bold flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 hover:bg-[var(--acc)]/60 text-[var(--acc)]/70 text-xs font-sans font-bold flex items-center gap-1 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
               </button>
@@ -722,7 +722,7 @@ export function OrdenDelDiaTab({
 
                             {/* Song state info from catalog */}
                             {matchedSong?.tonalidad && (
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-sans bg-[var(--surface)]/80 text-[var(--acc)]/70/90">
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-sans bg-[var(--surface)]/80 text-[var(--acc)]/70">
                                 {matchedSong.tonalidad}
                               </span>
                             )}
@@ -761,7 +761,7 @@ export function OrdenDelDiaTab({
                                   enfoque: e.target.value,
                                 })
                               }
-                              className="w-full text-xs font-sans text-[var(--ink-2)] bg-transparent hover: focus: outline-none transition-colors"
+                              className="w-full text-xs font-sans text-[var(--ink-2)] bg-transparent hover:focus:outline-none transition-colors"
                             />
                           </div>
                         </div>
@@ -949,7 +949,7 @@ export function OrdenDelDiaTab({
                         onClick={() => toggleSongSelection(s.id)}
                         className={`w-full flex items-center gap-3 p-2.5 rounded-[var(--r-m)] text-left cursor-pointer transition-colors ${
                           isSelected
-                            ? "bg-[var(--acc)]/60/15 /50 text-[var(--acc)]/70"
+                            ? "bg-[var(--acc)]/60  text-[var(--acc)]/70"
                             : "bg-[var(--surface)] hover:bg-[var(--surface)] hover:"
                         }`}
                       >
@@ -978,7 +978,7 @@ export function OrdenDelDiaTab({
                               </span>
                             )}
                             {isSelected && (
-                              <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-extrabold shrink-0 ml-auto">
+                              <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70 font-extrabold shrink-0 ml-auto">
                                 #{selectedIndex + 1} en orden
                               </span>
                             )}
@@ -1071,7 +1071,7 @@ export function OrdenDelDiaTab({
                     return (
                       <div
                         key={st.id}
-                        className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between gap-3 hover: transition-all"
+                        className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] flex items-center justify-between gap-3 hover:transition-all"
                       >
                         <div>
                           <p className="text-xs font-bold text-[var(--ink)]">
@@ -1164,7 +1164,7 @@ export function OrdenDelDiaTab({
                           }}
                           className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-all cursor-pointer ${
                             blockTipo === key
-                              ? "bg-[var(--acc)]/60/20 /40 text-[var(--acc)]/70 font-bold"
+                              ? "bg-[var(--acc)]/60  text-[var(--acc)]/70 font-bold"
                               : "bg-[var(--surface)] text-[var(--ink-2)] hover:"
                           }`}
                         >

@@ -140,7 +140,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="Ej: Booking & Management"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
               />
             </div>
 
@@ -161,7 +161,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="Ej: Booking & Management Team"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
               />
             </div>
 
@@ -182,7 +182,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="+34 600 00 00 00"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
               />
             </div>
 
@@ -203,7 +203,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   })
                 }
                 placeholder="booking@tubanda.com"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
               />
             </div>
           </div>
@@ -229,13 +229,13 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 })
               }
               placeholder="Música en directo, energía y directo arrollador"
-              className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
+              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
             />
           </div>
 
           {/* OPCIONES DE INCLUSIÓN */}
           <div className="pt-2 space-y-3">
-            <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)] hover:/50 transition">
+            <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)]  transition">
               <input
                 type="checkbox"
                 checked={config.firmaEmail?.incluirIconosRedes ?? true}
@@ -260,7 +260,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               </div>
             </label>
 
-            <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)] hover:/50 transition">
+            <label className="flex items-center gap-3 cursor-pointer p-2.5 bg-[var(--surface)] rounded-[var(--r-m)]  transition">
               <input
                 type="checkbox"
                 checked={config.firmaEmail?.adjuntarDossierPorDefecto ?? true}

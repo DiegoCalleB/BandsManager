@@ -2561,7 +2561,7 @@ export default function ReelsCenter({
                           className={` rounded-[var(--r-m)] p-3.5 cursor-pointer transition-all space-y-3 relative group overflow-hidden ${
                             isSelected
                               ? "-[var(--acc)] bg-[var(--acc)]/5"
-                              : " bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50"
+                              : "-neutral-200 bg-[var(--surface)] hover:-indigo-300 hover:bg-[var(--bg)]/50"
                           }`}
                         >
                           {/* Simulated miniature video thumbnail track design */}
@@ -4460,7 +4460,7 @@ export default function ReelsCenter({
                     ) : (
                       <div className="space-y-3">
                         {cuttingError && (
-                          <div className="bg-[var(--alert)]/90 p-3 rounded-[var(--r-m)]  text-[10.5px] text-[var(--alert)] font-sans flex items-start gap-2">
+                          <div className="bg-[var(--alert)]/90 p-3 rounded-[var(--r-m)] -red-800/40 text-[10.5px] text-[var(--alert)] font-sans flex items-start gap-2">
                             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[var(--alert)]" />
                             <div className="space-y-1">
                               <span className="font-bold">

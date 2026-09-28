@@ -289,22 +289,23 @@ export const PLATFORM_CONFIG: Record<
     label: "Facebook",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--tentative)]/50",
-    borderClass: "",
-    hoverClass: "hover:bg-[var(--tentative)]/50 hover:text-[var(--acc)]/80",
+    borderClass: "border-[var(--acc)]/30",
+    hoverClass:
+      "hover:bg-[var(--tentative)]/50 hover:border-[var(--acc)]/50 hover:text-[var(--acc)]/80",
   },
   twitter: {
     label: "X / Twitter",
     colorClass: "text-[var(--ink-2)]",
     bgClass: "bg-[var(--surface)]/80",
     borderClass: "",
-    hoverClass: "hover:bg-[var(--surface)] hover: hover:text-[var(--ink)]",
+    hoverClass: "hover:bg-[var(--surface)] hover:hover:text-[var(--ink)]",
   },
   website: {
     label: "Sitio Web",
     colorClass: "text-[var(--acc)]",
     bgClass: "bg-[var(--acc)]/10",
-    borderClass: "/30",
-    hoverClass: "hover:bg-[var(--acc)]/20 hover:/50 hover:text-[var(--acc)]/70",
+    borderClass: "",
+    hoverClass: "hover:bg-[var(--acc)]/20  hover:text-[var(--acc)]/70",
   },
   revolut: {
     label: "Revolut",

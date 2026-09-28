@@ -245,7 +245,7 @@ export default function BookingCampaignPanel({
                   </button>
                 </div>
               ))}
-              <div className="flex items-center gap-1.5 bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/10/80 text-[var(--tentative)] px-3 py-1.5 rounded-[var(--r-s)] transition-colors">
+              <div className="flex items-center gap-1.5 bg-[var(--tentative)]/5 hover:bg-[var(--tentative)]/10 text-[var(--tentative)] px-3 py-1.5 rounded-[var(--r-s)] transition-colors">
                 <Plus className="w-3.5 h-3.5 shrink-0" />
                 <span className="text-xs font-semibold shrink-0">
                   Añadir Fecha:

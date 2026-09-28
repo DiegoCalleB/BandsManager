@@ -1082,7 +1082,7 @@ export function GooglePlacesExplorerModal({
                         Prospección Masiva de Campaña
                       </span>
                       {activeCampaign && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60/20 text-[var(--ink)] font-sans">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--ink)] font-sans">
                           {activeCampaign.name}
                         </span>
                       )}
@@ -1152,7 +1152,7 @@ export function GooglePlacesExplorerModal({
                         }}
                         className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
                           isChecked
-                            ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /50"
+                            ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
                             : "bg-[var(--bg)]/80 text-[var(--ink-2)]800 hover:text-[var(--ink-2)]"
                         }`}
                       >
@@ -1625,7 +1625,7 @@ export function GooglePlacesExplorerModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus: cursor-pointer"
+                              className="bg-[var(--bg)]700 text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus:cursor-pointer"
                             >
                               {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>

@@ -307,7 +307,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     <div
       className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${"bg-[var(--surface)]"}`}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 /60">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 ">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--ink-2)]">
             <Mail className="w-5 h-5" />
@@ -337,7 +337,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
  Solo para Gmail; Outlook y otros proveedores siguen usando el formulario SMTP/IMAP de
  abajo. */}
       <div
-        className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--acc)]/5/20"}`}
+        className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--acc)]/5"}`}
       >
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
@@ -358,7 +358,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           </div>
         ) : gmailOAuthStatus.connected ? (
           <div
-            className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${"bg-[var(--ok)]/10/20 text-[var(--ink)]"}`}
+            className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${"bg-[var(--ok)]/10 text-[var(--ink)]"}`}
           >
             <div className="flex items-center gap-2 min-w-0">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
@@ -427,7 +427,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
       {status.connected && !editing ? (
         <div className="space-y-3">
           <div
-            className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${"bg-[var(--ok)]/10/20 text-[var(--ink)]"}`}
+            className={`p-4 rounded-[var(--r-m)] text-xs flex items-center justify-between gap-3 ${"bg-[var(--ok)]/10 text-[var(--ink)]"}`}
           >
             <div className="flex items-center gap-2 min-w-0">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
@@ -462,7 +462,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                   onClick={() => handleProviderChange(p)}
                   className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
                     provider === p
-                      ? "bg-[var(--acc)]/20/80 text-[var(--tentative)]/40"
+                      ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40"
                       : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
                   }`}
                 >
@@ -507,7 +507,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           </div>
 
           <div
-            className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 ${"bg-[var(--tentative)]/5/80 text-[var(--tentative)]"}`}
+            className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 ${"bg-[var(--tentative)]/5 text-[var(--tentative)]"}`}
           >
             <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[var(--ink-2)]" />
             <span>
@@ -528,7 +528,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           </div>
 
           {provider === "other" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 /60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 ">
               <div className="space-y-2">
                 <label className={labelClass}>
                   <span>Servidor SMTP (envío)</span>

@@ -84,7 +84,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             llevaMicrofoniaPropia
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
-              : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+              : "bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             llevaInEars
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
-              : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+              : "bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -122,7 +122,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
             necesitaBacklineBateria
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
-              : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+              : "bg-[var(--bg)] text-[var(--ink-2)] hover:border-[var(--hair)]"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -187,7 +187,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         ) : (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 hover:/40 rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
+            className="border-2  rounded-[var(--r-m)] p-5 text-center cursor-pointer bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 transition-colors"
           >
             <Upload className="w-6 h-6 text-[var(--ink-2)] mx-auto mb-1.5" />
             <span className="text-xs font-medium text-[var(--ink-2)] block">
@@ -216,7 +216,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
           value={riderTecnicoText}
           onChange={(e) => setRiderTecnicoText(e.target.value)}
           placeholder="Ej. Requerimos 4 tomas de corriente en escenario (220V), 3 envíos independientes de monitores, tarima para batería de al menos 2x2m..."
-          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus: leading-relaxed"
+          className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:leading-relaxed"
         />
       </div>
     </div>

@@ -66,7 +66,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/60/25 blur-sm"
+            className="absolute inset-0 rounded-full bg-[var(--acc)]/60 blur-sm"
           />
           {/* Sol girando lentamente a velocidad constante y suave */}
           <motion.div
@@ -230,7 +230,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               times: [0, 0.08, 0.15, 0.22, 1],
               ease: "easeInOut",
             }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/80/30 blur-md"
+            className="absolute inset-0 rounded-full bg-[var(--acc)]/80 blur-md"
           />
           {/* Nube con rayo principal */}
           <motion.div
@@ -263,7 +263,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
               opacity: [0.2, 0.5, 0.2],
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full bg-[var(--acc)]/80/20 blur-sm"
+            className="absolute inset-0 rounded-full bg-[var(--acc)]/80 blur-sm"
           />
           {/* Copo de nieve girando y flotando con suavidad */}
           <motion.div
@@ -393,32 +393,32 @@ export const CalendarWeatherBadge: React.FC<CalendarWeatherBadgeProps> = ({
       case "lightning":
         return {
           bg: isDanger
-            ? "bg-[var(--alert)]/25/60 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20/50 text-[var(--acc)]/80",
+            ? "bg-[var(--alert)]/25 text-[var(--ink)]"
+            : "bg-[var(--acc)]/20 text-[var(--acc)]/80",
         };
       case "rain":
         return {
           bg: isDanger
             ? "bg-[var(--alert)]/25 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20 text-[var(--ink-2)]",
+            : "bg-[var(--acc)]/20 text-[var(--ink-3)]",
         };
       case "snow":
         return {
           bg: isDanger
-            ? "bg-[var(--alert)]/25/60 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20/50 text-[var(--acc)]/80",
+            ? "bg-[var(--alert)]/25 text-[var(--ink)]"
+            : "bg-[var(--acc)]/20 text-[var(--acc)]/80",
         };
       case "wind":
         return {
           bg: isDanger
-            ? "bg-[var(--alert)]/25/60 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20/50 text-[var(--acc)]/70",
+            ? "bg-[var(--alert)]/25 text-[var(--ink)]"
+            : "bg-[var(--acc)]/20 text-[var(--acc)]/70",
         };
       default:
         return {
           bg: isDanger
-            ? "bg-[var(--alert)]/25/60 text-[var(--ink)]"
-            : "bg-[var(--acc)]/20/50 text-[var(--acc)]/70",
+            ? "bg-[var(--alert)]/25 text-[var(--ink)]"
+            : "bg-[var(--acc)]/20 text-[var(--acc)]/70",
         };
     }
   };

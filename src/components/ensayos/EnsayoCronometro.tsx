@@ -118,7 +118,7 @@ export function EnsayoCronometro({
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <div
-            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)]/60/15 text-[var(--acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
+            className={`p-1.5 rounded-[var(--r-s)] ${isActive ? "bg-[var(--acc)]/60 text-[var(--acc)]" : "bg-[var(--surface)]/80 text-[var(--ink-2)]"}`}
           >
             <Clock className={`w-4 h-4 ${isActive ? "animate-pulse" : ""}`} />
           </div>

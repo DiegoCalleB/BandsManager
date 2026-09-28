@@ -636,7 +636,7 @@ export function BulkAlbumAudioUploaderModal({
         {/* Modal Header */}
         <div className="p-6 flex items-center justify-between shrink-0 bg-gradient-to-r from-[var(--ok)]/10 to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20/40 flex items-center justify-center text-[var(--ok)]">
+            <div className="w-12 h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 flex items-center justify-center text-[var(--ok)]">
               <FolderUp className="w-6 h-6" />
             </div>
             <div>
@@ -769,8 +769,8 @@ export function BulkAlbumAudioUploaderModal({
             <div
               className={`p-4 rounded-[var(--r-l)] flex items-center gap-3 text-xs font-sans ${
                 feedbackMsg.type === "success"
-                  ? "bg-[var(--ok)]/10/30 text-[var(--ok)]"
-                  : "bg-[var(--alert)]/10/30 text-[var(--alert)]"
+                  ? "bg-[var(--ok)]/10 text-[var(--ok)]"
+                  : "bg-[var(--alert)]/10 text-[var(--alert)]"
               }`}
             >
               {feedbackMsg.type === "success" ? (

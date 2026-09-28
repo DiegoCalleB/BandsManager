@@ -117,7 +117,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     })
                   }
                   placeholder={campo.placeholder}
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
                 />
               </div>
             ))}
@@ -187,7 +187,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                       });
                     }}
                     placeholder="Texto exacto de la reseña o cita..."
-                    className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus: outline-none leading-relaxed resize-none"
+                    className="flex-1 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none leading-relaxed resize-none"
                   />
                   <button
                     type="button"
@@ -224,7 +224,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                     });
                   }}
                   placeholder="Medio / firma (Ej: Radio 3, MondoSonoro, blog especializado...)"
-                  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus: outline-none"
+                  className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus:outline-none"
                 />
               </div>
             ))}
@@ -245,7 +245,7 @@ export const EPKPrensaBlock: React.FC<EPKPrensaBlockProps> = ({
                 },
               });
             }}
-            className="w-full py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--acc)] hover:/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+            className="w-full py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--acc)]  text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
             <Plus className="w-4 h-4" /> Añadir Reseña de Prensa
           </button>

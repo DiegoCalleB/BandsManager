@@ -1,15 +1,23 @@
-import React from 'react';
-import { ThemeColors } from '../../types';
-import { BookingMetrics } from '../../utils/bookingUtils';
-import { Building2, CheckCircle2, MessageSquare, TrendingUp } from 'lucide-react';
-import { useLanguage } from '../../context/LanguageContext';
+import React from "react";
+import { ThemeColors } from "../../types";
+import { BookingMetrics } from "../../utils/bookingUtils";
+import {
+  Building2,
+  CheckCircle2,
+  MessageSquare,
+  TrendingUp,
+} from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface BookingMetricsCardsProps {
   colors: ThemeColors;
   metrics: BookingMetrics;
 }
 
-export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors, metrics }) => {
+export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
+  colors,
+  metrics,
+}) => {
   const { t } = useLanguage();
 
   return (
@@ -23,7 +31,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
-            {t('booking.total_leads', 'Total Leads / Salas')}
+            {t("booking.total_leads", "Total Leads / Salas")}
           </span>
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]">
             <Building2 className="w-5 h-5" />
@@ -32,7 +40,9 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
         <div className="text-2xl font-bold" style={{ color: colors.text }}>
           {metrics.totalLeads}
         </div>
-        <p className="text-xs text-[var(--ink-2)] mt-1">{t('booking.in_pipeline', 'En pipeline activo')}</p>
+        <p className="text-xs text-[var(--ink-2)] mt-1">
+          {t("booking.in_pipeline", "En pipeline activo")}
+        </p>
       </div>
 
       <div
@@ -44,16 +54,20 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
-            {t('booking.approved_dates', 'Fechas Aprobadas')}
+            {t("booking.approved_dates", "Fechas Aprobadas")}
           </span>
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/10 text-[var(--ok)]">
             <CheckCircle2 className="w-5 h-5" />
           </div>
         </div>
-        <div className="text-2xl font-bold text-[var(--ok)]">{metrics.leadsPorEstado['aprobado'] || 0}</div>
+        <div className="text-2xl font-bold text-[var(--ok)]">
+          {metrics.leadsPorEstado["aprobado"] || 0}
+        </div>
         <p className="text-xs text-[var(--ink-2)] mt-1">
-          {t('booking.conversion_rate', 'Tasa conversión')}:{' '}
-          <span className="text-[var(--ok)] font-semibold">{metrics.tasaConversion}%</span>
+          {t("booking.conversion_rate", "Tasa conversión")}:{" "}
+          <span className="text-[var(--ok)] font-semibold">
+            {metrics.tasaConversion}%
+          </span>
         </p>
       </div>
 
@@ -65,13 +79,19 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
         }}
       >
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">Tasa de Respuesta</span>
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/50/10 text-[var(--tentative)]">
+          <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
+            Tasa de Respuesta
+          </span>
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/50 text-[var(--tentative)]">
             <MessageSquare className="w-5 h-5" />
           </div>
         </div>
-        <div className="text-2xl font-bold text-[var(--acc)]">{metrics.tasaRespuesta}%</div>
-        <p className="text-xs text-[var(--ink-2)] mt-1">Feedback de programadores</p>
+        <div className="text-2xl font-bold text-[var(--acc)]">
+          {metrics.tasaRespuesta}%
+        </div>
+        <p className="text-xs text-[var(--ink-2)] mt-1">
+          Feedback de programadores
+        </p>
       </div>
 
       <div
@@ -82,15 +102,19 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({ colors
         }}
       >
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">Aforo Total Potencial</span>
+          <span className="text-xs font-semibold tracking-wider text-[var(--ink-2)]">
+            Aforo Total Potencial
+          </span>
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--acc)]">
             <TrendingUp className="w-5 h-5" />
           </div>
         </div>
         <div className="text-2xl font-bold" style={{ color: colors.text }}>
-          {metrics.aforoTotalPotencial.toLocaleString('es-ES')} pax
+          {metrics.aforoTotalPotencial.toLocaleString("es-ES")} pax
         </div>
-        <p className="text-xs text-[var(--ink-2)] mt-1">Promedio: ~{metrics.aforoPromedio} pax/sala</p>
+        <p className="text-xs text-[var(--ink-2)] mt-1">
+          Promedio: ~{metrics.aforoPromedio} pax/sala
+        </p>
       </div>
     </div>
   );

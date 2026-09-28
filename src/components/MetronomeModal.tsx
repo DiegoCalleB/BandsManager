@@ -254,7 +254,7 @@ export function MetronomeModal({
                 <select
                   value={selectedSongId}
                   onChange={handleSelectSong}
-                  className="w-full bg-[var(--bg)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none focus:/50"
+                  className="w-full bg-[var(--bg)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none "
                 >
                   <option value="">-- Seleccionar Canción --</option>
                   {songs.map((song) => (
@@ -415,7 +415,7 @@ export function MetronomeModal({
                     onClick={() => setBpm(p.val)}
                     className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium cursor-pointer transition-colors ${
                       bpm === p.val
-                        ? "bg-[var(--acc)]/20 /50 text-[var(--acc)]/70 font-bold"
+                        ? "bg-[var(--acc)]/20  text-[var(--acc)]/70 font-bold"
                         : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
                     }`}
                   >

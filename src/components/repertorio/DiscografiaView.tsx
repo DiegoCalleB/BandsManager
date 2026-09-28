@@ -953,7 +953,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       }}
                       className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                         isExpanded
-                          ? "bg-[var(--acc)]/15 /30 text-[var(--acc)]/70"
+                          ? "bg-[var(--acc)]/15  text-[var(--acc)]/70"
                           : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]"
                       }`}
                     >

@@ -267,7 +267,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
                 value={customCta}
                 onChange={(e) => setCustomCta(e.target.value)}
                 placeholder="¡ESCANEA CON LA CÁMARA DE TU MÓVIL!"
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
               />
             </div>
           )}
@@ -286,7 +286,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             </label>
           )}
 
-          <div className="pt-2 /80 flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
+          <div className="pt-2  flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
             <span>
               Destino QR:{" "}
               <strong className="text-[var(--acc)]/70">{url}</strong>

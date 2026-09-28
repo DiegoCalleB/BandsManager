@@ -260,7 +260,7 @@ export const SongStudioStructureUploadModal: React.FC<
           )}
 
           {errorMessage && (
-            <div className="p-3 rounded-[var(--r-s)] bg-[var(--alert)]/90/30 text-xs text-[var(--alert)]/40 flex items-center gap-2">
+            <div className="p-3 rounded-[var(--r-s)] bg-[var(--alert)]/90 text-xs text-[var(--alert)]/40 flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               {errorMessage}
             </div>
@@ -268,7 +268,7 @@ export const SongStudioStructureUploadModal: React.FC<
 
           {/* Processing status */}
           {isProcessing && (
-            <div className="p-4 rounded-[var(--r-s)] bg-[var(--acc)]/90/30 text-sm text-[var(--acc)]/40 flex items-center gap-3">
+            <div className="p-4 rounded-[var(--r-s)] bg-[var(--acc)]/90 text-sm text-[var(--acc)]/40 flex items-center gap-3">
               <Loader className="w-4 h-4 animate-spin" />
               <div>
                 <p className="font-semibold">
@@ -373,12 +373,12 @@ export const SongStudioStructureUploadModal: React.FC<
                           />
                         )}
                         {selectedFile.type === "application/pdf" && (
-                          <div className="bg-[var(--alert)]/90/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
+                          <div className="bg-[var(--alert)]/90 rounded p-3 text-center text-sm text-[var(--ink-2)]">
                             📄 PDF - Se procesará con IA para extraer acordes
                           </div>
                         )}
                         {selectedFile.type.includes("word") && (
-                          <div className="bg-[var(--tentative)]/10/20 rounded p-3 text-center text-sm text-[var(--ink-2)]">
+                          <div className="bg-[var(--tentative)]/10 rounded p-3 text-center text-sm text-[var(--ink-2)]">
                             📝 Documento Word - Se procesará con IA para extraer
                             acordes
                           </div>

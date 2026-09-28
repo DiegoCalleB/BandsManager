@@ -371,7 +371,7 @@ export default function Merchan({
 
       {/* 🎁 Banner de Regalo Pendiente de Canjear */}
       {hasGiftPending && (
-        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-[var(--acc)]/20 via-amber-400/15 to-[var(--acc)]/10  flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-[var(--r-l)] bg-gradient-to-r from-amber-0/20 via-amber-400/15 to-amber-0/10  flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <div className="w-11 h-11 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--on-acc)] flex items-center justify-center shrink-0">
               <Gift className="w-6 h-6 stroke-[2.5]" />
@@ -535,7 +535,7 @@ export default function Merchan({
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="w-full h-24 rounded-[var(--r-s)] hover: flex flex-col items-center justify-center gap-2 text-[var(--ink-2)] hover:text-[var(--acc)] transition"
+                  className="w-full h-24 rounded-[var(--r-s)] hover:flex flex-col items-center justify-center gap-2 text-[var(--ink-2)] hover:text-[var(--acc)] transition"
                 >
                   {isUploading ? (
                     <RefreshCw className="w-6 h-6 animate-spin" />
@@ -580,7 +580,7 @@ export default function Merchan({
 
           {/* Opción de recorte de fondo / rembg */}
           <div
-            className={`p-4 rounded-[var(--r-m)] space-y-2 ${"bg-[var(--tentative)]/20/30"}`}
+            className={`p-4 rounded-[var(--r-m)] space-y-2 ${"bg-[var(--tentative)]/20"}`}
           >
             <label
               className={`block text-[10px] font-sans font-bold tracking-wider flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
@@ -636,7 +636,7 @@ export default function Merchan({
 
           {productType === "pegatina" && (
             <div
-              className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--tentative)]/10/20"}`}
+              className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--tentative)]/10"}`}
             >
               <label
                 className={`block text-[10px] font-sans font-bold tracking-wider flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
@@ -719,7 +719,7 @@ export default function Merchan({
                   return (
                     <div
                       key={design.id}
-                      className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square hover:/50 transition-all flex flex-col items-center justify-center p-6 ${design.type === "camiseta" ? "bg-[var(--surface)]" : "bg-[var(--surface)]"}`}
+                      className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square  transition-all flex flex-col items-center justify-center p-6 ${design.type === "camiseta" ? "bg-[var(--surface)]" : "bg-[var(--surface)]"}`}
                     >
                       {design.type === "pegatina" ? (
                         <div className="w-52 h-52 bg-[var(--surface)] flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 rounded-[var(--r-s)] overflow-hidden">
@@ -877,7 +877,7 @@ export default function Merchan({
       {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
       {showClaimModal && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-fadeIn">
-          <div className="relative w-full max-w-2xl rounded-[var(--r-l)] bg-[var(--surface)]  overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-[var(--surface)]  overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
             <div className="p-5 bg-gradient-to-r from-[var(--surface)] to-[var(--sunken)] flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -887,7 +887,7 @@ export default function Merchan({
                 <div>
                   <h3 className="text-base font-black font-display tracking-wider text-[var(--ink)] flex items-center gap-2">
                     <span>Canjear Pack de Pegatinas Gratis</span>
-                    <span className="text-[10px] font-sans font-black px-2 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+                    <span className="text-[10px] font-sans font-black px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
                       100 uds
                     </span>
                   </h3>
@@ -945,7 +945,7 @@ export default function Merchan({
                           Vinilo mate exterior troquelado · 8x8 cm · Resistente
                           al agua, al sol y a fundas de guitarra.
                         </p>
-                        <p className="text-[11px] font-sans text-[var(--acc)]/70/90 pt-1">
+                        <p className="text-[11px] font-sans text-[var(--acc)]/70 pt-1">
                           ✨ Cantidad asignada por tu plan:{" "}
                           <strong>500 unidades</strong>
                         </p>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   X,
   Play,
@@ -23,13 +23,13 @@ import {
   Share2,
   MessageSquare,
   Upload,
-} from 'lucide-react';
-import { Song, SongSubstituteGuide } from '../types';
-import { formatSongTitle } from '../utils/formatSongTitle';
-import { ShareModal } from './ShareModal';
-import { ModalPortal } from './common/ModalPortal';
-import { formatSongShareText } from '../utils/shareUtils';
-import { SongStudioStructureUploadModal } from './song_studio/SongStudioStructureUploadModal';
+} from "lucide-react";
+import { Song, SongSubstituteGuide } from "../types";
+import { formatSongTitle } from "../utils/formatSongTitle";
+import { ShareModal } from "./ShareModal";
+import { ModalPortal } from "./common/ModalPortal";
+import { formatSongShareText } from "../utils/shareUtils";
+import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
   processChordText,
   extractUniqueChords,
@@ -37,7 +37,7 @@ import {
   GuitarChordShape,
   transposeChordToken,
   parseRootNote,
-} from '../utils/chordUtils';
+} from "../utils/chordUtils";
 
 interface SongChordsViewerModalProps {
   song: Song;
@@ -45,9 +45,15 @@ interface SongChordsViewerModalProps {
   onUpdateSong: (updated: Song) => void;
 }
 
-export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChordsViewerModalProps) {
-  const [activeTab, setActiveTab] = useState<'chords' | 'substitute' | 'edit'>('chords');
-  const [notation, setNotation] = useState<'ES' | 'EN'>('ES');
+export function SongChordsViewerModal({
+  song,
+  onClose,
+  onUpdateSong,
+}: SongChordsViewerModalProps) {
+  const [activeTab, setActiveTab] = useState<"chords" | "substitute" | "edit">(
+    "chords",
+  );
+  const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [transpose, setTranspose] = useState<number>(0);
 
   // Auto-scroll state
@@ -59,15 +65,20 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(true);
 
   // Edit form state
-  const [cifradoTexto, setCifradoTexto] = useState<string>(song.cifradoTexto || getSampleCifrado(song));
-  const [guiaSustituto, setGuiaSustituto] = useState<SongSubstituteGuide>(song.guiaSustituto || getSampleSubstituteGuide(song));
+  const [cifradoTexto, setCifradoTexto] = useState<string>(
+    song.cifradoTexto || getSampleCifrado(song),
+  );
+  const [guiaSustituto, setGuiaSustituto] = useState<SongSubstituteGuide>(
+    song.guiaSustituto || getSampleSubstituteGuide(song),
+  );
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
   const [aiSuccessMsg, setAiSuccessMsg] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<boolean>(false);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
-  const [showStructureUploadModal, setShowStructureUploadModal] = useState<boolean>(false);
+  const [showStructureUploadModal, setShowStructureUploadModal] =
+    useState<boolean>(false);
 
   // El estado de edición solo se inicializa desde `song` al montar (useState no vuelve a leer
   // sus argumentos). Cuando la subida de estructura o la generación con IA actualizan `song`
@@ -84,7 +95,8 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
     if (isAutoScrolling) {
       interval = setInterval(() => {
         if (scrollContainerRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+          const { scrollTop, scrollHeight, clientHeight } =
+            scrollContainerRef.current;
           if (scrollTop + clientHeight >= scrollHeight - 5) {
             setIsAutoScrolling(false);
           } else {
@@ -104,15 +116,20 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
       setIsGeneratingAi(true);
       setAiSuccessMsg(null);
 
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      const token =
+        localStorage.getItem("bakandeya_token") ||
+        localStorage.getItem("token") ||
+        "";
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        headers['x-auth-token'] = token;
+        headers["Authorization"] = `Bearer ${token}`;
+        headers["x-auth-token"] = token;
       }
 
-      const response = await fetch('/api/generate-song-chords', {
-        method: 'POST',
+      const response = await fetch("/api/generate-song-chords", {
+        method: "POST",
         headers,
         body: JSON.stringify({
           songId: song.id,
@@ -129,7 +146,7 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
 
       const data = await response.json();
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Error al generar acordes con IA');
+        throw new Error(data.error || "Error al generar acordes con IA");
       }
 
       setCifradoTexto(data.cifradoTexto);
@@ -147,19 +164,27 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
       // Igual que en el análisis automático: el mensaje debe distinguir una transcripción
       // real, una propuesta honesta de la IA (aproximada o no) y la plantilla de relleno
       // genérica cuando la IA falla del todo, en vez de llamar"éxito" a las tres por igual.
-      if (data.chordsSource === 'audio_real') {
-        setAiSuccessMsg('✓ Letra y acordes transcritos del audio real');
-      } else if (data.chordsSource === 'ia_sin_audio' && !data.esAproximado) {
-        setAiSuccessMsg('✓ Cifrado propuesto por IA a partir del título y la tonalidad');
-      } else if (data.chordsSource === 'ia_sin_audio' && data.esAproximado) {
-        setAiSuccessMsg('⚠️ Acordes aproximados de memoria, sin confirmar: verifícalos de oído');
+      if (data.chordsSource === "audio_real") {
+        setAiSuccessMsg("✓ Letra y acordes transcritos del audio real");
+      } else if (data.chordsSource === "ia_sin_audio" && !data.esAproximado) {
+        setAiSuccessMsg(
+          "✓ Cifrado propuesto por IA a partir del título y la tonalidad",
+        );
+      } else if (data.chordsSource === "ia_sin_audio" && data.esAproximado) {
+        setAiSuccessMsg(
+          "⚠️ Acordes aproximados de memoria, sin confirmar: verifícalos de oído",
+        );
       } else {
-        setAiSuccessMsg('⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico, revísalo');
+        setAiSuccessMsg(
+          "⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico, revísalo",
+        );
       }
       setTimeout(() => setAiSuccessMsg(null), 5000);
     } catch (err: any) {
-      console.error('Error generating with AI:', err);
-      setAiSuccessMsg(`⚠️ ${err.message || 'No se pudieron generar los acordes'}`);
+      console.error("Error generating with AI:", err);
+      setAiSuccessMsg(
+        `⚠️ ${err.message || "No se pudieron generar los acordes"}`,
+      );
       setTimeout(() => setAiSuccessMsg(null), 5000);
     } finally {
       setIsGeneratingAi(false);
@@ -175,22 +200,27 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
     };
 
     // Save to server
-    const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    const token =
+      localStorage.getItem("bakandeya_token") ||
+      localStorage.getItem("token") ||
+      "";
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-      headers['x-auth-token'] = token;
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["x-auth-token"] = token;
     }
 
     fetch(`/api/songs/${song.id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers,
       body: JSON.stringify(updatedSong),
-    }).catch((err) => console.error('Error saving song chords:', err));
+    }).catch((err) => console.error("Error saving song chords:", err));
 
     onUpdateSong(updatedSong);
-    setActiveTab('chords');
-    setAiSuccessMsg('¡Cambios guardados con éxito!');
+    setActiveTab("chords");
+    setAiSuccessMsg("¡Cambios guardados con éxito!");
     setTimeout(() => setAiSuccessMsg(null), 3000);
   };
 
@@ -227,24 +257,37 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">{formatSongTitle(song.titulo)}</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-[var(--ink)]">
+                    {formatSongTitle(song.titulo)}
+                  </h2>
                   {song.esVersionCovers && (
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">Cover</span>
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
+                      Cover
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-sans mt-0.5">
                   <span>
-                    Tonalidad: <strong className="text-[var(--acc)]">{song.tonalidad || 'Mim'}</strong>
+                    Tonalidad:{" "}
+                    <strong className="text-[var(--acc)]">
+                      {song.tonalidad || "Mim"}
+                    </strong>
                   </span>
                   <span>•</span>
                   <span>
-                    Tempo: <strong className="text-[var(--ok)]">{song.bpm || 120} BPM</strong>
+                    Tempo:{" "}
+                    <strong className="text-[var(--ok)]">
+                      {song.bpm || 120} BPM
+                    </strong>
                   </span>
                   {song.afinacion && (
                     <>
                       <span>•</span>
                       <span>
-                        Afinación: <strong className="text-[var(--tentative)]/80">{song.afinacion}</strong>
+                        Afinación:{" "}
+                        <strong className="text-[var(--tentative)]/80">
+                          {song.afinacion}
+                        </strong>
                       </span>
                     </>
                   )}
@@ -252,7 +295,10 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                     <>
                       <span>•</span>
                       <span>
-                        Duración: <strong className="text-[var(--ink-2)]">{song.duracion}</strong>
+                        Duración:{" "}
+                        <strong className="text-[var(--ink-2)]">
+                          {song.duracion}
+                        </strong>
                       </span>
                     </>
                   )}
@@ -269,12 +315,14 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                 className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 title={
                   song.audioPrincipalUrl
-                    ? 'Reanalizar escuchando el audio real de la canción'
-                    : 'Generar cifrado y guía con IA (sin audio disponible)'
+                    ? "Reanalizar escuchando el audio real de la canción"
+                    : "Generar cifrado y guía con IA (sin audio disponible)"
                 }
               >
-                <Wand2 className={`w-4 h-4 text-[var(--acc)]/40 ${isGeneratingAi ? 'animate-spin' : ''}`} />
-                <span>{isGeneratingAi ? 'Generando...' : 'IA Cifrado'}</span>
+                <Wand2
+                  className={`w-4 h-4 text-[var(--acc)]/40 ${isGeneratingAi ? "animate-spin" : ""}`}
+                />
+                <span>{isGeneratingAi ? "Generando..." : "IA Cifrado"}</span>
               </button>
 
               {/* Secondary actions — icon-only to keep the header clean */}
@@ -313,9 +361,11 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
             <div className="flex items-center bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
               <button
                 type="button"
-                onClick={() => setActiveTab('chords')}
+                onClick={() => setActiveTab("chords")}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  activeTab === 'chords' ? 'bg-[var(--acc)] text-[var(--on-acc)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  activeTab === "chords"
+                    ? "bg-[var(--acc)] text-[var(--on-acc)] shadow"
+                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -324,9 +374,11 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
 
               <button
                 type="button"
-                onClick={() => setActiveTab('substitute')}
+                onClick={() => setActiveTab("substitute")}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  activeTab === 'substitute' ? 'bg-[var(--acc)] text-[var(--ink)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  activeTab === "substitute"
+                    ? "bg-[var(--acc)] text-[var(--ink)] shadow"
+                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
                 <UserCheck className="w-3.5 h-3.5" />
@@ -335,9 +387,11 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
 
               <button
                 type="button"
-                onClick={() => setActiveTab('edit')}
+                onClick={() => setActiveTab("edit")}
                 className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  activeTab === 'edit' ? 'bg-[var(--surface)]/80 text-[var(--ink)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+                  activeTab === "edit"
+                    ? "bg-[var(--surface)]/80 text-[var(--ink)] shadow"
+                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
               >
                 <Edit3 className="w-3.5 h-3.5" />
@@ -346,11 +400,13 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
             </div>
 
             {/* INTERACTIVE CONTROLS (Only visible on chords tab) */}
-            {activeTab === 'chords' && (
+            {activeTab === "chords" && (
               <div className="flex flex-wrap items-center gap-3">
                 {/* TRANSPOSITION CONTROL */}
                 <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
-                  <span className="text-[11px] text-[var(--ink-2)] mr-1">Tono:</span>
+                  <span className="text-[11px] text-[var(--ink-2)] mr-1">
+                    Tono:
+                  </span>
                   <button
                     type="button"
                     onClick={() => setTranspose((prev) => prev - 1)}
@@ -359,7 +415,9 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                   >
                     -1
                   </button>
-                  <span className={`w-8 text-center font-bold ${transpose !== 0 ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`}>
+                  <span
+                    className={`w-8 text-center font-bold ${transpose !== 0 ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
+                  >
                     {transpose > 0 ? `+${transpose}` : transpose}
                   </span>
                   <button
@@ -385,12 +443,16 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                 {/* NOTATION TOGGLE (Latino / C-D-E) */}
                 <button
                   type="button"
-                  onClick={() => setNotation((prev) => (prev === 'ES' ? 'EN' : 'ES'))}
-                  className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] hover: text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
+                  onClick={() =>
+                    setNotation((prev) => (prev === "ES" ? "EN" : "ES"))
+                  }
+                  className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] hover:text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition cursor-pointer flex items-center gap-1"
                   title="Cambiar entre Cifrado Latino (Do, Re, Mi) e Inglés (C, D, E)"
                 >
                   <span>Cifrado:</span>
-                  <span className="text-[var(--acc)]">{notation === 'ES' ? 'Do - Re - Mi' : 'C - D - E'}</span>
+                  <span className="text-[var(--acc)]">
+                    {notation === "ES" ? "Do - Re - Mi" : "C - D - E"}
+                  </span>
                 </button>
 
                 {/* AUTO-SCROLL CONTROLLER */}
@@ -400,25 +462,33 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                     onClick={() => setIsAutoScrolling(!isAutoScrolling)}
                     className={`px-2.5 py-0.5 rounded-[var(--r-s)] font-bold flex items-center gap-1 transition cursor-pointer ${
                       isAutoScrolling
-                        ? 'bg-[var(--ok)] text-[var(--ink)]'
-                        : 'bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]'
+                        ? "bg-[var(--ok)] text-[var(--ink)]"
+                        : "bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)]"
                     }`}
                     title="Iniciar/Pausar Desfile Automático"
                   >
-                    {isAutoScrolling ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                    {isAutoScrolling ? (
+                      <Pause className="w-3 h-3" />
+                    ) : (
+                      <Play className="w-3 h-3" />
+                    )}
                     <span>Autoscroll</span>
                   </button>
 
                   {isAutoScrolling && (
                     <div className="flex items-center gap-1 ml-1">
-                      <span className="text-[10px] text-[var(--ink-2)]">Vel:</span>
+                      <span className="text-[10px] text-[var(--ink-2)]">
+                        Vel:
+                      </span>
                       {[1, 2, 3].map((v) => (
                         <button
                           key={v}
                           type="button"
                           onClick={() => setScrollSpeed(v)}
                           className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
-                            scrollSpeed === v ? 'bg-[var(--ok)] text-[var(--ink)]' : 'bg-[var(--ink)]/10 text-[var(--ink-2)]'
+                            scrollSpeed === v
+                              ? "bg-[var(--ok)] text-[var(--ink)]"
+                              : "bg-[var(--ink)]/10 text-[var(--ink-2)]"
                           }`}
                         >
                           {v}x
@@ -434,8 +504,8 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                   onClick={() => setShowChordDiagrams(!showChordDiagrams)}
                   className={`px-2.5 py-1 rounded-[var(--r-m)] font-bold transition cursor-pointer ${
                     showChordDiagrams
-                      ? 'bg-[var(--acc)]/90/40/50 text-[var(--tentative)]/80'
-                      : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                      ? "bg-[var(--acc)]/90 text-[var(--tentative)]/80"
+                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                   }`}
                 >
                   🎸 Diagramas
@@ -448,7 +518,11 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                   className="p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition cursor-pointer"
                   title="Copiar texto de acordes"
                 >
-                  {copiedText ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
+                  {copiedText ? (
+                    <Check className="w-4 h-4 text-[var(--ok)]" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             )}
@@ -458,19 +532,23 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
           {aiSuccessMsg && (
             <div
               className={`border-b px-4 py-2 text-xs font-sans flex items-center justify-between animate-in fade-in ${
-                aiSuccessMsg.startsWith('⚠️')
-                  ? 'bg-[var(--acc-soft)] /40 text-[var(--acc)]/70'
-                  : 'bg-[var(--ok-soft)]/40 text-[var(--ink-2)]'
+                aiSuccessMsg.startsWith("⚠️")
+                  ? "bg-[var(--acc-soft)]  text-[var(--acc)]/70"
+                  : "bg-[var(--ok-soft)]/40 text-[var(--ink-2)]"
               }`}
             >
               <span className="flex items-center gap-2">
-                <Sparkles className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith('⚠️') ? 'text-[var(--acc)]' : 'text-[var(--ok)]'}`} />
+                <Sparkles
+                  className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith("⚠️") ? "text-[var(--acc)]" : "text-[var(--ok)]"}`}
+                />
                 {aiSuccessMsg}
               </span>
               <button
                 onClick={() => setAiSuccessMsg(null)}
                 className={
-                  aiSuccessMsg.startsWith('⚠️') ? 'text-[var(--acc)] hover:text-[var(--ink)]' : 'text-[var(--ok)] hover:text-[var(--ink)]'
+                  aiSuccessMsg.startsWith("⚠️")
+                    ? "text-[var(--acc)] hover:text-[var(--ink)]"
+                    : "text-[var(--ok)] hover:text-[var(--ink)]"
                 }
               >
                 ✕
@@ -481,9 +559,12 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
           {/* MODAL BODY */}
           <div className="flex-1 overflow-hidden flex flex-col md:flex-row relative">
             {/* MAIN CONTENT AREA */}
-            <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scroll-smooth">
+            <div
+              ref={scrollContainerRef}
+              className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scroll-smooth"
+            >
               {/* TAB 1: CHORDS & LYRICS SHEET (LaCuerda style) */}
-              {activeTab === 'chords' && (
+              {activeTab === "chords" && (
                 <div className="space-y-6 max-w-3xl mx-auto">
                   {/* SUBSTITUTE QUICK SUMMARY BANNER */}
                   {guiaSustituto?.estructura && (
@@ -494,7 +575,7 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                           Estructura Rápida para el Músico:
                         </span>
                         <button
-                          onClick={() => setActiveTab('substitute')}
+                          onClick={() => setActiveTab("substitute")}
                           className="text-[10px] underline text-[var(--acc)] hover:text-[var(--ink)]"
                         >
                           Ver Ficha Completa →
@@ -514,7 +595,7 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
               )}
 
               {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
-              {activeTab === 'substitute' && (
+              {activeTab === "substitute" && (
                 <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
                   <div className="bg-gradient-to-br from-purple-950/60 to-[var(--surface)] p-6 rounded-[var(--r-l)] space-y-5">
                     <div className="flex items-center gap-3/30 pb-4">
@@ -522,9 +603,12 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                         <UserCheck className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-[var(--ink)]">Ficha de Sustitución Urgente</h3>
+                        <h3 className="text-lg font-bold text-[var(--ink)]">
+                          Ficha de Sustitución Urgente
+                        </h3>
                         <p className="text-xs text-[var(--tentative)]/80 font-sans">
-                          Resumen express para tocar el tema correctamente en directo o ensayo sin margen de error.
+                          Resumen express para tocar el tema correctamente en
+                          directo o ensayo sin margen de error.
                         </p>
                       </div>
                     </div>
@@ -532,29 +616,42 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                     {/* GUIDES GRID */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--acc)] font-bold block text-[11px] tracking-wider">1. Estructura Exacta del Tema</span>
+                        <span className="text-[var(--acc)] font-bold block text-[11px] tracking-wider">
+                          1. Estructura Exacta del Tema
+                        </span>
                         <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
-                          {guiaSustituto.estructura || 'Sin estructura definida.'}
+                          {guiaSustituto.estructura ||
+                            "Sin estructura definida."}
                         </p>
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--ok)] font-bold block text-[11px] tracking-wider">2. Progresión Armónica Clave</span>
+                        <span className="text-[var(--ok)] font-bold block text-[11px] tracking-wider">
+                          2. Progresión Armónica Clave
+                        </span>
                         <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
-                          {guiaSustituto.progresionClave || 'Ver cifrado completo.'}
+                          {guiaSustituto.progresionClave ||
+                            "Ver cifrado completo."}
                         </p>
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--alert)] font-bold block text-[11px] tracking-wider">3. Cortes, Entradas y Claves</span>
+                        <span className="text-[var(--alert)] font-bold block text-[11px] tracking-wider">
+                          3. Cortes, Entradas y Claves
+                        </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
-                          {guiaSustituto.cortesYClaves || 'Sin indicaciones especiales de cortes.'}
+                          {guiaSustituto.cortesYClaves ||
+                            "Sin indicaciones especiales de cortes."}
                         </p>
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--tentative)]/80 font-bold block text-[11px] tracking-wider">4. Capo / Afinación</span>
-                        <p className="text-[var(--ink-2)] leading-relaxed">{guiaSustituto.capoTraste || 'Standard / Sin Capo'}</p>
+                        <span className="text-[var(--tentative)]/80 font-bold block text-[11px] tracking-wider">
+                          4. Capo / Afinación
+                        </span>
+                        <p className="text-[var(--ink-2)] leading-relaxed">
+                          {guiaSustituto.capoTraste || "Standard / Sin Capo"}
+                        </p>
                       </div>
 
                       <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
@@ -562,7 +659,8 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                           5. Protagonismo de Instrumentos / Arreglos
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
-                          {guiaSustituto.instrumentosClave || 'Seguir el pulso principal de batería y bajo.'}
+                          {guiaSustituto.instrumentosClave ||
+                            "Seguir el pulso principal de batería y bajo."}
                         </p>
                       </div>
                     </div>
@@ -570,8 +668,8 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                     <div className="pt-2 flex justify-end">
                       <button
                         type="button"
-                        onClick={() => setActiveTab('edit')}
-                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/80/60 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
+                        onClick={() => setActiveTab("edit")}
+                        className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/80 hover:bg-[var(--acc)] text-[var(--acc)]/40 text-xs font-sans font-bold transition cursor-pointer flex items-center gap-2"
                       >
                         <Edit3 className="w-4 h-4" />
                         <span>Editar esta Ficha de Sustitución</span>
@@ -582,7 +680,7 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
               )}
 
               {/* TAB 3: EDIT MODE */}
-              {activeTab === 'edit' && (
+              {activeTab === "edit" && (
                 <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in">
                   <div className="bg-[var(--surface)]/90 p-5 rounded-[var(--r-l)] space-y-4">
                     <div className="flex items-center justify-between pb-3">
@@ -602,13 +700,14 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
 
                     <div>
                       <label className="text-xs font-sans font-bold text-[var(--acc)] block mb-1">
-                        Texto con Letra y Acordes (Formato LaCuerda o [Acorde] inline):
+                        Texto con Letra y Acordes (Formato LaCuerda o [Acorde]
+                        inline):
                       </label>
                       <textarea
                         value={cifradoTexto}
                         onChange={(e) => setCifradoTexto(e.target.value)}
                         rows={14}
-                        className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-sans text-xs focus:outline-none focus: leading-relaxed"
+                        className="w-full p-3 bg-[var(--sunken)] rounded-[var(--r-m)] text-[var(--ink)] font-sans text-xs focus:outline-none focus:leading-relaxed"
                         placeholder={`[Intro]\nMim Do Re Mim\n\n[Estribillo]\n[Sol] Que tiene tu [Re] veneno [Mim] ...`}
                       />
                     </div>
@@ -620,44 +719,72 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
                         <div>
-                          <label className="text-[var(--ink-2)] block mb-0.5">Estructura Exacta del Tema:</label>
+                          <label className="text-[var(--ink-2)] block mb-0.5">
+                            Estructura Exacta del Tema:
+                          </label>
                           <input
                             type="text"
-                            value={guiaSustituto.estructura || ''}
-                            onChange={(e) => setGuiaSustituto({ ...guiaSustituto, estructura: e.target.value })}
+                            value={guiaSustituto.estructura || ""}
+                            onChange={(e) =>
+                              setGuiaSustituto({
+                                ...guiaSustituto,
+                                estructura: e.target.value,
+                              })
+                            }
                             className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
                             placeholder="Intro -> Verso -> Estribillo -> Outro"
                           />
                         </div>
 
                         <div>
-                          <label className="text-[var(--ink-2)] block mb-0.5">Progresiones Clave:</label>
+                          <label className="text-[var(--ink-2)] block mb-0.5">
+                            Progresiones Clave:
+                          </label>
                           <input
                             type="text"
-                            value={guiaSustituto.progresionClave || ''}
-                            onChange={(e) => setGuiaSustituto({ ...guiaSustituto, progresionClave: e.target.value })}
+                            value={guiaSustituto.progresionClave || ""}
+                            onChange={(e) =>
+                              setGuiaSustituto({
+                                ...guiaSustituto,
+                                progresionClave: e.target.value,
+                              })
+                            }
                             className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
                             placeholder="Verso: Mim - Do | Estribillo: Sol - Re"
                           />
                         </div>
 
                         <div>
-                          <label className="text-[var(--ink-2)] block mb-0.5">Cortes y Claves en Vivo:</label>
+                          <label className="text-[var(--ink-2)] block mb-0.5">
+                            Cortes y Claves en Vivo:
+                          </label>
                           <input
                             type="text"
-                            value={guiaSustituto.cortesYClaves || ''}
-                            onChange={(e) => setGuiaSustituto({ ...guiaSustituto, cortesYClaves: e.target.value })}
+                            value={guiaSustituto.cortesYClaves || ""}
+                            onChange={(e) =>
+                              setGuiaSustituto({
+                                ...guiaSustituto,
+                                cortesYClaves: e.target.value,
+                              })
+                            }
                             className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
                             placeholder="Parón en compás 8..."
                           />
                         </div>
 
                         <div>
-                          <label className="text-[var(--ink-2)] block mb-0.5">Capo / Afinación:</label>
+                          <label className="text-[var(--ink-2)] block mb-0.5">
+                            Capo / Afinación:
+                          </label>
                           <input
                             type="text"
-                            value={guiaSustituto.capoTraste || ''}
-                            onChange={(e) => setGuiaSustituto({ ...guiaSustituto, capoTraste: e.target.value })}
+                            value={guiaSustituto.capoTraste || ""}
+                            onChange={(e) =>
+                              setGuiaSustituto({
+                                ...guiaSustituto,
+                                capoTraste: e.target.value,
+                              })
+                            }
                             className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[var(--ink)]"
                             placeholder="Capo 2º traste"
                           />
@@ -670,7 +797,7 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
             </div>
 
             {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
-            {activeTab === 'chords' && showChordDiagrams && (
+            {activeTab === "chords" && showChordDiagrams && (
               <div className="w-full md:w-64 bg-[var(--surface)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
                 <div className="flex items-center justify-between pb-2">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
@@ -686,7 +813,9 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
                 </div>
 
                 {uniqueChords.length === 0 ? (
-                  <p className="text-xs text-[var(--ink-2)] font-sans italic">No se detectaron acordes en el texto.</p>
+                  <p className="text-xs text-[var(--ink-2)] font-sans italic">
+                    No se detectaron acordes en el texto.
+                  </p>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
                     {uniqueChords.map((chord) => (
@@ -705,7 +834,10 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
           onClose={() => setShowShareModal(false)}
           title={song.titulo}
           subtitle="Canción y cifrado para WhatsApp"
-          initialText={formatSongShareText(song, { includeChords: true, includeGuide: true })}
+          initialText={formatSongShareText(song, {
+            includeChords: true,
+            includeGuide: true,
+          })}
           itemType="song"
         />
 
@@ -723,30 +855,47 @@ export function SongChordsViewerModal({ song, onClose, onUpdateSong }: SongChord
 
 // RENDER FUNCTION FOR FORMATTED CHORD SHEET WITH HIGHLIGHTED CHORDS
 function renderFormattedChordSheet(text: string) {
-  if (!text) return <span className="text-[var(--ink-2)] italic">Sin cifrado disponible. Usa el botón de IA para generarlo.</span>;
+  if (!text)
+    return (
+      <span className="text-[var(--ink-2)] italic">
+        Sin cifrado disponible. Usa el botón de IA para generarlo.
+      </span>
+    );
 
-  const lines = text.split('\n');
+  const lines = text.split("\n");
 
   return lines.map((line, idx) => {
     // Check if section header like [Intro], [Estribillo], [Solo], etc.
-    if (/^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(line.trim())) {
+    if (
+      /^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(
+        line.trim(),
+      )
+    ) {
       return (
-        <div key={idx} className="text-[var(--acc)] font-bold text-base my-2 pt-2 /60 flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded bg-[var(--acc)]/90/80 text-[var(--tentative)]/80">{line.trim()}</span>
+        <div
+          key={idx}
+          className="text-[var(--acc)] font-bold text-base my-2 pt-2  flex items-center gap-2"
+        >
+          <span className="px-2.5 py-0.5 rounded bg-[var(--acc)]/90 text-[var(--tentative)]/80">
+            {line.trim()}
+          </span>
         </div>
       );
     }
 
     // Check if inline bracket chord format: [Do] Que tiene tu [Sol] veneno
-    if (line.includes('[')) {
+    if (line.includes("[")) {
       const parts = line.split(/(\[[A-Za-z0-9#\/]+\])/g);
       return (
         <div key={idx} className="py-0.5">
           {parts.map((part, pIdx) => {
-            if (part.startsWith('[') && part.endsWith(']')) {
+            if (part.startsWith("[") && part.endsWith("]")) {
               const chordName = part.slice(1, -1);
               return (
-                <span key={pIdx} className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 py-0.5 rounded mx-0.5 text-xs">
+                <span
+                  key={pIdx}
+                  className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 py-0.5 rounded mx-0.5 text-xs"
+                >
                   {chordName}
                 </span>
               );
@@ -771,7 +920,10 @@ function renderFormattedChordSheet(text: string) {
 
     if (isChordLine) {
       return (
-        <div key={idx} className="font-bold text-[var(--acc)] text-sm tracking-wide py-0.5 leading-none select-none">
+        <div
+          key={idx}
+          className="font-bold text-[var(--acc)] text-sm tracking-wide py-0.5 leading-none select-none"
+        >
           {line}
         </div>
       );
@@ -780,7 +932,7 @@ function renderFormattedChordSheet(text: string) {
     // Standard lyrics line
     return (
       <div key={idx} className="text-[var(--ink-2)] py-0.5">
-        {line || '\u00A0'}
+        {line || "\u00A0"}
       </div>
     );
   });
@@ -792,7 +944,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
 
   return (
-    <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 hover:/40 transition">
+    <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5  transition">
       <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
         <span>{chord}</span>
       </div>
@@ -802,10 +954,12 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
           {/* Simple 6-string Guitar Fretboard Grid Representation */}
           <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-[9px] font-sans">
             {shape.baseFret && shape.baseFret > 1 && (
-              <div className="text-[8px] text-[var(--acc)] font-bold text-left pl-1">Traste {shape.baseFret}</div>
+              <div className="text-[8px] text-[var(--acc)] font-bold text-left pl-1">
+                Traste {shape.baseFret}
+              </div>
             )}
             <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] pb-0.5">
-              {['E', 'A', 'D', 'G', 'B', 'E'].map((s, i) => (
+              {["E", "A", "D", "G", "B", "E"].map((s, i) => (
                 <span key={i} className="text-center">
                   {s}
                 </span>
@@ -817,10 +971,14 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
                 <div key={stringIdx} className="flex flex-col items-center">
                   <span
                     className={`font-bold ${
-                      fret === -1 ? 'text-[var(--alert)]' : fret === 0 ? 'text-[var(--ok)]' : 'text-[var(--acc)]/70'
+                      fret === -1
+                        ? "text-[var(--alert)]"
+                        : fret === 0
+                          ? "text-[var(--ok)]"
+                          : "text-[var(--acc)]/70"
                     }`}
                   >
-                    {fret === -1 ? 'x' : fret === 0 ? 'o' : fret}
+                    {fret === -1 ? "x" : fret === 0 ? "o" : fret}
                   </span>
                 </div>
               ))}
@@ -828,7 +986,9 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
           </div>
         </div>
       ) : (
-        <p className="text-[10px] text-[var(--ink-2)] font-sans">[Acorde Estándar]</p>
+        <p className="text-[10px] text-[var(--ink-2)] font-sans">
+          [Acorde Estándar]
+        </p>
       )}
     </div>
   );
@@ -836,7 +996,10 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
 
 // SAMPLE DEFAULT CHORD SHEETS FOR DEMO SONGS
 function getSampleCifrado(song: Song): string {
-  if (song.titulo.toLowerCase().includes('brisa') || song.titulo.toLowerCase().includes('rojitas')) {
+  if (
+    song.titulo.toLowerCase().includes("brisa") ||
+    song.titulo.toLowerCase().includes("rojitas")
+  ) {
     return `[Intro]
 Lam Fa Sol Lam
 Lam Fa Sol Lam
@@ -895,10 +1058,14 @@ Mim Do Re Mim
 
 function getSampleSubstituteGuide(song: Song): SongSubstituteGuide {
   return {
-    estructura: 'Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo de Guitarra -> Outro',
-    progresionClave: 'Verso: Mim - Do - Re - Mim | Estribillo: Sol - Re - Mim - Do',
-    cortesYClaves: 'Corte seco en el compás 8 del solo. Entrada de voz sola en el verso 2.',
-    capoTraste: 'Sin Capo / Afinación Standard E',
-    instrumentosClave: 'Entrada potente de vientos en el estribillo. Redoble de batería para paso a solo.',
+    estructura:
+      "Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo de Guitarra -> Outro",
+    progresionClave:
+      "Verso: Mim - Do - Re - Mim | Estribillo: Sol - Re - Mim - Do",
+    cortesYClaves:
+      "Corte seco en el compás 8 del solo. Entrada de voz sola en el verso 2.",
+    capoTraste: "Sin Capo / Afinación Standard E",
+    instrumentosClave:
+      "Entrada potente de vientos en el estribillo. Redoble de batería para paso a solo.",
   };
 }

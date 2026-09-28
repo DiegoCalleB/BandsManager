@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
-import { ImageIcon, FileDown, FileText, Upload, Download, Trash2, Loader2, Sparkles } from 'lucide-react';
-import { EPKConfig } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
-import { AILogoGeneratorModal } from './AILogoGeneratorModal';
+import React, { useState } from "react";
+import {
+  ImageIcon,
+  FileDown,
+  FileText,
+  Upload,
+  Download,
+  Trash2,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
+import { EPKConfig } from "../../types";
+import { EPKBlockWrapper } from "./EPKBlockWrapper";
+import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { AILogoGeneratorModal } from "./AILogoGeneratorModal";
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -73,22 +82,24 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative shrink-0">
-              {config.logoUrl && config.logoUrl.trim() !== '' ? (
+              {config.logoUrl && config.logoUrl.trim() !== "" ? (
                 <img
                   src={config.logoUrl}
                   alt="Logo de la banda"
-                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 /60 bg-[var(--surface)]"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--surface)]"
                 />
               ) : isBakandeya ? (
                 <img
                   src="/logo_bakandeya_bueno_sin_fondo.png"
                   alt="Bakandeya Logo"
-                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1 /60 bg-[var(--surface)]"
+                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--surface)]"
                 />
               ) : (
                 <div className="w-28 h-28 rounded-[var(--r-l)] bg-[var(--surface)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
                   <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
-                  <span className="text-[10px] font-medium text-[var(--ink-2)]">Sin Logo</span>
+                  <span className="text-[10px] font-medium text-[var(--ink-2)]">
+                    Sin Logo
+                  </span>
                 </div>
               )}
             </div>
@@ -96,15 +107,29 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <div className="space-y-3 flex-1 w-full">
               <div className="flex items-center gap-2">
                 <label className="flex-1 cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 transition">
-                  {isUploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  <span>{isUploadingLogo ? 'Subiendo Logo...' : 'Subir Logo (PNG/JPG)'}</span>
-                  <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" disabled={isUploadingLogo} />
+                  {isUploadingLogo ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  <span>
+                    {isUploadingLogo
+                      ? "Subiendo Logo..."
+                      : "Subir Logo (PNG/JPG)"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                    disabled={isUploadingLogo}
+                  />
                 </label>
 
                 {config.logoUrl && (
                   <button
                     type="button"
-                    onClick={() => setConfig({ ...config, logoUrl: '' })}
+                    onClick={() => setConfig({ ...config, logoUrl: "" })}
                     className="p-2.5 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-m)] transition cursor-pointer"
                     title="Eliminar logo"
                   >
@@ -114,13 +139,17 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-[var(--ink-2)]">O introduce URL de la imagen:</label>
+                <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+                  O introduce URL de la imagen:
+                </label>
                 <input
                   type="text"
-                  value={config.logoUrl || ''}
-                  onChange={(e) => setConfig({ ...config, logoUrl: e.target.value })}
+                  value={config.logoUrl || ""}
+                  onChange={(e) =>
+                    setConfig({ ...config, logoUrl: e.target.value })
+                  }
                   placeholder="https://ejemplo.com/logo.jpg"
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
                 />
               </div>
             </div>
@@ -130,7 +159,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         <AILogoGeneratorModal
           isOpen={showAiLogoModal}
           onClose={() => setShowAiLogoModal(false)}
-          onSelectLogo={(logoUrl) => setConfig((prev) => ({ ...prev, logoUrl }))}
+          onSelectLogo={(logoUrl) =>
+            setConfig((prev) => ({ ...prev, logoUrl }))
+          }
           genre={config.genero}
         />
 
@@ -148,8 +179,12 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="truncate">
-                    <p className="font-bold text-xs text-[var(--ink)] truncate">{config.dossierPdfName || 'Dossier_Oficial.pdf'}</p>
-                    <p className="text-[10px] text-[var(--acc)] font-medium">Documento adjunto almacenado</p>
+                    <p className="font-bold text-xs text-[var(--ink)] truncate">
+                      {config.dossierPdfName || "Dossier_Oficial.pdf"}
+                    </p>
+                    <p className="text-[10px] text-[var(--acc)] font-medium">
+                      Documento adjunto almacenado
+                    </p>
                   </div>
                 </div>
 
@@ -158,8 +193,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   onClick={() =>
                     setConfig({
                       ...config,
-                      dossierPdfUrl: '',
-                      dossierPdfName: '',
+                      dossierPdfUrl: "",
+                      dossierPdfName: "",
                     })
                   }
                   className="p-2 bg-[var(--surface)] hover:bg-[var(--alert)]/20 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
@@ -169,7 +204,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 </button>
               </div>
 
-              <div className="flex items-center gap-2 pt-1 /80">
+              <div className="flex items-center gap-2 pt-1 ">
                 <a
                   href={config.dossierPdfUrl}
                   target="_blank"
@@ -197,13 +232,26 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <FileDown className="w-6 h-6 text-[var(--acc)]" />
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-bold text-[var(--ink)]">Sube aquí el Dossier Oficial (PDF o Word)</p>
-                <p className="text-[11px] text-[var(--ink-2)]">PDF, Word o TXT. Estará listo para el envío automático en correos.</p>
+                <p className="text-xs font-bold text-[var(--ink)]">
+                  Sube aquí el Dossier Oficial (PDF o Word)
+                </p>
+                <p className="text-[11px] text-[var(--ink-2)]">
+                  PDF, Word o TXT. Estará listo para el envío automático en
+                  correos.
+                </p>
               </div>
 
               <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
-                {isUploadingDossier ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                <span>{isUploadingDossier ? 'Subiendo Documento...' : 'Seleccionar PDF / Dossier'}</span>
+                {isUploadingDossier ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                <span>
+                  {isUploadingDossier
+                    ? "Subiendo Documento..."
+                    : "Seleccionar PDF / Dossier"}
+                </span>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx,.txt"
@@ -221,16 +269,18 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </label>
             <input
               type="text"
-              value={config.dossierPdfUrl || ''}
+              value={config.dossierPdfUrl || ""}
               onChange={(e) =>
                 setConfig({
                   ...config,
                   dossierPdfUrl: e.target.value,
-                  dossierPdfName: e.target.value ? config.dossierPdfName || 'Enlace Dossier' : '',
+                  dossierPdfName: e.target.value
+                    ? config.dossierPdfName || "Enlace Dossier"
+                    : "",
                 })
               }
               placeholder="https://drive.google.com/file/d/..."
-              className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
+              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] outline-none"
             />
           </div>
         </div>
@@ -239,19 +289,23 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca Interna)
+              <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca
+              Interna)
             </h3>
             <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-full">
               Solo visible aquí
             </span>
           </div>
           <p className="text-xs text-[var(--ink-2)]">
-            Este texto y documento no se muestra en el enlace público. Úsalo como biblioteca para guardarlo aquí y enviarlo a las salas
-            cuando sea necesario.
+            Este texto y documento no se muestra en el enlace público. Úsalo
+            como biblioteca para guardarlo aquí y enviarlo a las salas cuando
+            sea necesario.
           </p>
 
           <div className="space-y-3">
-            <label className="text-xs font-bold text-[var(--ink)] block">Archivo de Rider Técnico (PDF)</label>
+            <label className="text-xs font-bold text-[var(--ink)] block">
+              Archivo de Rider Técnico (PDF)
+            </label>
             {config.riderPdfUrl ? (
               <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-3">
                 <div className="flex items-start justify-between gap-4">
@@ -260,8 +314,12 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       <FileDown className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-[var(--ink)] truncate">{config.riderPdfName || 'Archivo subido'}</p>
-                      <p className="text-[10px] text-[var(--ink-2)] truncate mt-0.5">PDF guardado correctamente</p>
+                      <p className="text-xs font-bold text-[var(--ink)] truncate">
+                        {config.riderPdfName || "Archivo subido"}
+                      </p>
+                      <p className="text-[10px] text-[var(--ink-2)] truncate mt-0.5">
+                        PDF guardado correctamente
+                      </p>
                     </div>
                   </div>
                   <button
@@ -269,8 +327,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     onClick={() =>
                       setConfig({
                         ...config,
-                        riderPdfUrl: '',
-                        riderPdfName: '',
+                        riderPdfUrl: "",
+                        riderPdfName: "",
                       })
                     }
                     className="p-1.5 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] transition shrink-0 cursor-pointer"
@@ -279,7 +337,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex items-center gap-2 pt-1 /80">
+                <div className="flex items-center gap-2 pt-1 ">
                   <a
                     href={config.riderPdfUrl}
                     target="_blank"
@@ -307,101 +365,174 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                   <FileDown className="w-6 h-6 text-[var(--acc)]" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-[var(--ink)]">Sube aquí el Rider Técnico (PDF)</p>
+                  <p className="text-xs font-bold text-[var(--ink)]">
+                    Sube aquí el Rider Técnico (PDF)
+                  </p>
                 </div>
 
                 <label className="inline-flex cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2 rounded-[var(--r-m)] text-xs items-center gap-2 transition">
-                  {isUploadingRider ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  <span>{isUploadingRider ? 'Subiendo Documento...' : 'Seleccionar PDF / Rider'}</span>
-                  <input type="file" accept=".pdf,.doc,.docx" onChange={handleRiderUpload} className="hidden" disabled={isUploadingRider} />
+                  {isUploadingRider ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  <span>
+                    {isUploadingRider
+                      ? "Subiendo Documento..."
+                      : "Seleccionar PDF / Rider"}
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleRiderUpload}
+                    className="hidden"
+                    disabled={isUploadingRider}
+                  />
                 </label>
               </div>
             )}
 
             <div className="pt-2 space-y-1">
-              <label className="text-[11px] font-semibold text-[var(--ink-2)]">Rider Técnico (Texto)</label>
+              <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+                Rider Técnico (Texto)
+              </label>
               <textarea
-                value={config.riderTecnico || ''}
-                onChange={(e) => setConfig({ ...config, riderTecnico: e.target.value })}
+                value={config.riderTecnico || ""}
+                onChange={(e) =>
+                  setConfig({ ...config, riderTecnico: e.target.value })
+                }
                 placeholder="Canales, microfonía, DIs, etc..."
                 rows={4}
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
               />
             </div>
             {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
             <div className="pt-3 border-t border-slate-800/80 space-y-3">
               <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-                Parámetros Técnicos Clave para el Agente (Respuestas directas a salas)
+                Parámetros Técnicos Clave para el Agente (Respuestas directas a
+                salas)
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
                 {/* Monitoreo */}
                 <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">Sistema de Monitoreo</label>
+                  <label className="text-[11px] font-semibold text-slate-300 block">
+                    Sistema de Monitoreo
+                  </label>
                   <select
-                    value={config.riderConfig?.tipoMonitoreo || 'sin_preferencia'}
+                    value={
+                      config.riderConfig?.tipoMonitoreo || "sin_preferencia"
+                    }
                     onChange={(e) =>
-                      setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), tipoMonitoreo: e.target.value as any } })
+                      setConfig({
+                        ...config,
+                        riderConfig: {
+                          ...(config.riderConfig || {}),
+                          tipoMonitoreo: e.target.value as any,
+                        },
+                      })
                     }
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-amber-500"
                   >
-                    <option value="sin_preferencia">Sin preferencia / Sala</option>
+                    <option value="sin_preferencia">
+                      Sin preferencia / Sala
+                    </option>
                     <option value="cuñas_escenario">Cuñas de suelo</option>
                     <option value="in_ear">In-Ears propios (IEM)</option>
                     <option value="mixto">Mixto (In-Ears + Cuñas)</option>
                   </select>
-                  <p className="text-[10px] text-slate-500">Evita pedir monitores extra si lleváis IEM.</p>
+                  <p className="text-[10px] text-slate-500">
+                    Evita pedir monitores extra si lleváis IEM.
+                  </p>
                 </div>
                 {/* Backline */}
                 <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">Backline (Amplis / Batería)</label>
+                  <label className="text-[11px] font-semibold text-slate-300 block">
+                    Backline (Amplis / Batería)
+                  </label>
                   <select
-                    value={config.riderConfig?.backlinePropio || 'completo'}
+                    value={config.riderConfig?.backlinePropio || "completo"}
                     onChange={(e) =>
-                      setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), backlinePropio: e.target.value as any } })
+                      setConfig({
+                        ...config,
+                        riderConfig: {
+                          ...(config.riderConfig || {}),
+                          backlinePropio: e.target.value as any,
+                        },
+                      })
                     }
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-amber-500"
                   >
                     <option value="completo">Backline completo propio</option>
-                    <option value="parcial">Parcial (pedimos batería/amplis)</option>
-                    <option value="sin_backline">Necesitamos backline de sala</option>
+                    <option value="parcial">
+                      Parcial (pedimos batería/amplis)
+                    </option>
+                    <option value="sin_backline">
+                      Necesitamos backline de sala
+                    </option>
                   </select>
-                  <p className="text-[10px] text-slate-500">Crucial para pactar dobles carteles.</p>
+                  <p className="text-[10px] text-slate-500">
+                    Crucial para pactar dobles carteles.
+                  </p>
                 </div>
                 {/* Microfonía */}
                 <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">Microfonía / DIs</label>
+                  <label className="text-[11px] font-semibold text-slate-300 block">
+                    Microfonía / DIs
+                  </label>
                   <div className="flex gap-1.5 pt-0.5">
                     <button
                       type="button"
-                      onClick={() => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), microfoniaPropia: false } })}
-                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}`}
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            microfoniaPropia: false,
+                          },
+                        })
+                      }
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-amber-500/20 text-amber-300 border-amber-500/40" : "bg-slate-900 text-slate-400 border-slate-800"}`}
                     >
                       De la sala
                     </button>
                     <button
                       type="button"
-                      onClick={() => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), microfoniaPropia: true } })}
-                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}`}
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            microfoniaPropia: true,
+                          },
+                        })
+                      }
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-slate-900 text-slate-400 border-slate-800"}`}
                     >
                       Propia
                     </button>
                   </div>
-                  <p className="text-[10px] text-slate-500">Informa al técnico de la casa.</p>
+                  <p className="text-[10px] text-slate-500">
+                    Informa al técnico de la casa.
+                  </p>
                 </div>
                 {/* Tiempo de prueba y canales */}
                 <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-slate-300 block">Prueba / Canales Mínimos</label>
+                  <label className="text-[11px] font-semibold text-slate-300 block">
+                    Prueba / Canales Mínimos
+                  </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      value={config.riderConfig?.tiempoPruebaMinutos ?? ''}
+                      value={config.riderConfig?.tiempoPruebaMinutos ?? ""}
                       onChange={(e) =>
                         setConfig({
                           ...config,
                           riderConfig: {
                             ...(config.riderConfig || {}),
-                            tiempoPruebaMinutos: e.target.value ? Number(e.target.value) : undefined,
+                            tiempoPruebaMinutos: e.target.value
+                              ? Number(e.target.value)
+                              : undefined,
                           },
                         })
                       }
@@ -410,13 +541,15 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     />
                     <input
                       type="number"
-                      value={config.riderConfig?.canalesMinimos ?? ''}
+                      value={config.riderConfig?.canalesMinimos ?? ""}
                       onChange={(e) =>
                         setConfig({
                           ...config,
                           riderConfig: {
                             ...(config.riderConfig || {}),
-                            canalesMinimos: e.target.value ? Number(e.target.value) : undefined,
+                            canalesMinimos: e.target.value
+                              ? Number(e.target.value)
+                              : undefined,
                           },
                         })
                       }
@@ -424,7 +557,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       className="w-1/2 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-amber-500"
                     />
                   </div>
-                  <p className="text-[10px] text-slate-500">Minutos y canales de mesa.</p>
+                  <p className="text-[10px] text-slate-500">
+                    Minutos y canales de mesa.
+                  </p>
                 </div>
               </div>
             </div>
@@ -437,15 +572,24 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <ImageIcon className="w-5 h-5" /> Galería de Imagen &amp; Prensa
           </h3>
           <p className="text-xs text-[var(--ink-2)]">
-            Fotos reales de directo o sesión de prensa. Es lo primero que ve alguien que nunca os ha visto tocar.
+            Fotos reales de directo o sesión de prensa. Es lo primero que ve
+            alguien que nunca os ha visto tocar.
           </p>
           <label
             className={`cursor-pointer bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold px-4 py-2.5 rounded-[var(--r-m)] text-xs inline-flex items-center justify-center gap-2 transition ${
-              subiendoGaleria ? 'opacity-70 pointer-events-none' : ''
+              subiendoGaleria ? "opacity-70 pointer-events-none" : ""
             }`}
           >
-            {subiendoGaleria ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            <span>{subiendoGaleria ? 'Subiendo fotos...' : '+ Subir fotos (puedes elegir varias a la vez)'}</span>
+            {subiendoGaleria ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Upload className="w-4 h-4" />
+            )}
+            <span>
+              {subiendoGaleria
+                ? "Subiendo fotos..."
+                : "+ Subir fotos (puedes elegir varias a la vez)"}
+            </span>
             <input
               type="file"
               accept="image/*"
@@ -455,7 +599,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               onChange={(e) => {
                 const files = e.target.files;
                 if (files && files.length > 0) subirFotosGaleria(files);
-                e.target.value = '';
+                e.target.value = "";
               }}
             />
           </label>
@@ -466,11 +610,21 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {(config.bandPhotos || [])
-                .map((item) => (typeof item === 'string' ? item : (item as any)?.url || ''))
-                .filter((url) => typeof url === 'string' && url.trim() !== '')
+                .map((item) =>
+                  typeof item === "string" ? item : (item as any)?.url || "",
+                )
+                .filter((url) => typeof url === "string" && url.trim() !== "")
                 .map((url, idx) => (
-                  <div key={url + idx} className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)]">
-                    <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                  <div
+                    key={url + idx}
+                    className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)]"
+                  >
+                    <img
+                      src={url}
+                      alt={`Foto ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
                     <button
                       type="button"
                       onClick={() => quitarFotoGaleria(url)}

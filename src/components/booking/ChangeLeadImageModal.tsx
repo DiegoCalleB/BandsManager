@@ -207,7 +207,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
           {/* Options Stack */}
           <div className="flex flex-col gap-2.5">
             {/* Option 1: File Upload */}
-            <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)] hover:/50 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
+            <label className="w-full p-3 bg-[var(--bg)] hover:bg-[var(--surface)]  rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--sunken)] group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
                   {isUploading ? (
@@ -241,7 +241,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
               type="button"
               onClick={handleAutoSearchLogo}
               disabled={isSearching || isUploading}
-              className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 hover:/60 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group disabled:opacity-50"
+              className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20  rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group disabled:opacity-50"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)]">

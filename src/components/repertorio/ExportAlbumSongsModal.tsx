@@ -493,7 +493,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
           {/* Header */}
           <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-gradient-to-r from-[var(--ok)]/10 via-transparent to-transparent">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20/40 flex items-center justify-center text-[var(--ok)] shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[var(--r-l)] bg-[var(--surface)]/20 flex items-center justify-center text-[var(--ok)] shrink-0">
                 <Download className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <div className="min-w-0">
@@ -562,7 +562,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   className={`p-3 rounded-[var(--r-l)] text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
                     format === "zip"
                       ? "bg-gradient-to-br from-[var(--ok)]/30 to-emerald-900/40 text-[var(--ink)] ring-1 ring-[var(--ok)]/40"
-                      : "bg-[var(--ok)]/10/30 text-[var(--ink-2)] hover:bg-[var(--ok)]/20"
+                      : "bg-[var(--ok)]/10 text-[var(--ink-2)] hover:bg-[var(--ok)]/20"
                   }`}
                 >
                   <Archive
@@ -657,7 +657,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
             {/* Audio Availability Banner (for ZIP mode) */}
             {format === "zip" && (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10/30 flex items-center justify-between gap-3 text-xs">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 flex items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2 text-[var(--ink-2)]">
                   <Music className="w-4 h-4 text-[var(--ok)] shrink-0" />
                   <span>

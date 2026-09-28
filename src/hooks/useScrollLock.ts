@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  * Safari/Chrome en iOS "arrastren" el fondo o desplacen un position:fixed recién montado
  * durante el gesto de scroll que llevó al usuario hasta el botón que abrió el modal.
  */
-export function useScrollLock(active: boolean) {
+export function useScrollLock(active:boolean) {
   useEffect(() => {
     if (!active) return;
 

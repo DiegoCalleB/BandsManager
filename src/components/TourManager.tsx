@@ -842,7 +842,7 @@ export default function TourManager({
                           <span
                             className={`text-[10px] px-2 py-0.5 rounded font-sans flex items-center gap-1 ${
                               isFormacionParcial
-                                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80/30"
+                                ? "bg-[var(--tentative)]/10 text-[var(--tentative)]/80"
                                 : "bg-[var(--ok)]/10 text-[var(--ink-2)]/20"
                             }`}
                             title={
@@ -915,7 +915,7 @@ export default function TourManager({
                         </div>
                       </div>
                       <div
-                        className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ? "bg-[var(--ok)]/10/20 text-[var(--ok)]" : "bg-[var(--alert)]/10/20 text-[var(--alert)]"}`}
+                        className={`p-2.5 rounded-[var(--r-m)] ${beneficioNeto >= 0 ? "bg-[var(--ok)]/10 text-[var(--ok)]" : "bg-[var(--alert)]/10 text-[var(--alert)]"}`}
                       >
                         <span className="text-[9px] opacity-80 tracking-wider block font-sans">
                           Margen Neto
@@ -1107,7 +1107,7 @@ export default function TourManager({
                     </div>
 
                     {/* SELECCIÓN DE MIEMBROS DE LA BANDA (FORMACIÓN COMPLETA VS PARCIAL) */}
-                    <div className="sm:col-span-3 p-4 rounded-[var(--r-m)] bg-[var(--acc)]/90/20 space-y-4">
+                    <div className="sm:col-span-3 p-4 rounded-[var(--r-m)] bg-[var(--acc)]/90 space-y-4">
                       <div className="flex flex-wrap items-center justify-between gap-2/20 pb-3">
                         <div>
                           <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 tracking-wider flex items-center gap-1.5">
@@ -1194,7 +1194,7 @@ export default function TourManager({
                                   className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-3 transition-all cursor-pointer ${
                                     isSelected
                                       ? "bg-[var(--tentative)]/20 text-[var(--ink)]"
-                                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]"
+                                      : "bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]"
                                   }`}
                                 >
                                   <div

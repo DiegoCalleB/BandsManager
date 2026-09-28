@@ -516,7 +516,7 @@ export function ModoLocalEnVivoTab({
           {/* Fullscreen Button */}
           <button
             onClick={toggleFullscreen}
-            className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:/40 transition-all cursor-pointer"
+            className="p-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]  transition-all cursor-pointer"
             title={
               isFullscreen
                 ? "Salir de pantalla completa"
@@ -542,7 +542,7 @@ export function ModoLocalEnVivoTab({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5">
             <div className="space-y-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-sans font-bold bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-sans font-bold bg-[var(--acc)]/60 text-[var(--acc)]/70">
                   Pista {activeIndex + 1} de {agenda.length}
                 </span>
                 <span className="text-xs font-sans text-[var(--ink-2)]">
@@ -589,7 +589,7 @@ export function ModoLocalEnVivoTab({
           </div>
 
           {/* Quick Action: Button to open Atril / Chords immediately */}
-          <div className="flex items-center justify-between p-3 rounded-[var(--r-l)] bg-[var(--acc)]/60/10">
+          <div className="flex items-center justify-between p-3 rounded-[var(--r-l)] bg-[var(--acc)]/60">
             <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-[var(--acc)]" />
               <span className="text-xs font-sans font-bold text-[var(--acc)]/70">
@@ -642,7 +642,7 @@ export function ModoLocalEnVivoTab({
                   placeholder="Escribe anotaciones para la banda (ej. entrada con slap, cuidar coros, acento al final)..."
                   value={currentItem?.enfoque || ""}
                   onChange={(e) => handleUpdateCurrentNote(e.target.value)}
-                  className="w-full bg-transparent text-sm text-[var(--ink)] font-sans outline-none resize-none focus: transition-colors"
+                  className="w-full bg-transparent text-sm text-[var(--ink)] font-sans outline-none resize-none focus:transition-colors"
                 />
               </div>
 
@@ -745,7 +745,7 @@ export function ModoLocalEnVivoTab({
 
               <button
                 onClick={handleTapTempo}
-                className="px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60/30 text-xs font-sans font-bold cursor-pointer active:scale-90 transition-transform"
+                className="px-2.5 sm:px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60 text-xs font-sans font-bold cursor-pointer active:scale-90 transition-transform"
               >
                 Tap
               </button>
@@ -777,7 +777,7 @@ export function ModoLocalEnVivoTab({
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
                   currentItem?.evaluacion === "regular"
                     ? "bg-[var(--acc)]/60 text-[var(--ink)]"
-                    : "bg-[var(--acc)]/60/15 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60/25"
+                    : "bg-[var(--acc)]/60 text-[var(--acc)]/70 hover:bg-[var(--acc)]/60"
                 }`}
               >
                 <span>🟡</span>
@@ -887,7 +887,7 @@ export function ModoLocalEnVivoTab({
                     onClick={() => setScrollSpeed(spd)}
                     className={`px-2 py-1 rounded-md text-[10px] font-sans font-bold cursor-pointer ${
                       scrollSpeed === spd
-                        ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70"
+                        ? "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                         : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                     }`}
                   >
@@ -961,7 +961,7 @@ export function ModoLocalEnVivoTab({
                 onClick={() => setShowChordDiagrams(!showChordDiagrams)}
                 className={`p-2 rounded-[var(--r-m)] text-xs font-sans cursor-pointer transition-all ${
                   showChordDiagrams
-                    ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40"
+                    ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
                 }`}
                 title="Ver diagramas de acordes de guitarra"
@@ -1012,7 +1012,7 @@ export function ModoLocalEnVivoTab({
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 shrink-0">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[var(--acc)]/60 text-[var(--acc)]/70">
                     Pista {activeIndex + 1} de {agenda.length}
                   </span>
                   <span className="hidden sm:inline-block text-[10px] font-sans text-[var(--ink-2)]">
@@ -1064,7 +1064,7 @@ export function ModoLocalEnVivoTab({
                   className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
                     currentItem?.evaluacion === "regular"
                       ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
-                      : "bg-[var(--acc)]/60/15 text-[var(--acc)]/70"
+                      : "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                   }`}
                 >
                   <span>🟡 Regular</span>
@@ -1173,7 +1173,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
 
   return (
-    <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] text-center space-y-1 hover:/40 transition">
+    <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] text-center space-y-1  transition">
       <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
         <span>{chord}</span>
       </div>

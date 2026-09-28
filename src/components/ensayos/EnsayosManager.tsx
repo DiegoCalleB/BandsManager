@@ -175,7 +175,7 @@ export function EnsayosManager({
   if (rehearsals.length === 0) {
     return (
       <div className="p-6 sm:p-12 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-        <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)] mx-auto">
+        <div className="w-16 h-16 rounded-3xl bg-[var(--acc)]/60 flex items-center justify-center text-[var(--acc)] mx-auto">
           <Mic className="w-8 h-8" />
         </div>
 
@@ -232,7 +232,7 @@ export function EnsayosManager({
                 <select
                   value={currentRehearsal?.id || ""}
                   onChange={(e) => setSelectedRehearsalId(e.target.value)}
-                  className="appearance-none bg-[var(--surface)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover: focus: outline-none cursor-pointer"
+                  className="appearance-none bg-[var(--surface)] text-[var(--ink)] px-3.5 py-1.5 pr-8 rounded-[var(--r-m)] text-xs font-sans font-bold hover:focus:outline-none cursor-pointer"
                 >
                   {sortedRehearsals.map((r) => (
                     <option key={r.id} value={r.id}>
@@ -250,7 +250,7 @@ export function EnsayosManager({
                   currentRehearsal?.estado === "completado"
                     ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
                     : currentRehearsal?.estado === "en_curso"
-                      ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70 /40"
+                      ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                 }`}
               >

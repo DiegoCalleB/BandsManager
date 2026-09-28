@@ -1129,7 +1129,7 @@ export function SongTransitionPreviewModal({
                     }}
                     className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition cursor-pointer ${
                       autoCueEnabled
-                        ? "bg-[var(--acc)]/15 text-[var(--acc)] /40"
+                        ? "bg-[var(--acc)]/15 text-[var(--acc)] "
                         : "bg-[var(--surface)] text-[var(--ink-2)]700 hover:text-[var(--ink)]"
                     }`}
                     title="Auto-CUE Inteligente: Detecta y salta automáticamente los huecos de silencio y aplausos al principio y final de canciones en directo"
@@ -1251,7 +1251,7 @@ export function SongTransitionPreviewModal({
                 {/* Crossfade overlap highlight */}
                 {config.style === "crossfade" && (
                   <div
-                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-[var(--acc)]/30 to-emerald-500/30  pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
+                    className="absolute top-0.5 bottom-0.5 bg-gradient-to-r from-amber-0/30 to-emerald-500/30  pointer-events-none flex items-center justify-center text-[8px] font-sans font-bold text-[var(--ink)]/90"
                     style={{
                       left: `${(timeline.crossfadeStartSec / timeline.totalDurationSec) * 100}%`,
                       width: `${((timeline.crossfadeEndSec - timeline.crossfadeStartSec) / timeline.totalDurationSec) * 100}%`,
@@ -1464,7 +1464,7 @@ export function SongTransitionPreviewModal({
                               con.severity === "critico"
                                 ? "bg-[var(--alert-soft)]/40"
                                 : con.severity === "aviso"
-                                  ? "bg-[var(--acc-soft)] /30"
+                                  ? "bg-[var(--acc-soft)] "
                                   : "bg-[var(--bg)]/60800"
                             }`}
                           >

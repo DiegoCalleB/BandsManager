@@ -238,7 +238,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 placeholder="Ej. 600"
                 value={cacheAmount}
                 onChange={(e) => setCacheAmount(e.target.value)}
-                className="w-full bg-[var(--bg)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus: focus:outline-none"
+                className="w-full bg-[var(--bg)]800 rounded-[var(--r-m)] px-3 py-2 text-[var(--ink)] font-sans focus:focus:outline-none"
               />
             </div>
           </div>
@@ -297,7 +297,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 Calculando duraciones y repertorios óptimos...
               </div>
             ) : generateNewSetlist ? (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10/40 space-y-2 animate-fadeIn">
+              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)]/10 space-y-2 animate-fadeIn">
                 <div className="flex items-center gap-2 text-xs font-sans font-bold text-[var(--ok)]">
                   <Zap className="w-4 h-4 text-[var(--ok)]" />
                   <span>Se creará un nuevo setlist automático:</span>
@@ -336,10 +336,10 @@ export const BoloConfirmadoSetlistModal: React.FC<
                       }}
                       className={`p-3 rounded-[var(--r-l)] transition-all cursor-pointer flex items-center justify-between gap-2 ${
                         isSelected
-                          ? "bg-[var(--acc)]/15 /80"
+                          ? "bg-[var(--acc)]/15 "
                           : isOptimal
                             ? "bg-[var(--ok)]/10 hover:bg-[var(--ok)]/15"
-                            : "bg-[var(--bg)]/60 hover:bg-[var(--sunken)]"
+                            : "bg-[var(--bg)]/60800 hover:border-[var(--hair)]700"
                       }`}
                     >
                       <div className="space-y-0.5">

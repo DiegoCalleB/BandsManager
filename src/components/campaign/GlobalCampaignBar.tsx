@@ -129,7 +129,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "booking"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40"
+                : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
             }`}
             title="Ver salas objetivo de esta campaña en Booking CRM"
           >
@@ -146,7 +146,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "calendario"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40"
+                : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
             }`}
             title="Ver fechas de la campaña en el Calendario"
           >
@@ -163,7 +163,7 @@ export function GlobalCampaignBar({
             className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "bandas"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)]/90/60 hover:bg-[var(--acc)]/80/80 text-[var(--acc)]/40"
+                : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
             }`}
             title="Ver grupos en las ciudades objetivo para Co-booking"
           >
@@ -186,7 +186,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={onDeactivate}
-            className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 transition-colors shrink-0"
+            className="p-1 rounded-md bg-[var(--surface)]/80 hover:bg-[var(--alert)]/90 text-[var(--ink-2)] hover:text-[var(--alert)]/60 hover:border-[var(--alert)]/40 transition-colors shrink-0"
             title="Desactivar modo campaña (volver a modo general)"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

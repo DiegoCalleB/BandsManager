@@ -489,7 +489,7 @@ export default function Finanzas({
 
           {/* Concert Profitability Table */}
           <div className={`${colors.card} p-5 rounded-[var(--r-m)] space-y-4`}>
-            <div className="flex items-center justify-between /80 pb-3">
+            <div className="flex items-center justify-between  pb-3">
               <h3 className="text-sm font-bold tracking-wider text-[var(--acc)] flex items-center gap-2">
                 <Calculator className="w-4 h-4" /> Desglose de Gastos &
                 Rentabilidad por Bolo
@@ -578,8 +578,7 @@ export default function Finanzas({
                       } else if (beneficioNeto < 150) {
                         alertBadge = {
                           label: "🟡 Ajustado",
-                          bgColor:
-                            "bg-[var(--acc-soft)] /40 text-[var(--acc)]/70",
+                          bgColor: "bg-[var(--acc-soft)]  text-[var(--acc)]/70",
                         };
                       }
 

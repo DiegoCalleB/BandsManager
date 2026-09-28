@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   FileText,
   Info,
@@ -16,10 +16,10 @@ import {
   Sparkles,
   Plus,
   X,
-} from 'lucide-react';
-import { EPKConfig, BandMember } from '../../types';
-import { EPKBlockWrapper } from './EPKBlockWrapper';
-import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+} from "lucide-react";
+import { EPKConfig, BandMember } from "../../types";
+import { EPKBlockWrapper } from "./EPKBlockWrapper";
+import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
 
 interface EPKPerfilBlockProps {
   config: EPKConfig;
@@ -59,7 +59,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
   onSave,
   isAllView = false,
 }) => {
-  const [similarBandInput, setSimilarBandInput] = useState('');
+  const [similarBandInput, setSimilarBandInput] = useState("");
 
   const handleAddSimilarBand = () => {
     const val = similarBandInput.trim();
@@ -71,13 +71,15 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         bandasSimilares: [...(prev.bandasSimilares || []), val],
       }));
     }
-    setSimilarBandInput('');
+    setSimilarBandInput("");
   };
 
   const handleRemoveSimilarBand = (bandToRemove: string) => {
     setConfig((prev) => ({
       ...prev,
-      bandasSimilares: (prev.bandasSimilares || []).filter((b) => b !== bandToRemove),
+      bandasSimilares: (prev.bandasSimilares || []).filter(
+        (b) => b !== bandToRemove,
+      ),
     }));
   };
 
@@ -95,59 +97,81 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <FileText className="w-5 h-5" /> Biografía Oficial / Resumen Ejecutivo
+              <FileText className="w-5 h-5" /> Biografía Oficial / Resumen
+              Ejecutivo
             </h3>
             <span
               className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full ${
                 config.biografia &&
                 config.biografia.trim().length >= 80 &&
-                !config.biografia.toLowerCase().includes('por definir') &&
-                !config.biografia.includes('Propuesta musical en directo')
-                  ? 'bg-[var(--ok)]/10 text-[var(--ok)]/30'
-                  : 'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
+                !config.biografia.toLowerCase().includes("por definir") &&
+                !config.biografia.includes("Propuesta musical en directo")
+                  ? "bg-[var(--ok)]/10 text-[var(--ok)]/30"
+                  : "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
               }`}
             >
               {config.biografia &&
               config.biografia.trim().length >= 80 &&
-              !config.biografia.toLowerCase().includes('por definir') &&
-              !config.biografia.includes('Propuesta musical en directo')
-                ? '✓ Bio Lista'
-                : 'Mínimo 80 caracteres'}
+              !config.biografia.toLowerCase().includes("por definir") &&
+              !config.biografia.includes("Propuesta musical en directo")
+                ? "✓ Bio Lista"
+                : "Mínimo 80 caracteres"}
             </span>
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[var(--ink-2)]">Biografía de Presentación</label>
+            <label className="text-xs font-semibold text-[var(--ink-2)]">
+              Biografía de Presentación
+            </label>
             <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[11px] text-[var(--ink-2)] space-y-1.5">
               <p className="text-[var(--ink-2)] font-semibold">
-                Escribid UN texto de banda, no la trayectoria de cada uno por separado (eso va en &quot;Formación de la Banda&quot;, con su
+                Escribid UN texto de banda, no la trayectoria de cada uno por
+                separado (eso va en &quot;Formación de la Banda&quot;, con su
                 foto).
               </p>
-              <p>Un programador de sala lee esto en 15 segundos antes de decidir si sigue mirando. En este orden:</p>
+              <p>
+                Un programador de sala lee esto en 15 segundos antes de decidir
+                si sigue mirando. En este orden:
+              </p>
               <ol className="list-decimal list-inside space-y-0.5 pl-1">
-                <li>Qué sois y cómo sonáis, en una frase (vuestro género, lo que os hace distintos).</li>
-                <li>Qué pasa en vuestro directo - lo que ve y siente el público.</li>
                 <li>
-                  Por qué sois una apuesta segura - trayectoria en UNA frase (giras, festivales, con quién habéis compartido escenario).
+                  Qué sois y cómo sonáis, en una frase (vuestro género, lo que
+                  os hace distintos).
+                </li>
+                <li>
+                  Qué pasa en vuestro directo - lo que ve y siente el público.
+                </li>
+                <li>
+                  Por qué sois una apuesta segura - trayectoria en UNA frase
+                  (giras, festivales, con quién habéis compartido escenario).
                 </li>
               </ol>
               <p>
-                Máximo 150 palabras. Evitad adjetivos genéricos (&quot;energética&quot;, &quot;diversa&quot;) y usad detalles concretos que
-                os distingan.
+                Máximo 150 palabras. Evitad adjetivos genéricos
+                (&quot;energética&quot;, &quot;diversa&quot;) y usad detalles
+                concretos que os distingan.
               </p>
             </div>
             <textarea
               rows={6}
               value={config.biografia}
-              onChange={(e) => setConfig({ ...config, biografia: e.target.value })}
-              placeholder={
-                'Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica].'
+              onChange={(e) =>
+                setConfig({ ...config, biografia: e.target.value })
               }
-              className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
+              placeholder={
+                "Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica]."
+              }
+              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed placeholder:text-[var(--ink-2)]"
             />
             <div className="flex justify-between items-center text-[11px] font-sans text-[var(--ink-2)]">
               <span>Mínimo 80 caracteres para completar el perfil</span>
-              <span className={(config.biografia || '').trim().length >= 80 ? 'text-[var(--ok)] font-bold' : 'text-[var(--acc)] font-bold'}>
-                {(config.biografia || '').trim().length} / 80 min.
+              <span
+                className={
+                  (config.biografia || "").trim().length >= 80
+                    ? "text-[var(--ok)] font-bold"
+                    : "text-[var(--acc)] font-bold"
+                }
+              >
+                {(config.biografia || "").trim().length} / 80 min.
               </span>
             </div>
           </div>
@@ -157,25 +181,32 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
-              <Info className="w-5 h-5" /> Información Adicional y Notas del Dossier
+              <Info className="w-5 h-5" /> Información Adicional y Notas del
+              Dossier
             </h3>
             <div className="flex items-center gap-2">
               <span
                 className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full ${
-                  (config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
+                  (config.dossierPdfUrl &&
+                    config.dossierPdfUrl.trim().length > 5) ||
                   (config.dossierTextoExtra &&
                     config.dossierTextoExtra.trim().length >= 80 &&
-                    !config.dossierTextoExtra.toLowerCase().includes('por definir'))
-                    ? 'bg-[var(--ok)]/10 text-[var(--ok)]/30'
-                    : 'bg-[var(--acc)]/10 text-[var(--acc)]/70 /20'
+                    !config.dossierTextoExtra
+                      .toLowerCase()
+                      .includes("por definir"))
+                    ? "bg-[var(--ok)]/10 text-[var(--ok)]/30"
+                    : "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
                 }`}
               >
-                {(config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
+                {(config.dossierPdfUrl &&
+                  config.dossierPdfUrl.trim().length > 5) ||
                 (config.dossierTextoExtra &&
                   config.dossierTextoExtra.trim().length >= 80 &&
-                  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
-                  ? '✓ Listo'
-                  : 'Mín. 80 car. o PDF'}
+                  !config.dossierTextoExtra
+                    .toLowerCase()
+                    .includes("por definir"))
+                  ? "✓ Listo"
+                  : "Mín. 80 car. o PDF"}
               </span>
               <span className="text-[10px] font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/10 px-2 py-0.5 rounded-full hidden sm:inline">
                 Uso Interno
@@ -184,29 +215,37 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </div>
 
           <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-            Escribe notas y detalles de la banda (trayectoria, integrantes, estilo, hitos, prensa, etc.) para enriquecer la documentación
-            del proyecto.
+            Escribe notas y detalles de la banda (trayectoria, integrantes,
+            estilo, hitos, prensa, etc.) para enriquecer la documentación del
+            proyecto.
           </p>
           <p className="text-[11px] text-[var(--acc)]/90 font-semibold bg-[var(--acc)]/5 rounded-[var(--r-s)] px-3 py-2">
-            Nota: Este texto es para uso interno del equipo y no se muestra en la página pública del EPK.
+            Nota: Este texto es para uso interno del equipo y no se muestra en
+            la página pública del EPK.
           </p>
 
           <div className="space-y-1.5">
             <textarea
               rows={5}
-              value={config.dossierTextoExtra || ''}
-              onChange={(e) => setConfig({ ...config, dossierTextoExtra: e.target.value })}
+              value={config.dossierTextoExtra || ""}
+              onChange={(e) =>
+                setConfig({ ...config, dossierTextoExtra: e.target.value })
+              }
               placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
-              className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
+              className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3.5 text-xs sm:text-sm text-[var(--ink)] outline-none leading-relaxed font-sans"
             />
             <div className="flex justify-between items-center text-[11px] font-sans text-[var(--ink-2)]">
-              <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
+              <span>
+                Mínimo 80 caracteres para marcar como completado (si no hay PDF)
+              </span>
               <span
                 className={
-                  (config.dossierTextoExtra || '').trim().length >= 80 ? 'text-[var(--ok)] font-bold' : 'text-[var(--acc)] font-bold'
+                  (config.dossierTextoExtra || "").trim().length >= 80
+                    ? "text-[var(--ok)] font-bold"
+                    : "text-[var(--acc)] font-bold"
                 }
               >
-                {(config.dossierTextoExtra || '').trim().length} / 80 min.
+                {(config.dossierTextoExtra || "").trim().length} / 80 min.
               </span>
             </div>
           </div>
@@ -236,12 +275,16 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               </label>
               <input
                 type="text"
-                value={config.genero || ''}
-                onChange={(e) => setConfig({ ...config, genero: e.target.value })}
+                value={config.genero || ""}
+                onChange={(e) =>
+                  setConfig({ ...config, genero: e.target.value })
+                }
                 placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión..."
                 className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-200 outline-none"
               />
-              <p className="text-[11px] text-slate-400">Estilo sonoro representativo de vuestro show en vivo.</p>
+              <p className="text-[11px] text-slate-400">
+                Estilo sonoro representativo de vuestro show en vivo.
+              </p>
             </div>
 
             {/* Toggle mostrar en EPK público */}
@@ -254,15 +297,23 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                 <input
                   type="checkbox"
                   checked={config.mostrarBandasSimilares !== false}
-                  onChange={(e) => setConfig({ ...config, mostrarBandasSimilares: e.target.checked })}
+                  onChange={(e) =>
+                    setConfig({
+                      ...config,
+                      mostrarBandasSimilares: e.target.checked,
+                    })
+                  }
                   className="rounded border-slate-700 text-amber-400 focus:ring-amber-400 h-4 w-4 bg-slate-900 cursor-pointer"
                 />
                 <div className="text-xs">
-                  <span className="font-semibold text-slate-200">Mostrar bloque &quot;Para fans de (FFO)&quot; en el EPK web público</span>
+                  <span className="font-semibold text-slate-200">
+                    Mostrar bloque &quot;Para fans de (FFO)&quot; en el EPK web
+                    público
+                  </span>
                   <p className="text-[11px] text-slate-400">
                     {config.mostrarBandasSimilares !== false
-                      ? 'Visible para programadores y prensa en el dossier público.'
-                      : 'Oculto en el dossier público (solo activo para el motor de IA y Scout).'}
+                      ? "Visible para programadores y prensa en el dossier público."
+                      : "Oculto en el dossier público (solo activo para el motor de IA y Scout)."}
                   </p>
                 </div>
               </label>
@@ -274,22 +325,30 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-amber-400" />
-                Grupos y Artistas de Sonido Afín / Referencias (&quot;Para fans de...&quot;)
+                Grupos y Artistas de Sonido Afín / Referencias (&quot;Para fans
+                de...&quot;)
               </label>
-              <span className="text-[10px] text-zinc-400 font-mono">{config.bandasSimilares?.length || 0} referencias añadidas</span>
+              <span className="text-[10px] text-zinc-400 font-mono">
+                {config.bandasSimilares?.length || 0} referencias añadidas
+              </span>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed">
-              Un programador de sala o festival tarda menos de 15 segundos en descartar un dossier. Si ve referencias claras de grupos de su
-              circuito que llenan salas similares, sabrá al instante qué tipo de noche puede organizar. Los agentes de IA de BandManager.io
-              usan estas bandas para rastrear salas del circuito donde han tocado (*Efecto Espejo*) y redactar pitches adaptados.
+              Un programador de sala o festival tarda menos de 15 segundos en
+              descartar un dossier. Si ve referencias claras de grupos de su
+              circuito que llenan salas similares, sabrá al instante qué tipo de
+              noche puede organizar. Los agentes de IA de BandManager.io usan
+              estas bandas para rastrear salas del circuito donde han tocado
+              (*Efecto Espejo*) y redactar pitches adaptados.
             </p>
 
             {/* Chip tags list */}
             <div className="flex flex-wrap items-center gap-2 min-h-[36px] p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-              {!config.bandasSimilares || config.bandasSimilares.length === 0 ? (
+              {!config.bandasSimilares ||
+              config.bandasSimilares.length === 0 ? (
                 <span className="text-xs text-slate-500 italic">
-                  Ninguna banda similar añadida. Escribe el nombre de un artista o grupo afín abajo y pulsa Enter.
+                  Ninguna banda similar añadida. Escribe el nombre de un artista
+                  o grupo afín abajo y pulsa Enter.
                 </span>
               ) : (
                 config.bandasSimilares.map((band, idx) => (
@@ -319,7 +378,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   value={similarBandInput}
                   onChange={(e) => setSimilarBandInput(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       handleAddSimilarBand();
                     }
@@ -346,7 +405,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-[var(--acc)]" />
-              <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">Formación de la Banda ({miembros.length})</h3>
+              <h3 className="text-base sm:text-lg font-bold text-[var(--acc)]">
+                Formación de la Banda ({miembros.length})
+              </h3>
             </div>
             <button
               type="button"
@@ -358,29 +419,43 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </div>
           <div className="text-xs text-[var(--ink-2)] space-y-1">
             <p>
-              Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre, instrumento y breve descripción de cada
+              Quien programa quiere ver caras y saber cuánta gente sube al
+              escenario. Foto, nombre, instrumento y breve descripción de cada
               integrante.
             </p>
           </div>
           {miembros.length === 0 && (
             <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-2)]">
-              Todavía no has añadido a nadie. Añade a los integrantes con su foto y descripción para que el dossier tenga cercanía.
+              Todavía no has añadido a nadie. Añade a los integrantes con su
+              foto y descripción para que el dossier tenga cercanía.
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {miembros.map((m, idx) => (
-              <div key={m.id || `miembro-${idx}-${m.nombre || ''}`} className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2.5">
+              <div
+                key={m.id || `miembro-${idx}-${m.nombre || ""}`}
+                className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2.5"
+              >
                 <div className="flex items-start gap-3">
-                  <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
+                  <label
+                    className="shrink-0 cursor-pointer group"
+                    title="Subir foto del músico"
+                  >
                     <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">
                       {subiendoFotoMiembro === m.id ? (
                         <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
-                      ) : m.fotoUrl && m.fotoUrl.trim() !== '' ? (
-                        <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
+                      ) : m.fotoUrl && m.fotoUrl.trim() !== "" ? (
+                        <img
+                          src={m.fotoUrl}
+                          alt={m.nombre || "Miembro"}
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-1 text-center">
                           <Upload className="w-4 h-4 text-[var(--ink-2)] group-hover:text-[var(--acc)] transition mb-0.5" />
-                          <span className="text-[8px] text-[var(--ink-2)] font-medium">Foto</span>
+                          <span className="text-[8px] text-[var(--ink-2)] font-medium">
+                            Foto
+                          </span>
                         </div>
                       )}
                     </div>
@@ -391,7 +466,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       onChange={(e) => {
                         const f = e.target.files?.[0];
                         if (f) subirFotoMiembro(m.id, f);
-                        e.target.value = '';
+                        e.target.value = "";
                       }}
                     />
                   </label>
@@ -399,16 +474,20 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     <input
                       type="text"
                       value={m.nombre}
-                      onChange={(e) => editarMiembro(m.id, { nombre: e.target.value })}
+                      onChange={(e) =>
+                        editarMiembro(m.id, { nombre: e.target.value })
+                      }
                       placeholder="Nombre del músico"
-                      className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-sm font-semibold text-[var(--ink)] focus: outline-none"
+                      className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-sm font-semibold text-[var(--ink)] focus:outline-none"
                     />
                     <input
                       type="text"
                       value={m.rol}
-                      onChange={(e) => editarMiembro(m.id, { rol: e.target.value })}
+                      onChange={(e) =>
+                        editarMiembro(m.id, { rol: e.target.value })
+                      }
                       placeholder="Instrumento / Rol (Voz, guitarra, metales...)"
-                      className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus: outline-none"
+                      className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs text-[var(--acc)]/90 focus:outline-none"
                     />
                   </div>
                   <button
@@ -426,10 +505,12 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   </label>
                   <textarea
                     rows={2}
-                    value={m.bio || ''}
-                    onChange={(e) => editarMiembro(m.id, { bio: e.target.value })}
+                    value={m.bio || ""}
+                    onChange={(e) =>
+                      editarMiembro(m.id, { bio: e.target.value })
+                    }
                     placeholder="Trayectoria o rol en directo..."
-                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus: outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
+                    className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-xs text-[var(--ink)] focus:outline-none placeholder:text-[var(--ink-2)] leading-relaxed"
                   />
                 </div>
                 <div className="space-y-1">
@@ -440,10 +521,12 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     <Instagram className="w-3.5 h-3.5 text-[var(--ink-2)] absolute left-2.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
-                      value={m.instagram || ''}
-                      onChange={(e) => editarMiembro(m.id, { instagram: e.target.value })}
+                      value={m.instagram || ""}
+                      onChange={(e) =>
+                        editarMiembro(m.id, { instagram: e.target.value })
+                      }
                       placeholder="@usuario o https://instagram.com/usuario"
-                      className="w-full bg-[var(--surface)] rounded-[var(--r-s)] pl-8 pr-3 py-1.5 text-xs text-[var(--ink)] focus: outline-none"
+                      className="w-full bg-[var(--surface)] rounded-[var(--r-s)] pl-8 pr-3 py-1.5 text-xs text-[var(--ink)] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -455,16 +538,19 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
         {/* DATOS DE CONTACTO DE BOOKING & REDES */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
-            <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes Oficiales
+            <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes
+            Oficiales
           </h3>
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[var(--ink-2)]">Nombre / Cargo Mánager</label>
+                <label className="text-xs font-semibold text-[var(--ink-2)]">
+                  Nombre / Cargo Mánager
+                </label>
                 <input
                   type="text"
-                  value={config.contactoBooking?.nombre || ''}
+                  value={config.contactoBooking?.nombre || ""}
                   onChange={(e) =>
                     setConfig({
                       ...config,
@@ -474,15 +560,17 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       },
                     })
                   }
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[var(--ink-2)]">Email de Contacto</label>
+                <label className="text-xs font-semibold text-[var(--ink-2)]">
+                  Email de Contacto
+                </label>
                 <input
                   type="email"
-                  value={config.contactoBooking?.email || ''}
+                  value={config.contactoBooking?.email || ""}
                   onChange={(e) =>
                     setConfig({
                       ...config,
@@ -492,15 +580,17 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       },
                     })
                   }
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[var(--ink-2)]">Teléfono Mánager</label>
+                <label className="text-xs font-semibold text-[var(--ink-2)]">
+                  Teléfono Mánager
+                </label>
                 <input
                   type="text"
-                  value={config.contactoBooking?.telefono || ''}
+                  value={config.contactoBooking?.telefono || ""}
                   onChange={(e) =>
                     setConfig({
                       ...config,
@@ -510,7 +600,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       },
                     })
                   }
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none mt-1"
                 />
               </div>
             </div>
@@ -519,20 +609,22 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio Web Oficial Propio de la Banda (Opcional)
+                  <Globe className="w-4 h-4 text-[var(--acc)]" /> Sitio Web
+                  Oficial Propio de la Banda (Opcional)
                 </label>
                 <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
                   Dossier EPK + Fans Landing
                 </span>
               </div>
               <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
-                Si vuestra banda ya dispone de un sitio web oficial o dominio propio, incluidlo aquí. Se enlazará de forma destacada en el
+                Si vuestra banda ya dispone de un sitio web oficial o dominio
+                propio, incluidlo aquí. Se enlazará de forma destacada en el
                 Dossier EPK y en la Landing de Fans.
               </p>
               <input
                 type="url"
                 placeholder="https://www.tubanda.com"
-                value={config.enlacesRedes?.website || ''}
+                value={config.enlacesRedes?.website || ""}
                 onChange={(e) => {
                   const updatedVal = e.target.value;
                   setConfig((prev) => {
@@ -550,7 +642,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     };
                   });
                 }}
-                className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
+                className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none font-sans"
               />
             </div>
 
@@ -558,18 +650,23 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <label className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
-                    <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
+                    <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes &
+                    Plataformas Oficiales
                   </label>
                   <p className="text-[11px] text-[var(--ink-2)]">
-                    Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y plataformas oficiales.
+                    Fuente única: se sincronizan automáticamente en tu Dossier
+                    EPK, firma de email, landing de fans y plataformas
+                    oficiales.
                   </p>
                 </div>
-                <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ok)]">Fuente Centralizada</span>
+                <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
+                  Fuente Centralizada
+                </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
                 {unifiedPlatforms
-                  .filter((item) => item.key !== 'website')
+                  .filter((item) => item.key !== "website")
                   .map((item) => (
                     <div key={item.key} className="space-y-1">
                       <label className="text-[11px] font-semibold text-[var(--ink-2)] flex items-center gap-1">
@@ -579,7 +676,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                       <input
                         type="text"
                         placeholder={item.placeholder}
-                        value={(config.enlacesRedes as any)?.[item.key] || ''}
+                        value={(config.enlacesRedes as any)?.[item.key] || ""}
                         onChange={(e) => {
                           const updatedVal = e.target.value;
                           setConfig((prev) => {
@@ -597,7 +694,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                             };
                           });
                         }}
-                        className="w-full bg-[var(--surface)] focus: rounded-[var(--r-s)] px-2.5 py-1.5 text-[var(--ink)] outline-none font-sans text-[11px]"
+                        className="w-full bg-[var(--surface)] focus:rounded-[var(--r-s)] px-2.5 py-1.5 text-[var(--ink)] outline-none font-sans text-[11px]"
                       />
                     </div>
                   ))}

@@ -371,7 +371,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               }}
               className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                 hasIrisStems(song)
-                  ? "bg-gradient-to-r from-[var(--acc)]/20 via-orange-500/20 to-purple-500/20 hover:from-[var(--acc)]/30 hover:to-purple-500text-[var(--acc)]/70 "
+                  ? "bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500text-[var(--acc)]/70 "
                   : "bg-[var(--surface)] hover:bg-[var(--surface)]text-[var(--acc)]/70 "
               }`}
               title={

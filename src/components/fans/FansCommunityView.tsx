@@ -212,7 +212,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         return {
           label: "Fan Fundador",
           icon: Star,
-          bg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 /30",
+          bg: "bg-[var(--acc)]/15 text-[var(--acc)]/70 ",
           dot: "bg-[var(--acc)]/60",
         };
       case "superfan":
@@ -226,7 +226,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         return {
           label: "Backstage VIP",
           icon: Award,
-          bg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30",
+          bg: "bg-[var(--tentative)]/15 text-[var(--tentative)]/80",
           dot: "bg-[var(--acc)]",
         };
       default:
@@ -355,7 +355,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center justify-between pt-2 /80">
+          <div className="flex items-center justify-between pt-2 ">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleReactAnnouncement(ann.id, "likes")}
@@ -458,7 +458,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
             return (
               <div
                 key={fan.id}
-                className="bg-[var(--surface)] hover: rounded-[var(--r-l)] p-5 space-y-3.5 transition-all group"
+                className="bg-[var(--surface)] hover:rounded-[var(--r-l)] p-5 space-y-3.5 transition-all group"
               >
                 {/* Header with Avatar & Details */}
                 <div className="flex items-start justify-between gap-3">
@@ -694,7 +694,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   placeholder="Ej: ¡Nuevo single este viernes! / Concierto en Sevilla"
                   value={newPostTitle}
                   onChange={(e) => setNewPostTitle(e.target.value)}
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans"
                 />
               </div>
 
@@ -708,7 +708,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                   placeholder="Escribe las novedades, agradecimiento o anuncio exclusivo para tus seguidores..."
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
-                  className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
+                  className="w-full bg-[var(--surface)] focus:rounded-[var(--r-m)] p-3 text-xs text-[var(--ink)] outline-none font-sans resize-none"
                 />
               </div>
 

@@ -599,7 +599,7 @@ export function CampaignManagerModal({
                         onClick={() => setActivePitchCategory(cat.id)}
                         className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-[var(--r-s)] transition-colors ${
                           isSelected
-                            ? "bg-[var(--acc)]/30 text-[var(--acc)]/40/60"
+                            ? "bg-[var(--acc)]/30 text-[var(--acc)]/40"
                             : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:"
                         }`}
                       >
@@ -676,7 +676,7 @@ export function CampaignManagerModal({
                 onClick={() => onSetActiveCampaign(null)}
                 className={`p-3.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between ${
                   !activeCampaign
-                    ? "bg-[var(--surface)]/80 ring-1 ring-[var(--acc)]/30"
+                    ? "bg-[var(--surface)]/80 ring-1 ring-amber-400/30"
                     : "bg-[var(--surface)] hover:text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                 }`}
               >
@@ -684,7 +684,7 @@ export function CampaignManagerModal({
                   <div
                     className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center ${
                       !activeCampaign
-                        ? "bg-[var(--acc)]/60/20 text-[var(--acc)]/70"
+                        ? "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
                     }`}
                   >
@@ -696,7 +696,7 @@ export function CampaignManagerModal({
                         Modo General (Sin Filtro de Campaña)
                       </span>
                       {!activeCampaign && (
-                        <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+                        <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
                           ACTIVO
                         </span>
                       )}

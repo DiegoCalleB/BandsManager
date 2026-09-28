@@ -1,5 +1,14 @@
-import React from 'react';
-import { DollarSign, MapPin, Mail, Phone, User, Check, Car, Hotel } from 'lucide-react';
+import React from "react";
+import {
+  DollarSign,
+  MapPin,
+  Mail,
+  Phone,
+  User,
+  Check,
+  Car,
+  Hotel,
+} from "lucide-react";
 
 interface StepBookingConditionsProps {
   cacheAcustico: number;
@@ -42,18 +51,23 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <DollarSign className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Caché & Condiciones de Contratación (Booking CRM)</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Caché & Condiciones de Contratación (Booking CRM)
+        </h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
-        Configura los rangos de caché orientativos y las condiciones de kilometraje/alojamiento para que las propuestas generadas por el
-        agente o redactor incluyan cifras precisas.
+        Configura los rangos de caché orientativos y las condiciones de
+        kilometraje/alojamiento para que las propuestas generadas por el agente
+        o redactor incluyan cifras precisas.
       </p>
 
       {/* Caché estimado por formato */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">Caché Acústico / Showcase (€)</label>
+          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+            Caché Acústico / Showcase (€)
+          </label>
           <div className="relative">
             <input
               type="number"
@@ -68,7 +82,9 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">Caché Sala / Concierto Estándar (€)</label>
+          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+            Caché Sala / Concierto Estándar (€)
+          </label>
           <div className="relative">
             <input
               type="number"
@@ -83,7 +99,9 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">Caché Festival / Fiesta Mayor (€)</label>
+          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+            Caché Festival / Fiesta Mayor (€)
+          </label>
           <div className="relative">
             <input
               type="number"
@@ -119,28 +137,40 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
             type="button"
             onClick={() => setRequiereAlojamiento(!requiereAlojamiento)}
             className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all flex items-center justify-between ${
-              requiereAlojamiento ? 'bg-[var(--acc)]/10 /30 text-[var(--acc)]/70' : 'bg-[var(--bg)] text-[var(--ink-2)]'
+              requiereAlojamiento
+                ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
+                : "bg-[var(--bg)] text-[var(--ink-2)]"
             }`}
           >
             <div className="flex items-center gap-2">
               <Hotel className="w-4 h-4 text-[var(--acc)]" />
               <div>
-                <span className="text-xs font-semibold block">Hotel si distancia &gt; 150 km</span>
-                <span className="text-[10px] text-[var(--ink-2)]">Incluir pernocta en presupuestos fuera de la provincia</span>
+                <span className="text-xs font-semibold block">
+                  Hotel si distancia &gt; 150 km
+                </span>
+                <span className="text-[10px] text-[var(--ink-2)]">
+                  Incluir pernocta en presupuestos fuera de la provincia
+                </span>
               </div>
             </div>
-            {requiereAlojamiento && <Check className="w-4 h-4 text-[var(--acc)]" />}
+            {requiereAlojamiento && (
+              <Check className="w-4 h-4 text-[var(--acc)]" />
+            )}
           </button>
         </div>
       </div>
 
       {/* Contacto Directo de Booking */}
       <div className="pt-2 space-y-3">
-        <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">Persona de Contacto de Booking / Contratación</h4>
+        <h4 className="text-xs font-semibold text-[var(--ink-2)] tracking-wider">
+          Persona de Contacto de Booking / Contratación
+        </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Nombre / Cargo</label>
+            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+              Nombre / Cargo
+            </label>
             <input
               type="text"
               value={contactoBookingNombre}
@@ -151,7 +181,9 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Email de Contratación</label>
+            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+              Email de Contratación
+            </label>
             <input
               type="email"
               value={contactoBookingEmail}
@@ -162,7 +194,9 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Teléfono Directo</label>
+            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+              Teléfono Directo
+            </label>
             <input
               type="tel"
               value={contactoBookingTelefono}

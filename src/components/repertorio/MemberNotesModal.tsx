@@ -304,7 +304,7 @@ export function MemberNotesModal({
               {/* Add Custom Member Form */}
               {showAddCustomMember && (
                 <div
-                  className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${"bg-[var(--tentative)]/5/70"}`}
+                  className={`p-3 rounded-[var(--r-m)] flex flex-wrap items-center gap-2 animate-in fade-in duration-150 ${"bg-[var(--tentative)]/5"}`}
                 >
                   <input
                     type="text"
@@ -348,7 +348,9 @@ export function MemberNotesModal({
                 return (
                   <div
                     key={member.id || member.name}
-                    className={`p-3.5 rounded-[var(--r-m)] transition-all ${hasNote ? "bg-[var(--surface)]/90/30" : "bg-[var(--bg)]/70"}`}
+                    className={`p-3.5 rounded-[var(--r-m)] transition-all ${
+                      hasNote ? "bg-[var(--surface)]/90" : "bg-[var(--bg)]/70"
+                    }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2.5">

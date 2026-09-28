@@ -425,7 +425,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               {recordings.map((rec) => (
                 <div
                   key={rec.id}
-                  className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2 hover: transition-colors"
+                  className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2 hover:transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
@@ -463,7 +463,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60/15 text-[var(--acc)]">
+              <span className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--acc)]">
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3 className="text-sm font-sans font-bold text-[var(--ink)] tracking-wider">

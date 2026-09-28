@@ -808,7 +808,7 @@ export const AgentAutonomySettingsModal: React.FC<
                       <ShieldCheck className="w-3 h-3" /> Mánager / Admin
                     </span>
                   ) : (
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ink-3)]/60/50 text-[var(--ink-2)]600 flex items-center gap-1 font-bold">
+                    <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-[var(--ink-3)]/60 text-[var(--ink-2)]600 flex items-center gap-1 font-bold">
                       <Lock className="w-3 h-3" /> Modo Lectura (Músico)
                     </span>
                   )}
@@ -1088,7 +1088,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           </p>
                         </div>
                       </div>
-                      <div className="text-[10px] font-sans font-semibold text-[var(--acc)]/90 pt-2 /80">
+                      <div className="text-[10px] font-sans font-semibold text-[var(--acc)]/90 pt-2 ">
                         Ideal para empezar con la app.
                       </div>
                     </button>
@@ -1131,7 +1131,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           </p>
                         </div>
                       </div>
-                      <div className="text-[10px] font-sans font-semibold text-[var(--ink-2)]/90 pt-2 /80">
+                      <div className="text-[10px] font-sans font-semibold text-[var(--ink-2)]/90 pt-2 ">
                         Agiliza respuestas sin bloquear.
                       </div>
                     </button>
@@ -1174,7 +1174,7 @@ export const AgentAutonomySettingsModal: React.FC<
                           </p>
                         </div>
                       </div>
-                      <div className="text-[10px] font-sans font-semibold text-[var(--ok)]/90 pt-2 /80">
+                      <div className="text-[10px] font-sans font-semibold text-[var(--ok)]/90 pt-2 ">
                         Máxima velocidad de prospección.
                       </div>
                     </button>
@@ -1343,7 +1343,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 },
                               });
                             }}
-                            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus: focus:outline-none disabled:opacity-60"
+                            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
                             placeholder="—"
                           />
                           <span className="absolute right-3 top-2.5 text-xs text-[var(--ink-2)] font-sans">
@@ -1510,7 +1510,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             agentSenderEmail: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus: focus:outline-none disabled:opacity-60"
+                        className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
                         placeholder="ej: booking@tubanda.com o mibanda@gmail.com"
                       />
                       <p className="text-[10px] text-[var(--ink-2)]">
@@ -1533,7 +1533,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             agentSenderName: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus: focus:outline-none disabled:opacity-60"
+                        className="w-full px-3 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
                         placeholder={`ej: ${bandName} Booking & Management`}
                       />
                       <p className="text-[10px] text-[var(--ink-2)]">
@@ -1556,7 +1556,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             agentReplyToEmail: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus: focus:outline-none disabled:opacity-60"
+                        className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60"
                         placeholder="ej: contacto@tubanda.com (si es diferente al remitente)"
                       />
                     </div>
@@ -1802,7 +1802,7 @@ export const AgentAutonomySettingsModal: React.FC<
                     disabled={!isAdmin}
                     value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}
-                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus: focus:outline-none disabled:opacity-60 cursor-pointer"
+                    className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] text-xs font-sans focus:focus:outline-none disabled:opacity-60 cursor-pointer"
                   >
                     {TIMEZONES.map((tz) => (
                       <option key={tz.value} value={tz.value}>
@@ -1894,7 +1894,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 : "cursor-pointer active:scale-95"
                             } ${
                               isSelected
-                                ? "bg-[var(--acc)]/15 text-[var(--ink)]/10 ring-1 ring-[var(--acc)]/30"
+                                ? "bg-[var(--acc)]/15 text-[var(--ink)]/10 ring-1 ring-amber-0/30"
                                 : "bg-[var(--surface)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]"
                             }`}
                           >
@@ -1979,7 +1979,7 @@ export const AgentAutonomySettingsModal: React.FC<
                               isSelected
                                 ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
                                 : isPrimeTime
-                                  ? "bg-[var(--surface)] text-[var(--acc)]/70/90 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
+                                  ? "bg-[var(--surface)] text-[var(--acc)]/70 hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
                                   : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
                             }`}
                           >
@@ -2591,7 +2591,7 @@ export const AgentAutonomySettingsModal: React.FC<
                         return (
                           <div
                             key={log.id}
-                            className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover: transition-colors space-y-2"
+                            className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:transition-colors space-y-2"
                           >
                             <div className="flex flex-wrap items-center justify-between gap-2">
                               <div className="flex items-center gap-2">
@@ -2637,7 +2637,7 @@ export const AgentAutonomySettingsModal: React.FC<
                               {log.mensaje}
                             </p>
 
-                            <div className="flex flex-wrap items-center justify-between gap-2 pt-1 /60 text-[10px] font-sans text-[var(--ink-2)]">
+                            <div className="flex flex-wrap items-center justify-between gap-2 pt-1  text-[10px] font-sans text-[var(--ink-2)]">
                               <div className="flex items-center gap-1.5">
                                 <UserCheck className="w-3 h-3 text-[var(--ink-2)]" />
                                 <span>
@@ -2651,7 +2651,7 @@ export const AgentAutonomySettingsModal: React.FC<
                                 </span>
                               </div>
                               {affectedCount > 0 && (
-                                <span className="text-[var(--acc)]/70/90 font-bold">
+                                <span className="text-[var(--acc)]/70 font-bold">
                                   {affectedCount} sala(s) impactada(s)
                                 </span>
                               )}
@@ -2660,7 +2660,7 @@ export const AgentAutonomySettingsModal: React.FC<
                             {/* Detalle de leads afectados si existen */}
                             {Array.isArray(log.leads_afectados) &&
                               log.leads_afectados.length > 0 && (
-                                <div className="mt-2 pt-2 /40 space-y-1.5">
+                                <div className="mt-2 pt-2  space-y-1.5">
                                   <span className="text-[10px] font-sans font-bold text-[var(--ink-2)] tracking-wider flex items-center justify-between">
                                     <span>
                                       Salas / Leads Procesados (

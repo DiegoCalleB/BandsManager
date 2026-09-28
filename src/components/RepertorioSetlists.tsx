@@ -4267,7 +4267,7 @@ export default function RepertorioSetlists({
                                 };
                                 const dirBtnClass =
                                   "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
-                                const reorderBtnClass = `${dirBtnClass} bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70/90 hover:/60`;
+                                const reorderBtnClass = `${dirBtnClass} bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 `;
                                 // Antes era un rgba(23,23,23,0.8) fijo — negro casi puro sin importar el tema, por eso
                                 // en Claro los botones de subir/bajar energía salían tan oscuros. var(--sunken) es la
                                 // misma superficie hundida que usa el resto de la UI, y sí cambia con el tema.
@@ -4568,7 +4568,7 @@ export default function RepertorioSetlists({
                                     key={i}
                                     className={`px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition ${
                                       w.type === "warning"
-                                        ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 /30"
+                                        ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
                                         : w.type === "success"
                                           ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
                                           : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
@@ -4626,7 +4626,6 @@ export default function RepertorioSetlists({
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-bold text-[var(--ok)]/80">
                                 🧠 Análisis IA: {aiAnalysisResult.overallScore}
-                                /100
                               </span>
                               <button
                                 type="button"
@@ -6301,7 +6300,7 @@ export default function RepertorioSetlists({
               : statusBanner.type === "error"
                 ? "bg-[var(--alert-soft)]/60 text-[var(--alert)]/40"
                 : statusBanner.type === "warning"
-                  ? "bg-[var(--acc-soft)] /60 text-[var(--acc)]"
+                  ? "bg-[var(--acc-soft)]  text-[var(--acc)]"
                   : "bg-[var(--surface)] text-[var(--ink-2)]"
           }`}
         >

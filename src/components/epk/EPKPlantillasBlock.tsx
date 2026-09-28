@@ -317,7 +317,7 @@ export const EPKPlantillasBlock: React.FC<EPKPlantillasBlockProps> = ({
                       className={`w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center shrink-0 ${
                         item.isVisible
                           ? "bg-[var(--acc)]/10  text-[var(--acc)]"
-                          : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
+                          : "bg-[var(--surface)]/80 text-[var(--ink-3)]"
                       }`}
                     >
                       <Icon className="w-4 h-4" />

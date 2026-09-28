@@ -44,13 +44,13 @@ const STATUS_OPTIONS: {
   {
     status: "nuevo",
     label: "Nuevo Lead",
-    color: "bg-[var(--tentative)]/50/20 text-[var(--acc)]/80/40",
+    color: "bg-[var(--tentative)]/50 text-[var(--acc)]/80",
     icon: Sparkles,
   },
   {
     status: "pendiente_aprobacion",
     label: "Pendiente Aprobación",
-    color: "bg-[var(--acc)]/20 text-[var(--acc)]/70 /40",
+    color: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
     icon: Clock,
   },
   {
@@ -68,19 +68,19 @@ const STATUS_OPTIONS: {
   {
     status: "contactado",
     label: "Contactado",
-    color: "bg-[var(--acc)]/20 text-[var(--acc)]/80/40",
+    color: "bg-[var(--acc)]/20 text-[var(--acc)]/80",
     icon: MessageSquare,
   },
   {
     status: "respondido",
     label: "Respondido / Conversación",
-    color: "bg-[var(--tentative)]/20 text-[var(--tentative)]/50/40",
+    color: "bg-[var(--tentative)]/20 text-[var(--tentative)]/50",
     icon: MessageSquare,
   },
   {
     status: "negociando",
     label: "Negociando Caché / Fecha",
-    color: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40",
+    color: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
     icon: ArrowRight,
   },
   {
@@ -92,7 +92,7 @@ const STATUS_OPTIONS: {
   {
     status: "aplazado",
     label: "Aplazado (Próxima temp.)",
-    color: "bg-[var(--ink-3)]/60/50 text-[var(--ink-2)]600",
+    color: "bg-[var(--ink-3)]/60 text-[var(--ink-2)]600",
     icon: Clock,
   },
   {
@@ -134,7 +134,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
       {/* Gmail-Style Sticky Top Actions Toolbar */}
       <div
         id="bulk-leads-action-bar"
-        className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-all animate-slide-up ${"bg-[var(--surface)]/95/50 text-[var(--ink)] shadow-black/80"}`}
+        className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-all animate-slide-up ${"bg-[var(--surface)]/95 text-[var(--ink)] shadow-black/80"}`}
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
           {/* Left section: Checkbox toggle, counter badge and quick Gmail-style select prompt */}

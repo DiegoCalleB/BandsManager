@@ -176,7 +176,7 @@ export const PublicMusiciansLanding: React.FC = () => {
       </div>
 
       {/* Sticky Navigation / Header */}
-      <header className="relative z-20 /80 bg-[var(--bg)]/90 sticky top-0">
+      <header className="relative z-20  bg-[var(--bg)]/90 sticky top-0">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-[var(--r-m)] overflow-hidden bg-black p-0.5 flex items-center justify-center shrink-0">
@@ -213,8 +213,8 @@ export const PublicMusiciansLanding: React.FC = () => {
                 onClick={() => handleLanguageChange(lang.code)}
                 className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-all ${
                   currentLang === lang.code
-                    ? "bg-[var(--acc)]/20 text-[var(--acc)] /50 scale-105"
-                    : "bg-[var(--surface)]/60 /80 hover: opacity-70 hover:opacity-100"
+                    ? "bg-[var(--acc)]/20 text-[var(--acc)]  scale-105"
+                    : "bg-[var(--surface)]/60  hover:opacity-70 hover:opacity-100"
                 }`}
                 title={lang.label}
                 aria-label={lang.label}
@@ -295,7 +295,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* FEATURE CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-all space-y-2.5">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
               <QrCode className="w-5 h-5" />
             </div>
@@ -307,7 +307,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-all space-y-2.5">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
               <FileText className="w-5 h-5" />
             </div>
@@ -319,7 +319,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70 hover:/30 transition-all space-y-2.5">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-all space-y-2.5">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
               <Music className="w-5 h-5" />
             </div>
@@ -516,7 +516,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowOptionalDetails(!showOptionalDetails)}
-                    className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/70 hover:bg-[var(--surface)] hover: text-xs font-sans text-[var(--ink-2)] flex items-center justify-between transition-colors group"
+                    className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/70 hover:bg-[var(--surface)] hover:text-xs font-sans text-[var(--ink-2)] flex items-center justify-between transition-colors group"
                   >
                     <span className="flex items-center gap-2">
                       <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -660,7 +660,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                 {/* Consent checkbox */}
                 <div className="pt-2">
-                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80 cursor-pointer group hover: transition">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--surface)]/80 cursor-pointer group hover:transition">
                     <input
                       type="checkbox"
                       required

@@ -957,7 +957,7 @@ export function ReelsMetricsView({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Primary Module Navigation Tabs: Analytics Radar vs AI Growth Plan */}
-      <div className="flex items-center justify-between gap-3 /80 pb-3 flex-wrap">
+      <div className="flex items-center justify-between gap-3  pb-3 flex-wrap">
         <div className="flex items-center gap-2 p-1 bg-[var(--surface)]/80 rounded-[var(--r-m)]">
           <button
             type="button"
@@ -977,13 +977,13 @@ export function ReelsMetricsView({
             onClick={() => setActiveMainSection("growth_plan")}
             className={`px-4 py-2 rounded-[var(--r-s)] text-xs font-sans font-bold tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
               activeMainSection === "growth_plan"
-                ? "bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)]/10/20 font-black"
+                ? "bg-gradient-to-r from-[var(--acc)] to-indigo-500 text-[var(--ink)]/10 font-black"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
             <Compass className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Plan & Recomendaciones de Crecimiento</span>
-            <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-normal">
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70 font-normal">
               IA
             </span>
           </button>
@@ -1126,7 +1126,7 @@ export function ReelsMetricsView({
             {/* Instagram Card */}
             {hasInstagram && (
               <div
-                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40/30"}`}
+                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-sans tracking-wider text-[var(--alert)] font-bold flex items-center gap-1.5">
@@ -1140,7 +1140,7 @@ export function ReelsMetricsView({
                         setScanResult(null);
                         setShowScanModal(true);
                       }}
-                      className="text-[9px] font-sans px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-[var(--tentative)]/10 text-[var(--tentative)]/80/20 hover:bg-[var(--tentative)]/20"
+                      className="text-[9px] font-sans px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-[var(--tentative)]/10 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/20"
                       title="Escanear captura de pantalla de Instagram con Visión IA"
                     >
                       <Camera className="w-2.5 h-2.5" />
@@ -1204,7 +1204,7 @@ export function ReelsMetricsView({
             {/* TikTok Card */}
             {hasTikTok && (
               <div
-                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40/30"}`}
+                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
@@ -1218,7 +1218,7 @@ export function ReelsMetricsView({
                         setScanResult(null);
                         setShowScanModal(true);
                       }}
-                      className="text-[9px] font-sans px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-[var(--tentative)]/10 text-[var(--tentative)]/80/20 hover:bg-[var(--tentative)]/20"
+                      className="text-[9px] font-sans px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer bg-[var(--tentative)]/10 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/20"
                       title="Escanear captura de pantalla de TikTok con Visión IA"
                     >
                       <Camera className="w-2.5 h-2.5" />
@@ -1260,7 +1260,7 @@ export function ReelsMetricsView({
             {/* YouTube Card */}
             {hasYouTube && (
               <div
-                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40/30"}`}
+                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-sans tracking-wider text-[var(--alert)] font-bold flex items-center gap-1.5">
@@ -1302,7 +1302,7 @@ export function ReelsMetricsView({
             {/* Spotify Card */}
             {hasSpotify && (
               <div
-                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40/30"}`}
+                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--surface)]/40"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-sans tracking-wider text-[var(--ok)] font-bold flex items-center gap-1.5">
@@ -1347,7 +1347,7 @@ export function ReelsMetricsView({
             {/* Fans Registrados (BBDD / Formulario Únete) Card */}
             {hasFans && (
               <div
-                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--accent-alt)]/10/50"}`}
+                className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--accent-alt)]/10"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-sans tracking-wider text-[var(--acc)] font-bold flex items-center gap-1.5">
@@ -1366,7 +1366,7 @@ export function ReelsMetricsView({
                     Contactos en Base de Datos
                   </div>
                 </div>
-                <div className="pt-2 /10 flex justify-between text-[9px] font-sans text-[var(--ink-2)]">
+                <div className="pt-2  flex justify-between text-[9px] font-sans text-[var(--ink-2)]">
                   <span>
                     Formulario Únete:{" "}
                     <b className="text-[var(--acc)]/70">{uneteFansCount}</b>
@@ -1455,7 +1455,7 @@ export function ReelsMetricsView({
               {/* Period Summary Stats Badge if available */}
               {periodSummaryStats && (
                 <div
-                  className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-[9px] font-sans flex items-center justify-between flex-wrap gap-2 ${"bg-[var(--tentative)]/20 text-[var(--tentative)]/80/20"}`}
+                  className={`mb-3 px-3 py-1.5 rounded-[var(--r-s)] text-[9px] font-sans flex items-center justify-between flex-wrap gap-2 ${"bg-[var(--tentative)]/20 text-[var(--tentative)]/80"}`}
                 >
                   <div className="flex items-center gap-1.5">
                     <TrendingUp className="w-3 h-3 text-[var(--tentative)]" />
@@ -1535,13 +1535,13 @@ export function ReelsMetricsView({
               )}
 
               {/* Interactive Channel Filter Chips */}
-              <div className="flex flex-wrap gap-2 mb-4 pb-3 /50">
+              <div className="flex flex-wrap gap-2 mb-4 pb-3 ">
                 {/* Instagram Chip */}
                 {hasInstagram && (
                   <div
                     className={`flex items-center rounded-[var(--r-s)] transition-all ${
                       selectedChannels.instagram
-                        ? "bg-[var(--alert)]/15/40 text-[var(--alert)]/80"
+                        ? "bg-[var(--alert)]/15 text-[var(--alert)]/80"
                         : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
                     }`}
                   >
@@ -1587,7 +1587,7 @@ export function ReelsMetricsView({
                   <div
                     className={`flex items-center rounded-[var(--r-s)] transition-all ${
                       selectedChannels.tiktok
-                        ? "bg-[var(--tentative)]/15/40 text-[var(--acc)]/80"
+                        ? "bg-[var(--tentative)]/15 text-[var(--acc)]/80"
                         : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
                     }`}
                   >
@@ -1633,7 +1633,7 @@ export function ReelsMetricsView({
                   <div
                     className={`flex items-center rounded-[var(--r-s)] transition-all ${
                       selectedChannels.youtube
-                        ? "bg-[var(--alert)]/90/30/40 text-[var(--alert)]/60"
+                        ? "bg-[var(--alert)]/90 text-[var(--alert)]/60"
                         : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60 hover:opacity-100"
                     }`}
                   >
@@ -1945,7 +1945,7 @@ export function ReelsMetricsView({
                 {contentItems.map((item, idx) => (
                   <div
                     key={item.id || idx}
-                    className={`p-3.5 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--bg)]/60 /60"}`}
+                    className={`p-3.5 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--bg)]/60 "}`}
                   >
                     {item.thumbnail_url && (
                       <div className="w-full h-24 rounded-[var(--r-s)] overflow-hidden relative bg-[var(--sunken)]">
@@ -1980,7 +1980,7 @@ export function ReelsMetricsView({
                       </h4>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 /10">
+                    <div className="flex items-center justify-between pt-2 ">
                       <span className="text-sm font-black font-sans text-[var(--ok)]">
                         {(item.views || 0).toLocaleString()}{" "}
                         <span className="text-[9px] text-[var(--ink-2)] font-normal">
@@ -2506,7 +2506,7 @@ export function ReelsMetricsView({
               <div
                 className={`p-4 rounded-[var(--r-m)] ${
                   igStatus?.connected
-                    ? "bg-[var(--ok)]/10/30 text-[var(--ok)]"
+                    ? "bg-[var(--ok)]/10 text-[var(--ok)]"
                     : "bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]"
                 }`}
               >
@@ -2605,8 +2605,8 @@ export function ReelsMetricsView({
                 <div
                   className={`p-3.5 rounded-[var(--r-m)] text-xs font-sans flex items-center gap-2.5 ${
                     igModalMsg.type === "success"
-                      ? "bg-[var(--ok)]/10/30 text-[var(--ok)]"
-                      : "bg-[var(--alert)]/10/30 text-[var(--alert)]"
+                      ? "bg-[var(--ok)]/10 text-[var(--ok)]"
+                      : "bg-[var(--alert)]/10 text-[var(--alert)]"
                   }`}
                 >
                   {igModalMsg.type === "success" ? (
@@ -2790,7 +2790,7 @@ export function ReelsMetricsView({
             <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
               {/* Feedback messages */}
               {scanError && (
-                <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/90/20 text-[var(--alert)]/60 text-xs flex items-center gap-2">
+                <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/90 text-[var(--alert)]/60 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
                   <span>{scanError}</span>
                 </div>
@@ -2889,7 +2889,7 @@ export function ReelsMetricsView({
               {/* Result Preview Card */}
               {scanResult && (
                 <div
-                  className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-300 ${"bg-[var(--tentative)]/20/30"}`}
+                  className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-300 ${"bg-[var(--tentative)]/20"}`}
                 >
                   <div className="flex items-center justify-between/20 pb-2">
                     <div className="text-xs font-bold font-sans tracking-wider text-[var(--tentative)]/80 flex items-center gap-2">

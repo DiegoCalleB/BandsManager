@@ -667,7 +667,7 @@ export function SetlistAIAnalysisModal({
                       key={i}
                       className={`px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition ${
                         w.type === "warning"
-                          ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 /30"
+                          ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
                           : w.type === "success"
                             ? "bg-[var(--ok)]/10 text-[var(--ink-2)]/30"
                             : "bg-[var(--acc)]/10 text-[var(--ink-2)]/30"
@@ -835,7 +835,7 @@ export function SetlistAIAnalysisModal({
                               isInvalid
                                 ? "bg-[var(--surface)] opacity-50"
                                 : isHighlighted
-                                  ? "bg-[var(--acc)]/80/30/50 ring-2 ring-purple-400/30"
+                                  ? "bg-[var(--acc)]/80 ring-2 ring-purple-400/30"
                                   : "bg-[var(--surface)]/80 hover:"
                             }`}
                             onMouseEnter={() => {

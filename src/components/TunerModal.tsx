@@ -589,7 +589,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                             p.category === "ukulele"
                               ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                               : p.category === "bass"
-                                ? "bg-[var(--tentative)]/50/20 text-[var(--acc)]/80"
+                                ? "bg-[var(--tentative)]/50 text-[var(--acc)]/80"
                                 : "bg-[var(--ok)]/20 text-[var(--ink-2)]"
                           }`}
                         >
@@ -732,7 +732,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[var(--acc)]" />
                     <p className="leading-snug">{micError}</p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-2 pt-1 /20">
+                  <div className="flex flex-wrap items-center gap-2 pt-1 ">
                     <button
                       onClick={() => {
                         if (currentPreset.strings[0]) {

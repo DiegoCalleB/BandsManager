@@ -96,7 +96,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={localBandName}
               onChange={(e) => setLocalBandName(e.target.value)}
               placeholder="Ej. Linkin Park, Los Delirio, The Midnight Waves..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] font-medium placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
             />
           </div>
 
@@ -111,7 +111,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Ej. Madrid, Barcelona, Valencia, Los Ángeles..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
             />
           </div>
 
@@ -126,7 +126,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               placeholder="Ej. Nu-Metal, Rock Alternativo, Indie Pop, Ska-Rock..."
-              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm mb-2"
+              className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm mb-2"
             />
             <div className="flex flex-wrap gap-1.5">
               {commonGenres.slice(0, 8).map((g) => (
@@ -137,7 +137,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
                     genre.toLowerCase().includes(g.toLowerCase())
                       ? "bg-[var(--acc)]/20 text-[var(--acc)]/70  font-semibold"
-                      : "bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+                      : "bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:border-[var(--hair)]"
                   }`}
                 >
                   {g}
@@ -178,7 +178,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 onClick={() => setFontStyle(f.id)}
                 className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
                   isSelected
-                    ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
+                    ? "bg-[var(--acc)]/10  ring-1 ring-amber-0/30"
                     : "bg-[var(--bg)]/90  hover:bg-[var(--bg)]"
                 }`}
               >

@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { X, Loader, AlertCircle, ImagePlus, Music, ListChecks } from 'lucide-react';
-import { Song, Setlist, SetlistItem } from '../../types';
-import { getAuthHeaders } from '../../services/api';
+import React, { useState } from "react";
+import {
+  X,
+  Loader,
+  AlertCircle,
+  ImagePlus,
+  Music,
+  ListChecks,
+} from "lucide-react";
+import { Song, Setlist, SetlistItem } from "../../types";
+import { getAuthHeaders } from "../../services/api";
 
-type SongAction = 'link_matched' | 'link_other' | 'create_new' | 'discard';
+type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
 interface ReviewSongItem {
-  type: 'song';
+  type: "song";
   detectedTitle: string;
   matchedSongId?: string;
   matchedSongTitle?: string;
@@ -16,26 +23,26 @@ interface ReviewSongItem {
 }
 
 interface ReviewBlockItem {
-  type: 'block';
+  type: "block";
   titulo: string;
-  blockType: SetlistItem['tipoItem'];
+  blockType: SetlistItem["tipoItem"];
   included: boolean;
 }
 
 type ReviewItem = ReviewSongItem | ReviewBlockItem;
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
-  chapa: 'Chapa / discurso con público',
-  descanso: 'Pausa / descanso',
-  bis: 'Bis',
-  bloque_header: 'Bloque / sección',
-  interludio: 'Interludio',
-  presentacion: 'Presentación de la banda',
-  beatbox: 'Solo de batería/percusión',
-  intro_tema: 'Intro / historia del tema',
-  solo_performance: 'Solo instrumental',
-  cambio_instrumento: 'Cambio de instrumento',
-  otro: 'Bloque',
+  chapa: "Chapa / discurso con público",
+  descanso: "Pausa / descanso",
+  bis: "Bis",
+  bloque_header: "Bloque / sección",
+  interludio: "Interludio",
+  presentacion: "Presentación de la banda",
+  beatbox: "Solo de batería/percusión",
+  intro_tema: "Intro / historia del tema",
+  solo_performance: "Solo instrumental",
+  cambio_instrumento: "Cambio de instrumento",
+  otro: "Bloque",
 };
 
 interface ImportSetlistModalProps {
@@ -47,12 +54,17 @@ interface ImportSetlistModalProps {
   onCreated: (setlist: Setlist, newSongs: Song[]) => void;
 }
 
-export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }: ImportSetlistModalProps) {
+export function ImportSetlistModal({
+  isOpen,
+  onClose,
+  catalogSongs,
+  onCreated,
+}: ImportSetlistModalProps) {
   const [file, setFile] = useState<File | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [setlistName, setSetlistName] = useState('');
+  const [setlistName, setSetlistName] = useState("");
   const [reviewItems, setReviewItems] = useState<ReviewItem[] | null>(null);
 
   if (!isOpen) return null;
@@ -62,7 +74,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
     setAnalyzing(false);
     setCreating(false);
     setError(null);
-    setSetlistName('');
+    setSetlistName("");
     setReviewItems(null);
   };
 
@@ -72,7 +84,9 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
   };
 
   const findCatalogMatch = (title: string): Song | undefined =>
-    catalogSongs.find((s) => s.titulo.trim().toLowerCase() === title.trim().toLowerCase());
+    catalogSongs.find(
+      (s) => s.titulo.trim().toLowerCase() === title.trim().toLowerCase(),
+    );
 
   const handleAnalyze = async () => {
     if (!file) return;
@@ -80,53 +94,70 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
     setError(null);
     try {
       const authHeaders = getAuthHeaders() as Record<string, string>;
-      const { 'Content-Type': _ct, ...uploadHeaders } = authHeaders;
+      const { "Content-Type": _ct, ...uploadHeaders } = authHeaders;
       const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch('/api/setlists/import-from-image', {
-        method: 'POST',
+      formData.append("file", file);
+      const res = await fetch("/api/setlists/import-from-image", {
+        method: "POST",
         headers: uploadHeaders,
         body: formData,
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'No se pudo analizar el archivo');
+        throw new Error(data.error || "No se pudo analizar el archivo");
       }
-      setSetlistName(data.nombreSugerido || 'Repertorio importado');
+      setSetlistName(data.nombreSugerido || "Repertorio importado");
       setReviewItems(
         (data.items || []).map((it: any): ReviewItem => {
-          if (it.type === 'block') {
-            return { type: 'block', titulo: it.titulo, blockType: it.blockType || 'otro', included: true };
+          if (it.type === "block") {
+            return {
+              type: "block",
+              titulo: it.titulo,
+              blockType: it.blockType || "otro",
+              included: true,
+            };
           }
           // El backend ya intentó casar el título contra el catálogo; si por lo que sea no vino
           // matchedSongId, se prueba una vez más aquí con el catálogo que ya tiene el frontend.
-          const fallbackMatch = it.matchedSongId ? undefined : findCatalogMatch(it.detectedTitle);
+          const fallbackMatch = it.matchedSongId
+            ? undefined
+            : findCatalogMatch(it.detectedTitle);
           const matchedSongId = it.matchedSongId || fallbackMatch?.id;
           const matchedSongTitle = it.matchedSongTitle || fallbackMatch?.titulo;
           return {
-            type: 'song',
+            type: "song",
             detectedTitle: it.detectedTitle,
             matchedSongId,
             matchedSongTitle,
-            action: matchedSongId ? 'link_matched' : 'create_new',
-            linkedSongId: '',
+            action: matchedSongId ? "link_matched" : "create_new",
+            linkedSongId: "",
             newTitle: it.detectedTitle,
           };
-        })
+        }),
       );
     } catch (err: any) {
-      setError(err.message || 'Error al analizar el archivo');
+      setError(err.message || "Error al analizar el archivo");
     } finally {
       setAnalyzing(false);
     }
   };
 
   const updateSongItem = (idx: number, patch: Partial<ReviewSongItem>) => {
-    setReviewItems((prev) => (prev || []).map((it, i) => (i === idx && it.type === 'song' ? { ...it, ...patch } : it)));
+    setReviewItems((prev) =>
+      (prev || []).map((it, i) =>
+        i === idx && it.type === "song" ? { ...it, ...patch } : it,
+      ),
+    );
   };
 
   const toggleBlockIncluded = (idx: number) => {
-    setReviewItems((prev) => (prev || []).map((it, i) => (i === idx && it.type === 'block' ? { ...it, included: !it.included } : it)));
+    setReviewItems((prev) =>
+      (prev || []).map((it, i) =>
+        i === idx && it.type === "block"
+          ? { ...it, included: !it.included }
+          : it,
+      ),
+    );
   };
 
   const handleCreate = async () => {
@@ -139,7 +170,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
       const items: SetlistItem[] = [];
 
       for (const it of reviewItems) {
-        if (it.type === 'block') {
+        if (it.type === "block") {
           if (!it.included) continue;
           items.push({
             id: `it-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -149,23 +180,28 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           continue;
         }
 
-        if (it.action === 'discard') continue;
+        if (it.action === "discard") continue;
 
         let songId: string | undefined;
-        if (it.action === 'link_matched') songId = it.matchedSongId;
-        else if (it.action === 'link_other') songId = it.linkedSongId || undefined;
-        else if (it.action === 'create_new') {
+        if (it.action === "link_matched") songId = it.matchedSongId;
+        else if (it.action === "link_other")
+          songId = it.linkedSongId || undefined;
+        else if (it.action === "create_new") {
           const titulo = it.newTitle.trim() || it.detectedTitle;
           const newSong: Song = {
             id: `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
             titulo,
-            duracion: '0:00',
+            duracion: "0:00",
             duracionSegundos: 0,
-            tonalidad: 'Mim',
+            tonalidad: "Mim",
             bpm: 120,
           };
           // Secuencial (no Promise.all): así cada id generado con Date.now() es único de verdad.
-          await fetch('/api/songs', { method: 'POST', headers: authHeaders, body: JSON.stringify(newSong) });
+          await fetch("/api/songs", {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify(newSong),
+          });
           newSongs.push(newSong);
           songId = newSong.id;
         }
@@ -173,7 +209,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
         if (!songId) continue;
         items.push({
           id: `it-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-          tipoItem: 'cancion',
+          tipoItem: "cancion",
           songId,
         });
       }
@@ -181,28 +217,36 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
       const newSetlist: Setlist = {
         id: `setlist-${Date.now()}`,
         nombre: setlistName.trim(),
-        descripcion: 'Importado desde foto/PDF',
-        tipoFormato: 'festival',
+        descripcion: "Importado desde foto/PDF",
+        tipoFormato: "festival",
         duracionTotalEstimadaMinutos: 45,
-        fechaCreacion: new Date().toISOString().split('T')[0],
-        fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+        fechaCreacion: new Date().toISOString().split("T")[0],
+        fechaUltimaEdicion: new Date().toISOString().split("T")[0],
         items,
       };
 
-      await fetch('/api/setlists', { method: 'POST', headers: authHeaders, body: JSON.stringify(newSetlist) });
+      await fetch("/api/setlists", {
+        method: "POST",
+        headers: authHeaders,
+        body: JSON.stringify(newSetlist),
+      });
 
       onCreated(newSetlist, newSongs);
       reset();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Error al crear el repertorio');
+      setError(err.message || "Error al crear el repertorio");
     } finally {
       setCreating(false);
     }
   };
 
-  const songItemsCount = (reviewItems || []).filter((it) => it.type === 'song').length;
-  const matchedCount = (reviewItems || []).filter((it) => it.type === 'song' && it.action === 'link_matched').length;
+  const songItemsCount = (reviewItems || []).filter(
+    (it) => it.type === "song",
+  ).length;
+  const matchedCount = (reviewItems || []).filter(
+    (it) => it.type === "song" && it.action === "link_matched",
+  ).length;
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
@@ -210,9 +254,14 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
         <div className="sticky top-0 z-10 bg-[var(--surface)] p-3 flex justify-between items-center">
           <div className="flex items-center gap-2.5">
             <ImagePlus className="w-5 h-5 text-[var(--ink-2)]" />
-            <h2 className="text-base font-bold">Importar Repertorio de Foto/PDF</h2>
+            <h2 className="text-base font-bold">
+              Importar Repertorio de Foto/PDF
+            </h2>
           </div>
-          <button onClick={handleClose} className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition">
+          <button
+            onClick={handleClose}
+            className="p-2 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -222,7 +271,8 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
             <div className="text-center py-8 space-y-4">
               <ImagePlus className="w-12 h-12 text-[var(--ink-2)]/50 mx-auto" />
               <p className="text-[var(--ink-2)]">
-                Sube una foto o PDF de un repertorio ya impreso (a mano o a máquina) — la IA lee los temas en orden y los casa contra tu
+                Sube una foto o PDF de un repertorio ya impreso (a mano o a
+                máquina) — la IA lee los temas en orden y los casa contra tu
                 catálogo antes de crear nada.
               </p>
               <input
@@ -250,7 +300,7 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           )}
 
           {error && (
-            <div className="bg-[var(--alert)]/80/20 rounded-[var(--r-s)] p-4 flex gap-3">
+            <div className="bg-[var(--alert)]/80 rounded-[var(--r-s)] p-4 flex gap-3">
               <AlertCircle className="w-5 h-5 text-[var(--alert)] flex-shrink-0 mt-0.5" />
               <p className="text-sm text-[var(--alert)]/60">{error}</p>
             </div>
@@ -259,7 +309,9 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
           {reviewItems && (
             <div className="space-y-4">
               <div>
-                <label className="text-[11px] font-sans tracking-wider text-[var(--ink-2)] block mb-1">Nombre del repertorio</label>
+                <label className="text-[11px] font-sans tracking-wider text-[var(--ink-2)] block mb-1">
+                  Nombre del repertorio
+                </label>
                 <input
                   type="text"
                   value={setlistName}
@@ -270,72 +322,101 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
 
               <p className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5">
                 <ListChecks className="w-3.5 h-3.5" />
-                {matchedCount}/{songItemsCount} temas ya vinculados automáticamente al catálogo
+                {matchedCount}/{songItemsCount} temas ya vinculados
+                automáticamente al catálogo
               </p>
 
               <div className="space-y-1.5">
                 {reviewItems.map((it, idx) => {
-                  if (it.type === 'block') {
+                  if (it.type === "block") {
                     return (
                       <div
                         key={idx}
-                        className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ? 'bg-[var(--surface)]/80' : 'bg-[var(--surface)] opacity-50'}`}
+                        className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${it.included ? "bg-[var(--surface)]/80" : "bg-[var(--surface)] opacity-50"}`}
                       >
                         <span className="text-xs text-[var(--ink-2)]">
-                          📋 {it.titulo} <span className="text-[var(--ink-2)]">({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})</span>
+                          📋 {it.titulo}{" "}
+                          <span className="text-[var(--ink-2)]">
+                            ({BLOCK_TYPE_LABELS[it.blockType] || it.blockType})
+                          </span>
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleBlockIncluded(idx)}
                           className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] font-sans"
                         >
-                          {it.included ? 'Descartar' : 'Incluir'}
+                          {it.included ? "Descartar" : "Incluir"}
                         </button>
                       </div>
                     );
                   }
 
-                  const isDiscarded = it.action === 'discard';
+                  const isDiscarded = it.action === "discard";
                   return (
                     <div
                       key={idx}
-                      className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ? 'bg-[var(--surface)] opacity-50' : 'bg-[var(--surface)]/80'}`}
+                      className={`p-2 rounded-[var(--r-s)] space-y-1.5 ${isDiscarded ? "bg-[var(--surface)] opacity-50" : "bg-[var(--surface)]/80"}`}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-xs text-[var(--ink-2)] flex items-center gap-1.5">
-                          <Music className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />"{it.detectedTitle}"
+                          <Music className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
+                          "{it.detectedTitle}"
                         </span>
-                        {it.action === 'link_matched' && (
-                          <span className="text-[10px] text-[var(--ok)] font-sans whitespace-nowrap">✓ {it.matchedSongTitle}</span>
+                        {it.action === "link_matched" && (
+                          <span className="text-[10px] text-[var(--ok)] font-sans whitespace-nowrap">
+                            ✓ {it.matchedSongTitle}
+                          </span>
                         )}
                       </div>
                       <div className="flex flex-wrap items-center gap-1.5">
                         <select
                           value={it.action}
-                          onChange={(e) => updateSongItem(idx, { action: e.target.value as SongAction })}
+                          onChange={(e) =>
+                            updateSongItem(idx, {
+                              action: e.target.value as SongAction,
+                            })
+                          }
                           className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
                         >
-                          {it.matchedSongId && <option value="link_matched">Vincular a"{it.matchedSongTitle}"</option>}
-                          <option value="create_new">Crear canción nueva</option>
-                          <option value="link_other">Vincular a otra canción del catálogo</option>
-                          <option value="discard">Descartar (no incluir)</option>
+                          {it.matchedSongId && (
+                            <option value="link_matched">
+                              Vincular a"{it.matchedSongTitle}"
+                            </option>
+                          )}
+                          <option value="create_new">
+                            Crear canción nueva
+                          </option>
+                          <option value="link_other">
+                            Vincular a otra canción del catálogo
+                          </option>
+                          <option value="discard">
+                            Descartar (no incluir)
+                          </option>
                         </select>
-                        {it.action === 'create_new' && (
+                        {it.action === "create_new" && (
                           <input
                             type="text"
                             value={it.newTitle}
-                            onChange={(e) => updateSongItem(idx, { newTitle: e.target.value })}
+                            onChange={(e) =>
+                              updateSongItem(idx, { newTitle: e.target.value })
+                            }
                             placeholder="Título de la canción nueva"
                             className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           />
                         )}
-                        {it.action === 'link_other' && (
+                        {it.action === "link_other" && (
                           <select
                             value={it.linkedSongId}
-                            onChange={(e) => updateSongItem(idx, { linkedSongId: e.target.value })}
+                            onChange={(e) =>
+                              updateSongItem(idx, {
+                                linkedSongId: e.target.value,
+                              })
+                            }
                             className="text-[10px] bg-[var(--sunken)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           >
-                            <option value="">Elige una canción del catálogo...</option>
+                            <option value="">
+                              Elige una canción del catálogo...
+                            </option>
                             {catalogSongs.map((s) => (
                               <option key={s.id} value={s.id}>
                                 {s.titulo}
@@ -359,7 +440,11 @@ export function ImportSetlistModal({ isOpen, onClose, catalogSongs, onCreated }:
               disabled={creating || !setlistName.trim()}
               className="flex-1 bg-[var(--tentative)] hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] px-4 py-2 rounded-[var(--r-s)] transition font-medium text-sm flex items-center justify-center gap-1.5"
             >
-              {creating ? <Loader className="w-4 h-4 animate-spin" /> : '✓ Crear Repertorio'}
+              {creating ? (
+                <Loader className="w-4 h-4 animate-spin" />
+              ) : (
+                "✓ Crear Repertorio"
+              )}
             </button>
             <button
               onClick={handleClose}

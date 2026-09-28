@@ -26,7 +26,7 @@ export const EMAIL_TEMPLATES = [
     title: "1. Proposal Inicial a Sala de Conciertos (Aforo 200 - 600 pax)",
     type: "Booking directo",
     icon: Building2,
-    badgeColor: "bg-[var(--acc)]/20 text-[var(--acc)]/70 /30",
+    badgeColor: "bg-[var(--acc)]/20 text-[var(--acc)]/70 ",
     subject: "Propuesta de Concierto - {bandName} en {nombre_sala} (Gira 2026)",
     body: `Hola team de {nombre_sala},
 
@@ -50,7 +50,7 @@ Mánager Virtual & Booking Team de {bandName}`,
     title: "2. Propuesta de Intercambio de Fechas entre Bandas (Co-headlining)",
     type: "Intercambio de bolos",
     icon: MessageSquareCode,
-    badgeColor: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30",
+    badgeColor: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
     subject:
       "Propuesta de bolo conjunto e intercambio de sala - {bandName} x {nombre_banda_amiga}",
     body: `¡Hola compas de {nombre_banda_amiga}!
@@ -175,7 +175,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                     onClick={() => setSelectedTemplate(tpl.id)}
                     className={`p-3 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-2 cursor-pointer ${
                       isSelected
-                        ? "bg-[var(--acc)]/20 /60 text-[var(--acc)]/70"
+                        ? "bg-[var(--acc)]/20  text-[var(--acc)]/70"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]"
                     }`}
                   >

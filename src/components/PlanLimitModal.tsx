@@ -98,7 +98,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               <Lock className="w-7 h-7" />
             </div>
             <div>
-              <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/60/10 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-sans font-bold tracking-wider text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-md">
                 Límite de {currentPlanDef.name} alcanzado
               </span>
               <h3 className="text-xl font-bold font-display tracking-wide text-[var(--ink)] mt-1">
@@ -125,7 +125,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
           </div>
 
           {/* Recommended plan highlight */}
-          <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)] to-[var(--surface)] /40 space-y-4">
+          <div className="p-5 rounded-[var(--r-l)] bg-gradient-to-b from-[var(--surface)] to-[var(--surface)]  space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
@@ -133,7 +133,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                   Plan Recomendado: {targetPlanDef.name}
                 </span>
               </div>
-              <span className="text-xs font-sans text-[var(--ink-2)] font-bold bg-[var(--acc)]/60/20 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-sans text-[var(--ink-2)] font-bold bg-[var(--acc)]/60 px-2.5 py-0.5 rounded-full">
                 {targetPlanDef.badge}
               </span>
             </div>

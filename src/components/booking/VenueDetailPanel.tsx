@@ -2508,7 +2508,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                           tipo: e.target.value as LeadType,
                         })
                       }
-                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--acc)]/70 font-bold focus:outline-none focus: cursor-pointer"
+                      className="w-full p-2 rounded bg-[var(--bg)] text-[var(--acc)]/70 font-bold focus:outline-none focus:cursor-pointer"
                     >
                       <option value="sala">🏟️ Sala de Conciertos</option>
                       <option value="festival">🎪 Festival</option>
@@ -3221,7 +3221,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <span className="text-[11px] font-bold text-[var(--acc)]/40 truncate block">
                         Campaña: {activeCampaign.name}
                       </span>
-                      <span className="text-[10px] text-[var(--tentative)]/80/80 truncate block">
+                      <span className="text-[10px] text-[var(--tentative)]/80 truncate block">
                         Fechas objetivo:{" "}
                         {activeCampaign.targetDatesText ||
                           (Array.isArray(activeCampaign.targetDates)
@@ -3462,7 +3462,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   );
                   setIsEditingPitch(true);
                 }}
-                className="p-3 bg-[var(--bg)] rounded-[var(--r-m)]800 text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed cursor-pointer hover:/40 transition-colors group relative"
+                className="p-3 bg-[var(--bg)] rounded-[var(--r-m)]800 text-xs text-[var(--ink)] font-sans whitespace-pre-wrap leading-relaxed cursor-pointer  transition-colors group relative"
               >
                 {editedPitch ||
                   selectedLead.pitch_generado ||
@@ -3588,7 +3588,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
                       feedbackScope === "este_pitch"
                         ? "bg-[var(--acc)]/15  text-[var(--ink)]"
-                        : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+                        : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700"
                     }`}
                   >
                     <input
@@ -3614,7 +3614,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     className={`p-2 rounded-[var(--r-s)] cursor-pointer flex items-start gap-2 transition-all ${
                       feedbackScope === "global"
                         ? "bg-[var(--acc)]/15  text-[var(--ink)]"
-                        : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+                        : "bg-[var(--bg)]/60800 text-[var(--ink-2)] hover:border-[var(--hair)]700"
                     }`}
                   >
                     <input
@@ -3674,7 +3674,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                         className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                           isSelected
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
-                            : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--sunken)]"
+                            : "bg-[var(--bg)]/60 text-[var(--ink-2)]800 hover:border-[var(--hair)]700"
                         }`}
                         title={`Coste aproximado por pitch: ${m.cost}`}
                       >
@@ -3881,8 +3881,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 key={msg.id}
                 className={`p-3.5 rounded-[var(--r-m)] space-y-2 text-xs font-sans transition-all ${
                   msg.remitente === "sala"
-                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
-                    : "bg-[var(--bg)] text-[var(--ink)]"
+                    ? "bg-[var(--acc-soft)]  text-[var(--acc)]"
+                    : "bg-[var(--bg)]800 text-[var(--ink)]"
                 }`}
               >
                 <div className="flex items-center justify-between font-bold text-[11px]">

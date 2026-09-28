@@ -91,21 +91,21 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
   const getWeatherIconBackdrop = (iconType?: EventWeatherData["iconType"]) => {
     switch (iconType) {
       case "sun":
-        return "from-[var(--acc)]/30 via-amber-400/10 to-transparent ";
+        return "from-amber-0/30 via-amber-400/10 to-transparent ";
       case "cloud-sun":
-        return "from-[var(--acc)]/25 via-neutral-700/25 to-transparent ";
+        return "from-amber-0/25 via-neutral-700/25 to-transparent ";
       case "cloud":
-        return "from-neutral-600/35 viabg-[var(--surface)]/25 to-transparent ";
+        return "from-neutral-600/35 via-neutral-800/25 to-transparent ";
       case "rain":
         return "from-sky-500/30 via-blue-600/20 to-transparent/50";
       case "lightning":
-        return "from-yellow-500/35 via-purple-900/35 to-transparent /60";
+        return "from-yellow-500/35 via-purple-900/35 to-transparent ";
       case "snow":
         return "from-cyan-500/30 via-blue-900/25 to-transparent/50";
       case "fog":
-        return "from-neutral-500/25 via-neutral-700/25 to-transparent /35";
+        return "from-neutral-500/25 via-neutral-700/25 to-transparent ";
       default:
-        return "from-[var(--acc)]/20 to-transparent ";
+        return "from-amber-0/20 to-transparent ";
     }
   };
 
@@ -126,7 +126,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       <div
         className={`rounded-[var(--r-m)] px-3.5 py-2.5 transition-all duration-200 flex items-center justify-between gap-3 ${
           hasAlerts
-            ? "bg-[var(--acc-soft)] /40 text-[var(--ink-2)]"
+            ? "bg-[var(--acc-soft)]  text-[var(--ink-2)]"
             : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
         }`}
       >
@@ -210,7 +210,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
       }`}
     >
       {/* Barra superior del widget del tiempo */}
-      <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 /15">
+      <div className="flex items-center justify-between gap-2 pb-2 mb-2.5 ">
         <div className="flex items-center gap-2">
           <span
             className={`p-1 rounded-md ${
@@ -291,7 +291,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
               type="button"
               onClick={() => setIsExpanded(false)}
               title="Minimizar widget del tiempo"
-              className="px-1.5 py-0.5 text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-[10px] font-sans flex items-center gap-0.5 transition-colors cursor-pointer /20 ml-0.5"
+              className="px-1.5 py-0.5 text-[var(--ink-2)] hover:text-[var(--acc)]/70 text-[10px] font-sans flex items-center gap-0.5 transition-colors cursor-pointer  ml-0.5"
             >
               <span>Minimizar</span>
               <ChevronUp className="w-3 h-3" />
@@ -368,7 +368,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
                   (weatherData.rainProbability || 0) >= 40
-                    ? "bg-[var(--acc)]/20 text-[var(--ink-2)]"
+                    ? "bg-[var(--acc)]/20 text-[var(--ink-3)]"
                     : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >
@@ -394,7 +394,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 className={`flex flex-col items-center px-2.5 py-1.5 rounded-[var(--r-m)] text-center transition-all ${
                   (weatherData.windGusts || 0) >= 40
-                    ? "bg-[var(--acc)]/20 /50 text-[var(--acc)]/70"
+                    ? "bg-[var(--acc)]/20  text-[var(--acc)]/70"
                     : "bg-[var(--sunken)] text-[var(--ink-2)]"
                 }`}
               >
@@ -446,7 +446,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                       className={`rounded-[var(--r-m)] p-3 transition-all duration-200 ${
                         isDanger
                           ? "bg-[var(--alert-soft)]/50 text-[var(--alert)]/40"
-                          : "bg-[var(--acc-soft)] /40 text-[var(--acc)]"
+                          : "bg-[var(--acc-soft)]  text-[var(--acc)]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -454,8 +454,8 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                           <div
                             className={`p-1.5 rounded-[var(--r-s)] shrink-0 mt-0.5 ${
                               isDanger
-                                ? "bg-[var(--alert)]/20/40"
-                                : "bg-[var(--acc)]/20 /40"
+                                ? "bg-[var(--alert)]/20"
+                                : "bg-[var(--acc)]/20 "
                             }`}
                           >
                             <AnimatedWeatherIcon
@@ -517,7 +517,11 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
                               transition={{ duration: 0.2 }}
-                              className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${"text-[var(--ink)]/90"}`}
+                              className={`mt-2.5 pt-2.5 space-y-1.5 text-[10px] font-sans overflow-hidden ${
+                                isDanger
+                                  ? "border-[var(--alert)]/20 text-[var(--ink)]/90"
+                                  : " text-[var(--ink)]/90"
+                              }`}
                             >
                               <div className="font-sans tracking-wider text-[9px] font-bold text-[var(--acc)]/90 mb-1 flex items-center gap-1">
                                 <ShieldAlert className="w-3 h-3 text-[var(--acc)]" />

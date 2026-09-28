@@ -518,7 +518,7 @@ export const SocialAndFansGrowthChart: React.FC<
       className={`p-5 rounded-[var(--r-l)] transition-all ${"bg-[var(--bg)]/90 text-[var(--ink)]"}`}
     >
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 /60">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 mb-4 ">
         <div className="flex items-center gap-3">
           <div
             className={`p-2.5 rounded-[var(--r-m)] shrink-0 ${"bg-[var(--acc)]/20 text-[var(--acc)]"}`}
@@ -574,7 +574,7 @@ export const SocialAndFansGrowthChart: React.FC<
         {/* Card 1: Instagram */}
         {hasInstagram && (
           <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60/40"}`}
+            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
@@ -603,7 +603,7 @@ export const SocialAndFansGrowthChart: React.FC<
         {/* Card 2: TikTok */}
         {hasTikTok && (
           <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60/40"}`}
+            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--acc)] flex items-center gap-1">
@@ -631,7 +631,7 @@ export const SocialAndFansGrowthChart: React.FC<
         {/* Card 3: YouTube */}
         {hasYouTube && (
           <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60/40"}`}
+            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--alert)] flex items-center gap-1">
@@ -659,7 +659,7 @@ export const SocialAndFansGrowthChart: React.FC<
         {/* Card 4: Spotify */}
         {hasSpotify && (
           <div
-            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60/40"}`}
+            className={`p-3 rounded-[var(--r-m)] flex flex-col justify-between transition-all ${"bg-[var(--surface)]/60"}`}
           >
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-sans tracking-wider font-bold text-[var(--ok)] flex items-center gap-1">
@@ -702,11 +702,11 @@ export const SocialAndFansGrowthChart: React.FC<
               <span className="text-2xl font-display font-black text-[var(--acc)]">
                 {totalFans}
               </span>
-              <span className="text-[10px] font-sans text-[var(--acc)]/70/80">
+              <span className="text-[10px] font-sans text-[var(--acc)]/70">
                 fans totales
               </span>
             </div>
-            <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1 /20 pt-1">
+            <div className="text-[9px] font-sans text-[var(--ink-2)] flex items-center justify-between gap-1 mt-1  pt-1">
               <span className="text-[var(--acc)]/70 font-bold">
                 ✨ {uneteFans} vía Únete
               </span>
@@ -722,7 +722,7 @@ export const SocialAndFansGrowthChart: React.FC<
       </div>
 
       {/* Period Filter & Interactive Channel Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 pb-3 /40">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 pb-3 ">
         {/* Time Period Selector */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
@@ -785,7 +785,7 @@ export const SocialAndFansGrowthChart: React.FC<
       </div>
 
       {/* Interactive Channel Filters & Toggles */}
-      <div className="flex items-center justify-between gap-2 mb-3 pb-3 /40 flex-wrap">
+      <div className="flex items-center justify-between gap-2 mb-3 pb-3  flex-wrap">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-[10px] font-sans text-[var(--ink-2)] mr-1 flex items-center gap-1">
             <SlidersHorizontal className="w-3 h-3 text-[var(--ink-2)]" /> Curvas
@@ -797,7 +797,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <div
               className={`flex items-center rounded-[var(--r-s)] transition-all ${
                 selectedChannels.instagram
-                  ? "bg-[var(--alert)]/15/40 text-[var(--alert)]/60"
+                  ? "bg-[var(--alert)]/15 text-[var(--alert)]/60"
                   : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
               }`}
             >
@@ -836,7 +836,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <div
               className={`flex items-center rounded-[var(--r-s)] transition-all ${
                 selectedChannels.tiktok
-                  ? "bg-[var(--tentative)]/15/40 text-[var(--acc)]/80"
+                  ? "bg-[var(--tentative)]/15 text-[var(--acc)]/80"
                   : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
               }`}
             >
@@ -875,7 +875,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <div
               className={`flex items-center rounded-[var(--r-s)] transition-all ${
                 selectedChannels.youtube
-                  ? "bg-[var(--alert)]/90/30/40 text-[var(--alert)]/60"
+                  ? "bg-[var(--alert)]/90 text-[var(--alert)]/60"
                   : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
               }`}
             >
@@ -952,7 +952,7 @@ export const SocialAndFansGrowthChart: React.FC<
           <div
             className={`flex items-center rounded-[var(--r-s)] transition-all ${
               selectedChannels.fans
-                ? "bg-[var(--acc-soft)] /60 text-[var(--ink)] font-bold"
+                ? "bg-[var(--acc-soft)]  text-[var(--ink)] font-bold"
                 : "bg-[var(--surface)]/30 text-[var(--ink-2)] opacity-60"
             }`}
           >
@@ -966,7 +966,7 @@ export const SocialAndFansGrowthChart: React.FC<
               ></span>
               <Heart className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)]/30" />
               <span>Fans BD (Únete)</span>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70 font-sans font-black">
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70 font-sans font-black">
                 {totalFans}
               </span>
               {selectedChannels.fans ? (
@@ -978,7 +978,7 @@ export const SocialAndFansGrowthChart: React.FC<
             <button
               type="button"
               onClick={() => selectOnlyChannel("fans")}
-              className="px-1.5 py-1 text-[8px] font-sans /30 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 cursor-pointer font-black"
+              className="px-1.5 py-1 text-[8px] font-sans  hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 cursor-pointer font-black"
               title="Aislar y ver sólo la curva de Fans registrados"
             >
               Solo
@@ -1199,7 +1199,7 @@ export const SocialAndFansGrowthChart: React.FC<
       </div>
 
       {/* Footer Info & Direct Links */}
-      <div className="mt-4 pt-3 /60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-sans text-[var(--ink-2)]">
+      <div className="mt-4 pt-3  flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-sans text-[var(--ink-2)]">
         <div className="flex items-center gap-3 flex-wrap">
           <span className="flex items-center gap-1 text-[var(--ok)]">
             <ShieldCheck className="w-3.5 h-3.5" /> 100% Consentimiento RGPD (

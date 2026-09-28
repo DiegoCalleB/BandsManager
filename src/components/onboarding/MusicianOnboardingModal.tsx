@@ -122,7 +122,7 @@ export const MusicianOnboardingModal: React.FC<
           {/* Misión 1: Bolo / Concierto */}
           <div
             onClick={() => handleChooseMission("calendario")}
-            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-[var(--acc)]/5"
+            className="group relative p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-amber-0/5"
           >
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--acc)] shrink-0 group-hover:scale-105 transition-transform">
@@ -133,7 +133,7 @@ export const MusicianOnboardingModal: React.FC<
                   <h3 className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)] transition-colors">
                     Tengo un bolo o concierto a la vista
                   </h3>
-                  <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60/20 text-[var(--acc)]/70">
+                  <span className="text-[9px] font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
                     Rápido
                   </span>
                 </div>

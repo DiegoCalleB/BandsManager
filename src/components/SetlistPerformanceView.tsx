@@ -1056,7 +1056,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       {/* NOTES BANNER — cosas como"cambio de afinación","entra el segundo cantante", que un
  músico necesita ver ANTES de tocar el tema, no descubrirlas a mitad. */}
       {!isBlock && showNotes && notes && (
-        <div className="shrink-0 bg-[var(--acc-soft)] /40 px-4 py-2.5 text-sm text-[var(--acc)] whitespace-pre-wrap z-20">
+        <div className="shrink-0 bg-[var(--acc-soft)]  px-4 py-2.5 text-sm text-[var(--acc)] whitespace-pre-wrap z-20">
           {notes}
         </div>
       )}
@@ -1065,7 +1065,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
  sistema puede tocar la radio del móvil, por seguridad. Esto es honesto sobre esa
  limitación en vez de fingir un botón que no haría nada. */}
       {showFlightModeInfo && (
-        <div className="shrink-0 bg-[var(--bg)]/90/40 px-4 py-2.5 text-sm text-[var(--tentative)]/40 z-20 flex items-start gap-2">
+        <div className="shrink-0 bg-[var(--bg)]/90 px-4 py-2.5 text-sm text-[var(--tentative)]/40 z-20 flex items-start gap-2">
           <Plane className="w-4 h-4 shrink-0 mt-0.5" />
           <p>
             No hay forma de activar el modo avión desde aquí — ninguna web (ni
@@ -1358,7 +1358,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       className={`p-3 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition ${
                         isCurrent
                           ? "bg-[var(--acc)]/90 text-[var(--acc)]/40"
-                          : "bg-[var(--bg)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)]"
+                          : "bg-[var(--bg)]/60800 hover:border-[var(--hair)]700 text-[var(--ink-2)]"
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
@@ -1387,7 +1387,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     className={`p-3 rounded-[var(--r-m)] transition flex flex-col gap-2.5 ${
                       isCurrent
                         ? "bg-[var(--acc)]/10 "
-                        : "bg-[var(--surface)]/80 hover:bg-[var(--sunken)]"
+                        : "bg-[var(--surface)]800/80 hover:border-[var(--hair)]700"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -1761,7 +1761,7 @@ const ChordSheetPage: React.FC<{
             onClick={onToggleTeleprompterMode}
             className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-s)] transition flex items-center gap-1.5 cursor-pointer ${
               teleprompterMode === "scroll"
-                ? "bg-[var(--acc)]/20 /50 text-[var(--acc)]/70"
+                ? "bg-[var(--acc)]/20  text-[var(--acc)]/70"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
             title={

@@ -1,5 +1,5 @@
-import React from 'react';
-import { FileText, Sparkles, Clock, Users } from 'lucide-react';
+import React from "react";
+import { FileText, Sparkles, Clock, Users } from "lucide-react";
 
 interface StepBioProps {
   slogan: string;
@@ -32,28 +32,35 @@ export const StepBio: React.FC<StepBioProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <FileText className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Biografía, Slogan & Formato Directo</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Biografía, Slogan & Formato Directo
+        </h3>
       </div>
 
       {/* Slogan */}
       <div>
-        <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Slogan / Frase de Impacto</label>
+        <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+          Slogan / Frase de Impacto
+        </label>
         <input
           type="text"
           value={slogan}
           onChange={(e) => setSlogan(e.target.value)}
           placeholder="Ej. Guitarras afiladas y melodías directas al corazón"
-          className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+          className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
         />
         <p className="text-[11px] text-[var(--ink-2)] mt-1">
-          Aparece en la cabecera del Dossier de Prensa interactivo (EPK) y en el QR de fans.
+          Aparece en la cabecera del Dossier de Prensa interactivo (EPK) y en el
+          QR de fans.
         </p>
       </div>
 
       {/* Biografía con Asistente */}
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="text-xs font-medium text-[var(--ink-2)]">Biografía / Resumen de Prensa</label>
+          <label className="text-xs font-medium text-[var(--ink-2)]">
+            Biografía / Resumen de Prensa
+          </label>
           <button
             type="button"
             onClick={onGenerateBioAI}
@@ -68,43 +75,49 @@ export const StepBio: React.FC<StepBioProps> = ({
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Cuenta la trayectoria de la banda, influencias, lanzamientos destacados y lo que transmitís en vuestros conciertos..."
-          className="w-full px-4 py-3 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm leading-relaxed"
+          className="w-full px-4 py-3 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm leading-relaxed"
         />
       </div>
 
       {/* Formato de Directo */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Formato de Escenario</label>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+            Formato de Escenario
+          </label>
           <input
             type="text"
             value={formato}
             onChange={(e) => setFormato(e.target.value)}
             placeholder="Ej. Banda completa, Trío acústico..."
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Músicos en Escenario</label>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+            Músicos en Escenario
+          </label>
           <input
             type="number"
             min={1}
             max={25}
             value={numMusicos}
             onChange={(e) => setNumMusicos(Number(e.target.value))}
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none focus: text-sm"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] focus:outline-none focus:text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">Duración Típica del Show</label>
+          <label className="block text-xs font-medium text-[var(--ink-2)] mb-1.5">
+            Duración Típica del Show
+          </label>
           <input
             type="text"
             value={duracionDirecto}
             onChange={(e) => setDuracionDirecto(e.target.value)}
             placeholder="Ej. 60 - 75 min"
-            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus: text-sm"
+            className="w-full px-3 py-2 rounded-[var(--r-m)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:outline-none focus:text-sm"
           />
         </div>
       </div>

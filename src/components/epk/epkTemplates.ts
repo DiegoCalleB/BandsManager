@@ -98,7 +98,7 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       cardBg: "bg-[#241c17]",
       accent: "bg-[var(--acc)]",
       text: "text-[var(--acc)]/80",
-      pill: "bg-[var(--accent-alt)]/10/60 text-[var(--acc)]/80",
+      pill: "bg-[var(--accent-alt)]/10 text-[var(--acc)]/80",
     },
   },
 ];
@@ -330,9 +330,8 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
       return {
         pageBg:
           "bg-[#090713] text-[var(--tentative)]/20 selection:bg-[var(--tentative)]/80 selection:text-[var(--ink)]",
-        topBar: "bg-[#110d24]/90/20 text-[var(--tentative)]/20",
-        topBarBtn:
-          "bg-[#181335] hover:bg-[#231b4d] text-[var(--tentative)]/40/40",
+        topBar: "bg-[#110d24]/90 text-[var(--tentative)]/20",
+        topBarBtn: "bg-[#181335] hover:bg-[#231b4d] text-[var(--tentative)]/40",
         heroNoPhoto:
           "bg-gradient-to-br from-[#1b0e3d] via-[#090713] to-[#041d33]/50",
         heroOverlay:
@@ -348,13 +347,13 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
           fontFamily: "'Space Grotesk', system-ui, sans-serif",
         },
         card: "bg-[#120e24]/20 text-[var(--tentative)]/20",
-        cardHighlight: "bg-[#161030]/30 hover:bg-[#1e1745]/40",
+        cardHighlight: "bg-[#161030]/30 hover:border-[var(--tentative)]/80",
         statNumber: "text-[var(--acc)]/80 font-sans",
-        badge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40",
+        badge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
         accentBtn:
           "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
         accentBtnSubtle:
-          "bg-[var(--tentative)]/15 text-[var(--tentative)]/80/40 hover:bg-[var(--tentative)]/25",
+          "bg-[var(--tentative)]/15 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/25",
         accentText: "text-[var(--tentative)]/80",
         bookingCard: "bg-[#171133]/40 text-[var(--tentative)]/20",
         bookingTitle: "text-[var(--tentative)]/80 font-bold",
@@ -363,13 +362,13 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         quoteIcon: "text-[var(--tentative)]/40",
         quoteMedium: "text-[var(--acc)]/80",
         footer: "text-[var(--tentative)]/60",
-        stickyPlayer: "bg-[#110d24]/95/40 text-[var(--tentative)]/20",
+        stickyPlayer: "bg-[#110d24]/95 text-[var(--tentative)]/20",
       };
 
     case "vintage":
       return {
         pageBg:
-          "bg-[#171310] text-[var(--acc)] selection:bg-[var(--acc)] selection:text-[var(--ink)]",
+          "bg-[#171310] text-amber-50 selection:bg-[var(--acc)] selection:text-[var(--ink)]",
         topBar: "bg-[#201a15]/95 text-[var(--ink)]",
         topBarBtn: "bg-[#2b221c] hover:bg-[#382d25] text-[var(--ink-2)]/40",
         heroNoPhoto:
@@ -385,7 +384,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         card: "bg-[#201a16]/40 text-[var(--ink)]",
         cardHighlight: "bg-[#261e19] text-[var(--ink)] hover:bg-[#2f2620]",
         statNumber: "text-[var(--acc)]/80 font-sans",
-        badge: "bg-[var(--accent-alt)]/10/60 text-[var(--acc)]/80",
+        badge: "bg-[var(--accent-alt)]/10 text-[var(--acc)]/80",
         accentBtn:
           "bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold",
         accentBtnSubtle:
@@ -393,11 +392,11 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         accentText: "text-[var(--acc)]/80",
         bookingCard: "bg-[#261f1a] text-[var(--ink)]",
         bookingTitle: "text-[var(--acc)]/80 font-bold",
-        memberRole: "text-[var(--acc)]/80/90 font-sans",
+        memberRole: "text-[var(--acc)]/80 font-sans",
         memberCard: "bg-[#201a16]/40",
         quoteIcon: "text-[var(--accent-alt)]/40",
         quoteMedium: "text-[var(--acc)]/80 font-sans",
-        footer: "text-[var(--accent-alt)]/70/40",
+        footer: "text-[var(--accent-alt)]/70",
         stickyPlayer: "bg-[#201a16]/95 text-[var(--ink)]",
       };
 
@@ -406,7 +405,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
       return {
         pageBg:
           "bg-[var(--bg)] text-[var(--ink)] selection:bg-[var(--acc)] selection:text-[var(--ink)]",
-        topBar: "bg-[var(--bg)]/90/80 text-[var(--ink)]",
+        topBar: "bg-[var(--bg)]/90 text-[var(--ink)]",
         topBarBtn:
           "bg-[var(--ink)]/40 hover:bg-[var(--ink-2)]/40 text-[var(--ink)]/80",
         heroNoPhoto:
@@ -430,7 +429,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         accentText: "text-[var(--acc)]/80",
         bookingCard: "bg-[var(--acc)]/10",
         bookingTitle: "text-[var(--acc)]/80",
-        memberRole: "text-[var(--acc)]/80/90",
+        memberRole: "text-[var(--acc)]/80",
         memberCard: "bg-[var(--bg)]",
         quoteIcon: "text-[var(--acc)]/40",
         quoteMedium: "text-[var(--acc)]/80",

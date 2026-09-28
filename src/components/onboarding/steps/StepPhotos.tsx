@@ -1,5 +1,12 @@
-import React, { useRef } from 'react';
-import { Camera, Upload, Trash2, Loader2, Plus, Image as ImageIcon } from 'lucide-react';
+import React, { useRef } from "react";
+import {
+  Camera,
+  Upload,
+  Trash2,
+  Loader2,
+  Plus,
+  Image as ImageIcon,
+} from "lucide-react";
 
 interface StepPhotosProps {
   photos: string[];
@@ -26,19 +33,29 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center gap-2 pb-2">
         <Camera className="w-5 h-5 text-[var(--acc)]" />
-        <h3 className="text-base font-semibold text-[var(--ink)]">Galería de Fotos para Prensa & EPK</h3>
+        <h3 className="text-base font-semibold text-[var(--ink)]">
+          Galería de Fotos para Prensa & EPK
+        </h3>
       </div>
 
       <p className="text-xs text-[var(--ink-2)]">
-        Sube fotografías promocionales de alta calidad (horizontales y verticales) para que salas, medios y festivales las usen en carteles
-        y notas de prensa.
+        Sube fotografías promocionales de alta calidad (horizontales y
+        verticales) para que salas, medios y festivales las usen en carteles y
+        notas de prensa.
       </p>
 
       {/* Grid of photos */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {photos.map((url, idx) => (
-          <div key={idx} className="aspect-video rounded-[var(--r-m)] bg-[var(--bg)] overflow-hidden relative group">
-            <img src={url} alt={`Foto promo ${idx + 1}`} className="w-full h-full object-cover" />
+          <div
+            key={idx}
+            className="aspect-video rounded-[var(--r-m)] bg-[var(--bg)] overflow-hidden relative group"
+          >
+            <img
+              src={url}
+              alt={`Foto promo ${idx + 1}`}
+              className="w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-[var(--scrim)]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button
                 type="button"
@@ -55,15 +72,24 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
         {/* Upload box */}
         <div
           onClick={() => photoInputRef.current?.click()}
-          className="aspect-video rounded-[var(--r-m)] hover:/40 bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-colors"
+          className="aspect-video rounded-[var(--r-m)]  bg-[var(--bg)]/40 hover:bg-[var(--surface)]/70 flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-colors"
         >
-          <input type="file" ref={photoInputRef} onChange={onPhotoUpload} accept="image/*" multiple className="hidden" />
+          <input
+            type="file"
+            ref={photoInputRef}
+            onChange={onPhotoUpload}
+            accept="image/*"
+            multiple
+            className="hidden"
+          />
           {isUploadingPhoto ? (
             <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
           ) : (
             <>
               <Upload className="w-5 h-5 text-[var(--ink-2)] mb-1" />
-              <span className="text-[11px] font-medium text-[var(--ink-2)]">Subir desde dispositivo</span>
+              <span className="text-[11px] font-medium text-[var(--ink-2)]">
+                Subir desde dispositivo
+              </span>
             </>
           )}
         </div>

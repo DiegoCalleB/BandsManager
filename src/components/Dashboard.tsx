@@ -810,7 +810,7 @@ export default function Dashboard({
                       selectedDate: item.dateStr,
                     })
                   }
-                  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] hover:/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
+                  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
                 >
                   <div className="flex items-start gap-3.5">
                     <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0">
@@ -835,7 +835,7 @@ export default function Dashboard({
                         </span>
                         {(agendaFilterMode === "all" || hasMultipleBands) &&
                           item.bandName && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded font-sans font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70/90 truncate max-w-[120px] flex items-center gap-1">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded font-sans font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70 truncate max-w-[120px] flex items-center gap-1">
                               <Music className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
                               <span className="truncate">{item.bandName}</span>
                             </span>
@@ -894,7 +894,7 @@ export default function Dashboard({
         {/* 2. TARJETAS RÁPIDAS DE CAPTURA QR, FANS Y DOSSIER */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Card 1: Códigos QR & Captura de Fans */}
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:/40 transition-all">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4  transition-all">
             <div>
               <div className="flex items-center justify-between pb-3">
                 <div className="flex items-center gap-2.5">
