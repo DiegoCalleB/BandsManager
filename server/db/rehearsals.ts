@@ -1,5 +1,6 @@
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
+import { mergeWithExisting } from './mergeWithExisting.js';
 
 function parseSafeArray(val: any): string[] {
   if (!val) return [];
@@ -63,6 +64,8 @@ export async function dbGetRehearsals(bandId: string | string[]) {
 
   return validatedData.map((r) => ({
     ...r,
+    setlist_id: r.setlist_id || r.setlistId || null,
+    setlistId: r.setlist_id || r.setlistId || undefined,
     tipo_evento: r.tipo_evento || r.tipoEvento || 'ensayo',
     asunto: r.asunto || '',
     enlace_reunion: r.enlace_reunion || r.enlaceReunion || '',
@@ -85,83 +88,67 @@ export async function dbGetRehearsals(bandId: string | string[]) {
 
 export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
   const sb = getSupabase();
-  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
-  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
-  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  // Ver nota equivalente en dbUpsertConcert: un id que no pertenece a la banda del usuario no se
-  // reutiliza nunca (evita sobrescribir/robar el ensayo de otra banda por coincidencia de id).
-  // El SELECT trae también los campos JSONB/array que un caller parcial podría no mandar
-  // (agenda, objetivos, grabaciones, cronómetro, acta) — sin esto no hay forma de preservarlos
-  // si el payload entrante no los incluye; antes se reseteaban a []/{} en silencio en cualquier
-  // guardado que no los trajera, igual que le pasó a `miembros` en epk.ts.
   let finalRehearsalId = rehearsal.id;
-  let existing: any = null;
+  let existingRehearsal: any = null;
   if (finalRehearsalId) {
-    const { data } = await sb
+    // Ver nota equivalente en dbUpsertConcert: un id que no pertenece a la banda del usuario no se
+    // reutiliza nunca (evita sobrescribir/robar el ensayo de otra banda por coincidencia de id).
+    // El SELECT trae la fila entera para que un guardado parcial no resetee a []/{} en silencio
+    // los campos que no manda (agenda, objetivos, grabaciones, cronómetro, acta).
+    const { data: existing } = await sb
       .from('rehearsals')
-      .select(
-        'id, band_id, agenda, objetivos, grabaciones, cronometro_estado, acta'
-      )
+      .select('*')
       .eq('id', finalRehearsalId)
       .maybeSingle();
-    existing = data;
-    if (existing && existing.band_id !== targetBandId) {
-      finalRehearsalId = `reh-${Date.now()}`;
-      existing = null;
+    if (existing) {
+      if (existing.band_id && cleanBandId(existing.band_id) !== targetBandId) {
+        finalRehearsalId = `reh-${Date.now()}`;
+      } else {
+        existingRehearsal = existing;
+      }
     }
   }
+
+  const merged = mergeWithExisting(existingRehearsal, rehearsal);
 
   const payload = {
     id: finalRehearsalId || `reh-${Date.now()}`,
     band_id: targetBandId,
-    band_name: rehearsal.band_name || rehearsal.bandName || '',
-    fecha: rehearsal.fecha,
-    hora: rehearsal.hora || '20:00',
-    hora_fin: rehearsal.hora_fin || rehearsal.horaFin || null,
-    lugar: rehearsal.lugar || 'Local de Ensayo',
-    tipo_evento: rehearsal.tipo_evento || rehearsal.tipoEvento || 'ensayo',
-    asunto: rehearsal.asunto || '',
-    enlace_reunion: rehearsal.enlace_reunion || rehearsal.enlaceReunion || '',
-    asistentes: parseSafeArray(rehearsal.asistentes),
-    notas: rehearsal.notas || '',
-    estado: rehearsal.estado || 'programado',
-    setlist_id: rehearsal.setlist_id || rehearsal.setlistId || null,
+    band_name: merged.band_name || merged.bandName || '',
+    fecha: merged.fecha || new Date().toISOString().split('T')[0],
+    hora: merged.hora || '20:00',
+    hora_fin: merged.hora_fin || merged.horaFin || null,
+    lugar: merged.lugar || 'Local de Ensayo',
+    tipo_evento: merged.tipo_evento || merged.tipoEvento || 'ensayo',
+    asunto: merged.asunto || '',
+    enlace_reunion: merged.enlace_reunion || merged.enlaceReunion || '',
+    asistentes: parseSafeArray(merged.asistentes),
+    notas: merged.notas || '',
+    estado: merged.estado || 'programado',
+    setlist_id: merged.setlist_id || merged.setlistId || null,
     convocatoria_tipo:
-      rehearsal.convocatoria_tipo || rehearsal.convocatoriaTipo || 'completa',
+      merged.convocatoria_tipo || merged.convocatoriaTipo || 'completa',
     convocados_ids: parseSafeArray(
-      rehearsal.convocados_ids || rehearsal.convocadosIds
+      merged.convocados_ids || merged.convocadosIds
     ),
     convocados_nombres: parseSafeArray(
-      rehearsal.convocados_nombres || rehearsal.convocadosNombres
+      merged.convocados_nombres || merged.convocadosNombres
     ),
-    agenda:
-      rehearsal.agenda !== undefined
-        ? rehearsal.agenda
-        : (existing?.agenda ?? []),
-    objetivos:
-      rehearsal.objetivos !== undefined
-        ? rehearsal.objetivos
-        : (existing?.objetivos ?? []),
+    agenda: merged.agenda || [],
+    objetivos: merged.objetivos || [],
     duracion_estimada_min:
-      rehearsal.duracion_estimada_min ?? rehearsal.duracionEstimadaMin ?? 0,
-    duracion_real_seg:
-      rehearsal.duracion_real_seg ?? rehearsal.duracionRealSeg ?? 0,
+      merged.duracion_estimada_min ?? merged.duracionEstimadaMin ?? 0,
+    duracion_real_seg: merged.duracion_real_seg ?? merged.duracionRealSeg ?? 0,
     cronometro_estado:
-      (rehearsal.cronometro_estado ?? rehearsal.cronometroEstado) !== undefined
-        ? rehearsal.cronometro_estado || rehearsal.cronometroEstado
-        : (existing?.cronometro_estado ?? {}),
-    acta:
-      rehearsal.acta !== undefined ? rehearsal.acta : (existing?.acta ?? {}),
-    grabaciones:
-      rehearsal.grabaciones !== undefined
-        ? rehearsal.grabaciones
-        : (existing?.grabaciones ?? []),
-    rating_general: rehearsal.rating_general ?? rehearsal.ratingGeneral ?? null,
+      merged.cronometro_estado || merged.cronometroEstado || {},
+    acta: merged.acta || {},
+    grabaciones: merged.grabaciones || [],
+    rating_general: merged.rating_general ?? merged.ratingGeneral ?? null,
     temperatura_local:
-      rehearsal.temperatura_local || rehearsal.temperaturaLocal || null,
+      merged.temperatura_local || merged.temperaturaLocal || null,
   };
 
   const currentPayload: Record<string, any> = { ...payload };

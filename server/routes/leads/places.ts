@@ -6,6 +6,11 @@ import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from
 import { safeParseJson } from "../../utils.js";
 import { getDomainFromUrl } from "./helpers.js";
 import { getBandDnaProfile } from "../../utils/bandDna.js";
+import { getTargetBandId } from "../../utils/bandAccess.js";
+import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../../services/venueIntelligenceService.js";
+import { discoverVenuesMultiSource } from "../../services/multiSourceVenueDiscoveryService.js";
+import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatcherService.js";
+import { searchPublicCulturalOpportunities } from "../../services/publicCulturalEventsRadarService.js";
 
 const router = express.Router();
 
@@ -52,7 +57,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
     const typePrefix = (tipo && categorySearchPrefixes[lowerTipo]) 
       ? categorySearchPrefixes[lowerTipo] 
       : (isBandSearch ? "grupos y bandas de música en activo" : "salas de conciertos y festivales de música en directo");
-    const searchQuery = query || `${typePrefix} en ${ciudad}${region ? `, ${region}` : ''}, España`;
+    const searchQuery = query || `${typePrefix} en ${ciudad}${region ? `, ${region}` : ''}`;
     const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
     // Google Places API is great for physical places (venues, clubs, theaters, city halls).
@@ -61,7 +66,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
       try {
         let placesQuery = searchQuery;
         if (isAyuntamientoSearch) {
-          placesQuery = `Ayuntamiento de ${ciudad || 'Madrid'}, España`;
+          placesQuery = `Ayuntamiento de ${ciudad || 'Madrid'}`;
         }
 
         console.log(`[Google Places API (New)] Realizando búsqueda v1/places:searchText para: "${placesQuery}" (Límite: ${limit})`);
@@ -185,7 +190,60 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
           });
         }
       } catch (placesErr: any) {
-        console.warn("[Google Places API Warning] Failed to fetch from Places API, falling back to Gemini Search Grounding:", placesErr.message);
+        console.warn("[Google Places API Warning] Failed to fetch from Places API, falling back to Serper/Gemini:", placesErr.message);
+      }
+    }
+
+    // MOTOR SERPER PLACES + ENRIQUECIMIENTO QUIRÚRGICO DE CONTACTO
+    if (!isWebEntitySearch && process.env.SERPER_API_KEY) {
+      try {
+        console.log(`[Serper Places] Realizando búsqueda estructurada para: "${searchQuery}" (Ciudad: ${ciudad || "España"}, Tipo: ${tipo || "sala"}, Límite: ${limit})`);
+        const serperPlaces = await searchVenuesWithSerper({
+          query: searchQuery,
+          city: ciudad,
+          region,
+          type: tipo || "sala",
+          limit
+        });
+
+        if (serperPlaces && serperPlaces.length > 0) {
+          // Enriquecimiento de fichas (email, aforo, teléfono) en paralelo para los recintos encontrados
+          const enrichedResults = await Promise.all(
+            serperPlaces.map(async (place) => {
+              try {
+                const contactData = await enrichVenueDetailsWithSerper(place.nombre_sala, place.ciudad);
+                if (contactData) {
+                  if (contactData.email && !place.email_contacto) {
+                    place.email_contacto = contactData.email;
+                  }
+                  if (contactData.aforo && (!place.aforo || place.aforo === 0)) {
+                    place.aforo = contactData.aforo;
+                  }
+                  if (contactData.telefono && !place.telefono) {
+                    place.telefono = contactData.telefono;
+                  }
+                  if (contactData.website && !place.website) {
+                    place.website = contactData.website;
+                  }
+                  if (contactData.instagram && !place.instagram) {
+                    place.instagram = contactData.instagram;
+                  }
+                }
+              } catch (_) {}
+              return place;
+            })
+          );
+
+          return res.json({
+            success: true,
+            isPlacesApi: true,
+            source: "Serper Google Places & Live Intelligence",
+            query: searchQuery,
+            results: enrichedResults
+          });
+        }
+      } catch (serperErr: any) {
+        console.warn("[Serper Places Warning] Error en búsqueda con Serper, pasando a fallback Gemini:", serperErr?.message || serperErr);
       }
     }
 
@@ -925,9 +983,32 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           existing.email_contacto = rawLead.email_contacto;
           updated = true;
         }
-        if (!existing.telefono && rawLead.telefono) {
-          existing.telefono = rawLead.telefono;
+        const incomingTel = (rawLead.telefono_movil || rawLead.telefono || "").trim();
+        const incomingFijo = (rawLead.telefono_fijo || "").trim();
+        const isIncomingMob = /^(?:\+?34\s*)?[67]/.test(incomingTel);
+        const isIncomingFij = /^(?:\+?34\s*)?[89]/.test(incomingTel);
+
+        if (!existing.telefono && incomingTel) {
+          existing.telefono = incomingTel;
           updated = true;
+        }
+        if (!existing.telefono_movil) {
+          if (rawLead.telefono_movil) {
+            existing.telefono_movil = rawLead.telefono_movil;
+            updated = true;
+          } else if (isIncomingMob) {
+            existing.telefono_movil = incomingTel;
+            updated = true;
+          }
+        }
+        if (!existing.telefono_fijo) {
+          if (incomingFijo) {
+            existing.telefono_fijo = incomingFijo;
+            updated = true;
+          } else if (isIncomingFij) {
+            existing.telefono_fijo = incomingTel;
+            updated = true;
+          }
         }
         if (!existing.website && rawLead.website) {
           existing.website = rawLead.website;
@@ -961,6 +1042,12 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
         if (resolvedType === 'sellos' || resolvedType === 'discografica' || resolvedType === 'discográfica') resolvedType = 'sello';
         if (resolvedType === 'medios' || resolvedType === 'prensa' || resolvedType === 'radio') resolvedType = 'medio';
 
+        const rawPhone = (rawLead.telefono || "").trim();
+        const isMob = /^(?:\+?34\s*)?[67]/.test(rawPhone);
+        const isFij = /^(?:\+?34\s*)?[89]/.test(rawPhone);
+        const telMovil = rawLead.telefono_movil || (isMob ? rawPhone : "");
+        const telFijo = rawLead.telefono_fijo || (isFij ? rawPhone : "");
+
         const newLead: Lead = {
           id: `places-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
           band_id: userBandId,
@@ -972,7 +1059,9 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           genero: rawLead.genero || "Música en Directo / Mestizaje",
           tipo: resolvedType as any,
           email_contacto: rawLead.email_contacto || "",
-          telefono: rawLead.telefono || "",
+          telefono: rawPhone || telMovil || telFijo || "",
+          telefono_movil: telMovil,
+          telefono_fijo: telFijo,
           instagram: rawLead.instagram || "",
           website: rawLead.website || "",
           contacto_nombre: rawLead.contacto_nombre || "",
@@ -1007,6 +1096,89 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
   }
 });
 
-// Import Leads from Custom Excel / CSV with Intelligent Mapping & Classification
+/**
+ * Captación y Descubrimiento Multi-Fuente Omnicanal
+ * Integra Ticketmaster Discovery API, Setlist.fm, Eventbrite y Agregadores Locales (Entradium, Compralaentrada, Wegow)
+ */
+router.post(["/multi-source-venues", "/leads/multi-source-venues"], requireAuth, async (req, res) => {
+  try {
+    const { query, ciudad, region, tipo, countryCode, limit } = req.body;
+    const result = await discoverVenuesMultiSource({
+      query,
+      ciudad,
+      region,
+      tipo,
+      countryCode: countryCode || "ES",
+      limit: Number(limit) || 10
+    });
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/multi-source-venues:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al realizar la búsqueda multi-fuente de recintos."
+    });
+  }
+});
+
+/**
+ * Radar por Bandas Similares ("Efecto Espejo" / Setlist.fm & Spotify)
+ */
+router.post(["/similar-artists-venues", "/leads/similar-artists-venues"], requireAuth, async (req, res) => {
+  try {
+    const { bandName, genre, similarArtists, targetCities, limit } = req.body;
+    const userBandId = getTargetBandId(req);
+    const state = loadState();
+    const bandDna = userBandId ? getBandDnaProfile(state, userBandId) : null;
+    const bandConfig = userBandId ? (state?.epkConfigsByBand?.[userBandId] || state?.epkConfig) : state?.epkConfig;
+
+    const resolvedBandName = bandName || bandDna?.bandName || "Banda";
+    const resolvedGenre = genre || bandDna?.genero || bandConfig?.genero || "Música en directo";
+    const resolvedSimilar = (Array.isArray(similarArtists) && similarArtists.length > 0)
+      ? similarArtists
+      : (bandConfig?.bandasSimilares && bandConfig.bandasSimilares.length > 0
+          ? bandConfig.bandasSimilares
+          : bandDna?.artistasReferencia
+            ? bandDna.artistasReferencia.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : undefined);
+
+    const result = await findVenuesBySimilarArtists({
+      bandName: resolvedBandName,
+      genre: resolvedGenre,
+      similarArtists: resolvedSimilar,
+      targetCities,
+      limit: Number(limit) || 8
+    });
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/similar-artists-venues:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al buscar recintos por afinidad artística."
+    });
+  }
+});
+
+/**
+ * Radar de Contratación Pública, Ayuntamientos y Ciclos Culturales
+ */
+router.post(["/public-cultural-radar", "/leads/public-cultural-radar"], requireAuth, async (req, res) => {
+  try {
+    const { provinciaOrRegion, estiloMusical, bandName, limit } = req.body;
+    const result = await searchPublicCulturalOpportunities({
+      provinciaOrRegion,
+      estiloMusical,
+      bandName,
+      limit: Number(limit) || 8
+    });
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/public-cultural-radar:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al escanear oportunidades de contratación pública."
+    });
+  }
+});
 
 export default router;

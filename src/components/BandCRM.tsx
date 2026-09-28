@@ -55,6 +55,11 @@ import {
 } from 'lucide-react';
 import { BulkBandActionBar } from './bands/BulkBandActionBar';
 import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+import { AddEditBandModal } from './bandCRM/AddEditBandModal';
+
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
 
 interface BandCRMProps {
   colors: ThemeColors;
@@ -1641,464 +1646,50 @@ Bakandeya Agent Manager IA & Músicos`;
       )}
 
       {/* 4. MODAL: CREATE / EDIT BAND CONTACT */}
-      {isAddEditModalOpen && (
-        <div className="fixed inset-0 bg-[var(--scrim)]/85 flex items-center justify-center p-4 z-[9999]">
-          <div
-            className={`w-full max-w-2xl rounded-[var(--r-l)] p-6 space-y-5 relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-          >
-            <div className="flex items-center justify-between pb-3">
-              <div className="flex items-center gap-2">
-                <Music className="w-5 h-5 text-[var(--acc)]" />
-                <h3 className="text-base font-bold font-display tracking-wider">
-                  {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
-                </h3>
-              </div>
-              <button
-                onClick={() => setIsAddEditModalOpen(false)}
-                className="p-1 hover:bg-[var(--surface)]/80 rounded-[var(--r-s)] transition-colors"
-              >
-                <X className="w-5 h-5 text-[var(--ink-2)]" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveBand} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Nombre de la Banda */}
-                <div className="space-y-1 md:col-span-2">
-                  <div className="flex items-center justify-between">
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)]">Nombre de la Banda / Artista *</label>
-                    <button
-                      type="button"
-                      onClick={handleAiLookup}
-                      disabled={isAiSearching || !formName.trim()}
-                      className="flex items-center gap-1.5 text-[10px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/30 transition-all disabled:opacity-50 cursor-pointer"
-                    >
-                      {isAiSearching ? (
-                        <>
-                          <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
-                          <span>Buscando en la Web...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-3 h-3 text-[var(--acc)]" />
-                          <span>Buscar con IA (Autorellenar)</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    required
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                    placeholder="Ej: Pardiez, La Señora Tomasa, Tarraco Ska..."
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* AI Proposal Overlay / Card */}
-                {isAiSearching && (
-                  <div className="md:col-span-2 p-3 bg-[var(--surface)]/90/30 rounded-[var(--r-m)] flex items-center gap-3 text-xs text-[var(--acc)] font-sans">
-                    <Loader2 className="w-4 h-4 animate-spin text-[var(--acc)]" />
-                    <span>Buscando datos de"{formName}" con IA en la web...</span>
-                  </div>
-                )}
-
-                {aiError && (
-                  <div className="md:col-span-2 p-3 bg-[var(--alert-soft)] rounded-[var(--r-m)] flex items-center justify-between text-xs text-[var(--ink-2)] font-sans">
-                    <span>⚠️ {aiError}</span>
-                    <button type="button" onClick={() => setAiError(null)} className="p-1 hover:bg-[var(--alert-soft)] rounded">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                )}
-
-                {aiProposal && (
-                  <div className="md:col-span-2 p-3.5 bg-[var(--bg)]/40 rounded-[var(--r-m)] space-y-3 text-xs font-sans">
-                    <div className="flex items-center justify-between800 pb-2">
-                      <div className="flex items-center gap-1.5 text-[var(--acc)] font-bold">
-                        <Sparkles className="w-4 h-4" />
-                        <span>Propuesta de la IA (Revisa antes de confirmar):</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={handleApplyAllAiData}
-                          className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-s)] text-[10px] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex items-center gap-1 shadow"
-                        >
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Aplicar Todo</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setAiProposal(null)}
-                          className="p-1 hover:bg-[var(--surface)] text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors cursor-pointer"
-                          title="Descartar propuesta"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[var(--ink-2)]">
-                      {aiProposal.estilo_musical && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
-                          <div className="truncate pr-2">
-                            <span className="text-[var(--ink-2)] font-bold">Estilo:</span> {aiProposal.estilo_musical}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormStyle(aiProposal.estilo_musical)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {aiProposal.localizacion && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
-                          <div className="truncate pr-2">
-                            <span className="text-[var(--ink-2)] font-bold">Origen:</span> {aiProposal.localizacion}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormLocation(aiProposal.localizacion)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {aiProposal.contacto_nombre && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
-                          <div className="truncate pr-2">
-                            <span className="text-[var(--ink-2)] font-bold">Contacto:</span> {aiProposal.contacto_nombre}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormContactName(aiProposal.contacto_nombre)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {aiProposal.email && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
-                          <div className="truncate pr-2">
-                            <span className="text-[var(--ink-2)] font-bold">Email:</span> {aiProposal.email}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormEmail(aiProposal.email)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {aiProposal.telefono && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
-                          <div className="truncate pr-2">
-                            <span className="text-[var(--ink-2)] font-bold">Tel:</span> {aiProposal.telefono}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormPhone(aiProposal.telefono)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {aiProposal.instagram && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800">
-                          <div className="truncate pr-2">
-                            <span className="text-[var(--ink-2)] font-bold">Instagram:</span> {aiProposal.instagram}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormInstagram(aiProposal.instagram)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {(aiProposal.spotify_url || aiProposal.youtube_url) && (
-                        <div className="flex items-center justify-between bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800 sm:col-span-2">
-                          <div className="truncate max-w-[80%]">
-                            <span className="text-[var(--ink-2)] font-bold">Música / Media:</span>{' '}
-                            {aiProposal.spotify_url || aiProposal.youtube_url}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)}
-                            className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                          >
-                            Usar
-                          </button>
-                        </div>
-                      )}
-
-                      {aiProposal.biografia && (
-                        <div className="bg-[var(--bg)]/70 p-2 rounded-[var(--r-s)]800 sm:col-span-2 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[var(--ink-2)] font-bold">Resumen / Bio:</span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setFormNotes((prev) => (prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia))
-                              }
-                              className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
-                            >
-                              Añadir a Notas
-                            </button>
-                          </div>
-                          <p className="text-[10px] text-[var(--ink-2)] italic leading-relaxed">{aiProposal.biografia}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Icono o Imagen / Logo de la Banda */}
-                <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--surface)]/60 rounded-[var(--r-m)]">
-                  <label className="block text-[10px] font-sans text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
-
-                  <div className="flex flex-wrap items-center gap-3">
-                    {/* Preview current avatar */}
-                    <div className="w-10 h-10 rounded-full bg-[var(--surface)]/80 flex items-center justify-center overflow-hidden shrink-0">
-                      {formImageUrl ? (
-                        <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="text-xl">{formIcon || '🎸'}</span>
-                      )}
-                    </div>
-
-                    {/* Emoji preset selection */}
-                    <div className="flex-1 space-y-1">
-                      <span className="text-[10px] text-[var(--ink-2)] block font-sans">Seleccionar icono emoji:</span>
-                      <div className="flex flex-wrap gap-1">
-                        {['🎸', '🎹', '🥁', '🎤', '🎷', '🎺', '🎧', '🪕', '🎻', '⚡', '🔥', '🌟', '🎶'].map((emoji) => (
-                          <button
-                            key={emoji}
-                            type="button"
-                            onClick={() => {
-                              setFormIcon(emoji);
-                            }}
-                            className={`w-7 h-7 rounded-[var(--r-s)] text-sm flex items-center justify-center transition-all cursor-pointer ${
-                              formIcon === emoji && !formImageUrl
-                                ? 'bg-[var(--acc)]/20 text-[var(--ink)] scale-110'
-                                : 'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]'
-                            }`}
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Upload file button */}
-                    <div className="shrink-0 space-y-1">
-                      <span className="text-[10px] text-[var(--ink-2)] block font-sans">O subir logo (Supabase):</span>
-                      <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 rounded-[var(--r-m)] text-[10px] font-sans text-[var(--ink)] flex items-center gap-1.5 transition-all active:scale-95">
-                        {isUploadingLogo ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
-                        ) : (
-                          <Upload className="w-3.5 h-3.5 text-[var(--acc)]" />
-                        )}
-                        <span>{isUploadingLogo ? 'Subiendo...' : 'Subir Imagen'}</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleLogoUpload(file);
-                          }}
-                        />
-                      </label>
-                      {formImageUrl && (
-                        <button
-                          type="button"
-                          onClick={() => setFormImageUrl('')}
-                          className="text-[9px] text-[var(--alert)] hover:underline block text-center"
-                        >
-                          Quitar imagen
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Estilo Musical */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Estilo Musical *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formStyle}
-                    onChange={(e) => setFormStyle(e.target.value)}
-                    placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje..."
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Localización / Ciudad */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Localización / Ciudad Principal *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formLocation}
-                    onChange={(e) => setFormLocation(e.target.value)}
-                    placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla..."
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Estado de la Relación */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Estado de la Relación</label>
-                  <select
-                    value={formStatus}
-                    onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50 cursor-pointer"
-                  >
-                    <option value="sin_contactar">📡 Sin Contactar</option>
-                    <option value="intercambio_propuesto">🔄 Intercambio Propuesto (Date Swap)</option>
-                    <option value="concierto_agendado">⚡ Concierto Agendado</option>
-                    <option value="colegas_aliados">🤝 Colegas / Aliados de Gira</option>
-                    <option value="pendiente_respuesta">⏳ Pendiente Respuesta</option>
-                    <option value="no_disponible">❌ No Disponible</option>
-                  </select>
-                </div>
-
-                {/* Persona de Contacto */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Persona de Contacto / Rol</label>
-                  <input
-                    type="text"
-                    value={formContactName}
-                    onChange={(e) => setFormContactName(e.target.value)}
-                    placeholder="Ej: Carlos (Mánager / Teclista)"
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Último Contacto */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Fecha de Último Contacto</label>
-                  <input
-                    type="date"
-                    value={formLastContact}
-                    onChange={(e) => setFormLastContact(e.target.value)}
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Email */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Email de Contacto / Booking</label>
-                  <input
-                    type="email"
-                    value={formEmail}
-                    onChange={(e) => setFormEmail(e.target.value)}
-                    placeholder="ejemplo@banda.com"
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Teléfono */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Teléfono / WhatsApp</label>
-                  <input
-                    type="text"
-                    value={formPhone}
-                    onChange={(e) => setFormPhone(e.target.value)}
-                    placeholder="+34 600 000 000"
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Instagram */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Instagram</label>
-                  <input
-                    type="text"
-                    value={formInstagram}
-                    onChange={(e) => setFormInstagram(e.target.value)}
-                    placeholder="@nombrebanda"
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-
-                {/* Aforo habitual */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
-                  <input
-                    type="number"
-                    value={formAforo}
-                    onChange={(e) => setFormAforo(Number(e.target.value))}
-                    placeholder="300"
-                    className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                  />
-                </div>
-              </div>
-
-              {/* Enlace Spotify / YouTube */}
-              <div className="space-y-1">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">Enlace Spotify / YouTube / Dossier</label>
-                <input
-                  type="url"
-                  value={formSpotifyYoutube}
-                  onChange={(e) => setFormSpotifyYoutube(e.target.value)}
-                  placeholder="https://open.spotify.com/artist/..."
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-sans focus:outline-none focus:-[var(--acc)]/50"
-                />
-              </div>
-
-              {/* Notas de Colaboración */}
-              <div className="space-y-1">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
-                  Notas de Colaboración / Salas propuestas / Intercambios
-                </label>
-                <textarea
-                  rows={3}
-                  value={formNotes}
-                  onChange={(e) => setFormNotes(e.target.value)}
-                  placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)..."
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[var(--acc)]/50"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setIsAddEditModalOpen(false)}
-                  className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-sans text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-m)] transition-all cursor-pointer"
-                >
-                  {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <AddEditBandModal
+        isOpen={isAddEditModalOpen}
+        onClose={() => setIsAddEditModalOpen(false)}
+        isStitchLight={isStitchLight}
+        editingBand={editingBand}
+        handleSaveBand={handleSaveBand}
+        formName={formName}
+        setFormName={setFormName}
+        formStyle={formStyle}
+        setFormStyle={setFormStyle}
+        formLocation={formLocation}
+        setFormLocation={setFormLocation}
+        formStatus={formStatus}
+        setFormStatus={setFormStatus}
+        formLastContact={formLastContact}
+        setFormLastContact={setFormLastContact}
+        formContactName={formContactName}
+        setFormContactName={setFormContactName}
+        formEmail={formEmail}
+        setFormEmail={setFormEmail}
+        formPhone={formPhone}
+        setFormPhone={setFormPhone}
+        formInstagram={formInstagram}
+        setFormInstagram={setFormInstagram}
+        formSpotifyYoutube={formSpotifyYoutube}
+        setFormSpotifyYoutube={setFormSpotifyYoutube}
+        formAforo={formAforo}
+        setFormAforo={setFormAforo}
+        formNotes={formNotes}
+        setFormNotes={setFormNotes}
+        formIcon={formIcon}
+        setFormIcon={setFormIcon}
+        formImageUrl={formImageUrl}
+        setFormImageUrl={setFormImageUrl}
+        handleAiLookup={handleAiLookup}
+        isAiSearching={isAiSearching}
+        aiProposal={aiProposal}
+        setAiProposal={setAiProposal}
+        aiError={aiError}
+        setAiError={setAiError}
+        handleApplyAllAiData={handleApplyAllAiData}
+        handleLogoUpload={handleLogoUpload}
+        isUploadingLogo={isUploadingLogo}
+      />
 
       {/* 5. MODAL: DATE SWAP PITCH GENERATOR */}
       <BandPitchModal

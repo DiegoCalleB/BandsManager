@@ -206,10 +206,16 @@ export function getSongMemberNote(song?: any, memberKey?: string, memberName?: s
 
   // Check in notasPorMiembro array if exists
   if (Array.isArray(song.notasPorMiembro)) {
-    const found = song.notasPorMiembro.find(
-      (n: any) =>
-        (memberKey && n.userId === memberKey) || (memberName && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase())
-    );
+    const cleanMemberName = (memberName || '').toLowerCase().trim();
+    const found = song.notasPorMiembro.find((n: any) => {
+      if (memberKey && (n.userId === memberKey || n.id === memberKey)) return true;
+      if (!n.memberName) return false;
+      const target = String(n.memberName).toLowerCase().trim();
+      return (
+        target === cleanMemberName ||
+        (cleanMemberName.length > 2 && target.length > 2 && (cleanMemberName.includes(target) || target.includes(cleanMemberName)))
+      );
+    });
     if (found && found.nota) return found.nota;
   }
 

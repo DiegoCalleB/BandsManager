@@ -69,7 +69,7 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
     }
     if (bandId) {
       const cleanBandId = bandId.replace(/^(band|reg)-/, '').toLowerCase();
-      const bandConfig = state.epkConfigsByBand?.[cleanBandId] || (cleanBandId === 'bakandeya' ? state.epkConfig : null);
+      const bandConfig = state.epkConfigsByBand?.[cleanBandId] || state.epkConfig;
       if (bandConfig?.contactoBooking?.email && isValidEmail(bandConfig.contactoBooking.email)) {
         return bandConfig.contactoBooking.email.trim().toLowerCase();
       }
@@ -414,7 +414,7 @@ export function getOriginHost(req: express.Request): string {
     }
   }
   if (!host || host === "null" || !host.startsWith("http")) {
-    host = process.env.APP_URL || "https://ais-dev-qpqrrrbweq7pv4iyd5qrcd-283957839721.europe-west1.run.app";
+    host = process.env.APP_URL || "https://bandmanager.io";
   }
   return host;
 }

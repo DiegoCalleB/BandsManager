@@ -384,11 +384,16 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
             style={{ width: `${percentage}%` }}
           />
         </div>
+        <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400">
+          <span>0%</span>
+          <span className="text-amber-400 font-semibold">{percentage}% completado</span>
+          <span>100%</span>
+        </div>
       </div>
 
-      {/* Compact Trigger Button when Collapsed */}
+      {/* Mini Quick Summary (When Collapsed) */}
       {!isExpanded && (
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-1">
+        <div className="pt-3 flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-1.5 flex-wrap">
             {pillars.map((p) => (
               <span
@@ -406,6 +411,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               </span>
             ))}
           </div>
+
           <button
             onClick={() => setIsExpanded(true)}
             className="text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors"
@@ -416,11 +422,11 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         </div>
       )}
 
-      {/* Full Grid and Detailed Accordion when Expanded */}
+      {/* Expanded Checklist */}
       {isExpanded && (
-        <div className="mt-4 space-y-4 animate-in fade-in duration-200">
-          {/* Pill Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2">
+        <div className="pt-4 space-y-3 animate-in fade-in-50 duration-200">
+          {/* Quick Pillars Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {pillars.map((pillar) => (
               <button
                 key={pillar.id}
@@ -459,7 +465,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               </h4>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-sans">
+            <div className="space-y-1.5">
               {pillars.map((pillar) => (
                 <div
                   key={`exp-${pillar.id}`}
@@ -565,7 +571,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               </div>
             </div>
 
-            <div className="flex justify-end pt-2">
+            <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setShowAuditModal(false)}
                 className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--on-acc)] font-bold font-sans text-xs hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"

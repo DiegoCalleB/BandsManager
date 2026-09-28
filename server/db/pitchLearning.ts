@@ -3,6 +3,7 @@ import { getBandDnaProfile } from "../utils/bandDna.js";
 import { generateUnifiedAI } from "../ai.js";
 import { dbUpdateBandDnaExpresion } from "./bands.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
+import { autoIndexPitchOnSuccess } from "../services/pitchVectorStore.js";
 
 export interface PitchHumanEditRecord {
   id: string;
@@ -71,6 +72,21 @@ export async function dbRecordPitchHumanEdit(record: {
       // Si la tabla dedicada aún no se ha creado con el script SQL, no falla silencioso ni rompe la UI
       console.warn("Notice: pitch_learning_examples table insert skipped/error:", error.message);
       return false;
+    }
+
+    // Disparar en segundo plano la indexación vectorial (pgvector) para Dynamic Few-Shot RAG
+    if (aprobado && aprobado.length > 30) {
+      autoIndexPitchOnSuccess({
+        bandId: cleanId,
+        leadId: record.lead_id,
+        nombreSala: record.nombre_sala,
+        tipoEntidad: record.tipo_entidad || "sala",
+        ciudad: record.ciudad,
+        pitchText: aprobado,
+        resultado: record.resultado_respuesta === "positiva" ? "positiva" : "aprobado"
+      }).catch(err => {
+        console.warn("[pitchLearning] Background autoIndexPitchOnSuccess notice:", err);
+      });
     }
 
     // Disparar en segundo plano el refinamiento automático de ADN si hay suficientes ediciones

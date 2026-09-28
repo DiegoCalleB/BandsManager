@@ -19,6 +19,84 @@ export interface LeadDescubierto {
   instagram: string;
   website: string;
   notas: string;
+  corredor_gira?: string;
+  tier_aforo?: "intimo" | "medio" | "grande" | "macro";
+  afinidad_musical?: number;
+}
+
+/**
+ * Determina el corredor de gira / ruta geográfica según la ciudad o región.
+ * Permite a las bandas agrupar fechas contiguas para armar fines de semana de gira eficientes.
+ */
+export function determinarCorredorGira(ciudad: string, region: string): string {
+  const loc = `${ciudad || ""} ${region || ""}`.toLowerCase();
+
+  if (/\b(sevilla|cádiz|cadiz|málaga|malaga|granada|córdoba|cordoba|huelva|jaén|jaen|almería|almeria|jerez|marbella|algeciras|tarifa)\b/i.test(loc)) {
+    return "Ruta Sur (Andalucía)";
+  }
+  if (/\b(badajoz|cáceres|caceres|mérida|merida|plasencia|extremadura)\b/i.test(loc)) {
+    return "Ruta Suroeste (Extremadura)";
+  }
+  if (/\b(barcelona|valencia|alicante|castellón|castellon|murcia|girona|gerona|tarragona|lleida|elche|cartagena|palma|mallorca|menorca|ibiza|baleares)\b/i.test(loc)) {
+    return "Corredor Mediterráneo";
+  }
+  if (/\b(madrid|toledo|guadalajara|cuenca|ciudad real|albacete|segovia|ávila|avila|salamanca)\b/i.test(loc)) {
+    return "Eje Central (Madrid / Castillas)";
+  }
+  if (/\b(bilbao|bizkaia|vizcaya|donostia|san sebastián|san sebastian|gipuzkoa|guipúzcoa|vitoria|gasteiz|álava|alava|pamplona|navarra|santander|cantabria|oviedo|gijón|gijon|asturias|coruña|a coruña|vigo|pontevedra|santiago|ourense|lugo|galicia|logroño|rioja)\b/i.test(loc)) {
+    return "Ruta Norte / Cantábrico";
+  }
+  if (/\b(zaragoza|huesca|teruel|aragón|aragon|soria|burgos|valladolid|palencia|león|leon|zamora)\b/i.test(loc)) {
+    return "Eje Valle del Ebro / Interior";
+  }
+  if (/\b(tenerife|las palmas|gran canaria|lanzarote|fuerteventura|canarias)\b/i.test(loc)) {
+    return "Islas Canarias";
+  }
+  if (/\b(lisboa|porto|porto|coimbra|faro|portugal|francia|italia|alemania|londres|uk|reino unido)\b/i.test(loc)) {
+    return "Internacional / Europa";
+  }
+  return "Nacional / Multiruta";
+}
+
+/**
+ * Clasifica el aforo en niveles estándar de la industria para calibrar el caché y producción.
+ */
+export function clasificarAforoRecinto(aforo: number, tipo: string): "intimo" | "medio" | "grande" | "macro" {
+  const normTipo = (tipo || "").toLowerCase();
+  if (normTipo === "festival" || aforo > 1500) return "macro";
+  if (aforo > 500) return "grande";
+  if (aforo >= 150) return "medio";
+  return "intimo";
+}
+
+/**
+ * Calcula una puntuación de afinidad musical (0 a 100) entre la programación del recinto y el estilo de la banda.
+ */
+export function calcularAfinidadMusical(generoRecinto: string, generoBanda: string): number {
+  if (!generoRecinto || !generoBanda) return 75;
+
+  const r = generoRecinto.toLowerCase();
+  const b = generoBanda.toLowerCase();
+
+  if (r.includes(b) || b.includes(r)) return 95;
+
+  const gruposGeneros: string[][] = [
+    ["rock", "indie", "alternativo", "post-punk", "grunge", "punk", "garage"],
+    ["mestizaje", "ska", "reggae", "balkan", "fusión", "fusion", "cumbia", "world music", "pachanga"],
+    ["pop", "indie-pop", "canción de autor", "acústico", "folk", "americana"],
+    ["metal", "hardcore", "heavy", "thrash", "stoner", "metalcore"],
+    ["electrónica", "techno", "house", "dnb", "drum and bass", "electro", "club"],
+    ["jazz", "blues", "soul", "funk", "groove", "r&b", "afrobeat"],
+    ["flamenco", "rumba", "flamenco-fusión", "raíz", "copla"]
+  ];
+
+  for (const grupo of gruposGeneros) {
+    const coincideRecinto = grupo.some(g => r.includes(g));
+    const coincideBanda = grupo.some(g => b.includes(g));
+    if (coincideRecinto && coincideBanda) return 90;
+  }
+
+  return 70;
 }
 
 /** Valores de relleno que los modelos sueltan cuando no saben el dato. Nunca se guardan. */

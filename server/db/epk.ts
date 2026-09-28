@@ -1,74 +1,6 @@
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
-
-const BAKANDEYA_DEFAULT_EPK = {
-  biografia:
-    'Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
-  logo_url: '/logo_bakandeya_bueno_sin_fondo.png',
-  band_photos: ['/logo_bakandeya.jpg'],
-  rider_tecnico:
-    '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para sección de metales (2 x SM57 / clip condenser)\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
-  enlaces_redes: {
-    spotify: 'https://open.spotify.com/artist/bakandeya',
-    youtube: 'https://youtube.com/@bakandeya_oficial',
-    instagram: 'https://instagram.com/bakandeya_oficial',
-    tiktok: 'https://tiktok.com/@bakandeya_oficial',
-    appleMusic: 'https://music.apple.com/artist/bakandeya',
-    bandcamp: 'https://bakandeya.bandcamp.com',
-    website: 'https://bandmanager.io',
-    whatsapp: '+34612345678',
-    facebook: 'https://facebook.com/bakandeyaoficial',
-    twitter: 'https://x.com/bakandeya_band',
-  },
-  contacto_booking: {
-    nombre: 'Booking & Management',
-    email: '',
-    telefono: '',
-  },
-  temas_destacados_ids: ['s-1', 's-2', 's-3'],
-  incentivo_fans: {
-    mensajeAgradecimiento:
-      '¡Muchas gracias por unirte a nuestra comunidad! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.',
-    enlaceDescarga: 'https://bandmanager.io/descargas/tema-inedito-directo.mp3',
-    codigoDescuento: 'FAN-10',
-  },
-  donacion_revolut: {
-    habilitado: true,
-    revolutTag: '',
-    revolutUrl: '',
-    titulo: 'Colabora con una aportación económica',
-    descripcion:
-      'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
-  },
-  ciudades_config: [
-    'Madrid',
-    'Sevilla',
-    'Barcelona',
-    'Málaga',
-    'Valencia',
-    'Granada',
-    'Cádiz',
-  ],
-  firma_email: {
-    nombreRemitente: 'Booking & Management',
-    cargo: 'Booking & Management',
-    telefono: '',
-    email: '',
-    textoPie: 'Música en directo y conciertos',
-    incluirIconosRedes: true,
-    adjuntarDossierPorDefecto: true,
-    redesSociales: {
-      spotify: 'https://open.spotify.com/artist/bakandeya',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      appleMusic: 'https://music.apple.com/artist/bakandeya',
-      bandcamp: 'https://bakandeya.bandcamp.com',
-      website: 'https://bandmanager.io',
-      whatsapp: '+34612345678',
-    },
-  },
-};
+import { invalidateBandStateCache } from './sync.js';
 
 export async function dbGetEpkConfig(bandId: string) {
   const sb = getSupabase();
@@ -86,48 +18,17 @@ export async function dbGetEpkConfig(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (epk_configs): ${error.message}`);
 
-  const isBakandeya = rawClean === 'bakandeya';
-
   if (!data) {
-    if (isBakandeya) {
-      return {
-        band_id: 'band-bakandeya',
-        biografia: BAKANDEYA_DEFAULT_EPK.biografia,
-        logoUrl: BAKANDEYA_DEFAULT_EPK.logo_url,
-        dossierPdfUrl: '',
-        dossierPdfName: '',
-        dossierDocumentUrl: '',
-        dossierDocumentName: '',
-        dossierTextoExtra: '',
-        bandPhotos: BAKANDEYA_DEFAULT_EPK.band_photos,
-        riderTecnico: BAKANDEYA_DEFAULT_EPK.rider_tecnico,
-        riderPdfUrl: '',
-        riderPdfName: '',
-        enlacesRedes: BAKANDEYA_DEFAULT_EPK.enlaces_redes,
-        contactoBooking: BAKANDEYA_DEFAULT_EPK.contacto_booking,
-        temasDestacadosIds: BAKANDEYA_DEFAULT_EPK.temas_destacados_ids,
-        incentivoFans: BAKANDEYA_DEFAULT_EPK.incentivo_fans,
-        ciudadesConfig: BAKANDEYA_DEFAULT_EPK.ciudades_config,
-        firmaEmail: BAKANDEYA_DEFAULT_EPK.firma_email,
-      };
-    }
     return null;
   }
 
   const rawRedes = data.enlaces_redes || {};
-  const mergedRedes = isBakandeya
-    ? { ...BAKANDEYA_DEFAULT_EPK.enlaces_redes, ...rawRedes }
-    : rawRedes;
+  const mergedRedes = rawRedes;
 
   const rawFirma = data.firma_email || {};
-  const mergedFirma = isBakandeya
-    ? { ...BAKANDEYA_DEFAULT_EPK.firma_email, ...rawFirma }
-    : rawFirma;
+  const mergedFirma = rawFirma;
 
-  let resolvedLogo = data.logo_url;
-  if (isBakandeya && (!resolvedLogo || !resolvedLogo.trim())) {
-    resolvedLogo = BAKANDEYA_DEFAULT_EPK.logo_url;
-  }
+  const resolvedLogo = data.logo_url || '';
 
   // Si donacion_revolut viene en la tabla (o en enlaces_redes/incentivo), extraerlo
   let resolvedDonacionRevolut = data.donacion_revolut || null;
@@ -146,8 +47,6 @@ export async function dbGetEpkConfig(bandId: string) {
       titulo: 'Colabora con una aportación económica',
       descripcion: '',
     };
-  } else if (!resolvedDonacionRevolut && isBakandeya) {
-    resolvedDonacionRevolut = BAKANDEYA_DEFAULT_EPK.donacion_revolut;
   }
 
   return {
@@ -158,31 +57,21 @@ export async function dbGetEpkConfig(bandId: string) {
     dossierDocumentUrl: data.dossier_document_url,
     dossierDocumentName: data.dossier_document_name,
     dossierTextoExtra: data.dossier_texto_extra,
-    bandPhotos:
-      data.band_photos ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.band_photos : []),
+    bandPhotos: (Array.isArray(data.band_photos) ? data.band_photos : [])
+      .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
+      .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
     miembros: data.miembros || [],
     videos: data.videos || [],
     datosContratacion: data.datos_contratacion || {},
-    riderTecnico:
-      data.rider_tecnico ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.rider_tecnico : ''),
+    riderTecnico: data.rider_tecnico || '',
     riderPdfUrl: data.rider_pdf_url,
     riderPdfName: data.rider_pdf_name,
     enlacesRedes: mergedRedes,
-    contactoBooking:
-      data.contacto_booking ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.contacto_booking : {}),
-    temasDestacadosIds:
-      data.temas_destacados_ids ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.temas_destacados_ids : []),
-    incentivoFans:
-      data.incentivo_fans ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.incentivo_fans : {}),
+    contactoBooking: data.contacto_booking || {},
+    temasDestacadosIds: data.temas_destacados_ids || [],
+    incentivoFans: data.incentivo_fans || {},
     donacionRevolut: resolvedDonacionRevolut,
-    ciudadesConfig:
-      data.ciudades_config ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
+    ciudadesConfig: data.ciudades_config || [],
     firmaEmail: mergedFirma,
     traducciones: data.traducciones || {},
     audioPreview: data.audio_preview || {},
@@ -288,50 +177,39 @@ export async function dbGetEpkLogosMap(
   return result;
 }
 
-export async function dbUpsertEpkConfig(bandId: string, config: any) {
+export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(bandId);
-  const rawClean = targetBandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const isBakandeya = rawClean === 'bakandeya';
 
-  await ensureRegisteredBandExists(targetBandId);
+  const canonicalBandId =
+    (await ensureRegisteredBandExists(targetBandId)) || targetBandId;
+  const bandIdToUse = canonicalBandId;
 
   // Fetch current config to merge partial updates safely without erasing existing fields
   let existing: any = null;
   try {
-    existing = await dbGetEpkConfig(targetBandId);
+    existing = await dbGetEpkConfig(bandIdToUse);
   } catch (err) {
     // Non-blocking
   }
 
-  const existingRedes =
-    existing?.enlacesRedes ||
-    (isBakandeya ? BAKANDEYA_DEFAULT_EPK.enlaces_redes : {});
+  const existingRedes = existing?.enlacesRedes || {};
   const providedRedes = config.enlacesRedes || config.enlaces_redes || {};
   const mergedRedes = { ...existingRedes, ...providedRedes };
 
-  const existingContacto =
-    existing?.contactoBooking ||
-    (isBakandeya ? BAKANDEYA_DEFAULT_EPK.contacto_booking : {});
+  const existingContacto = existing?.contactoBooking || {};
   const providedContacto =
     config.contactoBooking || config.contacto_booking || {};
   const mergedContacto = { ...existingContacto, ...providedContacto };
 
-  const existingFirma =
-    existing?.firmaEmail ||
-    (isBakandeya ? BAKANDEYA_DEFAULT_EPK.firma_email : {});
+  const existingFirma = existing?.firmaEmail || {};
   const providedFirma = config.firmaEmail || config.firma_email || {};
   const mergedFirma = { ...existingFirma, ...providedFirma };
 
-  const existingIncentivo =
-    existing?.incentivoFans ||
-    (isBakandeya ? BAKANDEYA_DEFAULT_EPK.incentivo_fans : {});
+  const existingIncentivo = existing?.incentivoFans || {};
   const providedIncentivo = config.incentivoFans || config.incentivo_fans || {};
   const mergedIncentivo = { ...existingIncentivo, ...providedIncentivo };
 
-  const existingRevolut =
-    existing?.donacionRevolut ||
-    (isBakandeya ? BAKANDEYA_DEFAULT_EPK.donacion_revolut : {});
+  const existingRevolut = existing?.donacionRevolut || {};
   const providedRevolut =
     config.donacionRevolut || config.donacion_revolut || {};
   const mergedRevolut = { ...existingRevolut, ...providedRevolut };
@@ -383,16 +261,14 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
       ? config.logoUrl
       : config.logo_url !== undefined
         ? config.logo_url
-        : existing?.logoUrl) ||
-    (isBakandeya ? BAKANDEYA_DEFAULT_EPK.logo_url : '');
+        : existing?.logoUrl) || '';
 
   const payload = {
-    band_id: targetBandId,
+    band_id: bandIdToUse,
     biografia:
       (config.biografia !== undefined
         ? config.biografia
-        : existing?.biografia) ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.biografia : ''),
+        : existing?.biografia) || '',
     logo_url: newLogoUrl,
     dossier_pdf_url:
       (config.dossierPdfUrl !== undefined
@@ -424,13 +300,15 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
         : config.dossier_texto_extra !== undefined
           ? config.dossier_texto_extra
           : existing?.dossierTextoExtra) || '',
-    band_photos:
+    band_photos: (
       (config.bandPhotos !== undefined
         ? config.bandPhotos
         : config.band_photos !== undefined
           ? config.band_photos
-          : existing?.bandPhotos) ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.band_photos : []),
+          : existing?.bandPhotos) || []
+    )
+      .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
+      .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
     miembros: mergedMiembros,
     videos:
       (config.videos !== undefined ? config.videos : existing?.videos) || [],
@@ -445,8 +323,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
         ? config.riderTecnico
         : config.rider_tecnico !== undefined
           ? config.rider_tecnico
-          : existing?.riderTecnico) ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.rider_tecnico : ''),
+          : existing?.riderTecnico) || '',
     rider_pdf_url:
       (config.riderPdfUrl !== undefined
         ? config.riderPdfUrl
@@ -466,8 +343,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
         ? config.temasDestacadosIds
         : config.temas_destacados_ids !== undefined
           ? config.temas_destacados_ids
-          : existing?.temasDestacadosIds) ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.temas_destacados_ids : []),
+          : existing?.temasDestacadosIds) || [],
     incentivo_fans: mergedIncentivo,
     donacion_revolut: mergedRevolut,
     ciudades_config:
@@ -475,8 +351,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
         ? config.ciudadesConfig
         : config.ciudades_config !== undefined
           ? config.ciudades_config
-          : existing?.ciudadesConfig) ||
-      (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
+          : existing?.ciudadesConfig) || [],
     firma_email: mergedFirma,
     traducciones: mergedTraducciones,
     audio_preview:
@@ -526,7 +401,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     error.message.includes("' column of 'epk_configs'")
   ) {
     const match = error.message.match(
-      /Could not find the '([^']+)'column of 'epk_configs'/
+      /Could not find the '([^']+)' column of 'epk_configs'/
     );
     if (match && match[1] && currentPayload[match[1]] !== undefined) {
       const missingCol = match[1];
@@ -549,11 +424,26 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   if (error)
     throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);
 
-  // Also sync logo & band name into registered_bands table
-  const regUpdates: Record<string, any> = {};
-  if (newLogoUrl && newLogoUrl.trim()) {
-    regUpdates.logo_url = newLogoUrl.trim();
+  // En Supabase PostgreSQL, si el upsert por ON CONFLICT no sobreescribió los campos actualizados,
+  // garantizamos la persistencia atómica reemplazando el registro para asegurar que el logo y datos queden guardados.
+  if (data && newLogoUrl && data.logo_url !== newLogoUrl) {
+    try {
+      await sb.from('epk_configs').delete().eq('band_id', bandIdToUse);
+      const insertRes = await sb
+        .from('epk_configs')
+        .insert(currentPayload)
+        .select()
+        .single();
+      if (insertRes.data) {
+        data = insertRes.data;
+      }
+    } catch (_) {
+      // Non-blocking
+    }
   }
+
+  // Also sync band name into registered_bands table (logo_url lives in epk_configs)
+  const regUpdates: Record<string, any> = {};
   const providedName = (
     config.bandName ||
     config.nombre_banda ||
@@ -573,10 +463,19 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
       await sb
         .from('registered_bands')
         .update(regUpdates)
-        .eq('band_id', targetBandId);
+        .eq('band_id', bandIdToUse);
     } catch (regErr) {
       // Non-blocking
     }
+  }
+
+  try {
+    invalidateBandStateCache(bandIdToUse);
+    if (targetBandId && targetBandId !== bandIdToUse) {
+      invalidateBandStateCache(targetBandId);
+    }
+  } catch (_) {
+    // Non-blocking
   }
 
   return data;

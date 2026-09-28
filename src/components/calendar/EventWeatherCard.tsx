@@ -5,6 +5,8 @@ import { fetchEventWeather, EventWeatherData, WeatherAlert } from '../../service
 import { AnimatedWeatherIcon } from './AnimatedWeatherIcon';
 
 interface EventWeatherCardProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
   city: string;
   dateStr: string; // YYYY-MM-DD
   timeStr?: string; // e.g."21:00"

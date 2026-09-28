@@ -405,7 +405,10 @@ router.get("/calendar-feed-url", requireAuth, (req, res) => {
 // Export Band Calendar as standard iCalendar (.ics) feed
 router.get("/calendar.ics", async (req, res) => {
   try {
-    const bandIdQuery = (req.query.band_id as string) || (req.query.band as string) || "band-bakandeya";
+    const bandIdQuery = (req.query.band_id as string) || (req.query.band as string) || "";
+    if (!bandIdQuery) {
+      return res.status(400).type("text/plain").send("Falta el identificador de banda en la petición.");
+    }
     const userQuery = (req.query.user_id as string) || "";
 
     const firmaEsperada = firmaDeFeed(bandIdQuery);
@@ -444,14 +447,14 @@ router.get("/calendar.ics", async (req, res) => {
     if (!concerts || concerts.length === 0) {
       const state = loadState();
       concerts = (state.concerts || []).filter((c: any) => {
-        const cBid = c.band_id || (bandIds.some(b => b === "band-bakandeya" || b === "bakandeya") ? "band-bakandeya" : "");
+        const cBid = c.band_id || "";
         return bandIds.some(b => b === cBid || b.replace(/^band-/, "") === (cBid || "").replace(/^band-/, ""));
       });
     }
     if (!rehearsals || rehearsals.length === 0) {
       const state = loadState();
       rehearsals = (state.rehearsals || []).filter((r: any) => {
-        const rBid = r.band_id || (bandIds.some(b => b === "band-bakandeya" || b === "bakandeya") ? "band-bakandeya" : "");
+        const rBid = r.band_id || "";
         return bandIds.some(b => b === rBid || b.replace(/^band-/, "") === (rBid || "").replace(/^band-/, ""));
       });
     }

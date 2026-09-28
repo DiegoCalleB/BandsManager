@@ -18,6 +18,8 @@ interface ExampleThread {
 }
 
 interface ExampleThreadsSectionProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
   category: TemplateCategory;
   textSub: string;
 }

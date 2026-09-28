@@ -88,18 +88,6 @@ El `bandId` **siempre** se resuelve con `getTargetBandId(req)` — ver `security
 - Tests adyacentes al código, en `__tests__/` (ej.: `server/utils/__tests__/bandAccess.test.ts`).
 - `npm test`, o `npx vitest run ruta/al/test.test.ts` para uno concreto.
 
-```typescript
-import { describe, it, expect } from 'vitest';
-import { getTargetBandId } from '../bandAccess.js';
-
-describe('bandAccess helper', () => {
-  it('debe resolver el band_id de la sesión del usuario autenticado', () => {
-    const req = { user: { band_id: 'banda_123' }, headers: {} } as any;
-    expect(getTargetBandId(req)).toBe('banda_123');
-  });
-});
-```
-
 **Regresión visual:** los cambios de UI se protegen con capturas de referencia de Playwright (`e2e/visual.spec.ts`). Los tests unitarios no comprueban `className`, así que no detectan una rotura de layout — esa red es la de imagen.
 
 ---

@@ -68,6 +68,33 @@ interface EscenarioViewProps {
   embedded?: boolean;
 }
 
+const StageMetronomeDot: React.FC<{ isPlaying: boolean; bpm: number }> = React.memo(({ isPlaying, bpm }) => {
+  const [tick, setTick] = useState(false);
+
+  useEffect(() => {
+    if (!isPlaying || !bpm || bpm <= 0) {
+      setTick(false);
+      return;
+    }
+    const intervalMs = (60 / bpm) * 1000;
+    const interval = setInterval(
+      () => {
+        setTick((prev) => !prev);
+      },
+      Math.max(80, intervalMs / 2)
+    );
+    return () => clearInterval(interval);
+  }, [isPlaying, bpm]);
+
+  return (
+    <span
+      className={`w-2 h-2 rounded-full transition-all duration-75 ${
+        isPlaying ? (tick ? 'bg-amber-400 scale-125 shadow-[0_0_8px_#f59e0b]' : 'bg-amber-950 scale-90') : 'bg-zinc-600'
+      }`}
+    />
+  );
+});
+
 export const EscenarioView: React.FC<EscenarioViewProps> = ({
   activeSetlist,
   setlists,
@@ -112,7 +139,6 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
   // Visual metronome state based on active track BPM
   const currentBpm = Number(currentStageSong?.bpm) || 120;
-  const [metronomeTick, setMetronomeTick] = useState(false);
   const [showPedalShortcuts, setShowPedalShortcuts] = useState(false);
 
   // Offline Stage Mode & Local Cache
@@ -139,15 +165,6 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
       setIsCached(success);
     }
   }, [activeSetlist, songs]);
-
-  useEffect(() => {
-    if (!stageIsPlaying || !currentBpm || currentBpm <= 0) return;
-    const intervalMs = (60 / currentBpm) * 1000;
-    const interval = setInterval(() => {
-      setMetronomeTick((prev) => !prev);
-    }, intervalMs / 2);
-    return () => clearInterval(interval);
-  }, [stageIsPlaying, currentBpm]);
 
   // Bluetooth Pedal / Keyboard Shortcuts (PageDown = Next, PageUp = Prev, Space = Play/Pause)
   useEffect(() => {
@@ -315,15 +332,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                     <span className="font-bold text-[var(--ink)]">{currentStageSong.tonalidad || 'Am'}</span>
                     <span>•</span>
                     <span className="flex items-center gap-1.5 font-bold text-[var(--acc)]/70">
-                      <span
-                        className={`w-2 h-2 rounded-full transition-all duration-75 ${
-                          stageIsPlaying
-                            ? metronomeTick
-                              ? 'bg-[var(--acc)]/60 scale-125'
-                              : 'bg-[var(--acc-soft)] scale-90'
-                            : 'bg-[var(--ink-2)]/60'
-                        }`}
-                      />
+                      <StageMetronomeDot isPlaying={stageIsPlaying} bpm={currentBpm} />
                       {currentStageSong.bpm || 120} BPM
                     </span>
                     {currentStageSong.afinacion && (

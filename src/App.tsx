@@ -67,19 +67,24 @@ const PublicMusiciansLanding = safeLazy(() =>
 );
 const PublicEPK = safeLazy(() => import('./components/PublicEPK').then((m) => ({ default: m.PublicEPK })));
 const Planes = safeLazy(() => import('./components/Planes'));
-import { LoginModal } from './components/LoginModal';
-import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
-import { UserManagementModal } from './components/UserManagementModal';
-import { UserProfileModal } from './components/UserProfileModal';
 import { AiSupportWidget } from './components/dashboard/AiUsageSupportWidget';
-import { FontSelectorModal } from './components/FontSelectorModal';
 import { ThemeToggle } from './components/common/ThemeToggle';
-import { MetronomeModal } from './components/MetronomeModal';
-import { TunerModal } from './components/TunerModal';
-import { BandSwitcherModal } from './components/BandSwitcherModal';
-import { PlanLimitModal } from './components/PlanLimitModal';
 import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
-import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
+
+const LoginModal = safeLazy(() => import('./components/LoginModal').then((m) => ({ default: m.LoginModal })));
+const SimplePromoLoginModal = safeLazy(() =>
+  import('./components/SimplePromoLoginModal').then((m) => ({ default: m.SimplePromoLoginModal }))
+);
+const UserManagementModal = safeLazy(() => import('./components/UserManagementModal').then((m) => ({ default: m.UserManagementModal })));
+const UserProfileModal = safeLazy(() => import('./components/UserProfileModal').then((m) => ({ default: m.UserProfileModal })));
+const FontSelectorModal = safeLazy(() => import('./components/FontSelectorModal').then((m) => ({ default: m.FontSelectorModal })));
+const MetronomeModal = safeLazy(() => import('./components/MetronomeModal').then((m) => ({ default: m.MetronomeModal })));
+const TunerModal = safeLazy(() => import('./components/TunerModal').then((m) => ({ default: m.TunerModal })));
+const BandSwitcherModal = safeLazy(() => import('./components/BandSwitcherModal').then((m) => ({ default: m.BandSwitcherModal })));
+const PlanLimitModal = safeLazy(() => import('./components/PlanLimitModal').then((m) => ({ default: m.PlanLimitModal })));
+const CampaignManagerModal = safeLazy(() =>
+  import('./components/campaign/CampaignManagerModal').then((m) => ({ default: m.CampaignManagerModal }))
+);
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan } from './utils/planPermissions';
 import {
@@ -97,11 +102,36 @@ import {
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { SkeletonDashboard } from './components/ui/Skeleton';
 import { NavItemButton } from './components/common/NavItemButton';
-import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
-import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
+import { useBrowserPushNotifications } from './hooks/useBrowserPushNotifications';
+import { NotificationCenterBell } from './components/notifications/NotificationCenterBell';
+
+const MusicianOnboardingModal = safeLazy(() =>
+  import('./components/onboarding/MusicianOnboardingModal').then((m) => ({ default: m.MusicianOnboardingModal }))
+);
+const OnboardingWizardModal = safeLazy(() =>
+  import('./components/onboarding/OnboardingWizardModal').then((m) => ({ default: m.OnboardingWizardModal }))
+);
+const NotificationSettingsModal = safeLazy(() =>
+  import('./components/notifications/NotificationSettingsModal').then((m) => ({ default: m.NotificationSettingsModal }))
+);
 import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
-import { Menu, Sparkles, LogOut, ShieldAlert, UserCheck, RefreshCw, X, ChevronDown, Lock, Zap, Target, Guitar } from 'lucide-react';
+import {
+  Menu,
+  Sparkles,
+  LogOut,
+  ShieldAlert,
+  UserCheck,
+  RefreshCw,
+  X,
+  ChevronDown,
+  Lock,
+  Zap,
+  Target,
+  Guitar,
+  Sun,
+  Moon,
+} from 'lucide-react';
 
 export default function App() {
   const { t, language, isTranslating, refreshTranslation } = useLanguage();
@@ -174,6 +204,7 @@ export default function App() {
   const [showCampaignModal, setShowCampaignModal] = useState(false);
   const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
+  const [showNotificationSettingsModal, setShowNotificationSettingsModal] = useState<boolean>(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
@@ -191,12 +222,7 @@ export default function App() {
   const currentActiveBandLogo =
     epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0
       ? epkConfig.logoUrl
-      : activeBandFromList?.logo_url ||
-        activeBandFromList?.imagen_url ||
-        (currentUser as any)?.logoUrl ||
-        (currentUser as any)?.logo_url ||
-        (currentUser as any)?.imagen_url ||
-        (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
+      : activeBandFromList?.logo_url || activeBandFromList?.imagen_url || '';
 
   const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
     if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
@@ -371,20 +397,71 @@ export default function App() {
   ];
   const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
   const [currentView, setCurrentView] = useState<MainView>(() => {
-    // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
-    // que hace un deploy nuevo, o simplemente el usuario comprobando algo) manda siempre de
-    // vuelta a "Resumen" perdiendo dónde estaba trabajando.
+    // 1. Soporte para enlaces directos con parámetros de vista en URL (?view=calendario, ?modulo=..., ?tab=...)
     try {
-      //'directo' era el módulo "Directo", eliminado y fusionado dentro de Repertorio — un
-      // usuario que lo tuviera como última pantalla aterriza en Repertorio, no en Resumen.
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const rawViewParam = (
+          urlParams.get('view') ||
+          urlParams.get('modulo') ||
+          urlParams.get('module') ||
+          urlParams.get('tab')
+        )?.toLowerCase();
+
+        const resolvedView =
+          rawViewParam === 'calendar'
+            ? 'calendario'
+            : rawViewParam === 'repertoire'
+              ? 'repertorio'
+              : rawViewParam === 'tours'
+                ? 'giras'
+                : rawViewParam;
+
+        if (resolvedView && (VALID_VIEWS as string[]).includes(resolvedView)) {
+          return resolvedView as MainView;
+        }
+      }
+    } catch {
+      // Fallback seguro
+    }
+
+    // 2. Recordar la última pantalla entre recargas (F5)
+    try {
       const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
       const migrated = saved === 'directo' ? 'repertorio' : saved;
       if (migrated && (VALID_VIEWS as string[]).includes(migrated)) return migrated as MainView;
     } catch {
-      // localStorage puede no estar disponible (modo privado estricto, etc.) — no es crítico.
+      // localStorage puede no estar disponible
     }
     return 'resumen';
   });
+
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawViewParam = (
+        urlParams.get('view') ||
+        urlParams.get('modulo') ||
+        urlParams.get('module') ||
+        urlParams.get('tab')
+      )?.toLowerCase();
+
+      const resolvedView =
+        rawViewParam === 'calendar'
+          ? 'calendario'
+          : rawViewParam === 'repertoire'
+            ? 'repertorio'
+            : rawViewParam === 'tours'
+              ? 'giras'
+              : rawViewParam;
+
+      if (resolvedView && (VALID_VIEWS as string[]).includes(resolvedView)) {
+        setCurrentView(resolvedView as MainView);
+      }
+    } catch {
+      // Ignorado a propósito
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -491,6 +568,28 @@ export default function App() {
     }
   };
 
+  // Browser Push Notifications Engine & State
+  const {
+    permission: notificationPermission,
+    config: notificationConfig,
+    history: notificationHistory,
+    unreadCount: notificationUnreadCount,
+    requestPermission: requestNotificationPermission,
+    updateConfig: updateNotificationConfig,
+    markAllAsRead: markAllNotificationsAsRead,
+    markAsRead: markNotificationAsRead,
+    clearHistory: clearNotificationHistory,
+    triggerTest: triggerTestNotification,
+    triggerTestSound: triggerTestNotificationSound,
+  } = useBrowserPushNotifications({
+    leads,
+    messages,
+    isLoggedIn,
+    onSelectLead: (leadId) => {
+      handleNavigate('booking', { selectedLeadId: leadId });
+    },
+  });
+
   const [bandsCount, setBandsCount] = useState<number>(0);
 
   useEffect(() => {
@@ -563,6 +662,8 @@ export default function App() {
   // Active Theme State
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
     const saved = localStorage.getItem('bakandeya_theme') as ThemeName;
+    // Un tema guardado que ya no existe (p. ej. las paletas analog/legato/spectrum que llegaron a
+    // estar en main) cae al por defecto en vez de dejar `colors` sin definir.
     if (!saved || saved === ('stitch_light' as any) || !(saved in THEMES)) {
       return 'indie_velvet';
     }
@@ -599,9 +700,6 @@ export default function App() {
       // Confirm to backend and update Supabase & memory state
       const targetBand = bandParam || currentUser?.band_id;
 
-      // El plan lo decide Stripe, no esta URL: le pasamos el id de la sesión de Checkout para
-      // que el servidor lo verifique. Sin él no hay nada que confirmar y basta con refrescar,
-      // que el webhook de Stripe ya habrá hecho (o hará) el alta.
       if (sessionParam) {
         api
           .confirmPaymentSuccess({
@@ -617,9 +715,6 @@ export default function App() {
             refreshSession();
             fetchState();
           });
-        // El plan del usuario ya no se escribe aquí desde el `?plan=` de la URL: eso desbloqueaba
-        // en local la interfaz del plan de pago con solo visitar la dirección. Lo trae
-        // `refreshSession()` del servidor, que es quien sabe qué se ha pagado.
       } else {
         refreshSession();
         fetchState();
@@ -656,6 +751,10 @@ export default function App() {
 
   // Proporciona colores del sistema Espectro o fallback al sistema antiguo
   const colors: ThemeColors = isEspectroActive ? getEspectroColors() : THEMES[currentTheme] || THEMES.indie_velvet;
+  // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` heredadas (slate/indigo)
+  // que aún quedan en componentes no deben activarse nunca. Se mantiene el nombre porque el código
+  // que llega de main lo pasa como prop.
+  const isStitchLight = false;
 
   // Persist Theme Selection - sincroniza tanto currentTheme como data-theme
   const handleThemeChange = (theme: ThemeName) => {
@@ -833,10 +932,20 @@ export default function App() {
   // esta constante a false.
   const USE_SIMPLE_LOGIN = true;
   if (!isLoggedIn) {
-    return USE_SIMPLE_LOGIN ? (
-      <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
-    ) : (
-      <LoginModal onLoginSuccess={handleLoginSuccess} />
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
+            <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
+          </div>
+        }
+      >
+        {USE_SIMPLE_LOGIN ? (
+          <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
+        ) : (
+          <LoginModal onLoginSuccess={handleLoginSuccess} />
+        )}
+      </Suspense>
     );
   }
 
@@ -897,7 +1006,20 @@ export default function App() {
                 </button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <NotificationCenterBell
+                permission={notificationPermission}
+                config={notificationConfig}
+                history={notificationHistory}
+                unreadCount={notificationUnreadCount}
+                onOpenSettings={() => setShowNotificationSettingsModal(true)}
+                onRequestPermission={requestNotificationPermission}
+                onMarkAllAsRead={markAllNotificationsAsRead}
+                onMarkAsRead={markNotificationAsRead}
+                onClearHistory={clearNotificationHistory}
+                onSelectLead={(leadId) => handleNavigate('booking', { selectedLeadId: leadId })}
+                variant="mobile"
+              />
               <button
                 type="button"
                 onClick={() => setShowOnboardingModal(true)}
@@ -1523,6 +1645,19 @@ export default function App() {
               </div>
               <div className="flex items-center gap-1.5">
                 <ThemeToggle compact openUpward />
+                <NotificationCenterBell
+                  permission={notificationPermission}
+                  config={notificationConfig}
+                  history={notificationHistory}
+                  unreadCount={notificationUnreadCount}
+                  onOpenSettings={() => setShowNotificationSettingsModal(true)}
+                  onRequestPermission={requestNotificationPermission}
+                  onMarkAllAsRead={markAllNotificationsAsRead}
+                  onMarkAsRead={markNotificationAsRead}
+                  onClearHistory={clearNotificationHistory}
+                  onSelectLead={(leadId) => handleNavigate('booking', { selectedLeadId: leadId })}
+                  variant="desktop"
+                />
                 <button
                   onClick={handleLogout}
                   className="p-1.5 text-[var(--ink-2)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
@@ -1628,6 +1763,8 @@ export default function App() {
                     currentUser={currentUser}
                     bandName={currentActiveBandName}
                     currentBandId={currentActiveBandId}
+                    concerts={activeBandConcerts || concerts}
+                    tours={tours}
                   />
                 )}
                 {currentView === 'bandas' && (
@@ -1858,214 +1995,232 @@ export default function App() {
           </div>
         </main>
 
-        {/* User Management Modal for Band Leader */}
-        {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
-          <UserManagementModal
-            currentUser={currentUser}
-            users={bandUsers}
-            onClose={() => setShowUserManagementModal(false)}
-            onRefreshUsers={fetchState}
-          />
-        )}
+        {/* Los modales se cargan bajo demanda (safeLazy): necesitan su propio límite de Suspense. */}
+        <Suspense fallback={null}>
+          {/* User Management Modal for Band Leader */}
+          {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
+            <UserManagementModal
+              currentUser={currentUser}
+              users={bandUsers}
+              onClose={() => setShowUserManagementModal(false)}
+              onRefreshUsers={fetchState}
+            />
+          )}
 
-        {/* User Profile & Password Change Modal for All Users */}
-        {showUserProfileModal && currentUser && (
-          <UserProfileModal
+          {/* User Profile & Password Change Modal for All Users */}
+          {showUserProfileModal && currentUser && (
+            <UserProfileModal
+              currentUser={currentUser}
+              onClose={() => setShowUserProfileModal(false)}
+              onUpdateUser={(updated) => {
+                setCurrentUser(updated);
+                localStorage.setItem('bakandeya_user', JSON.stringify(updated));
+                fetchState();
+              }}
+              isAdmin={isAdmin}
+              onOpenBandManagement={() => setShowUserManagementModal(true)}
+              currentTheme={currentTheme}
+              onThemeChange={handleThemeChange}
+              currentFont={currentFont}
+              onFontChange={handleFontChange}
+              epkConfig={epkConfig}
+              onUpdateEpkConfig={handleUpdateEpkConfig}
+              activeBandName={currentActiveBandName}
+              onRefreshData={fetchState}
+              availableBands={availableBands}
+              onSetMainBand={handleSetMainBand}
+              onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
+              onNavigateToPlanes={() => handleNavigate('planes')}
+              onOpenProfileWizard={() => setShowProfileWizardModal(true)}
+              onOpenNotificationSettings={() => setShowNotificationSettingsModal(true)}
+            />
+          )}
+
+          {/* Font Selector Modal */}
+          {showFontModal && (
+            <FontSelectorModal
+              onClose={() => setShowFontModal(false)}
+              currentFont={currentFont}
+              onSelectFont={(f) => {
+                handleFontChange(f);
+              }}
+            />
+          )}
+
+          {/* Floating Chatbot Overlay */}
+          {currentView !== 'chat' && !isPromoPlan && (
+            <div
+              className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-all duration-200 ${
+                isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
+              }`}
+            >
+              <Suspense fallback={null}>
+                <Chatbot
+                  key={`floating_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
+                  colors={colors}
+                  leads={leads}
+                  rehearsals={rehearsals}
+                  concerts={concerts}
+                  epkConfig={epkConfig}
+                  onUpdateLead={handleUpdateLead}
+                  onCreateLead={handleAddLeadWithLimitCheck}
+                  onAddRehearsal={handleAddRehearsal}
+                  onAddConcert={handleAddConcert}
+                  onNavigate={handleNavigate}
+                  isFloating={true}
+                  onClose={() => setIsFloatingChatOpen(false)}
+                  userRole={currentUser?.role}
+                  currentUser={currentUser}
+                  activeBandName={currentActiveBandName}
+                  onLoadingChange={handleChatLoadingChange}
+                />
+              </Suspense>
+            </div>
+          )}
+
+          {/* Floating Chatbot Trigger Button */}
+          {currentView !== 'chat' && !isPromoPlan && (
+            <button
+              id="floating-chat-trigger-btn"
+              onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
+              className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
+                isFloatingChatOpen
+                  ? 'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
+                  : isChatLoading
+                    ? 'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50'
+                    : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105'
+              }`}
+              title={isChatLoading ? 'Agente AI ejecutando en segundo plano...' : 'Abrir Agente Mánager AI'}
+            >
+              {isFloatingChatOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <>
+                  <div className="relative">
+                    {isChatLoading ? <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" /> : <Guitar className="w-5 h-5" />}
+                    <span
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`}
+                    />
+                    <span
+                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--tentative)]/50' : 'bg-[var(--ok)]'}`}
+                    />
+                  </div>
+                  <span className="text-xs font-sans font-bold tracking-wider hidden sm:inline-block pr-1">
+                    {isChatLoading ? 'Ejecutando...' : 'Agente AI'}
+                  </span>
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Metronome Pro Modal */}
+          <MetronomeModal isOpen={showMetronomeModal} onClose={() => setShowMetronomeModal(false)} songs={[]} colors={colors} />
+
+          {/* Tuner Pro Modal */}
+          <TunerModal isOpen={showTunerModal} onClose={() => setShowTunerModal(false)} colors={colors} />
+
+          {/* Band Switcher Modal (Netflix Style) */}
+          <BandSwitcherModal
+            isOpen={showBandSwitcherModal}
+            onClose={() => setShowBandSwitcherModal(false)}
             currentUser={currentUser}
-            onClose={() => setShowUserProfileModal(false)}
-            onUpdateUser={(updated) => {
-              setCurrentUser(updated);
-              localStorage.setItem('bakandeya_user', JSON.stringify(updated));
-              fetchState();
-            }}
-            isAdmin={isAdmin}
-            onOpenBandManagement={() => setShowUserManagementModal(true)}
-            currentTheme={currentTheme}
-            onThemeChange={handleThemeChange}
-            currentFont={currentFont}
-            onFontChange={handleFontChange}
+            availableBands={availableBands}
             epkConfig={epkConfig}
             onUpdateEpkConfig={handleUpdateEpkConfig}
-            activeBandName={currentActiveBandName}
             onRefreshData={fetchState}
-            availableBands={availableBands}
-            onSetMainBand={handleSetMainBand}
-            onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
-            onNavigateToPlanes={() => handleNavigate('planes')}
-            onOpenProfileWizard={() => setShowProfileWizardModal(true)}
-          />
-        )}
-
-        {/* Font Selector Modal */}
-        {showFontModal && (
-          <FontSelectorModal
-            onClose={() => setShowFontModal(false)}
-            currentFont={currentFont}
-            onSelectFont={(f) => {
-              handleFontChange(f);
+            onSwitchBand={async (bandId) => {
+              await handleSwitchBand(bandId);
+              await fetchState();
             }}
+            onSetMainBand={handleSetMainBand}
+            onOpenRegisterBand={() => handleNavigate('bandas')}
+            onOpenBandManagement={() => setShowUserManagementModal(true)}
           />
-        )}
 
-        {/* Floating Chatbot Overlay */}
-        {currentView !== 'chat' && !isPromoPlan && (
-          <div
-            className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-all duration-200 ${
-              isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
-            }`}
-          >
-            <Suspense fallback={null}>
-              <Chatbot
-                key={`floating_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
-                colors={colors}
-                leads={leads}
-                rehearsals={rehearsals}
-                concerts={concerts}
-                epkConfig={epkConfig}
-                onUpdateLead={handleUpdateLead}
-                onCreateLead={handleAddLeadWithLimitCheck}
-                onAddRehearsal={handleAddRehearsal}
-                onAddConcert={handleAddConcert}
-                onNavigate={handleNavigate}
-                isFloating={true}
-                onClose={() => setIsFloatingChatOpen(false)}
-                userRole={currentUser?.role}
-                currentUser={currentUser}
-                activeBandName={currentActiveBandName}
-                onLoadingChange={handleChatLoadingChange}
-              />
-            </Suspense>
-          </div>
-        )}
+          {/* Soft Limits Upgrade Modal */}
+          <PlanLimitModal
+            isOpen={planLimitModal.isOpen}
+            onClose={() => setPlanLimitModal((prev) => ({ ...prev, isOpen: false }))}
+            onNavigateToPlanes={() => {
+              setPlanLimitModal((prev) => ({ ...prev, isOpen: false }));
+              handleNavigate('planes');
+            }}
+            currentUser={currentUser}
+            activeBandName={currentActiveBandName}
+            resourceType={planLimitModal.resourceType}
+            currentCount={planLimitModal.currentCount}
+          />
 
-        {/* Floating Chatbot Trigger Button */}
-        {currentView !== 'chat' && !isPromoPlan && (
-          <button
-            id="floating-chat-trigger-btn"
-            onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
-            className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
-              isFloatingChatOpen
-                ? 'bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]'
-                : isChatLoading
-                  ? 'bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50'
-                  : 'bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105'
-            }`}
-            title={isChatLoading ? 'Agente AI ejecutando en segundo plano...' : 'Abrir Agente Mánager AI'}
-          >
-            {isFloatingChatOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <>
-                <div className="relative">
-                  {isChatLoading ? <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" /> : <Guitar className="w-5 h-5" />}
-                  <span
-                    className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--acc)]/80 animate-ping' : 'bg-[var(--ok)]/60 animate-ping'}`}
-                  />
-                  <span
-                    className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? 'bg-[var(--tentative)]/50' : 'bg-[var(--ok)]'}`}
-                  />
-                </div>
-                <span className="text-xs font-sans font-bold tracking-wider hidden sm:inline-block pr-1">
-                  {isChatLoading ? 'Ejecutando...' : 'Agente AI'}
-                </span>
-              </>
-            )}
-          </button>
-        )}
+          {/* Campaign Manager Modal */}
+          <CampaignManagerModal
+            isOpen={showCampaignModal}
+            onClose={() => setShowCampaignModal(false)}
+            campaigns={campaigns}
+            activeCampaign={activeCampaign}
+            onSaveCampaign={handleSaveCampaign}
+            onDeleteCampaign={handleDeleteCampaign}
+            onSetActiveCampaign={handleSetActiveCampaign}
+            onNavigate={handleNavigate}
+          />
 
-        {/* Metronome Pro Modal */}
-        <MetronomeModal isOpen={showMetronomeModal} onClose={() => setShowMetronomeModal(false)} songs={[]} colors={colors} />
+          {/* Musician First-Time Onboarding Modal ("Elige tu misión") */}
+          <MusicianOnboardingModal
+            key={`musician-onboarding-${cleanActiveBandId || 'default'}`}
+            isOpen={showOnboardingModal && !showProfileWizardModal}
+            onClose={() => {
+              setShowOnboardingModal(false);
+              try {
+                if (cleanActiveBandId) {
+                  localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`, 'true');
+                }
+                localStorage.setItem('bandmanager_onboarding_completed', 'true');
+              } catch {}
+            }}
+            onSelectMission={(targetView) => handleNavigate(targetView)}
+            bandName={currentActiveBandName}
+          />
 
-        {/* Tuner Pro Modal */}
-        <TunerModal isOpen={showTunerModal} onClose={() => setShowTunerModal(false)} colors={colors} />
+          {/* Comprehensive Band Profile Setup Wizard */}
+          <OnboardingWizardModal
+            key={`profile-wizard-${cleanActiveBandId || 'default'}`}
+            isOpen={showProfileWizardModal && isLoggedIn}
+            onClose={() => {
+              setShowProfileWizardModal(false);
+              try {
+                if (cleanActiveBandId) {
+                  localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
+                }
+                localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
+                window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
+              } catch {}
+            }}
+            currentUser={currentUser}
+            epkConfig={epkConfig as any}
+            onUpdateEpkConfig={handleUpdateEpkConfig}
+            onSongsImported={() => {
+              fetchState();
+            }}
+            onRefreshData={fetchState}
+            onAddConcert={handleAddConcert}
+            onAddRehearsal={handleAddRehearsal}
+            bandId={currentActiveBandId}
+            bandName={currentActiveBandName}
+            bandLogoUrl={currentActiveBandLogo}
+            bandPlan={currentActiveBandPlan}
+          />
 
-        {/* Band Switcher Modal (Netflix Style) */}
-        <BandSwitcherModal
-          isOpen={showBandSwitcherModal}
-          onClose={() => setShowBandSwitcherModal(false)}
-          currentUser={currentUser}
-          availableBands={availableBands}
-          epkConfig={epkConfig}
-          onUpdateEpkConfig={handleUpdateEpkConfig}
-          onRefreshData={fetchState}
-          onSwitchBand={async (bandId) => {
-            await handleSwitchBand(bandId);
-            await fetchState();
-          }}
-          onSetMainBand={handleSetMainBand}
-          onOpenRegisterBand={() => handleNavigate('bandas')}
-          onOpenBandManagement={() => setShowUserManagementModal(true)}
-        />
-
-        {/* Soft Limits Upgrade Modal */}
-        <PlanLimitModal
-          isOpen={planLimitModal.isOpen}
-          onClose={() => setPlanLimitModal((prev) => ({ ...prev, isOpen: false }))}
-          onNavigateToPlanes={() => {
-            setPlanLimitModal((prev) => ({ ...prev, isOpen: false }));
-            handleNavigate('planes');
-          }}
-          currentUser={currentUser}
-          activeBandName={currentActiveBandName}
-          resourceType={planLimitModal.resourceType}
-          currentCount={planLimitModal.currentCount}
-        />
-
-        {/* Campaign Manager Modal */}
-        <CampaignManagerModal
-          isOpen={showCampaignModal}
-          onClose={() => setShowCampaignModal(false)}
-          campaigns={campaigns}
-          activeCampaign={activeCampaign}
-          onSaveCampaign={handleSaveCampaign}
-          onDeleteCampaign={handleDeleteCampaign}
-          onSetActiveCampaign={handleSetActiveCampaign}
-          onNavigate={handleNavigate}
-        />
-
-        {/* Musician First-Time Onboarding Modal ("Elige tu misión") */}
-        <MusicianOnboardingModal
-          isOpen={showOnboardingModal && !showProfileWizardModal}
-          onClose={() => {
-            setShowOnboardingModal(false);
-            try {
-              if (cleanActiveBandId) {
-                localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`, 'true');
-              }
-              localStorage.setItem('bandmanager_onboarding_completed', 'true');
-            } catch {}
-          }}
-          onSelectMission={(targetView) => handleNavigate(targetView)}
-          bandName={currentActiveBandName}
-        />
-
-        {/* Comprehensive Band Profile Setup Wizard */}
-        <OnboardingWizardModal
-          isOpen={showProfileWizardModal && isLoggedIn}
-          onClose={() => {
-            setShowProfileWizardModal(false);
-            try {
-              if (cleanActiveBandId) {
-                localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
-              }
-              localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
-              window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
-            } catch {}
-          }}
-          currentUser={currentUser}
-          epkConfig={epkConfig as any}
-          onUpdateEpkConfig={handleUpdateEpkConfig}
-          onSongsImported={() => {
-            fetchState();
-          }}
-          onRefreshData={fetchState}
-          onAddConcert={handleAddConcert}
-          onAddRehearsal={handleAddRehearsal}
-          bandId={currentActiveBandId}
-          bandName={currentActiveBandName}
-          bandLogoUrl={currentActiveBandLogo}
-          bandPlan={currentActiveBandPlan}
-        />
+          {/* Browser Push Notifications Settings Modal */}
+          <NotificationSettingsModal
+            isOpen={showNotificationSettingsModal}
+            onClose={() => setShowNotificationSettingsModal(false)}
+            permission={notificationPermission}
+            config={notificationConfig}
+            onUpdateConfig={updateNotificationConfig}
+            onRequestPermission={requestNotificationPermission}
+            onTriggerTest={triggerTestNotification}
+            onTriggerTestSound={triggerTestNotificationSound}
+          />
+        </Suspense>
 
         <GlobalPlayer colors={colors} onOpenStudio={handleOpenStudio} onOpenIris={handleOpenIris} />
       </div>

@@ -9,6 +9,7 @@
 import { getLowLatencyAudioStream } from '../utils/audioLatency';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { ShowItemModal } from './repertorio/ShowItemModal';
 import { api } from '../services/api';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -216,7 +217,7 @@ function generatePdfStylesheet(): string {
  justify-content: space-between;
  align-items: center;
  }
- h1 { font-size: 32px; text-transform:; margin: 0; color: ${accColor}; letter-spacing: 2px; }
+ h1 { font-size: 32px; margin: 0; color: ${accColor}; letter-spacing: 2px; }
  .meta { font-size: 16px; font-family: monospace; color: ${ink2Color}; }
  .set-table { width: 100%; border-collapse: collapse; }
  .set-table th {
@@ -224,7 +225,6 @@ function generatePdfStylesheet(): string {
  padding: 10px;
  border-bottom: 2px solid ${ink3Color};
  font-size: 14px;
- text-transform:;
  color: ${ink2Color};
  }
  .set-table td {
@@ -245,9 +245,20 @@ function generatePdfStylesheet(): string {
  }
  .bpm { color: ${ink2Color}; font-size: 16px; font-family: monospace; }
  .chapa { color: ${accColor}; font-style: italic; font-size: 18px; }
- .bis { color: ${alertColor}; text-transform:; font-size: 20px; text-align: center; }
+ .bis { color: ${alertColor}; font-size: 20px; text-align: center; }
  .note { display: block; font-size: 13px; color: ${ink3Color}; font-weight: normal; margin-top: 4px; font-style: italic; }
  .footer { margin-top: 30px; font-size: 12px; font-family: monospace; color: ${ink3Color}; text-align: center; }
+ .member-note {
+ display: inline-block;
+ background: ${bgColor};
+ color: ${inkColor};
+ font-size: 11px;
+ padding: 2px 7px;
+ border-radius: 999px;
+ font-family: monospace;
+ margin-right: 6px;
+ margin-top: 4px;
+ }
  `;
 }
 
@@ -1463,8 +1474,8 @@ export default function RepertorioSetlists({
   const handleUpdateSongFromStudio = (updatedSong: Song) => {
     const updatedList = songs.map((s) => (s.id === updatedSong.id ? updatedSong : s));
     setSongs(updatedList);
-    saveSongsToLocalStorageSafely(updatedList);
-    // Este handler se reutiliza como"guardar canción" genérico (MemberNotesModal, favorito,
+    saveSongsToLocalStorageSafely(updatedList, bandId);
+    // Este handler se reutiliza como "guardar canción" genérico (MemberNotesModal, favorito,
     // PdfExportModal, SpotifyPlayerBar), no solo desde el propio Song Studio: sin este guard
     // (mismo patrón que handleUpdateSongFromChords de arriba) forzaba la apertura del Studio en
     // cualquiera de esos sitios aunque estuviera cerrado, p.ej. al guardar notas por miembro.
@@ -1478,7 +1489,21 @@ export default function RepertorioSetlists({
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify(updatedSong),
-    }).catch((err) => console.error('Error updating song on server:', err));
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.song) {
+          const savedSong = data.song;
+          setSongs((prev) => prev.map((s) => (s.id === savedSong.id || s.id === updatedSong.id ? savedSong : s)));
+          if (activeStudioSong?.id === updatedSong.id || activeStudioSong?.id === savedSong.id) {
+            setActiveStudioSong(savedSong);
+          }
+          if (activePlayerSong?.id === updatedSong.id || activePlayerSong?.id === savedSong.id) {
+            setActivePlayerSong(savedSong);
+          }
+        }
+      })
+      .catch((err) => console.error('Error updating song on server:', err));
   };
 
   // Setlist Assign Modal State
@@ -3034,11 +3059,15 @@ export default function RepertorioSetlists({
 
     const pdfStylesheet = generatePdfStylesheet();
     const okColorForPrint = getTokenValueForPrint('--ok');
+    const accColorForPrint = getTokenValueForPrint('--acc');
+    const sunkenColorForPrint = getTokenValueForPrint('--sunken');
+    const bandDisplayName = currentUser?.bandName || 'BANDMANAGER';
+
     printWindow.document.write(`
  <!DOCTYPE html>
  <html>
  <head>
- <title>SETLIST BAKANDEYA - ${activeSetlist.nombre}</title>
+ <title>SETLIST ${bandDisplayName.toUpperCase()} - ${activeSetlist.nombre}</title>
  <style>
  ${pdfStylesheet}
  </style>
@@ -3046,7 +3075,7 @@ export default function RepertorioSetlists({
  <body>
  <div class="header">
  <div>
- <h1>BAKANDEYA — SETLIST</h1>
+ <h1>${bandDisplayName.toUpperCase()} — HOJA DE ESCENARIO</h1>
  <div class="meta">${activeSetlist.nombre} (${activeSetlistMetrics.formattedTime} • ${activeSetlistMetrics.songCount} Temas)</div>
  </div>
  <div style="font-size:20px; font-weight:bold; color:${okColorForPrint}; font-family:monospace;">
@@ -3058,8 +3087,8 @@ export default function RepertorioSetlists({
  <thead>
  <tr>
  <th style="width:40px;">#</th>
- <th>TÍTULO DEL TEMA</th>
- <th style="width:100px;">TONO</th>
+ <th>TÍTULO DEL TEMA & CUES</th>
+ <th style="width:90px;">TONO</th>
  <th style="width:80px;">BPM</th>
  <th style="width:80px;">TIEMPO</th>
  </tr>
@@ -3070,23 +3099,42 @@ export default function RepertorioSetlists({
      if (it.tipoItem === 'cancion' && it.songId) {
        const s = songs.find((x) => x.id === it.songId);
        if (!s) return '';
+       const memberNotes = Array.isArray(s.notasPorMiembro) ? s.notasPorMiembro : [];
        return `
  <tr>
  <td class="num">${idx + 1}</td>
  <td>
- ${s.titulo}
- ${it.notaTema ? `<span class="note">⚠️ ${it.notaTema}</span>` : ''}
+ <div style="font-size: 20px; color: #fff;">${s.titulo}</div>
+ ${it.notaTema ? `<span class="note">💡 <b>CUE:</b> ${it.notaTema}</span>` : ''}
+ ${
+   memberNotes.length > 0
+     ? `
+ <div style="margin-top: 4px;">
+ ${memberNotes
+   .map(
+     (m) => `
+ <span class="member-note">
+ <b style="color: #f2ca50;">[${m.instrument || m.memberName}]:</b> ${m.nota}
+ </span>
+ `
+   )
+   .join('')}
+ </div>
+ `
+     : ''
+ }
+ ${s.notasRepertorio ? `<span class="note" style="color: #93c5fd;">📝 ${s.notasRepertorio}</span>` : ''}
  </td>
- <td><span class="key-badge">${s.tonalidad}</span></td>
+ <td><span class="key-badge">${it.tonalidadDeseada || s.tonalidad}</span></td>
  <td class="bpm">${s.bpm}</td>
  <td style="font-family:monospace; font-size:16px; color:#aaa;">${s.duracion}</td>
  </tr>
  `;
      } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
        return `
- <tr style="background:#1e1e1e; border-top: 3px solid var(--acc); border-bottom: 2px solid var(--acc);">
- <td colspan="5" style="color:var(--acc); font-size:20px; font-weight:900; letter-spacing:1px; text-transform:uppercase; padding: 12px 10px;">
- ⚡ ${it.tituloCustom || 'BLOQUE DEL SHOW'}
+ <tr style="background:${sunkenColorForPrint}; border-top: 3px solid ${accColorForPrint}; border-bottom: 2px solid ${accColorForPrint};">
+ <td colspan="5" style="color:${accColorForPrint}; font-size:18px; font-weight:900; letter-spacing:1px; padding: 12px 10px;">
+ ${it.tituloCustom || '⚡ Bloque del show'}
  </td>
  </tr>
  `;
@@ -3097,14 +3145,14 @@ export default function RepertorioSetlists({
        };
        const durText = formatItemDuration(it);
        return `
- <tr style="background:#121212; border-left: 4px solid #38bdf8;">
+ <tr style="background:#0f172a; border-left: 4px solid #38bdf8;">
  <td class="num" style="color:#38bdf8;">•</td>
- <td colspan="3" style="color:#e0f2fe; font-size:18px; font-weight:bold;">
- <span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:13px; font-family:monospace; margin-right:8px;">
+ <td colspan="3" style="color:#e0f2fe; font-size:16px; font-weight:bold;">
+ <span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:12px; font-family:monospace; margin-right:8px;">
  ${typeInfo.icon} ${typeInfo.label.toUpperCase()}
  </span>
  ${it.tituloCustom || 'Evento del Show'}
- ${it.notaTema ? `<span class="note" style="color:#94a3b8;">📋 CUE: ${it.notaTema}</span>` : ''}
+ ${it.notaTema ? `<span class="note" style="color:#94a3b8; font-size:12px;">📋 CUE: ${it.notaTema}</span>` : ''}
  </td>
  <td style="font-family:monospace; font-size:16px; color:var(--acc); text-align:right;">${durText}</td>
  </tr>
@@ -3116,7 +3164,7 @@ export default function RepertorioSetlists({
  </table>
 
  <div class="footer">
- Hoja de Escenario Impresa • Bakandeya Repertoire Manager
+ Hoja de Escenario Impresa • ${bandDisplayName} • Repertoire Manager
  </div>
 
  <script>
@@ -4479,13 +4527,14 @@ export default function RepertorioSetlists({
 
                       {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
                       {(() => {
-                        // La nota"general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
+                        // La nota "general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
                         // notasRepertorio, no en notasInternas (un campo distinto, sin UI de edición expuesta aquí)
                         // — mirar notasInternas hacía que esta línea nunca mostrara la nota general recién guardada.
                         // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
                         // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
                         const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
-                        return song.notasRepertorio || it.notaTema || userNote ? (
+                        const hasMemberNotes = Array.isArray(song.notasPorMiembro) && song.notasPorMiembro.length > 0;
+                        return song.notasRepertorio || it.notaTema || userNote || hasMemberNotes ? (
                           <div className="px-2.5 py-1.5 text-[10px] font-sans space-y-1" onClick={(e) => e.stopPropagation()}>
                             {song.notasRepertorio && (
                               <div className="text-[var(--accent-alt)]/80 truncate" title={song.notasRepertorio}>
@@ -4500,6 +4549,18 @@ export default function RepertorioSetlists({
                             {it.notaTema && (
                               <div className="text-[var(--ok)]/80 truncate" title={it.notaTema}>
                                 💡 {it.notaTema}
+                              </div>
+                            )}
+                            {hasMemberNotes && (
+                              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                                {song.notasPorMiembro!.map((m, mIdx) => (
+                                  <span
+                                    key={m.userId || m.memberName || mIdx}
+                                    className="inline-flex items-center gap-1 bg-[var(--acc-soft)] text-[var(--acc-ink)] px-1.5 py-0.5 rounded-[var(--r-pill)] text-[9px]"
+                                  >
+                                    <b>[{m.instrument || m.memberName}]:</b> {m.nota}
+                                  </span>
+                                ))}
                               </div>
                             )}
                           </div>
@@ -5164,227 +5225,14 @@ export default function RepertorioSetlists({
       />
 
       {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
-      {showShowItemModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
-          <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 ${colors.card}`}>
-            <div className="flex justify-between items-center pb-3">
-              <div className="flex items-center gap-2">
-                <span className="p-2 bg-[var(--acc)]/20 text-[var(--ink-2)] rounded-[var(--r-m)]">⚡</span>
-                <div>
-                  <h3 className={`text-sm font-extrabold font-sans ${colors.text}`}>
-                    {editingShowItem ? 'Editar Interludio / Evento del Show' : 'Nuevo Interludio / Bloque del Show'}
-                  </h3>
-                  <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                    Organiza momentos del directo (beatbox, presentaciones, bloque de temas, pausas).
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  setShowShowItemModal(false);
-                  setEditingShowItem(null);
-                }}
-                className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const form = e.currentTarget;
-                const formData = new FormData(form);
-                const tipo = formData.get('tipoItem') as SetlistItem['tipoItem'];
-                const titulo = formData.get('tituloCustom') as string;
-                const min = parseInt(formData.get('minutos') as string, 10) || 0;
-                const seg = parseInt(formData.get('segundos') as string, 10) || 0;
-                const totalSeg = min * 60 + seg;
-                const notas = formData.get('notaTema') as string;
-
-                handleSaveShowItem({
-                  tipoItem: tipo,
-                  tituloCustom: titulo,
-                  duracionEstimadaMinutos: Math.ceil(totalSeg / 60),
-                  duracionEstimadaSegundos: totalSeg,
-                  notaTema: notas,
-                });
-              }}
-              className="space-y-4 text-xs font-sans"
-            >
-              <div>
-                <label className="block text-[var(--ink)] font-bold mb-1">Categoría del Evento *</label>
-                <select
-                  name="tipoItem"
-                  defaultValue={editingShowItem?.tipoItem || 'presentacion'}
-                  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  onChange={(e) => {
-                    const val = e.target.value as keyof typeof SHOW_ITEM_TYPES;
-                    const titleInput = e.target.form?.elements.namedItem('tituloCustom') as HTMLInputElement;
-                    if (titleInput && (!titleInput.value || Object.values(SHOW_ITEM_TYPES).some((t) => t.label === titleInput.value))) {
-                      if (SHOW_ITEM_TYPES[val]) {
-                        titleInput.value = SHOW_ITEM_TYPES[val].label;
-                      }
-                    }
-                  }}
-                >
-                  {Object.entries(SHOW_ITEM_TYPES).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.icon} {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[var(--ink)] font-bold mb-1">Título / Nombre en la Hoja de Escenario *</label>
-                <input
-                  name="tituloCustom"
-                  type="text"
-                  required
-                  defaultValue={editingShowItem?.tituloCustom || 'Presentación de la Banda'}
-                  placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
-                  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                />
-              </div>
-
-              <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
-                <label className="block text-[var(--acc)] font-bold text-[11px] flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" />
-                  Tiempo Asignado al Evento (Minutos y Segundos) *
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <span className="text-[10px] text-[var(--ink-2)] block mb-1">Minutos:</span>
-                    <input
-                      name="minutos"
-                      type="number"
-                      min="0"
-                      max="60"
-                      defaultValue={
-                        editingShowItem?.duracionEstimadaSegundos
-                          ? Math.floor(editingShowItem.duracionEstimadaSegundos / 60)
-                          : editingShowItem?.duracionEstimadaMinutos || 2
-                      }
-                      className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-[var(--ink-2)] block mb-1">Segundos:</span>
-                    <input
-                      name="segundos"
-                      type="number"
-                      min="0"
-                      max="59"
-                      defaultValue={editingShowItem?.duracionEstimadaSegundos ? editingShowItem.duracionEstimadaSegundos % 60 : 0}
-                      className={`w-full p-2 rounded-[var(--r-s)] text-center font-bold text-sm ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                </div>
-                <p className="text-[9px] text-[var(--ink-2)] italic">
-                  Este tiempo se suma automáticamente a la duración total del concierto.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-[var(--ink)] font-bold mb-1">Notas / Cues para la Banda / Sonido (Opcional)</label>
-                <textarea
-                  name="notaTema"
-                  rows={2}
-                  defaultValue={editingShowItem?.notaTema || ''}
-                  placeholder="Ej: Foco cenital sobre guitarra solista, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
-                  className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                />
-              </div>
-
-              <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[var(--ink-2)] font-bold text-[11px] flex items-center gap-1.5">
-                    <Mic className="w-3.5 h-3.5" />
-                    Audio de la Presentación / Chapa / Ensayo
-                  </label>
-                  {showItemAudioUrl && (
-                    <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ink-2)] font-bold flex items-center gap-1">
-                      <Check className="w-3 h-3" /> Audio Guardado
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  {isRecordingShowItem ? (
-                    <button
-                      type="button"
-                      onClick={handleStopRecordingShowItem}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Square className="w-3.5 h-3.5 fill-current" />
-                      <span>Detener Grabación ({recordingShowItemSecs}s)</span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleStartRecordingShowItem}
-                      className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Mic className="w-3.5 h-3.5" />
-                      <span>{showItemAudioUrl ? 'Regrabar Voz' : 'Grabar Voz'}</span>
-                    </button>
-                  )}
-
-                  <label className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-bold text-xs flex items-center gap-1.5 cursor-pointer">
-                    <Upload className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Subir MP3 / WAV</span>
-                    <input type="file" accept="audio/*" onChange={handleShowItemAudioFileUpload} className="hidden" />
-                  </label>
-
-                  {showItemAudioUrl && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowItemAudioUrl('');
-                        setRecordingShowItemSecs(0);
-                      }}
-                      className="p-1.5 rounded-[var(--r-s)] text-[var(--alert)] hover:text-[var(--ink-2)] hover:bg-[var(--alert-soft)] cursor-pointer"
-                      title="Eliminar Audio"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {showItemAudioUrl && (
-                  <div className="pt-1">
-                    <audio src={showItemAudioUrl} controls onError={(e) => e.preventDefault()} className="w-full h-8 accent-sky-500" />
-                  </div>
-                )}
-
-                <p className="text-[9px] text-[var(--ink-2)] italic">
-                  Graba o sube la charla o performance para medir la duración exacta e incluirla en el reproductor del concierto.
-                </p>
-              </div>
-
-              <div className="pt-2 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowShowItemModal(false);
-                    setEditingShowItem(null);
-                  }}
-                  className="px-3 py-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:bg-[var(--surface)]/80 text-xs font-sans cursor-pointer"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] text-[var(--ink)] font-bold hover:bg-[var(--ok)] text-xs font-sans cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>Guardar en Setlist</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <ShowItemModal
+        isOpen={showShowItemModal}
+        onClose={() => setShowShowItemModal(false)}
+        colors={colors}
+        editingShowItem={editingShowItem}
+        setEditingShowItem={setEditingShowItem}
+        handleSaveShowItem={handleSaveShowItem}
+      />
 
       {/* PDF Preview Modal */}
       <PdfExportModal

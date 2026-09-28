@@ -51,17 +51,25 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
             method: 'POST',
           });
           if (res && res.success && res.data) {
+            const incomingTel = res.data.telefono || lead.telefono || '';
+            const isMob = /^(?:\+?34\s*)?[67]/.test(incomingTel);
+            const isFij = /^(?:\+?34\s*)?[89]/.test(incomingTel);
+            const telMovil = res.data.telefono_movil || lead.telefono_movil || (isMob ? incomingTel : '');
+            const telFijo = res.data.telefono_fijo || lead.telefono_fijo || (isFij ? incomingTel : '');
+
             enrichedList.push({
               leadId: lead.id,
               name: lead.nombre_sala,
               email: res.data.email_contacto || lead.email_contacto,
-              phone: res.data.telefono || lead.telefono,
+              phone: incomingTel || telMovil || telFijo,
               instagram: res.data.instagram || lead.instagram,
             });
             if (onUpdateLead) {
               onUpdateLead(lead.id, {
                 email_contacto: res.data.email_contacto || lead.email_contacto,
-                telefono: res.data.telefono || lead.telefono,
+                telefono: incomingTel || telMovil || telFijo,
+                telefono_movil: telMovil,
+                telefono_fijo: telFijo,
                 instagram: res.data.instagram || lead.instagram,
                 website: res.data.website || lead.website,
               });

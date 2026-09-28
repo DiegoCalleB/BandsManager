@@ -27,11 +27,13 @@ import {
   RotateCcw,
   ArrowUpDown,
   SlidersHorizontal,
+  WifiOff,
 } from 'lucide-react';
 import { Setlist, SetlistItem, Song, SongAudioIdea, User } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
 import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
 import { getSongIrisStemIdea, getIdeaTracks } from '../utils/irisTracks';
+import { cacheActiveStageSetlist } from '../utils/stageOfflineCache';
 import PracticeModePanel from './PracticeModePanel';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
 
@@ -114,9 +116,29 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // eso que fingir un dato de batería falso en la mitad de los móviles.
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
   const [batteryCharging, setBatteryCharging] = useState(false);
+  const [isOffline, setIsOffline] = useState(() => typeof navigator !== 'undefined' && !navigator.onLine);
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const wakeLockRef = useRef<any>(null);
+
+  // Modo Escenario Offline Guard: almacena en caché local letras, cifrados y metadatos
+  // para que el concierto siga funcionando al 100% si se corta la conexión o el wifi en la sala.
+  useEffect(() => {
+    if (setlist && songs && songs.length > 0) {
+      cacheActiveStageSetlist(setlist, songs, currentUser?.band_id);
+    }
+  }, [setlist, songs, currentUser?.band_id]);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Incluye TANTO canciones como bloques (presentación, cambio de instrumento, descanso...) en
   // su orden real del repertorio — antes el modo concierto solo conocía canciones, así que un
@@ -318,7 +340,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
     // iOS/Android liberan el wake lock al cambiar de pestaña/app; lo repedimos al volver.
     const handleVisibility = () => {
-      if (!released && document.visibilityState === 'visible') requestLock();
+      if (!released && document.visibilityState === 'visible') {
+        requestLock();
+      } else if (document.visibilityState === 'hidden') {
+        wakeLockRef.current?.release?.().catch(() => {});
+        wakeLockRef.current = null;
+      }
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
@@ -480,6 +507,15 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <h1 className={`text-base sm:text-lg font-bold truncate ${glareMode ? 'text-[var(--ink)]' : 'text-[var(--acc)]/70'}`}>
               {isBlock ? currentItem.tituloCustom || blockMeta!.label : currentSong?.titulo}
             </h1>
+            {isOffline && (
+              <span
+                className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1"
+                title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
+              >
+                <WifiOff className="w-3 h-3 text-amber-400" />
+                <span className="hidden sm:inline">Offline Seguro</span>
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0 relative">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from '../types';
+import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig, Concert, Tour } from '../types';
 import DirectionsCard from './DirectionsCard';
 import { apiFetch } from '../utils/api';
 import { uploadFileToServer } from '../utils/audioStorage';
@@ -23,6 +23,7 @@ import {
   Users,
   Bot,
   MessageSquare,
+  MessageSquareText,
   Edit3,
   Settings,
   Sparkles,
@@ -74,6 +75,8 @@ import {
   Wrench,
   FileSpreadsheet,
   Copy,
+  Wand2,
+  Activity,
 } from 'lucide-react';
 import { VenueMap } from './VenueMap';
 import { AddLeadModal } from './booking/AddLeadModal';
@@ -83,18 +86,27 @@ import { ExcelImportModal } from './booking/ExcelImportModal';
 import { ExportLeadsModal } from './booking/ExportLeadsModal';
 import { LeadDuplicatesModal } from './booking/LeadDuplicatesModal';
 import { findDuplicateLeads } from '../utils/duplicateLeads';
+import { Compass } from 'lucide-react';
+import { isLeadNeedsFollowup } from '../utils/bookingFollowup';
+import { areCitiesLogisticallyCompatible } from '../utils/tourRouting';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
+import { TemplateRecommendationsCard } from './booking/TemplateRecommendationsCard';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
+import { GenerateAllTemplatesModal } from './booking/GenerateAllTemplatesModal';
 import { LeadsTable } from './booking/LeadsTable';
 import { VenueDetailPanel } from './booking/VenueDetailPanel';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
+import { MorningBriefingRadar } from './booking/MorningBriefingRadar';
+import { RoadbookContractModal } from './booking/RoadbookContractModal';
 import { isLeadVerificado } from '../utils/leadReliability';
 import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from '../utils/campaignMatch';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
 import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+import { AgentQueueMonitorModal } from './booking/AgentQueueMonitorModal';
+import { BookingFiltersPanel } from './booking/BookingFiltersPanel';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
@@ -239,10 +251,16 @@ interface BookingCRMProps {
   bandName?: string;
   activeCampaign?: BookingCampaign | null;
   onCampaignChange?: (campaign: BookingCampaign | null) => void;
+  concerts?: Concert[];
+  tours?: Tour[];
 }
 
 import { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
+
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
 
 export { normalizeStatus, normalizeType, autoDetectVenueAddress, VENUE_ADDRESS_DATABASE };
 
@@ -266,6 +284,8 @@ export default function BookingCRM({
   bandName,
   activeCampaign,
   onCampaignChange,
+  concerts = [],
+  tours = [],
 }: BookingCRMProps) {
   const bookingTutorial = useModuleTutorial('booking');
   const effectiveBandName = bandName || 'Tu Banda';
@@ -307,6 +327,7 @@ export default function BookingCRM({
   const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [isTemplatesSectionOpen, setIsTemplatesSectionOpen] = useState(false);
+  const [routeAnchorCity, setRouteAnchorCity] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialSection) {
@@ -388,6 +409,8 @@ export default function BookingCRM({
     isOptimizingTemplate,
     optimizationFeedbackMsg,
     setOptimizationFeedbackMsg,
+    isGeneratingAllTemplates,
+    handleGenerateAllFromBase,
     templateCustomInstruction,
     setTemplateCustomInstruction,
     templateToneRating,
@@ -401,6 +424,9 @@ export default function BookingCRM({
     handleSaveTemplates,
     handleResetTemplate,
   } = useEmailTemplates();
+
+  const [crmTemplateSubTab, setCrmTemplateSubTab] = useState<'plantilla' | 'hilos'>('plantilla');
+  const [isMultiTemplatesModalOpen, setIsMultiTemplatesModalOpen] = useState(false);
 
   const { gmailUser, gmailToken, isSyncingGmail, gmailStatusMsg, handleGmailLogin, handleGmailLogout, handleSyncGmailForLead } =
     useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
@@ -458,9 +484,15 @@ export default function BookingCRM({
   const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
   const [isExportLeadsOpen, setIsExportLeadsOpen] = useState(false);
   const [isDuplicatesModalOpen, setIsDuplicatesModalOpen] = useState(false);
+  const [isQueueMonitorOpen, setIsQueueMonitorOpen] = useState(false);
   const duplicateGroups = useMemo(() => findDuplicateLeads(leads), [leads]);
   const duplicateGroupsCount = duplicateGroups.length;
   const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
+
+  // Roadbook & Contract Modal State
+  const [isRoadbookModalOpen, setIsRoadbookModalOpen] = useState(false);
+  const [roadbookModalLead, setRoadbookModalLead] = useState<Lead | null>(null);
+  const [venueDetailInitialTab, setVenueDetailInitialTab] = useState<'info' | 'emails' | 'copilot' | 'bitacora'>('info');
 
   const handleTriggerEnviadorAgent = async (leadId?: string) => {
     setIsDispatchingEmails(true);
@@ -504,7 +536,10 @@ export default function BookingCRM({
     aforo: 0,
     tipo: 'medio' as LeadType,
     email_contacto: '',
+    email_secundario: '',
     telefono: '',
+    telefono_movil: '',
+    telefono_fijo: '',
     website: '',
     instagram: '',
     fuente: '',
@@ -562,7 +597,7 @@ export default function BookingCRM({
   const [scrapingLeadError, setScrapingLeadError] = useState<string | null>(null);
 
   // Email thread and manual dispatch states
-  const [activeTab, setActiveTab] = useState<'info' | 'emails'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'copilot' | 'bitacora'>('info');
   const [manualEmailBody, setManualEmailBody] = useState('');
   const [manualEmailSubject, setManualEmailSubject] = useState('');
   const [manualEmailSender, setManualEmailSender] = useState('Bakandeya Agent Manager IA');
@@ -687,8 +722,9 @@ export default function BookingCRM({
       const normSt = normalizeStatus(lead.estado);
       const matchesStatus =
         statusFilter === 'todos' ||
-        normSt === statusFilter ||
-        (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
+        (statusFilter === 'seguimientos'
+          ? isLeadNeedsFollowup(lead)
+          : normSt === statusFilter || (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado));
 
       const matchesType =
         typeFilter === 'todos'
@@ -703,7 +739,8 @@ export default function BookingCRM({
         (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) ||
         (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
       const matchesCapacity = !minCapacityFilter || (lead.aforo || 0) >= minCapacityFilter;
-      return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
+      const matchesRoute = !routeAnchorCity || areCitiesLogisticallyCompatible(routeAnchorCity, lead.ciudad || lead.region || '');
+      return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity && matchesRoute;
     });
   }, [
     sectionLeads,
@@ -715,6 +752,7 @@ export default function BookingCRM({
     sectionTab,
     filterByCampaign,
     activeCampaign,
+    routeAnchorCity,
   ]);
 
   const handleModalScrape = async () => {
@@ -762,6 +800,8 @@ export default function BookingCRM({
           const getVal = (f: any) => (typeof f === 'object' && f !== null ? f.valor : f || '');
           const emailVal = getVal(resData.data.email_contacto);
           const telVal = getVal(resData.data.telefono);
+          const isMobile = telVal && /^(?:\+?34\s*)?[67]/.test(telVal.trim());
+          const isLandline = telVal && /^(?:\+?34\s*)?[89]/.test(telVal.trim());
           const webVal = getVal(resData.data.website);
           const instaVal = getVal(resData.data.instagram);
           const contactoVal = getVal(resData.data.contacto_nombre);
@@ -775,6 +815,8 @@ export default function BookingCRM({
             ...prev,
             email_contacto: emailVal || prev.email_contacto,
             telefono: telVal || prev.telefono,
+            telefono_movil: isMobile ? telVal : prev.telefono_movil,
+            telefono_fijo: isLandline ? telVal : prev.telefono_fijo,
             website: webVal || prev.website,
             region: regionVal || prev.region,
             aforo: aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : prev.aforo,
@@ -912,7 +954,10 @@ export default function BookingCRM({
       genero: newLeadData.genero || (sectionTab === 'medios' ? 'Radio' : 'Música en directo'),
       tipo: sectionTab === 'medios' ? 'medio' : newLeadData.tipo,
       email_contacto: newLeadData.email_contacto || '',
-      telefono: newLeadData.telefono || '',
+      email_secundario: newLeadData.email_secundario || '',
+      telefono: newLeadData.telefono || newLeadData.telefono_movil || newLeadData.telefono_fijo || '',
+      telefono_movil: newLeadData.telefono_movil || '',
+      telefono_fijo: newLeadData.telefono_fijo || '',
       instagram: newLeadData.instagram || '',
       website: newLeadData.website || '',
       icono: newLeadData.icono || (sectionTab === 'medios' ? '📻' : '🏛️'),
@@ -945,16 +990,21 @@ export default function BookingCRM({
 
   const getStatusLabel = (status: LeadStatus | string) => leadStatusLabel(normalizeStatus(status), String(status));
 
-  const handleOpenLead = (lead: Lead) => {
+  const handleOpenLead = (lead: Lead, options?: { tab?: 'info' | 'emails' | 'copilot' | 'bitacora'; pitchDraft?: string }) => {
     setSelectedLead(lead);
-    setEditedPitch(lead.pitch_generado || '');
+    if (options?.pitchDraft) {
+      setEditedPitch(options.pitchDraft);
+    } else {
+      setEditedPitch(lead.pitch_generado || '');
+    }
     setIsEditingPitch(false);
     setIsEditingLeadInfo(false);
     setIsRejecting(false);
     setRejectionNotes('');
 
-    // Automatically switch to emails tab for negotiating or interested leads, else info
-    setActiveTab(lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
+    const targetTab = options?.tab || (lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
+    setActiveTab(targetTab);
+    setVenueDetailInitialTab(targetTab);
     setManualEmailBody('');
     setManualEmailSubject(
       lead.hilo_emails && lead.hilo_emails.length > 0
@@ -969,6 +1019,24 @@ export default function BookingCRM({
         block: 'start',
       });
     }, 100);
+  };
+
+  const handleDeleteSingleLead = (id: string, name?: string) => {
+    const leadToDelete = leads.find((l) => l.id === id);
+    const targetName = name || leadToDelete?.nombre_sala || 'esta sala';
+    if (
+      window.confirm(
+        `¿Estás seguro de que deseas eliminar "${targetName}" de tu CRM?\nSe eliminará de tu agenda y se guardará en la lista negra para no volver a sugerirla.`
+      )
+    ) {
+      if (selectedLead?.id === id) {
+        setSelectedLead(null);
+      }
+      setSelectedLeadIds((prev) => prev.filter((item) => item !== id));
+      if (onDeleteLead) {
+        onDeleteLead(id);
+      }
+    }
   };
 
   const handleStartEditLeadInfo = () => {
@@ -1059,22 +1127,76 @@ export default function BookingCRM({
 
     let simSender = 'Programación';
     let simBody = '';
+    let simFechas: string[] = [];
+    let simEcon: any = null;
+    let simIntencion = 'proponer_fechas';
+    let simScore = 0.8;
+    let simResumen = '';
+    let simPlaybook: any = null;
 
     const lowercaseName = selectedLead.nombre_sala.toLowerCase();
     if (selectedLead.id === 'lead-14' || lowercaseName.includes('hebe')) {
       simSender = 'Kike (Programación Sala Hebe)';
       simBody =
-        '¡Buenas! He estado pensando lo de la fecha doble con la banda local que propusisteis. Me parece de lujo, los chavales de"Vallekas Ska" están buscando bolo para noviembre y seguro que entre los dos llenamos el Hebe. El viernes 13 de Noviembre sigue libre. ¿Cerramos ese día con un 75% de taquilla para vosotros si llegamos a las 100 entradas? Ya me decís y os paso el contrato.';
+        '¡Buenas! He estado pensando lo de la fecha doble con la banda local que propusisteis. Me parece de lujo, los chavales de "Vallekas Ska" están buscando bolo para noviembre y seguro que entre los dos llenamos el Hebe. El viernes 13 de Noviembre sigue libre. ¿Cerramos ese día con un 75% de taquilla para vosotros si llegamos a las 100 entradas? Ya me decís y os paso el contrato.';
+      simFechas = ['Viernes 13 de Noviembre'];
+      simEcon = { tipo: 'taquilla_porcentaje', cifra: '75%', detalles: 'Mínimo 100 entradas con Vallekas Ska' };
+      simIntencion = 'proponer_fechas';
+      simScore = 0.9;
+      simResumen = 'Kike propone fecha doble con Vallekas Ska el 13 de Noviembre con 75% de taquilla para la banda.';
+      simPlaybook = {
+        titulo: 'Aceptar fecha doble y cerrar contrato',
+        estrategia: 'La oferta es altamente favorable y asegura convocatoria local con Vallekas Ska.',
+        sugerencia_accion: 'responder_inmediato',
+        propuesta_rapida:
+          '¡Aceptamos el viernes 13 de Noviembre con Vallekas Ska y el 75% de taquilla! Pásanos el contrato y el contacto de la banda local para coordinar la cartelería.',
+      };
     } else if (selectedLead.id === 'lead-4' || lowercaseName.includes('viña')) {
       simSender = 'Producción Artística (Viña Rock)';
       simBody =
         'Hola, gracias por pasarnos los detalles. El caché de 4.500€ entra en vuestros rangos para el escenario de Mestizaje. El slot de las 18:30 del viernes está libre. Confirmadnos si vuestro rider técnico incluye los sintetizadores listos para línea balanceada o si necesitáis cajas DI adicionales del festival. ¡Cerremos trato!';
+      simFechas = ['Viernes 18:30 (Escenario Mestizaje)'];
+      simEcon = { tipo: 'cache_fijo', cifra: '4.500€', detalles: 'Caché fijo garantizado por festival' };
+      simIntencion = 'confirmar_fecha';
+      simScore = 0.95;
+      simResumen = 'Viña Rock confirma slot a las 18:30 con caché de 4.500€ y consulta rider para cajas DI.';
+      simPlaybook = {
+        titulo: 'Confirmar slot y enviar rider técnico',
+        estrategia: 'Oferta cerrada al caché solicitado. Responder adjuntando detalles técnicos para no perder el slot.',
+        sugerencia_accion: 'confirmar_directo',
+        propuesta_rapida:
+          '¡Confirmamos el slot del viernes a las 18:30 por 4.500€! Llevamos sintetizadores con salidas balanceadas en jack TRS, pero agradeceríamos 2 cajas DI pasivas de cortesía.',
+      };
     } else if (selectedLead.id === 'lead-6' || lowercaseName.includes('razzmatazz')) {
       simSender = 'Xavi (Booking Razzmatazz)';
       simBody = `Buenas, nos parece perfecto el acuerdo de taquilla al 80/20 con un mínimo de 150 entradas garantizadas. La fecha del sábado 5 de Diciembre queda reservada para ${effectiveBandName}. Decidme a qué email enviamos el borrador del contrato de sala. ¡Un saludo!`;
+      simFechas = ['Sábado 5 de Diciembre'];
+      simEcon = { tipo: 'taquilla_porcentaje', cifra: '80/20', detalles: '80% para la banda (mín. 150 entradas)' };
+      simIntencion = 'confirmar_fecha';
+      simScore = 0.95;
+      simResumen = 'Razzmatazz reserva el 5 de Diciembre con 80% taquilla y solicita email para enviar contrato.';
+      simPlaybook = {
+        titulo: 'Enviar datos fiscales y solicitar contrato',
+        estrategia: 'La sala ha aceptado la fecha clave de sábado. Formalizar el acuerdo administrativo inmediatamente.',
+        sugerencia_accion: 'enviar_contrato',
+        propuesta_rapida:
+          '¡Perfecto Xavi! Enviad el contrato a booking@labanda.com con atención a Administración. Nos ponemos ya con la promoción.',
+      };
     } else {
       simSender = `Programador (${selectedLead.nombre_sala})`;
       simBody = `Hola equipo de ${effectiveBandName}, gracias por la propuesta. Nos gusta mucho vuestra propuesta en directo. Para otoño tenemos el calendario casi cerrado, pero nos queda un hueco el sábado 28 de Noviembre. Iríamos a taquilla 70/30 a vuestro favor con entradas a 10€. ¿Os cuadra la fecha?`;
+      simFechas = ['Sábado 28 de Noviembre'];
+      simEcon = { tipo: 'taquilla_porcentaje', cifra: '70/30 (10€)', detalles: '70% a favor de la banda' };
+      simIntencion = 'proponer_fechas';
+      simScore = 0.75;
+      simResumen = 'El programador ofrece hueco el sábado 28 de Noviembre con 70% de taquilla a 10€ entrada.';
+      simPlaybook = {
+        titulo: 'Aceptar fecha de sábado 28 de Noviembre',
+        estrategia: 'Es sábado y el porcentaje es competitivo. Gran oportunidad de fecha de fin de semana.',
+        sugerencia_accion: 'responder_inmediato',
+        propuesta_rapida:
+          '¡Nos encaja perfectamente el sábado 28 de Noviembre con taquilla al 70/30 a 10€! Reservamos esa fecha en nuestro calendario de gira.',
+      };
     }
 
     const now = new Date();
@@ -1109,21 +1231,29 @@ export default function BookingCRM({
     const today = new Date().toISOString().split('T')[0];
     const nuevaNota = `*** [${today}] Correo de simulación entrante recibido de ${simSender} ***\n` + (selectedLead.notas || '');
 
-    onUpdateLead(selectedLead.id, {
+    const updatedLeadFields: Partial<Lead> = {
       hilo_emails: nuevoHilo,
       estado: nuevoEstado,
       notas: nuevaNota,
       fecha_ultima_respuesta: today,
-    });
+      ultimo_mensaje_recibido: simBody,
+      fechas_propuestas_sala: simFechas,
+      condiciones_economicas_detectadas: simEcon,
+      temperatura_lead: 'muy_caliente',
+      ultima_intencion: simIntencion as any,
+      ultimo_sentimiento: 'muy_positivo',
+      ultimo_sentimiento_score: simScore,
+      ultimo_analisis_resumen: simResumen,
+      estrategia_playbook: simPlaybook,
+    };
+
+    onUpdateLead(selectedLead.id, updatedLeadFields);
 
     setSelectedLead((prev) =>
       prev
         ? {
             ...prev,
-            hilo_emails: nuevoHilo,
-            estado: nuevoEstado,
-            notas: nuevaNota,
-            fecha_ultima_respuesta: today,
+            ...updatedLeadFields,
           }
         : null
     );
@@ -1227,110 +1357,9 @@ export default function BookingCRM({
           <div className="space-y-3 sm:space-y-4">
             {/* Header: Tabs + Unified Action Buttons */}
             <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                {/* SECCIONES PRINCIPALES DE CONTACTOS: ESCENARIOS, MEDIOS Y MANAGEMENT/PRODUCTORAS */}
-                <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-x-auto w-full sm:w-auto scrollbar-none">
-                  <button
-                    id="section-tab-salas"
-                    type="button"
-                    onClick={() => handleSelectSectionTab('salas')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                      sectionTab === 'salas'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    <Building2 className="w-3.5 h-3.5 shrink-0" />
-                    <span>Escenarios</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-                        sectionTab === 'salas' ? 'bg-[var(--sunken)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {
-                        leads.filter(
-                          (l) =>
-                            !normalizeType(l.tipo).includes('medio') &&
-                            !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))
-                        ).length
-                      }
-                    </span>
-                  </button>
-
-                  <button
-                    id="section-tab-medios"
-                    type="button"
-                    onClick={() => handleSelectSectionTab('medios')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                      sectionTab === 'medios'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    <Radio className="w-3.5 h-3.5 shrink-0" />
-                    <span>Medios y Prensa</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-                        sectionTab === 'medios' ? 'bg-[var(--sunken)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {leads.filter((l) => normalizeType(l.tipo) === 'medio').length}
-                    </span>
-                  </button>
-
-                  <button
-                    id="section-tab-grupos"
-                    type="button"
-                    onClick={() => handleSelectSectionTab('grupos')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                      sectionTab === 'grupos'
-                        ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    <Briefcase className="w-3.5 h-3.5 shrink-0" />
-                    <span>Management & Productoras</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
-                        sectionTab === 'grupos' ? 'bg-[var(--sunken)] text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {
-                        leads.filter((l) =>
-                          ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some((t) =>
-                            normalizeType(l.tipo).includes(t)
-                          )
-                        ).length
-                      }
-                    </span>
-                  </button>
-
-                  <button
-                    id="section-tab-bandas"
-                    type="button"
-                    onClick={() => {
-                      if (onNavigate) {
-                        onNavigate('bandas');
-                      } else if (onSectionChange) {
-                        onSectionChange('bandas');
-                      }
-                    }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    title="Ver Red de Co-Booking y Grupos Amigos"
-                  >
-                    <Users className="w-3.5 h-3.5 shrink-0 text-[var(--acc-ink)]" />
-                    <span>Grupos</span>
-                    {typeof bandsCount === 'number' && bandsCount > 0 && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-2)]">
-                        {bandsCount}
-                      </span>
-                    )}
-                  </button>
-                </div>
-
-                {/* UNIFIED ACTION BUTTONS — PC: Todos, Móvil: Solo esenciales */}
-                <div className="flex items-center gap-1.5 shrink-0 ml-auto">
-                  {/* Botón Añadir (SIEMPRE visible) */}
+              <div className="flex items-center justify-end gap-2">
+                {/* UNIFIED ACTION BUTTONS */}
+                <div className="flex items-center gap-1.5 w-full sm:w-auto justify-stretch sm:justify-end">
                   <button
                     id="add-new-lead-btn"
                     type="button"
@@ -1343,7 +1372,10 @@ export default function BookingCRM({
                         aforo: 0,
                         tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
                         email_contacto: '',
+                        email_secundario: '',
                         telefono: '',
+                        telefono_movil: '',
+                        telefono_fijo: '',
                         website: '',
                         instagram: '',
                         fuente: '',
@@ -1359,13 +1391,12 @@ export default function BookingCRM({
                     title="Añadir contacto"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
-                    <span className="sm:inline">
-                      Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}
-                    </span>
+                    <span>+ {sectionTab === 'medios' ? 'Medio' : sectionTab === 'grupos' ? 'Contacto' : 'Escenario'}</span>
                   </button>
 
-                  {/* Tutorial (pequeño en móvil) */}
-                  <ModuleTutorialTrigger moduleId="booking" onClick={bookingTutorial.openTutorial} />
+                  <div className="hidden sm:inline-flex">
+                    <ModuleTutorialTrigger moduleId="booking" onClick={bookingTutorial.openTutorial} />
+                  </div>
 
                   {/* Botón Exportar — Solo en PC */}
                   <button
@@ -1377,6 +1408,22 @@ export default function BookingCRM({
                   >
                     <Download className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     <span>Exportar Leads</span>
+                  </button>
+
+                  <button
+                    id="open-templates-direct-btn"
+                    type="button"
+                    onClick={() => {
+                      setIsTemplatesSectionOpen(true);
+                      setTimeout(() => {
+                        document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }, 60);
+                    }}
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] transition-[filter] cursor-pointer"
+                    title="Configurar plantillas de correo y entrenar el Redactor con hilos reales de conversación"
+                  >
+                    <MessageSquareText className="w-3.5 h-3.5" />
+                    <span>Plantillas & Hilos IA</span>
                   </button>
 
                   {/* Botón Herramientas & IA */}
@@ -1392,8 +1439,7 @@ export default function BookingCRM({
                     title="Herramientas, Scout, Excel y Agentes IA"
                   >
                     <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
-                    <span className="hidden sm:inline">Herramientas e IA</span>
-                    <span className="sm:hidden">IA</span>
+                    <span>IA & Herramientas</span>
                     {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
                       <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
                         {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length}
@@ -1540,6 +1586,59 @@ export default function BookingCRM({
                     <button
                       type="button"
                       onClick={() => {
+                        setIsQueueMonitorOpen(true);
+                        setIsMobileToolsOpen(false);
+                      }}
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950/80 to-zinc-900 hover:from-emerald-900/90 hover:to-zinc-800 text-emerald-300 border border-emerald-500/40 transition-all cursor-pointer active:scale-98 shadow-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <Activity className="w-4 h-4 text-emerald-400" />
+                        <span>Monitor de Cola & Workers en Vivo</span>
+                      </span>
+                      <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileToolsOpen(false);
+                        setIsTemplatesSectionOpen(true);
+                        setTimeout(() => {
+                          document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 60);
+                      }}
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                    >
+                      <span className="flex items-center gap-2">
+                        <MessageSquareText className="w-4 h-4 text-amber-400" />
+                        <span>Plantillas & Hilos de Ejemplo (Redactor AI)</span>
+                      </span>
+                      <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileToolsOpen(false);
+                        setRoadbookModalLead(selectedLead || leads[0] || null);
+                        setIsRoadbookModalOpen(true);
+                      }}
+                      className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+                    >
+                      <span className="flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-amber-400" />
+                        <span>Hoja de Ruta (Roadbook) & Contratos</span>
+                      </span>
+                      <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
                         setIsMobileToolsOpen(false);
                         setIsExportLeadsOpen(true);
                       }}
@@ -1642,6 +1741,22 @@ export default function BookingCRM({
                           </option>
                           <option value="ayuntamiento">
                             🎆 Ayuntamientos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'ayuntamiento').length})
+                          </option>
+                          <option value="agencia">
+                            💼 Agencias (
+                            {sectionLeads.filter((l) => normalizeType(l.tipo) === 'agencia' || normalizeType(l.tipo) === 'manager').length})
+                          </option>
+                          <option value="sello">💿 Sellos ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'sello').length})</option>
+                          <option value="productora">
+                            🎛️ Productores (
+                            {
+                              sectionLeads.filter((l) => normalizeType(l.tipo) === 'productora' || normalizeType(l.tipo) === 'productor')
+                                .length
+                            }
+                            )
+                          </option>
+                          <option value="grupo">
+                            🎸 Bandas Amigas ({sectionLeads.filter((l) => normalizeType(l.tipo) === 'grupo').length})
                           </option>
                         </>
                       )}
@@ -1763,269 +1878,40 @@ export default function BookingCRM({
             )}
 
             {/* ⚡ UNIFIED COMPACT FILTERS PANEL (Desktop, Tablet & Mobile) */}
-            {isMobileFiltersOpen && (
-              <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] /40 space-y-3.5 animate-in slide-in-from-top-2 duration-150">
-                <div className="flex items-center justify-between pb-2">
-                  <span className="text-xs font-bold text-[var(--acc)]/70 flex items-center gap-1.5">
-                    <Filter className="w-3.5 h-3.5" />
-                    Filtros y Búsquedas Avanzadas
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setIsMobileFiltersOpen(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-s)] cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Opciones rápidas</p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <button
-                      type="button"
-                      onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
-                      className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                        onlyFavoritesFilter
-                          ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /50'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
-                    >
-                      <span>⭐ Favoritos</span>
-                      {onlyFavoritesFilter && <X className="w-3 h-3 ml-0.5" />}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
-                      className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                        onlyVerifiedFilter
-                          ? 'bg-[var(--acc)]/20 text-[var(--ink-3)]/50'
-                          : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
-                    >
-                      <span>✔ Verificados</span>
-                      {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
-                    </button>
-
-                    <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-s)] text-xs">
-                      <span className="text-[var(--ink-2)]">Aforo mín:</span>
-                      <input
-                        type="number"
-                        placeholder="Ej: 300"
-                        value={minCapacityFilter || ''}
-                        onChange={(e) => setMinCapacityFilter(Number(e.target.value) || 0)}
-                        className="w-16 bg-transparent text-[var(--acc)] font-bold focus:outline-none"
-                      />
-                      {minCapacityFilter > 0 && (
-                        <button
-                          type="button"
-                          onClick={() => setMinCapacityFilter(0)}
-                          className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Button to save current filter */}
-                    {!isSavingFilterOpen ? (
-                      <button
-                        type="button"
-                        onClick={() => setIsSavingFilterOpen(true)}
-                        className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-s)] font-bold text-xs flex items-center gap-1 transition-all/30 cursor-pointer"
-                        title="Guardar la combinación de filtros actual en 1 clic"
-                      >
-                        <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
-                        <span>💾 Guardar búsqueda</span>
-                      </button>
-                    ) : (
-                      <form onSubmit={handleSaveCurrentFilter} className="flex items-center gap-1.5 animate-fadeIn">
-                        <input
-                          type="text"
-                          autoFocus
-                          placeholder="Nombre del filtro (ej: Salas BCN > 300)..."
-                          value={newFilterName}
-                          onChange={(e) => setNewFilterName(e.target.value)}
-                          className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--bg)]/50 text-[var(--ink)] focus:outline-none w-48 sm:w-56"
-                        />
-                        <button
-                          type="submit"
-                          className="px-2.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-bold cursor-pointer"
-                        >
-                          Guardar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setIsSavingFilterOpen(false)}
-                          className="p-1.5 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)] rounded-[var(--r-s)] cursor-pointer"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                </div>
-
-                {/* Saved Filters List */}
-                {savedFilters.length > 0 && (
-                  <div className="space-y-1.5">
-                    <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Búsquedas guardadas</p>
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-                      {savedFilters.map((sf) => {
-                        const isActive = activeSavedFilterId === sf.id;
-                        return (
-                          <div
-                            key={sf.id}
-                            className={`group relative shrink-0 flex items-center rounded-full transition-all cursor-pointer ${
-                              isActive
-                                ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold'
-                                : 'bg-[var(--bg)]/80 hover:bg-[var(--surface)]800 text-[var(--ink)]'
-                            }`}
-                          >
-                            <button
-                              type="button"
-                              onClick={() => handleApplySavedFilter(sf)}
-                              className="px-3 py-1 text-xs font-sans flex items-center gap-1.5 cursor-pointer"
-                            >
-                              <span>📌 {sf.nombre}</span>
-                              {sf.minCapacityFilter ? (
-                                <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-[var(--ink)]">
-                                  &gt;{sf.minCapacityFilter}
-                                </span>
-                              ) : null}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => handleDeleteSavedFilter(sf.id, e)}
-                              className="pr-2 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors p-0.5 rounded-full cursor-pointer"
-                              title="Eliminar filtro guardado"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* 2. Tipo Filter */}
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Tipo de espacio / contacto</p>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {(sectionTab === 'medios'
-                      ? ([
-                          { key: 'todos', label: '🌟 Todos' },
-                          { key: 'radio', label: '📻 Radio' },
-                          { key: 'tv', label: '📺 TV' },
-                          { key: 'prensa', label: '📰 Prensa' },
-                          { key: 'redes', label: '📱 Redes' },
-                          { key: 'podcast', label: '🎙️ Podcasts' },
-                        ] as const)
-                      : sectionTab === 'grupos'
-                        ? ([
-                            { key: 'todos', label: '🌟 Todos' },
-                            { key: 'productora', label: '🎬 Productoras' },
-                            { key: 'manager', label: '👔 Mánagers' },
-                            { key: 'agencia', label: '💼 Agencias' },
-                            { key: 'sello', label: '💿 Sellos' },
-                            { key: 'grupo', label: '🎸 Grupos' },
-                          ] as const)
-                        : ([
-                            { key: 'todos', label: '🌟 Todos' },
-                            { key: 'sala', label: '🏛️ Salas' },
-                            { key: 'festival', label: '🎪 Festivales' },
-                            { key: 'discoteca', label: '🪩 Discotecas' },
-                            { key: 'ayuntamiento', label: '🎆 Ayuntamientos' },
-                          ] as const)
-                    ).map((t) => (
-                      <button
-                        key={t.key}
-                        type="button"
-                        onClick={() => setTypeFilter(t.key)}
-                        className={`px-3 py-1 rounded-[var(--r-s)] text-xs font-semibold transition-all cursor-pointer ${
-                          typeFilter === t.key
-                            ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60'
-                        }`}
-                      >
-                        {t.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 3. Ciudad Filter */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <p className="text-[10px] font-bold text-[var(--ink-2)] tracking-wider">Ciudad / Localidad</p>
-                    {selectedCityFilter && (
-                      <button
-                        type="button"
-                        onClick={() => setSelectedCityFilter('')}
-                        className="text-[10px] text-[var(--acc)] hover:underline cursor-pointer"
-                      >
-                        Ver todas
-                      </button>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCityFilter('')}
-                      className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-all cursor-pointer ${
-                        selectedCityFilter === ''
-                          ? 'bg-[var(--surface)] text-[var(--acc)] font-bold'
-                          : 'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800'
-                      }`}
-                    >
-                      Todas ({activeLeadsForSection.length})
-                    </button>
-                    {displayCityChips.map((cityName) => {
-                      const isSelected = selectedCityFilter.toLowerCase() === cityName.toLowerCase();
-                      const count = cityCounts[cityName] || 0;
-                      return (
-                        <button
-                          key={cityName}
-                          type="button"
-                          onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
-                          className={`px-2.5 py-1 rounded-full text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
-                            isSelected
-                              ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold/50'
-                              : 'bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]800'
-                          }`}
-                        >
-                          <span>{cityName}</span>
-                          {count > 0 && <span className="opacity-70 text-[10px]">({count})</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 4. Action Buttons Footer */}
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleClearAllFilters}
-                    className="text-xs text-[var(--ink-2)] hover:text-[var(--alert)] flex items-center gap-1 px-2 py-1 cursor-pointer"
-                  >
-                    <RefreshCw className="w-3 h-3" />
-                    <span>Limpiar filtros</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsMobileFiltersOpen(false)}
-                    className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] cursor-pointer"
-                  >
-                    Ver {filteredLeads.length} resultados
-                  </button>
-                </div>
-              </div>
-            )}
+            <BookingFiltersPanel
+              isOpen={isMobileFiltersOpen}
+              onClose={() => setIsMobileFiltersOpen(false)}
+              sectionTab={sectionTab}
+              handleSelectSectionTab={handleSelectSectionTab}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              typeFilter={typeFilter}
+              setTypeFilter={setTypeFilter}
+              onlyFavoritesFilter={onlyFavoritesFilter}
+              setOnlyFavoritesFilter={setOnlyFavoritesFilter}
+              onlyVerifiedFilter={onlyVerifiedFilter}
+              setOnlyVerifiedFilter={setOnlyVerifiedFilter}
+              minCapacityFilter={minCapacityFilter}
+              setMinCapacityFilter={setMinCapacityFilter}
+              isSavingFilterOpen={isSavingFilterOpen}
+              setIsSavingFilterOpen={setIsSavingFilterOpen}
+              newFilterName={newFilterName}
+              setNewFilterName={setNewFilterName}
+              handleSaveCurrentFilter={handleSaveCurrentFilter}
+              savedFilters={savedFilters}
+              activeSavedFilterId={activeSavedFilterId}
+              handleApplySavedFilter={handleApplySavedFilter}
+              handleDeleteSavedFilter={handleDeleteSavedFilter}
+              selectedCityFilter={selectedCityFilter}
+              setSelectedCityFilter={setSelectedCityFilter}
+              handleClearAllFilters={handleClearAllFilters}
+              filteredCount={filteredLeads.length}
+              sectionLeads={sectionLeads}
+              normalizeType={normalizeType}
+              activeLeadsForSection={activeLeadsForSection}
+              displayCityChips={displayCityChips}
+              cityCounts={cityCounts}
+            />
 
             {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
             {activeFiltersCount > 0 && !isMobileFiltersOpen && (
@@ -2089,6 +1975,27 @@ export default function BookingCRM({
               </div>
             )}
 
+            {/* 🌟 MORNING BRIEFING & RADAR DEL MÁNAGER (5-MINUTE DAILY ACTION RADAR) */}
+            <div className="mb-2">
+              <MorningBriefingRadar
+                leads={leads}
+                concerts={concerts}
+                tours={tours}
+                onSelectLead={(lead, options) => {
+                  handleOpenLead(lead, options);
+                }}
+                onApproveLead={(lead) => {
+                  onUpdateLead(lead.id, { estado: 'aprobado_propuesta' });
+                }}
+                onOpenRoadbookModal={(lead) => {
+                  setRoadbookModalLead(lead || selectedLead || leads[0] || null);
+                  setIsRoadbookModalOpen(true);
+                }}
+                isStitchLight={isStitchLight}
+                bandName={effectiveBandName}
+              />
+            </div>
+
             {/* Main Status Tabs Bar (Clean, no-scrollbar, single row) */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
               {(
@@ -2096,6 +2003,7 @@ export default function BookingCRM({
                   { key: 'todos', label: 'Todos' },
                   { key: 'nuevo', label: 'Por contactar' },
                   { key: 'esperando_respuesta', label: 'Contactados' },
+                  { key: 'seguimientos', label: '⏰ Seguimientos' },
                   { key: 'respondido', label: 'En conversación' },
                   { key: 'negociando', label: 'Negociando' },
                   { key: 'confirmado', label: 'Confirmados 🎉' },
@@ -2106,11 +2014,13 @@ export default function BookingCRM({
                 const count =
                   tab.key === 'todos'
                     ? sectionLeads.length
-                    : sectionLeads.filter((l) => {
-                        const norm = normalizeStatus(l.estado);
-                        if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
-                        return norm === tab.key;
-                      }).length;
+                    : tab.key === 'seguimientos'
+                      ? sectionLeads.filter((l) => isLeadNeedsFollowup(l)).length
+                      : sectionLeads.filter((l) => {
+                          const norm = normalizeStatus(l.estado);
+                          if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
+                          return norm === tab.key;
+                        }).length;
                 const isSelected = statusFilter === tab.key;
 
                 return (
@@ -2136,6 +2046,26 @@ export default function BookingCRM({
                 );
               })}
             </div>
+
+            {/* Route Anchor Active Filter Banner */}
+            {routeAnchorCity && (
+              <div className="flex items-center justify-between p-2.5 px-3.5 rounded-xl bg-sky-950/50 border border-sky-500/40 text-sky-200 text-xs">
+                <div className="flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span>
+                    🚗 <strong>Enlace de Fin de Semana desde {routeAnchorCity}:</strong> Mostrando {filteredLeads.length} salas compatibles
+                    en ruta (&lt; 2.5h)
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRouteAnchorCity(null)}
+                  className="text-sky-300 hover:text-white text-xs font-bold px-2 py-0.5 rounded bg-sky-900/60 border border-sky-500/30 cursor-pointer transition-colors"
+                >
+                  ✕ Quitar filtro de ruta
+                </button>
+              </div>
+            )}
 
             {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
             <BulkLeadsActionBar
@@ -2278,6 +2208,7 @@ export default function BookingCRM({
                     const res = await apiFetch(`/api/leads/enrich-lead`, {
                       method: 'POST',
                       body: JSON.stringify({
+                        leadId: targetLead.id,
                         name: targetLead.nombre_sala,
                         city: targetLead.ciudad || 'España',
                       }),
@@ -2360,11 +2291,12 @@ export default function BookingCRM({
               />
             ) : (
               <LeadsTable
-                onDeleteLead={onDeleteLead}
+                onDeleteLead={handleDeleteSingleLead}
                 leads={filteredLeads}
                 selectedLead={selectedLead}
                 onSelectLead={handleOpenLead}
                 onUpdateLead={onUpdateLead}
+                activeCampaign={activeCampaign}
                 onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
                 viewMode={viewMode === 'grid' ? 'grid' : 'table'}
                 getStatusBadgeClass={getStatusBadgeClass}
@@ -2382,6 +2314,9 @@ export default function BookingCRM({
                 onDeselectAll={() => setSelectedLeadIds([])}
                 isAllSelected={filteredLeads.length > 0 && filteredLeads.every((l) => selectedLeadIds.includes(l.id))}
                 isSomeSelected={filteredLeads.length > 0 && filteredLeads.some((l) => selectedLeadIds.includes(l.id))}
+                onFilterByRouteCity={setRouteAnchorCity}
+                effectiveBandName={effectiveBandName}
+                concerts={concerts}
               />
             )}
           </div>
@@ -2400,11 +2335,19 @@ export default function BookingCRM({
               normalizeStatus={normalizeStatus}
               normalizeType={normalizeType}
               autoDetectVenueAddress={autoDetectVenueAddress}
-              onDeleteLead={onDeleteLead}
+              onDeleteLead={handleDeleteSingleLead}
               sectionTab={sectionTab}
               activeCampaign={activeCampaign}
               onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
               isUploadingLeadLogo={isUploadingLeadLogo}
+              initialTab={venueDetailInitialTab}
+              onOpenRoadbookModal={(lead) => {
+                setRoadbookModalLead(lead);
+                setIsRoadbookModalOpen(true);
+              }}
+              onFilterByRouteCity={setRouteAnchorCity}
+              bandName={effectiveBandName}
+              concerts={concerts}
             />
           </div>
         )}
@@ -2414,7 +2357,7 @@ export default function BookingCRM({
           selectedLead={selectedLead}
           onClose={() => setSelectedLead(null)}
           onUpdateLead={onUpdateLead}
-          onDeleteLead={onDeleteLead}
+          onDeleteLead={handleDeleteSingleLead}
           getStatusBadgeClass={getStatusBadgeClass}
           getStatusLabel={getStatusLabel}
           getStatusDotColor={getStatusDotColor}
@@ -2425,6 +2368,9 @@ export default function BookingCRM({
           activeCampaign={activeCampaign}
           onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
           isUploadingLeadLogo={isUploadingLeadLogo}
+          onFilterByRouteCity={setRouteAnchorCity}
+          bandName={effectiveBandName}
+          concerts={concerts}
         />
       </div>
 
@@ -2468,417 +2414,26 @@ export default function BookingCRM({
         </div>
 
         {isTemplatesSectionOpen && (
-          <div className="mt-5 pt-4800/80 space-y-6">
-            <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${'-neutral-100'}`}>
-              <div>
-                <h4 className={`text-xs font-bold font-display tracking-widest flex items-center gap-2 ${'text-[var(--acc)]'}`}>
-                  Pautas diferenciadas por categoría
-                </h4>
-              </div>
-
-              {/* Template Tab Selector (7 Categories) */}
-              <div className={`flex flex-wrap items-center gap-1 p-1 rounded-[var(--r-m)] shrink-0 ${'bg-[var(--surface)]'}`}>
-                {[
-                  { id: 'salas', label: '🏛️ Salas', icon: Building2 },
-                  { id: 'festivales', label: '🎪 Festivales', icon: Tent },
-                  { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
-                  { id: 'medios', label: '📻 Medios', icon: Radio },
-                  { id: 'grupos', label: '🎸 Grupos', icon: Users },
-                  {
-                    id: 'managements',
-                    label: '💼 Managements',
-                    icon: Briefcase,
-                  },
-                  {
-                    id: 'ayuntamientos',
-                    label: '🎉 Ayuntamientos',
-                    icon: Landmark,
-                  },
-                ].map((tab) => {
-                  const isActive = templateTab === tab.id;
-                  const IconComp = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      id={`template-tab-${tab.id}`}
-                      onClick={() => setTemplateTab(tab.id as TemplateCategory)}
-                      className={`py-1.5 px-2.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
-                        isActive ? 'bg-[var(--acc)] text-[var(--on-acc)] font-extrabold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
-                    >
-                      <IconComp className="w-3.5 h-3.5" />
-                      <span>{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Category Notice Banner */}
-            {(() => {
-              const activeTemplate = getActiveTemplateData();
-              return (
-                <>
-                  <div
-                    className={`p-3 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between ${
-                      templateTab === 'medios'
-                        ? 'bg-[var(--alert)]/15 text-[var(--alert)]'
-                        : templateTab === 'grupos'
-                          ? 'bg-[var(--surface)]/15 text-[var(--ok)]'
-                          : templateTab === 'discotecas'
-                            ? 'bg-[var(--acc)]/10 text-[var(--acc)]'
-                            : templateTab === 'ayuntamientos'
-                              ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70'
-                              : 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
-                    }`}
-                  >
-                    <div>
-                      <strong>{activeTemplate.title}</strong>
-                      <p className="text-[10px] opacity-80 mt-0.5">{activeTemplate.desc}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Form Side */}
-                    <div className="space-y-4">
-                      {optimizationFeedbackMsg && (
-                        <div className="p-3 bg-[var(--acc)]/15 text-[var(--ink)] text-[11px] rounded-[var(--r-m)] flex items-center justify-between font-sans animate-in fade-in">
-                          <span>{optimizationFeedbackMsg}</span>
-                          <button
-                            onClick={() => setOptimizationFeedbackMsg(null)}
-                            className="text-[var(--acc)] font-bold ml-2 hover:text-[var(--ink)] cursor-pointer"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      )}
-
-                      <div className="space-y-1.5">
-                        <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>
-                          Asunto del Email por Defecto
-                        </label>
-                        <input
-                          id="template-subject"
-                          type="text"
-                          value={activeTemplate.subject}
-                          onChange={(e) => activeTemplate.setSubject(e.target.value)}
-                          className={`w-full rounded-[var(--r-s)] px-2 py-1 text-[10px] focus:outline-none transition-all font-sans ${'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'}`}
-                        />
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className={`block text-[10px] font-sans tracking-wider ${'text-[var(--ink-2)]'}`}>
-                          Cuerpo de la Plantilla de Correo de Presentación
-                        </label>
-                        <textarea
-                          id="template-body"
-                          rows={8}
-                          value={activeTemplate.body}
-                          onChange={(e) => activeTemplate.setBody(e.target.value)}
-                          className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--acc)]/50'}`}
-                          placeholder="Escribe el cuerpo de la plantilla usando {{nombre_sala}}, {{ciudad}} etc..."
-                        />
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className={`block text-[10px] font-sans tracking-wider flex items-center gap-1.5 ${'text-[var(--acc)]'}`}>
-                          <Sparkles className="w-3.5 h-3.5" /> Pautas AI (Directrices de Redacción Subjetiva)
-                        </label>
-                        <textarea
-                          id="template-guidelines"
-                          rows={3}
-                          value={activeTemplate.guidelines}
-                          onChange={(e) => activeTemplate.setGuidelines(e.target.value)}
-                          className={`w-full rounded-[var(--r-s)] p-3 text-[10px] focus:outline-none transition-all font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)] focus:-[var(--accent)]/50'}`}
-                          placeholder="Ej: Mantén un tono periodístico, enfatiza el lanzamiento del single..."
-                        />
-                      </div>
-
-                      <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10">
-                        <div className="flex items-center justify-between">
-                          <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
-                            <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Evaluación y Entrenamiento de la Plantilla
-                          </label>
-                          {(templateToneRating > 0 || templateContentRating > 0 || templateCustomInstruction) && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setTemplateToneRating(0);
-                                setTemplateContentRating(0);
-                                setTemplateCustomInstruction('');
-                              }}
-                              className="text-[9px] text-[var(--acc)] font-bold hover:underline cursor-pointer"
-                            >
-                              Limpiar todo
-                            </button>
-                          )}
-                        </div>
-
-                        {/* Estrellitas de Tono y Contenido */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                          {/* Tono y Estilo */}
-                          <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
-                              <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                {templateToneRating > 0 ? `${templateToneRating}/5` : 'Sin calificar'}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <button
-                                  key={`crm-template-tone-${star}`}
-                                  type="button"
-                                  onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
-                                  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                    templateToneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
-                                  }`}
-                                  title={`Calificar tono y estilo: ${star}/5`}
-                                >
-                                  <Star className="w-4 h-4 fill-current" />
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Contenido y Estructura */}
-                          <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
-                              <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                {templateContentRating > 0 ? `${templateContentRating}/5` : 'Sin calificar'}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <button
-                                  key={`crm-template-content-${star}`}
-                                  type="button"
-                                  onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
-                                  className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                    templateContentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
-                                  }`}
-                                  title={`Calificar contenido y estructura: ${star}/5`}
-                                >
-                                  <Star className="w-4 h-4 fill-current" />
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-1 pt-1">
-                          <label className="block text-[10px] font-sans font-bold tracking-wider text-[var(--acc)]/70 flex items-center gap-1.5">
-                            <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" /> Comentario o Corrección Directa
-                          </label>
-                          <textarea
-                            id="template-custom-instruction"
-                            rows={2}
-                            value={templateCustomInstruction}
-                            onChange={(e) => setTemplateCustomInstruction(e.target.value)}
-                            className="w-full rounded-[var(--r-s)] p-2.5 text-[10px] bg-[var(--surface)] text-[var(--ink)] focus: focus:outline-none font-sans leading-relaxed"
-                            placeholder="Ej:'Haz la plantilla de salas un 20% más corta, resalta nuestro directo enérgico sin instrumentos de viento y pide propuesta de fecha para el próximo trimestre...'"
-                          />
-                        </div>
-                        <div className="text-[9px] text-[var(--acc)]/70/80 font-sans leading-tight">
-                          💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en{' '}
-                          <strong>Regenerar</strong>, la IA usará tus valoraciones para optimizar la plantilla.
-                        </div>
-                      </div>
-
-                      <ExampleThreadsSection category={templateTab} textSub={textSub} />
-
-                      {/* Success Stats Badge + Reset Button */}
-                      {templateStats && templateStats[templateTab] && (
-                        <div className="space-y-2 pt-3 pb-2">
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <span className="text-[9px] font-sans text-[var(--ink-2)]">📊 Resultados:</span>
-                            <span className="text-[9px] font-sans px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)]">
-                              {templateStats[templateTab].totalUses} usos
-                            </span>
-                            <span
-                              className={`text-[9px] font-sans px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? 'bg-[var(--ok)]/10 text-[var(--ok)]' : 'bg-[var(--hair)] text-[var(--ink-2)]'}`}
-                            >
-                              {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas (
-                              {templateStats[templateTab].responseRate}%)
-                            </span>
-                          </div>
-                          {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
-                            <div className="space-y-1">
-                              {templateStats[templateTab].invalidEmails > 0 && (
-                                <div
-                                  className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${'bg-[var(--alert)]/10 text-[var(--alert)]'}`}
-                                >
-                                  <span>⚠️</span>
-                                  <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
-                                </div>
-                              )}
-                              {templateStats[templateTab].bouncedEmails > 0 && (
-                                <div className="text-[9px] px-2 py-1 rounded flex items-center gap-1 bg-[var(--ink-2)]/10 text-[var(--ink-2)]">
-                                  <span>📬</span>
-                                  <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        <button
-                          id="template-btn-optimize"
-                          type="button"
-                          onClick={handleOptimizeTemplate}
-                          disabled={isOptimizingTemplate}
-                          className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
-                          title="Re-redacta la plantilla y sus pautas integrando todo el feedback histórico de valoraciones del mánager"
-                        >
-                          <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
-                          <span>{isOptimizingTemplate ? 'Regenerando con IA...' : '✨ Regenerar Plantilla con IA y Aprendizaje'}</span>
-                        </button>
-                        <button
-                          id="template-btn-test"
-                          onClick={handleTestPrompt}
-                          disabled={isTestingPrompt}
-                          className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
-                        >
-                          {isTestingPrompt ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                          <span>Probar Prompt</span>
-                        </button>
-                        <button
-                          id="template-btn-reset"
-                          onClick={handleResetTemplate}
-                          className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'}`}
-                          title="Restaurar valores por defecto de esta plantilla"
-                        >
-                          <RotateCcw className="w-3 h-3" />
-                          <span>Restaurar</span>
-                        </button>
-                        <button
-                          id="template-btn-save"
-                          onClick={handleSaveTemplates}
-                          className={`flex-1 py-2 font-sans font-bold text-[10px] tracking-wider rounded-[var(--r-s)] transition-all cursor-pointer text-center active:scale-95 ${'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]/10'}`}
-                        >
-                          Guardar Plantillas y Directrices
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Test / Prompt Output side */}
-                    <div className={` rounded-[var(--r-m)] p-4 flex flex-col justify-between ${'bg-[var(--surface)]'}`}>
-                      <div className="space-y-3">
-                        <div className={`flex items-center gap-2 pb-2 ${'-neutral-200'}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${'bg-[var(--acc)]'}`} />
-                          <h4 className={`text-[10px] font-sans tracking-widest ${textSub}`}>Sandbox de Simulación de Redacción AI</h4>
-                        </div>
-
-                        <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
-                          Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y pautas, las mezcla con los
-                          detalles del contacto capturado por el <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un
-                          borrador adaptado para que lo revises en esta misma pantalla.
-                        </div>
-
-                        {testPromptResult ? (
-                          <div className="space-y-3">
-                            <div
-                              className={`rounded-[var(--r-s)] p-3.5 text-[10px] font-sans whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto animate-in fade-in duration-300 select-text ${'bg-[var(--surface)] text-[var(--ink-2)]'}`}
-                            >
-                              {testPromptResult}
-                            </div>
-
-                            {/* Valoración directa del resultado generado en la simulación */}
-                            <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] space-y-2">
-                              <div className="flex items-center justify-between">
-                                <span className="text-[10px] font-bold text-[var(--acc)]/70 tracking-wider flex items-center gap-1.5 font-sans">
-                                  <Star className="w-3.5 h-3.5 text-[var(--acc)] fill-amber-400/30" /> Valorar esta plantilla / resultado
-                                </span>
-                                {(templateToneRating > 0 || templateContentRating > 0) && (
-                                  <span className="text-[9px] text-[var(--acc)] font-sans">
-                                    Tono: {templateToneRating || '-'}/5 | Contenido: {templateContentRating || '-'}/5
-                                  </span>
-                                )}
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {/* Tono */}
-                                <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-bold text-[var(--ink)]">Tono y Estilo</span>
-                                    <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                      {templateToneRating > 0 ? `${templateToneRating}/5` : '⭐'}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                      <button
-                                        key={`sandbox-tone-${star}`}
-                                        type="button"
-                                        onClick={() => setTemplateToneRating(templateToneRating === star ? 0 : star)}
-                                        className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                          templateToneRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
-                                        }`}
-                                        title={`Calificar tono: ${star}/5`}
-                                      >
-                                        <Star className="w-4 h-4 fill-current" />
-                                      </button>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* Contenido */}
-                                <div className="p-2 bg-[var(--surface)] rounded-[var(--r-s)] space-y-1">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-bold text-[var(--ink)]">Contenido y Estructura</span>
-                                    <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
-                                      {templateContentRating > 0 ? `${templateContentRating}/5` : '⭐'}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                      <button
-                                        key={`sandbox-content-${star}`}
-                                        type="button"
-                                        onClick={() => setTemplateContentRating(templateContentRating === star ? 0 : star)}
-                                        className={`p-0.5 rounded hover:bg-[var(--acc)]/20 transition-colors cursor-pointer ${
-                                          templateContentRating >= star ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
-                                        }`}
-                                        title={`Calificar contenido: ${star}/5`}
-                                      >
-                                        <Star className="w-4 h-4 fill-current" />
-                                      </button>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-
-                              <button
-                                type="button"
-                                onClick={handleOptimizeTemplate}
-                                disabled={isOptimizingTemplate}
-                                className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
-                              >
-                                <Sparkles className={`w-3.5 h-3.5 ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
-                                <span>Re-generar plantilla usando estas valoraciones ✨</span>
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className={`border-2 rounded-[var(--r-s)] p-12 text-center text-[10px] font-sans ${'text-[var(--ink-2)]'}`}>
-                            Haz clic en"Probar Prompt" a la izquierda para simular el resultado de generación del Redactor AI basado en tus
-                            directrices actuales.
-                          </div>
-                        )}
-                      </div>
-
-                      <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
-                        Módulo de Modelado AI de BandManager. Powered by Gemini.
-                      </div>
-                    </div>
-                  </div>
-                </>
-              );
-            })()}
+          <div className="mt-5 pt-4">
+            <TemplateConfigSection
+              colors={colors}
+              isStitchLight={isStitchLight}
+              textSub={textSub}
+              textMuted={textMuted}
+              templateTab={templateTab}
+              onSelectTemplateTab={setTemplateTab}
+              activeTemplate={getActiveTemplateData()}
+              isTestingPrompt={isTestingPrompt}
+              testPromptResult={testPromptResult}
+              onTestPrompt={handleTestPrompt}
+              onSaveTemplates={handleSaveTemplates}
+              onOptimizeTemplate={handleOptimizeTemplate}
+              isOptimizingTemplate={isOptimizingTemplate}
+              onGenerateAllTemplates={handleGenerateAllFromBase}
+              isGeneratingAllTemplates={isGeneratingAllTemplates}
+              optimizationFeedbackMsg={optimizationFeedbackMsg}
+              onClearFeedbackMsg={() => setOptimizationFeedbackMsg(null)}
+            />
           </div>
         )}
       </div>
@@ -2932,6 +2487,7 @@ export default function BookingCRM({
         activeCampaign={activeCampaign}
         bandGenre={epkConfig?.genero || (currentUser as any)?.genero || ''}
         bandName={effectiveBandName}
+        similarBands={epkConfig?.bandasSimilares || []}
         onClose={() => setIsPlacesExplorerOpen(false)}
         onImportLeads={() => {
           window.dispatchEvent(new CustomEvent('app-data-updated'));
@@ -2986,8 +2542,24 @@ export default function BookingCRM({
         onClose={() => setIsDuplicatesModalOpen(false)}
         leads={leads}
         onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
-        onDeleteLead={onDeleteLead}
+        onDeleteLead={handleDeleteSingleLead}
+        isStitchLight={isStitchLight}
       />
+
+      <RoadbookContractModal
+        isOpen={isRoadbookModalOpen}
+        onClose={() => {
+          setIsRoadbookModalOpen(false);
+          setRoadbookModalLead(null);
+        }}
+        lead={roadbookModalLead}
+        leads={leads}
+        concerts={concerts}
+        bandName={effectiveBandName}
+        isStitchLight={isStitchLight}
+      />
+
+      <AgentQueueMonitorModal isOpen={isQueueMonitorOpen} onClose={() => setIsQueueMonitorOpen(false)} bandName={effectiveBandName} />
 
       {/* BULK PROGRESS MODAL */}
       <BulkProgressModal
@@ -3003,6 +2575,41 @@ export default function BookingCRM({
 
       {/* MODULE TUTORIAL MODAL */}
       <ModuleTutorialModal isOpen={bookingTutorial.isOpen} onClose={bookingTutorial.closeTutorial} moduleId="booking" />
+
+      {/* MOBILE FLOATING ACTION BUTTON (FAB) FOR ZERO-FRICTION CREATION */}
+      <button
+        id="mobile-fab-add-lead"
+        type="button"
+        onClick={() => {
+          setNewLeadData({
+            nombre_sala: '',
+            ciudad: '',
+            region: 'Nacional',
+            direccion: '',
+            aforo: 0,
+            tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
+            email_contacto: '',
+            email_secundario: '',
+            telefono: '',
+            telefono_movil: '',
+            telefono_fijo: '',
+            website: '',
+            instagram: '',
+            fuente: '',
+            genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
+            notas: '',
+            pitch_generado: '',
+            icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
+            imagen_url: '',
+          });
+          setIsAddingLeadModalOpen(true);
+        }}
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-2xl active:scale-95 transition-all cursor-pointer animate-bounce"
+        style={{ animationDuration: '3s' }}
+        title="Añadir contacto"
+      >
+        <Plus className="w-6 h-6 stroke-[3]" />
+      </button>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import helmet from "helmet";
 import path from "path";
 import * as XLSX from "xlsx";
 
+import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
 import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
@@ -23,6 +24,7 @@ import concertsRouter from "./server/routes/concerts.js";
 import bandsRouter from "./server/routes/bands.js";
 import toursRouter from "./server/routes/tours.js";
 import agentRouter from "./server/routes/agent.js";
+import agentQueueRouter from "./server/routes/agentQueue.js";
 import reelsRouter from "./server/routes/reels.js";
 import repertorioRouter from "./server/routes/repertorio.js";
 import epkFansRouter from "./server/routes/epk_fans.js";
@@ -36,9 +38,10 @@ import campaignsRouter from "./server/routes/campaigns.js";
 import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
+import trackingRouter from "./server/routes/tracking.js";
 
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config(); // No sobreescribir variables de entorno inyectadas por Railway / producción
 
 // Pasivo sin SENTRY_DSN en el entorno - ver server/utils/errorTracking.ts.
 initErrorTracking();
@@ -99,6 +102,7 @@ app.use("/api", concertsRouter);
 app.use("/api", bandsRouter);
 app.use("/api", toursRouter);
 app.use("/api", agentRouter);
+app.use("/api/agent-queue", agentQueueRouter);
 app.use("/api", reelsRouter);
 app.use("/api", repertorioRouter);
 app.use("/api", epkFansRouter);
@@ -111,6 +115,7 @@ app.use("/api/upload", uploadRouter);
 app.use("/api", campaignsRouter);
 app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
+app.use("/api", trackingRouter);
 app.use(transposeRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
@@ -132,7 +137,22 @@ app.use("/transposed", (req, res, next) => {
 
 // Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
 app.get(["/health", "/api/health"], (req, res) => {
-  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+  const resolvedKey = resolveResendApiKey();
+  const detectedKey = resolvedKey ? resolvedKey.key : null;
+  const keyDetectedAs = resolvedKey ? resolvedKey.name : null;
+
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptimeSeconds: Math.floor(process.uptime()),
+    emailService: {
+      configured: Boolean(detectedKey),
+      keyDetectedAs,
+      keyLength: detectedKey ? detectedKey.trim().length : 0,
+      sender: process.env.SENDER_EMAIL || process.env.VITE_SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>",
+      resendEnvVarsFound: Object.keys(process.env).filter(k => k.toUpperCase().includes('RESEND'))
+    }
+  });
 });
 
 // Privacy Policy endpoint required for Google OAuth verification

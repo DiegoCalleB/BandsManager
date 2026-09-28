@@ -61,4 +61,32 @@ describe('dbUpsertConcert: gastos_detalle no se resetea en un guardado parcial',
     const payload = upsertMock.mock.calls[0][0];
     expect(payload.gastos_detalle).toEqual({ transporte: 200 });
   });
+
+  it('gana el camelCase del frontend sobre el snake_case viejo de la fila (Finanzas manda gastosDetalle)', async () => {
+    selectResult = {
+      data: { band_id: 'band-test', gastos_detalle: { transporte: 150 }, setlist_id: 'set-viejo' },
+      error: null
+    };
+
+    await dbUpsertConcert(
+      { id: 'cnc-1', gastosDetalle: { transporte: 300 }, setlistId: 'set-nuevo' },
+      'band-test'
+    );
+
+    const payload = upsertMock.mock.calls[0][0];
+    expect(payload.gastos_detalle).toEqual({ transporte: 300 });
+    expect(payload.setlist_id).toBe('set-nuevo');
+  });
+
+  it('preserva el resto de campos de la fila en un guardado parcial', async () => {
+    selectResult = {
+      data: { band_id: 'band-test', ciudad: 'Sevilla', sala: 'Sala X', cache: 900 },
+      error: null
+    };
+
+    await dbUpsertConcert({ id: 'cnc-1', notas: 'solo cambio esto' }, 'band-test');
+
+    const payload = upsertMock.mock.calls[0][0];
+    expect(payload).toMatchObject({ ciudad: 'Sevilla', sala: 'Sala X', cache: 900, notas: 'solo cambio esto' });
+  });
 });

@@ -3,6 +3,8 @@ import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbGetLeadMessages, dbUpsertLead } from "../../db.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { generarBorradorRespuesta } from "../../services/replyDrafting.js";
+import { analyzeIncomingMessageSentiment } from "../../services/sentimentAnalysis.js";
+import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 
 const router = express.Router();
@@ -48,18 +50,94 @@ router.post("/leads/:id/generate-reply", requireAuth, async (req, res) => {
       .filter((m) => m !== ultimoMensajeSala || Boolean(incomingMessageOverride))
       .map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
 
-    const { draftReply, isSimulated } = await generarBorradorRespuesta(bandId, lead, incomingMessage, threadSoFar, provider);
+    const { draftReply, isSimulated, sentimentAnalysis } = await generarBorradorRespuesta(bandId, lead, incomingMessage, threadSoFar, provider);
 
     res.json({
       success: true,
       draftReply,
       isSimulated,
+      sentimentAnalysis,
       incomingMessage,
       threadSoFar
     });
   } catch (error: any) {
     console.error("Error in POST /api/leads/:id/generate-reply:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al generar la respuesta." });
+  }
+});
+
+// Endpoint para analizar sentimiento e intención de un mensaje específico bajo demanda
+router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bandId = getTargetBandId(req);
+    const { messageText } = req.body || {};
+
+    const state = loadState();
+    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    if (!lead) {
+      try {
+        lead = await dbGetLeadById(id, bandId);
+        if (lead) state.leads.push(lead);
+      } catch (dbErr) {
+        console.warn("Could not fetch lead by ID from Supabase:", dbErr);
+      }
+    }
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Sala no encontrada." });
+    }
+
+    let targetText = (messageText || "").trim();
+    if (!targetText) {
+      const hilo = await dbGetLeadMessages(String(lead.id), bandId);
+      const ultimoMensajeSala = [...hilo].reverse().find((m) => m.remitente === "sala");
+      targetText = (ultimoMensajeSala?.mensaje || lead.ultimo_mensaje_recibido || "").trim();
+    }
+
+    if (!targetText) {
+      return res.status(400).json({ success: false, error: "No hay texto que analizar." });
+    }
+
+    const leadLang = detectPitchLanguage(lead);
+    const sentimentAnalysis = await analyzeIncomingMessageSentiment(targetText, leadLang.code, {
+      name: lead.nombre_sala,
+      city: lead.ciudad,
+      tipo: lead.tipo
+    });
+
+    // Actualizamos el lead en base de datos para que quede enriquecido inmediatamente
+    const updatedLead = {
+      ...lead,
+      ultimo_sentimiento: sentimentAnalysis.sentimiento,
+      ultimo_sentimiento_score: sentimentAnalysis.sentimiento_score,
+      ultimo_sentimiento_label: sentimentAnalysis.sentimiento_label,
+      ultima_intencion: sentimentAnalysis.intencion,
+      ultima_intencion_etiqueta: sentimentAnalysis.intencion_etiqueta,
+      ultimas_objeciones: sentimentAnalysis.objeciones_detectadas,
+      ultimo_analisis_resumen: sentimentAnalysis.resumen_ejecutivo,
+      temperatura_lead: sentimentAnalysis.temperatura,
+      fechas_propuestas_sala: sentimentAnalysis.fechas_propuestas,
+      condiciones_economicas_detectadas: sentimentAnalysis.condiciones_economicas,
+      requisitos_tecnicos_detectados: sentimentAnalysis.requisitos_tecnicos,
+      accion_sugerida_ia: sentimentAnalysis.accion_sugerida,
+      estrategia_playbook: sentimentAnalysis.estrategia_playbook
+    };
+    await dbUpsertLead(updatedLead, bandId);
+
+    // Actualizamos en memoria
+    const leadIdx = state.leads.findIndex((l: any) => String(l.id) === String(id));
+    if (leadIdx >= 0) {
+      state.leads[leadIdx] = updatedLead;
+    }
+
+    res.json({
+      success: true,
+      sentimentAnalysis,
+      lead: updatedLead
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/analyze-sentiment:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al analizar el sentimiento." });
   }
 });
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Lead, LeadStatus } from '../../types';
+import { Lead, LeadStatus, Concert } from '../../types';
 import { VenueDetailPanel } from './VenueDetailPanel';
 import { X, Building2 } from 'lucide-react';
 
@@ -19,6 +19,9 @@ interface MobileBottomSheetProps {
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => void;
   isUploadingLeadLogo?: boolean;
+  onFilterByRouteCity?: (city: string) => void;
+  bandName?: string;
+  concerts?: Concert[];
 }
 
 export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
@@ -36,6 +39,9 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   activeCampaign,
   onLeadLogoUpload,
   isUploadingLeadLogo = false,
+  onFilterByRouteCity,
+  bandName,
+  concerts = [],
 }) => {
   useEffect(() => {
     if (selectedLead) {
@@ -94,6 +100,9 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             activeCampaign={activeCampaign}
             onLeadLogoUpload={onLeadLogoUpload}
             isUploadingLeadLogo={isUploadingLeadLogo}
+            onFilterByRouteCity={onFilterByRouteCity}
+            bandName={bandName}
+            concerts={concerts}
           />
         </div>
       </div>

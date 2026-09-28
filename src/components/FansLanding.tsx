@@ -46,6 +46,8 @@ import { safeUrl } from '../utils/safeUrl';
 import { sanitizeConcertDisplayName } from '../utils/fanUtils';
 
 import { Concert, EPKConfig, BandMember } from '../types';
+import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../utils/whatsapp';
+import { decodeBandIdClient } from '../utils/bandHash';
 
 export interface FansLandingProps {
   currentBandId?: string;
@@ -377,7 +379,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     // 1. Determine active band ID from URL, props or localStorage
     const params = new URLSearchParams(window.location.search);
-    const queryBand = params.get('band_id') || params.get('band') || params.get('b');
+    const rawQuery = params.get('b') || params.get('t') || params.get('token') || params.get('band_id') || params.get('band');
+    const queryBand = rawQuery ? decodeBandIdClient(rawQuery) : '';
 
     let storedBandId = '';
     let storedBandName = '';
@@ -649,15 +652,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   // Lleva &lang= con el idioma del concierto: así quien entra al EPK desde un Únete de Italia
   // lo ve en italiano por defecto, no en español. EpkLanguage y FanFormLanguage comparten
   // exactamente los mismos códigos (es/en/it/cs), así que conciertoLanguage vale tal cual.
-  const epkUrl =
-    (typeof window !== 'undefined'
-      ? window.location.origin.includes('localhost') ||
-        window.location.origin.includes('ais-dev') ||
-        window.location.origin.includes('ais-pre') ||
-        window.location.origin.includes('run.app')
-        ? `${window.location.origin}/epk`
-        : 'https://bandmanager.io/epk'
-      : 'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+  const epkUrl = `https://bandmanager.io/epk?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
     if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;
@@ -1080,10 +1075,21 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 )}
               </button>
               <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t('whatsappShareMessage', { bandName, url: typeof window !== 'undefined' ? window.location.href : '' }) || `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
-                target="_blank"
+                href={getWhatsAppUrl(
+                  undefined,
+                  t('whatsappShareMessage', { bandName, url: typeof window !== 'undefined' ? window.location.href : '' }) ||
+                    `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== 'undefined' ? window.location.href : ''}`
+                )}
+                target={WHATSAPP_WINDOW_NAME}
                 rel="noopener noreferrer"
-                onClick={() => trackClick('whatsapp_share', '', 'success')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  trackClick('whatsapp_share', '', 'success');
+                  const msg =
+                    t('whatsappShareMessage', { bandName, url: typeof window !== 'undefined' ? window.location.href : '' }) ||
+                    `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== 'undefined' ? window.location.href : ''}`;
+                  openWhatsAppChat(undefined, msg);
+                }}
                 className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
               >
                 <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
@@ -1159,9 +1165,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         <span className="truncate">{contactoBooking.telefono}</span>
                       </a>
                       <a
-                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
-                        target="_blank"
+                        href={getWhatsAppUrl(contactoBooking.telefono, t('bookingWhatsappText', { bandName }))}
+                        target={WHATSAPP_WINDOW_NAME}
                         rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openWhatsAppChat(contactoBooking.telefono, t('bookingWhatsappText', { bandName }));
+                        }}
                         className="px-2 py-0.5 text-[9px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
                       >
                         <MessageCircle className="w-3 h-3" /> WhatsApp
@@ -1734,9 +1744,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     </a>
                     <div className="flex items-center shrink-0 ml-2">
                       <a
-                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
-                        target="_blank"
+                        href={getWhatsAppUrl(contactoBooking.telefono, t('bookingWhatsappText', { bandName }))}
+                        target={WHATSAPP_WINDOW_NAME}
                         rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openWhatsAppChat(contactoBooking.telefono, t('bookingWhatsappText', { bandName }));
+                        }}
                         className="px-2.5 py-1 text-[10px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
                       >
                         <MessageCircle className="w-3.5 h-3.5 text-[var(--ok)]" />

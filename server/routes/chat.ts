@@ -1,7 +1,7 @@
 import express from "express";
 import { KNOWN_LOCATIONS, CANONICAL_LOCATION_MAP, getRegionForCity } from "../../src/constants/regions.js";
 import { Lead, Rehearsal, Concert } from "../../src/types.js";
-import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyConfigForBand, requireAuth, BAKANDEYA_BAND_ID } from "../state.js";
+import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyConfigForBand, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
@@ -192,8 +192,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         const matchBandLocal = (item: any) => {
           if (!item) return false;
           const bid = item.band_id || item.bandId;
-          if (bid) return bid === userBandId;
-          return userBandId === BAKANDEYA_BAND_ID || userBandId === 'reg-bakandeya';
+          return bid === userBandId;
         };
         const count = state.leads.filter(matchBandLocal).filter((l: Lead) => (l.genero || "").toLowerCase().includes("reggae") || (l.genero || "").toLowerCase().includes("ska")).length;
         reply += `Tienes actualmente **${count} salas** especializadas en Ska/Reggae en la base de datos (por ejemplo, *Kafe Antzokia* en Bilbao, *Sala El Tren* en Granada y *Viña Rock*).`;
@@ -202,8 +201,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         const matchBandLocal = (item: any) => {
           if (!item) return false;
           const bid = item.band_id || item.bandId;
-          if (bid) return bid === userBandId;
-          return userBandId === BAKANDEYA_BAND_ID || userBandId === 'reg-bakandeya';
+          return bid === userBandId;
         };
         const totalLeads = state.leads.filter(matchBandLocal).length;
         const rehearsalsCount = (state.rehearsals || []).filter(matchBandLocal).filter((r: Rehearsal) => r.estado === 'programado').length;
@@ -221,8 +219,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     const matchBand = (item: any) => {
       if (!item) return false;
       const bid = item.band_id || item.bandId;
-      if (bid) return bid === userBandId;
-      return userBandId === BAKANDEYA_BAND_ID || userBandId === 'reg-bakandeya';
+      return bid === userBandId;
     };
 
     // El repertorio (songs/setlists) vive solo en Supabase — POST /repertorio no pasa por
@@ -323,26 +320,10 @@ router.post("/chat", requireAuth, async (req, res) => {
     }
 
     const targetBandName = userReq?.bandName || epkConfigData?.nombre_banda || 'tu banda';
-    const cleanBandId = bandIdForEpk.replace(/^(band|reg)-/, '');
-    const isBakandeyaBand = cleanBandId === 'bakandeya' || targetBandName.toLowerCase().includes('bakandeya');
 
     const globalPitchFeedbackText = formatGlobalPitchFeedbackForPrompt(state.leads.filter(matchBand));
 
-    const specificDossierBlock = isBakandeyaBand ? `
-DOSSIER COMPLETO E INFORMACIÓN INTERNA DE LA BANDA BAKANDEYA:
-1. ESTILO Y PROPUESTA MUSICAL:
-- Estilo: Electrónica-fusión / Electrobasureo (percusión reciclada). Mezcla electrónica analógica, reggae, balkan, klezmer, jazz, música oriental, clásico, DnB, techno.
-- Contacto oficial: Bakandeya@gmail.com | Tel: +34 652938521 | Instagram: @Bakandeya
-
-2. MIEMBROS DE LA BANDA:
-- Jon Quel: Voz, guitarra, beatbox, percusión. Ex-JarelBabel, acróbata, profesor de rap en centros penitenciarios, percusionista en la compañía Toompak.
-- José Filgueira: Percusión. Músico y actor, ex-Swingdigentes (25 países), Cirque du Soleil, actualmente en STOMP.
-- Elyar Pashang: Multi-percusionista turco-iraní (handpan, nagara, darbuka, daf) formado en Tabriz (Irán), especialista en folclor azerbaiyano y oriental.
-- Raúl Pérez: Violinista mexicano, arreglista e intérprete, ex-Teatro de la Memoria, historiador, novelista ("La taberna de las ánimas").
-
-3. DEPARTAMENTOS INTERNOS DE GESTIÓN BAKANDEYA:
-- Community Manager (Redes), Distribuidora de Mailing, Promoción de Medios, Distribuidora Social, Biblioteca de Salas/Festivales y Análisis de Resultados.
-` : `
+    const specificDossierBlock = `
 INFORMACIÓN DE LA BANDA ${targetBandName.toUpperCase()}:
 - Nombre de la banda: ${targetBandName}
 - Biografía/Estilo: ${epkConfigData?.biografia || 'Sin biografía especificada aún'}
@@ -371,7 +352,7 @@ REGLA DE AUTONOMÍA: Cuando el usuario te pregunte sobre negociaciones, ofertas 
 Tu labor es ayudar a los miembros de la banda a organizarse, consultar sus datos de la base de datos Supabase (salas de conciertos, medios y contactos), ver el calendario de ensayos, conciertos y resolver dudas en lenguaje natural.
 
 DOSSIER OFICIAL & KIT DE PRENSA ALMACENADO (stateSummary.epkConfig):
-- Logo oficial: ${epkConfigData?.logoUrl || '/logo_bakandeya_bueno_sin_fondo.png'}
+- Logo oficial: ${epkConfigData?.logoUrl || 'No configurado'}
 - Dossier PDF/Documento: ${epkConfigData?.dossierPdfUrl ? `${epkConfigData.dossierPdfName || 'Dossier PDF'} (${epkConfigData.dossierPdfUrl})` : (epkConfigData?.dossierDocumentUrl ? `${epkConfigData.dossierDocumentName || 'Documento'} (${epkConfigData.dossierDocumentUrl})` : 'No subido aún')}
 - Biografía oficial: ${epkConfigData?.biografia || 'Sin biografía'}
 - Información adicional/Texto extra de dossier: ${epkConfigData?.dossierTextoExtra || 'Sin notas adicionales'}

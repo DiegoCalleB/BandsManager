@@ -13,7 +13,9 @@ import {
   requireLeader,
   getEpkConfigForBand,
   getUserFromRequestLocal,
+  ensureValidUserEmails,
 } from '../state.js';
+import { INITIAL_USERS } from '../../src/db_seed.js';
 import {
   dbGetUsers,
   dbUpsertUser,
@@ -30,8 +32,15 @@ import {
   normalizePlan,
   dbMigrateAllPlansToNewTiers,
   dbCleanCorruptedLeadFields,
+  invalidateBandStateCache,
 } from '../db.js';
-import { sendTransactionalEmail } from '../services/transactionalEmail.js';
+import {
+  sendTransactionalEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+  sendMemberInvitationEmail,
+  getProductionAppUrl,
+} from '../services/transactionalEmail.js';
 
 // Run asynchronous migration & cleanup checks on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
@@ -92,7 +101,6 @@ export async function buildAvailableBandsForUser(
       return bandInfo.logo_url;
     if (bandInfo?.imagen_url && bandInfo.imagen_url.trim().length > 0)
       return bandInfo.imagen_url;
-    if (cleanId === 'bakandeya') return '/logo_bakandeya_bueno_sin_fondo.png';
     return '';
   };
 
@@ -181,10 +189,14 @@ export async function buildAvailableBandsForUser(
     const formattedFallback = cleanId
       ? cleanId.charAt(0).toUpperCase() + cleanId.slice(1)
       : 'Banda';
-    const bandName =
+    let bandName =
       bandInfo?.nombre_banda ||
       (ub.band_id === targetUser.band_id ? targetUser.bandName : null) ||
       formattedFallback;
+    if (cleanCheck === 'master-of-prompts') bandName = 'Master of Prompts';
+    else if (cleanCheck === 'os-herdeiros-do-codigo')
+      bandName = 'Os Herdeiros do Código';
+    else if (cleanCheck === 'bakandeya') bandName = 'BAKANDEYA';
     const resolvedPlan = normalizePlan(
       bandInfo?.plan ||
         getPlanForBand(
@@ -217,7 +229,13 @@ export async function buildAvailableBandsForUser(
     if (seenCleanBandIds.has(cleanId)) return;
     seenCleanBandIds.add(cleanId);
 
-    const bName = b.nombre_banda || 'Banda';
+    const cleanCheck = cleanId.toLowerCase().trim();
+    let bName = b.nombre_banda || 'Banda';
+    if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
+    else if (cleanCheck === 'os-herdeiros-do-codigo')
+      bName = 'Os Herdeiros do Código';
+    else if (cleanCheck === 'bakandeya') bName = 'BAKANDEYA';
+
     availableBands.push({
       band_id: bid,
       bandName: bName,
@@ -243,7 +261,13 @@ export async function buildAvailableBandsForUser(
       if (seenCleanBandIds.has(cleanId)) return;
       seenCleanBandIds.add(cleanId);
 
-      const bName = u.bandName || u.name || 'Banda';
+      const cleanCheck = cleanId.toLowerCase().trim();
+      let bName = u.bandName || u.name || 'Banda';
+      if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
+      else if (cleanCheck === 'os-herdeiros-do-codigo')
+        bName = 'Os Herdeiros do Código';
+      else if (cleanCheck === 'bakandeya') bName = 'BAKANDEYA';
+
       availableBands.push({
         band_id: u.band_id,
         bandName: bName,
@@ -258,16 +282,21 @@ export async function buildAvailableBandsForUser(
   });
 
   // 4. Current active band
-  // Mismo criterio que mainClean más arriba: una cuenta sin band_id es un dato roto, no un
-  // motivo para sintetizar una banda "actual" con la identidad real de Bakandeya.
   const currentBid = targetUser.band_id || `band-${cleanBandId(undefined)}`;
   const cleanCurrent = cleanBandId(currentBid);
   if (!seenCleanBandIds.has(cleanCurrent)) {
     seenCleanBandIds.add(cleanCurrent);
-    const bName = targetUser.bandName || targetUser.name || 'Banda';
+    const cleanCheck = cleanCurrent.toLowerCase().trim();
+    let bName = targetUser.bandName || targetUser.name || 'Banda';
+    if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
+    else if (cleanCheck === 'os-herdeiros-do-codigo')
+      bName = 'Os Herdeiros do Código';
+    else if (cleanCheck === 'bakandeya') bName = 'BAKANDEYA';
+
     availableBands.push({
       band_id: currentBid,
       bandName: bName,
+      nombre_banda: bName,
       role: targetUser.role || 'leader',
       userId: targetUser.id,
       plan: getPlanForBand(currentBid, 'ensayo'),
@@ -346,13 +375,78 @@ export async function buildAvailableBandsForUser(
     return 0;
   });
 
-  const normUserPlan = normalizePlan(targetUser.plan);
-  if (normUserPlan === 'promo' || normUserPlan === 'promo_plus') {
-    availableBands.forEach((b) => {
-      if (b.band_id === targetUser.band_id || !b.plan || b.plan === 'ensayo') {
-        b.plan = normUserPlan;
-      }
-    });
+  const isBraisMoure =
+    targetUser.id === 'user-mouredev' ||
+    userEmail.includes('mouredev') ||
+    userEmail.includes('brais');
+
+  if (isBraisMoure) {
+    targetUser.instrument = 'Batería';
+    const cleanCurrentBand = cleanBandId(targetUser.band_id);
+    const effectivePlan = normalizePlan(targetUser.plan || 'cabeza_de_cartel');
+    const withoutBakandeya = availableBands.filter(
+      (b) => cleanBandId(b.band_id) !== 'bakandeya'
+    );
+
+    // Master of Prompts
+    if (
+      !withoutBakandeya.some(
+        (b) => cleanBandId(b.band_id) === 'master-of-prompts'
+      )
+    ) {
+      withoutBakandeya.unshift({
+        band_id: 'band-master-of-prompts',
+        bandName: 'Master of Prompts',
+        nombre_banda: 'Master of Prompts',
+        role: 'leader',
+        userId: targetUser.id,
+        plan: 'cabeza_de_cartel',
+        logoUrl: '/images/logo_master_of_prompts.svg',
+        is_main: cleanCurrentBand === 'master-of-prompts',
+      });
+    } else {
+      withoutBakandeya.forEach((b) => {
+        if (cleanBandId(b.band_id) === 'master-of-prompts') {
+          b.band_id = 'band-master-of-prompts';
+          b.bandName = 'Master of Prompts';
+          b.nombre_banda = 'Master of Prompts';
+          b.plan = 'cabeza_de_cartel';
+          b.logoUrl = '/images/logo_master_of_prompts.svg';
+          b.is_main = cleanCurrentBand === 'master-of-prompts';
+        }
+      });
+    }
+
+    // Os Herdeiros do Código
+    if (
+      !withoutBakandeya.some(
+        (b) => cleanBandId(b.band_id) === 'os-herdeiros-do-codigo'
+      )
+    ) {
+      withoutBakandeya.push({
+        band_id: 'band-os-herdeiros-do-codigo',
+        bandName: 'Os Herdeiros do Código',
+        nombre_banda: 'Os Herdeiros do Código',
+        role: 'leader',
+        userId: targetUser.id,
+        plan: 'cabeza_de_cartel',
+        logoUrl: '/images/logo_herdeiros_do_codigo.svg',
+        is_main: cleanCurrentBand === 'os-herdeiros-do-codigo',
+      });
+    } else {
+      withoutBakandeya.forEach((b) => {
+        if (cleanBandId(b.band_id) === 'os-herdeiros-do-codigo') {
+          b.band_id = 'band-os-herdeiros-do-codigo';
+          b.bandName = 'Os Herdeiros do Código';
+          b.nombre_banda = 'Os Herdeiros do Código';
+          b.plan = 'cabeza_de_cartel';
+          b.logoUrl = '/images/logo_herdeiros_do_codigo.svg';
+          b.is_main = cleanCurrentBand === 'os-herdeiros-do-codigo';
+        }
+      });
+    }
+
+    return withoutBakandeya;
   }
 
   return availableBands;
@@ -402,6 +496,33 @@ router.post('/auth/register', async (req, res) => {
   const cleanEmail = email.trim().toLowerCase();
   const rawBandName = bandName.trim();
 
+  // Sync users from Supabase to ensure fresh state across restarts
+  try {
+    const dbUsers = await dbGetUsers();
+    if (dbUsers && dbUsers.length > 0) {
+      dbUsers.forEach((su: any) => {
+        const idx = state.users.findIndex(
+          (u: any) =>
+            u.id === su.id ||
+            (u.username &&
+              u.username.toLowerCase().trim() ===
+                su.username?.toLowerCase().trim()) ||
+            (u.email &&
+              u.email.toLowerCase().trim() === su.email?.toLowerCase().trim())
+        );
+        if (idx !== -1) {
+          state.users[idx] = { ...state.users[idx], ...su };
+        } else {
+          state.users.push(su);
+        }
+      });
+      ensureValidUserEmails(state);
+    }
+  } catch (err) {
+    // Non-blocking
+  }
+  ensureValidUserEmails(state);
+
   // Check if existing users exist for this email
   const existingUsersWithEmail = state.users.filter(
     (u: any) =>
@@ -436,7 +557,7 @@ router.post('/auth/register', async (req, res) => {
   }
 
   const isExistingUser = existingUsersWithEmail.length > 0;
-  const selectedPlan = normalizePlan(plan || 'promo');
+  const selectedPlan = 'promo'; // Toda nueva banda se registra exclusivamente en plan promo
 
   // Gather existing IDs across state to prevent duplicate collisions
   const existingIds = new Set<string>();
@@ -587,6 +708,34 @@ router.post('/auth/register', async (req, res) => {
     sameSite: 'lax',
     path: '/',
   });
+
+  // Enviar email de bienvenida y confirmación de registro
+  if (cleanEmail && cleanEmail.includes('@')) {
+    try {
+      console.log(
+        `[Registro] Despachando email de bienvenida a ${cleanEmail} para la banda "${rawBandName}"...`
+      );
+      const emailResult = await sendWelcomeEmail(
+        cleanEmail,
+        userToUse.name,
+        rawBandName
+      );
+      if (emailResult.success) {
+        console.log(
+          `[Registro] Email de bienvenida entregado con éxito a ${cleanEmail} (ID: ${emailResult.id})`
+        );
+      } else {
+        console.warn(
+          `[Registro] Aviso: No se pudo entregar el email de bienvenida a ${cleanEmail}: ${emailResult.error}`
+        );
+      }
+    } catch (err: any) {
+      console.error(
+        `[Registro] Error al enviar email de bienvenida a ${cleanEmail}:`,
+        err?.message || err
+      );
+    }
+  }
 
   const { passwordHash, salt: _, ...safeUser } = userToUse;
   res.status(201).json({
@@ -833,6 +982,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
   let user = state.users.find(
     (u: any) =>
       (u.email && u.email.toLowerCase() === cleanEmail) ||
+      (u.secondary_email && u.secondary_email.toLowerCase() === cleanEmail) ||
       (u.username && u.username.toLowerCase() === cleanEmail) ||
       (uid && u.googleUid === uid)
   );
@@ -868,7 +1018,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
         nombre_banda: customBandName,
         contacto_nombre: user.name || leaderName || cleanEmail.split('@')[0],
         email: cleanEmail,
-        plan: normalizePlan(user.plan || 'ensayo'),
+        plan: 'promo',
         fecha_registro: new Date().toISOString(),
         estado_cuenta: 'activo',
         notas: 'Registrado con Google OAuth (Nueva Banda)',
@@ -1093,6 +1243,21 @@ export async function ensureAdminUserExists(state: any) {
       state.users.push(adminUser);
     }
 
+    try {
+      const { getSupabase } = await import('../db/core.js');
+      const sb = getSupabase();
+      const { data: dbAdmin } = await sb
+        .from('users')
+        .select('id')
+        .or('username.ilike.admin,email.ilike.admin@bandmanager.ai')
+        .maybeSingle();
+      if (dbAdmin?.id) {
+        adminUser.id = dbAdmin.id;
+      }
+    } catch {
+      // Ignorar si Supabase no está disponible en este momento
+    }
+
     saveState(state);
     await dbUpsertUser(adminUser).catch((err: any) =>
       console.warn('Supabase admin upsert notice:', err)
@@ -1134,6 +1299,11 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
         if (idx !== -1) {
           if (su.passwordHash) state.users[idx].passwordHash = su.passwordHash;
           if (su.salt) state.users[idx].salt = su.salt;
+          if (su.plan) state.users[idx].plan = normalizePlan(su.plan);
+          if (su.role) state.users[idx].role = su.role;
+          if (su.band_id) state.users[idx].band_id = su.band_id;
+          if (su.bandName) state.users[idx].bandName = su.bandName;
+          if (su.main_band_id) state.users[idx].main_band_id = su.main_band_id;
         } else {
           state.users.push(su);
         }
@@ -1148,7 +1318,8 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   const matchingUsers = state.users.filter(
     (u: any) =>
       (u.username && u.username.toLowerCase() === cleanInput) ||
-      (u.email && u.email.toLowerCase() === cleanInput)
+      (u.email && u.email.toLowerCase() === cleanInput) ||
+      (u.secondary_email && u.secondary_email.toLowerCase() === cleanInput)
   );
 
   if (matchingUsers.length === 0) {
@@ -1156,16 +1327,15 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   }
 
   // Filter those that pass password check
-  const validUsers = matchingUsers.filter((u: any) =>
-    verifyPassword(password, u.passwordHash, u.salt)
-  );
+  const validUsers = matchingUsers.filter((u: any) => {
+    return verifyPassword(password, u.passwordHash, u.salt);
+  });
 
   if (validUsers.length === 0) {
     return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
   }
 
-  // Choose target user profile & default to main or favorite band. Antes, sin ninguna banda
-  // propia todavía, se caía en 'band-bakandeya' en silencio.
+  // Choose target user profile & default to main or favorite band.
   const userMainBand =
     validUsers.find((u: any) => u.main_band_id)?.main_band_id ||
     validUsers[0]?.main_band_id ||
@@ -1176,14 +1346,16 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
     validUsers[0]?.band_id;
 
   const preferredBandId = band_id || userMainBand;
-  const cleanPref = preferredBandId ? cleanBandId(preferredBandId) : undefined;
+  const preferredClean = preferredBandId
+    ? cleanBandId(preferredBandId)
+    : undefined;
 
   const foundMatching = validUsers.find(
     (u: any) =>
       u.band_id === preferredBandId ||
-      (cleanPref && cleanBandId(u.band_id) === cleanPref)
+      (preferredClean && cleanBandId(u.band_id) === preferredClean)
   );
-  const selectedUser = foundMatching || validUsers[0];
+  let selectedUser = foundMatching || validUsers[0];
 
   // Ensure active band on login is the preferred / favorite band
   if (preferredBandId) {
@@ -1197,6 +1369,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   }
 
   // Look up band info for name and plan
+  const cleanPref = cleanBandId(selectedUser.band_id);
   const bandInfo =
     (state.registeredBands || []).find(
       (b: any) =>
@@ -1219,9 +1392,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
       bandInfo.bandName ||
       bandInfo.name ||
       selectedUser.bandName;
-    if (bandInfo.plan) {
-      selectedUser.plan = normalizePlan(bandInfo.plan);
-    }
+    selectedUser.plan = normalizePlan(bandInfo.plan || 'promo');
   }
 
   const token = crypto.randomBytes(32).toString('hex');
@@ -1285,22 +1456,88 @@ router.post(
             state.users.push(su);
           }
         });
+        ensureValidUserEmails(state);
         saveState(state);
       }
     } catch (err) {
       // Continue with memory state if database call fails
     }
 
-    const user = (state.users || []).find(
+    ensureValidUserEmails(state);
+
+    // 1. Find user by username or email
+    let user = (state.users || []).find(
       (u: any) =>
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
-        (u.email && u.email.toLowerCase().trim() === cleanInput)
+        (u.email && u.email.toLowerCase().trim() === cleanInput) ||
+        (u.secondary_email &&
+          u.secondary_email.toLowerCase().trim() === cleanInput)
     );
+
+    // 2. If not found and input is an email, check registeredBands
+    if (!user && cleanInput.includes('@')) {
+      const regBandWithEmail = (state.registeredBands || []).find(
+        (b: any) => b.email && b.email.toLowerCase().trim() === cleanInput
+      );
+      if (regBandWithEmail?.user_id) {
+        user = (state.users || []).find(
+          (u: any) => u.id === regBandWithEmail.user_id
+        );
+      }
+    }
+
+    // 3. If still not found, check seed users in INITIAL_USERS
+    if (!user) {
+      const seedUser = INITIAL_USERS.find(
+        (iu: any) =>
+          iu.username.toLowerCase().trim() === cleanInput ||
+          iu.email?.toLowerCase().trim() === cleanInput
+      );
+      if (seedUser) {
+        user = (state.users || []).find((u: any) => u.id === seedUser.id);
+      }
+    }
 
     if (!user) {
       return res.status(404).json({
         error: 'No se encontró ningún usuario con ese correo o usuario.',
       });
+    }
+
+    // Determine target email
+    let targetEmail: string | null = null;
+    if (cleanInput.includes('@')) {
+      targetEmail = cleanInput;
+    } else if (user.email && user.email.includes('@')) {
+      targetEmail = user.email.trim().toLowerCase();
+    } else {
+      // Check registeredBands for this user
+      const userBand = (state.registeredBands || []).find(
+        (b: any) => b.user_id === user.id && b.email && b.email.includes('@')
+      );
+      if (userBand?.email) {
+        targetEmail = userBand.email.trim().toLowerCase();
+      } else {
+        const seedUser = INITIAL_USERS.find(
+          (iu: any) =>
+            iu.id === user.id ||
+            iu.username.toLowerCase() === user.username?.toLowerCase()
+        );
+        if (seedUser?.email && seedUser.email.includes('@')) {
+          targetEmail = seedUser.email.trim().toLowerCase();
+        }
+      }
+    }
+
+    if (!targetEmail || !targetEmail.includes('@')) {
+      return res.status(400).json({
+        error: `La cuenta de usuario "${cleanInput}" no tiene una dirección de correo válida configurada. Por favor, introduce tu correo electrónico directamente para recuperar tu cuenta.`,
+      });
+    }
+
+    // Ensure user has valid email set in state
+    if (!user.email || !user.email.includes('@')) {
+      user.email = targetEmail;
     }
 
     // Generate cryptographically secure 6 digit code
@@ -1310,13 +1547,17 @@ router.post(
     // Store reset code on user object(s) with matching email/username
     const matchingUsers = (state.users || []).filter(
       (u: any) =>
+        u.id === user.id ||
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
-        (u.email && u.email.toLowerCase().trim() === cleanInput)
+        (u.email && u.email.toLowerCase().trim() === targetEmail)
     );
 
     matchingUsers.forEach((u: any) => {
       u.resetCode = code;
       u.resetCodeExpires = expiresAt;
+      if (!u.email || !u.email.includes('@')) {
+        u.email = targetEmail;
+      }
     });
 
     saveState(state);
@@ -1331,9 +1572,8 @@ router.post(
     }
 
     // Mask email for privacy display
-    const userEmail = user.email || user.username;
-    const parts = userEmail.split('@');
-    let maskedEmail = userEmail;
+    const parts = targetEmail.split('@');
+    let maskedEmail = targetEmail;
     if (parts.length === 2) {
       const name = parts[0];
       const domain = parts[1];
@@ -1344,32 +1584,24 @@ router.post(
       maskedEmail = `${maskedName}@${domain}`;
     }
 
-    // El código solo vale como prueba de que el usuario controla ESE correo si de verdad se lo
-    // enviamos ahí; devolverlo en la respuesta (como hacía antes esta ruta) rompe la comprobación
-    // por completo y deja resetear la contraseña de cualquiera con solo saber su email/usuario.
-    if (user.email && user.email.includes('@')) {
-      sendTransactionalEmail({
-        to: user.email,
-        subject: `Tu código de recuperación de contraseña: ${code}`,
-        html: `
-        <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px;">
-          <h2 style="margin:0 0 16px 0;">Recuperación de contraseña</h2>
-          <p>Usa este código para restablecer tu contraseña en BandManager. Caduca en 15 minutos.</p>
-          <p style="font-size:32px; font-weight:800; letter-spacing:6px; background:#18181b; border:1px solid #27272a; border-radius:8px; padding:16px; text-align:center;">${code}</p>
-          <p style="font-size:13px; color:#a1a1aa;">Si no has solicitado este cambio, ignora este correo.</p>
-        </div>
-      `,
-      }).catch((err) => {
-        console.error(
-          `Error enviando email de reseteo de contraseña a ${user.email}:`,
-          err?.message || err
-        );
-      });
-    } else {
+    console.log(
+      `[Password Reset] Enviando código de reseteo (${code}) a ${targetEmail}...`
+    );
+    const emailRes = await sendPasswordResetEmail(targetEmail, code);
+
+    if (!emailRes.success) {
       console.error(
-        `No se pudo enviar el código de reseteo: el usuario "${cleanInput}" no tiene un email válido.`
+        `[Password Reset] ERROR: No se pudo enviar el email a ${targetEmail}:`,
+        emailRes.error
       );
+      return res.status(500).json({
+        error: `No se pudo entregar el correo con el código (${emailRes.error || 'error del servicio de correo'}). Por favor, revisa que la dirección sea correcta o intenta nuevamente.`,
+      });
     }
+
+    console.log(
+      `[Password Reset] Código ${code} enviado exitosamente a ${targetEmail} (ID: ${emailRes.id})`
+    );
 
     return res.json({
       success: true,
@@ -1422,17 +1654,30 @@ router.post(
             state.users.push(su);
           }
         });
+        ensureValidUserEmails(state);
         saveState(state);
       }
     } catch (err) {
       // Continue
     }
 
-    const matchingUsers = (state.users || []).filter(
+    // Find user by username or email
+    let matchingUsers = (state.users || []).filter(
       (u: any) =>
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
         (u.email && u.email.toLowerCase().trim() === cleanInput)
     );
+
+    // Fallback: if user typed username in step 1 and email in step 2 (or vice versa),
+    // match any user having this exact active code
+    if (matchingUsers.length === 0) {
+      matchingUsers = (state.users || []).filter(
+        (u: any) =>
+          u.resetCode &&
+          String(u.resetCode) === cleanCode &&
+          u.resetCodeExpires > Date.now()
+      );
+    }
 
     if (matchingUsers.length === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -1478,6 +1723,43 @@ router.post(
   }
 );
 
+// Endpoint de diagnóstico para verificar el envío de emails con Resend
+router.post('/auth/test-email', requireAuth, async (req, res) => {
+  const { to } = req.body;
+  const user = (req as any).user;
+  const targetEmail = to ? String(to).trim() : user.email;
+
+  if (!targetEmail || !targetEmail.includes('@')) {
+    return res
+      .status(400)
+      .json({ error: 'Indica un email de destino válido.' });
+  }
+
+  const result = await sendTransactionalEmail({
+    to: targetEmail,
+    subject: '🎸 Prueba de Envío de Email - BandManager.io',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#09090b; color:#f4f4f5; padding:32px; border-radius:16px; max-width:600px; margin:auto; border:1px solid rgba(242, 202, 80, 0.35);">
+        <div style="text-align:center; margin-bottom:20px;">
+          <h1 style="color:#ffffff; font-size:24px; margin:0;">BandManager<span style="color:#f2ca50;">.io</span></h1>
+        </div>
+        <h2 style="color:#f2ca50; margin:0 0 16px 0;">¡El servicio de email está funcionando correctamente! 🚀</h2>
+        <p>Este es un email de comprobación enviado desde BandManager.io a través de Resend.</p>
+        <p style="font-size:13px; color:#a1a1aa; border-top:1px solid #27272a; padding-top:16px; margin-top:24px;">Destino: ${targetEmail} | Fecha: ${new Date().toLocaleString('es-ES')}</p>
+      </div>
+    `,
+  });
+
+  return res.json({
+    success: result.success,
+    id: result.id,
+    error: result.error,
+    resendConfigured: Boolean(process.env.RESEND_API_KEY),
+    senderConfigured:
+      process.env.SENDER_EMAIL || 'BandManager <no-reply@bandmanager.io>',
+  });
+});
+
 // Verify current session
 router.get('/auth/me', async (req, res) => {
   const authHeader = req.headers.authorization;
@@ -1492,11 +1774,33 @@ router.get('/auth/me', async (req, res) => {
 
   const state = loadState();
 
-  // Refresh registered bands from Supabase if possible so plans are real-time
+  // Refresh registered bands and users from Supabase if possible so plans are real-time
   try {
-    const freshRegBands = await dbGetRegisteredBands();
+    const [freshRegBands, freshUsers] = await Promise.all([
+      dbGetRegisteredBands(),
+      dbGetUsers(),
+    ]);
     if (Array.isArray(freshRegBands) && freshRegBands.length > 0) {
       state.registeredBands = freshRegBands;
+    }
+    if (Array.isArray(freshUsers) && freshUsers.length > 0) {
+      freshUsers.forEach((su: any) => {
+        const idx = state.users.findIndex(
+          (u: any) =>
+            u.id === su.id ||
+            (u.username &&
+              u.username.toLowerCase() === su.username?.toLowerCase())
+        );
+        if (idx !== -1) {
+          if (su.plan) state.users[idx].plan = normalizePlan(su.plan);
+          if (su.role) state.users[idx].role = su.role;
+          if (su.band_id) state.users[idx].band_id = su.band_id;
+          if (su.bandName) state.users[idx].bandName = su.bandName;
+          if (su.main_band_id) state.users[idx].main_band_id = su.main_band_id;
+        } else {
+          state.users.push(su);
+        }
+      });
     }
   } catch (e) {
     // Non-blocking fallback to state.registeredBands
@@ -1519,6 +1823,29 @@ router.get('/auth/me', async (req, res) => {
     if (state.sessions && state.sessions[token]) {
       state.sessions[token].createdAt = Date.now();
       saveState(state);
+    }
+  }
+
+  const isBraisUser =
+    user.id === 'user-mouredev' ||
+    user.username?.toLowerCase() === 'mouredev' ||
+    user.username?.toLowerCase() === 'braismouredev' ||
+    user.email?.toLowerCase().includes('mouredev') ||
+    user.email?.toLowerCase().includes('brais');
+
+  if (isBraisUser) {
+    user.instrument = 'Batería';
+    user.plan = normalizePlan(user.plan || 'cabeza_de_cartel');
+    const cleanCurrent = cleanBandId(user.band_id);
+    if (cleanCurrent === 'master-of-prompts') {
+      user.band_id = 'band-master-of-prompts';
+      user.bandName = 'Master of Prompts';
+    } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
+      user.band_id = 'band-os-herdeiros-do-codigo';
+      user.bandName = 'Os Herdeiros do Código';
+    } else if (!user.band_id || cleanCurrent === 'bakandeya') {
+      user.band_id = 'band-master-of-prompts';
+      user.bandName = 'Master of Prompts';
     }
   }
 
@@ -1558,8 +1885,8 @@ router.get('/auth/me', async (req, res) => {
         (cleanCurrent.length > 1 && bName === cleanCurrent)
       );
     });
-    if (regBand && regBand.plan) {
-      user.plan = normalizePlan(regBand.plan);
+    if (regBand) {
+      user.plan = normalizePlan(regBand.plan || 'promo');
     }
   }
 
@@ -1710,11 +2037,18 @@ router.post('/auth/switch-band', async (req, res) => {
       );
     });
 
-  const resolvedName = bandInfo
+  let resolvedName = bandInfo
     ? bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name
     : cleanTargetBand === 'bakandeya'
       ? 'BAKANDEYA'
       : targetUser.bandName || 'Banda';
+  if (cleanTargetBand === 'master-of-prompts') {
+    resolvedName = 'Master of Prompts';
+  } else if (cleanTargetBand === 'os-herdeiros-do-codigo') {
+    resolvedName = 'Os Herdeiros do Código';
+  } else if (cleanTargetBand === 'bakandeya') {
+    resolvedName = 'BAKANDEYA';
+  }
   const resolvedPlan = normalizePlan(
     bandInfo?.plan || targetUser.plan || 'ensayo'
   );
@@ -2127,12 +2461,19 @@ router.post(
         }
       });
 
-      if (cleanTarget === 'bakandeya') {
+      if (
+        cleanTarget === 'bakandeya' ||
+        ((req as any).user?.band_id &&
+          cleanBandId((req as any).user.band_id) === cleanTarget)
+      ) {
         if (!state.epkConfig) state.epkConfig = {};
         state.epkConfig.logoUrl = logoUrl.trim();
       }
 
       saveState(state);
+      invalidateBandStateCache(targetBandId);
+      invalidateBandStateCache(cleanTarget);
+      invalidateBandStateCache(`band-${cleanTarget}`);
 
       res.json({
         success: true,
@@ -2178,7 +2519,7 @@ router.post(
 
       const rawBandName = bandName.trim();
       const cleanEmail = (user.email || user.username || '').toLowerCase();
-      const selectedPlan = normalizePlan(plan || user.plan || 'ensayo');
+      const selectedPlan = 'promo'; // Toda nueva banda se crea exclusivamente en plan promo
       const leaderDisplayName = (
         leaderName ||
         contacto_nombre ||
@@ -2281,6 +2622,50 @@ router.post(
           }
         });
       }
+
+      // Inicializar configuración EPK limpia y aislada para la nueva banda
+      if (!state.epkConfigsByBand) {
+        state.epkConfigsByBand = {};
+      }
+      const cleanBandIdStr = cleanBandId(bandId);
+      const freshEpkConfig = {
+        biografia: '',
+        logoUrl: '',
+        bandPhotos: [],
+        miembros: [
+          {
+            id: 'leader',
+            nombre: leaderDisplayName,
+            rol: user.instrument || 'Voz / Guitarra',
+            email: cleanEmail,
+            instagram: '',
+            isLeader: true,
+          },
+        ],
+        riderTecnico: '',
+        enlacesRedes: {
+          spotify: '',
+          youtube: '',
+          instagram: '',
+          tiktok: '',
+          website: '',
+        },
+        contactoBooking: {
+          nombre: leaderDisplayName,
+          email: cleanEmail,
+          telefono: '',
+        },
+        temasDestacadosIds: [],
+        incentivoFans: {
+          mensajeAgradecimiento: `¡Muchas gracias por unirte a la comunidad de ${rawBandName}!`,
+          enlaceDescarga: '',
+          codigoDescuento: '',
+        },
+      };
+      state.epkConfigsByBand[bandId] = freshEpkConfig;
+      state.epkConfigsByBand[cleanBandIdStr] = freshEpkConfig;
+      state.epkConfigsByBand[`band-${cleanBandIdStr}`] = freshEpkConfig;
+      state.epkConfigsByBand[`reg-${cleanBandIdStr}`] = freshEpkConfig;
 
       saveState(state);
 
@@ -2522,6 +2907,76 @@ router.delete(
   }
 );
 
+// Upload and persist band logo
+router.post('/users/upload-logo', requireAuth, async (req, res) => {
+  try {
+    const { bandId, logoUrl } = req.body;
+    if (!bandId || !logoUrl) {
+      return res.status(400).json({ error: 'bandId y logoUrl son requeridos' });
+    }
+
+    if (!puedeEscribirEnBanda(req, bandId)) {
+      return res
+        .status(403)
+        .json({
+          error: 'No tienes permiso para modificar el logo de esta banda.',
+        });
+    }
+
+    const state = loadState();
+    const cleanId = cleanBandId(bandId);
+
+    // Update in registeredBands
+    if (!state.registeredBands) state.registeredBands = [];
+    let regBand = state.registeredBands.find((b: any) => {
+      const bBid = cleanBandId(b.band_id || b.id);
+      return bBid === cleanId;
+    });
+
+    if (regBand) {
+      regBand.logo_url = logoUrl;
+      regBand.imagen_url = logoUrl;
+      try {
+        await dbUpsertRegisteredBand(regBand);
+      } catch (e) {
+        console.warn('Could not sync registeredBand logo to DB:', e);
+      }
+    }
+
+    // Update in epkConfigsByBand
+    if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
+    const existingEpk = getEpkConfigForBand(
+      state,
+      bandId,
+      regBand?.nombre_banda || 'Banda'
+    );
+    const updatedEpk = { ...existingEpk, logoUrl };
+    const possibleKeys = [bandId, cleanId, `band-${cleanId}`, `reg-${cleanId}`];
+    possibleKeys.forEach((k) => {
+      state.epkConfigsByBand[k] = updatedEpk;
+    });
+
+    if (cleanId === 'bakandeya') {
+      state.epkConfig = updatedEpk;
+    }
+
+    try {
+      await dbUpsertEpkConfig(bandId, { logoUrl });
+    } catch (e) {
+      console.warn('Could not sync EPK logo to DB:', e);
+    }
+
+    saveState(state);
+
+    res.json({ success: true, bandId, logoUrl });
+  } catch (err: any) {
+    console.error('Error in /users/upload-logo:', err);
+    res
+      .status(500)
+      .json({ error: err?.message || 'Error al actualizar el logotipo' });
+  }
+});
+
 // Associate an existing user to the leader's band using exact email match
 router.post(
   '/users/associate',
@@ -2761,6 +3216,27 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
       'Notice: User saved locally, Supabase update skipped or pending:',
       err
     );
+  }
+
+  // Enviar email de invitación al nuevo miembro si tiene email válido
+  if (cleanEmail && cleanEmail.includes('@')) {
+    const appUrl = getProductionAppUrl(process.env.APP_URL);
+    const bandInfo = (state.registeredBands || []).find(
+      (b: any) => b.band_id === targetBandId || b.id === targetBandId
+    );
+    const bName = bandInfo?.nombre_banda || 'tu banda';
+    sendMemberInvitationEmail({
+      toEmail: cleanEmail,
+      memberName: name.trim(),
+      bandName: bName,
+      instrument: instrument ? instrument.trim() : undefined,
+      username: cleanUsername,
+    }).catch((err) => {
+      console.error(
+        `[Miembros] Error enviando email de invitación a ${cleanEmail}:`,
+        err?.message || err
+      );
+    });
   }
 
   const { passwordHash, salt: _, ...safeUser } = newUser;

@@ -55,7 +55,10 @@ import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import { openWhatsAppChat } from '../utils/whatsapp';
+import { encodeBandIdClient } from '../utils/bandHash';
 
+import { FansDashboardView } from './fans/FansDashboardView';
 interface FansPanelProps {
   fans: Fan[];
   concerts: Concert[];
@@ -446,8 +449,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       : '/unete';
 
   const qrQueryParams: string[] = [];
-  if (currentBandId) qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
-  else if (cleanBandId) qrQueryParams.push(`band=${encodeURIComponent(cleanBandId)}`);
+  if (currentBandId) qrQueryParams.push(`b=${encodeURIComponent(encodeBandIdClient(currentBandId))}`);
+  else if (cleanBandId) qrQueryParams.push(`b=${encodeURIComponent(encodeBandIdClient(cleanBandId))}`);
   if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE) qrQueryParams.push(`lang=${qrLanguage}`);
   if (selectedConcert) {
     // Permite que /api/public/fans guarde el concierto de origen real (concierto_origen_id)
@@ -473,7 +476,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handleShareWhatsApp = () => {
     const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : effectiveBandName;
     const text = `¡Únete a ${effectiveBandName} en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    openWhatsAppChat(undefined, text);
   };
 
   const handleShareNative = async () => {
@@ -672,173 +675,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       </div>
 
       {activeTab === 'dashboard' && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Total Fans Registrados</p>
-              <h3 className="text-5xl font-black text-[var(--ink)] font-display">{fans.length}</h3>
-            </div>
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Consentimiento RGPD</p>
-              <h3 className="text-4xl font-black text-[var(--ok)] font-display flex items-center gap-2">
-                <ShieldCheck className="w-8 h-8" />
-                100%
-              </h3>
-            </div>
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Ciudades Activas</p>
-              <h3 className="text-4xl font-black text-[var(--acc)] font-display flex items-center gap-2">
-                <MapPin className="w-8 h-8" />
-                {new Set(fans.map((f) => f.ciudad).filter(Boolean)).size}
-              </h3>
-            </div>
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 flex flex-col justify-center">
-              <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest mb-2 font-sans">Clics Totales en QR & Redes</p>
-              <h3 className="text-4xl font-black text-[var(--ink-2)] font-display flex items-center gap-2">
-                <ExternalLink className="w-7 h-7" />
-                {Object.entries(clickStats)
-                  .filter(([k]) => !k.endsWith('_last_at'))
-                  .reduce((a, b) => a + Number(b[1] || 0), 0)}
-              </h3>
-            </div>
-          </div>
-
-          {/* Breakdown de Clics por Red Social, Métodos de Pago y Dossier */}
-          {Object.keys(clickStats).length > 0 && (
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 space-y-3">
-              <h4 className="text-xs font-bold text-[var(--acc)] font-sans tracking-wider flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en FansLanding & QR (Por Canal y Donaciones)
-              </h4>
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                {Object.entries(clickStats)
-                  .filter(([k]) => !k.endsWith('_last_at'))
-                  .map(([key, count]) => (
-                    <div
-                      key={key}
-                      className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-xs font-sans flex items-center gap-2"
-                    >
-                      <span className="font-semibold text-[var(--ink-2)]">{key}:</span>
-                      <span className="font-black text-[var(--acc)]">
-                        {count} {count === 1 ? 'clic' : 'clics'}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Crecimiento Evolutivo de Fans */}
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 h-88 flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest font-sans flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
-                    Crecimiento Evolutivo de Fans
-                  </p>
-                  <p className="text-[11px] text-[var(--ink-2)] font-sans">Curva acumulativa de la comunidad {effectiveBandName}</p>
-                </div>
-                <span className="text-xs font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-s)]">
-                  Total: {fans.length} fans
-                </span>
-              </div>
-
-              <div className="flex-1 min-h-0 flex flex-col items-center justify-center">
-                {evolutionaryGrowthData.length > 0 ? (
-                  <Onda
-                    data={evolutionaryGrowthData.map((d) => ({
-                      label: d.date || 'Sin fecha',
-                      value: d.total || 0,
-                      color: 'var(--acc)',
-                    }))}
-                    height={240}
-                    barWidth={16}
-                    gap={10}
-                    showLabels={true}
-                    animated={true}
-                    tooltipFormatter={(val) => `${val} fans acumulados`}
-                    className="w-full"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full gap-4">
-                    <PublicoSilhouette opacity={0.12} size="medium" />
-                    <div className="text-center space-y-1">
-                      <p className="text-sm font-semibold text-[var(--ink)]">La sala está vacía</p>
-                      <p className="text-xs text-[var(--ink-2)]">Empieza a registrar fans y ve cómo crece tu comunidad</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Canal de Origen (Fixed & Visual) */}
-            <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 h-88 flex flex-col">
-              <div className="mb-2">
-                <p className="text-xs font-bold text-[var(--ink-2)] tracking-widest font-sans">Canal de Origen de Fans</p>
-                <p className="text-[11px] text-[var(--ink-2)] font-sans">De dónde provienen los registros</p>
-              </div>
-
-              <div className="flex-1 min-h-0 flex flex-col gap-4">
-                {originData.length > 0 ? (
-                  <>
-                    <div className="w-full h-48">
-                      <Onda
-                        data={originData.map((item, idx) => ({
-                          label: item.name,
-                          value: item.value,
-                          color: COLORS[idx % COLORS.length],
-                        }))}
-                        height={180}
-                        barWidth={20}
-                        gap={8}
-                        showLabels={true}
-                        animated={true}
-                        tooltipFormatter={(val) => {
-                          const total = fans.length || 1;
-                          const pct = Math.round((val / total) * 100);
-                          return `${val} fans (${pct}%)`;
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-
-                    {/* Channel Legend List */}
-                    <div className="w-full space-y-2 overflow-y-auto max-h-48 hide-scrollbar pr-1">
-                      {originData.map((item, idx) => (
-                        <div
-                          key={item.name}
-                          className="flex items-center justify-between bg-[var(--surface)] p-2 rounded-[var(--r-m)] text-xs font-sans"
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span
-                              className="w-3 h-3 rounded-full shrink-0"
-                              style={{
-                                backgroundColor: COLORS[idx % COLORS.length],
-                              }}
-                            />
-                            <span className="text-[var(--ink-2)] font-bold truncate">{item.name}</span>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-[var(--acc)] font-bold">{item.value}</span>
-                            <span className="text-[var(--ink-2)] text-[10px]">({item.percentage}%)</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full gap-4 py-12">
-                    <PublicoSilhouette animated={false} opacity={0.14} size="large" />
-                    <div className="text-center">
-                      <p className="text-[var(--ink-2)] text-sm font-sans">La audiencia aún no ha llegado.</p>
-                      <p className="text-[var(--ink-3)] text-xs font-sans mt-1">Cultiva tu fanbase conectándote con tus seguidores.</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <FansDashboardView
+          fans={fans}
+          clickStats={clickStats}
+          effectiveBandName={effectiveBandName}
+          evolutionaryGrowthData={evolutionaryGrowthData}
+          originData={originData}
+          COLORS={COLORS}
+        />
       )}
 
       {activeTab === 'fans' && (

@@ -18,6 +18,16 @@ interface StepEventsProps {
   setNewEventVenue: (v: string) => void;
   newEventTicketUrl: string;
   setNewEventTicketUrl: (v: string) => void;
+  newEventAttendancePropia?: number;
+  setNewEventAttendancePropia?: (v: number) => void;
+  newEventAttendanceOtras?: number;
+  setNewEventAttendanceOtras?: (v: number) => void;
+  newEventSharedBands?: string;
+  setNewEventSharedBands?: (v: string) => void;
+  newEventPostShowReview?: string;
+  setNewEventPostShowReview?: (v: string) => void;
+  newEventIsMilestone?: boolean;
+  setNewEventIsMilestone?: (v: boolean) => void;
   onAddEvent: () => void;
   onRemoveEvent: (id: string) => void;
 }
@@ -38,6 +48,16 @@ export const StepEvents: React.FC<StepEventsProps> = ({
   setNewEventVenue,
   newEventTicketUrl,
   setNewEventTicketUrl,
+  newEventAttendancePropia = 0,
+  setNewEventAttendancePropia,
+  newEventAttendanceOtras = 0,
+  setNewEventAttendanceOtras,
+  newEventSharedBands = '',
+  setNewEventSharedBands,
+  newEventPostShowReview = '',
+  setNewEventPostShowReview,
+  newEventIsMilestone = false,
+  setNewEventIsMilestone,
   onAddEvent,
   onRemoveEvent,
 }) => {
@@ -168,6 +188,59 @@ export const StepEvents: React.FC<StepEventsProps> = ({
               placeholder="Enlace de venta de entradas (Wegow, DICE, Eventbrite...)"
               className="w-full px-3 py-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none focus:"
             />
+          </div>
+
+          {/* Opcional: Datos de Afluencia e Impresiones Post-Show */}
+          <div className="sm:col-span-3 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono font-bold text-amber-400">
+                📊 Éxito / Afluencia Real (Opcional - Contexto para Agente IA)
+              </span>
+              {setNewEventIsMilestone && (
+                <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-mono text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">
+                  <input
+                    type="checkbox"
+                    checked={newEventIsMilestone}
+                    onChange={(e) => setNewEventIsMilestone(e.target.checked)}
+                    className="accent-amber-500 rounded"
+                  />
+                  <span>⭐ Llenazo / Hito Clave</span>
+                </label>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <input
+                  type="number"
+                  value={newEventAttendancePropia || ''}
+                  onChange={(e) => setNewEventAttendancePropia?.(Number(e.target.value))}
+                  placeholder="Asistentes propios (ej. 250 espect.)"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  value={newEventSharedBands}
+                  onChange={(e) => setNewEventSharedBands?.(e.target.value)}
+                  placeholder="Grupos compartidos (ej. La Pegatina)"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+            </div>
+
+            {setNewEventPostShowReview && (
+              <div>
+                <textarea
+                  rows={2}
+                  value={newEventPostShowReview}
+                  onChange={(e) => setNewEventPostShowReview(e.target.value)}
+                  placeholder="Resumen del directo o nota de voz (ej. Lleno absoluto en la sala, respuesta brutal del público)"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+            )}
           </div>
         </div>
 

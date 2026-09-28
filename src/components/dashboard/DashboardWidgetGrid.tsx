@@ -48,6 +48,10 @@ import { useScrollLock } from '../../hooks/useScrollLock';
 import { useVisualViewportOverlayStyle } from '../../hooks/useVisualViewportOverlayStyle';
 import { AiSupportWidget, AiUsageCard } from './AiUsageSupportWidget';
 
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+
 export interface DashboardWidgetGridProps {
   currentUser?: any;
   concerts: Concert[];
@@ -64,6 +68,10 @@ export interface DashboardWidgetGridProps {
   agendaFilterMode: 'active' | 'all';
   onSetAgendaFilterMode: (mode: 'active' | 'all') => void;
   onNavigate?: (view: string, options?: any) => void;
+  isEditMode?: boolean;
+  setIsEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
+  viewDensityMode?: 'clean' | 'full';
+  setViewDensityMode?: React.Dispatch<React.SetStateAction<'clean' | 'full'>>;
 }
 
 export function DashboardWidgetGrid({
@@ -82,8 +90,22 @@ export function DashboardWidgetGrid({
   agendaFilterMode,
   onSetAgendaFilterMode,
   onNavigate,
+  isEditMode: externalEditMode,
+  setIsEditMode: externalSetIsEditMode,
+  viewDensityMode: externalDensityMode,
+  setViewDensityMode: externalSetViewDensityMode,
 }: DashboardWidgetGridProps) {
   const userPlan = currentUser?.plan;
+
+  // Internal fallback state if props not passed
+  const [internalDensityMode, setInternalDensityMode] = useState<'clean' | 'full'>('clean');
+  const [internalEditMode, setInternalEditMode] = useState(false);
+
+  const viewDensityMode = externalDensityMode ?? internalDensityMode;
+  const setViewDensityMode = externalSetViewDensityMode ?? setInternalDensityMode;
+
+  const isEditMode = externalEditMode ?? internalEditMode;
+  const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
 
   // Load saved widgets from user preferences or use default, filtering by module access
   const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as DashboardWidgetConfig[] | undefined;
@@ -117,7 +139,6 @@ export function DashboardWidgetGrid({
     return deduped;
   });
 
-  const [isEditMode, setIsEditMode] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   useScrollLock(isAddModalOpen);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
@@ -347,11 +368,11 @@ export function DashboardWidgetGrid({
       case 'crm_pipeline':
         return <CrmPipelineWidget leads={leads} onNavigate={onNavigate} />;
       case 'booking_funnel_chart':
-        return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} />;
+        return <BookingFunnelChartWidget leads={leads} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'finances_chart':
-        return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} />;
+        return <FinancesChartWidget concerts={concerts} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'social_fans_chart':
-        return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} />;
+        return <SocialFansGrowthWidget fans={fans} onNavigate={onNavigate} heightMode={heightMode} isStitchLight={isStitchLight} />;
       case 'repertorio_summary':
         return <RepertorioWidget onNavigate={onNavigate} />;
       case 'finances_summary':
@@ -370,7 +391,7 @@ export function DashboardWidgetGrid({
   };
 
   // Filter visible widgets sorted by order, enforcing module access
-  const visibleWidgets = widgets
+  const allVisibleWidgets = widgets
     .filter((w) => {
       if (!w.visible) return false;
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
@@ -381,69 +402,73 @@ export function DashboardWidgetGrid({
     })
     .sort((a, b) => a.order - b.order);
 
+  // In clean view, limit to essential operational widgets (max 4 core widgets) to prevent information overload
+  const visibleWidgets =
+    viewDensityMode === 'clean' && !isEditMode
+      ? allVisibleWidgets
+          .filter((w) => ['calendar', 'crm_pipeline', 'ai_agent_status', 'epk_status', 'repertorio_summary'].includes(w.type))
+          .slice(0, 4)
+      : allVisibleWidgets;
+
   return (
     <div className="space-y-4 w-full">
-      {/* Top Customization Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)]">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
-            <LayoutGrid className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-[var(--ink)]">Tu panel</span>
-              <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
-                Arrastra para reordenar
-              </span>
+      {/* Top Customization Bar - Only shown in edit mode */}
+      {isEditMode && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
+              <LayoutGrid className="w-5 h-5" />
             </div>
-            <p className="text-xs text-[var(--ink-2)] mt-0.5">{visibleWidgets.length} widgets activos · se guardan solos</p>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-[var(--ink)]">Editando tu panel</span>
+                <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
+                  Arrastra para reordenar
+                </span>
+              </div>
+              <p className="text-xs text-[var(--ink-2)] mt-0.5">
+                {visibleWidgets.length} de {allVisibleWidgets.length} módulos visibles · se guardan solos
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {saveSuccessMsg && (
+              <span className="text-xs text-[var(--ok)] bg-[var(--ok-soft)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 animate-fade-in">
+                <Check className="w-3.5 h-3.5" /> Guardado en BBDD
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setIsAddModalOpen(true)}
+              className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Añadir Widget</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleResetDefault}
+              className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs transition-colors cursor-pointer flex items-center gap-1"
+              title="Restablecer disposición por defecto"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Por Defecto</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsEditMode(false)}
+              className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-semibold transition-[filter] hover:brightness-110 cursor-pointer flex items-center gap-1.5"
+            >
+              <Check className="w-4 h-4" />
+              <span>Finalizar Edición</span>
+            </button>
           </div>
         </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          {saveSuccessMsg && (
-            <span className="text-xs text-[var(--ok)] bg-[var(--ok-soft)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 animate-fade-in">
-              <Check className="w-3.5 h-3.5" /> Guardado en BBDD
-            </span>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setIsEditMode(!isEditMode)}
-            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5 ${
-              isEditMode
-                ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110 hover:text-[var(--ink)]'
-            }`}
-          >
-            <Settings className={`w-4 h-4 ${isEditMode ? 'text-[var(--on-acc)]' : 'text-[var(--acc-ink)]'}`} />
-            <span>{isEditMode ? 'Finalizar Edición' : 'Personalizar Dashboard'}</span>
-          </button>
-
-          {isEditMode && (
-            <>
-              <button
-                type="button"
-                onClick={() => setIsAddModalOpen(true)}
-                className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Añadir Widget</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleResetDefault}
-                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] text-xs transition-colors cursor-pointer flex items-center gap-1"
-                title="Restablecer disposición por defecto"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Por Defecto</span>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Edit Mode Instructions Banner */}
       {isEditMode && (

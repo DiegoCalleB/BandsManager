@@ -27,6 +27,7 @@ export interface AutonomyConfig {
   agentSenderEmail?: string;
   agentSenderName?: string;
   agentReplyToEmail?: string;
+  markAsReadInInbox?: boolean;
   responseStrategies?: Record<string, ResponseStrategy>;
   minCacheByType?: {
     salas?: number;
@@ -113,6 +114,7 @@ export async function dbGetAutonomyConfig(
     agentSenderEmail: data.agent_sender_email || undefined,
     agentSenderName: data.agent_sender_name || undefined,
     agentReplyToEmail: data.agent_reply_to_email || undefined,
+    markAsReadInInbox: Boolean(data.mark_as_read_in_inbox ?? false),
     responseStrategies: data.response_strategies || {},
     minCacheByType:
       Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
@@ -151,6 +153,9 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
       (config.dispatchMode || config.dispatch_mode) === 'direct_send'
         ? 'direct_send'
         : 'draft_gmail',
+    mark_as_read_in_inbox: Boolean(
+      config.markAsReadInInbox ?? config.mark_as_read_in_inbox ?? false
+    ),
     // Como min_cache_by_type/negotiation_start_cache_by_type abajo: si el caller no manda este
     // campo, se deja `undefined` (Supabase omite la columna del UPDATE, preservando lo que
     // hubiera) en vez de {}. Antes caía a {} — el botón general "Guardar" del panel de

@@ -1,3 +1,5 @@
+import { CalendarViewsContainer } from './calendar/CalendarViewsContainer';
+import { CalendarSidebarLogistics } from './calendar/CalendarSidebarLogistics';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -11,6 +13,14 @@ import {
   MerchBoloItem,
   MerchControlBolo,
 } from '../types';
+import { CalendarSyncModal } from './calendar/CalendarSyncModal';
+import { CalendarReminderModal } from './calendar/CalendarReminderModal';
+import { CalendarEventDetailModal } from './calendar/CalendarEventDetailModal';
+
+import { ConcertBreakEvenCard } from './calendar/ConcertBreakEvenCard';
+import { CalendarCreateEventModal } from './calendar/CalendarCreateEventModal';
+import { CalendarEditConcertModal } from './calendar/CalendarEditConcertModal';
+import { CalendarEditRehearsalModal } from './calendar/CalendarEditRehearsalModal';
 import DirectionsCard from './DirectionsCard';
 import {
   Calendar,
@@ -80,6 +90,8 @@ import {
   Calculator,
   ShoppingBag,
   Tag,
+  Search,
+  X,
 } from 'lucide-react';
 import { EventWeatherCard } from './calendar/EventWeatherCard';
 import { CalendarWeatherBadge, AnimatedWeatherIcon } from './calendar/AnimatedWeatherIcon';
@@ -107,165 +119,22 @@ import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
 import { HolidayDateWarning } from './common/HolidayDateWarning';
 import { PublicoSilhouette } from './ui/PublicoSilhouette';
+import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../utils/whatsapp';
 
-interface CalendarViewProps {
-  colors: ThemeColors;
-  rehearsals: Rehearsal[];
-  concerts: Concert[];
-  campaigns?: BookingCampaign[];
-  activeCampaign?: BookingCampaign | null;
-  onNavigate?: (view: string, options?: any) => void;
-  onUpdateRehearsal: (id: string, updatedFields: Partial<Rehearsal>) => void;
-  onUpdateConcert: (id: string, updatedFields: Partial<Concert>) => void;
-  onDeleteRehearsal?: (id: string) => void;
-  onDeleteConcert?: (id: string) => void;
-  onAddRehearsal?: (rehearsal: Rehearsal) => void;
-  onAddConcert?: (concert: Concert) => void;
-  initialSelectedEventId?: string;
-  initialSelectedDate?: string;
-  currentBandId?: string;
-  currentBandName?: string;
-  currentBandLogo?: string;
-  availableBands?: Array<{
-    band_id: string;
-    bandName: string;
-    name?: string;
-    logoUrl?: string;
-    logo_url?: string;
-    imagen_url?: string;
-    avatar_url?: string;
-  }>;
-  bandUsers?: Array<{
-    id: string;
-    name: string;
-    username?: string;
-    role?: string;
-    instrument?: string;
-    band_id?: string;
-    bandName?: string;
-  }>;
-  currentUser?: {
-    id?: string;
-    name?: string;
-    username?: string;
-    email?: string;
-    role?: string;
-    band_id?: string;
-    instrument?: string;
-    plan?: string;
-    ui_preferences?: any;
-  };
-  isPromoPlan?: boolean;
-  onShowNotification?: (message: string, type?: 'success' | 'error' | 'info') => void;
-}
+import {
+  CalendarViewProps,
+  RunOfShowItem,
+  GearItem,
+  RoadbookInfo,
+  BAND_COLOR_PALETTES,
+  getDetailedDateInfo,
+} from './calendar/calendarTypes';
+import { useCalendarRoadbook } from './calendar/useCalendarRoadbook';
 
-interface RunOfShowItem {
-  id: string;
-  time: string;
-  activity: string;
-  done: boolean;
-}
-
-interface GearItem {
-  id: string;
-  label: string;
-  checked: boolean;
-}
-
-export const getDetailedDateInfo = (dateInput: string | Date | undefined | null) => {
-  if (!dateInput) return null;
-  let d: Date;
-  if (typeof dateInput === 'string') {
-    const cleanStr = dateInput.split('T')[0].trim();
-    const parts = cleanStr.split('-');
-    if (parts.length === 3) {
-      const y = parseInt(parts[0], 10);
-      const m = parseInt(parts[1], 10) - 1;
-      const day = parseInt(parts[2], 10);
-      d = new Date(y, m, day, 12, 0, 0);
-    } else {
-      d = new Date(dateInput);
-    }
-  } else {
-    d = new Date(dateInput.getFullYear(), dateInput.getMonth(), dateInput.getDate(), 12, 0, 0);
-  }
-  if (isNaN(d.getTime())) return null;
-
-  const dayNamesLong = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  const dayNamesShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
-  const monthNamesLong = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre',
-  ];
-  const monthNamesShort = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-
-  const dayOfWeek = dayNamesLong[d.getDay()];
-  const dayOfWeekShort = dayNamesShort[d.getDay()];
-  const dayNum = d.getDate();
-  const monthLong = monthNamesLong[d.getMonth()];
-  const monthShort = monthNamesShort[d.getMonth()];
-  const year = d.getFullYear();
-
-  // Indicador temporal relativo
-  const today = new Date();
-  today.setHours(12, 0, 0, 0);
-  const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
-  const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-  let relativeLabel = '';
-  let relativeBadgeClass = '';
-  if (diffDays === 0) {
-    relativeLabel = '¡HOY!';
-    relativeBadgeClass = 'bg-[var(--ok)] text-[var(--on-ok)] font-black';
-  } else if (diffDays === 1) {
-    relativeLabel = 'Mañana';
-    relativeBadgeClass = 'bg-[var(--acc)]/60 text-[var(--on-acc)] font-black';
-  } else if (diffDays === 2) {
-    relativeLabel = 'Pasado mañana';
-    relativeBadgeClass = 'bg-[var(--acc)]/20 text-[var(--acc)]/70';
-  } else if (diffDays > 2 && diffDays <= 7) {
-    relativeLabel = `En ${diffDays} días`;
-    relativeBadgeClass = 'bg-[var(--ink-2)]/10 text-[var(--ink-2)]';
-  } else if (diffDays > 7 && diffDays <= 30) {
-    const weeks = Math.round(diffDays / 7);
-    relativeLabel = `En ${diffDays} días (${weeks} sem)`;
-    relativeBadgeClass = 'bg-[var(--ink-3)]/10 text-[var(--ink-3)]';
-  } else if (diffDays > 30) {
-    const months = Math.round(diffDays / 30);
-    relativeLabel = `En ${diffDays} días (~${months} mes${months > 1 ? 'es' : ''})`;
-    relativeBadgeClass = 'bg-[var(--surface)]/80 text-[var(--ink)]';
-  } else if (diffDays === -1) {
-    relativeLabel = 'Ayer';
-    relativeBadgeClass = 'bg-[var(--surface)]/80 text-[var(--ink-2)]';
-  } else {
-    relativeLabel = `Celebrado (hace ${Math.abs(diffDays)} d)`;
-    relativeBadgeClass = 'bg-[var(--surface)] text-[var(--ink-2)]';
-  }
-
-  return {
-    dayOfWeek,
-    dayOfWeekShort,
-    dayNum,
-    monthLong,
-    monthShort,
-    year,
-    fullFormatted: `${dayOfWeek}, ${dayNum} de ${monthLong} de ${year}`,
-    shortFormatted: `${dayOfWeekShort} ${dayNum} ${monthShort}`,
-    diffDays,
-    relativeLabel,
-    relativeBadgeClass,
-  };
-};
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+export { getDetailedDateInfo };
 
 export default function CalendarView({
   colors,
@@ -429,6 +298,58 @@ export default function CalendarView({
     [effectiveBandsList, activeBandName, isSameBandId]
   );
 
+  const getBandIdentity = React.useCallback(
+    (bandId?: string, bandNameFallback?: string) => {
+      const name = getEventBandName({ band_id: bandId, bandName: bandNameFallback });
+      const cleanId = (bandId || '')
+        .replace(/^(band|reg)-/, '')
+        .trim()
+        .toLowerCase();
+      const cleanName = (name || '').trim().toLowerCase();
+
+      const found = effectiveBandsList.find((b) => isSameBandId(b.band_id, bandId));
+      let logoUrl = found?.logoUrl || (found as any)?.logo_url || (found as any)?.imagen_url || (found as any)?.avatar_url || '';
+
+      if (!logoUrl && availableBands && availableBands.length > 0) {
+        const match = availableBands.find((b: any) => isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId));
+        if (match) {
+          logoUrl = (match as any).logoUrl || (match as any).logo_url || (match as any).imagen_url || (match as any).avatar_url || '';
+        }
+      }
+
+      if (!logoUrl) {
+        try {
+          const raw = localStorage.getItem('bandmanager_custom_band_logos');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed[cleanId]) logoUrl = parsed[cleanId];
+          }
+        } catch {}
+      }
+
+      if (!logoUrl && (isSameBandId(activeBandId, bandId) || cleanName === activeBandName?.trim().toLowerCase())) {
+        logoUrl = currentBandLogo || '';
+      }
+
+      if (!logoUrl && (cleanId === 'bakandeya' || cleanName.includes('bakandeya') || cleanId === '' || !bandId)) {
+        logoUrl = '/logo_bakandeya_bueno_sin_fondo.png';
+      }
+
+      const words = name.trim().split(/\s+/).filter(Boolean);
+      const initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : name.slice(0, 2).toUpperCase();
+
+      let hash = 0;
+      const str = bandId || name || 'band';
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+      }
+      const palette = BAND_COLOR_PALETTES[hash % BAND_COLOR_PALETTES.length];
+
+      return { name, initials, logoUrl, palette };
+    },
+    [effectiveBandsList, getEventBandName, isSameBandId, availableBands, activeBandId, activeBandName, currentBandLogo]
+  );
+
   // Check if current user is in multiple bands or has access to multiple bands' events
   const isMultiBandUser =
     effectiveBandsList.length > 1 ||
@@ -473,7 +394,9 @@ export default function CalendarView({
     };
   }, [showSyncModal, bandasDelFeed]);
 
-  const urlFeedAbsoluta = rutaFeed ? `${window.location.origin}${rutaFeed}` : '';
+  const host = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
+  const urlFeedAbsoluta = rutaFeed ? `${host}${rutaFeed}` : '';
+  const webCalFeed = urlFeedAbsoluta ? urlFeedAbsoluta.replace(/^https?:\/\//i, 'webcal://') : '';
 
   // Effective band members list for Convocatoria filtered by target band of the event
   // Antes esto era la formación real de Bakandeya (Diego, Filgue, Batería, Teclados) y se usaba
@@ -659,7 +582,11 @@ export default function CalendarView({
     [currentUser]
   );
 
-  // Filtered concerts & rehearsals depending on filterBandMode and Convocatoria
+  // Estado de búsqueda rápida por palabra clave / sala / ciudad / notas / artista
+  const [calendarSearchTerm, setCalendarSearchTerm] = useState<string>('');
+  const [agendaFilterPast, setAgendaFilterPast] = useState<'all' | 'future' | 'past'>('all');
+
+  // Filtered concerts & rehearsals depending on filterBandMode, Convocatoria and search term
   const filteredConcerts = React.useMemo(() => {
     let list = concerts;
     if (filterBandMode === 'active') {
@@ -668,8 +595,23 @@ export default function CalendarView({
         return isSameBandId(c.band_id, activeBandId);
       });
     }
-    return list.filter(matchesConvocatoria);
-  }, [concerts, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
+    list = list.filter(matchesConvocatoria);
+
+    if (calendarSearchTerm.trim()) {
+      const q = calendarSearchTerm.trim().toLowerCase();
+      list = list.filter((c) => {
+        const matchSala = (c.sala || '').toLowerCase().includes(q);
+        const matchCiudad = (c.ciudad || '').toLowerCase().includes(q);
+        const matchDireccion = (c.direccion || '').toLowerCase().includes(q);
+        const matchNotas = (c.notas || '').toLowerCase().includes(q);
+        const matchBand = getEventBandName(c).toLowerCase().includes(q);
+        const matchTipo = (c.tipo || '').toLowerCase().includes(q);
+        const matchFecha = (c.fecha || '').toLowerCase().includes(q);
+        return matchSala || matchCiudad || matchDireccion || matchNotas || matchBand || matchTipo || matchFecha;
+      });
+    }
+    return list;
+  }, [concerts, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId, calendarSearchTerm, getEventBandName]);
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts
@@ -697,8 +639,21 @@ export default function CalendarView({
         return isSameBandId(r.band_id, activeBandId);
       });
     }
-    return list.filter(matchesConvocatoria);
-  }, [rehearsals, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
+    list = list.filter(matchesConvocatoria);
+
+    if (calendarSearchTerm.trim()) {
+      const q = calendarSearchTerm.trim().toLowerCase();
+      list = list.filter((r) => {
+        const matchLugar = (r.lugar || '').toLowerCase().includes(q);
+        const matchAsunto = (r.asunto || '').toLowerCase().includes(q);
+        const matchNotas = (r.notas || '').toLowerCase().includes(q);
+        const matchBand = getEventBandName(r).toLowerCase().includes(q);
+        const matchFecha = (r.fecha || '').toLowerCase().includes(q);
+        return matchLugar || matchAsunto || matchNotas || matchBand || matchFecha;
+      });
+    }
+    return list;
+  }, [rehearsals, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId, calendarSearchTerm, getEventBandName]);
 
   // Handle initial selected date / event ID passed as props
   useEffect(() => {
@@ -806,500 +761,10 @@ export default function CalendarView({
       setConfigToast(null);
     }, 2200);
   };
-
   const [activeTab, setActiveTab] = useState<'runofshow' | 'tecnica' | 'contactos' | 'merchan' | 'cierre' | 'gear' | 'roadbook'>(
     'runofshow'
   );
-  const [modalActiveTab, setModalActiveTab] = useState<'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'cierre'>('resumen');
-
-  // Roadbooks state per event date
-  interface RoadbookInfo {
-    contactoPromotor: string;
-    telefonoPromotor: string;
-    tecnicoSonido: string;
-    hotelNombre: string;
-    hotelDireccion: string;
-    cateringInfo: string;
-    inputList: string;
-    horaLlegada?: string;
-    horaPruebaSonido?: string;
-    horaAperturaPuertas?: string;
-    horaShow?: string;
-    horaCierreToque?: string;
-    paEspecificaciones?: string;
-    monitoresTipo?: string;
-    canalesMonitores?: string;
-    backlineInfo?: string;
-    potenciaElectrica?: string;
-    notasTecnicas?: string;
-    contactosClave?: KeyContactItem[];
-    cierreMaterial?: CierreMaterialItem[];
-    merchControl?: MerchControlBolo;
-  }
-
-  // Form states for adding Key Contact
-  const [showAddContactForm, setShowAddContactForm] = useState(false);
-  const [newContactNombre, setNewContactNombre] = useState('');
-  const [newContactRol, setNewContactRol] = useState('Promotor / Sala');
-  const [newContactTelefono, setNewContactTelefono] = useState('');
-  const [newContactEmail, setNewContactEmail] = useState('');
-  const [newContactNotas, setNewContactNotas] = useState('');
-
-  // Form states for adding Cierre Item
-  const [newCierreItemText, setNewCierreItemText] = useState('');
-  const [newCierreItemCat, setNewCierreItemCat] = useState<'escenario' | 'camerino' | 'furgoneta'>('escenario');
-
-  // Form states for Merch Control
-  const [showAddMerchForm, setShowAddMerchForm] = useState(false);
-  const [newMerchNombre, setNewMerchNombre] = useState('');
-  const [newMerchCategoria, setNewMerchCategoria] = useState<'camisetas' | 'vinilos' | 'musica' | 'accesorios' | 'otro'>('camisetas');
-  const [newMerchTalla, setNewMerchTalla] = useState('');
-  const [newMerchPrecio, setNewMerchPrecio] = useState<string>('20');
-  const [newMerchStockInicial, setNewMerchStockInicial] = useState<string>('15');
-  const [merchCopiedToast, setMerchCopiedToast] = useState(false);
-
-  const getDefaultRoadbook = (concert?: Concert | null): RoadbookInfo => {
-    const salaNombre = concert?.sala || 'Sala de Conciertos';
-    const ciudadNombre = concert?.ciudad || 'Madrid';
-    return {
-      contactoPromotor: `Manuel (Producción ${salaNombre})`,
-      telefonoPromotor: '+34 654 321 987',
-      tecnicoSonido: 'Carlos (FOH / Sonido)',
-      hotelNombre: 'Hotel de Gira',
-      hotelDireccion: ciudadNombre,
-      cateringInfo: 'Cena caliente tras prueba de sonido + aguas, fruta y toallas en camerino',
-      inputList:
-        '1. Bombo (Beta 52)\n2. Caja Top (SM57)\n3. Hi-Hat (KM184)\n4. Bajo (D.I. Radial J48)\n5. Guitarra 1 (e906)\n6. Guitarra 2 (SM57)\n7. Teclado L/R (2x D.I.)\n8. Trompeta (Clip DPA)\n9. Saxo (Clip DPA)\n10. Voz Principal (Beta 58)\n11. Coro Gtr (SM58)\n12. Coro Teclado (SM58)',
-      horaLlegada: '17:00',
-      horaPruebaSonido: '18:00 - 19:30',
-      horaAperturaPuertas: '20:30',
-      horaShow: concert?.fecha ? '21:30' : '21:30',
-      horaCierreToque: '01:00',
-      paEspecificaciones: 'Sistema Line Array estéreo homogéneo (D&B / L-Acoustics / Meyer) con subwoofers dedicados y presión adecuada.',
-      monitoresTipo: 'In-Ears estéreo de la banda (traemos transmisores propios) + 2 cuñas de refuerzo en frontal de escenario.',
-      canalesMonitores: '4 envíos auxiliares independientes XLR a rack de IEMs.',
-      backlineInfo:
-        'Sala aporta: Batería básica (bombo, toms, pie hihat, 3 pies plato). Banda trae: Caja, platos, pedal bombo, amplificadores de guitarra/bajo y pedaleras.',
-      potenciaElectrica: '2 tomas Schuko 220V / 16A limpias en frontal y trasera de escenario.',
-      notasTecnicas: 'Muelle de carga lateral disponible desde las 16:30. Acceso a prueba de sonido puntual.',
-      contactosClave: [
-        {
-          id: 'ct-1',
-          nombre: `Manuel Producción (${salaNombre})`,
-          rol: 'Promotor / Sala',
-          telefono: '+34 654 321 987',
-          email: 'produccion@conciertos.es',
-          notas: 'Contacto principal para accesos, llaves camerino y cobro de taquilla/caché.',
-        },
-        {
-          id: 'ct-2',
-          nombre: 'Carlos Sonido (FOH)',
-          rol: 'Técnico de Sonido (P.A.)',
-          telefono: '+34 612 345 678',
-          email: 'sonido@salaslive.com',
-          notas: 'A cargo de la mesa de mezclas en sala y chequeo de líneas de microfonía.',
-        },
-        {
-          id: 'ct-3',
-          nombre: 'Laura Hospitalidad',
-          rol: 'Producción / Camerinos',
-          telefono: '+34 699 112 233',
-          email: 'camerinos@venues.com',
-          notas: 'Catering, toallas, acreditaciones y acceso a furgoneta de carga.',
-        },
-      ],
-      cierreMaterial: [
-        {
-          id: 'cm-1',
-          categoria: 'escenario',
-          item: 'Instrumentos principales y estuches rígidos (guitarras, bajo, metales/teclado)',
-          checked: false,
-        },
-        {
-          id: 'cm-2',
-          categoria: 'escenario',
-          item: 'Pedaleras de efectos, alimentadores y fuentes de corriente',
-          checked: false,
-        },
-        {
-          id: 'cm-3',
-          categoria: 'escenario',
-          item: 'Cables jack / XLR propios, alargaderas y adaptadores',
-          checked: false,
-        },
-        {
-          id: 'cm-4',
-          categoria: 'escenario',
-          item: 'Petacas de in-ears, auriculares y transmisores inalámbricos',
-          checked: false,
-        },
-        {
-          id: 'cm-5',
-          categoria: 'escenario',
-          item: 'Pies de micro y soportes de instrumento de la banda',
-          checked: false,
-        },
-        {
-          id: 'cm-6',
-          categoria: 'escenario',
-          item: 'Micrófonos vocales y pinzas especiales',
-          checked: false,
-        },
-        {
-          id: 'cm-7',
-          categoria: 'camerino',
-          item: 'Ropa de directo, calzado y fundas de ropa',
-          checked: false,
-        },
-        {
-          id: 'cm-8',
-          categoria: 'camerino',
-          item: 'Mochilas personales, carteras, teléfonos y documentación',
-          checked: false,
-        },
-        {
-          id: 'cm-9',
-          categoria: 'camerino',
-          item: 'Cargadores de móvil, powerbanks y tablets de partituras',
-          checked: false,
-        },
-        {
-          id: 'cm-10',
-          categoria: 'camerino',
-          item: 'Caja de Merchandising, datáfono y dinero recaudado en efectivo',
-          checked: false,
-        },
-        {
-          id: 'cm-11',
-          categoria: 'furgoneta',
-          item: 'Todo el backline estibado y trincado con cinchas de amarre',
-          checked: false,
-        },
-        {
-          id: 'cm-12',
-          categoria: 'furgoneta',
-          item: 'Portón trasero y puertas laterales cerradas con candado/alarma',
-          checked: false,
-        },
-        {
-          id: 'cm-13',
-          categoria: 'furgoneta',
-          item: 'Inspección visual final de camerino y escenario (¡cero olvidos!)',
-          checked: false,
-        },
-      ],
-      merchControl: {
-        items: [
-          {
-            id: 'mb-1',
-            nombre: 'Camiseta Gira Oficial',
-            categoria: 'camisetas',
-            talla: 'M',
-            precioUnitario: 20,
-            stockInicial: 15,
-            stockFinal: 5,
-          },
-          {
-            id: 'mb-2',
-            nombre: 'Camiseta Gira Oficial',
-            categoria: 'camisetas',
-            talla: 'L',
-            precioUnitario: 20,
-            stockInicial: 20,
-            stockFinal: 6,
-          },
-          {
-            id: 'mb-3',
-            nombre: 'Vinilo LP 12" Edición Limitada',
-            categoria: 'vinilos',
-            talla: 'LP',
-            precioUnitario: 25,
-            stockInicial: 15,
-            stockFinal: 7,
-          },
-          {
-            id: 'mb-4',
-            nombre: 'Pack Púas de Colección + Pegatinas',
-            categoria: 'accesorios',
-            talla: 'Pack',
-            precioUnitario: 5,
-            stockInicial: 40,
-            stockFinal: 12,
-          },
-          {
-            id: 'mb-5',
-            nombre: 'Totebag Algodón Serigrafiada',
-            categoria: 'accesorios',
-            talla: 'Única',
-            precioUnitario: 12,
-            stockInicial: 15,
-            stockFinal: 5,
-          },
-        ],
-        fondoCajaInicial: 50,
-        ingresosEfectivo: 480,
-        ingresosBizum: 460,
-        notas: 'Mesa de merchandising bien ubicada junto al acceso principal. Gran tirón de vinilos y camisetas tras el show.',
-      },
-    };
-  };
-
-  const [allRoadbooks, setAllRoadbooks] = useState<Record<string, RoadbookInfo>>(() => {
-    try {
-      const saved = localStorage.getItem('bakandeya_roadbooks');
-      return saved
-        ? JSON.parse(saved)
-        : {
-            '2026-07-18': {
-              contactoPromotor: 'Manuel (Producción Cabo de Plata)',
-              telefonoPromotor: '+34 654 321 987',
-              tecnicoSonido: 'Carlos (FOH Bakandeya)',
-              hotelNombre: 'Hotel Playa de Barbate ****',
-              hotelDireccion: 'Avenida del Mar, 12, 11160 Barbate',
-              cateringInfo: 'Cena tras prueba de sonido (21:00). 2 menús vegetarianos.',
-              inputList:
-                '1. Bombo (Beta 52)\n2. Caja Top (SM57)\n3. Bajo (DI Radial)\n4. Gtr L (e609)\n5. Teclado L/R\n6. Tpt (Clip)\n7. Voz Ppal (Beta 58)\n8. Coros (SM58)',
-            },
-          };
-    } catch {
-      return {};
-    }
-  });
-
-  const saveRoadbook = (dateKey: string, info: RoadbookInfo) => {
-    const updated = { ...allRoadbooks, [dateKey]: info };
-    setAllRoadbooks(updated);
-    // NOTE: Removed localStorage persistence. Roadbooks are session-local state.
-    // For persistence: use API with band_id validation instead.
-  };
-
-  const getCurrentRoadbook = (dateKey: string, concert?: Concert | null): RoadbookInfo => {
-    const existing = allRoadbooks[dateKey];
-    const def = getDefaultRoadbook(concert);
-    if (!existing) return def;
-    return {
-      ...def,
-      ...existing,
-      contactosClave: existing.contactosClave && existing.contactosClave.length > 0 ? existing.contactosClave : def.contactosClave,
-      cierreMaterial: existing.cierreMaterial && existing.cierreMaterial.length > 0 ? existing.cierreMaterial : def.cierreMaterial,
-      merchControl:
-        existing.merchControl && existing.merchControl.items && existing.merchControl.items.length > 0
-          ? existing.merchControl
-          : def.merchControl,
-    };
-  };
-
-  const updateRoadbookField = (dateKey: string, partial: Partial<RoadbookInfo>) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updated: RoadbookInfo = { ...current, ...partial };
-    saveRoadbook(dateKey, updated);
-    if (selectedConcert && onUpdateConcert) {
-      onUpdateConcert(selectedConcert.id, {
-        logisticaTecnica: {
-          horaLlegada: updated.horaLlegada,
-          horaPruebaSonido: updated.horaPruebaSonido,
-          horaAperturaPuertas: updated.horaAperturaPuertas,
-          horaShow: updated.horaShow,
-          horaCierreToque: updated.horaCierreToque,
-          paEspecificaciones: updated.paEspecificaciones,
-          monitoresTipo: updated.monitoresTipo,
-          canalesMonitores: updated.canalesMonitores,
-          backlineInfo: updated.backlineInfo,
-          potenciaElectrica: updated.potenciaElectrica,
-          inputList: updated.inputList,
-          notasTecnicas: updated.notasTecnicas,
-        },
-        contactosClave: updated.contactosClave,
-        cierreMaterial: updated.cierreMaterial,
-        merchControl: updated.merchControl,
-      });
-    }
-  };
-
-  const handleToggleCierreItem = (itemId: string, dateKey: string) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.cierreMaterial || []).map((item) => (item.id === itemId ? { ...item, checked: !item.checked } : item));
-    updateRoadbookField(dateKey, { cierreMaterial: updatedList });
-  };
-
-  const handleToggleAllCierreItems = (dateKey: string, checkAll: boolean) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.cierreMaterial || []).map((item) => ({
-      ...item,
-      checked: checkAll,
-    }));
-    updateRoadbookField(dateKey, { cierreMaterial: updatedList });
-  };
-
-  const handleAddCierreItem = (dateKey: string, e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!newCierreItemText.trim()) return;
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const newItem: CierreMaterialItem = {
-      id: `cm-${Date.now()}`,
-      categoria: newCierreItemCat,
-      item: newCierreItemText.trim(),
-      checked: false,
-    };
-    updateRoadbookField(dateKey, {
-      cierreMaterial: [...(current.cierreMaterial || []), newItem],
-    });
-    setNewCierreItemText('');
-  };
-
-  const handleDeleteCierreItem = (itemId: string, dateKey: string) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.cierreMaterial || []).filter((item) => item.id !== itemId);
-    updateRoadbookField(dateKey, { cierreMaterial: updatedList });
-  };
-
-  const handleAddKeyContact = (dateKey: string, e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!newContactNombre.trim() || !newContactTelefono.trim()) return;
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const newContact: KeyContactItem = {
-      id: `ct-${Date.now()}`,
-      nombre: newContactNombre.trim(),
-      rol: newContactRol,
-      telefono: newContactTelefono.trim(),
-      email: newContactEmail.trim() || undefined,
-      notas: newContactNotas.trim() || undefined,
-    };
-    updateRoadbookField(dateKey, {
-      contactosClave: [...(current.contactosClave || []), newContact],
-    });
-    setNewContactNombre('');
-    setNewContactTelefono('');
-    setNewContactEmail('');
-    setNewContactNotas('');
-    setShowAddContactForm(false);
-  };
-
-  const handleDeleteKeyContact = (contactId: string, dateKey: string) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const updatedList = (current.contactosClave || []).filter((c) => c.id !== contactId);
-    updateRoadbookField(dateKey, { contactosClave: updatedList });
-  };
-
-  const openWhatsAppContact = (contact: KeyContactItem, eventDateStr: string, venueName: string) => {
-    const cleanPhone = contact.telefono.replace(/[^0-9]/g, '');
-    const bandName = getBandIdentity(selectedConcert?.band_id).name || 'la banda';
-    const msg = `¡Hola ${contact.nombre}! Te escribo de parte de ${bandName} con respecto al concierto en ${venueName} el día ${eventDateStr}. ¿Cómo estás? Quería consultar unos detalles de producción.`;
-    const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleUpdateMerchItem = (dateKey: string, itemId: string, updates: Partial<MerchBoloItem>) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-    const updatedItems = merch.items.map((item) => (item.id === itemId ? { ...item, ...updates } : item));
-    updateRoadbookField(dateKey, {
-      merchControl: {
-        ...merch,
-        items: updatedItems,
-      },
-    });
-  };
-
-  const handleAddMerchItem = (dateKey: string, e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!newMerchNombre.trim()) return;
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-    const precio = Math.max(0, parseFloat(newMerchPrecio) || 0);
-    const stockIni = Math.max(0, parseInt(newMerchStockInicial, 10) || 0);
-    const newItem: MerchBoloItem = {
-      id: `mb-${Date.now()}`,
-      nombre: newMerchNombre.trim(),
-      categoria: newMerchCategoria,
-      talla: newMerchTalla.trim() || undefined,
-      precioUnitario: precio,
-      stockInicial: stockIni,
-      stockFinal: stockIni,
-    };
-    updateRoadbookField(dateKey, {
-      merchControl: {
-        ...merch,
-        items: [...merch.items, newItem],
-      },
-    });
-    setNewMerchNombre('');
-    setNewMerchTalla('');
-    setShowAddMerchForm(false);
-  };
-
-  const handleDeleteMerchItem = (dateKey: string, itemId: string) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-    const updatedItems = merch.items.filter((item) => item.id !== itemId);
-    updateRoadbookField(dateKey, {
-      merchControl: {
-        ...merch,
-        items: updatedItems,
-      },
-    });
-  };
-
-  const handleUpdateMerchTotals = (dateKey: string, updates: Partial<MerchControlBolo>) => {
-    const current = getCurrentRoadbook(dateKey, selectedConcert);
-    const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-    updateRoadbookField(dateKey, {
-      merchControl: {
-        ...merch,
-        ...updates,
-      },
-    });
-  };
-
-  const handleCopyMerchSummary = (roadbook: RoadbookInfo, dateKey: string, concert?: Concert | null) => {
-    const merch = roadbook.merchControl || getDefaultRoadbook(concert).merchControl!;
-    const sala = concert?.sala || 'Sala de Conciertos';
-    const ciudad = concert?.ciudad || '';
-
-    let totalVendidas = 0;
-    let totalVentaTeorica = 0;
-    const desgloseItems: string[] = [];
-
-    merch.items.forEach((item) => {
-      const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
-      if (vendidas > 0) {
-        const subtotal = vendidas * (item.precioUnitario || 0);
-        totalVendidas += vendidas;
-        totalVentaTeorica += subtotal;
-        desgloseItems.push(
-          `• ${item.nombre}${item.talla ? ` (${item.talla})` : ''}: ${vendidas} uds × ${item.precioUnitario}€ = ${subtotal}€ (quedan: ${item.stockFinal})`
-        );
-      }
-    });
-
-    const totalCobrado = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
-    const diferencia = totalCobrado - totalVentaTeorica;
-
-    const texto = [
-      `👕 *CONTROL DE MERCHANDISING - ${sala.toUpperCase()}*`,
-      `📅 Fecha: ${dateKey}${ciudad ? ` | 📍 ${ciudad}` : ''}`,
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `📦 *Artículos vendidos:* ${totalVendidas} unidades`,
-      `💰 *Ventas Teóricas:* ${totalVentaTeorica.toFixed(2)} €`,
-      ``,
-      `💳 *DESGLOSE DE INGRESOS (ARQUEO):*`,
-      `💵 Efectivo recaudado: ${(merch.ingresosEfectivo || 0).toFixed(2)} €`,
-      `📱 Bizum / TPV: ${(merch.ingresosBizum || 0).toFixed(2)} €`,
-      `🏷️ Total Cobrado Real: ${totalCobrado.toFixed(2)} €`,
-      merch.fondoCajaInicial ? `🪙 Fondo de caja inicial: ${merch.fondoCajaInicial.toFixed(2)} €` : null,
-      `⚖️ Cuadre de caja: ${diferencia === 0 ? '✓ ¡CAJA CUADRADA EXACTA! ' : diferencia > 0 ? `+${diferencia.toFixed(2)} € (Superávit / Propinas)` : `${diferencia.toFixed(2)} € (Descuadre por verificar)`}`,
-      ``,
-      `📋 *DETALLE POR ARTÍCULO:*`,
-      ...(desgloseItems.length > 0 ? desgloseItems : ['(Sin ventas registradas todavía)']),
-      merch.notas ? `\n📝 *Notas:* ${merch.notas}` : '',
-    ]
-      .filter(Boolean)
-      .join('\n');
-
-    navigator.clipboard.writeText(texto);
-    setMerchCopiedToast(true);
-    setTimeout(() => setMerchCopiedToast(false), 3000);
-  };
+  const [modalActiveTab, setModalActiveTab] = useState<'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'postshow' | 'cierre'>('resumen');
 
   // Creation Modals state
   const [showCreateModal, setShowCreateModal] = useState<'rehearsal' | 'concert' | 'reunion' | null>(null);
@@ -1597,6 +1062,19 @@ export default function CalendarView({
       setlistId: editDraft.setlistId || undefined,
       entradasUrl: editDraft.entradasUrl?.trim() || undefined,
       entradasLugarFisico: editDraft.entradasLugarFisico?.trim() || undefined,
+      precioEntradaEstimado: Number(editDraft.precioEntradaEstimado) || undefined,
+      asistencia_propia: Number(editDraft.asistencia_propia) || 0,
+      asistencia_otras_bandas: Number(editDraft.asistencia_otras_bandas) || 0,
+      bandas_compartidas: Array.isArray(editDraft.bandas_compartidas)
+        ? editDraft.bandas_compartidas
+        : typeof editDraft.bandas_compartidas === 'string'
+          ? (editDraft.bandas_compartidas as string)
+              .split(',')
+              .map((s: string) => s.trim())
+              .filter(Boolean)
+          : [],
+      post_show_review: editDraft.post_show_review?.trim() || '',
+      es_hito_destacado: Boolean(editDraft.es_hito_destacado),
     });
     setViewingConcert(null);
     setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
@@ -2150,48 +1628,13 @@ export default function CalendarView({
 
   const defaultInitialRunOfShow: Record<string, RunOfShowItem[]> = {
     '2026-07-23': [
-      {
-        id: 'ros-1',
-        time: '17:00',
-        activity: 'Llegada a la sala y descarga de bártulos',
-        done: true,
-      },
-      {
-        id: 'ros-2',
-        time: '17:30',
-        activity: 'Montaje de escenario e in-ears',
-        done: true,
-      },
-      {
-        id: 'ros-3',
-        time: '18:15',
-        activity: 'Prueba de sonido (Soundcheck de metales y bases)',
-        done: true,
-      },
-      {
-        id: 'ros-4',
-        time: '19:30',
-        activity: 'Cena de la banda / Catering',
-        done: false,
-      },
-      {
-        id: 'ros-5',
-        time: '21:00',
-        activity: 'Apertura de puertas',
-        done: false,
-      },
-      {
-        id: 'ros-6',
-        time: '21:30',
-        activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎺💥',
-        done: false,
-      },
-      {
-        id: 'ros-7',
-        time: '23:30',
-        activity: 'Merchandising, firmas y recogida de equipo',
-        done: false,
-      },
+      { id: 'ros-1', time: '17:00', activity: 'Llegada a la sala y descarga de bártulos', done: true },
+      { id: 'ros-2', time: '17:30', activity: 'Montaje de escenario e in-ears', done: true },
+      { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de violín, sintes y bases)', done: true },
+      { id: 'ros-4', time: '19:30', activity: 'Cena de la banda / Catering', done: false },
+      { id: 'ros-5', time: '21:00', activity: 'Apertura de puertas', done: false },
+      { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎻💥', done: false },
+      { id: 'ros-7', time: '23:30', activity: 'Merchandising, firmas y recogida de equipo', done: false },
     ],
     '2026-07-15': [
       {
@@ -2218,21 +1661,9 @@ export default function CalendarView({
   const defaultInitialGear: Record<string, GearItem[]> = {
     '2026-07-23': [
       { id: 'gear-1', label: 'Teclado Korg SV-2 + Stand', checked: true },
-      {
-        id: 'gear-2',
-        label: 'Sección Metales (Sordinas y atril)',
-        checked: true,
-      },
-      {
-        id: 'gear-3',
-        label: 'Banderola de Escenario Bakandeya',
-        checked: false,
-      },
-      {
-        id: 'gear-4',
-        label: 'Merchandising (Camisetas, Pegatinas, CDs)',
-        checked: false,
-      },
+      { id: 'gear-2', label: 'Estuche Violín electroacústico + Arco y resina', checked: true },
+      { id: 'gear-3', label: 'Banderola de Escenario Bakandeya', checked: false },
+      { id: 'gear-4', label: 'Merchandising (Camisetas, Pegatinas, CDs)', checked: false },
       { id: 'gear-5', label: 'Cables Jack / XLR de recambio', checked: true },
       { id: 'gear-6', label: 'DI-Box estéreo para teclados', checked: false },
     ],
@@ -2529,112 +1960,56 @@ export default function CalendarView({
   const textSub = 'text-[var(--ink-2)]';
   const textMuted = 'text-[var(--ink-2)]';
 
-  // Paleta de colores e identificador visual de bandas (estilo Google Calendar)
-  const BAND_COLOR_PALETTES = [
-    {
-      bg: 'bg-[var(--band-0-soft)] text-[var(--band-0)]',
-      badge: 'bg-[var(--band-0)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-0)]/60',
-      accent: 'var(--band-0)',
-    },
-    {
-      bg: 'bg-[var(--band-1-soft)] text-[var(--band-1)]',
-      badge: 'bg-[var(--band-1)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-1)]/60',
-      accent: 'var(--band-1)',
-    },
-    {
-      bg: 'bg-[var(--band-2-soft)] text-[var(--band-2)]',
-      badge: 'bg-[var(--band-2)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-2)]/60',
-      accent: 'var(--band-2)',
-    },
-    {
-      bg: 'bg-[var(--band-3-soft)] text-[var(--band-3)]',
-      badge: 'bg-[var(--band-3)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-3)]/60',
-      accent: 'var(--band-3)',
-    },
-    {
-      bg: 'bg-[var(--band-4-soft)] text-[var(--band-4)]',
-      badge: 'bg-[var(--band-4)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-4)]/60',
-      accent: 'var(--band-4)',
-    },
-    {
-      bg: 'bg-[var(--band-5-soft)] text-[var(--band-5)]',
-      badge: 'bg-[var(--band-5)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-5)]/60',
-      accent: 'var(--band-5)',
-    },
-    {
-      bg: 'bg-[var(--band-6-soft)] text-[var(--band-6)]',
-      badge: 'bg-[var(--band-6)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-6)]/60',
-      accent: 'var(--band-6)',
-    },
-    {
-      bg: 'bg-[var(--band-7-soft)] text-[var(--band-7)]',
-      badge: 'bg-[var(--band-7)] text-[var(--ink)]',
-      dot: 'bg-[var(--band-7)]/60',
-      accent: 'var(--band-7)',
-    },
-  ];
-
-  const getBandIdentity = React.useCallback(
-    (bandId?: string, bandNameFallback?: string) => {
-      const name = getEventBandName({
-        band_id: bandId,
-        bandName: bandNameFallback,
-      });
-      const cleanId = (bandId || '')
-        .replace(/^(band|reg)-/, '')
-        .trim()
-        .toLowerCase();
-      const cleanName = (name || '').trim().toLowerCase();
-
-      const found = effectiveBandsList.find((b) => isSameBandId(b.band_id, bandId));
-      let logoUrl = found?.logoUrl || (found as any)?.logo_url || (found as any)?.imagen_url || (found as any)?.avatar_url || '';
-
-      if (!logoUrl && availableBands && availableBands.length > 0) {
-        const match = availableBands.find((b: any) => isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId));
-        if (match) {
-          logoUrl = (match as any).logoUrl || (match as any).logo_url || (match as any).imagen_url || (match as any).avatar_url || '';
-        }
-      }
-
-      if (!logoUrl) {
-        try {
-          const raw = localStorage.getItem('bandmanager_custom_band_logos');
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed[cleanId]) logoUrl = parsed[cleanId];
-          }
-        } catch {}
-      }
-
-      if (!logoUrl && (isSameBandId(activeBandId, bandId) || cleanName === activeBandName?.trim().toLowerCase())) {
-        logoUrl = currentBandLogo || '';
-      }
-
-      if (!logoUrl && (cleanId === 'bakandeya' || cleanName.includes('bakandeya') || cleanId === '' || !bandId)) {
-        logoUrl = '/logo_bakandeya_bueno_sin_fondo.png';
-      }
-
-      const words = name.trim().split(/\s+/).filter(Boolean);
-      const initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : name.slice(0, 2).toUpperCase();
-
-      let hash = 0;
-      const str = bandId || name || 'band';
-      for (let i = 0; i < str.length; i++) {
-        hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
-      }
-      const palette = BAND_COLOR_PALETTES[hash % BAND_COLOR_PALETTES.length];
-
-      return { name, initials, logoUrl, palette };
-    },
-    [effectiveBandsList, getEventBandName, isSameBandId, availableBands, activeBandId, activeBandName, currentBandLogo]
-  );
+  // Roadbooks & Merch state per event date (Encapsulated in custom hook)
+  const {
+    allRoadbooks,
+    setAllRoadbooks,
+    saveRoadbook,
+    getDefaultRoadbook,
+    getCurrentRoadbook,
+    updateRoadbookField,
+    handleToggleCierreItem,
+    handleToggleAllCierreItems,
+    handleAddCierreItem,
+    handleDeleteCierreItem,
+    handleAddKeyContact,
+    handleDeleteKeyContact,
+    openWhatsAppContact,
+    handleUpdateMerchItem,
+    handleAddMerchItem,
+    handleDeleteMerchItem,
+    handleUpdateMerchTotals,
+    handleCopyMerchSummary,
+    newCierreItemText,
+    setNewCierreItemText,
+    newCierreItemCat,
+    setNewCierreItemCat,
+    showAddContactForm,
+    setShowAddContactForm,
+    newContactNombre,
+    setNewContactNombre,
+    newContactRol,
+    setNewContactRol,
+    newContactTelefono,
+    setNewContactTelefono,
+    newContactEmail,
+    setNewContactEmail,
+    newContactNotas,
+    setNewContactNotas,
+    showAddMerchForm,
+    setShowAddMerchForm,
+    newMerchNombre,
+    setNewMerchNombre,
+    newMerchCategoria,
+    setNewMerchCategoria,
+    newMerchTalla,
+    setNewMerchTalla,
+    newMerchPrecio,
+    setNewMerchPrecio,
+    newMerchStockInicial,
+    setNewMerchStockInicial,
+    merchCopiedToast,
+  } = useCalendarRoadbook(selectedConcert, getBandIdentity);
 
   const getEventShareText = React.useCallback(
     (event: Concert | Rehearsal, isConcert: boolean) => {
@@ -2682,8 +2057,7 @@ export default function CalendarView({
   const handleShareEventWhatsApp = React.useCallback(
     (event: Concert | Rehearsal, isConcert: boolean) => {
       const msg = getEventShareText(event, isConcert);
-      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      openWhatsAppChat(undefined, msg);
     },
     [getEventShareText]
   );
@@ -2724,638 +2098,6 @@ export default function CalendarView({
     },
     [onDeleteConcert, onDeleteRehearsal, onShowNotification]
   );
-
-  // Render month grid function
-  const renderMonthGrid = (year: number, month: number, showMonthHeader: boolean = false) => {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const startOffset = (new Date(year, month, 1).getDay() + 6) % 7;
-
-    const cells = [];
-    for (let i = 0; i < startOffset; i++) {
-      cells.push({ empty: true, day: 0 });
-    }
-    for (let d = 1; d <= daysInMonth; d++) {
-      cells.push({ empty: false, day: d });
-    }
-
-    const isThisRealMonth = realToday.getFullYear() === year && realToday.getMonth() === month;
-
-    return (
-      <div key={`month-grid-${year}-${month}`} data-modulo="sala" className="flex-1 min-w-[280px]">
-        {showMonthHeader && (
-          <div className={`text-center font-bold font-display tracking-wider text-[10px] mb-3 pb-1 ${'text-[var(--acc)]'}`}>
-            {monthNames[month]} {year}
-          </div>
-        )}
-
-        {/* Weekday Labels */}
-        <div
-          className={`grid grid-cols-7 gap-1.5 text-center text-[10px] font-sans mb-2.5 font-bold ${textSub} bg-[var(--surface)]/60 p-2 rounded-[var(--r-m)]`}
-        >
-          {weekdays.map((day) => (
-            <div key={day} className="py-0.5 tracking-wider">
-              {day}
-            </div>
-          ))}
-        </div>
-
-        {/* Grid Cells */}
-        <div className="grid grid-cols-7 gap-1.5">
-          {cells.map((cell, index) => {
-            if (cell.empty) {
-              return <div key={`empty-${year}-${month}-${index}`} className="aspect-square bg-transparent rounded-[var(--r-s)]" />;
-            }
-
-            const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(cell.day).padStart(2, '0')}`;
-            const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(formattedDate);
-            const dayCampaigns = getCampaignsForDate(formattedDate);
-            const hasConcert = dayConcerts.length > 0;
-            const hasRehearsal = dayRehearsals.length > 0;
-            const hasCampaign = dayCampaigns.length > 0;
-            const activeDateCampaign = dayCampaigns.find((c) => c.isActive) || dayCampaigns[0];
-            const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
-            const dayWeatherAlerts = dayConcerts.flatMap((c) => getCachedEventWeatherAlerts(c.ciudad, formattedDate));
-            const primaryAlert = dayWeatherAlerts[0];
-
-            const isSelected =
-              selectedDate.getFullYear() === year && selectedDate.getMonth() === month && selectedDate.getDate() === cell.day;
-
-            const isToday = isThisRealMonth && cell.day === realToday.getDate();
-
-            // Stylish logic for non-selected vs event vs selected days
-            let borderAndBgClass = '';
-            if (isSelected) {
-              borderAndBgClass = 'bg-[var(--acc)] text-[var(--on-acc)] font-black scale-[1.05] z-20';
-            } else if (isToday) {
-              borderAndBgClass = 'bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold /80 hover: z-10';
-            } else if (hasConcert && hasRehearsal) {
-              borderAndBgClass =
-                'bg-gradient-to-br from-amber-950/40 to-emerald-950/40 hover: hover:shadow-md hover:shadow-amber-0/10 text-[var(--ink)]';
-            } else if (hasConcert) {
-              borderAndBgClass = 'bg-[var(--acc-soft)] hover: hover:shadow-md hover:shadow-amber-0/10 text-[var(--ink)]';
-            } else if (hasRehearsal) {
-              borderAndBgClass =
-                'bg-[var(--ok-soft)] hover:border-[var(--ok)] hover:shadow-md hover:shadow-[var(--ok)]/10 text-[var(--ink)]';
-            } else if (hasCampaign) {
-              borderAndBgClass =
-                'bg-[var(--tentative)]/10 hover:border-[var(--tentative)]/80 hover:shadow-md hover:shadow-[var(--tentative)]/20 text-[var(--tentative)]/60';
-            } else {
-              borderAndBgClass = 'bg-[var(--surface)] hover:border-[var(--acc)] hover:bg-[var(--bg)] text-[var(--ink)]';
-            }
-
-            return (
-              <button
-                key={`day-${year}-${month}-${cell.day}`}
-                onClick={() => {
-                  setSelectedDate(new Date(year, month, cell.day));
-                  if (dayEvents.length > 0) {
-                    setSelectedEventId(dayEvents[0].id);
-                  }
-                }}
-                className={`relative min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-m)] flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span
-                    className={`text-[11px] sm:text-xs font-sans font-bold ${isSelected ? 'text-[var(--acc-ink)] font-black' : isToday ? 'text-[var(--acc)]' : ''}`}
-                  >
-                    {cell.day}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {primaryAlert && <CalendarWeatherBadge alert={primaryAlert} compact />}
-                    {isToday && !isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 shrink-0 animate-ping" />}
-                  </div>
-                </div>
-
-                {/* Mini Badges / Event Indicators con texto claro y legible */}
-                <div className="w-full space-y-0.5 sm:space-y-1 overflow-hidden">
-                  {dayConcerts.slice(0, 2).map((c) => {
-                    const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
-                    const venueLabel = c.sala || c.ciudad || 'Concierto';
-                    const isPosible = Boolean(c.is_posible || (c as any).isPosible);
-                    return (
-                      <div
-                        key={c.id}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSelectEvent(c);
-                        }}
-                        className={`text-[8px] sm:text-[9.5px] font-sans font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
-                          isSelected
-                            ? 'bg-[var(--bg)]/25 text-[var(--acc-ink)] font-black'
-                            : isPosible
-                              ? 'bg-[var(--tentative)]/25 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/35 hover:text-[var(--ink)]'
-                              : 'bg-[var(--acc)]/25 text-[var(--ink)] hover:bg-[var(--acc)]/35 hover:text-[var(--ink)]'
-                        }`}
-                        title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
-                      >
-                        <span className="shrink-0 text-[8.5px] leading-none">{isPosible ? '🎯' : '🎸'}</span>
-                        <span className="truncate font-extrabold tracking-tight">{venueLabel}</span>
-                        {c.ciudad && c.sala && (
-                          <span className="hidden md:inline opacity-75 text-[8px] shrink-0 font-normal">· {c.ciudad}</span>
-                        )}
-                      </div>
-                    );
-                  })}
-                  {dayRehearsals.slice(0, dayConcerts.length > 0 ? 1 : 2).map((r) => {
-                    const isReu = r.tipo_evento === 'reunion';
-                    const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
-                    const rehearsalLabel = isReu
-                      ? r.asunto || 'Reunión'
-                      : r.lugar
-                          .split(',')[0]
-                          .replace(/Rehearsal|Studios/gi, '')
-                          .trim() || 'Ensayo';
-                    return (
-                      <div
-                        key={r.id}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSelectEvent(r);
-                        }}
-                        className={`text-[8px] sm:text-[9.5px] font-sans font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
-                          isSelected
-                            ? 'bg-[var(--bg)]/25 text-[var(--acc-ink)] font-black'
-                            : isReu
-                              ? 'bg-[var(--tentative)]/25 text-[var(--tentative)]/80 hover:bg-[var(--tentative)]/35 hover:text-[var(--ink)]'
-                              : 'bg-[var(--ok)]/25 text-[var(--ink)] hover:bg-[var(--ok)]/35 hover:text-[var(--ink)]'
-                        }`}
-                        title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
-                      >
-                        <span className="shrink-0 text-[8.5px] leading-none">{isReu ? '🤝' : '🥁'}</span>
-                        <span className="truncate font-extrabold tracking-tight">{rehearsalLabel}</span>
-                      </div>
-                    );
-                  })}
-                  {dayEvents.length > (dayConcerts.length > 0 ? 2 : 2) && (
-                    <div className="text-[7.5px] sm:text-[8.5px] font-sans text-center font-bold text-[var(--acc)]/70 opacity-90">
-                      +{dayEvents.length - 2} más
-                    </div>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  // Render Week View (Google Calendar Style: 7 días detallados con logos de banda)
-  const renderWeekView = () => {
-    const weekDays = getWeekDays(selectedDate);
-    return (
-      <div className="w-full flex flex-col gap-3">
-        {/* Selector de días de la semana con badges */}
-        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-          {weekDays.map((d, idx) => {
-            const isToday = realToday.toDateString() === d.toDateString();
-            const isSelected = selectedDate.toDateString() === d.toDateString();
-            const dayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-            const { concerts: cList, rehearsals: rList } = getEventsForDateStr(dayStr);
-            const totalEvents = cList.length + rList.length;
-
-            return (
-              <button
-                key={dayStr}
-                onClick={() => setSelectedDate(d)}
-                className={`flex flex-col items-center justify-center p-2 rounded-[var(--r-m)] transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black'
-                    : isToday
-                      ? 'bg-[var(--acc)]/15 text-[var(--acc)]/70 /60 font-bold'
-                      : 'bg-[var(--surface)] text-[var(--ink-2)] hover:border-[var(--acc)]'
-                }`}
-              >
-                <span className="text-[10px] font-sans tracking-wider opacity-80">{fullWeekdays[idx].slice(0, 3)}</span>
-                <span className="text-sm sm:text-base font-bold font-sans my-0.5">{d.getDate()}</span>
-                {totalEvents > 0 && (
-                  <span
-                    className={`text-[9px] px-1.5 py-0.2 rounded-full font-sans font-bold ${
-                      isSelected ? 'bg-[var(--sunken)] text-inherit' : 'bg-[var(--acc)]/20 text-[var(--acc)]'
-                    }`}
-                  >
-                    {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* 7 Columnas de la semana estilo Google Calendar */}
-        <div className="w-full overflow-x-auto pb-2">
-          <div className="grid grid-cols-7 gap-2 min-w-[700px] lg:min-w-0 min-h-[420px]">
-            {weekDays.map((d, idx) => {
-              const isToday = realToday.toDateString() === d.toDateString();
-              const isSelected = selectedDate.toDateString() === d.toDateString();
-              const dayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-              const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(dayStr);
-              const campaigns = getCampaignsForDate(dayStr);
-
-              return (
-                <div
-                  key={`col-${dayStr}`}
-                  onClick={() => setSelectedDate(d)}
-                  className={`flex flex-col rounded-[var(--r-m)] p-2 sm:p-2.5 transition-all min-w-0 ${
-                    isSelected
-                      ? 'bg-[var(--surface)] ring-1 ring-[var(--acc)]/50'
-                      : isToday
-                        ? 'bg-[var(--accent-alt)]/10/40'
-                        : 'bg-[var(--surface)]'
-                  }`}
-                >
-                  <div className="flex items-center justify-between pb-2 mb-2 /50">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <span
-                        className={`text-xs font-sans font-bold truncate ${isSelected ? 'text-[var(--acc)]' : isToday ? 'text-[var(--acc)]/70' : 'text-[var(--ink-2)]'}`}
-                      >
-                        {fullWeekdays[idx].slice(0, 3)} {d.getDate()}
-                      </span>
-                      {(() => {
-                        const dIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                        const cCity = dayConcerts.find((c) => c.ciudad)?.ciudad;
-                        if (!cCity) return null;
-                        const wAlerts = getCachedEventWeatherAlerts(cCity, dIso);
-                        return wAlerts[0] ? <CalendarWeatherBadge alert={wAlerts[0]} compact /> : null;
-                      })()}
-                      {isToday && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 animate-ping shrink-0" />}
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedDate(d);
-                        setShowCreateModal('concert');
-                      }}
-                      title="Añadir evento a este día"
-                      className="p-1 rounded hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer shrink-0"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                  </div>
-
-                  {/* Lista de eventos del día */}
-                  <div className="flex-1 flex flex-col gap-1.5 overflow-y-auto max-h-[360px]">
-                    {dayConcerts.map((c) => {
-                      const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
-                      const isEvtSelected = selectedEventId === c.id;
-                      const isPosible = Boolean(c.is_posible || (c as any).isPosible);
-                      return (
-                        <div
-                          key={c.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectEvent(c);
-                          }}
-                          className={`p-2 rounded-[var(--r-s)] cursor-pointer transition-all text-left min-w-0 ${
-                            isEvtSelected
-                              ? isPosible
-                                ? 'bg-[var(--tentative)]/25 ring-1 ring-purple-400/50'
-                                : 'bg-[var(--acc)]/25 ring-1 ring-amber-400/50'
-                              : isPosible
-                                ? 'bg-[var(--tentative)]/10/40 hover:border-[var(--tentative)]/80 hover:bg-[var(--tentative)]/15 text-[var(--tentative)]/80'
-                                : 'bg-[var(--acc-soft)] /40 hover: hover:bg-[var(--acc-soft)]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-1.5 mb-1 min-w-0">
-                            {bandInfo.logoUrl ? (
-                              <img
-                                src={bandInfo.logoUrl}
-                                alt={bandInfo.name}
-                                className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 ${isPosible ? 'border-[var(--acc)]/60' : '/60'}`}
-                                onError={(e) => {
-                                  (e.currentTarget as HTMLElement).style.display = 'none';
-                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
-                                }}
-                              />
-                            ) : null}
-                            <span
-                              className={`fallback-initials w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[8px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}
-                            >
-                              {bandInfo.initials}
-                            </span>
-                            <span
-                              className={`text-[10px] font-bold ${isPosible ? 'text-[var(--tentative)]/80' : 'text-[var(--ink)]'} truncate`}
-                              title={bandInfo.name}
-                            >
-                              {bandInfo.name}
-                            </span>
-                            {isPosible && (
-                              <span className="ml-auto text-[8px] font-sans font-black px-1.5 py-0.5 rounded bg-[var(--tentative)]text-[var(--tentative)]/80">
-                                Posible
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-[11px] font-bold text-[var(--ink)] truncate flex items-center gap-1">
-                            <span>{isPosible ? '🎯' : '🎸'}</span>
-                            <span className="truncate">{c.sala}</span>
-                          </div>
-                          {c.ciudad && <div className="text-[10px] text-[var(--acc)]/70/80 truncate">📍 {c.ciudad}</div>}
-                          <HolidayDateWarning date={c.fecha} city={c.ciudad} compact className="mt-1" />
-                          {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
-                            <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">
-                              🕒 {(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-
-                    {dayRehearsals.map((r) => {
-                      const isReu = r.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
-                      const isEvtSelected = selectedEventId === r.id;
-                      return (
-                        <div
-                          key={r.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectEvent(r);
-                          }}
-                          className={`p-2 rounded-[var(--r-s)] cursor-pointer transition-all text-left min-w-0 ${
-                            isEvtSelected
-                              ? isReu
-                                ? 'bg-[var(--tentative)]/25 ring-1 ring-[var(--tentative)]/50'
-                                : 'bg-[var(--ok)]/25 ring-1 ring-[var(--ok)]/50'
-                              : isReu
-                                ? 'bg-[var(--tentative)]/10/40 hover:border-[var(--tentative)] hover:bg-[var(--tentative)]/20'
-                                : 'bg-[var(--ok-soft)]/40 hover:border-[var(--ok)] hover:bg-[var(--ok-soft)]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-1.5 mb-1 min-w-0">
-                            {bandInfo.logoUrl ? (
-                              <img
-                                src={bandInfo.logoUrl}
-                                alt={bandInfo.name}
-                                className={`w-4 h-4 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-0 ${isReu ? 'border-[var(--acc)]/60' : 'border-[var(--ok)]/60'}`}
-                                onError={(e) => {
-                                  (e.currentTarget as HTMLElement).style.display = 'none';
-                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
-                                }}
-                              />
-                            ) : null}
-                            <span
-                              className={`fallback-initials w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[8px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}
-                            >
-                              {bandInfo.initials}
-                            </span>
-                            <span
-                              className={`text-[10px] font-bold truncate ${isReu ? 'text-[var(--tentative)]' : 'text-[var(--ink)]'}`}
-                              title={bandInfo.name}
-                            >
-                              {bandInfo.name}
-                            </span>
-                          </div>
-                          <div className="text-[11px] font-bold text-[var(--ink)] truncate flex items-center gap-1">
-                            <span>{isReu ? '🤝' : '🥁'}</span>
-                            <span className="truncate">{isReu ? r.asunto || 'Reunión' : r.lugar}</span>
-                          </div>
-                          {r.hora && <div className="text-[9px] font-sans text-[var(--ink-2)] mt-1">🕒 {r.hora}</div>}
-                        </div>
-                      );
-                    })}
-                    {campaigns.map((camp) => (
-                      <div
-                        key={camp.id}
-                        className="p-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/12 text-[10px] text-[var(--tentative)]/80"
-                      >
-                        🎯 {camp.name}
-                      </div>
-                    ))}
-
-                    {dayConcerts.length === 0 && dayRehearsals.length === 0 && campaigns.length === 0 && (
-                      <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded /60 text-[var(--ink-2)]">
-                        <span className="text-[10px]">Sin eventos</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Render Agenda View (Google Calendar Style: lista cronológica de eventos con logos e información detallada)
-  const renderAgendaView = () => {
-    const allEventsList: Array<{
-      date: Date;
-      dateStr: string;
-      type: 'concert' | 'rehearsal';
-      event: Concert | Rehearsal;
-    }> = [];
-
-    const startRange = new Date(currentYear, currentMonth, 1);
-    const endRange = new Date(currentYear, currentMonth + 2, 0);
-
-    concerts.forEach((c) => {
-      const d = new Date(c.fecha);
-      if (!isNaN(d.getTime()) && d >= startRange && d <= endRange) {
-        allEventsList.push({
-          date: d,
-          dateStr: c.fecha.split('T')[0],
-          type: 'concert',
-          event: c,
-        });
-      }
-    });
-
-    rehearsals.forEach((r) => {
-      const d = new Date(r.fecha);
-      if (!isNaN(d.getTime()) && d >= startRange && d <= endRange) {
-        allEventsList.push({
-          date: d,
-          dateStr: r.fecha.split('T')[0],
-          type: 'rehearsal',
-          event: r,
-        });
-      }
-    });
-
-    allEventsList.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-    const groupedByDate: { [dateStr: string]: typeof allEventsList } = {};
-    allEventsList.forEach((item) => {
-      if (!groupedByDate[item.dateStr]) groupedByDate[item.dateStr] = [];
-      groupedByDate[item.dateStr].push(item);
-    });
-
-    const dateKeys = Object.keys(groupedByDate).sort();
-
-    return (
-      <div className="w-full flex flex-col gap-4">
-        <div className="flex items-center justify-between pb-2 /80">
-          <div className="flex items-center gap-2">
-            <List className="w-4 h-4 text-[var(--acc)]" />
-            <span className="text-xs font-sans font-bold tracking-wider text-[var(--ink-2)]">
-              Agenda Cronológica ({allEventsList.length} eventos programados)
-            </span>
-          </div>
-          <button
-            onClick={() => setShowCreateModal('concert')}
-            className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold font-sans bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/50/90 transition-all cursor-pointer flex items-center gap-1.5"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Añadir Evento</span>
-          </button>
-        </div>
-
-        {dateKeys.length === 0 ? (
-          <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)]">
-            <PublicoSilhouette opacity={0.12} size="medium" className="mx-auto mb-4" />
-            <p className="text-sm font-bold text-[var(--ink)]">El calendario está vacío</p>
-            <p className="text-xs text-[var(--ink-2)] mt-2">Usa el botón"Añadir Evento" o cambia de mes para ver otras fechas</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {dateKeys.map((dateStr) => {
-              const items = groupedByDate[dateStr];
-              const d = new Date(dateStr + 'T12:00:00');
-              const isToday = realToday.toDateString() === d.toDateString();
-              const isSelected = selectedDate.toDateString() === d.toDateString();
-              const dayName = fullWeekdays[(d.getDay() + 6) % 7];
-
-              return (
-                <div
-                  key={dateStr}
-                  className={`rounded-[var(--r-m)] transition-all p-3 ${
-                    isSelected
-                      ? 'bg-[var(--surface)]/90 /60 ring-1 ring-amber-0/30'
-                      : isToday
-                        ? 'bg-[var(--surface)]/70 /40'
-                        : 'bg-[var(--surface)]/40 /80 hover:'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2.5 pb-2 /60">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-xs font-sans font-bold px-2 py-0.5 rounded ${
-                          isToday ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black' : 'bg-[var(--surface)] text-[var(--ink-2)]'
-                        }`}
-                      >
-                        {dayName}, {d.getDate()} de {monthNames[d.getMonth()]}
-                      </span>
-                      {isToday && (
-                        <span className="text-[10px] font-sans font-bold text-[var(--acc)] flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60 animate-ping" />
-                          Hoy
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => {
-                        setSelectedDate(d);
-                        setShowCreateModal('concert');
-                      }}
-                      className="p-1 rounded text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)] transition-all cursor-pointer"
-                      title="Añadir a esta fecha"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    {items.map(({ type, event: evt }) => {
-                      const isConcert = type === 'concert';
-                      const c = isConcert ? (evt as Concert) : null;
-                      const r = !isConcert ? (evt as Rehearsal) : null;
-                      const isReu = r?.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(evt.band_id, (evt as any).bandName || (evt as any).band_name);
-                      const isEvtSelected = selectedEventId === evt.id;
-
-                      return (
-                        <div
-                          key={evt.id}
-                          onClick={() => handleSelectEvent(evt)}
-                          className={`flex items-center justify-between p-2.5 rounded-[var(--r-s)] cursor-pointer transition-all ${
-                            isEvtSelected
-                              ? 'bg-[var(--acc)]/20 ring-1 ring-amber-400/50'
-                              : isConcert
-                                ? 'bg-[var(--acc-soft)] /30 hover:/80 hover:bg-[var(--acc-soft)]'
-                                : isReu
-                                  ? 'bg-[var(--tentative)]/10/30 hover:border-[var(--tentative)]/80 hover:bg-[var(--tentative)]/15'
-                                  : 'bg-[var(--ok-soft)]/30 hover:border-[var(--ok)]/80 hover:bg-[var(--ok-soft)]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3 min-w-0">
-                            {/* Logo o iniciales de la banda */}
-                            {bandInfo.logoUrl ? (
-                              <img
-                                src={bandInfo.logoUrl}
-                                alt={bandInfo.name}
-                                className="w-8 h-8 rounded-full object-contain bg-[var(--sunken)] p-0.5 shrink-020"
-                                onError={(e) => {
-                                  (e.currentTarget as HTMLElement).style.display = 'none';
-                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
-                                }}
-                              />
-                            ) : null}
-                            <span
-                              className={`fallback-initials w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}
-                            >
-                              {bandInfo.initials}
-                            </span>
-
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span
-                                  className={`text-xs font-bold font-sans px-1.5 py-0.2 rounded ${
-                                    isConcert
-                                      ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40'
-                                      : isReu
-                                        ? 'bg-[var(--tentative)]/20 text-[var(--tentative)]/40'
-                                        : 'bg-[var(--ok)]/20 text-[var(--ink-2)]/40'
-                                  }`}
-                                >
-                                  {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
-                                </span>
-                                <span className="text-xs font-bold text-[var(--ink)] truncate">{bandInfo.name}</span>
-                              </div>
-                              <div className="text-xs text-[var(--ink-2)] font-medium truncate mt-0.5 flex items-center gap-1.5 flex-wrap">
-                                <span>
-                                  {isConcert
-                                    ? `${c?.sala}${c?.ciudad ? ` (${c?.ciudad})` : ''}`
-                                    : isReu
-                                      ? r?.asunto || 'Reunión de coordinación'
-                                      : r?.lugar}
-                                </span>
-                                {isConcert &&
-                                  c?.ciudad &&
-                                  (() => {
-                                    const alerts = getCachedEventWeatherAlerts(c.ciudad, dateStr);
-                                    return alerts[0] ? <CalendarWeatherBadge alert={alerts[0]} /> : null;
-                                  })()}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3 shrink-0">
-                            {((evt as any).hora ||
-                              ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')) && (
-                              <span className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                <Clock className="w-3 h-3 text-[var(--ink-2)]" />
-                                {(evt as any).hora ||
-                                  ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')}
-                              </span>
-                            )}
-                            <ChevronRight className="w-4 h-4 text-[var(--ink-2)]" />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <div
@@ -3496,6 +2238,45 @@ export default function CalendarView({
                   </button>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Quick Search Bar across calendar events (Palabras clave, sala, ciudad, banda, evento) */}
+          <div className="mt-3 pt-2">
+            <div className="flex items-center gap-2">
+              <div
+                className={`relative flex-1 flex items-center rounded-xl border transition-all ${
+                  isStitchLight
+                    ? 'bg-white border-slate-300 focus-within:border-sky-500 shadow-xs'
+                    : 'bg-neutral-900/90 border-zinc-800 focus-within:border-amber-500/80 shadow-inner'
+                }`}
+              >
+                <Search className="w-4 h-4 ml-3 text-neutral-400 shrink-0" />
+                <input
+                  type="text"
+                  value={calendarSearchTerm}
+                  onChange={(e) => setCalendarSearchTerm(e.target.value)}
+                  placeholder="Buscar evento, sala, ciudad, artista, notas (ej. Joy Eslava, Madrid, acústico)..."
+                  className={`w-full px-2.5 py-1.5 text-xs font-sans bg-transparent outline-none ${
+                    isStitchLight ? 'text-slate-900 placeholder:text-slate-400' : 'text-neutral-100 placeholder:text-neutral-500'
+                  }`}
+                />
+                {calendarSearchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setCalendarSearchTerm('')}
+                    className="p-1 mr-2 text-neutral-400 hover:text-white rounded-full transition-colors cursor-pointer"
+                    title="Borrar búsqueda"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              {calendarSearchTerm && (
+                <div className="text-[11px] font-mono shrink-0 px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                  {filteredConcerts.length + filteredRehearsals.length} resultados
+                </div>
+              )}
             </div>
           </div>
 
@@ -3941,16 +2722,47 @@ export default function CalendarView({
               style={dragOffset !== 0 ? { transform: `translateX(${dragOffset}px)` } : undefined}
               className={`flex flex-col ${calendarViewMode === '2m' ? 'xl:flex-row gap-6' : 'gap-4'} transition-transform duration-75`}
             >
-              {calendarViewMode === 'week' ? (
-                renderWeekView()
-              ) : calendarViewMode === 'agenda' ? (
-                renderAgendaView()
-              ) : (
-                <>
-                  {renderMonthGrid(currentYear, currentMonth, calendarViewMode === '2m')}
-                  {calendarViewMode === '2m' && renderMonthGrid(nextMonthYear, nextMonth, true)}
-                </>
-              )}
+              <CalendarViewsContainer
+                calendarViewMode={calendarViewMode}
+                calendarSearchTerm={calendarSearchTerm}
+                viewDate={viewDate}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                selectedEventId={selectedEventId}
+                setSelectedEventId={setSelectedEventId}
+                handleSelectEvent={handleSelectEvent}
+                realToday={realToday}
+                isStitchLight={isStitchLight}
+                textTitle={textTitle}
+                textSub={textSub}
+                textMuted={textMuted}
+                monthNames={monthNames}
+                weekdays={weekdays}
+                currentYear={currentYear}
+                currentMonth={currentMonth}
+                nextMonthYear={nextMonthYear}
+                nextMonth={nextMonth}
+                getEventsForDateStr={getEventsForDateStr}
+                getCampaignsForDate={getCampaignsForDate}
+                getBandIdentity={getBandIdentity}
+                getCachedEventWeatherAlerts={getCachedEventWeatherAlerts}
+                setShowCreateModal={setShowCreateModal}
+                setShowEventFichaModal={setShowEventFichaModal}
+                setModalActiveTab={setModalActiveTab}
+                setViewingConcert={setViewingConcert}
+                setViewingRehearsal={setViewingRehearsal}
+                onDeleteConcert={onDeleteConcert}
+                onDeleteRehearsal={onDeleteRehearsal}
+                onNavigate={onNavigate}
+                allRoadbooks={allRoadbooks}
+                getDefaultRoadbook={getDefaultRoadbook}
+                filteredConcerts={filteredConcerts}
+                filteredRehearsals={filteredRehearsals}
+                concerts={concerts}
+                rehearsals={rehearsals}
+                isPromoPlan={isPromoPlan}
+                onShowNotification={onShowNotification}
+              />
             </motion.div>
           </AnimatePresence>
         </div>
@@ -4363,4551 +3175,265 @@ export default function CalendarView({
       </div>
 
       {/* RIGHT: LOGISTICS & CHECKLISTS SIDEBAR (1/3 width) */}
-      <div className={`${colors.card} p-5 flex flex-col justify-between lg:col-span-1`}>
-        {selectedEventDetails.type === 'free' ? (
-          <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
-            {getCampaignsForDate(selectedDateKey).length > 0 ? (
-              <div className="w-full text-left rounded-[var(--r-l)] bg-gradient-to-br from-[var(--tentative)]/10 via-[var(--tentative)]/5 to-[var(--surface)] p-4/20">
-                <div className="flex items-center justify-between gap-2 pb-2.5/30">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 flex items-center justify-center">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="text-[9px] font-sans font-extrabold tracking-wider text-[var(--tentative)]/80 bg-[var(--tentative)]/20 px-2 py-0.5 rounded-full">
-                        🎯 Fecha Objetivo de Campaña
-                      </span>
-                      <p className="text-[11px] font-sans text-[var(--ink-2)] font-bold mt-0.5">
-                        {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {getCampaignsForDate(selectedDateKey).map((camp) => (
-                  <div key={camp.id} className="pt-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold font-display text-[var(--ink)] flex items-center gap-1.5">
-                        <span
-                          className="w-2 h-2 rounded-full"
-                          style={{
-                            backgroundColor: camp.color || 'var(--acc)',
-                          }}
-                        />
-                        {camp.name}
-                      </h4>
-                      {camp.isActive && (
-                        <span className="text-[8px] font-sans font-black px-1.5 py-0.5 rounded bg-[var(--tentative)] text-[var(--ink)]">
-                          ACTIVA
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 text-xs text-[var(--ink)]">
-                      <span className="inline-flex items-center gap-1 text-[var(--ink-3)] text-[11px]">
-                        <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
-                        {camp.targetCities?.join(',') || 'Cualquier ciudad'}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 text-[11px]">
-                        <Users className="w-3 h-3 text-[var(--acc)]" />
-                        {camp.minCapacity} - {camp.maxCapacity} pax
-                      </span>
-                    </div>
-
-                    {camp.notes && (
-                      <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)]">
-                        &ldquo;{camp.notes}&rdquo;
-                      </p>
-                    )}
-
-                    <div className="pt-2 flex flex-col sm:flex-row gap-2">
-                      {onNavigate && (
-                        <button
-                          type="button"
-                          onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                          className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-sans font-bold bg-[var(--tentative)]/80/30 hover:bg-[var(--tentative)]/80/50 text-[var(--tentative)]/80 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                        >
-                          <Building2 className="w-3 h-3 text-[var(--tentative)]/80" />
-                          <span>Salas CRM</span>
-                        </button>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setConcCiudad(camp.targetCities?.[0] || 'Madrid');
-                          setConcAforo(String(camp.minCapacity || 250));
-                          setConcNotas(`Concierto agendado para la campaña"${camp.name}".`);
-                          setShowCreateModal('concert');
-                        }}
-                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-sans font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                      >
-                        <Plus className="w-3 h-3" />
-                        <span>Confirmar Concierto</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <>
-                <div className={`p-3 rounded-full ${'bg-[var(--sunken)] text-[var(--ink-2)]'}`}>
-                  <Calendar className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className={`text-xs font-sans font-bold tracking-wider ${'text-[var(--ink-2)]'}`}>
-                    {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
-                  </p>
-                  <h4 className={`text-sm font-bold font-display mt-1 ${textTitle}`}>Día sin eventos agendados</h4>
-                  <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
-                    Selecciona un día con concierto en el calendario para ver su logística y ubicación GPS.
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateModal('rehearsal')}
-                    className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${'bg-[var(--surface)]/20 text-[var(--ok)] hover:bg-[var(--surface)]/30'}`}
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>+ Agendar Ensayo</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateModal('concert')}
-                    className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${'bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/50/30'}`}
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>+ Agendar Concierto</span>
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/* Quick GPS & Upcoming Events List */}
-            <div className={`w-full text-left mt-4 pt-3 space-y-2.5 ${'border-t'}`}>
-              <div className="flex items-center justify-between gap-1 flex-wrap">
-                <div className={`flex items-center gap-1.5 text-xs font-sans font-bold tracking-wider ${'text-[var(--acc)]'}`}>
-                  <MapPin className="w-3.5 h-3.5" />
-                  <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
-                </div>
-
-                {/* Filter Buttons */}
-                <div className="flex items-center gap-1">
-                  {[
-                    { id: 'todos', label: 'Todas' },
-                    { id: 'conciertos', label: 'Bolos' },
-                    { id: 'campañas', label: '🎯 Campañas' },
-                  ].map((f) => (
-                    <button
-                      key={f.id}
-                      onClick={() => setUpcomingFilter(f.id as any)}
-                      className={`px-1.5 py-0.5 rounded text-[9px] font-sans font-bold transition-all cursor-pointer ${
-                        upcomingFilter === f.id
-                          ? 'bg-[var(--acc)]/60/20 text-[var(--acc)]/70'
-                          : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                      }`}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
-                {upcomingCalendarEvents.filter((evt) => {
-                  if (upcomingFilter === 'conciertos') return evt.type === 'concierto';
-                  if (upcomingFilter === 'ensayos') return evt.type === 'ensayo';
-                  if (upcomingFilter === 'campañas') return evt.type === 'campaña';
-                  return true;
-                }).length === 0 ? (
-                  <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay próximas fechas con el filtro seleccionado.</p>
-                ) : (
-                  upcomingCalendarEvents
-                    .filter((evt) => {
-                      if (upcomingFilter === 'conciertos') return evt.type === 'concierto';
-                      if (upcomingFilter === 'ensayos') return evt.type === 'ensayo';
-                      if (upcomingFilter === 'campañas') return evt.type === 'campaña';
-                      return true;
-                    })
-                    .map((evt) => (
-                      <div
-                        key={evt.id}
-                        onClick={() => {
-                          if (evt.fecha) {
-                            const p = evt.fecha.split('-');
-                            if (p.length === 3) {
-                              setSelectedDate(new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10)));
-                              setViewDate(new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, 1));
-                            }
-                          }
-                        }}
-                        className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-all cursor-pointer ${
-                          evt.type === 'campaña'
-                            ? 'bg-[var(--tentative)]/10 hover:border-[var(--acc)]/50'
-                            : 'bg-[var(--surface)] hover:border-[var(--acc)] hover:shadow-sm'
-                        }`}
-                      >
-                        {/* Custom calendar badge: Day number top, short month bottom */}
-                        <div
-                          className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${
-                            evt.type === 'campaña'
-                              ? 'bg-[var(--tentative)]/15/40 text-[var(--tentative)]/80'
-                              : 'bg-[var(--sunken)] text-[var(--ink)]'
-                          }`}
-                        >
-                          <span
-                            className={`text-base font-sans font-black leading-none ${
-                              evt.type === 'campaña' ? 'text-[var(--tentative)]/80' : 'text-[var(--acc)]'
-                            }`}
-                          >
-                            {evt.day}
-                          </span>
-                          <span
-                            className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${
-                              evt.type === 'campaña' ? 'text-[var(--tentative)]/80' : 'text-[var(--acc)]/70'
-                            }`}
-                          >
-                            {evt.month}
-                          </span>
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span
-                              className={`text-[9px] px-1.5 py-0.5 rounded font-sans font-bold tracking-wider ${
-                                evt.type === 'concierto'
-                                  ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70'
-                                  : evt.type === 'campaña'
-                                    ? 'bg-[var(--tentative-soft)] text-[var(--tentative)]'
-                                    : 'bg-[var(--ok-soft)] text-[var(--ink)]'
-                              }`}
-                            >
-                              {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
-                            </span>
-                            {evt.bandName && (
-                              <span
-                                className="text-[9px] px-1.5 py-0.5 rounded font-sans font-bold bg-[var(--sunken)]/80 text-[var(--ink)] truncate max-w-[100px]"
-                                title={evt.bandName}
-                              >
-                                {evt.bandName}
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] mt-1 truncate">{evt.title}</div>
-                          {evt.direccion && <p className={`text-[10px] font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>}
-                          {evt.type !== 'campaña' ? (
-                            <div className="mt-1 flex justify-center">
-                              <DirectionsCard
-                                query={evt.locationQuery}
-                                locationName={evt.salaOrLugar}
-                                address={evt.direccion || evt.ciudad}
-                              />
-                            </div>
-                          ) : (
-                            <p className="text-[10px] font-sans text-[var(--ink-2)]/80 mt-0.5">{evt.salaOrLugar}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))
-                )}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div id="calendar-event-detail-sidebar" className="concert-detail-view">
-            {/* Day details */}
-            <div className={`pb-4 mb-4 flex items-center gap-3 ${'border-[var(--hair)]'}`}>
-              <div
-                className={`w-11 h-11 rounded-[var(--r-m)] flex flex-col items-center justify-center shrink-0 ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
-              >
-                <span className={`text-base font-sans font-black leading-none ${'text-[var(--acc)]'}`}>{selectedDate.getDate()}</span>
-                <span className={`text-[9px] font-sans font-extrabold tracking-widest mt-0.5 ${'text-[var(--acc)]/70'}`}>
-                  {monthNames[selectedDate.getMonth()]?.slice(0, 3).toUpperCase()}
-                </span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <div className={`text-[10px] font-sans tracking-widest font-bold ${'text-[var(--acc)]'}`}>
-                    Logística de Ensayos y Conciertos
-                  </div>
-                  {(selectedConcert || selectedRehearsal) && (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 flex items-center gap-1">
-                      🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
-                    </span>
-                  )}
-                </div>
-                <h3 className={`text-lg font-bold font-display tracking-wide mt-0.5 ${textTitle}`}>{selectedEventTitle}</h3>
-                <p className={`text-[10px] font-sans mt-0.5 ${textSub}`}>
-                  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
-                </p>
-              </div>
-              <div className="flex flex-col gap-1.5 shrink-0 self-start">
-                {(selectedConcert || selectedRehearsal) && (
-                  <button
-                    type="button"
-                    onClick={() => setShowEventFichaModal(true)}
-                    className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer items-center gap-1 ${'bg-gradient-to-r from-amber-0/20 to-yellow-600/20 /60 text-[var(--acc)]/70 hover:from-amber-0/30 hover:to-yellow-600/30'}`}
-                    title="Ampliar esta ficha en un modal centrado"
-                  >
-                    <Maximize2 className="w-3 h-3" />
-                    Ampliar
-                  </button>
-                )}
-                {(selectedConcert || selectedRehearsal) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setReminderNotes('');
-                      setReminderSuccessMsg(null);
-                      setReminderErrorMsg(null);
-                      setShowReminderModal(true);
-                    }}
-                    className={`px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${'bg-[var(--surface)]/40 text-[var(--ink-3)] hover:bg-[var(--surface)]/80'}`}
-                    title="Enviar un recordatorio por correo/notificación a los convocados"
-                  >
-                    🔔 Notificar Banda
-                  </button>
-                )}
-                {selectedConcert && (
-                  <button
-                    type="button"
-                    onClick={() => setViewingConcert(selectedConcert)}
-                    className={`px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${'bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80'}`}
-                    title="Editar ficha completa del concierto"
-                  >
-                    ✎ Editar Ficha
-                  </button>
-                )}
-                {selectedRehearsal && (
-                  <button
-                    type="button"
-                    onClick={() => setViewingRehearsal(selectedRehearsal)}
-                    className={`px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${'bg-[var(--surface)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]/80'}`}
-                    title="Editar ficha completa del ensayo"
-                  >
-                    ✎ Editar Ficha
-                  </button>
-                )}
-                {selectedConcert && onDeleteConcert && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (window.confirm(`¿Eliminar el concierto en ${selectedConcert.sala}? Esta acción no se puede deshacer.`)) {
-                        setSelectedEventId(null);
-                        onDeleteConcert(selectedConcert.id);
-                      }
-                    }}
-                    className="px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert)]/20/40 text-[var(--alert)]/80 hover:bg-[var(--alert)]/30"
-                  >
-                    🗑 Eliminar
-                  </button>
-                )}
-                {selectedRehearsal && onDeleteRehearsal && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (window.confirm(`¿Eliminar este ensayo en ${selectedRehearsal.lugar}? Esta acción no se puede deshacer.`)) {
-                        setSelectedEventId(null);
-                        onDeleteRehearsal(selectedRehearsal.id);
-                      }
-                    }}
-                    className="px-2.5 py-1.5 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert)]/20/40 text-[var(--alert)]/80 hover:bg-[var(--alert)]/30"
-                  >
-                    🗑 Eliminar
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Selector de eventos: cuando el día tiene más de uno (2 conciertos, o concierto + ensayo),
- el panel de arriba solo muestra uno a la vez. Estos chips dejan entrar a cada uno. */}
-            {hasMultipleDayEvents && (
-              <div className="flex flex-wrap gap-1.5 mb-4 -mt-2">
-                {dayEventsList.map((evt) => {
-                  const isActive = evt.id === activeDayEventId;
-                  return (
-                    <button
-                      key={evt.id}
-                      type="button"
-                      onClick={() => setSelectedEventId(evt.id)}
-                      className={`px-2 py-1 rounded-full text-[9px] font-sans font-bold transition-colors cursor-pointer ${
-                        isActive
-                          ? evt.kind === 'concert'
-                            ? 'bg-[var(--acc)]text-[var(--ink)]'
-                            : 'bg-[var(--ok)]text-[var(--ink)]'
-                          : 'bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                      }`}
-                    >
-                      {evt.label}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Previsión Meteorológica Rápida en Panel Lateral */}
-            {(selectedConcert?.ciudad || (selectedRehearsal?.lugar && selectedRehearsal.lugar.length > 2)) && (
-              <div className="mb-4">
-                <EventWeatherCard
-                  city={
-                    selectedConcert?.ciudad ||
-                    selectedRehearsal?.lugar?.split(',')[1]?.trim() ||
-                    selectedRehearsal?.lugar?.split('-')[1]?.trim() ||
-                    selectedRehearsal?.lugar ||
-                    ''
-                  }
-                  dateStr={selectedDateKey}
-                  timeStr={selectedConcert ? '21:30' : selectedRehearsal?.hora || '18:00'}
-                />
-              </div>
-            )}
-
-            {/* Core Info */}
-            <div className={`space-y-3 mb-6 rounded-[var(--r-s)] p-3 ${'bg-[var(--surface)]'}`}>
-              <div className="flex items-center gap-2 text-[10px]">
-                <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
-                <span className={`font-sans ${textSub}`}>Hora:</span>
-                <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
-              </div>
-              <div className="flex items-start gap-2 text-[10px]">
-                <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
-                <div className="flex-1">
-                  <span className={`font-sans ${textSub}`}>Lugar:</span>
-                  <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
-                  {selectedEventDetails.direccion && (
-                    <p className={`text-[10px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
-                      <span className="font-semibold font-sans">Dirección:</span> {selectedEventDetails.direccion}
-                    </p>
-                  )}
-                </div>
-              </div>
-              {selectedEventDetails.locationQuery && selectedEventDetails.type !== 'free' && (
-                <div className="pt-3 mt-2.5 flex justify-center">
-                  <DirectionsCard
-                    query={selectedEventDetails.locationQuery}
-                    locationName={selectedEventDetails.lugar}
-                    address={selectedEventDetails.direccion}
-                  />
-                </div>
-              )}
-              {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-                <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'text-[var(--ink-2)]'}`}>
-                  <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                  <span className={`font-sans ${textSub}`}>Compensación:</span>
-                  <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
-                </div>
-              )}
-              {selectedEventDetails.type === 'concert' &&
-                (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
-                  <div className="flex flex-col gap-1.5 pt-2 mt-1 /40">
-                    {selectedEventDetails.entradasUrl && (
-                      <a
-                        href={selectedEventDetails.entradasUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
-                      >
-                        <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
-                      </a>
-                    )}
-                    {selectedEventDetails.entradasLugarFisico && (
-                      <div className="flex items-center gap-2 text-[10px]">
-                        <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                        <span className={`font-sans ${textSub}`}>También en:</span>
-                        <span className="font-semibold font-sans">{selectedEventDetails.entradasLugarFisico}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              {!isPromoPlan &&
-                selectedEventDetails.type === 'concert' &&
-                selectedConcert &&
-                (() => {
-                  const g = selectedConcert.gastosDetalle;
-                  const totalG = g
-                    ? (g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)
-                    : selectedConcert.gastosEstimadosTipicos || 150;
-                  const net = (selectedConcert.cache || 0) - totalG;
-                  return (
-                    <div className={`flex items-center justify-between text-[10px] pt-1.5 mt-1`}>
-                      <span className={`font-sans ${textSub}`}>Rentabilidad neta:</span>
-                      <span
-                        className={`font-bold font-sans px-2 py-0.5 rounded-full ${
-                          net < 0
-                            ? 'bg-[var(--alert-soft)] text-[var(--alert)]'
-                            : net < 150
-                              ? 'bg-[var(--acc-soft)] text-[var(--acc)]/70'
-                              : 'bg-[var(--ok-soft)] text-[var(--ok)]'
-                        }`}
-                      >
-                        {net >= 0 ? `+${net}€ Neto` : `${net}€ En pérdidas`}
-                      </span>
-                    </div>
-                  );
-                })()}
-              {selectedEventDetails.notes && (
-                <div className={`text-[10px] font-sans italic pt-2 leading-relaxed ${'text-[var(--ink-2)] text-[var(--ink-2)]'}`}>
-                  &ldquo;{selectedEventDetails.notes}&rdquo;
-                </div>
-              )}
-
-              {selectedConcert?.giraNombre && (
-                <div className="flex items-center gap-2 text-[10px] pt-2 /60 mt-2">
-                  <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                  <span className={`font-sans ${textSub}`}>Gira:</span>
-                  <span className="font-bold font-sans text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
-                </div>
-              )}
-
-              {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
-                <div className="flex items-center gap-2 text-[10px] pt-2 /60 mt-2">
-                  <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
-                  <span className={`font-sans ${textSub}`}>Convocatoria:</span>
-                  <span className="font-bold font-sans text-[var(--ink-2)]">
-                    {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
-                      ? 'Banda Completa'
-                      : `Parcial (${(() => {
-                          const raw: any = selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres;
-                          if (Array.isArray(raw)) return raw.join(',') || 'Seleccionados';
-                          if (typeof raw === 'string' && raw.trim()) return raw.trim();
-                          return 'Seleccionados';
-                        })()})`}
-                  </span>
-                </div>
-              )}
-
-              {/* WIDGET QR DEL CONCIERTO (ACCESO RÁPIDO & CONFIGURACIÓN) */}
-              {selectedConcert &&
-                (() => {
-                  const host = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
-                  const cleanCity = (selectedConcert.ciudad || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-                  const cleanSala = (selectedConcert.sala || '')
-                    .toLowerCase()
-                    .replace(/\s+/g, '-')
-                    .replace(/[^a-z0-9-]/g, '');
-                  const bandCode = (selectedConcert.band_id || currentBandId || activeBandId || '').replace(/^(band|reg)-/, '');
-                  const defaultUrl = `${host}/unete${cleanCity || cleanSala ? `/${cleanCity}-${cleanSala}` : ''}${bandCode ? `?band=${encodeURIComponent(bandCode)}` : ''}`;
-                  const targetQrUrl = selectedConcert.customQrUrl || defaultUrl;
-
-                  return (
-                    <div className={`mt-3 pt-3 ${''}`}>
-                      <div className="flex items-center justify-between gap-1 mb-2">
-                        <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--acc)]">
-                          <QrCode className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
-                          <span>QR Bolo & Captación Fans:</span>
-                        </div>
-                        {onNavigate && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              onNavigate('fans', {
-                                concertId: selectedConcert.id,
-                              })
-                            }
-                            className="text-[9px] font-sans text-[var(--acc)]/90 hover:text-[var(--acc)]/70 hover:underline flex items-center gap-1 cursor-pointer font-bold"
-                            title="Configurar el QR y la experiencia del fan para este concierto"
-                          >
-                            <Settings className="w-3 h-3 text-[var(--acc)]" />
-                            <span>Configurar</span>
-                          </button>
-                        )}
-                      </div>
-
-                      <div className={`p-2 rounded-[var(--r-m)] flex items-center gap-2.5 ${'bg-[var(--surface)]'}`}>
-                        <div
-                          onClick={() =>
-                            onNavigate?.('fans', {
-                              concertId: selectedConcert.id,
-                            })
-                          }
-                          className="p-1 bg-[var(--surface)] rounded-[var(--r-s)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
-                          title="Haz clic para abrir la configuración del QR"
-                        >
-                          <QRCode value={targetQrUrl} size={58} level="M" />
-                        </div>
-
-                        <div className="flex-1 min-w-0 space-y-1.5">
-                          <p
-                            className="text-[9px] font-sans text-[var(--ink-2)] truncate break-all bg-[var(--surface)]/60 p-1 rounded text-[var(--acc)]/70 font-semibold"
-                            title={targetQrUrl}
-                          >
-                            {targetQrUrl}
-                          </p>
-                          <div className="flex items-center gap-1.5">
-                            <a
-                              href={targetQrUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]text-[var(--acc)]/70 rounded text-[9px] font-sans font-bold flex items-center gap-1 transition-colors"
-                            >
-                              <ExternalLink className="w-2.5 h-2.5" /> Abrir
-                            </a>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                navigator.clipboard.writeText(targetQrUrl);
-                                setCopiedQrId(selectedConcert.id);
-                                setTimeout(() => setCopiedQrId(null), 2000);
-                              }}
-                              className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-sans font-bold flex items-center gap-1 transition-colors cursor-pointer"
-                            >
-                              {copiedQrId === selectedConcert.id ? (
-                                <>
-                                  <Check className="w-2.5 h-2.5 text-[var(--ok)]" />
-                                  <span className="text-[var(--ok)]">¡Copiado!</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="w-2.5 h-2.5 text-[var(--ink-2)]" />
-                                  <span>Copiar</span>
-                                </>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()}
-              {/* WIDGET REUNIÓN (ENLACE VIDEOCONFERENCIA / ASUNTO) */}
-              {selectedRehearsal?.tipo_evento === 'reunion' && (
-                <div className={`mt-3 pt-3 ${''}`}>
-                  <div className="flex items-center justify-between gap-1 mb-2">
-                    <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--tentative)]">
-                      <Video className="w-3.5 h-3.5 shrink-0 text-[var(--tentative)]" />
-                      <span>Detalles de la Reunión:</span>
-                    </div>
-                    <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[var(--tentative)]/15 text-[var(--tentative)]/80">
-                      🤝 Coordinación
-                    </span>
-                  </div>
-
-                  <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]/80/20'}`}>
-                    {selectedRehearsal.asunto && (
-                      <div className="text-[11px] font-semibold text-[var(--tentative)]/80">📌 {selectedRehearsal.asunto}</div>
-                    )}
-                    <div className="text-[10px] text-[var(--ink)] flex items-center gap-1.5">
-                      <span>📍 {selectedRehearsal.lugar}</span>
-                    </div>
-
-                    {selectedRehearsal.enlace_reunion && (
-                      <div className="pt-1 flex items-center gap-2">
-                        <a
-                          href={
-                            selectedRehearsal.enlace_reunion.startsWith('http')
-                              ? selectedRehearsal.enlace_reunion
-                              : `https://${selectedRehearsal.enlace_reunion}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 px-3 py-1.5 bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center justify-center gap-1.5/20 transition-all cursor-pointer"
-                        >
-                          <Video className="w-3.5 h-3.5" />
-                          <span>Unirse a Videollamada</span>
-                          <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* REPERTORIO / SETLIST ASIGNADO */}
-              {(!isPromoPlan || hasModuleAccess(currentUser?.plan, 'repertorio')) && (selectedConcert || selectedRehearsal) && (
-                <div className={` pt-2.5 mt-2.5 ${'text-[var(--ink-2)]'}`}>
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <div className="flex items-center gap-1.5 text-[10px] font-sans font-bold text-[var(--acc)]">
-                      <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
-                      <span>Repertorio Asignado:</span>
-                    </div>
-                    {assignedSetlist && (
-                      <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--surface)]/15 text-[var(--ok)] font-bold">
-                        {assignedSetlist.items?.length || 0} canciones/ítems
-                      </span>
-                    )}
-                  </div>
-
-                  <select
-                    value={currentSetlistId || ''}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (selectedConcert) {
-                        onUpdateConcert(selectedConcert.id, {
-                          setlistId: val,
-                        });
-                      } else if (selectedRehearsal) {
-                        onUpdateRehearsal(selectedRehearsal.id, {
-                          setlistId: val,
-                        });
-                      }
-                    }}
-                    className={`w-full text-[10px] font-sans p-1.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer ${'bg-[var(--surface)] text-[var(--acc)] font-bold'}`}
-                  >
-                    <option value="">-- Sin repertorio asignado --</option>
-                    {availableSetlists.map((s: any) => (
-                      <option key={s.id} value={s.id}>
-                        {s.nombre} ({s.tipoFormato})
-                      </option>
-                    ))}
-                  </select>
-
-                  {assignedSetlist && (
-                    <div className="mt-2.5 flex items-center gap-2">
-                      <button
-                        type="button"
-                        id="calendar-launch-stage-mode-btn"
-                        onClick={() => {
-                          setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
-                          setActiveStageSetlist(assignedSetlist);
-                        }}
-                        className="flex-1 py-2 px-3 rounded-[var(--r-s)] bg-gradient-to-r from-[var(--acc)] to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-                        title="Lanzar Modo Escenario / Vista de Directo para este evento"
-                      >
-                        <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
-                        <span>{selectedConcert ? 'Lanzar Modo Escenario' : 'Lanzar Modo Ensayo'}</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Subtabs for Checklist */}
-            <div className={`flex flex-wrap gap-1 mb-4 pb-1 ${''}`}>
-              <button
-                id="calendar-subtab-runofshow"
-                onClick={() => setActiveTab('runofshow')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
-                  activeTab === 'runofshow'
-                    ? 'bg-[var(--acc)]/60/20 text-[var(--acc)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                Timing
-              </button>
-              <button
-                id="calendar-subtab-tecnica"
-                onClick={() => setActiveTab('tecnica')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
-                  activeTab === 'tecnica'
-                    ? 'bg-[var(--surface)] text-[var(--ink)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                <Wrench className="w-2.5 h-2.5" />
-                <span>1. Logística</span>
-              </button>
-              <button
-                id="calendar-subtab-contactos"
-                onClick={() => setActiveTab('contactos')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
-                  activeTab === 'contactos'
-                    ? 'bg-[var(--ok-soft)] text-[var(--ink)] font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                <Users className="w-2.5 h-2.5" />
-                <span>2. Contactos</span>
-              </button>
-              <button
-                id="calendar-subtab-merchan"
-                onClick={() => setActiveTab('merchan')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
-                  activeTab === 'merchan' ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                <Shirt className="w-2.5 h-2.5" />
-                <span>3. Merchan</span>
-              </button>
-              <button
-                id="calendar-subtab-cierre"
-                onClick={() => setActiveTab('cierre')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
-                  activeTab === 'cierre'
-                    ? 'bg-[var(--tentative)]-soft text-[var(--tentative)]/dark font-bold'
-                    : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                <ShieldCheck className="w-2.5 h-2.5" />
-                <span>5. Cierre</span>
-              </button>
-              <button
-                id="calendar-subtab-roadbook"
-                onClick={() => setActiveTab('roadbook')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
-                  activeTab === 'roadbook' ? 'bg-[var(--ok)]/20 text-[var(--ok)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                Ruta
-              </button>
-              <button
-                id="calendar-subtab-gear"
-                onClick={() => setActiveTab('gear')}
-                className={`px-2 py-1 text-[10px] font-sans tracking-wider rounded cursor-pointer transition-colors ${
-                  activeTab === 'gear' ? 'bg-[var(--acc)]/20 text-[var(--acc)]/80 font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                }`}
-              >
-                Cacharros
-              </button>
-            </div>
-
-            {/* Content for Subtabs */}
-            {activeTab === 'roadbook' ? (
-              <div className="space-y-3 max-h-80 overflow-y-auto pr-1 text-[10px]">
-                {(() => {
-                  const currentRb = allRoadbooks[selectedDateKey] || {
-                    contactoPromotor: 'Manuel (Producción)',
-                    telefonoPromotor: '+34 654 321 987',
-                    tecnicoSonido: 'FOH Bakandeya',
-                    hotelNombre: 'Hotel de Gira',
-                    hotelDireccion: selectedConcert?.ciudad || 'Por confirmar',
-                    cateringInfo: 'Cena tras prueba de sonido',
-                    inputList:
-                      '1. Bombo (Beta 52)\n2. Caja Top (SM57)\n3. Bajo (DI Radial)\n4. Gtr L (e609)\n5. Teclado L/R\n6. Tpt (Clip)\n7. Voz Ppal (Beta 58)\n8. Coros (SM58)',
-                  };
-
-                  return (
-                    <div className="space-y-3">
-                      <div className={`p-3 rounded-[var(--r-s)] space-y-2 ${'bg-[var(--bg)]'}`}>
-                        <div className="flex items-center justify-between">
-                          <span className={`text-[10px] font-sans font-bold ${'text-[var(--ok)]'}`}>📞 Contacto Producción & Hotel</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-[10px]">
-                          <div>
-                            <label className={`block text-[10px] font-sans ${textSub}`}>Promotor / Sala</label>
-                            <input
-                              type="text"
-                              value={currentRb.contactoPromotor}
-                              onChange={(e) =>
-                                saveRoadbook(selectedDateKey, {
-                                  ...currentRb,
-                                  contactoPromotor: e.target.value,
-                                })
-                              }
-                              className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
-                            />
-                          </div>
-                          <div>
-                            <label className={`block text-[10px] font-sans ${textSub}`}>Teléfono</label>
-                            <input
-                              type="text"
-                              value={currentRb.telefonoPromotor}
-                              onChange={(e) =>
-                                saveRoadbook(selectedDateKey, {
-                                  ...currentRb,
-                                  telefonoPromotor: e.target.value,
-                                })
-                              }
-                              className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className={`block text-[10px] font-sans ${textSub}`}>Hotel Alojamientos</label>
-                          <input
-                            type="text"
-                            value={currentRb.hotelNombre}
-                            onChange={(e) =>
-                              saveRoadbook(selectedDateKey, {
-                                ...currentRb,
-                                hotelNombre: e.target.value,
-                              })
-                            }
-                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
-                          />
-                        </div>
-
-                        <div>
-                          <label className={`block text-[10px] font-sans ${textSub}`}>Catering & Menús</label>
-                          <input
-                            type="text"
-                            value={currentRb.cateringInfo}
-                            onChange={(e) =>
-                              saveRoadbook(selectedDateKey, {
-                                ...currentRb,
-                                cateringInfo: e.target.value,
-                              })
-                            }
-                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--surface)]'}`}
-                          />
-                        </div>
-                      </div>
-
-                      <div className={`p-3 rounded-[var(--r-s)] space-y-1.5 ${'bg-[var(--bg)]'}`}>
-                        <span className={`text-[10px] font-sans font-bold ${'text-[var(--acc)]'}`}>🎸 Input List / Rider de Canales</span>
-                        <textarea
-                          rows={4}
-                          value={currentRb.inputList}
-                          onChange={(e) =>
-                            saveRoadbook(selectedDateKey, {
-                              ...currentRb,
-                              inputList: e.target.value,
-                            })
-                          }
-                          className={`w-full p-2 rounded font-sans text-[10px] ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                        />
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const currentRbData = allRoadbooks[selectedDateKey] || currentRb;
-                          const printWindow = window.open('', '_blank');
-                          if (!printWindow) return;
-                          printWindow.document.write(`
- <!DOCTYPE html>
- <html>
- <head>
- <title>Hoja de Ruta Bakandeya - ${selectedConcert ? selectedConcert.sala : 'Concierto'}</title>
- <style>
- body { font-family: system-ui, -apple-system, sans-serif; margin: 30px; color: #111; line-height: 1.5; }
- h1 { font-size: 22px; margin: 0; text-transform:; color: #d97706; }
- h2 { font-size: 14px; color: #555; margin-top: 2px; margin-bottom: 20px; font-weight: normal; }
- .badge { display: inline-block; padding: 4px 10px; background: #fef3c7; color: #92400e; font-weight: bold; border-radius: 4px; font-size: 11px; font-family: monospace; }
- .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
- .card { border: 1px solid #e5e7eb; padding: 12px 15px; border-radius: 8px; background: #fafafa; }
- .card-title { font-size: 11px; text-transform:; font-weight: bold; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 6px; }
- .item-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #e5e7eb; font-size: 12px; }
- .time { font-weight: bold; font-family: monospace; color: #d97706; width: 60px; }
- pre { font-family: monospace; font-size: 11px; background: #fff; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; white-space: pre-wrap; margin: 0; }
- .footer { margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 10px; color: #888; text-align: center; }
- </style>
- </head>
- <body>
- <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--acc); padding-bottom:12px; margin-bottom:20px;">
- <div>
- <h1>Bakandeya — Hoja de Ruta de Gira</h1>
- <h2>${selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : selectedEventTitle}</h2>
- </div>
- <div>
- <span class="badge">FECHA: ${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}</span>
- </div>
- </div>
-
- <div class="grid">
- <div class="card">
- <div class="card-title">📍 Ubicación & Logística</div>
- <p style="margin:2px 0; font-size:13px; font-weight:bold;">${selectedEventDetails.lugar}</p>
- <p style="margin:2px 0; font-size:11px; color:#555;">${selectedEventDetails.direccion || 'Dirección no especificada'}</p>
- ${!isPromoPlan ? `<p style="margin:8px 0 2px 0; font-size:11px;"><strong>Caché / Condición:</strong> ${selectedEventDetails.fee}</p>` : ''}
- </div>
-
- <div class="card">
- <div class="card-title">📞 Contactos & Hotel</div>
- <p style="margin:2px 0; font-size:11px;"><strong>Promotor/Contacto:</strong> ${currentRbData.contactoPromotor} (${currentRbData.telefonoPromotor})</p>
- <p style="margin:2px 0; font-size:11px;"><strong>Técnico Sonido:</strong> ${currentRbData.tecnicoSonido}</p>
- <p style="margin:2px 0; font-size:11px;"><strong>Hotel:</strong> ${currentRbData.hotelNombre}</p>
- <p style="margin:2px 0; font-size:11px;"><strong>Catering:</strong> ${currentRbData.cateringInfo}</p>
- </div>
- </div>
-
- <div class="card" style="margin-bottom: 20px;">
- <div class="card-title">⏱️ Horarios / Run of Show</div>
- ${
-   currentRunOfShow.length === 0
-     ? '<p style="font-size:11px; color:#888;">Sin horarios definidos.</p> '
-     : currentRunOfShow
-         .map(
-           (i) => `
- <div class="item-row">
- <span class="time">${i.time}</span>
- <span style="flex:1;">${i.activity}</span>
- </div>
- `
-         )
-         .join('')
- }
- </div>
-
- <div class="grid">
- <div class="card">
- <div class="card-title">🎸 Lista de Canales / Input List (Rider)</div>
- <pre>${currentRbData.inputList}</pre>
- </div>
- <div class="card">
- <div class="card-title">🎒 Check-list Cacharros & Backline</div>
- ${
-   currentGear.length === 0
-     ? '<p style="font-size:11px; color:#888;">Sin material asignado.</p> '
-     : currentGear
-         .map(
-           (g) => `
- <div class="item-row">
- <span>${g.checked ? '☑' : '☐'} ${g.label}</span>
- </div>
- `
-         )
-         .join('')
- }
- </div>
- </div>
-
- <div class="footer">
- Documento Oficial de Gira • Generado por Bakandeya Band CRM
- </div>
-
- <script>
- window.onload = function() { window.print(); }
- </script>
- </body>
- </html>
- `);
-                          printWindow.document.close();
-                        }}
-                        className={`w-full py-2 px-3 rounded-[var(--r-m)] font-sans text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all ${'bg-gradient-to-r from-[var(--ok)] to-teal-500 text-[var(--acc-ink)] font-extrabold'}`}
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Imprimir / Exportar Hoja de Ruta (PDF)</span>
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            ) : activeTab === 'tecnica' ? (
-              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
-                {(() => {
-                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
-                  return (
-                    <div className="space-y-2.5">
-                      <div className={`p-2.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]/40'}`}>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-bold flex items-center gap-1 text-[var(--ink-2)] font-sans text-[10px]">
-                            <Wrench className="w-3 h-3" /> 1. Logística Técnica
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setModalActiveTab('tecnica');
-                              setShowEventFichaModal(true);
-                            }}
-                            className="text-[9px] underline text-[var(--ink-2)] hover:text-[var(--ink-3)] font-sans cursor-pointer"
-                          >
-                            Editar Completo →
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-1.5 text-[9px]">
-                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Prueba de Sonido</span>
-                            <span className="font-bold text-[var(--acc)]">{currentRb.horaPruebaSonido || '18:00'}</span>
-                          </div>
-                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Horario Show</span>
-                            <span className="font-bold text-[var(--ok)]">{currentRb.horaShow || '21:30'}</span>
-                          </div>
-                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Técnico Sonido FOH</span>
-                            <span className="font-medium truncate">{currentRb.tecnicoSonido || 'Propio / Sala'}</span>
-                          </div>
-                          <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Sistema P.A.</span>
-                            <span className="font-medium truncate">{currentRb.paEspecificaciones ? 'Especificado' : 'Estándar Sala'}</span>
-                          </div>
-                        </div>
-                        {currentRb.backlineInfo && (
-                          <div className={`mt-2 p-1.5 rounded text-[9px] ${'bg-[var(--surface)]'}`}>
-                            <span className="block text-[var(--ink-2)] font-sans text-[8px]">Backline & Rider</span>
-                            <p className="line-clamp-2 text-[var(--ink)]">{currentRb.backlineInfo}</p>
-                          </div>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setModalActiveTab('tecnica');
-                          setShowEventFichaModal(true);
-                        }}
-                        className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ink-3)]/10 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/15 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                      >
-                        <Wrench className="w-3 h-3" />
-                        <span>Abrir Logística Técnica Completa</span>
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            ) : activeTab === 'contactos' ? (
-              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
-                {(() => {
-                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
-                  const contacts = currentRb.contactosClave || [];
-                  return (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-sans font-bold text-[var(--ok)] text-[10px] flex items-center gap-1">
-                          <Users className="w-3 h-3" /> 2. Contactos Clave ({contacts.length})
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setModalActiveTab('contactos');
-                            setShowEventFichaModal(true);
-                          }}
-                          className="text-[9px] underline text-[var(--ok)] hover:text-[var(--ink-2)] font-sans cursor-pointer"
-                        >
-                          + Gestionar →
-                        </button>
-                      </div>
-                      {contacts.length === 0 ? (
-                        <p className={`text-[10px] italic text-center py-3 ${textMuted}`}>No hay contactos clave agregados.</p>
-                      ) : (
-                        <div className="space-y-1.5">
-                          {contacts.map((c) => (
-                            <div
-                              key={c.id}
-                              className={`p-2 rounded-[var(--r-s)] flex items-center justify-between gap-2 ${'bg-[var(--surface)]'}`}
-                            >
-                              <div className="min-w-0">
-                                <div className="font-bold truncate text-[10px]">{c.nombre}</div>
-                                <div className="text-[9px] text-[var(--ink-2)] font-sans flex items-center gap-1">
-                                  <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px]">{c.rol}</span>
-                                  <span>{c.telefono}</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-1 shrink-0">
-                                {c.telefono && (
-                                  <>
-                                    <a
-                                      href={`https://wa.me/${c.telefono.replace(/[^0-9]/g, '')}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="p-1 rounded bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30"
-                                      title="WhatsApp"
-                                    >
-                                      <MessageCircle className="w-3 h-3" />
-                                    </a>
-                                    <a
-                                      href={`tel:${c.telefono}`}
-                                      className="p-1 rounded bg-[var(--ink-3)]/10 text-[var(--ink-2)] hover:bg-[var(--ink-3)]/15"
-                                      title="Llamar"
-                                    >
-                                      <Phone className="w-3 h-3" />
-                                    </a>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setModalActiveTab('contactos');
-                          setShowEventFichaModal(true);
-                        }}
-                        className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                      >
-                        <Plus className="w-3 h-3" />
-                        <span>Añadir Contactos Clave</span>
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            ) : activeTab === 'merchan' ? (
-              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
-                {(() => {
-                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
-                  const merch = currentRb.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-                  const items = merch.items || [];
-                  const totalInicial = items.reduce((acc, i) => acc + (i.stockInicial || 0), 0);
-                  const totalFinal = items.reduce((acc, i) => acc + (i.stockFinal || 0), 0);
-                  const totalVendidas = Math.max(0, totalInicial - totalFinal);
-                  const totalTeorico = items.reduce(
-                    (acc, i) => acc + Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) * (i.precioUnitario || 0),
-                    0
-                  );
-                  const totalCobrado = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
-                  const cuadreDiff = totalCobrado - totalTeorico;
-
-                  return (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-sans font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
-                          <Shirt className="w-3 h-3" /> 3. Merch ({totalVendidas}/{totalInicial} uds)
-                        </span>
-                        <span className="text-[9px] font-sans font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70">
-                          {totalTeorico.toFixed(0)}€ ventas
-                        </span>
-                      </div>
-
-                      {/* Arqueo Rápido */}
-                      <div className="grid grid-cols-2 gap-1.5 text-[9px] font-sans">
-                        <div className="p-1.5 rounded bg-[var(--ok)]/10 flex flex-col">
-                          <span className="text-[var(--ok)]/80 text-[8px] flex items-center gap-0.5">
-                            <Banknote className="w-2.5 h-2.5" /> Efectivo
-                          </span>
-                          <span className="font-bold text-[var(--ink-2)] text-[11px]">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
-                        </div>
-                        <div className="p-1.5 rounded bg-[var(--ink-3)]/10 flex flex-col">
-                          <span className="text-[var(--ink-2)]/80 text-[8px] flex items-center gap-0.5">
-                            <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
-                          </span>
-                          <span className="font-bold text-[var(--ink-3)] text-[11px]">{(merch.ingresosBizum || 0).toFixed(0)}€</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between text-[8.5px] font-sans px-1 py-0.5 rounded bg-[var(--surface)]/60">
-                        <span className="text-[var(--ink-2)]">
-                          Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong>
-                        </span>
-                        <span
-                          className={`font-bold ${cuadreDiff === 0 ? 'text-[var(--ok)]' : cuadreDiff > 0 ? 'text-[var(--ink-2)]' : 'text-[var(--acc)]'}`}
-                        >
-                          {cuadreDiff === 0
-                            ? '✓ Cuadrada'
-                            : cuadreDiff > 0
-                              ? `+${cuadreDiff.toFixed(0)}€ propina`
-                              : `${cuadreDiff.toFixed(0)}€ descuadre`}
-                        </span>
-                      </div>
-
-                      {/* Stock furgoneta vs fin */}
-                      <div className="space-y-1">
-                        {items.slice(0, 4).map((item) => {
-                          const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
-                          return (
-                            <div
-                              key={item.id}
-                              className={`p-1.5 rounded flex items-center justify-between ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                            >
-                              <div className="truncate pr-2">
-                                <p className="font-medium truncate text-[9.5px]">
-                                  {item.nombre} {item.talla ? `(${item.talla})` : ''}
-                                </p>
-                                <p className="text-[8px] text-[var(--ink-2)] font-sans">
-                                  {item.stockInicial} furgón ➔ {item.stockFinal} quedan
-                                </p>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <span className="text-[9px] font-sans font-bold text-[var(--acc)]">{vendidas} vend.</span>
-                                <p className="text-[8px] font-sans text-[var(--ink-2)]">{(vendidas * item.precioUnitario).toFixed(0)}€</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {items.length > 4 && (
-                        <p className="text-[8px] text-center font-sans text-[var(--ink-2)]">
-                          +{items.length - 4} productos más en inventario
-                        </p>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setModalActiveTab('merchan');
-                          setShowEventFichaModal(true);
-                        }}
-                        className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                      >
-                        <Shirt className="w-3 h-3" />
-                        <span>Control Merchandising Completo</span>
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            ) : activeTab === 'cierre' ? (
-              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
-                {(() => {
-                  const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
-                  const items = currentRb.cierreMaterial || [];
-                  const checkedCount = items.filter((i) => i.checked).length;
-                  const progress = items.length > 0 ? Math.round((checkedCount / items.length) * 100) : 0;
-                  return (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-sans font-bold text-[var(--tentative)] text-[10px] flex items-center gap-1">
-                          <ShieldCheck className="w-3 h-3" /> 5. Cierre Material ({checkedCount}/{items.length})
-                        </span>
-                        <span
-                          className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80'}`}
-                        >
-                          {progress}%
-                        </span>
-                      </div>
-                      <div className="w-full bg-[var(--surface)]/80 rounded-full h-1.5 overflow-hidden">
-                        <div
-                          className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-[var(--ok)]' : 'bg-[var(--tentative)]'}`}
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        {items.map((item) => (
-                          <div
-                            key={item.id}
-                            onClick={() => handleToggleCierreItem(item.id, selectedDateKey)}
-                            className={`p-1.5 rounded flex items-center gap-2 cursor-pointer transition-colors ${
-                              item.checked
-                                ? 'bg-[var(--ok-soft)]/70 text-[var(--ink-2)] line-through'
-                                : 'bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--bg)]'
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={item.checked}
-                              onChange={() => {}}
-                              className="rounded text-[var(--tentative)] h-3 w-3 cursor-pointer"
-                            />
-                            <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
-                            <span className="text-[8px] font-sans px-1 rounded bg-[var(--surface)]/80 text-[var(--ink-2)] shrink-0">
-                              {item.categoria}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setModalActiveTab('cierre');
-                          setShowEventFichaModal(true);
-                        }}
-                        className="w-full py-1.5 px-2 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--tentative)] hover:bg-[var(--tentative)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                      >
-                        <ShieldCheck className="w-3 h-3" />
-                        <span>Checklist Cierre Completo</span>
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            ) : (
-              <>
-                {/* Form to add new item */}
-                <div className="mb-3">
-                  {activeTab === 'runofshow' ? (
-                    <form onSubmit={handleAddRunOfShow} className="flex gap-1.5 items-center">
-                      <input
-                        type="text"
-                        placeholder="17:30"
-                        value={newRunTime}
-                        onChange={(e) => setNewRunTime(e.target.value)}
-                        className={`w-16 px-2 py-1 text-[10px] font-sans rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Nueva actividad/horario..."
-                        value={newRunActivity}
-                        onChange={(e) => setNewRunActivity(e.target.value)}
-                        className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                      <button
-                        type="submit"
-                        className={`p-1.5 rounded transition-colors cursor-pointer ${'bg-[var(--acc)]/15 text-[var(--on-acc)] hover:bg-[var(--acc)]/50/15 font-bold'}`}
-                        title="Añadir horario"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                    </form>
-                  ) : (
-                    <form onSubmit={handleAddGear} className="flex gap-1.5 items-center">
-                      <input
-                        type="text"
-                        placeholder="Añadir instrumento, cable o cacharro de directo..."
-                        value={newGearLabel}
-                        onChange={(e) => setNewGearLabel(e.target.value)}
-                        className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                      <button
-                        type="submit"
-                        className={`p-1.5 rounded transition-colors cursor-pointer ${'bg-[var(--acc)]/15 text-[var(--on-acc)] hover:bg-[var(--acc)]/50/15 font-bold'}`}
-                        title="Añadir material"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                    </form>
-                  )}
-                </div>
-
-                {/* Interactive Lists */}
-                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-                  {activeTab === 'runofshow' ? (
-                    currentRunOfShow.length === 0 ? (
-                      <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay horarios registrados para este día.</p>
-                    ) : (
-                      currentRunOfShow.map((item) => {
-                        const isItemDone = item.done;
-                        return (
-                          <div
-                            key={item.id}
-                            onClick={() => handleToggleRunOfShow(item.id)}
-                            className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
-                              isItemDone
-                                ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
-                                : 'bg-[var(--surface)] text-[var(--ink-2)] hover:-indigo-300'
-                            }`}
-                          >
-                            <span
-                              className={`font-sans text-[10px] font-bold shrink-0 ${
-                                isItemDone ? 'text-[var(--ink-2)]' : 'text-[var(--acc)]'
-                              }`}
-                            >
-                              {item.time}
-                            </span>
-                            <p className="text-[10px] font-sans leading-normal flex-1">{item.activity}</p>
-                            <button
-                              type="button"
-                              onClick={(e) => handleDeleteRunOfShow(item.id, e)}
-                              className="opacity-0 group-hover:opacity-100 p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity"
-                              title="Eliminar"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </button>
-                          </div>
-                        );
-                      })
-                    )
-                  ) : currentGear.length === 0 ? (
-                    <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay material registrado para este día.</p>
-                  ) : (
-                    currentGear.map((item) => {
-                      const isChecked = item.checked;
-                      return (
-                        <div
-                          key={item.id}
-                          onClick={() => handleToggleGear(item.id)}
-                          className={`p-2 rounded-md flex items-center gap-2.5 cursor-pointer transition-colors group ${
-                            isChecked
-                              ? 'bg-[var(--sunken)] text-[var(--ink-2)] line-through'
-                              : 'bg-[var(--surface)] text-[var(--ink-2)] hover:-indigo-300'
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {}} // handled by div click
-                            className={`rounded focus:ring-0 cursor-pointer h-3.5 w-3.5 ${'-[#99907c]/40 text-[var(--acc)] bg-[var(--surface)]'}`}
-                          />
-                          <p className="text-[10px] font-sans leading-normal flex-1">{item.label}</p>
-                          <button
-                            type="button"
-                            onClick={(e) => handleDeleteGear(item.id, e)}
-                            className="opacity-0 group-hover:opacity-100 p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-opacity"
-                            title="Eliminar"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* Footer info */}
-        <div className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-sans ${'text-[var(--ink-2)] text-[var(--ink-2)]'}`}>
-          <span>Huso Horario: Madrid (UTC+2)</span>
-          <span className="text-[var(--ok)]">● Sincronizado</span>
-        </div>
-      </div>
+      <CalendarSidebarLogistics
+        colors={colors}
+        isStitchLight={isStitchLight}
+        textTitle={textTitle}
+        textSub={textSub}
+        textMuted={textMuted}
+        selectedDate={selectedDate}
+        selectedDateKey={selectedDateKey}
+        selectedEventDetails={selectedEventDetails}
+        selectedEventTitle={selectedEventTitle}
+        selectedConcert={selectedConcert}
+        selectedRehearsal={selectedRehearsal}
+        hasMultipleDayEvents={hasMultipleDayEvents}
+        dayEventsList={dayEventsList}
+        activeDayEventId={activeDayEventId}
+        setSelectedEventId={setSelectedEventId}
+        monthNames={monthNames}
+        weekdays={weekdays}
+        onNavigate={onNavigate}
+        currentBandId={currentBandId}
+        activeBandId={activeBandId}
+        activeBandName={activeBandName}
+        getEventBandName={getEventBandName}
+        getBandIdentity={getBandIdentity}
+        getCampaignsForDate={getCampaignsForDate}
+        isPromoPlan={isPromoPlan}
+        currentUser={currentUser}
+        setShowCreateModal={setShowCreateModal}
+        setShowEventFichaModal={setShowEventFichaModal}
+        setShowReminderModal={setShowReminderModal}
+        setViewingConcert={setViewingConcert}
+        setViewingRehearsal={setViewingRehearsal}
+        onDeleteConcert={onDeleteConcert}
+        onDeleteRehearsal={onDeleteRehearsal}
+        setReminderNotes={setReminderNotes}
+        setReminderSuccessMsg={setReminderSuccessMsg}
+        setReminderErrorMsg={setReminderErrorMsg}
+        setConcCiudad={setConcCiudad}
+        setConcAforo={setConcAforo}
+        setConcNotas={setConcNotas}
+        setModalActiveTab={setModalActiveTab}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        allRoadbooks={allRoadbooks}
+        getCurrentRoadbook={getCurrentRoadbook}
+        updateRoadbookField={updateRoadbookField}
+        getDefaultRoadbook={getDefaultRoadbook}
+        handleToggleCierreItem={handleToggleCierreItem}
+        handleToggleAllCierreItems={handleToggleAllCierreItems}
+        handleAddCierreItem={handleAddCierreItem}
+        handleDeleteCierreItem={handleDeleteCierreItem}
+        newCierreItemText={newCierreItemText}
+        setNewCierreItemText={setNewCierreItemText}
+        newCierreItemCat={newCierreItemCat}
+        setNewCierreItemCat={setNewCierreItemCat}
+        showAddContactForm={showAddContactForm}
+        setShowAddContactForm={setShowAddContactForm}
+        newContactNombre={newContactNombre}
+        setNewContactNombre={setNewContactNombre}
+        newContactRol={newContactRol}
+        setNewContactRol={setNewContactRol}
+        newContactTelefono={newContactTelefono}
+        setNewContactTelefono={setNewContactTelefono}
+        newContactEmail={newContactEmail}
+        setNewContactEmail={setNewContactEmail}
+        newContactNotas={newContactNotas}
+        setNewContactNotas={setNewContactNotas}
+        handleAddKeyContact={handleAddKeyContact}
+        handleDeleteKeyContact={handleDeleteKeyContact}
+        openWhatsAppContact={openWhatsAppContact}
+        handleUpdateMerchItem={handleUpdateMerchItem}
+        handleAddMerchItem={handleAddMerchItem}
+        handleDeleteMerchItem={handleDeleteMerchItem}
+        handleUpdateMerchTotals={handleUpdateMerchTotals}
+        handleCopyMerchSummary={handleCopyMerchSummary}
+        showAddMerchForm={showAddMerchForm}
+        setShowAddMerchForm={setShowAddMerchForm}
+        newMerchNombre={newMerchNombre}
+        setNewMerchNombre={setNewMerchNombre}
+        newMerchCategoria={newMerchCategoria}
+        setNewMerchCategoria={setNewMerchCategoria}
+        newMerchTalla={newMerchTalla}
+        setNewMerchTalla={setNewMerchTalla}
+        newMerchPrecio={newMerchPrecio}
+        setNewMerchPrecio={setNewMerchPrecio}
+        newMerchStockInicial={newMerchStockInicial}
+        setNewMerchStockInicial={setNewMerchStockInicial}
+        merchCopiedToast={merchCopiedToast}
+        currentRunOfShow={currentRunOfShow}
+        currentGear={currentGear}
+        handleToggleRunOfShow={handleToggleRunOfShow}
+        handleAddRunOfShow={handleAddRunOfShow}
+        handleDeleteRunOfShow={handleDeleteRunOfShow}
+        handleToggleGear={handleToggleGear}
+        handleAddGear={handleAddGear}
+        handleDeleteGear={handleDeleteGear}
+        newRunTime={newRunTime}
+        setNewRunTime={setNewRunTime}
+        newRunActivity={newRunActivity}
+        setNewRunActivity={setNewRunActivity}
+        newGearLabel={newGearLabel}
+        setNewGearLabel={setNewGearLabel}
+        copiedQrId={copiedQrId}
+        setCopiedQrId={setCopiedQrId}
+        assignedSetlist={assignedSetlist}
+        setSelectedDate={setSelectedDate}
+        upcomingCalendarEvents={upcomingCalendarEvents}
+        upcomingFilter={upcomingFilter}
+        setUpcomingFilter={setUpcomingFilter}
+        setViewDate={setViewDate}
+        currentSetlistId={currentSetlistId}
+        onUpdateConcert={onUpdateConcert}
+        onUpdateRehearsal={onUpdateRehearsal}
+        availableSetlists={availableSetlists}
+        setActiveStageInitialMode={setActiveStageInitialMode}
+        setActiveStageSetlist={setActiveStageSetlist}
+        saveRoadbook={saveRoadbook}
+      />
 
       {/* UNIFIED CREATE EVENT MODAL (Concierto | Ensayo | Reunión) */}
-      {showCreateModal && (
-        <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
-          <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-            <div
-              className={`w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-            >
-              <button
-                onClick={() => setShowCreateModal(null)}
-                className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-              >
-                ✕
-              </button>
-
-              {/* Segmented Event Type Selector */}
-              <div className="flex items-center justify-between gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] mb-55">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCreateModal('concert');
-                    setConcIsPosible(false);
-                  }}
-                  className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                    showCreateModal === 'concert' && !concIsPosible
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
-                >
-                  <span>🎸</span>
-                  <span>Concierto</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCreateModal('concert');
-                    setConcIsPosible(true);
-                  }}
-                  className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                    showCreateModal === 'concert' && concIsPosible
-                      ? 'bg-[var(--tentative)] text-[var(--ink)] font-black'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
-                >
-                  <span>🎯</span>
-                  <span>Posible</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal('rehearsal')}
-                  className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                    showCreateModal === 'rehearsal'
-                      ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
-                >
-                  <span>🥁</span>
-                  <span>Ensayo</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal('reunion')}
-                  className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                    showCreateModal === 'reunion'
-                      ? 'bg-[var(--tentative)] text-[var(--ink)] font-black'
-                      : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
-                  }`}
-                >
-                  <span>🤝</span>
-                  <span>Reunión</span>
-                </button>
-              </div>
-
-              {/* Header Date Info */}
-              <div className="flex items-center gap-2 mb-4">
-                <span
-                  className={`p-2 rounded-[var(--r-s)] ${
-                    showCreateModal === 'concert'
-                      ? concIsPosible
-                        ? 'bg-[var(--tentative)]/15 text-[var(--tentative)]'
-                        : 'bg-[var(--acc)]/15 text-[var(--acc)]'
-                      : showCreateModal === 'reunion'
-                        ? 'bg-[var(--tentative)]/15 text-[var(--tentative)]'
-                        : 'bg-[var(--surface)]/15 text-[var(--ok)]'
-                  }`}
-                >
-                  {showCreateModal === 'concert' ? (
-                    <Sparkles className="w-5 h-5" />
-                  ) : showCreateModal === 'reunion' ? (
-                    <Handshake className="w-5 h-5" />
-                  ) : (
-                    <Calendar className="w-5 h-5" />
-                  )}
-                </span>
-                <div>
-                  <h3 className="font-bold text-base font-display">
-                    {showCreateModal === 'concert' &&
-                      (concIsPosible ? 'Crear Concierto Posible (Bolo Tentativo)' : 'Crear Nuevo Concierto')}
-                    {showCreateModal === 'rehearsal' && 'Crear Nuevo Ensayo'}
-                    {showCreateModal === 'reunion' && 'Crear Nueva Reunión'}
-                  </h3>
-                  <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                    Fecha: {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
-                  </p>
-                </div>
-              </div>
-
-              {/* FORM: REUNIÓN */}
-              {showCreateModal === 'reunion' && (
-                <form onSubmit={handleSaveNewReunion} className="space-y-4">
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold">
-                      Asunto / Objetivo de la Reunión
-                    </label>
-                    <input
-                      type="text"
-                      value={reuAsunto}
-                      onChange={(e) => setReuAsunto(e.target.value)}
-                      placeholder="ej. Coordinación de gira de verano y reparto de tareas"
-                      required
-                      className={`w-full px-2 py-1.5 text-xs rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario</label>
-                      <input
-                        type="text"
-                        value={reuHora}
-                        onChange={(e) => setReuHora(e.target.value)}
-                        placeholder="ej. 19:00 - 20:00"
-                        required
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Plataforma</label>
-                      <input
-                        type="text"
-                        value={reuLugar}
-                        onChange={(e) => setReuLugar(e.target.value)}
-                        placeholder="ej. Online (Google Meet) o Bar Local"
-                        required
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1.5">
-                      <Video className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                      <span>Enlace a Videollamada (Opcional)</span>
-                    </label>
-                    <input
-                      type="url"
-                      value={reuEnlace}
-                      onChange={(e) => setReuEnlace(e.target.value)}
-                      placeholder="https://meet.google.com/xxx-xxxx-xxx o Zoom"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  {isMultiBandUser && (
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
-                      <select
-                        value={selectedBandIdForNewEvent}
-                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      >
-                        {effectiveBandsList.map((b) => (
-                          <option key={b.band_id} value={b.band_id}>
-                            {b.bandName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {/* Convocatoria selector */}
-                  <div className="space-y-2 pt-3">
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
-                      <Users className="w-3 h-3 text-[var(--tentative)]" />
-                      <span>Asistentes Convocados</span>
-                    </label>
-                    <select
-                      value={convocatoriaTipo}
-                      onChange={(e) => {
-                        const val = e.target.value as 'completa' | 'parcial';
-                        setConvocatoriaTipo(val);
-                        if (val === 'completa') {
-                          setConvocadosIds(effectiveBandMembers.map((m) => m.id));
-                        }
-                      }}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="completa">Toda la Banda (Todos los miembros convocados)</option>
-                      <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
-                    </select>
-
-                    {convocatoriaTipo === 'parcial' && (
-                      <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}>
-                        <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
-                        <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                          {effectiveBandMembers.map((member) => {
-                            const isChecked = convocadosIds.includes(member.id);
-                            return (
-                              <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
-                                <input
-                                  type="checkbox"
-                                  checked={isChecked}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setConvocadosIds((prev) => [...prev, member.id]);
-                                    } else {
-                                      setConvocadosIds((prev) => prev.filter((id) => id !== member.id));
-                                    }
-                                  }}
-                                  className="rounded text-[var(--tentative)] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
-                                />
-                                <span>
-                                  {member.name} {member.role === 'leader' ? '(Líder)' : ''}
-                                </span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Orden del Día / Notas</label>
-                    <textarea
-                      value={rehNotas}
-                      onChange={(e) => setRehNotas(e.target.value)}
-                      rows={3}
-                      placeholder="ej. 1. Definir fechas de estudio. 2. Presupuesto de merchandising. 3. Reparto de tareas de redes."
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  <div className="pt-2 flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(null)}
-                      className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${'bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)]'}`}
-                    >
-                      Guardar Reunión
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {/* FORM: ENSAYO */}
-              {showCreateModal === 'rehearsal' && (
-                <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario del Ensayo</label>
-                    <input
-                      type="text"
-                      value={rehTime}
-                      onChange={(e) => setRehTime(e.target.value)}
-                      placeholder="ej. 18:00 - 21:00"
-                      required
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Local</label>
-                    <input
-                      type="text"
-                      value={rehLugar}
-                      onChange={(e) => setRehLugar(e.target.value)}
-                      placeholder="ej. Rock Palace, Madrid (Local 4)"
-                      required
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  {isMultiBandUser && (
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
-                      <select
-                        value={selectedBandIdForNewEvent}
-                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      >
-                        {effectiveBandsList.map((b) => (
-                          <option key={b.band_id} value={b.band_id}>
-                            {b.bandName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {/* Convocatoria selector */}
-                  <div className="space-y-2 pt-3">
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
-                      <Users className="w-3 h-3 text-[var(--ink-2)]" />
-                      <span>Tipo de Convocatoria</span>
-                    </label>
-                    <select
-                      value={convocatoriaTipo}
-                      onChange={(e) => {
-                        const val = e.target.value as 'completa' | 'parcial';
-                        setConvocatoriaTipo(val);
-                        if (val === 'completa') {
-                          setConvocadosIds(effectiveBandMembers.map((m) => m.id));
-                        }
-                      }}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="completa">Banda Completa (Todos los miembros convocados)</option>
-                      <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
-                    </select>
-
-                    {convocatoriaTipo === 'parcial' && (
-                      <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}>
-                        <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
-                        <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                          {effectiveBandMembers.map((member) => {
-                            const isChecked = convocadosIds.includes(member.id);
-                            return (
-                              <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
-                                <input
-                                  type="checkbox"
-                                  checked={isChecked}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setConvocadosIds((prev) => [...prev, member.id]);
-                                    } else {
-                                      setConvocadosIds((prev) => prev.filter((id) => id !== member.id));
-                                    }
-                                  }}
-                                  className="rounded text-[var(--acc)] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
-                                />
-                                <span>
-                                  {member.name} {member.role === 'leader' ? '(Líder)' : ''}
-                                </span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                        <p className="text-[9px] text-[var(--acc)] font-sans italic mt-1">
-                          * Este ensayo solo aparecerá en el calendario de los miembros convocados.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado</label>
-                    <select
-                      value={rehEstado}
-                      onChange={(e) => setRehEstado(e.target.value as any)}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="programado">Programado</option>
-                      <option value="completado">Completado</option>
-                      <option value="cancelado">Cancelado</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
-                      <span className="flex items-center gap-1 text-[var(--ok)]">
-                        <Music className="w-3 h-3" />
-                        <span>Repertorio / Setlist a Ensayar</span>
-                      </span>
-                      {rehSetlistId && (
-                        <span className="text-[9px] font-sans text-[var(--ok)]">
-                          {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
-                        </span>
-                      )}
-                    </label>
-                    <select
-                      value={rehSetlistId}
-                      onChange={(e) => setRehSetlistId(e.target.value)}
-                      className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="">-- Sin repertorio asignado --</option>
-                      {availableSetlists.map((s: any) => (
-                        <option key={s.id} value={s.id}>
-                          {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
-                          {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
-                    <textarea
-                      value={rehNotas}
-                      onChange={(e) => setRehNotas(e.target.value)}
-                      rows={3}
-                      placeholder="ej. Montar la estructura de la canción nueva y probar dinámicas de volumen."
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  <div className="pt-2 flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(null)}
-                      className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold/20'}`}
-                    >
-                      Guardar Ensayo
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {/* FORM: CONCIERTO */}
-              {showCreateModal === 'concert' && (
-                <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
-                      <input
-                        type="text"
-                        value={concCiudad}
-                        onChange={(e) => setConcCiudad(e.target.value)}
-                        placeholder="ej. Madrid"
-                        required
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sala / Recinto</label>
-                      <input
-                        type="text"
-                        value={concSala}
-                        onChange={(e) => setConcSala(e.target.value)}
-                        placeholder="ej. Sala Sol"
-                        required
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Dirección Exacta</label>
-                    <input
-                      type="text"
-                      value={concDireccion}
-                      onChange={(e) => setConcDireccion(e.target.value)}
-                      placeholder="ej. Calle Jardines 3, 28013 Madrid"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  {/* Auditor de Festivos y Puentes */}
-                  <HolidayDateWarning date={selectedDate} city={concCiudad} />
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Caché (€)</label>
-                      <input
-                        type="number"
-                        value={concCache}
-                        onChange={(e) => setConcCache(e.target.value)}
-                        placeholder="800"
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado de Pago</label>
-                      <select
-                        value={concEstadoPago}
-                        onChange={(e) => setConcEstadoPago(e.target.value as any)}
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      >
-                        <option value="pendiente">Pendiente</option>
-                        <option value="pagado">Pagado</option>
-                        <option value="anticipo">Anticipo</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {isMultiBandUser && (
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Banda del Evento</label>
-                      <select
-                        value={selectedBandIdForNewEvent}
-                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      >
-                        {effectiveBandsList.map((b) => (
-                          <option key={b.band_id} value={b.band_id}>
-                            {b.bandName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
-                      <span className="flex items-center gap-1 text-[var(--acc)]">
-                        <Music className="w-3 h-3" />
-                        <span>Repertorio / Setlist del Concierto</span>
-                      </span>
-                      {concSetlistId && (
-                        <span className="text-[9px] font-sans text-[var(--ok)]">
-                          {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
-                        </span>
-                      )}
-                    </label>
-                    <select
-                      value={concSetlistId}
-                      onChange={(e) => setConcSetlistId(e.target.value)}
-                      className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="">-- Sin repertorio asignado --</option>
-                      {availableSetlists.map((s: any) => (
-                        <option key={s.id} value={s.id}>
-                          {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
-                          {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10">
-                    <input
-                      type="checkbox"
-                      id="concIsPosibleCheck"
-                      checked={concIsPosible}
-                      onChange={(e) => setConcIsPosible(e.target.checked)}
-                      className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
-                    />
-                    <label
-                      htmlFor="concIsPosibleCheck"
-                      className="text-[10px] font-sans cursor-pointer select-none font-bold text-[var(--tentative)]/80 flex items-center gap-1"
-                    >
-                      🎯 Concierto Posible / En negociación (Bolo Tentativo)
-                    </label>
-                  </div>
-
-                  <div>
-                    <textarea
-                      value={concNotas}
-                      onChange={(e) => setConcNotas(e.target.value)}
-                      rows={2}
-                      placeholder="ej. Prueba de sonido a las 18:30h. Catering frío y 4 camerinos incluidos."
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-
-                  <div className="pt-2 flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(null)}
-                      className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold'}`}
-                    >
-                      Guardar Concierto
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
-        </ModalPortal>
-      )}
-
+      <CalendarCreateEventModal
+        showCreateModal={showCreateModal}
+        setShowCreateModal={setShowCreateModal}
+        selectedDate={selectedDate}
+        isStitchLight={isStitchLight}
+        effectiveBandsList={effectiveBandsList}
+        activeBandId={activeBandId}
+        activeBandName={activeBandName}
+        effectiveBandMembers={effectiveBandMembers}
+        onAddRehearsal={onAddRehearsal}
+        onAddConcert={onAddConcert}
+        setSyncSuccessMessage={setSyncSuccessMessage}
+        availableSetlists={availableSetlists}
+      />
       {/* EDIT CONCERT MODAL (Ficha del Concierto) */}
-      {viewingConcert && editDraft && (
-        <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
-          <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-            <div
-              className={`w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-            >
-              <button
-                onClick={() => setViewingConcert(null)}
-                className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors"
-              >
-                ✕
-              </button>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]">
-                  <Sparkles className="w-5 h-5" />
-                </span>
-                <div>
-                  <h3 className="font-bold text-base font-display">Ficha del Concierto</h3>
-                  <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                    {viewingConcert.sala} · {viewingConcert.ciudad}
-                  </p>
-                </div>
-              </div>
-
-              <form onSubmit={handleSaveConcertEdit} className="space-y-3.5">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Ciudad</label>
-                    <input
-                      type="text"
-                      value={editDraft.ciudad}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, ciudad: e.target.value } : prev))}
-                      required
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Sala / Evento</label>
-                    <input
-                      type="text"
-                      value={editDraft.sala}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, sala: e.target.value } : prev))}
-                      required
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Fecha</label>
-                  <input
-                    type="date"
-                    value={editDraft.fecha}
-                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, fecha: e.target.value } : prev))}
-                    required
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  />
-                </div>
-
-                <div className={isPromoPlan ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-2 gap-3'}>
-                  {!isPromoPlan && (
-                    <div>
-                      <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Caché (€)</label>
-                      <input
-                        type="number"
-                        value={editDraft.cache}
-                        onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, cache: Number(e.target.value) } : prev))}
-                        className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Aforo Máximo</label>
-                    <input
-                      type="number"
-                      value={editDraft.aforo_total}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, aforo_total: Number(e.target.value) } : prev))}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Dirección de la Sala</label>
-                    <input
-                      type="text"
-                      value={editDraft.direccion || ''}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, direccion: e.target.value } : prev))}
-                      placeholder="ej. C/ San Vicente 34"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Entradas Vendidas</label>
-                    <input
-                      type="number"
-                      value={editDraft.aforo_vendido || 0}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, aforo_vendido: Number(e.target.value) } : prev))}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
-                      <Ticket className="w-3 h-3 text-[var(--ok)]" />
-                      Enlace para Comprar Entradas
-                    </label>
-                    <input
-                      type="url"
-                      value={editDraft.entradasUrl || ''}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, entradasUrl: e.target.value } : prev))}
-                      placeholder="https://taquilla.com/tu-concierto"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Punto de Venta Físico</label>
-                    <input
-                      type="text"
-                      value={editDraft.entradasLugarFisico || ''}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, entradasLugarFisico: e.target.value } : prev))}
-                      placeholder="ej. Potential Hardcore, Vallecas"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Tipo de Evento</label>
-                    <select
-                      value={editDraft.tipo}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, tipo: e.target.value as any } : prev))}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="propio">Concierto Propio</option>
-                      <option value="festival">Festival / Macroevento</option>
-                      <option value="privado">Evento Privado / Boda</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado de Pago</label>
-                    <select
-                      value={editDraft.estado_pago}
-                      onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    >
-                      <option value="pendiente">Pendiente</option>
-                      <option value="anticipo">Anticipo / Parcial</option>
-                      <option value="pagado">Cobrado 100%</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Idioma del formulario"Únete" (QR de fans)</label>
-                  <select
-                    value={editDraft.idioma || ''}
-                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, idioma: e.target.value } : prev))}
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  >
-                    <option value="">Español (por defecto)</option>
-                    {FAN_FORM_LANGUAGES.filter((l) => l.code !== 'es').map((l) => (
-                      <option key={l.code} value={l.code}>
-                        {l.flag} {l.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-2 py-1">
-                  <input
-                    type="checkbox"
-                    id="editContrato"
-                    checked={editDraft.contrato_firmado}
-                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, contrato_firmado: e.target.checked } : prev))}
-                    className="rounded text-[var(--acc)] focus:ring-0 w-4 h-4 cursor-pointer"
-                  />
-                  <label htmlFor="editContrato" className="text-[10px] font-sans cursor-pointer select-none">
-                    Contrato firmado y verificado
-                  </label>
-                </div>
-
-                <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-s)] bg-[var(--tentative)]/10">
-                  <input
-                    type="checkbox"
-                    id="editIsPosibleCheck"
-                    checked={Boolean(editDraft.is_posible ?? (editDraft as any).isPosible)}
-                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, is_posible: e.target.checked } : prev))}
-                    className="rounded text-[var(--tentative)] focus:ring-0 w-4 h-4 cursor-pointer"
-                  />
-                  <label
-                    htmlFor="editIsPosibleCheck"
-                    className="text-[10px] font-sans cursor-pointer select-none font-bold text-[var(--tentative)]/80 flex items-center gap-1"
-                  >
-                    🎯 Concierto Posible / En negociación (Bolo Tentativo)
-                  </label>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-[var(--acc)]">
-                      <Disc3 className="w-3 h-3" />
-                      <span>Repertorio / Setlist Asignado</span>
-                    </span>
-                    {editDraft.setlistId && (
-                      <span className="text-[9px] font-sans text-[var(--ok)]">
-                        {availableSetlists.find((s: any) => s.id === editDraft.setlistId)?.items?.length || 0} temas
-                      </span>
-                    )}
-                  </label>
-                  <select
-                    value={editDraft.setlistId || ''}
-                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, setlistId: e.target.value || undefined } : prev))}
-                    className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  >
-                    <option value="">-- Sin repertorio asignado --</option>
-                    {availableSetlists.map((s: any) => (
-                      <option key={s.id} value={s.id}>
-                        {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
-                        {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Cláusulas Técnicas</label>
-                  <textarea
-                    value={editDraft.notas}
-                    onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
-                    rows={2}
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  />
-                </div>
-
-                <div className="pt-2 flex justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setViewingConcert(null)}
-                    className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold'}`}
-                  >
-                    Guardar Cambios
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </ModalPortal>
-      )}
+      <CalendarEditConcertModal
+        viewingConcert={viewingConcert}
+        setViewingConcert={setViewingConcert}
+        editDraft={editDraft}
+        setEditDraft={setEditDraft}
+        isStitchLight={isStitchLight}
+        onUpdateConcert={onUpdateConcert}
+        onDeleteConcert={onDeleteConcert}
+        setSyncSuccessMessage={setSyncSuccessMessage}
+        availableSetlists={availableSetlists}
+      />
 
       {/* EDIT REHEARSAL MODAL (Ficha del Ensayo) */}
-      {viewingRehearsal && editRehearsalDraft && (
-        <ModalPortal isOpen={true} onClose={() => setViewingRehearsal(null)}>
-          <div className="fixed inset-0 bg-[var(--scrim)]/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-            <div
-              className={`w-full max-w-md rounded-[var(--r-l)] p-6 relative my-auto max-h-[90vh] overflow-y-auto ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-            >
-              <button
-                onClick={() => setViewingRehearsal(null)}
-                className="absolute top-4 right-4 p-1 rounded-full text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-              >
-                ✕
-              </button>
-              <div className="flex items-center gap-2 mb-4">
-                <span
-                  className={`p-2 rounded-[var(--r-s)] ${
-                    editRehearsalDraft.tipo_evento === 'reunion'
-                      ? 'bg-[var(--tentative)]/15 text-[var(--tentative)]'
-                      : 'bg-[var(--surface)]/15 text-[var(--ok)]'
-                  }`}
-                >
-                  {editRehearsalDraft.tipo_evento === 'reunion' ? <Handshake className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
-                </span>
-                <div>
-                  <h3 className="font-bold text-base font-display">
-                    {editRehearsalDraft.tipo_evento === 'reunion' ? 'Ficha de la Reunión' : 'Ficha del Ensayo'}
-                  </h3>
-                  <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                    {editRehearsalDraft.lugar} · {editRehearsalDraft.fecha}
-                  </p>
-                </div>
-              </div>
-
-              <form onSubmit={handleSaveRehearsalEdit} className="space-y-3.5">
-                {editRehearsalDraft.tipo_evento === 'reunion' && (
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold">Asunto / Objetivo</label>
-                    <input
-                      type="text"
-                      value={editRehearsalDraft.asunto || ''}
-                      onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, asunto: e.target.value } : prev))}
-                      placeholder="ej. Coordinación de gira y reparto de tareas"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                )}
-
-                {editRehearsalDraft.tipo_evento === 'reunion' && (
-                  <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
-                      <Video className="w-3 h-3 text-[var(--tentative)]" />
-                      <span>Enlace a Videollamada</span>
-                    </label>
-                    <input
-                      type="url"
-                      value={editRehearsalDraft.enlace_reunion || ''}
-                      onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, enlace_reunion: e.target.value } : prev))}
-                      placeholder="https://meet.google.com/xxx o Zoom"
-                      className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Horario</label>
-                  <input
-                    type="text"
-                    value={editRehearsalDraft.hora}
-                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, hora: e.target.value } : prev))}
-                    placeholder="ej. 18:00 - 21:00"
-                    required
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Lugar / Local de Ensayo</label>
-                  <input
-                    type="text"
-                    value={editRehearsalDraft.lugar}
-                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, lugar: e.target.value } : prev))}
-                    placeholder="ej. Rock Palace, Local 4"
-                    required
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Estado del Ensayo</label>
-                  <select
-                    value={editRehearsalDraft.estado || 'programado'}
-                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  >
-                    <option value="programado">Programado</option>
-                    <option value="completado">Completado</option>
-                    <option value="cancelado">Cancelado</option>
-                  </select>
-                </div>
-
-                {/* Convocatoria selector */}
-                <div className="space-y-2 pt-3">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center gap-1">
-                    <Users className="w-3 h-3 text-[var(--ink-2)]" />
-                    <span>Tipo de Convocatoria</span>
-                  </label>
-                  <select
-                    value={editRehearsalDraft.convocatoria_tipo || 'completa'}
-                    onChange={(e) => {
-                      const val = e.target.value as 'completa' | 'parcial';
-                      setEditRehearsalDraft((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              convocatoria_tipo: val,
-                              convocados_ids: val === 'completa' ? effectiveBandMembers.map((m) => m.id) : prev.convocados_ids || [],
-                            }
-                          : prev
-                      );
-                    }}
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  >
-                    <option value="completa">Banda Completa (Todos convocados)</option>
-                    <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
-                  </select>
-
-                  {editRehearsalDraft.convocatoria_tipo === 'parcial' && (
-                    <div className={`p-2.5 rounded-[var(--r-m)] space-y-2 text-[10px] ${'bg-[var(--bg)] text-[var(--ink)]'}`}>
-                      <span className="font-sans font-bold block text-[var(--ink-2)]">Selecciona miembros convocados:</span>
-                      <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                        {effectiveBandMembers.map((member) => {
-                          const currentIds = editRehearsalDraft.convocados_ids || [];
-                          const isChecked = currentIds.includes(member.id);
-                          return (
-                            <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-sans">
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setEditRehearsalDraft((prev) =>
-                                      prev
-                                        ? {
-                                            ...prev,
-                                            convocados_ids: [...(prev.convocados_ids || []), member.id],
-                                          }
-                                        : prev
-                                    );
-                                  } else {
-                                    setEditRehearsalDraft((prev) =>
-                                      prev
-                                        ? {
-                                            ...prev,
-                                            convocados_ids: (prev.convocados_ids || []).filter((id) => id !== member.id),
-                                          }
-                                        : prev
-                                    );
-                                  }
-                                }}
-                                className="rounded text-[var(--acc)] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
-                              />
-                              <span>
-                                {member.name} {member.role === 'leader' ? '(Líder)' : ''}
-                              </span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1 font-bold flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-[var(--ok)]">
-                      <Music className="w-3 h-3" />
-                      <span>Repertorio / Setlist a Ensayar</span>
-                    </span>
-                    {editRehearsalDraft.setlistId && (
-                      <span className="text-[9px] font-sans text-[var(--ok)]">
-                        {availableSetlists.find((s: any) => s.id === editRehearsalDraft.setlistId)?.items?.length || 0} temas
-                      </span>
-                    )}
-                  </label>
-                  <select
-                    value={editRehearsalDraft.setlistId || ''}
-                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, setlistId: e.target.value || undefined } : prev))}
-                    className={`w-full px-2 py-1.5 text-[10px] rounded-[var(--r-s)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  >
-                    <option value="">-- Sin repertorio asignado --</option>
-                    {availableSetlists.map((s: any) => (
-                      <option key={s.id} value={s.id}>
-                        {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', '')})` : ''} •{' '}
-                        {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">Notas / Objetivo del Ensayo</label>
-                  <textarea
-                    value={editRehearsalDraft.notas}
-                    onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, notas: e.target.value } : prev))}
-                    rows={3}
-                    placeholder="ej. Repasar repertorio del concierto del fin de semana."
-                    className={`w-full px-2 py-1 text-[10px] rounded-[var(--r-s)] outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  />
-                </div>
-
-                <div className="pt-2 flex justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setViewingRehearsal(null)}
-                    className="px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className={`px-3 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-all cursor-pointer ${'bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--acc-ink)] font-bold/20'}`}
-                  >
-                    Guardar Cambios
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </ModalPortal>
-      )}
-
-      {/* Modal de Sincronización Automática con Google Calendar / Apple iCal */}
-      {showSyncModal && (
-        <ModalPortal>
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
-            <div className={`relative w-full max-w-xl rounded-[var(--r-l)] p-6 ${'bg-[var(--surface)] text-[var(--ink)]'}`}>
-              <div className="flex items-start justify-between gap-4 mb-4 pb-310">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]">
-                    <Radio className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold font-display tracking-wider text-[var(--acc)]">
-                      Sincronización Automática en Tiempo Real
-                    </h3>
-                    <p className="text-xs text-[var(--ink-2)]">
-                      Conciertos y ensayos siempre actualizados en tu móvil sin descargar archivos cada vez
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowSyncModal(false)}
-                  className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="space-y-4 text-xs">
-                <div className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)] text-[var(--ink)]'}`}>
-                  <p className="font-semibold mb-1 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                    ¿Cómo funciona la sincronización automática?
-                  </p>
-                  <p className="text-[11px] opacity-90 leading-relaxed">
-                    Al suscribirte mediante la URL en vivo (feed webcal), tu app de calendario (Google Calendar, Apple Calendar en
-                    iPhone/Mac o Outlook) consultará automáticamente a BandManager. Cuando crees o actualices un bolo o ensayo en
-                    BandManager, aparecerá en tu calendario personal sin que tengas que volver a descargar nada.
-                  </p>
-                </div>
-
-                {isMultiBandUser && (
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]10 space-y-2">
-                    <label className="block text-[11px] font-sans tracking-wider text-[var(--acc)] font-bold">
-                      ¿Qué bandas quieres incluir en tu agenda?
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setSyncScope('all')}
-                        className={`px-3 py-2 rounded-[var(--r-s)] text-left transition-all cursor-pointer ${
-                          syncScope === 'all'
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <div className="flex items-center gap-1.5 text-xs font-bold mb-0.5">
-                          <Users className="w-3.5 h-3.5 text-[var(--acc)]" />
-                          <span>Todas mis Bandas</span>
-                        </div>
-                        <p className="text-[10px] opacity-75 leading-tight">{effectiveBandsList.map((b) => b.bandName).join('+')}</p>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setSyncScope('active')}
-                        className={`px-3 py-2 rounded-[var(--r-s)] text-left transition-all cursor-pointer ${
-                          syncScope === 'active'
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <div className="flex items-center gap-1.5 text-xs font-bold mb-0.5">
-                          <Music className="w-3.5 h-3.5 text-[var(--acc)]" />
-                          <span>Solo {activeBandName}</span>
-                        </div>
-                        <p className="text-[10px] opacity-75 leading-tight">Únicamente eventos de {activeBandName}</p>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-[11px] font-sans tracking-wider text-[var(--ink-2)] mb-1.5 font-bold">
-                    URL de Suscripción en Tiempo Real:
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      readOnly
-                      value={errorFeed || urlFeedAbsoluta || 'Generando enlace...'}
-                      className={`flex-1 px-3 py-2 text-xs font-sans rounded-[var(--r-s)] outline-none select-all ${'bg-[var(--surface)] text-[var(--acc)]/70'}`}
-                    />
-                    <button
-                      onClick={() => {
-                        if (!urlFeedAbsoluta) return;
-                        navigator.clipboard.writeText(urlFeedAbsoluta);
-                        setCopiedFeed(true);
-                        setTimeout(() => setCopiedFeed(false), 2500);
-                      }}
-                      className={`px-3 py-2 rounded-[var(--r-s)] font-sans font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
-                        copiedFeed ? 'bg-[var(--ok)]/80 text-[var(--ink)]' : 'bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)]'
-                      }`}
-                    >
-                      {copiedFeed ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      <span>{copiedFeed ? '¡Copiado!' : 'Copiar URL'}</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  <a
-                    href={`https://calendar.google.com/calendar/r/settings/addbyurl?cid=${encodeURIComponent(urlFeedAbsoluta)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 p-2.5 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--tentative)]/50 text-[var(--ink)] font-bold transition-all active:scale-95"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>Añadir a Google Calendar</span>
-                  </a>
-
-                  <a
-                    href={rutaFeed ? `webcal://${window.location.host}${rutaFeed}` : undefined}
-                    className="flex items-center justify-center gap-2 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold transition-all active:scale-95"
-                  >
-                    <Radio className="w-4 h-4 text-[var(--ok)]" />
-                    <span>Suscribir en iPhone / Mac</span>
-                  </a>
-                </div>
-
-                <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)]/605 space-y-1.5 text-[11px] text-[var(--ink)]">
-                  <p className="font-bold text-[var(--ink-2)]">Pasos en Google Calendar (1 minuto):</p>
-                  <ol className="list-decimal list-inside space-y-1 text-[var(--ink-2)]">
-                    <li>
-                      Haz clic en el botón azul <strong>"Añadir a Google Calendar"</strong> de arriba.
-                    </li>
-                    <li>
-                      Si lo añades manualmente: ve a <em>"Otros calendarios" (+)</em> ➔ <strong>"Desde URL"</strong> en Google Calendar.
-                    </li>
-                    <li>Pega la URL de suscripción y confirma.</li>
-                    <li>¡Listo! Google Calendar sincronizará los cambios automáticamente.</li>
-                  </ol>
-                </div>
-              </div>
-
-              <div className="mt-5 pt-310 flex items-center justify-between">
-                <a
-                  href={rutaFeed || undefined}
-                  download={`calendar-${activeBandId || 'band'}.ics`}
-                  className="text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--acc)]/70 underline flex items-center gap-1"
-                >
-                  <Download className="w-3 h-3" />
-                  <span>O si prefieres, descargar archivo .ics puntual</span>
-                </a>
-                <button
-                  onClick={() => setShowSyncModal(false)}
-                  className="px-4 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
-        </ModalPortal>
-      )}
-
-      {/* Modal de Enviar Recordatorio / Notificación de Calendario */}
-      {showReminderModal && (
-        <ModalPortal>
-          <div className="fixed inset-0 bg-[var(--scrim)]/80 z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div className={`max-w-md w-full rounded-[var(--r-l)] p-5 relative ${'bg-[var(--surface)] text-[var(--ink)]'}`}>
-              <div className="flex items-center justify-between pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-[var(--r-m)] bg-[var(--ink-3)]/10 text-[var(--ink-2)]">
-                    <Bell className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm">Enviar Recordatorio a la Banda</h3>
-                    <p className="text-[10px] text-[var(--ink-2)] font-sans truncate max-w-[200px]">
-                      {selectedConcert
-                        ? `Concierto: ${selectedConcert.sala}`
-                        : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento'}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowReminderModal(false)}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink)] text-sm font-bold cursor-pointer p-1"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="py-4 space-y-4 text-xs">
-                {reminderSuccessMsg && (
-                  <div className="p-3 bg-[var(--ok)]/10 text-[var(--ok)] rounded-[var(--r-m)] font-sans text-[11px]">
-                    {reminderSuccessMsg}
-                  </div>
-                )}
-
-                {reminderErrorMsg && (
-                  <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] font-sans text-[11px]">
-                    {reminderErrorMsg}
-                  </div>
-                )}
-
-                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--bg)]'}`}>
-                  <div className="font-sans text-[10px] text-[var(--ink-2)] font-bold mb-1 tracking-wider">Detalles del Evento</div>
-                  <p className="font-semibold">
-                    {selectedConcert
-                      ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})`
-                      : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Ensayo/Reunión'}
-                  </p>
-                  <p className="text-[11px] text-[var(--ink-2)] font-sans mt-0.5">
-                    📅 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
-                    {selectedRehearsal?.hora ? ` a las ${selectedRehearsal.hora}` : ''}
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)] mb-1">
-                    Destinatarios ({effectiveBandMembers.length} miembros)
-                  </label>
-                  <div className="flex flex-wrap gap-1 font-sans text-[10px]">
-                    {effectiveBandMembers.map((m: any, idx: number) => (
-                      <span key={idx} className="px-2 py-0.5 rounded-md bg-[var(--ink-3)]/10 text-[var(--ink-3)]">
-                        👤 {m.name} {m.email ? `(${m.email})` : ''}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-sans tracking-wider text-[var(--ink-2)] mb-1">
-                    Nota adicional / Indicaciones (Opcional)
-                  </label>
-                  <textarea
-                    value={reminderNotes}
-                    onChange={(e) => setReminderNotes(e.target.value)}
-                    placeholder="Ej: Traer la lista de repertorio revisada o llegar 15 min antes para probar sonido..."
-                    rows={3}
-                    className={`w-full p-2 text-xs rounded-[var(--r-m)] outline-none font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                  />
-                </div>
-
-                <div className="space-y-2 pt-1 /60">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="chk-send-push"
-                      checked={reminderSendPush}
-                      onChange={(e) => setReminderSendPush(e.target.checked)}
-                      className="rounded cursor-pointer accent-sky-500"
-                    />
-                    <label
-                      htmlFor="chk-send-push"
-                      className="text-[11px] text-[var(--ink-3)] cursor-pointer font-sans font-medium flex items-center gap-1"
-                    >
-                      📱 Notificación Push en móvil / navegador (PWA)
-                    </label>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="chk-send-email"
-                      checked={reminderSendEmail}
-                      onChange={(e) => setReminderSendEmail(e.target.checked)}
-                      className="rounded cursor-pointer accent-sky-500"
-                    />
-                    <label
-                      htmlFor="chk-send-email"
-                      className="text-[11px] text-[var(--ink)] cursor-pointer font-sans flex items-center gap-1"
-                    >
-                      📧 Enviar correo electrónico a la banda
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-3 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowReminderModal(false)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] text-xs text-[var(--ink)] hover:bg-[var(--surface)]/80 font-sans cursor-pointer"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  disabled={reminderSending}
-                  onClick={handleSendEventReminder}
-                  className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-xs font-bold text-[var(--ink)] font-sans flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all"
-                >
-                  {reminderSending ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Enviando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-3.5 h-3.5" />
-                      <span>Enviar Recordatorio</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        </ModalPortal>
-      )}
-
-      {/* Ficha Modal Emergente y Centrada del Evento, con navegación cronológica < / > entre
- todos los conciertos y ensayos de la banda activa. */}
-      {showEventFichaModal &&
-        (() => {
-          const modalEvent = selectedConcert || selectedRehearsal;
-          const isConcert = !!selectedConcert;
-          const modalBandInfo = getBandIdentity(modalEvent?.band_id, (modalEvent as any)?.bandName || (modalEvent as any)?.band_name);
-          const modalPosLabel =
-            allChronologicalEvents.length > 0
-              ? `${activeChronoIndex >= 0 ? activeChronoIndex + 1 : 1} de ${allChronologicalEvents.length}`
-              : '';
-          const eventCity =
-            selectedConcert?.ciudad ||
-            (selectedRehearsal?.lugar?.includes(',') ? selectedRehearsal.lugar.split(',').pop()?.trim() : '') ||
-            (selectedRehearsal && !selectedRehearsal.lugar?.toLowerCase().includes('online') ? selectedRehearsal.lugar : '') ||
-            '';
-          const eventDateStr = modalEvent ? modalEvent.fecha.split('T')[0] : '';
-          const eventTimeStr = selectedConcert ? '21:30' : selectedRehearsal?.hora || '20:00';
-          const isConfirmingDelete = deletingEventConfirmId === modalEvent?.id;
-          const modalRoadbookKey = eventDateStr || selectedDateKey;
-          const modalRoadbook = getCurrentRoadbook(modalRoadbookKey, selectedConcert);
-          return (
-            <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
-              <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-[var(--scrim)]/70 animate-in fade-in duration-200">
-                <div
-                  onTouchStart={handleModalTouchStart}
-                  onTouchMove={handleModalTouchMove}
-                  onTouchEnd={handleModalTouchEnd}
-                  className={`relative w-full max-w-3xl rounded-[var(--r-l)] max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                >
-                  {/* Barra superior del modal: navegación cronológica entre eventos */}
-                  <div
-                    className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 ${'bg-[var(--surface)]/95'}`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => goToAdjacentEvent(-1)}
-                      disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
-                      className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                      title="Evento anterior (←)"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                      <span className="hidden sm:inline">Anterior</span>
-                    </button>
-
-                    <div className="flex flex-col items-center min-w-0">
-                      <span className="text-[9px] font-sans tracking-widest text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
-                      {modalPosLabel && <span className={`text-[10px] font-sans font-bold ${'text-[var(--ink-2)]'}`}>{modalPosLabel}</span>}
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => goToAdjacentEvent(1)}
-                        disabled={
-                          allChronologicalEvents.length === 0 ||
-                          activeChronoIndex < 0 ||
-                          activeChronoIndex >= allChronologicalEvents.length - 1
-                        }
-                        className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                        title="Evento siguiente (→)"
-                      >
-                        <span className="hidden sm:inline">Siguiente</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowEventFichaModal(false)}
-                        className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80 transition-colors cursor-pointer"
-                        title="Cerrar (Esc)"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="p-5 sm:p-7 space-y-4">
-                    {/* Cabecera: Logo HD + identidad de banda + título + barra de acciones */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 /20">
-                      <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                        {modalBandInfo.logoUrl ? (
-                          <img
-                            src={modalBandInfo.logoUrl}
-                            alt={modalBandInfo.name}
-                            className="w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] object-contain bg-[var(--sunken)] p-1 shrink-0"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display = 'none';
-                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
-                              if (fb) (fb as HTMLElement).classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span
-                          className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
-                        >
-                          {modalBandInfo.initials}
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 inline-flex items-center gap-1">
-                            🎸 {modalBandInfo.name}
-                          </span>
-                          <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>
-                            {selectedEventTitle}
-                          </h3>
-                          <p className={`text-[11px] font-sans mt-0.5 ${textSub}`}>
-                            {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
-                          </p>
-                          {modalWeatherAlerts.length > 0 && (
-                            <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                              {modalWeatherAlerts.map((alert) => (
-                                <CalendarWeatherBadge key={alert.id} alert={alert} />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Barra de Acciones del Evento (Editar, WhatsApp, Notificar, Copiar, Eliminar) */}
-                      {modalEvent && (
-                        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setShowEventFichaModal(false);
-                              if (selectedConcert) setViewingConcert(selectedConcert);
-                              if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
-                            }}
-                            className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)] /40 text-[var(--acc)]/70 hover:bg-[var(--surface)]/80 flex items-center gap-1"
-                            title="Editar todos los campos de este evento"
-                          >
-                            ✎ Editar
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
-                            className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--ok-soft)]/40 text-[var(--ink-2)] hover:bg-[var(--ok-soft)] flex items-center gap-1"
-                            title="Compartir convocatoria por WhatsApp"
-                          >
-                            <Share2 className="w-3.5 h-3.5" />
-                            <span className="hidden xs:inline">WhatsApp</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
-                            className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--surface)]/40 text-[var(--ink-3)] hover:bg-[var(--surface)]/70 flex items-center gap-1"
-                            title="Enviar recordatorio / notificación push a los músicos"
-                          >
-                            <Bell className="w-3.5 h-3.5" />
-                            <span className="hidden xs:inline">Notificar</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
-                            className={`px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer flex items-center gap-1 ${
-                              copiedEventModalId === modalEvent.id
-                                ? 'bg-[var(--ok)] text-[var(--ink)]'
-                                : 'bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface)]/80'
-                            }`}
-                            title="Copiar texto de convocatoria al portapapeles"
-                          >
-                            {copiedEventModalId === modalEvent.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span className="hidden xs:inline">{copiedEventModalId === modalEvent.id ? 'Copiado' : 'Copiar'}</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setDeletingEventConfirmId(modalEvent.id)}
-                            className="px-2.5 py-1.5 text-[11px] font-sans font-bold rounded-[var(--r-s)] transition-colors cursor-pointer bg-[var(--alert-soft)]/40 text-[var(--ink-2)] hover:bg-[var(--alert-soft)] flex items-center gap-1"
-                            title="Eliminar este evento del calendario"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            <span className="hidden xs:inline">Eliminar</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Panel de Confirmación de Eliminación In-Modal */}
-                    {isConfirmingDelete && modalEvent && (
-                      <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--alert-soft)] text-[var(--alert)]-soft flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0" />
-                          <div>
-                            <p className="text-xs font-sans font-bold text-[var(--ink)]">
-                              ¿Confirmas que deseas eliminar este {isConcert ? 'concierto' : 'ensayo'}?
-                            </p>
-                            <p className="text-[10px] text-[var(--ink-2)]/80 font-sans">
-                              Esta acción es definitiva y retirará el evento del calendario y agenda de la banda.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => setDeletingEventConfirmId(null)}
-                            className="px-3 py-1.5 text-xs font-sans rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink)] transition-colors cursor-pointer"
-                          >
-                            Cancelar
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
-                            className="px-3.5 py-1.5 text-xs font-sans font-bold rounded-[var(--r-s)] bg-[var(--alert)]/80 hover:bg-[var(--alert)]/60 text-[var(--ink)] transition-colors cursor-pointer"
-                          >
-                            Sí, Eliminar Definitivamente
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Previsión Meteorológica Open-Meteo para el Evento */}
-                    {eventCity && eventDateStr && (
-                      <EventWeatherCard
-                        city={eventCity}
-                        dateStr={eventDateStr}
-                        timeStr={eventTimeStr}
-                        onAlertsDetected={(alerts) => setModalWeatherAlerts(alerts)}
-                      />
-                    )}
-
-                    {/* Pestañas de Navegación de la Ficha */}
-                    <div className={`flex items-center gap-1.5 pb-2.5 overflow-x-auto ${''}`}>
-                      <button
-                        type="button"
-                        onClick={() => setModalActiveTab('resumen')}
-                        className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                          modalActiveTab === 'resumen'
-                            ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <span>📋 Resumen & Info</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setModalActiveTab('tecnica')}
-                        className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                          modalActiveTab === 'tecnica'
-                            ? 'bg-[var(--acc)] text-[var(--ink)]'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <Wrench className="w-3.5 h-3.5" />
-                        <span>1. Logística Técnica</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setModalActiveTab('contactos')}
-                        className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                          modalActiveTab === 'contactos'
-                            ? 'bg-[var(--ok)] text-[var(--ink)]'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <Phone className="w-3.5 h-3.5" />
-                        <span>2. Contactos Clave</span>
-                        {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
-                          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
-                            {modalRoadbook.contactosClave.length}
-                          </span>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setModalActiveTab('merchan')}
-                        className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                          modalActiveTab === 'merchan'
-                            ? 'bg-[var(--acc)] text-[var(--on-acc)]'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <Shirt className="w-3.5 h-3.5" />
-                        <span>3. Control Merchandising</span>
-                        {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
-                          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[var(--sunken)] font-sans">
-                            {modalRoadbook.merchControl.items.length}
-                          </span>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setModalActiveTab('cierre')}
-                        className={`px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                          modalActiveTab === 'cierre'
-                            ? 'bg-[var(--tentative)] text-[var(--ink)]'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
-                        }`}
-                      >
-                        <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>5. Cierre Material</span>
-                        {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
-                          <span
-                            className={`px-1.5 py-0.2 rounded-full text-[10px] font-sans ${
-                              modalRoadbook.cierreMaterial.every((i) => i.checked)
-                                ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
-                                : 'bg-[var(--sunken)]'
-                            }`}
-                          >
-                            {modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/{modalRoadbook.cierreMaterial.length}
-                          </span>
-                        )}
-                      </button>
-                    </div>
-
-                    {/* TAB 1: RESUMEN GENERAL & DETALLES */}
-                    {modalActiveTab === 'resumen' && (
-                      <div className="space-y-4">
-                        <div className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--bg)]'}`}>
-                          <div className="flex items-center gap-2 text-[11px]">
-                            <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
-                            <span className={`font-sans ${textSub}`}>Hora:</span>
-                            <span className={`font-bold font-sans ${'text-[var(--acc)]'}`}>{selectedEventDetails.time}</span>
-                          </div>
-                          <div className="flex items-start gap-2 text-[11px]">
-                            <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
-                            <div className="flex-1 min-w-0">
-                              <span className={`font-sans ${textSub}`}>Lugar:</span>
-                              <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
-                              {selectedEventDetails.direccion && (
-                                <p className={`text-[11px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
-                                  <span className="font-semibold font-sans">Dirección:</span> {selectedEventDetails.direccion}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          {selectedEventDetails.locationQuery && selectedEventDetails.type !== 'free' && (
-                            <div className="pt-2 flex justify-center">
-                              <DirectionsCard
-                                query={selectedEventDetails.locationQuery}
-                                locationName={selectedEventDetails.lugar}
-                                address={selectedEventDetails.direccion}
-                              />
-                            </div>
-                          )}
-                          {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-                            <div className="flex items-center gap-2 text-[11px] pt-2">
-                              <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                              <span className={`font-sans ${textSub}`}>Compensación:</span>
-                              <span className="text-[var(--ok)] font-bold font-sans">{selectedEventDetails.fee}</span>
-                            </div>
-                          )}
-                          {selectedEventDetails.type === 'concert' &&
-                            (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
-                              <div className="flex flex-col gap-1.5 pt-2">
-                                {selectedEventDetails.entradasUrl && (
-                                  <a
-                                    href={selectedEventDetails.entradasUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-[11px] font-sans font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]/80 transition-colors w-fit"
-                                  >
-                                    <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
-                                  </a>
-                                )}
-                                {selectedEventDetails.entradasLugarFisico && (
-                                  <div className="flex items-center gap-2 text-[11px]">
-                                    <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                                    <span className={`font-sans ${textSub}`}>También en:</span>
-                                    <span className="font-semibold font-sans">{selectedEventDetails.entradasLugarFisico}</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          {selectedConcert?.giraNombre && (
-                            <div className="flex items-center gap-2 text-[11px] pt-2">
-                              <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                              <span className={`font-sans ${textSub}`}>Gira:</span>
-                              <span className="font-bold font-sans text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
-                            </div>
-                          )}
-                          {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
-                            <div className="flex items-center gap-2 text-[11px] pt-2">
-                              <Users className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
-                              <span className={`font-sans ${textSub}`}>Convocatoria:</span>
-                              <span className="font-bold font-sans text-[var(--ink-2)]">
-                                {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
-                                  ? 'Banda Completa'
-                                  : `Parcial (${(() => {
-                                      const raw: any = selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres;
-                                      if (Array.isArray(raw)) return raw.join(',') || 'Seleccionados';
-                                      if (typeof raw === 'string' && raw.trim()) return raw.trim();
-                                      return 'Seleccionados';
-                                    })()})`}
-                              </span>
-                            </div>
-                          )}
-                          {selectedEventDetails.notes && (
-                            <div className={`text-[11px] font-sans italic pt-2 /40 leading-relaxed ${'text-[var(--ink-2)]'}`}>
-                              &ldquo;{selectedEventDetails.notes}&rdquo;
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Accesos rápidos a los 3 módulos clave en el resumen */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-                          <div
-                            onClick={() => setModalActiveTab('tecnica')}
-                            className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:border-[var(--acc)]/60 ${'bg-[var(--surface)]/30'}`}
-                          >
-                            <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-sans font-bold text-xs mb-1">
-                              <Wrench className="w-3.5 h-3.5" />
-                              <span>1. Logística Técnica</span>
-                            </div>
-                            <p className={`text-[11px] font-sans ${textSub}`}>
-                              {modalRoadbook.horaPruebaSonido
-                                ? `Prueba: ${modalRoadbook.horaPruebaSonido}`
-                                : 'Configurar rider, P.A. y horarios'}
-                            </p>
-                            <span className="text-[10px] text-[var(--ink-2)] font-sans font-semibold underline mt-1 inline-block">
-                              Abrir sección técnica →
-                            </span>
-                          </div>
-
-                          <div
-                            onClick={() => setModalActiveTab('contactos')}
-                            className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:border-[var(--ok)]/60 ${'bg-[var(--ok-soft)]/30'}`}
-                          >
-                            <div className="flex items-center gap-1.5 text-[var(--ok)] font-sans font-bold text-xs mb-1">
-                              <Phone className="w-3.5 h-3.5" />
-                              <span>2. Contactos Clave</span>
-                            </div>
-                            <p className={`text-[11px] font-sans ${textSub}`}>
-                              {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0
-                                ? `${modalRoadbook.contactosClave.length} contactos (WhatsApp directo)`
-                                : 'Añadir contactos de sala y técnicos'}
-                            </p>
-                            <span className="text-[10px] text-[var(--ok)] font-sans font-semibold underline mt-1 inline-block">
-                              Ver directorio →
-                            </span>
-                          </div>
-
-                          <div
-                            onClick={() => setModalActiveTab('merchan')}
-                            className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:/60 ${'bg-[var(--acc-soft)] /30'}`}
-                          >
-                            <div className="flex items-center gap-1.5 text-[var(--acc)] font-sans font-bold text-xs mb-1">
-                              <Shirt className="w-3.5 h-3.5" />
-                              <span>3. Control Merchandising</span>
-                            </div>
-                            <p className={`text-[11px] font-sans ${textSub}`}>
-                              {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0
-                                ? `${modalRoadbook.merchControl.items.length} productos | ${(modalRoadbook.merchControl.ingresosEfectivo || 0) + (modalRoadbook.merchControl.ingresosBizum || 0)}€ arqueo`
-                                : 'Stock furgón vs final, Bizum y efectivo'}
-                            </p>
-                            <span className="text-[10px] text-[var(--acc)] font-sans font-semibold underline mt-1 inline-block">
-                              Abrir control de ventas →
-                            </span>
-                          </div>
-
-                          <div
-                            onClick={() => setModalActiveTab('cierre')}
-                            className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:border-[var(--acc)]/60 ${'bg-[var(--tentative)]/10/30'}`}
-                          >
-                            <div className="flex items-center gap-1.5 text-[var(--tentative)] font-sans font-bold text-xs mb-1">
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                              <span>5. Cierre Material</span>
-                            </div>
-                            <p className={`text-[11px] font-sans ${textSub}`}>
-                              {modalRoadbook.cierreMaterial
-                                ? `${modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/${modalRoadbook.cierreMaterial.length} verificados`
-                                : 'Checklist de carga de furgoneta'}
-                            </p>
-                            <span className="text-[10px] text-[var(--tentative)] font-sans font-semibold underline mt-1 inline-block">
-                              Hacer checklist →
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TAB 2: 1. LOGÍSTICA TÉCNICA */}
-                    {modalActiveTab === 'tecnica' && (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between pb-1/20">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--ink)]">
-                              Sección 1
-                            </span>
-                            <h3 className={`text-sm font-sans font-bold ${textTitle}`}>Logística Técnica, Horarios & Rider</h3>
-                          </div>
-                          <span className="text-[10px] font-sans text-[var(--ink-2)]">Guardado automático local</span>
-                        </div>
-
-                        {/* Horarios de Producción */}
-                        <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}>
-                          <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" />
-                            <span>Cronograma de Producción del Día</span>
-                          </h4>
-                          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
-                              <input
-                                type="text"
-                                value={modalRoadbook.horaLlegada || '17:00'}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    horaLlegada: e.target.value,
-                                  })
-                                }
-                                placeholder="17:00"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
-                              <input
-                                type="text"
-                                value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    horaPruebaSonido: e.target.value,
-                                  })
-                                }
-                                placeholder="18:00 - 19:30"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
-                              <input
-                                type="text"
-                                value={modalRoadbook.horaAperturaPuertas || '20:30'}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    horaAperturaPuertas: e.target.value,
-                                  })
-                                }
-                                placeholder="20:30"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
-                              <input
-                                type="text"
-                                value={modalRoadbook.horaShow || '21:30'}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    horaShow: e.target.value,
-                                  })
-                                }
-                                placeholder="21:30"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold ${'bg-[var(--acc-soft)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Toque de Queda</label>
-                              <input
-                                type="text"
-                                value={modalRoadbook.horaCierreToque || '01:00'}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    horaCierreToque: e.target.value,
-                                  })
-                                }
-                                placeholder="01:00"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Sonido P.A. & Monitores */}
-                        <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}>
-                          <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                            <Wrench className="w-3.5 h-3.5" />
-                            <span>Sistema de Sonido (P.A. & Monitoreo)</span>
-                          </h4>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
-                                Especificaciones P.A. de Sala
-                              </label>
-                              <textarea
-                                rows={2}
-                                value={modalRoadbook.paEspecificaciones || ''}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    paEspecificaciones: e.target.value,
-                                  })
-                                }
-                                placeholder="Ej: Line Array L-Acoustics / D&B, subwoofers estéreo, presión homogénea"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Monitoreo (In-Ears / Cuñas)</label>
-                              <textarea
-                                rows={2}
-                                value={modalRoadbook.monitoresTipo || ''}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    monitoresTipo: e.target.value,
-                                  })
-                                }
-                                placeholder="Ej: In-Ears estéreo de la banda (traemos transmisores) + 2 cuñas de refuerzo"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Canales de Envíos Auxiliares</label>
-                            <input
-                              type="text"
-                              value={modalRoadbook.canalesMonitores || ''}
-                              onChange={(e) =>
-                                updateRoadbookField(modalRoadbookKey, {
-                                  canalesMonitores: e.target.value,
-                                })
-                              }
-                              placeholder="Ej: 4 envíos auxiliares XLR independientes a rack de IEMs"
-                              className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Backline y Electricidad */}
-                        <div className={`p-4 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--surface)]'}`}>
-                          <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                            <Truck className="w-3.5 h-3.5" />
-                            <span>Backline Aportado vs Traído & Toma Eléctrica</span>
-                          </h4>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>Backline (Sala vs Banda)</label>
-                              <textarea
-                                rows={3}
-                                value={modalRoadbook.backlineInfo || ''}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    backlineInfo: e.target.value,
-                                  })
-                                }
-                                placeholder="Sala aporta: Batería básica. Banda trae: Platos, pedal, guitarras, amplificadores y teclado."
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div>
-                              <label className={`block text-[10px] font-sans font-bold mb-1 ${textSub}`}>
-                                Potencia y Tomas Eléctricas en Escenario
-                              </label>
-                              <textarea
-                                rows={3}
-                                value={modalRoadbook.potenciaElectrica || ''}
-                                onChange={(e) =>
-                                  updateRoadbookField(modalRoadbookKey, {
-                                    potenciaElectrica: e.target.value,
-                                  })
-                                }
-                                placeholder="Ej: 2 líneas independientes Schuko 220V 16A limpias (frontal y trasera)"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Input List / Rider de Canales */}
-                        <div className={`p-4 rounded-[var(--r-m)] space-y-2.5 ${'bg-[var(--surface)]'}`}>
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                              <span>🎛️</span>
-                              <span>Input List / Lista de Canales de Microfonía</span>
-                            </h4>
-                            <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                              {(modalRoadbook.inputList || '').split('\n').filter(Boolean).length} canales especificados
-                            </span>
-                          </div>
-                          <textarea
-                            rows={6}
-                            value={modalRoadbook.inputList || ''}
-                            onChange={(e) =>
-                              updateRoadbookField(modalRoadbookKey, {
-                                inputList: e.target.value,
-                              })
-                            }
-                            placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)..."
-                            className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-sans leading-relaxed ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                          />
-                        </div>
-
-                        {/* Notas de Producción y Carga */}
-                        <div className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
-                          <label className={`block text-[10px] font-sans font-bold ${textSub}`}>
-                            Notas de Acceso, Muelle de Carga & Observaciones
-                          </label>
-                          <textarea
-                            rows={2}
-                            value={modalRoadbook.notasTecnicas || ''}
-                            onChange={(e) =>
-                              updateRoadbookField(modalRoadbookKey, {
-                                notasTecnicas: e.target.value,
-                              })
-                            }
-                            placeholder="Ej: Acceso por puerta trasera calle peatonal. Se requiere autorización de matrícula para la furgoneta."
-                            className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TAB 3: 2. CONTACTOS CLAVE */}
-                    {modalActiveTab === 'contactos' && (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between pb-1/20 flex-wrap gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--ok)] text-[var(--ink)]">
-                              Sección 2
-                            </span>
-                            <h3 className={`text-sm font-sans font-bold ${textTitle}`}>Directorio de Contactos Clave de Producción</h3>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setShowAddContactForm(!showAddContactForm)}
-                            className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
-                          >
-                            <span>+</span> Añadir Contacto
-                          </button>
-                        </div>
-
-                        {/* Formulario de Nuevo Contacto */}
-                        {showAddContactForm && (
-                          <form
-                            onSubmit={(e) => handleAddKeyContact(modalRoadbookKey, e)}
-                            className={`p-4 rounded-[var(--r-m)] space-y-3 animate-in fade-in ${'bg-[var(--ok-soft)]/40'}`}
-                          >
-                            <h4 className="text-xs font-sans font-bold text-[var(--ok)]">Nuevo Contacto Clave</h4>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                              <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Nombre y Apellidos *</label>
-                                <input
-                                  type="text"
-                                  required
-                                  value={newContactNombre}
-                                  onChange={(e) => setNewContactNombre(e.target.value)}
-                                  placeholder="Ej: Manuel Producción"
-                                  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Rol / Cargo</label>
-                                <select
-                                  value={newContactRol}
-                                  onChange={(e) => setNewContactRol(e.target.value)}
-                                  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                >
-                                  <option value="Promotor / Sala">Promotor / Sala</option>
-                                  <option value="Técnico de Sonido (P.A.)">Técnico de Sonido (P.A.)</option>
-                                  <option value="Técnico de Monitores">Técnico de Monitores</option>
-                                  <option value="Técnico de Iluminación">Técnico de Iluminación</option>
-                                  <option value="Producción / Camerinos">Producción / Camerinos</option>
-                                  <option value="Hotel / Alojamiento">Hotel / Alojamiento</option>
-                                  <option value="Seguridad / Acceso">Seguridad / Acceso</option>
-                                  <option value="Road Manager">Road Manager</option>
-                                </select>
-                              </div>
-                              <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">
-                                  Teléfono (WhatsApp) *
-                                </label>
-                                <input
-                                  type="tel"
-                                  required
-                                  value={newContactTelefono}
-                                  onChange={(e) => setNewContactTelefono(e.target.value)}
-                                  placeholder="+34 600 000 000"
-                                  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Email</label>
-                                <input
-                                  type="email"
-                                  value={newContactEmail}
-                                  onChange={(e) => setNewContactEmail(e.target.value)}
-                                  placeholder="produccion@sala.com"
-                                  className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                />
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-[10px] font-sans font-bold text-[var(--ink)] mb-1">Notas u observaciones</label>
-                              <input
-                                type="text"
-                                value={newContactNotas}
-                                onChange={(e) => setNewContactNotas(e.target.value)}
-                                placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
-                                className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                              />
-                            </div>
-                            <div className="flex justify-end gap-2 pt-1">
-                              <button
-                                type="button"
-                                onClick={() => setShowAddContactForm(false)}
-                                className="px-3 py-1.5 text-xs font-sans rounded-[var(--r-s)] hover:bg-[var(--surface)]/80 text-[var(--ink)] transition-colors"
-                              >
-                                Cancelar
-                              </button>
-                              <button
-                                type="submit"
-                                className="px-4 py-1.5 text-xs font-sans font-bold rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)]/80 text-[var(--ink)] transition-colors"
-                              >
-                                Guardar Contacto
-                              </button>
-                            </div>
-                          </form>
-                        )}
-
-                        {/* Lista de Contactos */}
-                        <div className="space-y-2.5">
-                          {(modalRoadbook.contactosClave || []).length === 0 ? (
-                            <div className="text-center py-6 text-[var(--ink-2)] font-sans text-xs">
-                              No hay contactos clave registrados para este concierto.
-                              <p className="text-[10px] mt-1 text-[var(--ok)]">
-                                Pulsa en &ldquo;+ Añadir Contacto&rdquo; para registrar promotor, técnico de sonido o producción.
-                              </p>
-                            </div>
-                          ) : (
-                            (modalRoadbook.contactosClave || []).map((contact) => (
-                              <div
-                                key={contact.id}
-                                className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${'bg-[var(--surface)] hover:border-[var(--ok)]/40'}`}
-                              >
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                                    <span className="text-xs font-sans font-bold text-[var(--ink)]">{contact.nombre}</span>
-                                    <span className="px-2 py-0.5 rounded-md text-[9px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)]">
-                                      {contact.rol}
-                                    </span>
-                                  </div>
-                                  <p className="text-xs font-sans text-[var(--ink)]">
-                                    📞 {contact.telefono}
-                                    {contact.email && <span className="ml-2 text-[var(--ink-2)]">✉️ {contact.email}</span>}
-                                  </p>
-                                  {contact.notas && (
-                                    <p className="text-[11px] font-sans text-[var(--ink-2)] mt-1 italic">&ldquo;{contact.notas}&rdquo;</p>
-                                  )}
-                                </div>
-
-                                {/* Botones de acción rápida: WhatsApp directo, llamada, eliminar */}
-                                <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
-                                  <button
-                                    type="button"
-                                    onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
-                                    className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
-                                    title="Abrir WhatsApp directo con mensaje predefinido"
-                                  >
-                                    <MessageSquare className="w-3.5 h-3.5" />
-                                    <span>WhatsApp</span>
-                                  </button>
-                                  <a
-                                    href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
-                                    className="px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold text-[var(--ink-2)] hover:bg-[var(--ok)]/10 flex items-center gap-1 transition-colors"
-                                    title="Llamar directamente por teléfono"
-                                  >
-                                    <Phone className="w-3.5 h-3.5" />
-                                    <span className="hidden sm:inline">Llamar</span>
-                                  </a>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteKeyContact(contact.id, modalRoadbookKey)}
-                                    className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert-soft)] transition-colors cursor-pointer"
-                                    title="Eliminar este contacto"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
-                              </div>
-                            ))
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TAB 3: 3. CONTROL DE MERCHANDISING POR BOLO */}
-                    {modalActiveTab === 'merchan' &&
-                      (() => {
-                        const merch = modalRoadbook.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
-                        const items = merch.items || [];
-                        const totalInicial = items.reduce((acc, i) => acc + (i.stockInicial || 0), 0);
-                        const totalFinal = items.reduce((acc, i) => acc + (i.stockFinal || 0), 0);
-                        const totalVendidas = Math.max(0, totalInicial - totalFinal);
-                        const totalVentaTeorica = items.reduce(
-                          (acc, i) => acc + Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) * (i.precioUnitario || 0),
-                          0
-                        );
-                        const totalCobradoReal = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
-                        const diferenciaCuadre = totalCobradoReal - totalVentaTeorica;
-                        const porcentajeVendido = totalInicial > 0 ? Math.round((totalVendidas / totalInicial) * 100) : 0;
-
-                        const categoriaIcons: Record<
-                          string,
-                          {
-                            icon: React.ReactNode;
-                            label: string;
-                            color: string;
-                          }
-                        > = {
-                          camisetas: {
-                            icon: <Shirt className="w-3.5 h-3.5" />,
-                            label: 'Camisetas',
-                            color: 'text-[var(--acc)] bg-[var(--acc)]/15 /30',
-                          },
-                          vinilos: {
-                            icon: <Disc3 className="w-3.5 h-3.5" />,
-                            label: 'Vinilos',
-                            color: 'text-[var(--ink-2)] bg-[var(--acc)]/15/30',
-                          },
-                          musica: {
-                            icon: <Music className="w-3.5 h-3.5" />,
-                            label: 'Música (CD/Tape)',
-                            color: 'text-[var(--tentative)] bg-[var(--tentative)]/15/30',
-                          },
-                          accesorios: {
-                            icon: <Tag className="w-3.5 h-3.5" />,
-                            label: 'Accesorios & Púas',
-                            color: 'text-[var(--ok)] bg-[var(--ok)]/15/30',
-                          },
-                          otro: {
-                            icon: <ShoppingBag className="w-3.5 h-3.5" />,
-                            label: 'Otro',
-                            color: 'text-[var(--alert)] bg-[var(--alert)]/15/30',
-                          },
-                        };
-
-                        return (
-                          <div className="space-y-4">
-                            {/* Cabecera de la Sección de Merchan */}
-                            <div className="flex items-center justify-between pb-1 /20 flex-wrap gap-2">
-                              <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--acc)] text-[var(--on-acc)]">
-                                  Sección 3
-                                </span>
-                                <div>
-                                  <h3 className={`text-sm font-sans font-bold ${textTitle}`}>Control de Merchandising por Bolo</h3>
-                                  <p className={`text-[11px] font-sans ${textSub}`}>
-                                    Inventario que sube a la furgoneta vs. stock final de noche, arqueo de Efectivo y Bizum
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
-                                  className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
-                                  title="Copiar arqueo y balance para WhatsApp"
-                                >
-                                  {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
-                                  <span>{merchCopiedToast ? '¡Copiado! ' : 'Copiar Arqueo (WhatsApp)'}</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => setShowAddMerchForm(!showAddMerchForm)}
-                                  className="px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1 cursor-pointer"
-                                >
-                                  <Plus className="w-3.5 h-3.5" />
-                                  <span>{showAddMerchForm ? 'Cerrar' : '+ Añadir Producto'}</span>
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* Toast de copiado */}
-                            {merchCopiedToast && (
-                              <motion.div
-                                initial={{ opacity: 0, y: -6 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="p-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-xs font-sans flex items-center gap-2"
-                              >
-                                <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
-                                <span>
-                                  ¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!
-                                </span>
-                              </motion.div>
-                            )}
-
-                            {/* KPI Grid: Cuadre y Métricas Principales */}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Truck className="w-3 h-3 text-[var(--ink-2)]" /> Sube a Furgón
-                                </span>
-                                <div className="mt-1 flex items-baseline gap-1">
-                                  <span className={`text-lg font-bold font-sans ${textTitle}`}>{totalInicial}</span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">uds</span>
-                                </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Inventario de salida</p>
-                              </div>
-
-                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock Final
-                                </span>
-                                <div className="mt-1 flex items-baseline gap-1">
-                                  <span className={`text-lg font-bold font-sans ${textTitle}`}>{totalFinal}</span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">uds</span>
-                                </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Quedan en furgoneta</p>
-                              </div>
-
-                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Zap className="w-3 h-3 text-[var(--ok)]" /> Vendidas
-                                </span>
-                                <div className="mt-1 flex items-baseline gap-1">
-                                  <span className="text-lg font-bold font-sans text-[var(--ok)]">{totalVendidas}</span>
-                                  <span className="text-[10px] text-[var(--ok)]/70 font-sans font-bold">({porcentajeVendido}%)</span>
-                                </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Salidas del bolo</p>
-                              </div>
-
-                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Calculator className="w-3 h-3 text-[var(--tentative)]" /> Venta Teórica
-                                </span>
-                                <div className="mt-1 flex items-baseline gap-1">
-                                  <span className="text-lg font-bold font-sans text-[var(--tentative)]">
-                                    {totalVentaTeorica.toFixed(2)}
-                                  </span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">€</span>
-                                </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Según inventario</p>
-                              </div>
-
-                              <div className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado Real
-                                </span>
-                                <div className="mt-1 flex items-baseline gap-1">
-                                  <span className="text-lg font-bold font-sans text-[var(--ok)]">{totalCobradoReal.toFixed(2)}</span>
-                                  <span className="text-[10px] text-[var(--ink-2)] font-sans">€</span>
-                                </div>
-                                <p className="text-[9px] text-[var(--ink-2)] font-sans">Efectivo + Bizum</p>
-                              </div>
-
-                              <div
-                                className={`p-2.5 rounded-[var(--r-m)] ${
-                                  diferenciaCuadre === 0
-                                    ? 'bg-[var(--ok-soft)]/40'
-                                    : diferenciaCuadre > 0
-                                      ? 'bg-[var(--surface)]/80/40'
-                                      : 'bg-[var(--alert-soft)]/40'
-                                }`}
-                              >
-                                <span className="text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                  <ShieldCheck className="w-3 h-3" /> Cuadre Caja
-                                </span>
-                                <div className="mt-1 flex items-baseline gap-1">
-                                  <span
-                                    className={`text-base font-bold font-sans ${
-                                      diferenciaCuadre === 0
-                                        ? 'text-[var(--ok)]'
-                                        : diferenciaCuadre > 0
-                                          ? 'text-[var(--ink-2)]'
-                                          : 'text-[var(--alert)]'
-                                    }`}
-                                  >
-                                    {diferenciaCuadre === 0
-                                      ? '0.00'
-                                      : diferenciaCuadre > 0
-                                        ? `+${diferenciaCuadre.toFixed(2)}`
-                                        : diferenciaCuadre.toFixed(2)}
-                                  </span>
-                                  <span className="text-[10px] font-sans text-[var(--ink-2)]">€</span>
-                                </div>
-                                <p
-                                  className={`text-[9px] font-sans font-bold ${
-                                    diferenciaCuadre === 0
-                                      ? 'text-[var(--ok)]'
-                                      : diferenciaCuadre > 0
-                                        ? 'text-[var(--ink-2)]'
-                                        : 'text-[var(--alert)]'
-                                  }`}
-                                >
-                                  {diferenciaCuadre === 0
-                                    ? '✓ Caja exacta'
-                                    : diferenciaCuadre > 0
-                                      ? 'Superávit / Propinas'
-                                      : 'Descuadre faltante'}
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* Formulario Añadir Producto */}
-                            <AnimatePresence>
-                              {showAddMerchForm && (
-                                <motion.form
-                                  initial={{ opacity: 0, height: 0 }}
-                                  animate={{ opacity: 1, height: 'auto' }}
-                                  exit={{ opacity: 0, height: 0 }}
-                                  onSubmit={(e) => handleAddMerchItem(modalRoadbookKey, e)}
-                                  className={`p-3.5 rounded-[var(--r-m)] space-y-3 ${'bg-[var(--acc-soft)] /30'}`}
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                                      <Plus className="w-3.5 h-3.5" /> Nuevo Artículo de Merchandising para este Concierto
-                                    </span>
-                                    <button
-                                      type="button"
-                                      onClick={() => setShowAddMerchForm(false)}
-                                      className="text-[var(--ink-2)] hover:text-[var(--ink-2)] text-xs font-sans cursor-pointer"
-                                    >
-                                      ✕ Cancelar
-                                    </button>
-                                  </div>
-
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-sans">
-                                    <div className="md:col-span-2">
-                                      <label className={`block text-[10px] mb-1 ${textSub}`}>Nombre del Producto *</label>
-                                      <input
-                                        type="text"
-                                        required
-                                        placeholder="Ej: Camiseta Gira Oficial, Vinilo LP..."
-                                        value={newMerchNombre}
-                                        onChange={(e) => setNewMerchNombre(e.target.value)}
-                                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] outline-none text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                      />
-                                    </div>
-
-                                    <div>
-                                      <label className={`block text-[10px] mb-1 ${textSub}`}>Categoría</label>
-                                      <select
-                                        value={newMerchCategoria}
-                                        onChange={(e) => setNewMerchCategoria(e.target.value as any)}
-                                        className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                      >
-                                        <option value="camisetas">👕 Camisetas</option>
-                                        <option value="vinilos">💿 Vinilos</option>
-                                        <option value="musica">🎵 Música (CD/Tape)</option>
-                                        <option value="accesorios">🎸 Púas / Accesorios</option>
-                                        <option value="otro">🏷️ Otro</option>
-                                      </select>
-                                    </div>
-
-                                    <div>
-                                      <label className={`block text-[10px] mb-1 ${textSub}`}>Talla / Versión</label>
-                                      <input
-                                        type="text"
-                                        placeholder="Ej: M, L, XL, 12'', Pack..."
-                                        value={newMerchTalla}
-                                        onChange={(e) => setNewMerchTalla(e.target.value)}
-                                        className={`w-full px-2.5 py-1.5 rounded-[var(--r-s)] outline-none text-xs ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                      />
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-1.5">
-                                      <div>
-                                        <label className={`block text-[10px] mb-1 ${textSub}`}>Precio (€)</label>
-                                        <input
-                                          type="number"
-                                          step="0.5"
-                                          min="0"
-                                          value={newMerchPrecio}
-                                          onChange={(e) => setNewMerchPrecio(e.target.value)}
-                                          className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                        />
-                                      </div>
-                                      <div>
-                                        <label className={`block text-[10px] mb-1 ${textSub}`}>Furgón (uds)</label>
-                                        <input
-                                          type="number"
-                                          min="0"
-                                          value={newMerchStockInicial}
-                                          onChange={(e) => setNewMerchStockInicial(e.target.value)}
-                                          className={`w-full px-2 py-1.5 rounded-[var(--r-s)] outline-none text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex justify-end pt-1">
-                                    <button
-                                      type="submit"
-                                      className="px-4 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)]/60 transition-colors flex items-center gap-1.5 cursor-pointer"
-                                    >
-                                      <Check className="w-3.5 h-3.5" />
-                                      <span>Guardar Producto en el Bolo</span>
-                                    </button>
-                                  </div>
-                                </motion.form>
-                              )}
-                            </AnimatePresence>
-
-                            {/* Tabla de Artículos: Sube a Furgoneta vs Stock Final Noche */}
-                            <div className={`rounded-[var(--r-m)] overflow-hidden ${'bg-[var(--surface)]'}`}>
-                              <div className="p-3 /80 flex items-center justify-between flex-wrap gap-2">
-                                <span className="text-xs font-sans font-bold tracking-wider text-[var(--acc)] flex items-center gap-1.5">
-                                  <Shirt className="w-4 h-4" /> Inventario de Merchandising ({items.length} productos)
-                                </span>
-                                <span className={`text-[11px] font-sans ${textSub}`}>
-                                  Ajusta las unidades al subir a la furgoneta y al terminar el bolo
-                                </span>
-                              </div>
-
-                              {items.length === 0 ? (
-                                <div className="p-8 text-center space-y-2">
-                                  <Shirt className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
-                                  <p className={`text-xs font-sans ${textSub}`}>Aún no has registrado productos para este bolo.</p>
-                                  <button
-                                    type="button"
-                                    onClick={() => setShowAddMerchForm(true)}
-                                    className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
-                                  >
-                                    <Plus className="w-3.5 h-3.5" />
-                                    <span>Añadir primer producto</span>
-                                  </button>
-                                </div>
-                              ) : (
-                                <div className="divide-y divide-[var(--hair)]800/60">
-                                  {items.map((item) => {
-                                    const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
-                                    const subtotal = vendidas * (item.precioUnitario || 0);
-                                    const catConfig = categoriaIcons[item.categoria] || categoriaIcons.otro;
-                                    const pctVendido = item.stockInicial > 0 ? Math.round((vendidas / item.stockInicial) * 100) : 0;
-
-                                    return (
-                                      <div
-                                        key={item.id}
-                                        className={`p-3 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 ${'hover:bg-[var(--bg)]'}`}
-                                      >
-                                        {/* Datos del producto */}
-                                        <div className="flex items-center gap-2.5 min-w-[220px]">
-                                          <div className={`p-2 rounded-[var(--r-s)] shrink-0 ${catConfig.color}`}>{catConfig.icon}</div>
-                                          <div className="min-w-0">
-                                            <div className="flex items-center gap-1.5 flex-wrap">
-                                              <h4 className={`text-xs font-bold font-sans ${textTitle}`}>{item.nombre}</h4>
-                                              {item.talla && (
-                                                <span className="px-1.5 py-0.2 rounded text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink)]">
-                                                  {item.talla}
-                                                </span>
-                                              )}
-                                            </div>
-                                            <div className="flex items-center gap-2 mt-0.5 text-[10px] font-sans text-[var(--ink-2)]">
-                                              <span>
-                                                Precio: <strong className="text-[var(--acc)]">{item.precioUnitario}€</strong>
-                                              </span>
-                                              <span>•</span>
-                                              <span>{catConfig.label}</span>
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        {/* Controles de Stock Inicial (Sube a Furgoneta) y Stock Final */}
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 items-center flex-1 max-w-lg">
-                                          {/* Sube a Furgoneta */}
-                                          <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
-                                            <span className="block text-[9px] font-sans text-[var(--ink-2)] mb-1 flex items-center gap-1">
-                                              <Truck className="w-2.5 h-2.5 text-[var(--ink-2)]" /> Sube Furgón
-                                            </span>
-                                            <div className="flex items-center gap-1">
-                                              <button
-                                                type="button"
-                                                onClick={() =>
-                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
-                                                    stockInicial: Math.max(0, (item.stockInicial || 0) - 1),
-                                                  })
-                                                }
-                                                className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
-                                              >
-                                                -
-                                              </button>
-                                              <input
-                                                type="number"
-                                                min="0"
-                                                value={item.stockInicial}
-                                                onChange={(e) =>
-                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
-                                                    stockInicial: Math.max(0, parseInt(e.target.value, 10) || 0),
-                                                  })
-                                                }
-                                                className={`w-12 text-center text-xs font-sans font-bold py-0.5 rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                              />
-                                              <button
-                                                type="button"
-                                                onClick={() =>
-                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
-                                                    stockInicial: (item.stockInicial || 0) + 1,
-                                                  })
-                                                }
-                                                className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
-                                              >
-                                                +
-                                              </button>
-                                            </div>
-                                          </div>
-
-                                          {/* Stock Final (Fin de Noche) */}
-                                          <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--surface)]'}`}>
-                                            <div className="flex items-center justify-between mb-1">
-                                              <span className="text-[9px] font-sans text-[var(--ink-2)] flex items-center gap-1">
-                                                <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" /> Stock Final
-                                              </span>
-                                              <button
-                                                type="button"
-                                                onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
-                                                className="text-[8px] font-sans px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
-                                                title="Marcar como agotado tras el concierto"
-                                              >
-                                                Agotado (0)
-                                              </button>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                              <button
-                                                type="button"
-                                                onClick={() =>
-                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
-                                                    stockFinal: Math.max(0, (item.stockFinal || 0) - 1),
-                                                  })
-                                                }
-                                                className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
-                                              >
-                                                -
-                                              </button>
-                                              <input
-                                                type="number"
-                                                min="0"
-                                                value={item.stockFinal}
-                                                onChange={(e) =>
-                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
-                                                    stockFinal: Math.max(0, parseInt(e.target.value, 10) || 0),
-                                                  })
-                                                }
-                                                className={`w-12 text-center text-xs font-sans font-bold py-0.5 rounded outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                              />
-                                              <button
-                                                type="button"
-                                                onClick={() =>
-                                                  handleUpdateMerchItem(modalRoadbookKey, item.id, {
-                                                    stockFinal: (item.stockFinal || 0) + 1,
-                                                  })
-                                                }
-                                                className="w-5 h-5 rounded bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs flex items-center justify-center font-sans cursor-pointer shrink-0"
-                                              >
-                                                +
-                                              </button>
-                                            </div>
-                                          </div>
-
-                                          {/* Resumen Ventas del Artículo */}
-                                          <div className="col-span-2 sm:col-span-1 flex flex-col items-end justify-center pr-2">
-                                            <div className="text-right">
-                                              <span className="text-xs font-sans font-black text-[var(--acc)]">{vendidas} vendidas</span>
-                                              <span className="block text-xs font-sans font-bold text-[var(--ok)]">
-                                                {subtotal.toFixed(2)} €
-                                              </span>
-                                            </div>
-                                            <div className="w-20 bg-[var(--surface)]/80 rounded-full h-1 mt-1 overflow-hidden">
-                                              <div
-                                                className="h-full bg-[var(--acc)]/60 transition-all duration-300"
-                                                style={{
-                                                  width: `${Math.min(100, pctVendido)}%`,
-                                                }}
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        {/* Acciones */}
-                                        <div className="flex items-center justify-end">
-                                          <button
-                                            type="button"
-                                            onClick={() => handleDeleteMerchItem(modalRoadbookKey, item.id)}
-                                            className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert-soft)] transition-colors cursor-pointer"
-                                            title="Eliminar este artículo del bolo"
-                                          >
-                                            <Trash2 className="w-4 h-4" />
-                                          </button>
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Módulo de Arqueo de Caja y Cobros (Efectivo & Bizum) */}
-                            <div className={`p-4 rounded-[var(--r-m)] space-y-4 ${'bg-[var(--bg)]'}`}>
-                              <div className="flex items-center justify-between pb-2">
-                                <span className="text-xs font-sans font-bold tracking-wider text-[var(--ok)] flex items-center gap-1.5">
-                                  <Coins className="w-4 h-4" /> Arqueo de Caja y Métodos de Cobro
-                                </span>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                                  Introduce los importes reales cobrados durante la noche
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                {/* Efectivo Recaudado */}
-                                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/30'}`}>
-                                  <div className="flex items-center gap-1.5 text-[var(--ok)] font-sans font-bold text-xs mb-1">
-                                    <Banknote className="w-4 h-4" />
-                                    <span>Efectivo en Caja (€)</span>
-                                  </div>
-                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">Billetes y monedas cobrados en el bolo</p>
-                                  <div className="flex items-center gap-1.5">
-                                    <input
-                                      type="number"
-                                      step="1"
-                                      min="0"
-                                      value={merch.ingresosEfectivo ?? 0}
-                                      onChange={(e) =>
-                                        handleUpdateMerchTotals(modalRoadbookKey, {
-                                          ingresosEfectivo: Math.max(0, parseFloat(e.target.value) || 0),
-                                        })
-                                      }
-                                      className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                    />
-                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
-                                  </div>
-                                </div>
-
-                                {/* Bizum / TPV Recaudado */}
-                                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]/30'}`}>
-                                  <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-sans font-bold text-xs mb-1">
-                                    <Smartphone className="w-4 h-4" />
-                                    <span>Bizum / TPV (€)</span>
-                                  </div>
-                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">Pagos por móvil y datáfono del bolo</p>
-                                  <div className="flex items-center gap-1.5">
-                                    <input
-                                      type="number"
-                                      step="1"
-                                      min="0"
-                                      value={merch.ingresosBizum ?? 0}
-                                      onChange={(e) =>
-                                        handleUpdateMerchTotals(modalRoadbookKey, {
-                                          ingresosBizum: Math.max(0, parseFloat(e.target.value) || 0),
-                                        })
-                                      }
-                                      className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                    />
-                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
-                                  </div>
-                                </div>
-
-                                {/* Fondo de Caja Inicial */}
-                                <div className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}>
-                                  <div className="flex items-center gap-1.5 text-[var(--acc)] font-sans font-bold text-xs mb-1">
-                                    <Coins className="w-4 h-4" />
-                                    <span>Fondo de Caja (€)</span>
-                                  </div>
-                                  <p className="text-[10px] text-[var(--ink-2)] font-sans mb-2">
-                                    Cambio que se llevó al inicio para la mesa
-                                  </p>
-                                  <div className="flex items-center gap-1.5">
-                                    <input
-                                      type="number"
-                                      step="1"
-                                      min="0"
-                                      value={merch.fondoCajaInicial ?? 0}
-                                      onChange={(e) =>
-                                        handleUpdateMerchTotals(modalRoadbookKey, {
-                                          fondoCajaInicial: Math.max(0, parseFloat(e.target.value) || 0),
-                                        })
-                                      }
-                                      className={`w-full px-3 py-1.5 rounded-[var(--r-s)] font-sans font-bold text-sm outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                    />
-                                    <span className="font-sans text-xs font-bold text-[var(--ink-2)]">€</span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Desglose de Caja Total en Mano */}
-                              <div
-                                className={`p-3 rounded-[var(--r-m)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${'bg-[var(--surface)]'}`}
-                              >
-                                <div className="space-y-0.5">
-                                  <span className="text-xs font-sans font-bold text-[var(--ink)]">
-                                    Resumen del Dinero Recaudado en el Puesto:
-                                  </span>
-                                  <p className="text-[11px] font-sans text-[var(--ink-2)]">
-                                    💵 {(merch.ingresosEfectivo || 0).toFixed(2)}€ Efectivo + 📱 {(merch.ingresosBizum || 0).toFixed(2)}€
-                                    Bizum = <strong className="text-[var(--ok)]">{totalCobradoReal.toFixed(2)}€ Total Ventas</strong>
-                                  </p>
-                                  {merch.fondoCajaInicial ? (
-                                    <p className="text-[10px] font-sans text-[var(--ink-2)]">
-                                      (Efectivo físico total a retirar del cajón incluyendo fondo de caja:{' '}
-                                      {((merch.ingresosEfectivo || 0) + (merch.fondoCajaInicial || 0)).toFixed(2)} €)
-                                    </p>
-                                  ) : null}
-                                </div>
-
-                                <div className="text-right shrink-0">
-                                  <span
-                                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold ${
-                                      diferenciaCuadre === 0
-                                        ? 'bg-[var(--ok)]/20 text-[var(--ink-2)]/40'
-                                        : diferenciaCuadre > 0
-                                          ? 'bg-[var(--ink-3)]/10 text-[var(--ink-3)]/40'
-                                          : 'bg-[var(--alert)]/20 text-[var(--ink-2)]/40'
-                                    }`}
-                                  >
-                                    {diferenciaCuadre === 0 ? (
-                                      <>
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
-                                        <span>¡Caja Cuadrada al Céntimo!</span>
-                                      </>
-                                    ) : diferenciaCuadre > 0 ? (
-                                      <>
-                                        <Sparkles className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                                        <span>+{diferenciaCuadre.toFixed(2)} € (Superávit / Donaciones)</span>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
-                                        <span>{diferenciaCuadre.toFixed(2)} € (Descuadre por revisar)</span>
-                                      </>
-                                    )}
-                                  </span>
-                                </div>
-                              </div>
-
-                              {/* Observaciones y Notas del Puesto de Merch */}
-                              <div>
-                                <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
-                                  Notas del Puesto de Merchandising / Incidencias
-                                </label>
-                                <textarea
-                                  rows={2}
-                                  placeholder="Ej: Encargado de mesa: Andrea. Las camisetas talla L se agotaron antes del bis. Mucha demanda de púas."
-                                  value={merch.notas || ''}
-                                  onChange={(e) =>
-                                    handleUpdateMerchTotals(modalRoadbookKey, {
-                                      notas: e.target.value,
-                                    })
-                                  }
-                                  className={`w-full p-2.5 rounded-[var(--r-s)] text-xs font-sans outline-none resize-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })()}
-
-                    {/* TAB 4: 5. CHECKLIST CIERRE DE MATERIAL */}
-                    {modalActiveTab === 'cierre' && (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between pb-1/20 flex-wrap gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-sans font-black tracking-wider bg-[var(--tentative)] text-[var(--ink)]">
-                              Sección 5
-                            </span>
-                            <h3 className={`text-sm font-sans font-bold ${textTitle}`}>
-                              Checklist de Cierre de Material & Carga de Furgoneta
-                            </h3>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
-                              className="px-2 py-1 rounded text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
-                            >
-                              ✓ Marcar Todo
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleToggleAllCierreItems(modalRoadbookKey, false)}
-                              className="px-2 py-1 rounded text-[10px] font-sans font-bold bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70 transition-colors cursor-pointer"
-                            >
-                              ↺ Desmarcar
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Barra de Progreso y Banner de Estado */}
-                        {(() => {
-                          const items = modalRoadbook.cierreMaterial || [];
-                          const checkedCount = items.filter((i) => i.checked).length;
-                          const totalCount = items.length;
-                          const pct = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
-                          const isCompleted = totalCount > 0 && checkedCount === totalCount;
-
-                          return (
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between text-xs font-sans font-bold">
-                                <span className="text-[var(--tentative)]/80">
-                                  {checkedCount} de {totalCount} elementos verificados
-                                </span>
-                                <span className={isCompleted ? 'text-[var(--ok)]' : 'text-[var(--acc)]'}>{pct}%</span>
-                              </div>
-                              <div className="w-full h-2.5 rounded-full bg-[var(--surface)]/80 overflow-hidden">
-                                <div
-                                  className={`h-full transition-all duration-300 ${
-                                    isCompleted ? 'bg-[var(--ok)]' : pct > 50 ? 'bg-[var(--tentative)]' : 'bg-[var(--acc)]'
-                                  }`}
-                                  style={{ width: `${pct}%` }}
-                                />
-                              </div>
-
-                              {isCompleted ? (
-                                <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] text-xs font-sans flex items-center gap-2">
-                                  <CheckSquare className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                                  <span>
-                                    ¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.
-                                  </span>
-                                </div>
-                              ) : (
-                                <div className="p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-xs font-sans flex items-center gap-2">
-                                  <ShieldCheck className="w-4 h-4 text-[var(--tentative)] shrink-0" />
-                                  <span>
-                                    Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o
-                                    ropa.
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })()}
-
-                        {/* Listado clasificado por categoría */}
-                        {['escenario', 'camerino', 'furgoneta'].map((catKey) => {
-                          const catLabel =
-                            catKey === 'escenario'
-                              ? '🎸 Escenario (Backline & Sonido)'
-                              : catKey === 'camerino'
-                                ? '👕 Camerino (Ropa, Móviles & Merch)'
-                                : '🚐 Furgoneta & Vehículo (Estiba & Cierre)';
-                          const catItems = (modalRoadbook.cierreMaterial || []).filter((i) => i.categoria === catKey);
-                          if (catItems.length === 0) return null;
-
-                          return (
-                            <div key={catKey} className={`p-3.5 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-sans font-bold text-[var(--tentative)]/80">{catLabel}</h4>
-                                <span className="text-[10px] font-sans text-[var(--ink-2)]">
-                                  {catItems.filter((i) => i.checked).length}/{catItems.length}
-                                </span>
-                              </div>
-                              <div className="space-y-1.5">
-                                {catItems.map((item) => (
-                                  <div
-                                    key={item.id}
-                                    onClick={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
-                                    className={`p-2.5 rounded-[var(--r-s)] transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
-                                      item.checked
-                                        ? 'bg-[var(--ok-soft)]/40 text-[var(--ink-2)] line-through'
-                                        : 'bg-[var(--sunken)] /80 text-[var(--ink-2)] hover:border-[var(--acc)]/40'
-                                    }`}
-                                  >
-                                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                                      <input
-                                        type="checkbox"
-                                        checked={item.checked}
-                                        onChange={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="w-4 h-4 rounded text-[var(--tentative)] focus:ring-[var(--tentative)] cursor-pointer"
-                                      />
-                                      <span className="text-xs font-sans font-medium">{item.item}</span>
-                                    </div>
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteCierreItem(item.id, modalRoadbookKey);
-                                      }}
-                                      className="p-1 text-[var(--ink-2)] hover:text-[var(--alert)] transition-colors cursor-pointer"
-                                      title="Eliminar este ítem"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
-
-                        {/* Formulario para añadir ítem al checklist */}
-                        <form
-                          onSubmit={(e) => handleAddCierreItem(modalRoadbookKey, e)}
-                          className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 flex-wrap ${'bg-[var(--surface)]'}`}
-                        >
-                          <select
-                            value={newCierreItemCat}
-                            onChange={(e) => setNewCierreItemCat(e.target.value as any)}
-                            className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                          >
-                            <option value="escenario">🎸 Escenario</option>
-                            <option value="camerino">👕 Camerino</option>
-                            <option value="furgoneta">🚐 Furgoneta</option>
-                          </select>
-                          <input
-                            type="text"
-                            value={newCierreItemText}
-                            onChange={(e) => setNewCierreItemText(e.target.value)}
-                            placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)..."
-                            className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans ${'bg-[var(--surface)] text-[var(--ink)]'}`}
-                          />
-                          <button
-                            type="submit"
-                            disabled={!newCierreItemText.trim()}
-                            className="px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                          >
-                            + Añadir Ítem
-                          </button>
-                        </form>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </ModalPortal>
-          );
-        })()}
-
-      {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal moduleId="calendario" isOpen={isTutorialOpen} onClose={closeTutorial} />
+      <CalendarEditRehearsalModal
+        viewingRehearsal={viewingRehearsal}
+        setViewingRehearsal={setViewingRehearsal}
+        editRehearsalDraft={editRehearsalDraft}
+        setEditRehearsalDraft={setEditRehearsalDraft}
+        isStitchLight={isStitchLight}
+        onUpdateRehearsal={onUpdateRehearsal}
+        onDeleteRehearsal={onDeleteRehearsal}
+        setSyncSuccessMessage={setSyncSuccessMessage}
+        availableSetlists={availableSetlists}
+      />
+
+      {/* Modal de Sincronización Automática */}
+      <CalendarSyncModal
+        isOpen={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
+        isStitchLight={isStitchLight}
+        activeBandId={activeBandId}
+        host={host}
+        webCalFeed={webCalFeed}
+        rutaFeed={rutaFeed}
+      />
+
+      {/* Modal de Enviar Recordatorio */}
+      <CalendarReminderModal
+        isOpen={showReminderModal}
+        onClose={() => setShowReminderModal(false)}
+        isStitchLight={isStitchLight}
+        selectedConcert={selectedConcert}
+        selectedRehearsal={selectedRehearsal}
+        selectedDate={selectedDate}
+        monthNames={monthNames}
+        effectiveBandMembers={effectiveBandMembers}
+        reminderNotes={reminderNotes}
+        setReminderNotes={setReminderNotes}
+        reminderSendPush={reminderSendPush}
+        setReminderSendPush={setReminderSendPush}
+        reminderSendEmail={reminderSendEmail}
+        setReminderSendEmail={setReminderSendEmail}
+        reminderSending={reminderSending}
+        reminderSuccessMsg={reminderSuccessMsg}
+        reminderErrorMsg={reminderErrorMsg}
+        handleSendEventReminder={handleSendEventReminder}
+      />
+
+      {/* Ficha Modal Emergente y Centrada del Evento */}
+      <CalendarEventDetailModal
+        showEventFichaModal={showEventFichaModal}
+        setShowEventFichaModal={setShowEventFichaModal}
+        selectedConcert={selectedConcert}
+        selectedRehearsal={selectedRehearsal}
+        allChronologicalEvents={allChronologicalEvents}
+        currentEventIndex={activeChronoIndex}
+        handleNavigateChronologicalEvent={(dir) => goToAdjacentEvent(dir === 'next' ? 1 : -1)}
+        activeBandId={activeBandId}
+        currentBandId={activeBandId}
+        getBandIdentity={getBandIdentity}
+        isStitchLight={isStitchLight}
+        isPromoPlan={isPromoPlan}
+        modalActiveTab={modalActiveTab}
+        setModalActiveTab={setModalActiveTab}
+        selectedDateKey={selectedDateKey}
+        allRoadbooks={allRoadbooks}
+        getCurrentRoadbook={getCurrentRoadbook}
+        updateRoadbookField={updateRoadbookField}
+        getDefaultRoadbook={getDefaultRoadbook}
+        handleToggleCierreItem={handleToggleCierreItem}
+        handleToggleAllCierreItems={handleToggleAllCierreItems}
+        handleAddCierreItem={handleAddCierreItem}
+        handleDeleteCierreItem={handleDeleteCierreItem}
+        handleAddKeyContact={handleAddKeyContact}
+        handleDeleteKeyContact={handleDeleteKeyContact}
+        openWhatsAppContact={openWhatsAppContact}
+        handleUpdateMerchItem={handleUpdateMerchItem}
+        handleAddMerchItem={handleAddMerchItem}
+        handleDeleteMerchItem={handleDeleteMerchItem}
+        handleUpdateMerchTotals={handleUpdateMerchTotals}
+        handleCopyMerchSummary={handleCopyMerchSummary}
+        setViewingConcert={setViewingConcert}
+        setViewingRehearsal={setViewingRehearsal}
+        setShowReminderModal={setShowReminderModal}
+        handleDeleteEventFromModal={handleDeleteEventFromModal}
+        deletingEventConfirmId={deletingEventConfirmId}
+        setDeletingEventConfirmId={setDeletingEventConfirmId}
+        newContactNombre={newContactNombre}
+        setNewContactNombre={setNewContactNombre}
+        newContactRol={newContactRol}
+        setNewContactRol={setNewContactRol}
+        newContactEmail={newContactEmail}
+        setNewContactEmail={setNewContactEmail}
+        newMerchNombre={newMerchNombre}
+        setNewMerchNombre={setNewMerchNombre}
+        newMerchTalla={newMerchTalla}
+        setNewMerchTalla={setNewMerchTalla}
+        newMerchPrecio={Number(newMerchPrecio) || 0}
+        setNewMerchPrecio={(v) => setNewMerchPrecio(String(v))}
+        setlists={availableSetlists}
+        songs={availableSongs}
+        activeTutorial={null}
+        setActiveTutorial={() => {}}
+        handleOpenDirectoEscenarioFromModal={(dk) => {
+          const parts = dk.split('-');
+          if (parts.length === 3) {
+            setSelectedDate(new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)));
+          }
+        }}
+        modalWeatherAlerts={modalWeatherAlerts}
+        handleShareEventWhatsApp={handleShareEventWhatsApp}
+        handleNotifyBandMembers={handleNotifyBandMembers}
+        handleCopyEventFicha={handleCopyEventFicha}
+      />
 
       {/* Vista de Directo / Modo Escenario asociado a la fecha del calendario */}
       {activeStageSetlist && (

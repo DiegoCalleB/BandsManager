@@ -1,4 +1,5 @@
 import { Song, SongAudioIdea, Setlist, Rehearsal, Concert, Lead, EPKConfig } from '../types';
+import { openWhatsAppChat } from './whatsapp';
 
 export interface SharePayload {
   title: string;
@@ -32,15 +33,10 @@ export async function shareViaWebShare(payload: SharePayload): Promise<boolean> 
 
 /**
  * Direct WhatsApp sharing link generator
+ * Reutiliza la misma sesión y pestaña de WhatsApp Web si está abierta.
  */
 export function shareViaWhatsApp(text: string, phone?: string): void {
-  const cleanPhone = phone ? phone.replace(/[^0-9+]/g, '') : '';
-  const encodedText = encodeURIComponent(text);
-  const whatsappUrl = cleanPhone
-    ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`
-    : `https://api.whatsapp.com/send?text=${encodedText}`;
-
-  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  openWhatsAppChat(phone, text);
 }
 
 /**

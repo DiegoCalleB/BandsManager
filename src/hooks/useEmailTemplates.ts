@@ -1,117 +1,116 @@
 import { useState, useEffect } from 'react';
+import { getAuthHeaders } from '../services/api';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 export function useEmailTemplates() {
   // Template states for Salas
-  const [subjectTemplateSala, setSubjectTemplateSala] = useState('Propuesta de concierto: {bandName} (Fusión)');
-  const [bodyTemplateSala, setBodyTemplateSala] = useState(`Hola equipo de booking de {{nombre_sala}},
+  const [subjectTemplateSala, setSubjectTemplateSala] = useState('Propuesta de concierto: {bandName} ({estilo})');
+  const [bodyTemplateSala, setBodyTemplateSala] = useState(`Hola equipo de {{nombre_sala}},
 
-Somos {bandName}, banda que fusiona {estilo}. Hemos visto su programación en {{ciudad}} y creemos que nuestra propuesta encaja perfecto para su público.
+Os escribo desde {bandName} ({estilo}). Seguimos vuestra programación en {{ciudad}} y nos encantaría valorar fecha en vuestra sala para los próximos meses.
 
-Disponemos de fechas abiertas para nuestra gira 2026. Les invitamos a ver nuestros directos de alta energía: {enlace_videos}
+Traemos un directo muy cuidado y enérgico, concebido para conectar con el público y dinamizar la sala. Nos adaptamos a taquilla, co-booking o caché, y disponemos de rider técnico claro y ágil.
+
+Podéis consultar nuestro directo y dossier en el enlace adjunto: {enlace_videos}
+
+¿Cómo tenéis la agenda para los próximos meses?
 
 Un saludo,
-{bandName} Agent Manager IA`);
+Booking & Management — {bandName}`);
   const [aiGuidelinesSala, setAiGuidelinesSala] = useState(
-    'Escribe siempre en un tono enérgico, cercano pero muy respetuoso con los programadores de salas. Enfatiza que disponemos de un potente show con violín enérgico, loops en directo y percusión reciclada, y que aseguramos llenar el aforo gracias a nuestra campaña de promo local.'
+    'Escribe siempre en un tono cercano, natural y respetuoso. Enfatiza la calidad del directo y la solvencia escénica de la banda, destacando que es una propuesta idónea para dinamizar la sala y convocar a público.'
   );
 
   // Template states for Festivales
-  const [subjectTemplateFestival, setSubjectTemplateFestival] = useState('Propuesta de Cartel / Booking Festival: {bandName} (Live Show)');
-  const [bodyTemplateFestival, setBodyTemplateFestival] = useState(`Hola equipo de producción y booking de {{nombre_sala}},
+  const [subjectTemplateFestival, setSubjectTemplateFestival] = useState('Propuesta de cartel / Festival: {bandName} (Live Show)');
+  const [bodyTemplateFestival, setBodyTemplateFestival] = useState(`Hola equipo de programación de {{nombre_sala}},
 
-Escribimos de parte de {bandName} para presentar la propuesta de nuestro show directo para la próxima edición de {{nombre_sala}} en {{ciudad}}.
+Os escribo de parte de {bandName} para presentar la propuesta de nuestro directo de cara a la próxima edición de vuestro festival.
 
-Nuestra propuesta combina una fiesta explosiva con un directo de alta energía en tiempo real, ideal para escenarios principales de tarde/noche. Hemos formado parte de eventos de gran formato destacando por la conexión total con el público.
+Es un espectáculo de alta energía pensado para escenarios de festival, con montaje limpio y rotación técnica muy rápida en cambios de set.
 
-Podéis ver nuestro dossier y directo aquí: {enlace_videos}
+Podéis consultar nuestro dossier y vídeos de directo aquí: {enlace_videos}
 
-Quedamos a vuestra disposición para enviar rider técnico y caché de contratación.
+Quedamos a vuestra disposición para enviar rider técnico y propuesta económica.
 
-Un saludo atento,
-{bandName} Agent Manager IA`);
+Un saludo,
+Booking & Management — {bandName}`);
   const [aiGuidelinesFestival, setAiGuidelinesFestival] = useState(
-    'Tono muy profesional, conciso y enfocado a directores artísticos y jefes de producción de festivales. Destaca la capacidad de mantener el ritmo alto en un escenario de festival, la brevedad del cambio de línea técnico y el valor diferencial del show directo.'
+    'Tono muy profesional, conciso y enfocado a directores artísticos y jefes de producción de festivales. Destaca la capacidad de mantener el ritmo alto en escenario, la brevedad del cambio de set técnico y el valor diferencial del show.'
   );
 
   // Template states for Discotecas / Clubs
   const [subjectTemplateDiscoteca, setSubjectTemplateDiscoteca] = useState('Propuesta Live Show / Session Nocturna: {bandName} (Live Set)');
-  const [bodyTemplateDiscoteca, setBodyTemplateDiscoteca] = useState(`Hola equipo de programación de {{nombre_sala}},
+  const [bodyTemplateDiscoteca, setBodyTemplateDiscoteca] = useState(`Hola equipo de {{nombre_sala}},
 
-Os contactamos desde {bandName} para proponer una noche diferente en {{ciudad}}: un Live Performance & Clubbing Set de alta intensidad que fusiona ritmos bailables, instrumentos en directo y bases de potencia.
+Os escribo desde {bandName} para proponer un Live Set de alta intensidad pensado para la sesión de noche y clubbing.
 
-Nuestro formato está diseñado para horarios nocturnos en club/discoteca, manteniendo la pista encendida con bpm progresivos sin perder la energía orgánica de la música en vivo.
+Nuestra propuesta combina ritmos bailables y directo enérgico, manteniendo la pista activa con gran conexión con el público.
 
-Vídeo promocional y sesión en directo: {enlace_videos}
+Vídeo promocional y directo: {enlace_videos}
 
 ¿Tenéis fechas libres para incorporar un set en vivo en vuestra programación nocturna?
 
-Saludos cordiales,
-{bandName} Agent Manager IA`);
+Un saludo,
+Booking & Management — {bandName}`);
   const [aiGuidelinesDiscoteca, setAiGuidelinesDiscoteca] = useState(
-    'Tono moderno, enfocado a clubes y discotecas de noche. Resalta que no somos un grupo acústico tradicional, sino un Live Set electrónico con impulsos bailables ideales para horario de clubbing o sesiones de madrugada.'
+    'Tono moderno, enfocado a clubes y discotecas de noche. Resalta que es una propuesta enérgica y bailable ideal para horario de clubbing o sesiones de noche.'
   );
 
   // Template states for Medios de Comunicación & Prensa
-  const [subjectTemplateMedio, setSubjectTemplateMedio] = useState(
-    '[Nota de Prensa / Dossier] {bandName} presenta su nuevo videoclip y gira'
-  );
-  const [bodyTemplateMedio, setBodyTemplateMedio] = useState(`Hola equipo de redacción de {{nombre_sala}},
+  const [subjectTemplateMedio, setSubjectTemplateMedio] = useState('[Nota de Prensa / Dossier] {bandName} presenta nuevo material y gira');
+  const [bodyTemplateMedio, setBodyTemplateMedio] = useState(`Hola equipo de {{nombre_sala}},
 
-Nos ponemos en contacto desde {bandName}, proyecto independiente con propuesta enérgica y sonido propio.
+Os escribo desde {bandName} ({estilo}) para haceros llegar nuestro dossier promocional y últimos lanzamientos con motivo de nuestra gira.
 
-Les remitimos nuestro último comunicado de prensa y dossier promocional con motivo del lanzamiento de nuestro nuevo videoclip y la gira de conciertos. Nos encantaría enviarles el tema en calidad broadcast para sonar en su programa/radio, o ponernos a su disposición para entrevistas, acústicos en directo o reseñas.
+Estaríamos encantados de enviaros los temas en calidad broadcast (WAV) para vuestra programación, o ponernos a vuestra disposición para entrevistas, acústicos o reseñas.
 
 Dossier y videoclip oficial: {enlace_videos}
-Material en alta resolución (fotos, bio y audio): {{website}}
 
-Muchas gracias por su apoyo a la difusión de la música independiente,
-{bandName} Agent Manager IA`);
+Muchas gracias por apoyar la música independiente en directo,
+
+Prensa & Comunicación — {bandName}`);
   const [aiGuidelinesMedio, setAiGuidelinesMedio] = useState(
-    'Tono periodístico, profesional y directo para medios de comunicación (radio, podcasts, prensa escrita, blogs). Dirígete al redactor, locutor o equipo de redacción de prensa. Destaca la nota de prensa, la propuesta sonora y la disponibilidad para entrevistas, acústicos en estudio o reseñas.'
+    'Tono periodístico, profesional y directo para medios de comunicación. Dirígete al redactor, locutor o equipo de redacción. Destaca la nota de prensa y la disponibilidad para entrevistas, acústicos o reseñas.'
   );
 
   // Template states for Grupos & Bandas (Co-Booking)
   const [subjectTemplateGrupo, setSubjectTemplateGrupo] = useState(
-    'Propuesta de concierto compartido e intercambio de fechas: {bandName} x {{nombre_sala}}'
+    'Concierto compartido e intercambio de fechas: {bandName} x {{nombre_sala}}'
   );
-  const [bodyTemplateGrupo, setBodyTemplateGrupo] = useState(`¡Buenas chavales de {{nombre_sala}}!
+  const [bodyTemplateGrupo, setBodyTemplateGrupo] = useState(`¡Buenas, gente de {{nombre_sala}}!
 
-Os escribimos desde {bandName}. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
+Os escribimos desde {bandName}. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectarían genial en una fecha compartida.
 
-Queremos proponer un INTERCAMBIO DE FECHAS / CO-BOOKING para esta temporada:
-1. Os invitamos a tocar con nosotros en nuestra ciudad compartiendo escenario y taquilla.
-2. Vosotros nos invitáis a tocar en {{ciudad}} en vuestro espacio habitual.
-
-Así aseguramos llenar las dos salas sumando ambos públicos y compartimos gastos de viaje y backline.
+Queríamos proponeros un intercambio de fechas (date swap): os invitamos a tocar con nosotros en nuestra ciudad compartiendo sala y taquilla, y montamos la fecha de vuelta en {{ciudad}} para sumar públicos y compartir gastos.
 
 Podéis escuchar lo que hacemos aquí: {enlace_videos}
 
-¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos llamada esta semana?
+¿Cómo lo veis? ¿Hablamos por WhatsApp esta semana para cuadrarlo?
 
 ¡Un abrazo!
-{bandName} Agent Manager IA`);
+{bandName}`);
   const [aiGuidelinesGrupo, setAiGuidelinesGrupo] = useState(
-    'Tono de músico a músico: cercano, colega, directo y colaborativo. Propón claramente la estrategia de ganar-ganar (date swap), compartir público local, compartir backline y abaratar gastos de furgoneta.'
+    'Tono de músico a músico: cercano, colega, directo y colaborativo. Propón claramente la estrategia de ganar-ganar (date swap), compartir público local y abaratar gastos.'
   );
 
   // Template states for Managements & Agencias
   const [subjectTemplateManagement, setSubjectTemplateManagement] = useState('Propuesta de colaboración / Roster: {bandName} (Live Show)');
-  const [bodyTemplateManagement, setBodyTemplateManagement] = useState(`Estimado equipo de {{nombre_sala}},
+  const [bodyTemplateManagement, setBodyTemplateManagement] = useState(`Hola equipo de {{nombre_sala}},
 
-Nos dirigimos a vuestra agencia para presentar la propuesta artística de {bandName} con vista a posibles colaboraciones, coproducciones o inclusión en vuestro catálogo de booking para giras y festivales.
+Os escribo en representación de {bandName} para presentar nuestra propuesta artística con vista a posibles colaboraciones, coproducciones o inclusión en vuestro catálogo de booking.
 
-{bandName} es un proyecto consolidado de alta energía. Destacamos por una logística ágil, alta rentabilidad en venta de entradas y un directo arrollador probado en salas y festivales.
+Es un proyecto con un directo muy sólido, buena respuesta en venta de entradas y una logística de producción muy eficiente y fácil de girar.
 
-Dossier corporativo y resumen en vídeo: {enlace_videos}
+Dossier corporativo y vídeos: {enlace_videos}
 
-Estaríamos encantados de agendar una breve reunión telefónica para valorar posibles sinergias.
+Estaré encantado de hacer una breve llamada cuando os vaya bien para valorar posibles sinergias.
 
-Atentamente,
-{bandName} Agent Manager IA`);
+Un saludo,
+Booking & Management — {bandName}`);
   const [aiGuidelinesManagement, setAiGuidelinesManagement] = useState(
-    'Tono ejecutivo-musical profesional para mánagers, agencias y agentes de booking. Destaca la profesionalidad técnica, el atractivo comercial, la sencillez logística del cuarteto y los datos positivos de aforo.'
+    'Tono profesional y directo para mánagers, agencias y agentes de booking. Destaca la profesionalidad técnica, el atractivo comercial y la facilidad logística.'
   );
 
   // Template states for Ayuntamientos y Fiestas Patronales
@@ -121,18 +120,18 @@ Atentamente,
   const [bodyTemplateAyuntamiento, setBodyTemplateAyuntamiento] =
     useState(`Estimados responsables del Área de Cultura y Festejos de {{nombre_sala}},
 
-Nos dirigimos a ustedes desde la representación de {bandName} para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales de la próxima temporada.
+Nos dirigimos a ustedes desde la representación de {bandName} para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales.
 
-Ofrecemos un espectáculo de alta energía, familiar, participativo y muy bailable, ideal para plazas públicas y eventos al aire libre. Contamos con amplia solvencia técnica, facturación oficial y rigurosa puntualidad de producción.
+Ofrecemos un espectáculo participativo y de alta energía, adecuado para todos los públicos en plazas y recintos al aire libre. Disponemos de solvencia técnica, facturación oficial y rigurosa puntualidad en producción.
 
 Material promocional, dossier y rider técnico: {enlace_videos}
 
-Quedamos a su entera disposición para remitirles nuestro rider técnico y propuesta presupuestaria formal.
+Quedamos a su disposición para remitirles la propuesta presupuestaria formal.
 
-Cordialmente,
-{bandName} Agent Manager IA`);
+Atentamente,
+Oficina de Producción — {bandName}`);
   const [aiGuidelinesAyuntamiento, setAiGuidelinesAyuntamiento] = useState(
-    'Tono formal e institucional, mucho más protocolario que el de una sala de conciertos: dirígete a "ustedes"/"responsables del Área de Cultura", no tutees. Destaca la solvencia técnica, la facturación oficial (factura, no taquilla) y el carácter festivo pero intergeneracional. Nunca uses jerga informal ni emojis.'
+    'Tono formal e institucional. Dirígete a "ustedes", destaca facturación oficial y solvencia técnica.'
   );
 
   // Selected template category in Editor
@@ -140,6 +139,7 @@ Cordialmente,
   const [testPromptResult, setTestPromptResult] = useState('');
   const [isTestingPrompt, setIsTestingPrompt] = useState(false);
   const [isOptimizingTemplate, setIsOptimizingTemplate] = useState(false);
+  const [isGeneratingAllTemplates, setIsGeneratingAllTemplates] = useState(false);
   const [optimizationFeedbackMsg, setOptimizationFeedbackMsg] = useState<string | null>(null);
   const [templateCustomInstruction, setTemplateCustomInstruction] = useState('');
   const [templateToneRating, setTemplateToneRating] = useState<number>(0);
@@ -159,33 +159,117 @@ Cordialmente,
     >
   >({});
 
-  const handleOptimizeTemplate = async () => {
-    setIsOptimizingTemplate(true);
+  const applyTemplatesMap = (t: Record<string, any>) => {
+    if (!t) return;
+    if (t.salas) {
+      setSubjectTemplateSala(t.salas.subject || '');
+      setBodyTemplateSala(t.salas.body || '');
+      setAiGuidelinesSala(t.salas.guidelines || '');
+    }
+    if (t.festivales) {
+      setSubjectTemplateFestival(t.festivales.subject || '');
+      setBodyTemplateFestival(t.festivales.body || '');
+      setAiGuidelinesFestival(t.festivales.guidelines || '');
+    }
+    if (t.discotecas) {
+      setSubjectTemplateDiscoteca(t.discotecas.subject || '');
+      setBodyTemplateDiscoteca(t.discotecas.body || '');
+      setAiGuidelinesDiscoteca(t.discotecas.guidelines || '');
+    }
+    if (t.medios) {
+      setSubjectTemplateMedio(t.medios.subject || '');
+      setBodyTemplateMedio(t.medios.body || '');
+      setAiGuidelinesMedio(t.medios.guidelines || '');
+    }
+    if (t.grupos) {
+      setSubjectTemplateGrupo(t.grupos.subject || '');
+      setBodyTemplateGrupo(t.grupos.body || '');
+      setAiGuidelinesGrupo(t.grupos.guidelines || '');
+    }
+    if (t.managements) {
+      setSubjectTemplateManagement(t.managements.subject || '');
+      setBodyTemplateManagement(t.managements.body || '');
+      setAiGuidelinesManagement(t.managements.guidelines || '');
+    }
+    if (t.ayuntamientos) {
+      setSubjectTemplateAyuntamiento(t.ayuntamientos.subject || '');
+      setBodyTemplateAyuntamiento(t.ayuntamientos.body || '');
+      setAiGuidelinesAyuntamiento(t.ayuntamientos.guidelines || '');
+    }
+  };
+
+  const handleGenerateAllFromBase = async (baseProposal: string): Promise<boolean> => {
+    if (!baseProposal || !baseProposal.trim()) return false;
+    setIsGeneratingAllTemplates(true);
     setOptimizationFeedbackMsg(null);
     try {
+      const authHeaders = getAuthHeaders() as Record<string, string>;
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...authHeaders,
+        ...(token ? { 'x-auth-token': token } : {}),
+      };
+      const res = await fetch('/api/templates/generate-all', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ baseProposal }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && data.templates) {
+        applyTemplatesMap(data.templates);
+        setOptimizationFeedbackMsg(
+          `✨ ¡Éxito! Se han generado y adaptado automáticamente las 7 plantillas maestras y sus 7 pautas de IA para cada escenario.`
+        );
+        return true;
+      } else {
+        const errorMsg = data?.error || data?.message || 'No se pudieron generar todas las plantillas.';
+        setOptimizationFeedbackMsg(`⚠️ ${errorMsg}`);
+        return false;
+      }
+    } catch (err: any) {
+      console.error('Error generating all templates:', err);
+      setOptimizationFeedbackMsg(`⚠️ Error de conexión al generar las 7 plantillas.`);
+      return false;
+    } finally {
+      setIsGeneratingAllTemplates(false);
+    }
+  };
+
+  const handleOptimizeTemplate = async (overrideInstruction?: string) => {
+    setIsOptimizingTemplate(true);
+    setOptimizationFeedbackMsg(null);
+    const instructionToUse =
+      typeof overrideInstruction === 'string' && overrideInstruction.trim() !== '' ? overrideInstruction.trim() : templateCustomInstruction;
+    try {
       const activeData = getActiveTemplateData();
+      const authHeaders = getAuthHeaders() as Record<string, string>;
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...authHeaders,
+        ...(token ? { 'x-auth-token': token } : {}),
+      };
       const res = await fetch('/api/templates/optimize', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           category: templateTab,
           currentSubject: activeData.subject,
           currentBody: activeData.body,
           currentGuidelines: activeData.guidelines,
-          customInstruction: templateCustomInstruction,
+          customInstruction: instructionToUse,
           toneRating: templateToneRating,
           contentRating: templateContentRating,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok && data.success && data.optimized) {
         activeData.setSubject(data.optimized.subject);
         activeData.setBody(data.optimized.body);
         activeData.setGuidelines(data.optimized.guidelines);
 
-        setTestPromptResult(`Asunto: ${data.optimized.subject}
-
-${data.optimized.body}`);
+        setTestPromptResult(`Asunto: ${data.optimized.subject}\n\n${data.optimized.body}`);
 
         const countNote =
           data.feedbackCountUsed > 0
@@ -201,11 +285,12 @@ ${data.optimized.body}`);
         setTemplateToneRating(0);
         setTemplateContentRating(0);
       } else {
-        setOptimizationFeedbackMsg('⚠️ No se pudo re-generar la plantilla. Inténtalo de nuevo.');
+        const errorMsg = data?.error || data?.message || 'No se pudo re-generar la plantilla. Inténtalo de nuevo.';
+        setOptimizationFeedbackMsg(`⚠️ ${errorMsg}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error optimizing template:', err);
-      setOptimizationFeedbackMsg('⚠️ Error de conexión al re-generar la plantilla.');
+      setOptimizationFeedbackMsg(`⚠️ Error al re-generar la plantilla: ${err?.message || 'Error de conexión'}`);
     } finally {
       setIsOptimizingTemplate(false);
     }
@@ -492,6 +577,8 @@ ${data.optimized.body}`);
     isOptimizingTemplate,
     optimizationFeedbackMsg,
     setOptimizationFeedbackMsg,
+    isGeneratingAllTemplates,
+    handleGenerateAllFromBase,
     templateCustomInstruction,
     setTemplateCustomInstruction,
     templateToneRating,

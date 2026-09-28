@@ -52,6 +52,9 @@ function mockRegisteredBandEmail(email: string) {
         eq: () => ({
           maybeSingle: () => Promise.resolve({ data: { email } })
         })
+      }),
+      update: () => ({
+        eq: () => Promise.resolve({ data: null, error: null })
       })
     })
   } as any);

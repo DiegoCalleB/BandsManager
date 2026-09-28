@@ -419,6 +419,18 @@ function dispararDeteccionTonalidadDesdeStemEnSegundoPlano(
   );
 }
 
+function parseJsonArray(val: any): any[] {
+  if (!val) return [];
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string' && val.trim()) {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {}
+  }
+  return [];
+}
+
 export function mapSongRecord(s: any) {
   if (!s || typeof s !== 'object') return s;
   const audioUrl =
@@ -429,6 +441,22 @@ export function mapSongRecord(s: any) {
     '';
   const portada = s.portada_url || s.portadaUrl || '';
   const albumDisco = s.album_disco || s.albumDisco || s.album || '';
+  const parsedIdeas = parseJsonArray(s.audio_ideas || s.audioIdeas);
+  const audioIdeas =
+    parsedIdeas.length > 0
+      ? parsedIdeas
+      : audioUrl
+        ? [
+            {
+              id: `idea_${s.id}`,
+              titulo: 'Audio Oficial',
+              seccion: 'general' as const,
+              audioUrl,
+              subidoPor: 'Sync',
+              fecha: new Date().toISOString(),
+            },
+          ]
+        : [];
 
   return {
     ...s,
@@ -510,29 +538,8 @@ export function mapSongRecord(s: any) {
     audioPrincipalUrl: audioUrl,
     audio_principal_url: audioUrl,
     audioUrl,
-    audioIdeas:
-      Array.isArray(s.audio_ideas) && s.audio_ideas.length > 0
-        ? s.audio_ideas
-        : Array.isArray(s.audioIdeas) && s.audioIdeas.length > 0
-          ? s.audioIdeas
-          : audioUrl
-            ? [
-                {
-                  id: `idea_${s.id}`,
-                  titulo: 'Audio Oficial',
-                  seccion: 'general' as const,
-                  audioUrl,
-                  subidoPor: 'Sync',
-                  fecha: new Date().toISOString(),
-                },
-              ]
-            : [],
-    audio_ideas:
-      Array.isArray(s.audio_ideas) && s.audio_ideas.length > 0
-        ? s.audio_ideas
-        : Array.isArray(s.audioIdeas) && s.audioIdeas.length > 0
-          ? s.audioIdeas
-          : [],
+    audioIdeas,
+    audio_ideas: audioIdeas,
     cifradoTexto: s.cifrado_texto || s.cifradoTexto || '',
     cifrado_texto: s.cifrado_texto || s.cifradoTexto || '',
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
@@ -578,42 +585,7 @@ export async function dbGetSongs(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
 
-  let songsData = data || [];
-
-  // Auto-poblado si no hay canciones o si falta el catálogo inicial de Bakandeya
-  if (
-    songsData.length === 0 &&
-    (noPrefix === 'bakandeya' ||
-      noPrefix === '' ||
-      candidateIds.includes('band-bakandeya'))
-  ) {
-    console.log(
-      `[Repertorio] Auto-poblando catálogo de canciones iniciales de Bakandeya en Supabase...`
-    );
-    const seedTargetBandId = rawClean || 'band-bakandeya';
-    try {
-      for (const song of INITIAL_SONGS) {
-        await dbUpsertSong(song, seedTargetBandId);
-      }
-      const { data: reFetched } = await sb
-        .from('songs')
-        .select('*')
-        .in('band_id', candidateIds)
-        .order('titulo', { ascending: true });
-      if (reFetched && reFetched.length > 0) {
-        songsData = reFetched;
-      } else {
-        return INITIAL_SONGS.map(mapSongRecord);
-      }
-    } catch (seedErr) {
-      console.error(
-        '[Repertorio] Error auto-poblando canciones iniciales:',
-        seedErr
-      );
-      return INITIAL_SONGS.map(mapSongRecord);
-    }
-  }
-
+  const songsData = data || [];
   return songsData.map(mapSongRecord);
 }
 
@@ -632,16 +604,18 @@ function preferClearableString(
   return fallback;
 }
 
-export async function dbUpsertSong(song: any, bandId: string) {
+export async function dbUpsertSong(
+  song: any,
+  bandId: string,
+  isAdmin: boolean = false
+) {
   const sb = getSupabase();
-  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
-  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
-  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
-  const targetBandId = cleanBandId(bandId);
-  await ensureRegisteredBandExists(targetBandId);
+  // 'bandId' es el origen de confianza resuelto desde la sesión; si el usuario es admin,
+  // se permite actualizar canciones existentes preservando su band_id original.
+  let targetBandId = cleanBandId(bandId);
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
-  // usuario no se reutiliza nunca.
+  // usuario no se reutiliza nunca, salvo si el usuario es admin con acceso global.
   let finalSongId = song.id;
   let existing: {
     id: string;
@@ -661,56 +635,70 @@ export async function dbUpsertSong(song: any, bandId: string) {
       .eq('id', finalSongId)
       .maybeSingle();
     existing = data;
-    if (existing && existing.band_id !== targetBandId) {
-      finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-      existing = null;
+    const stripPrefix = (b?: string) =>
+      (b || '')
+        .trim()
+        .toLowerCase()
+        .replace(/^(band|reg)-/, '');
+    if (existing) {
+      const sameBand =
+        stripPrefix(existing.band_id) === stripPrefix(targetBandId);
+      if (sameBand) {
+        // Misma banda
+      } else if (isAdmin) {
+        // El usuario admin tiene permiso global: respetamos la banda original de la canción
+        targetBandId = existing.band_id;
+      } else {
+        finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+        existing = null;
+      }
     }
   }
 
-  // Fusionar inteligentemente audio_ideas para NO perder pistas/stems extraídas previamente
-  const existingIdeas = existing?.audio_ideas || [];
-  let incomingIdeas = song.audioIdeas || song.audio_ideas;
+  await ensureRegisteredBandExists(targetBandId);
 
-  if (
-    (!incomingIdeas ||
-      !Array.isArray(incomingIdeas) ||
-      incomingIdeas.length === 0) &&
-    existingIdeas.length > 0
-  ) {
+  // Gestión de audio_ideas: si la petición envió explícitamente audioIdeas/audio_ideas (incluso si está vacío o se eliminaron elementos),
+  // se respeta la decisión del usuario sin resucitar ideas eliminadas. Si la petición no incluyó el campo (actualización parcial), se conservan las existentes.
+  const existingIdeas = parseJsonArray(existing?.audio_ideas);
+  const hasExplicitIdeas =
+    song.audioIdeas !== undefined || song.audio_ideas !== undefined;
+  let incomingIdeas: any[];
+
+  if (!hasExplicitIdeas) {
     incomingIdeas = existingIdeas;
-  } else if (Array.isArray(incomingIdeas) && existingIdeas.length > 0) {
-    incomingIdeas = incomingIdeas.map((incIdea: any) => {
-      const existingMatch = existingIdeas.find(
-        (e: any) =>
-          e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
-      );
-      if (
-        existingMatch &&
-        (!incIdea.pistas || incIdea.pistas.length === 0) &&
-        existingMatch.pistas &&
-        existingMatch.pistas.length > 0
-      ) {
-        return {
-          ...incIdea,
-          pistas: existingMatch.pistas,
-        };
-      }
-      return incIdea;
-    });
-
-    // Preservar cualquier idea previa que contenga stems/pistas si no venía en el payload entrante
-    existingIdeas.forEach((e: any) => {
-      if (e.pistas && e.pistas.length > 0) {
-        const existsInIncoming = incomingIdeas.some(
-          (inc: any) => inc.id === e.id || inc.titulo === e.titulo
+  } else {
+    incomingIdeas = parseJsonArray(
+      song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas
+    );
+    if (incomingIdeas.length > 0 && existingIdeas.length > 0) {
+      incomingIdeas = incomingIdeas.map((incIdea: any) => {
+        const existingMatch = existingIdeas.find(
+          (e: any) =>
+            e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
         );
-        if (!existsInIncoming) {
-          incomingIdeas.push(e);
+        if (
+          existingMatch &&
+          (!incIdea.pistas || incIdea.pistas.length === 0) &&
+          existingMatch.pistas &&
+          existingMatch.pistas.length > 0
+        ) {
+          return {
+            ...incIdea,
+            pistas: existingMatch.pistas,
+            stemEngineUsed:
+              incIdea.stemEngineUsed || existingMatch.stemEngineUsed,
+            stemIsNeural: incIdea.stemIsNeural ?? existingMatch.stemIsNeural,
+            stemDegraded: incIdea.stemDegraded ?? existingMatch.stemDegraded,
+            stemProcessedAt:
+              incIdea.stemProcessedAt || existingMatch.stemProcessedAt,
+          };
         }
-      }
-    });
+        return incIdea;
+      });
+    }
   }
 
+  const nowIso = new Date().toISOString();
   const payload: any = {
     id:
       finalSongId ||
@@ -814,13 +802,36 @@ export async function dbUpsertSong(song: any, bandId: string) {
     estructura_verificada: Boolean(
       song.estructuraVerificada ?? song.estructura_verificada
     ),
+    created_at: existing
+      ? (existing as any).created_at || song.created_at || nowIso
+      : song.created_at || nowIso,
+    updated_at: nowIso,
   };
+
+  // En PostgreSQL/Supabase, para asegurar que la actualización persista todas las columnas
+  // (incluyendo audio_ideas con pistas y stems aislados) sin que triggers de auditoría cancelen
+  // el UPDATE silenciosamente devolviendo OLD: si la fila ya existía, limpiamos y reinsertamos
+  // conservando exactamente el mismo id y created_at.
+  if (existing) {
+    try {
+      await sb.from('songs').delete().eq('id', payload.id);
+    } catch {}
+  }
 
   let { data, error } = await sb
     .from('songs')
-    .upsert(payload)
+    .insert(payload)
     .select()
     .single();
+  if (error && error.code === '23505') {
+    // Si por concurrencia la fila seguía existiendo, forzar delete y reinsertar
+    try {
+      await sb.from('songs').delete().eq('id', payload.id);
+    } catch {}
+    const retryIns = await sb.from('songs').insert(payload).select().single();
+    data = retryIns.data;
+    error = retryIns.error;
+  }
   if (
     error &&
     error.message &&
@@ -835,14 +846,17 @@ export async function dbUpsertSong(song: any, bandId: string) {
     delete fallbackPayload.notas_repertorio;
     delete fallbackPayload.energia_variacion;
     delete fallbackPayload.energia_variacion_calculada_en;
+    try {
+      await sb.from('songs').delete().eq('id', fallbackPayload.id);
+    } catch {}
     const retry = await sb
       .from('songs')
-      .upsert(fallbackPayload)
+      .insert(fallbackPayload)
       .select()
       .single();
     if (retry.error)
       throw new Error(
-        `Supabase Error (upsert song fallback): ${retry.error.message}`
+        `Supabase Error (insert song fallback): ${retry.error.message}`
       );
     data = retry.data;
     error = null;
@@ -908,40 +922,7 @@ export async function dbGetSetlists(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
 
-  let setlistData = data || [];
-
-  if (
-    setlistData.length === 0 &&
-    (noPrefix === 'bakandeya' ||
-      noPrefix === '' ||
-      candidateIds.includes('band-bakandeya'))
-  ) {
-    console.log(
-      `[Repertorio] Auto-poblando setlists iniciales de Bakandeya en Supabase...`
-    );
-    const seedTargetBandId = rawClean || 'band-bakandeya';
-    try {
-      for (const setlist of INITIAL_SETLISTS) {
-        await dbUpsertSetlist(setlist, seedTargetBandId);
-      }
-      const { data: reFetched } = await sb
-        .from('setlists')
-        .select('*')
-        .in('band_id', candidateIds)
-        .order('fecha_ultima_edicion', { ascending: false });
-      if (reFetched && reFetched.length > 0) {
-        setlistData = reFetched;
-      } else {
-        return INITIAL_SETLISTS.map((sl) => ({ ...sl, items: sl.items || [] }));
-      }
-    } catch (seedErr) {
-      console.error(
-        '[Repertorio] Error auto-poblando setlists iniciales:',
-        seedErr
-      );
-      return INITIAL_SETLISTS.map((sl) => ({ ...sl, items: sl.items || [] }));
-    }
-  }
+  const setlistData = data || [];
 
   return setlistData.map((sl) => ({
     ...sl,

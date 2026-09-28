@@ -2,6 +2,7 @@ export interface BandStyleContext {
   genero?: string;
   biografia?: string;
   dossierTextoExtra?: string;
+  bandasSimilares?: string[];
   /** Memoria acumulada de feedback (valoraciones + comentarios) que la banda ha ido dejando en
    * generaciones anteriores con alcance "global" — ver `formatGlobalSetlistFeedbackForPrompt`.
    * Ya viene formateada como texto listo para el prompt. */
@@ -24,6 +25,9 @@ export function buildBandStyleContextBlock(context?: BandStyleContext | null): s
   if (context.genero?.trim()) parts.push(`Género: ${context.genero.trim()}`);
   if (context.biografia?.trim()) parts.push(`Biografía: ${context.biografia.trim()}`);
   if (context.dossierTextoExtra?.trim()) parts.push(`Notas de booking/estilo: ${context.dossierTextoExtra.trim()}`);
+  if (context.bandasSimilares && context.bandasSimilares.length > 0) {
+    parts.push(`Bandas de referencia y sonido afín (Para fans de / FFO): ${context.bandasSimilares.join(', ')}`);
+  }
 
   let block = '';
   if (parts.length > 0) {

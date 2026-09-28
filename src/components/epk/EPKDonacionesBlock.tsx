@@ -466,8 +466,11 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                         <p className="text-[10px] tracking-wider text-[var(--ink-2)] font-semibold">Formación</p>
                         {miembros
                           .filter((m) => (m.rol || '').trim() || (m.bio || '').trim())
-                          .map((m) => (
-                            <div key={m.id} className="bg-[var(--surface)]/60 rounded-[var(--r-s)] p-3 space-y-2">
+                          .map((m, idx) => (
+                            <div
+                              key={m.id || `miembro-${idx}-${m.nombre || ''}`}
+                              className="bg-[var(--surface)]/60 rounded-[var(--r-s)] p-3 space-y-2"
+                            >
                               <p className="text-xs font-bold text-[var(--ink)]">{m.nombre || 'Sin nombre'}</p>
                               {(m.rol || '').trim() && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

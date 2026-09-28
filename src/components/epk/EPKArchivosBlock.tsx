@@ -1,8 +1,9 @@
-import React from 'react';
-import { ImageIcon, FileDown, FileText, Upload, Download, Trash2, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { ImageIcon, FileDown, FileText, Upload, Download, Trash2, Loader2, Sparkles } from 'lucide-react';
 import { EPKConfig } from '../../types';
 import { EPKBlockWrapper } from './EPKBlockWrapper';
 import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+import { AILogoGeneratorModal } from './AILogoGeneratorModal';
 
 interface EPKArchivosBlockProps {
   config: EPKConfig;
@@ -43,6 +44,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
   onSave,
   isAllView = false,
 }) => {
+  const [showAiLogoModal, setShowAiLogoModal] = useState(false);
+
   return (
     <EPKBlockWrapper
       meta={EPK_BLOCKS[1]}
@@ -55,9 +58,18 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* LOGO DE LA BANDA */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
-          <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2 pb-3">
-            <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
-          </h3>
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5" /> Logo Oficial de la Banda
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowAiLogoModal(true)}
+              className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> Generar con IA
+            </button>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative shrink-0">
@@ -114,6 +126,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </div>
           </div>
         </div>
+
+        <AILogoGeneratorModal
+          isOpen={showAiLogoModal}
+          onClose={() => setShowAiLogoModal(false)}
+          onSelectLogo={(logoUrl) => setConfig((prev) => ({ ...prev, logoUrl }))}
+          genre={config.genero}
+        />
 
         {/* DOSSIER EN PDF O DOCUMENTO OFICIAL */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4">
@@ -309,6 +328,106 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors font-sans leading-relaxed resize-none"
               />
             </div>
+            {/* PARÁMETROS TÉCNICOS CLAVE PARA EL AGENTE DE BOOKING */}
+            <div className="pt-3 border-t border-slate-800/80 space-y-3">
+              <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                Parámetros Técnicos Clave para el Agente (Respuestas directas a salas)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
+                {/* Monitoreo */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Sistema de Monitoreo</label>
+                  <select
+                    value={config.riderConfig?.tipoMonitoreo || 'sin_preferencia'}
+                    onChange={(e) =>
+                      setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), tipoMonitoreo: e.target.value as any } })
+                    }
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-amber-500"
+                  >
+                    <option value="sin_preferencia">Sin preferencia / Sala</option>
+                    <option value="cuñas_escenario">Cuñas de suelo</option>
+                    <option value="in_ear">In-Ears propios (IEM)</option>
+                    <option value="mixto">Mixto (In-Ears + Cuñas)</option>
+                  </select>
+                  <p className="text-[10px] text-slate-500">Evita pedir monitores extra si lleváis IEM.</p>
+                </div>
+                {/* Backline */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Backline (Amplis / Batería)</label>
+                  <select
+                    value={config.riderConfig?.backlinePropio || 'completo'}
+                    onChange={(e) =>
+                      setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), backlinePropio: e.target.value as any } })
+                    }
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-amber-500"
+                  >
+                    <option value="completo">Backline completo propio</option>
+                    <option value="parcial">Parcial (pedimos batería/amplis)</option>
+                    <option value="sin_backline">Necesitamos backline de sala</option>
+                  </select>
+                  <p className="text-[10px] text-slate-500">Crucial para pactar dobles carteles.</p>
+                </div>
+                {/* Microfonía */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Microfonía / DIs</label>
+                  <div className="flex gap-1.5 pt-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), microfoniaPropia: false } })}
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${!config.riderConfig?.microfoniaPropia ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}`}
+                    >
+                      De la sala
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, riderConfig: { ...(config.riderConfig || {}), microfoniaPropia: true } })}
+                      className={`flex-1 py-1.5 px-1 rounded-lg text-[11px] font-medium border transition-colors ${config.riderConfig?.microfoniaPropia ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}`}
+                    >
+                      Propia
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-slate-500">Informa al técnico de la casa.</p>
+                </div>
+                {/* Tiempo de prueba y canales */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-300 block">Prueba / Canales Mínimos</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={config.riderConfig?.tiempoPruebaMinutos ?? ''}
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            tiempoPruebaMinutos: e.target.value ? Number(e.target.value) : undefined,
+                          },
+                        })
+                      }
+                      placeholder="30 min"
+                      className="w-1/2 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-amber-500"
+                    />
+                    <input
+                      type="number"
+                      value={config.riderConfig?.canalesMinimos ?? ''}
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          riderConfig: {
+                            ...(config.riderConfig || {}),
+                            canalesMinimos: e.target.value ? Number(e.target.value) : undefined,
+                          },
+                        })
+                      }
+                      placeholder="12 ch"
+                      className="w-1/2 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-500">Minutos y canales de mesa.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -347,7 +466,8 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {(config.bandPhotos || [])
-                .filter((url) => Boolean(url && url.trim() !== ''))
+                .map((item) => (typeof item === 'string' ? item : (item as any)?.url || ''))
+                .filter((url) => typeof url === 'string' && url.trim() !== '')
                 .map((url, idx) => (
                   <div key={url + idx} className="group relative aspect-video rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)]">
                     <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />

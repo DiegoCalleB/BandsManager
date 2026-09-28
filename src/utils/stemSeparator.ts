@@ -21,9 +21,9 @@ export interface IsolatedStemResult {
 }
 
 /**
- * Procesa un archivo de audio y genera 5 stems aislados con cancelación activa de fase anti-vocal
+ * Procesa un archivo de audio y genera stems aislados con cancelación activa de fase anti-vocal
  */
-export async function separateAudioIntoStems(audioUrl: string): Promise<IsolatedStemResult[]> {
+export async function separateAudioIntoStems(audioUrl: string, targetInstruments?: string[]): Promise<IsolatedStemResult[]> {
   try {
     // 1. Fetch original audio content safely handling indexeddb keys, base64 data URLs & streams
     const arrayBuffer = await getAudioArrayBufferFromUrl(audioUrl);
@@ -46,38 +46,19 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
     // STEP 3: Generate Side-Channel Buffer S(t) = L(t) - R(t) (mathematically cancels dead-center vocals, kick & snare)
     const sideChannelBuffer = createSideChannelBuffer(tempCtx, audioBuffer);
 
-    const stemTypes = [
-      {
-        instrument: 'Voz',
-        trackName: '🎤 Pista IA: Voz Principal (Aislada)',
-        volume: 1.0,
-        sourceBuf: vocalBuffer,
-      },
-      {
-        instrument: 'Batería',
-        trackName: '🥁 Pista IA: Batería & Percusión',
-        volume: 0.9,
-        sourceBuf: vocalCancelledBuffer,
-      },
-      {
-        instrument: 'Bajo',
-        trackName: '🎸 Pista IA: Bajo (Sub-Bass)',
-        volume: 0.95,
-        sourceBuf: vocalCancelledBuffer,
-      },
-      {
-        instrument: 'Guitarras',
-        trackName: '🎹 Pista IA: Guitarras & Teclados',
-        volume: 0.85,
-        sourceBuf: sideChannelBuffer,
-      },
-      {
-        instrument: 'Arreglos',
-        trackName: '🎺 Pista IA: Vientos, Cuerdas & Solos',
-        volume: 0.85,
-        sourceBuf: sideChannelBuffer,
-      },
+    const allStemTypes = [
+      { instrument: 'Voz', trackName: '🎤 Pista IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
+      { instrument: 'Instrumental', trackName: '🎵 Pista IA: Base Instrumental (Playback)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Batería', trackName: '🥁 Pista IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Bajo', trackName: '🎸 Pista IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Guitarras', trackName: '🎹 Pista IA: Guitarras & Teclados', volume: 0.85, sourceBuf: sideChannelBuffer },
+      { instrument: 'Arreglos', trackName: '🎺 Pista IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: sideChannelBuffer },
     ];
+
+    const stemTypes =
+      targetInstruments && targetInstruments.length > 0
+        ? allStemTypes.filter((s) => targetInstruments.some((t) => t.toLowerCase() === s.instrument.toLowerCase()))
+        : allStemTypes;
 
     const results: IsolatedStemResult[] = [];
 

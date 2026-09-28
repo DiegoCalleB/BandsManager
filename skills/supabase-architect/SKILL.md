@@ -58,38 +58,11 @@ export async function dbUpsertConcert(concertData: Partial<Concert>, bandId: str
 2. **Índices de Rendimiento:** Crear siempre índices en columnas de filtrado frecuente, especialmente `band_id` y claves foráneas.
 3. **Ubicación:** Guardar scripts de cambios de esquema en `supabase/migrations/YYYYMMDD_descripcion.sql` y sincronizar en `supabase_schema.sql`.
 
-```sql
--- Ejemplo de Migración Idempotente
-CREATE TABLE IF NOT EXISTS public.band_campaigns (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    band_id TEXT NOT NULL REFERENCES public.bands(id) ON DELETE CASCADE,
-    nombre TEXT NOT NULL,
-    estado TEXT DEFAULT 'borrador',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Índice obligatorio por band_id para consultas rápidas y seguras
-CREATE INDEX IF NOT EXISTS idx_band_campaigns_band_id ON public.band_campaigns(band_id);
-```
-
 ---
 
 ## 🔐 4. Row Level Security (RLS) en Supabase — estado real, no aspiracional
 
 **Cómo está hoy, de verdad:** las 40 políticas RLS de `supabase_schema.sql` son `USING (true)` ("Permitir acceso total al backend") en todas las tablas — RLS está *activado* pero *no restringe nada*. El aislamiento por `band_id` es 100% responsabilidad de la capa de aplicación (`getTargetBandId(req)`, ver skill `security-multitenancy`) — no hay red de seguridad de base de datos por debajo si esa capa falla. No generes código asumiendo que una política `USING (band_id = ...)` ya existe: no es así, y una tabla nueva sigue el mismo patrón (`USING (true)`) salvo que se decida explícitamente reforzarla.
-
-**Si el mánager pide reforzar RLS de verdad** (dirección de hardening, no el patrón por defecto de este proyecto):
-
-```sql
-ALTER TABLE public.band_campaigns ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Aislamiento por Banda" ON public.band_campaigns
-    FOR ALL
-    USING (band_id = auth.jwt() ->> 'band_id');
-```
-
-Antes de aplicar esto a una tabla existente, confirma que el JWT que usa el backend para conectar a Supabase realmente lleva un claim `band_id` explotable así — si el backend se conecta con la service role key (que **bypasea RLS por completo**), esta política no protege nada y el cambio da una falsa sensación de seguridad.
 
 ---
 

@@ -1,5 +1,6 @@
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
+import { mergeWithExisting } from './mergeWithExisting.js';
 
 export async function dbGetConcerts(bandId: string | string[]) {
   const sb = getSupabase();
@@ -34,6 +35,8 @@ export async function dbGetConcerts(bandId: string | string[]) {
 
   return validatedData.map((c) => ({
     ...c,
+    setlist_id: c.setlist_id || c.setlistId || null,
+    setlistId: c.setlist_id || c.setlistId || undefined,
     gastosDetalle: c.gastos_detalle || c.gastosDetalle || {},
     gastos_detalle: c.gastos_detalle || c.gastosDetalle || {},
     convocatoria_tipo: c.convocatoria_tipo || c.convocatoriaTipo || 'completa',
@@ -46,82 +49,107 @@ export async function dbGetConcerts(bandId: string | string[]) {
     entradasUrl: c.entradas_url || c.entradasUrl || undefined,
     entradasLugarFisico:
       c.entradas_lugar_fisico || c.entradasLugarFisico || undefined,
+    asistencia_propia: Number(c.asistencia_propia ?? c.asistenciaPropia ?? 0),
+    asistencia_otras_bandas: Number(
+      c.asistencia_otras_bandas ?? c.asistenciaOtrasBandas ?? 0
+    ),
+    bandas_compartidas: Array.isArray(
+      c.bandas_compartidas || c.bandasCompartidas
+    )
+      ? c.bandas_compartidas || c.bandasCompartidas
+      : [],
+    post_show_review: String(c.post_show_review || c.postShowReview || ''),
+    es_hito_destacado: Boolean(
+      c.es_hito_destacado ?? c.esHitoDestacado ?? false
+    ),
+    cartel_url: c.cartel_url || c.cartelUrl || undefined,
+    cartelUrl: c.cartel_url || c.cartelUrl || undefined,
   }));
 }
 
 export async function dbUpsertConcert(concert: any, bandId: string) {
   const sb = getSupabase();
-  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
-  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
-  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  // El upsert es por id (clave primaria): si `concert.id` coincidiera con el de un concierto de
-  // OTRA banda, este upsert lo sobrescribiría y se lo reasignaría a la banda del llamador. Un id
-  // que no pertenece a la banda del usuario no se reutiliza nunca.
   let finalConcertId = concert.id;
   let existingConcert: any = null;
   if (finalConcertId) {
-    // gastos_detalle también viene en este SELECT: sin fetch previo no hay forma de preservarlo
-    // si un guardado parcial no lo incluye — antes se reseteaba a {} en silencio.
+    // La fila entera viene en este SELECT: sin fetch previo no hay forma de preservar lo que un
+    // guardado parcial no incluye (gastos_detalle, setlist, etc.) — antes se reseteaba en silencio.
     const existing = await sb
       .from('concerts')
-      .select('band_id, gastos_detalle')
+      .select('*')
       .eq('id', finalConcertId)
       .maybeSingle();
-    if (
-      existing.data &&
-      existing.data.band_id &&
-      cleanBandId(existing.data.band_id) !== targetBandId
-    ) {
-      console.warn(
-        `[dbUpsertConcert] Conflicto de band_id en id ${finalConcertId}. Se generará un id nuevo.`
-      );
-      finalConcertId = `cnc-${Date.now()}`;
-    } else {
-      existingConcert = existing.data;
+    if (existing.data) {
+      if (
+        existing.data.band_id &&
+        cleanBandId(existing.data.band_id) !== targetBandId
+      ) {
+        console.warn(
+          `[dbUpsertConcert] Conflicto de band_id en id ${finalConcertId}. Se generará un id nuevo.`
+        );
+        finalConcertId = `cnc-${Date.now()}`;
+      } else {
+        existingConcert = existing.data;
+      }
     }
   }
+
+  const merged = mergeWithExisting(existingConcert, concert);
 
   const payload: any = {
     id: finalConcertId || `cnc-${Date.now()}`,
     band_id: targetBandId,
-    band_name: concert.band_name || concert.bandName || '',
-    fecha: concert.fecha,
-    ciudad: concert.ciudad || '',
-    sala: concert.sala || 'Sala',
-    direccion: concert.direccion || '',
-    cache: Number(concert.cache || 0),
-    aforo_vendido: Number(concert.aforo_vendido || concert.aforoVendido || 0),
-    aforo_total: Number(concert.aforo_total || concert.aforoTotal || 0),
+    band_name: merged.band_name || merged.bandName || '',
+    fecha: merged.fecha || new Date().toISOString().split('T')[0],
+    ciudad: merged.ciudad || '',
+    sala: merged.sala || 'Sala',
+    direccion: merged.direccion || '',
+    cache: Number(merged.cache || 0),
+    aforo_vendido: Number(merged.aforo_vendido || merged.aforoVendido || 0),
+    aforo_total: Number(merged.aforo_total || merged.aforoTotal || 0),
     contrato_firmado: Boolean(
-      concert.contrato_firmado ?? concert.contratoFirmado
+      merged.contrato_firmado ?? merged.contratoFirmado
     ),
-    estado_pago: concert.estado_pago || concert.estadoPago || 'pendiente',
-    notas: concert.notas || '',
-    tipo: concert.tipo || 'sala',
-    setlist_id: concert.setlist_id || concert.setlistId || null,
-    gastos_detalle:
-      (concert.gastos_detalle ?? concert.gastosDetalle) !== undefined
-        ? concert.gastos_detalle || concert.gastosDetalle
-        : (existingConcert?.gastos_detalle ?? {}),
+    estado_pago: merged.estado_pago || merged.estadoPago || 'pendiente',
+    notas: merged.notas || '',
+    tipo: merged.tipo || 'sala',
+    setlist_id: merged.setlist_id || merged.setlistId || null,
+    gastos_detalle: merged.gastos_detalle || merged.gastosDetalle || {},
     gastos_estimados_tipicos: Number(
-      concert.gastos_estimados_tipicos || concert.gastosEstimadosTipicos || 0
+      merged.gastos_estimados_tipicos || merged.gastosEstimadosTipicos || 0
     ),
     convocatoria_tipo:
-      concert.convocatoria_tipo || concert.convocatoriaTipo || 'completa',
-    convocados_ids: concert.convocados_ids || concert.convocadosIds || [],
+      merged.convocatoria_tipo || merged.convocatoriaTipo || 'completa',
+    convocados_ids: merged.convocados_ids || merged.convocadosIds || [],
     convocados_nombres:
-      concert.convocados_nombres || concert.convocadosNombres || [],
-    gira_id: concert.gira_id || concert.giraId || null,
-    gira_nombre: concert.gira_nombre || concert.giraNombre || null,
-    idioma: concert.idioma || '',
-    is_posible: Boolean(concert.is_posible ?? concert.isPosible),
-    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null,
-    entradas_url: concert.entradas_url || concert.entradasUrl || null,
+      merged.convocados_nombres || merged.convocadosNombres || [],
+    gira_id: merged.gira_id || merged.giraId || null,
+    gira_nombre: merged.gira_nombre || merged.giraNombre || null,
+    idioma: merged.idioma || '',
+    is_posible: Boolean(merged.is_posible ?? merged.isPosible),
+    custom_qr_url: merged.custom_qr_url || merged.customQrUrl || null,
+    entradas_url: merged.entradas_url || merged.entradasUrl || null,
     entradas_lugar_fisico:
-      concert.entradas_lugar_fisico || concert.entradasLugarFisico || null,
+      merged.entradas_lugar_fisico || merged.entradasLugarFisico || null,
+    asistencia_propia: Number(
+      merged.asistencia_propia ?? merged.asistenciaPropia ?? 0
+    ),
+    asistencia_otras_bandas: Number(
+      merged.asistencia_otras_bandas ?? merged.asistenciaOtrasBandas ?? 0
+    ),
+    bandas_compartidas: Array.isArray(
+      merged.bandas_compartidas || merged.bandasCompartidas
+    )
+      ? merged.bandas_compartidas || merged.bandasCompartidas
+      : [],
+    post_show_review: merged.post_show_review || merged.postShowReview || '',
+    es_hito_destacado: Boolean(
+      merged.es_hito_destacado ?? merged.esHitoDestacado
+    ),
+    cartel_url: merged.cartel_url || merged.cartelUrl || null,
   };
 
   let data: any = null;

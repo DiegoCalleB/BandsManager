@@ -6,7 +6,13 @@ import { getEnergyInfo } from '../../../utils/energyPacingUtils';
 import { Onda } from '../../ui/Onda';
 import { api } from '../../../services/api';
 
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+
 export interface ChartWidgetProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
   leads?: Lead[];
   concerts?: Concert[];
   fans?: Fan[];
@@ -105,51 +111,18 @@ export function RepertorioEnergyChartWidget({
         keyStr: (songAny.tonalidad as string) || 'C',
         label: energyInfo.label,
         hexColor: energyInfo.hexColor,
-        durationMin: 4,
+        durationMin: Math.round((Number(songAny.duracionSegundos ?? songAny.duracion_segundos) || 240) / 60),
       };
     });
   } else {
-    // Standard default setlist for immediate demo
+    // Fallback demo data
     const demoItems = [
-      { title: 'Intro / Apertura', energy: 16, bpm: 135, keyStr: 'Em', dur: 3 },
-      {
-        title: 'Fuego en la Noche',
-        energy: 18,
-        bpm: 142,
-        keyStr: 'Am',
-        dur: 4,
-      },
-      { title: 'Camino Sagrado', energy: 14, bpm: 118, keyStr: 'Dm', dur: 4 },
-      { title: 'Mar de Dudas', energy: 8, bpm: 90, keyStr: 'G', dur: 5 },
-      {
-        title: 'Viento del Sur (Acústico)',
-        energy: 6,
-        bpm: 85,
-        keyStr: 'C',
-        dur: 4,
-      },
-      {
-        title: 'Resurrección (In Crescendo)',
-        energy: 15,
-        bpm: 128,
-        keyStr: 'Em',
-        dur: 5,
-      },
-      {
-        title: 'Gritando al Viento',
-        energy: 19,
-        bpm: 150,
-        keyStr: 'Bm',
-        dur: 4,
-      },
-      { title: 'Clímax Final', energy: 20, bpm: 155, keyStr: 'E', dur: 6 },
-      {
-        title: 'Bis: Himno de la Banda',
-        energy: 17,
-        bpm: 138,
-        keyStr: 'A',
-        dur: 5,
-      },
+      { title: 'Intro: Despegue', energy: 6, bpm: 90, keyStr: 'Em', dur: 2 },
+      { title: 'Ritmo en las Calles', energy: 12, bpm: 124, keyStr: 'G', dur: 4 },
+      { title: 'Furia Eléctrica', energy: 16, bpm: 132, keyStr: 'A', dur: 4 },
+      { title: 'Balada de Medianoche', energy: 8, bpm: 85, keyStr: 'C', dur: 5 },
+      { title: 'Clímax Festival', energy: 19, bpm: 140, keyStr: 'D', dur: 4 },
+      { title: 'Bis: Himno de la Banda', energy: 17, bpm: 138, keyStr: 'A', dur: 5 },
     ];
     chartData = demoItems.map((item, idx) => {
       const energyInfo = getEnergyInfo(item.energy);
@@ -313,7 +286,7 @@ export function RepertorioEnergyChartWidget({
 }
 
 /* 2. GRÁFICO DE EMBUDO Y CONVERSIÓN DE BOOKING */
-export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
   const counts = {
     nuevo: leads.filter((l) => l.estado === 'nuevo').length,
     contactado: leads.filter((l) => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length,
@@ -465,7 +438,8 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
                           Gastos: <span className="font-bold text-[var(--alert)]">-{data.gastos}€</span>
                         </div>
                         <div>
-                          Caché Medio: <span className="font-bold text-[var(--acc)]">{data.cacheMedio}€</span>
+                          Caché Medio:{' '}
+                          <span className={`font-bold ${isStitchLight ? 'text-amber-700' : 'text-amber-400'}`}>{data.cacheMedio}€</span>
                         </div>
                       </div>
                     </div>
@@ -484,7 +458,7 @@ export function FinancesChartWidget({ onNavigate, heightMode = 'normal' }: Chart
 }
 
 /* 4. GRÁFICO DE CRECIMIENTO DE FANS & SOCIAL */
-export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'normal' }: ChartWidgetProps) {
+export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'normal', isStitchLight = false }: ChartWidgetProps) {
   const fansCount = fans.length;
   const growthData = [
     { mes: 'Ene', fans: Math.max(5, Math.round(fansCount * 0.2)), qrScans: 12 },

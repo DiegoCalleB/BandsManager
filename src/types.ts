@@ -52,7 +52,10 @@ export type LeadType =
   | 'discoteca'
   | 'agencia'
   | 'manager'
-  | 'sello';
+  | 'sello'
+  | 'productor'
+  | 'patrocinador'
+  | 'supervisor_sync';
 
 export type BandRelationshipStatus =
   | 'sin_contactar'
@@ -102,7 +105,7 @@ export interface SavedFilter {
   sectionTab?: 'salas' | 'medios' | 'grupos';
   searchTerm?: string;
   selectedCityFilter?: string;
-  statusFilter?: LeadStatus | 'todos';
+  statusFilter?: LeadStatus | 'todos' | 'seguimientos';
   typeFilter?: LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast';
   minCapacityFilter?: number;
 }
@@ -114,6 +117,38 @@ export interface EmailMessage {
   remitente_nombre: string;
   asunto: string;
   mensaje: string;
+  sentimiento?: 'muy_positivo' | 'positivo' | 'neutral' | 'negativo_suave' | 'negativo_firme';
+  sentimiento_score?: number; // -1.0 a +1.0
+  sentimiento_label?: string;
+  intencion?:
+    | 'confirmacion'
+    | 'negociacion_precio'
+    | 'pregunta_logistica'
+    | 'peticion_fechas'
+    | 'rechazo_temporal'
+    | 'rechazo_definitivo'
+    | 'informativo'
+    | 'otro';
+  intencion_etiqueta?: string;
+  temperatura?: 'muy_caliente' | 'caliente' | 'tibio' | 'frio' | 'congelado';
+  objeciones?: string[];
+  puntos_clave?: string[];
+  fechas_propuestas?: string[];
+  condiciones_economicas?: {
+    tipo?: string;
+    cifra?: string;
+    detalles?: string;
+  };
+  requisitos_tecnicos?: string[];
+  accion_sugerida?: string;
+  estrategia_playbook?: {
+    titulo: string;
+    pasos: string[];
+    propuesta_rapida: string;
+  };
+  resumen_ejecutivo?: string;
+  sugerencia_estrategia?: string;
+  analisis_ia?: any;
 }
 
 export interface PitchFeedbackLog {
@@ -141,6 +176,8 @@ export interface Lead {
   email_contacto: string;
   email_secundario?: string;
   telefono: string;
+  telefono_movil?: string;
+  telefono_fijo?: string;
   website?: string;
   instagram: string;
   contacto_nombre?: string;
@@ -158,6 +195,8 @@ export interface Lead {
   icono?: string;
   imagen_url?: string;
   band_id?: string;
+  campaign_id?: string;
+  campaña_asociada?: string;
   es_favorito?: boolean;
   es_verificado?: boolean;
   fiabilidad_score?: number;
@@ -167,6 +206,148 @@ export interface Lead {
   historial_feedback_pitch?: PitchFeedbackLog[];
   festival_start_date?: string;
   festival_end_date?: string;
+  email_abierto?: boolean;
+  veces_abierto?: number;
+  primer_abierto_at?: string;
+  ultimo_abierto_at?: string;
+  clics_epk?: number;
+  ultimo_clic_at?: string;
+  fechas_ocupadas?: string[];
+  fechas_libres_detectadas?: string[];
+  disponible_para_campana?: boolean;
+  fechas_ocupadas_campana?: string[];
+  fechas_libres_campana?: string[];
+  datos_fechas_encontrados?: boolean;
+  mensaje_disponibilidad?: string;
+  radar_fuentes_verificadas?: string[];
+  radar_wegow_status?: 'ok' | 'sin_datos' | 'error';
+  radar_bandsintown_status?: 'ok' | 'sin_datos' | 'error';
+  contrastado_multi_fuente?: boolean;
+  fiabilidad_radar?: 'alta' | 'media' | 'baja' | 'sin_datos';
+  estado_cartelera?: 'publicada_libre' | 'ocupada' | 'no_publicada_aun' | 'fuera_temporada' | 'residencia_clubbing' | 'sin_datos';
+  max_fecha_publicada?: string;
+  min_fecha_publicada?: string;
+  ultimo_sentimiento?: 'muy_positivo' | 'positivo' | 'neutral' | 'negativo_suave' | 'negativo_firme';
+  ultimo_sentimiento_score?: number;
+  ultimo_sentimiento_label?: string;
+  ultima_intencion?: string;
+  ultima_intencion_etiqueta?: string;
+  ultimas_objeciones?: string[];
+  ultimo_analisis_resumen?: string;
+  temperatura_lead?: 'muy_caliente' | 'caliente' | 'tibio' | 'frio' | 'congelado';
+  fechas_propuestas_sala?: string[];
+  condiciones_economicas_detectadas?: {
+    tipo?: string;
+    cifra?: string;
+    detalles?: string;
+  };
+  requisitos_tecnicos_detectados?: string[];
+  accion_sugerida_ia?: string;
+  estrategia_playbook?: {
+    titulo: string;
+    pasos: string[];
+    propuesta_rapida: string;
+  };
+  spotify_city_demand?: {
+    oyentes_ciudad: number;
+    afinidad_genero: number; // 0 - 100%
+    prediccion_entradas: number;
+    porcentaje_ocupacion_estimado: number;
+    top_ciudades_ranking?: number;
+  };
+  google_places_info?: {
+    rating: number;
+    total_reviews: number;
+    fotos: string[];
+    horario_carga?: string;
+    resumen_acustica?: string;
+    acceso_backline?: string;
+    place_id?: string;
+  };
+  setlist_history?: {
+    bandas_similares_recientes: string[];
+    fecha_ultimo_concierto?: string;
+    generos_habituales: string[];
+    promotores_frecuentes?: string[];
+    referencia_pitch_sugerida?: string;
+  };
+  email_verification?: {
+    estado: 'valido' | 'inseguro' | 'no_verificado' | 'invalido';
+    mx_valido: boolean;
+    entregabilidad_score: number; // 0 - 100
+    es_cuenta_rol: boolean; // ej: info@, booking@
+    motivo?: string;
+    verificado_at?: string;
+  };
+  tour_logistics?: {
+    origen: string;
+    distancia_km: number;
+    tiempo_conduccion: string;
+    coste_gasolina_estimado: number;
+    peajes_estimados: number;
+    coste_total_viaje: number;
+    recomendacion_logistica?: string;
+  };
+  social_engagement?: {
+    instagram_followers: number;
+    engagement_rate: number;
+    promedio_views_reels: number;
+    promociona_bandas_activo: boolean;
+    calidad_promo_sala: 'alta' | 'media' | 'baja';
+    resumen_social: string;
+  };
+  financial_break_even?: {
+    precio_entrada_anticipada: number;
+    precio_entrada_taquilla: number;
+    alquiler_sala_fijo: number;
+    porcentaje_sala: number;
+    gastos_produccion_fijos: number;
+    entradas_break_even: number;
+    beneficio_estimado_lleno: number;
+    beneficio_por_musico_estimado: number;
+    num_musicos: number;
+  };
+  booking_window_info?: {
+    antelacion_meses_recomendada: number;
+    meses_cierre_temporada?: string[];
+    dias_semana_ideales: string[];
+    estado_calendario_estimado: 'abierto' | 'llenandose' | 'casi_cerrado' | 'fuera_de_temporada';
+    consejo_antelacion: string;
+    ventana_optima_pitch: string;
+  };
+  local_events_clash_info?: {
+    eventos_detectados: Array<{
+      nombre: string;
+      tipo: 'festival' | 'fiesta_patronal' | 'macroconcierto' | 'festivo';
+      fecha_aproximada: string;
+      nivel_riesgo_solapamiento: 'alto' | 'medio' | 'bajo';
+      descripcion: string;
+    }>;
+    alerta_resumen: string;
+    fechas_favorables_sugeridas: string[];
+  };
+  local_press_media_info?: {
+    medios: Array<{
+      nombre: string;
+      tipo: 'radio' | 'prensa_escrita' | 'blog_cultural' | 'agenda_local';
+      alcance: 'provincial' | 'autonomico' | 'local';
+      contacto_sugerido?: string;
+      canal: string;
+    }>;
+    resumen_cobertura: string;
+    plantilla_nota_prensa_hook: string;
+  };
+  local_band_partners_info?: {
+    bandas_compatibles: Array<{
+      nombre: string;
+      genero: string;
+      oyentes_estimados?: number;
+      instagram?: string;
+      motivo_afinidad: string;
+    }>;
+    estrategia_co_booking: string;
+    gancho_propuesta_sala: string;
+  };
 }
 
 export interface RehearsalAgendaItem {
@@ -345,10 +526,19 @@ export interface Concert {
   customQrSlug?: string;
   entradasUrl?: string;
   entradasLugarFisico?: string;
+  precioEntradaEstimado?: number;
   logisticaTecnica?: TechnicalLogistics;
   contactosClave?: KeyContactItem[];
   cierreMaterial?: CierreMaterialItem[];
   merchControl?: MerchControlBolo;
+  // Métricas de convocatoria real e historial para la IA de booking
+  asistencia_propia?: number;
+  asistencia_otras_bandas?: number;
+  bandas_compartidas?: string[];
+  post_show_review?: string;
+  es_hito_destacado?: boolean;
+  cartelUrl?: string;
+  cartel_url?: string;
 }
 
 export interface EmailSignatureConfig {
@@ -369,10 +559,20 @@ export interface EmailSignatureConfig {
     twitter?: string;
     appleMusic?: string;
     bandcamp?: string;
+    soundcloud?: string;
+    bandsintown?: string;
+    songkick?: string;
+    wegow?: string;
+    tidal?: string;
+    deezer?: string;
+    amazonMusic?: string;
+    twitch?: string;
+    threads?: string;
     website?: string;
     whatsapp?: string;
     revolut?: string;
     paypal?: string;
+    [key: string]: string | undefined;
   };
 }
 
@@ -403,6 +603,22 @@ export interface DatosContratacion {
   ciudadBase?: string;
   formatos?: string;
   necesidadesEscenario?: string;
+  // Operativa real para el agente y salas:
+  tieneMerchandising?: boolean;
+  detallesMerchandising?: string; // ej: 'Camisetas y vinilos con datáfono propio'
+  tieneTecnicoSonidoPropio?: boolean; // true = viajan con técnico propio, false = usan técnico de la sala
+  transportePropio?: boolean; // furgoneta propia / transporte público
+  hospedajeRequerido?: boolean; // si necesitan alojamiento para bolos fuera de su comunidad
+  facturacion?: 'autonomo' | 'sociedad' | 'cooperativa' | 'asociacion' | 'facturacion_por_terceros';
+}
+
+export interface RiderConfig {
+  tipoMonitoreo?: 'in_ear' | 'cuñas_escenario' | 'mixto' | 'sin_preferencia';
+  microfoniaPropia?: boolean; // Traen sus propios micrófonos/DIs o dependen de la sala
+  canalesMinimos?: number; // Ej: 12, 16, 24 canales
+  backlinePropio?: 'completo' | 'parcial' | 'sin_backline'; // Ej: traen ampli de bajo/guitarra/batería o piden todo a la sala
+  tiempoPruebaMinutos?: number; // Ej: 30, 45, 60 min
+  observacionesRider?: string;
 }
 
 export interface EPKConfig {
@@ -410,12 +626,17 @@ export interface EPKConfig {
   biografia: string;
   fraseImpacto?: string;
   genero?: string;
+  /** Bandas o artistas afines / Sonido similar ("Para fans de..." / FFO - For Fans Of) */
+  bandasSimilares?: string[];
+  /** Si está activo, muestra la etiqueta de "Para fans de (FFO)" en el dossier público */
+  mostrarBandasSimilares?: boolean;
   idioma?: string;
   fontStyle?: string;
   tipografia?: string;
   miembros?: BandMember[];
   videos?: EPKVideo[];
   datosContratacion?: DatosContratacion;
+  riderConfig?: RiderConfig;
   logoUrl: string;
   dossierPdfUrl?: string;
   dossierPdfName?: string;
@@ -435,6 +656,15 @@ export interface EPKConfig {
     twitter?: string;
     appleMusic?: string;
     bandcamp?: string;
+    soundcloud?: string;
+    bandsintown?: string;
+    songkick?: string;
+    wegow?: string;
+    tidal?: string;
+    deezer?: string;
+    amazonMusic?: string;
+    twitch?: string;
+    threads?: string;
     website?: string;
     whatsapp?: string;
     revolut?: string;
@@ -672,6 +902,7 @@ export interface User {
   main_band_id?: string;
   band_order?: string[];
   email?: string;
+  secondary_email?: string;
   instrument?: string;
   avatarColor?: string;
   createdAt: string;
@@ -906,6 +1137,7 @@ export interface SetlistShortcut {
 
 export interface ThemeColors {
   name: string;
+  mode?: 'light' | 'dark';
   bg: string;
   card: string;
   primary: string;
@@ -1045,4 +1277,26 @@ export interface BandToneDnaExpression {
   vocabulario_aprendido?: string[];
   terminos_a_evitar?: string[];
   ultimo_auto_refinamiento?: string;
+}
+
+export interface CustomAlertRule {
+  id: string;
+  name: string;
+  description: string;
+  category: 'booking' | 'finanzas' | 'ensayos' | 'epk';
+  requiredModule: string;
+  enabled: boolean;
+  daysThreshold?: number;
+  notifyInApp: boolean;
+  notifyEmail: boolean;
+  targetRoleOnly?: boolean;
+}
+
+export interface AlertSettingsConfig {
+  emailNotificationsEnabled: boolean;
+  inAppNotificationsEnabled: boolean;
+  digestFrequency: 'realtime' | 'daily_digest' | 'weekly_digest';
+  recipientEmail?: string;
+  recipientRole: 'leader_only' | 'all_members';
+  rules: CustomAlertRule[];
 }

@@ -40,13 +40,19 @@ import {
   Download,
 } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+import { ChatbotHeader } from './chatbot/ChatbotHeader';
+import { ChatbotModeSwitcher } from './chatbot/ChatbotModeSwitcher';
 import { apiFetch } from '../utils/api';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 
-interface ProposedAction {
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+
+export interface ProposedAction {
   status?: 'pending' | 'applied' | 'dismissed';
   type:
     | 'propose_lead_approval'
@@ -109,7 +115,7 @@ interface ProposedAction {
   };
 }
 
-interface ChatMessage {
+export interface ChatMessage {
   id: string;
   sender: 'user' | 'bot';
   text: string;
@@ -1899,144 +1905,26 @@ export default function Chatbot({
       className={`flex flex-col ${isFloating ? 'h-[550px]' : 'h-full min-h-[500px]'} ${'bg-[var(--surface)]'} rounded-[var(--r-l)] overflow-hidden font-sans w-full max-w-full overflow-x-hidden`}
     >
       {/* Bot Header */}
-      <div className={`px-5 py-4 flex items-center justify-between ${'bg-[var(--bg)] -neutral-200/80'}`}>
-        <div className="flex items-center gap-3">
-          <div className={`p-1.5 rounded-[var(--r-s)] ${'bg-[var(--tentative)]/5 text-[var(--tentative)]'}`}>
-            <Guitar className="w-4 h-4" />
-          </div>
-          <div>
-            <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 ${'text-[var(--ink)]'}`}>
-              Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block ${'bg-[var(--tentative)]/80'}`} />
-            </h4>
-            <span className="text-[9px] font-sans text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {isAdmin ? (
-            <button
-              type="button"
-              onClick={() => setIsAutonomyModalOpen(true)}
-              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${'bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--acc)]/40/40'}`}
-              title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
-            >
-              <Sliders className="w-3 h-3 text-[var(--acc)]" />
-              <span>
-                Autonomía:{' '}
-                {autonomyConfig.dispatchLevel === 'draft_only'
-                  ? 'Borrador'
-                  : autonomyConfig.dispatchLevel === 'scheduled_window'
-                    ? 'Ventana 3h'
-                    : 'Auto 1er Contacto'}{' '}
-                • Min {autonomyConfig.minCacheThreshold || 300}€
-              </span>
-              <span className="px-1 py-0.2 text-[8px] rounded font-black bg-[var(--tentative)]/40 text-[var(--ink)] ml-0.5">ADMIN</span>
-            </button>
-          ) : (
-            <div
-              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold opacity-80 ${'bg-[var(--tentative)]/15 text-[var(--tentative)]/80/30'}`}
-              title="Límites de autonomía configurados (Configuración restringida a Administradores)"
-            >
-              <Sliders className="w-3 h-3 text-[var(--acc)]" />
-              <span>
-                Autonomía:{' '}
-                {autonomyConfig.dispatchLevel === 'draft_only'
-                  ? 'Borrador'
-                  : autonomyConfig.dispatchLevel === 'scheduled_window'
-                    ? 'Ventana 3h'
-                    : 'Auto 1er Contacto'}{' '}
-                • Min {autonomyConfig.minCacheThreshold || 300}€
-              </span>
-            </div>
-          )}
-
-          <button
-            id="clear-chat-btn"
-            onClick={() => {
-              const resetMessages: ChatMessage[] = [
-                {
-                  id: 'welcome-1',
-                  sender: 'bot',
-                  text: `👋 **¡Buenas, ${cleanUserName}!** He limpiado el hilo del chat de **${bandDisplayName}**.\n\n¿En qué os puedo ayudar para organizar los conciertos de la banda, el calendario de redes o revisar los correos para las salas hoy?`,
-                  timestamp: new Date(),
-                },
-              ];
-              setMessages(resetMessages);
-              try {
-                localStorage.setItem(storageKey, JSON.stringify(resetMessages));
-              } catch (e) {
-                console.error(e);
-              }
-            }}
-            className={`text-[9px] font-sans tracking-wider transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${'text-[var(--ink-2)] hover:text-[var(--tentative)]'}`}
-          >
-            Limpiar Hilo
-          </button>
-          {onClose && (
-            <button
-              id="close-floating-chat-btn"
-              onClick={onClose}
-              className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center active:scale-95 ${'bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
-              title="Cerrar Chat"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
-      </div>
+      <ChatbotHeader
+        isStitchLight={isStitchLight}
+        bandDisplayName={bandDisplayName}
+        isAdmin={isAdmin}
+        onOpenAutonomyModal={() => setIsAutonomyModalOpen(true)}
+        autonomyConfig={autonomyConfig}
+        cleanUserName={cleanUserName}
+        storageKey={storageKey}
+        setMessages={setMessages}
+        onClose={onClose}
+      />
 
       {/* Mode Switcher Banner (Python Agents vs Direct Gemini) */}
-      <div
-        className={`px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-sans transition-colors ${
-          agentsEnabled ? 'bg-[var(--acc)]/10 -amber-0/20 text-[var(--acc)]/70' : 'bg-[var(--ok)]/10/80 -emerald-200/80 text-[var(--ok)]'
-        }`}
-      >
-        <div className="flex items-center gap-2 min-w-0">
-          <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ? 'bg-[var(--acc)]/60' : 'bg-[var(--ok)]'}`} />
-          <span className="font-bold truncate text-[11px] tracking-wider">
-            {agentsEnabled ? '⚡ Agentes Supabase Activos (Backend & Database)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
-          </span>
-          <span className="text-[10px] opacity-75 hidden sm:inline truncate">
-            {agentsEnabled
-              ? '— Ejecuta agentes (Scout, Redactor, Enviador, Lector) en Supabase'
-              : '— Asistencia, redacción y consultas directas con Gemini'}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          {isAdmin && (
-            <button
-              id="open-autonomy-config-btn"
-              type="button"
-              onClick={() => setIsAutonomyModalOpen(true)}
-              className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]'}`}
-              title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
-            >
-              <Sliders className="w-3 h-3 text-[var(--acc)]" />
-              <span>Niveles de Autonomía</span>
-              <span className="px-1 py-0.2 rounded text-[8px] bg-[var(--tentative)]/50 text-[var(--ink)] font-black">ADMIN</span>
-            </button>
-          )}
-
-          <button
-            id="toggle-agents-switch"
-            type="button"
-            onClick={() => {
-              const nextVal = !agentsEnabled;
-              setAgentsEnabled(nextVal);
-              localStorage.setItem('bakandeya_agents_enabled', String(nextVal));
-            }}
-            className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
-              agentsEnabled
-                ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/50/15 text-[var(--acc)] -amber-0/40'
-                : 'bg-[var(--ok)]/20 hover:bg-[var(--surface)]/15 text-[var(--ok)] -emerald-500/40'
-            }`}
-            title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}
-          >
-            <span>{agentsEnabled ? 'Desactivar Agentes Supabase' : 'Activar Agentes Supabase'}</span>
-          </button>
-        </div>
-      </div>
+      <ChatbotModeSwitcher
+        agentsEnabled={agentsEnabled}
+        onToggleAgents={setAgentsEnabled}
+        isAdmin={isAdmin}
+        onOpenAutonomyModal={() => setIsAutonomyModalOpen(true)}
+        isStitchLight={isStitchLight}
+      />
 
       {/* Messages Thread Container */}
       <div className={`flex-1 p-4 overflow-y-auto space-y-4 ${'bg-[var(--bg)]/50'}`}>

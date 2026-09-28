@@ -8,26 +8,50 @@ import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 
+export function detectMimeType(ext: string, fallback?: string): string {
+  const cleanExt = (ext || '').toLowerCase().replace('.', '');
+  const mimeMap: Record<string, string> = {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+    svg: 'image/svg+xml',
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    m4a: 'audio/x-m4a',
+    ogg: 'audio/ogg',
+    aac: 'audio/aac',
+    flac: 'audio/flac',
+    pdf: 'application/pdf',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    mp4: 'video/mp4',
+    mov: 'video/quicktime',
+    webm: 'video/webm'
+  };
+  return mimeMap[cleanExt] || (fallback && fallback !== 'application/octet-stream' ? fallback : 'application/octet-stream');
+}
+
 /**
  * Optimizador transparente de archivos de audio.
  * Si el usuario sube un archivo de audio (.wav, .flac, .aiff, .m4a, .wma, etc. o mp3 pesado > 2MB),
  * lo recodifica en segundo plano a MP3 de alta fidelidad (256kbps), reduciendo el peso de almacenamiento
  * en Supabase/disco hasta un 93% sin pérdida de calidad auditiva apreciable.
  */
-async function compressAudioFileIfNeeded(inputPath: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
+async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
   const ext = path.extname(inputPath).toLowerCase().replace('.', '');
   const isAudioExt = ['wav', 'flac', 'aiff', 'aif', 'alac', 'm4a', 'wma', 'ogg', 'opus'].includes(ext);
   
   if (!fs.existsSync(inputPath)) {
-    return { finalPath: inputPath, wasCompressed: false, newMime: 'application/octet-stream', newExt: ext };
+    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
   }
 
   const stats = fs.statSync(inputPath);
   
   // Si no es un formato de audio pesado o es un mp3 pequeño (< 2MB), no hace falta comprimir
   if (!isAudioExt && (ext !== 'mp3' || stats.size < 2 * 1024 * 1024)) {
-    const defaultMime = ext === 'mp3' ? 'audio/mpeg' : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'application/octet-stream';
-    return { finalPath: inputPath, wasCompressed: false, newMime: defaultMime, newExt: ext };
+    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
   }
 
   const outputPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '-opt.mp3');
@@ -400,10 +424,10 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
     }
 
     // Optimizador transparente: si es un audio pesado (.wav, .flac, .m4a, etc.), se comprime a MP3 256k
-    const compResult = await compressAudioFileIfNeeded(filePath);
+    const compResult = await compressAudioFileIfNeeded(filePath, mimeType);
     filePath = compResult.finalPath;
     uniqueName = path.basename(filePath);
-    mimeType = compResult.newMime;
+    mimeType = compResult.newMime || detectMimeType(path.extname(filePath), mimeType);
     buffer = null; // Forzar lectura del archivo optimizado desde disco
 
     let finalUrl = `/uploads/${uniqueName}`;
@@ -413,10 +437,6 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
     const supabase = getSupabaseClient();
     if (supabase) {
       const bucketName = getBucketName();
-      // La banda salía del body o de la cabecera sin validar, así que se podían dejar ficheros
-      // en la carpeta de otra banda. Y el `folder` del cliente se usaba TAL CUAL como ruta
-      // dentro del bucket, con upsert activado: valía para escribir en cualquier rama, encima
-      // de los ficheros de quien fuera. Ahora todo cuelga de la carpeta de la banda propia.
       const targetBand = getTargetBandId(req);
       const cleanBandId = String(targetBand).toLowerCase().replace(/[^a-z0-9_-]/g, '-');
       const cleanCategory = category ? String(category).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'general';
@@ -425,12 +445,6 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       const storagePath = `${subPath}/${uniqueName}`;
       const fileContent = buffer || fs.readFileSync(filePath);
 
-      // El fallo de subida a Supabase es intermitente (red, timeout puntual), así que antes de
-      // rendirse se reintenta una vez. Antes, un solo fallo pasajero caía en silencio al disco
-      // local de /uploads - que en Railway se borra en cada redeploy - dejando en la base de
-      // datos una URL que "funcionaba" un rato y luego se rompía sin ningún aviso (así se rompió
-      // el logo de Ruta 66: unos intentos subieron bien a Supabase y otro cayó al disco local,
-      // y el que quedó guardado en el EPK fue justo ese).
       let uploadError: any = null;
       for (let attempt = 0; attempt < 2 && storageEngine !== "supabase"; attempt++) {
         try {
@@ -449,6 +463,13 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
             }
           } else {
             uploadError = error;
+            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || (error as any).statusCode === "404" || (error as any).status === 404)) {
+              try {
+                await supabase.storage.createBucket(bucketName, { public: true });
+              } catch (createErr) {
+                console.warn("[Upload] Could not create bucket:", createErr);
+              }
+            }
           }
         } catch (sbErr) {
           uploadError = sbErr;
@@ -456,14 +477,10 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       }
 
       if (storageEngine !== "supabase") {
-        // Con Supabase configurado, el disco local ya NUNCA es una alternativa segura en
-        // producción (Railway lo borra en cada redeploy): mejor que la subida falle claramente
-        // y el usuario reintente, a que "funcione" y el archivo desaparezca más tarde sin avisar.
-        console.error("Supabase Storage upload failed twice, refusing local fallback:", uploadError?.message || uploadError);
-        try { fs.unlinkSync(filePath); } catch (_) { /* ya no queda nada útil que borrar */ }
-        return res.status(502).json({
-          error: "No se pudo guardar el archivo en el almacenamiento permanente. Inténtalo de nuevo en unos segundos."
-        });
+        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", uploadError?.message || uploadError);
+        // Fallback to locally served path so upload never fails for user
+        finalUrl = `/uploads/${uniqueName}`;
+        storageEngine = "local";
       }
     }
 

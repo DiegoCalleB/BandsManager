@@ -398,13 +398,17 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Contraseña"
-                      className={`${inputClass} pr-11`}
+                      className={`${inputClass} pr-12`}
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      onPointerDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      tabIndex={-1}
+                      aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -526,13 +530,17 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
                       placeholder="Contraseña"
-                      className={`${inputClass} pr-11`}
+                      className={`${inputClass} pr-12`}
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => setShowRegPassword(!showRegPassword)}
-                      className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                      onClick={() => setShowRegPassword((prev) => !prev)}
+                      onPointerDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      tabIndex={-1}
+                      aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>

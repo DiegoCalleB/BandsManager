@@ -1,4 +1,5 @@
 import { getSupabase } from "./core.js";
+import { ensureRegisteredBandExists } from "./bands.js";
 
 export interface StemsCacheRecord {
   bandId: string;
@@ -22,7 +23,7 @@ export interface StemsCacheRecord {
 // In-memory fast layer
 export const stemsMemoryCache = new Map<string, StemsCacheRecord>();
 
-const LOCK_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutos para declarar un pending como abandonado
+const LOCK_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutos para declarar un pending como abandonado (permite cold-start de GPU en Replicate)
 
 /**
  * Consulta la caché de stems con estrategia de dos capas:
@@ -129,6 +130,9 @@ export async function acquireStemsSeparationLock(
   }
 
   try {
+    if (bandId && bandId !== "sin-banda") {
+      await ensureRegisteredBandExists(bandId).catch(() => {});
+    }
     const sb = getSupabase();
 
     // 2. Comprobar si ya existe fila en Supabase
@@ -276,7 +280,7 @@ export async function waitForStemsCompletion(
   bandId: string,
   songHash: string,
   engine: string,
-  maxWaitMs: number = 180000,
+  maxWaitMs: number = 600000,
   pollIntervalMs: number = 1500
 ): Promise<StemsCacheRecord | null> {
   const startTime = Date.now();
@@ -311,6 +315,9 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
   // devuelve { error } — hay que comprobarlo explícitamente o un fallo real (p.ej. PGRST204 por un
   // esquema desincronizado) se registra como "guardado con éxito" mientras la fila real nunca cambia.
   try {
+    if (record.bandId && record.bandId !== "sin-banda") {
+      await ensureRegisteredBandExists(record.bandId).catch(() => {});
+    }
     const sb = getSupabase();
     const { error } = await sb
       .from("song_stems_cache")

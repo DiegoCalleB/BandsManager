@@ -115,11 +115,9 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     className="w-full bg-[var(--surface)] focus: rounded-[var(--r-m)] px-3 py-2 text-xs text-[var(--ink)] outline-none"
                   >
                     <option value="">-- Seleccionar tema del repertorio o usar personalizado --</option>
-                    {songs.map((song) => (
-                      <option key={song.id} value={song.id}>
-                        {song.titulo} {song.duracion ? `(${song.duracion})` : ''}
-                        {''}
-                        {song.audioPrincipalUrl ? '🎵 (Con audio subido)' : ''}
+                    {songs.map((song, idx) => (
+                      <option key={song.id || `song-${idx}`} value={song.id}>
+                        {song.titulo} {song.duracion ? `(${song.duracion})` : ''} {song.audioPrincipalUrl ? '🎵 (Con audio subido)' : ''}
                       </option>
                     ))}
                   </select>
@@ -247,9 +245,9 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
             </div>
           )}
           <div className="space-y-3">
-            {videos.map((v) => (
+            {videos.map((v, idx) => (
               <div
-                key={v.id}
+                key={v.id || `video-${idx}-${v.url || ''}`}
                 className={`rounded-[var(--r-m)] p-3 space-y-2 ${v.destacado ? '/60 bg-[var(--acc)]/5' : 'bg-[var(--surface)]'}`}
               >
                 <div className="flex items-center gap-2">
@@ -353,6 +351,86 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
               className="w-full bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-2 text-sm text-[var(--ink)] focus: outline-none"
             />
+          </div>
+          {/* PARÁMETROS OPERATIVOS PARA EL AGENTE DE BOOKING (ANTI-ALUCINACIONES) */}
+          <div className="pt-4 border-t border-slate-800/80">
+            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              Operativa Real para el Agente de IA (Anti-Alucinaciones)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {/* Técnico de sonido propio vs sala */}
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
+                <span className="text-xs font-semibold text-slate-300 block">Técnico de sonido en directo</span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => editarDatoContratacion('tieneTecnicoSonidoPropio', false)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${!config.datosContratacion?.tieneTecnicoSonidoPropio ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+                  >
+                    De la sala / casa
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editarDatoContratacion('tieneTecnicoSonidoPropio', true)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.tieneTecnicoSonidoPropio ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+                  >
+                    Propio de la banda
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500">El agente no prometerá técnico propio si marcáis "De la sala".</p>
+              </div>
+              {/* Merchandising */}
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
+                <span className="text-xs font-semibold text-slate-300 block">Merchandising físico en bolos</span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => editarDatoContratacion('tieneMerchandising', false)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${!config.datosContratacion?.tieneMerchandising ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+                  >
+                    No disponemos
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editarDatoContratacion('tieneMerchandising', true)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.tieneMerchandising ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+                  >
+                    Sí (tenemos stock)
+                  </button>
+                </div>
+                {config.datosContratacion?.tieneMerchandising && (
+                  <input
+                    type="text"
+                    value={config.datosContratacion?.detallesMerchandising || ''}
+                    onChange={(e) => editarDatoContratacion('detallesMerchandising', e.target.value)}
+                    placeholder="Ej: Camisetas y vinilos con TPV propio"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-slate-600 focus:border-amber-500 outline-none"
+                  />
+                )}
+              </div>
+              {/* Transporte y Hospedaje */}
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
+                <span className="text-xs font-semibold text-slate-300 block">Transporte & Logística</span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => editarDatoContratacion('transportePropio', !config.datosContratacion?.transportePropio)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.transportePropio ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+                  >
+                    {config.datosContratacion?.transportePropio ? 'Furgoneta propia' : 'Sin furgoneta'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editarDatoContratacion('hospedajeRequerido', !config.datosContratacion?.hospedajeRequerido)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium border transition-colors ${config.datosContratacion?.hospedajeRequerido ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+                  >
+                    {config.datosContratacion?.hospedajeRequerido ? 'Pide hotel' : 'Hotel no obligatorio'}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500">Ayuda a calcular cachés y viabilidad de kilometraje.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

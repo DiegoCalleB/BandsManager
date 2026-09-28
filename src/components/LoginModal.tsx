@@ -16,7 +16,6 @@ import {
   KeyRound,
   ArrowLeft,
   CheckCircle2,
-  Sparkles,
 } from 'lucide-react';
 import { User as UserType } from '../types';
 import { signInWithGoogleIdentity } from '../utils/googleAuth';
@@ -379,21 +378,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       onLoginSuccess(data.user, data.token, data.availableBands);
     } catch (err: any) {
-      console.warn('Backend register notice, proceeding with local session state:', err);
-      // Fallback local session if offline
-      onLoginSuccess(
-        {
-          id: `user-${Date.now()}`,
-          username: regEmail.trim() || regBandName.trim() || 'banda',
-          name: regLeaderName.trim() || 'Miembro',
-          bandName: regBandName.trim() || 'Nueva Banda',
-          email: regEmail.trim(),
-          role: 'leader',
-          plan: planKey,
-          createdAt: new Date().toISOString(),
-        },
-        'mock_token_after_register'
-      );
+      console.error('Error al registrar cuenta:', err);
+      setError(err.message || 'Error al crear la cuenta. Por favor, revisa los datos e inténtalo de nuevo.');
+      setView('register');
     } finally {
       setLoading(false);
     }
@@ -661,8 +648,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      onPointerDown={(e) => e.preventDefault()}
+                      onMouseDown={(e) => e.preventDefault()}
+                      tabIndex={-1}
+                      aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                      className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -855,8 +846,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         />
                         <button
                           type="button"
-                          onClick={() => setShowResetNewPassword(!showResetNewPassword)}
-                          className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                          onClick={() => setShowResetNewPassword((prev) => !prev)}
+                          onPointerDown={(e) => e.preventDefault()}
+                          onMouseDown={(e) => e.preventDefault()}
+                          tabIndex={-1}
+                          aria-label={showResetNewPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                          className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                         >
                           {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
@@ -989,8 +984,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       />
                       <button
                         type="button"
-                        onClick={() => setShowRegPassword(!showRegPassword)}
-                        className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                        onClick={() => setShowRegPassword((prev) => !prev)}
+                        onPointerDown={(e) => e.preventDefault()}
+                        onMouseDown={(e) => e.preventDefault()}
+                        tabIndex={-1}
+                        aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                        className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                       >
                         {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -1165,8 +1164,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                         />
                         <button
                           type="button"
-                          onClick={() => setShowActivatePassword(!showActivatePassword)}
-                          className="absolute right-4 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                          onClick={() => setShowActivatePassword((prev) => !prev)}
+                          onPointerDown={(e) => e.preventDefault()}
+                          onMouseDown={(e) => e.preventDefault()}
+                          tabIndex={-1}
+                          aria-label={showActivatePassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                          className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-200 active:text-[#f2ca50] transition-colors cursor-pointer z-10 touch-manipulation"
                         >
                           {showActivatePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>

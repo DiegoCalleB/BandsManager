@@ -1,6 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
+import { getSupabase } from "../db/core.js";
 import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { enviarEmail } from "../services/emailAgentClient.js";
 import { tieneGmailOAuthConectado, enviarEmailGmailApi } from "../services/gmailApiClient.js";
@@ -10,6 +11,7 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import responseStrategiesRouter from "./bands/responseStrategies.js";
 
 const router = express.Router();
@@ -335,7 +337,7 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
     return res.status(500).json({ error: "Servicio de IA no disponible o API key no configurada." });
   }
 
-  const isBakandeyaOrSender = is_sender || nombre_entidad.toLowerCase().includes("bakandeya");
+  const isSenderBand = !!is_sender;
 
   // Para la banda EMISORA (la propia) hay algo mejor que lo que mande el body: su EPK real,
   // que ya guarda los 4 enlaces de verdad. Antes solo se rastreaba Instagram porque era el
@@ -380,7 +382,7 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
 
 OBJETIVO: Analizar en profundidad la FORMA DE HABLAR, EL ADN DE EXPRESIÓN Y EL TONO DE COMUNICACIÓN de la siguiente entidad musical:
 - Nombre de la Entidad: "${nombre_entidad}"
-- Rol: ${isBakandeyaOrSender ? "Banda EMISORA de la propuesta (nuestro perfil)" : "Entidad RECEPTORA / Objetivo"}
+- Rol: ${isSenderBand ? "Banda EMISORA de la propuesta (nuestro perfil)" : "Entidad RECEPTORA / Objetivo"}
 - Tipo: ${tipo || "Banda / Artista / Sala / Festival"}
 ${redesConHandle.length ? redesConHandle.join("\n") : `- Instagram / Handle: ${instagram || "No especificado"}`}
 - Estilo Musical: ${estilo_musical || "No especificado"}
@@ -393,14 +395,14 @@ INSTRUCCIONES DE BÚSQUEDA Y EXTRACCIÓN (SEARCH GROUNDING):
 3. Determinar su tono general (¿informal/fiestero, provocador/gótico, elegante/institucional, enérgico, académico, callejero?), su nivel de energía, tratamiento habitual (Tú/Vosotros vs Usted) y vocabulario icónico.
 4. IMPORTANTE: el tono no es idéntico en todas las redes. Compara cómo hablan en cada una de las que tengan handle arriba: Facebook suele ser más institucional/informativo que TikTok; TikTok suele ser más gamberro, rápido y con jerga que Instagram; YouTube suele explicar más. Anota en qué se diferencia REALMENTE cada red (no lo des por hecho sin comprobarlo) en "matices_por_red". Si una red no tiene handle o no encuentras diferencia real respecto al tono general, deja esa clave vacía o igual al tono general; no inventes una diferencia que no hayas comprobado.
 5. Redactar una propuesta de contacto o correo electrónico en la que:
-   - Si es la banda emisora (Bakandeya): El correo transmite fielmente la energía festiva y directa de Bakandeya (balkan-ska, violín enérgico, sustitución de metales por sintetizador).
-   - Si es un grupo destino (ej: Marilyn Manson, Ska-P, etc.): La propuesta se adapta para utilizar referencias, vocabulario y tono que conecten con la personalidad del grupo destino sin perder la esencia de Bakandeya.
+   - Si es la banda emisora: El correo transmite fielmente la personalidad sonora, energía y propuesta escénica de la banda.
+   - Si es una entidad receptora: La propuesta se adapta para utilizar referencias, vocabulario y tono que conecten con la personalidad del receptor manteniendo la identidad de la banda.
 
 Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exacta:
 
 {
   "nombre_entidad": "${nombre_entidad}",
-  "es_emisor": ${isBakandeyaOrSender ? "true" : "false"},
+  "es_emisor": ${isSenderBand ? "true" : "false"},
   "redes_rastreadas": ["Instagram Reels @...", "TikTok", "YouTube", "Facebook", "Prensa / Web oficial"],
   "tono_comunicacion": "Resumen conciso de 1-2 frases del ADN y estilo de voz general",
   "tratamiento_habitual": "Tú / Colegueo",
@@ -700,14 +702,16 @@ router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
 
 router.post("/bands/email-account", requireAuth, async (req, res) => {
   try {
-    const { band_id, provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
-    if (!band_id || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
+    const targetBandId = getTargetBandId(req) || req.body.band_id;
+    const { provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
+    if (!targetBandId || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
       return res.status(400).json({ error: "band_id, email, app_password, smtp_host, smtp_port e imap_host son requeridos" });
     }
+    const cleanEmail = email.trim().toLowerCase();
     const saved = await dbUpsertBandEmailAccount({
-      band_id,
+      band_id: targetBandId,
       provider: provider || "other",
-      email,
+      email: cleanEmail,
       app_password,
       smtp_host,
       smtp_port: Number(smtp_port),
@@ -715,6 +719,15 @@ router.post("/bands/email-account", requireAuth, async (req, res) => {
       imap_host,
       imap_port: imap_port ? Number(imap_port) : 993
     });
+
+    // Sincronizar el email oficial de registered_bands con el buzón que la banda ha configurado
+    try {
+      const sb = getSupabase();
+      await sb.from("registered_bands").update({ email: cleanEmail }).eq("band_id", targetBandId);
+    } catch (syncErr) {
+      console.warn("[bands] No se pudo sincronizar registered_bands.email:", syncErr);
+    }
+
     res.json({ success: true, data: toSafeEmailAccountResponse(saved) });
   } catch (err: any) {
     console.error("Error saving band email account:", err);
@@ -810,4 +823,251 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
   }
 });
 
+import { dbGetAlertSettings, dbUpsertAlertSettings } from "../db/alertSettings.js";
+
+// GET /api/bands/alert-settings
+router.get("/bands/alert-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbGetAlertSettings(bandId);
+    return res.json({ success: true, settings });
+  } catch (err: any) {
+    console.error("Error obteniendo configuración de alertas:", err);
+    return res.status(500).json({ error: err?.message || "Error consultando alertas" });
+  }
+});
+
+// POST /api/bands/alert-settings
+router.post("/bands/alert-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const success = await dbUpsertAlertSettings(bandId, req.body || {});
+    return res.json({ success });
+  } catch (err: any) {
+    console.error("Error guardando configuración de alertas:", err);
+    return res.status(500).json({ error: err?.message || "Error guardando alertas" });
+  }
+});
+
+// POST /api/bands/trigger-alert-digest - Enviar email de resumen ejecutivo de alertas
+router.post("/bands/trigger-alert-digest", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbGetAlertSettings(bandId);
+
+    const recipientEmail = settings?.recipient_email || req.user?.email || req.user?.username;
+    if (!recipientEmail) {
+      return res.status(400).json({ error: "No se ha configurado un email de destino para las alertas." });
+    }
+
+    const state = loadState();
+    const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === bandId || b.id === bandId);
+    const bandName = bandInfo?.nombre_banda || bandInfo?.bandName || req.user?.bandName || "Tu Banda";
+
+    const leads = (state.leads || []).filter((l: any) => l.band_id === bandId || l.bandId === bandId);
+    const concerts = (state.concerts || []).filter((c: any) => c.band_id === bandId || c.bandId === bandId);
+
+    // Conteo de elementos pendientes
+    const pendingDraftsCount = leads.filter((l: any) => l.estado === 'pendiente_aprobacion' || l.estado === 'borrador_creado').length;
+    const staleLeadsCount = leads.filter((l: any) => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length;
+    const confirmedShowsCount = concerts.filter((c: any) => c.estado === 'confirmado' || new Date(c.fecha) >= new Date()).length;
+
+    const emailSubject = `📊 Resumen Ejecutivo & Alertas de Booking - ${bandName}`;
+
+    const htmlBody = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto;">
+        <div style="border-bottom: 2px solid #f59e0b; padding-bottom: 16px; margin-bottom: 24px;">
+          <h1 style="color: #f59e0b; font-size: 22px; margin: 0 0 4px 0;">⚡ Radar del Mánager — ${bandName}</h1>
+          <p style="color: #94a3b8; font-size: 13px; margin: 0;">Resumen ejecutivo automático de actividad y alertas de booking.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+          <div style="background-color: #1e293b; padding: 16px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
+            <span style="font-size: 20px; font-weight: bold; color: #38bdf8; display: block;">${pendingDraftsCount}</span>
+            <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Borradores IA</span>
+          </div>
+          <div style="background-color: #1e293b; padding: 16px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
+            <span style="font-size: 20px; font-weight: bold; color: #fbbf24; display: block;">${staleLeadsCount}</span>
+            <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Salas a Seguir</span>
+          </div>
+          <div style="background-color: #1e293b; padding: 16px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
+            <span style="font-size: 20px; font-weight: bold; color: #34d399; display: block;">${confirmedShowsCount}</span>
+            <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Bolos Activos</span>
+          </div>
+        </div>
+
+        <div style="background-color: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 24px;">
+          <h3 style="color: #f8fafc; font-size: 15px; margin-top: 0; margin-bottom: 12px;">🎪 Recomendación Estacional del Mánager</h3>
+          <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin: 0;">
+            Estamos en ventana activa de contratación de <strong>festivales de verano y cierres de salas</strong>. Se recomienda revisar las propuestas preparadas por la IA y enviar los emails de seguimiento correspondientes.
+          </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid #334155;">
+          <a href="${process.env.APP_URL || 'https://bandmanager.io'}" style="background-color: #f59e0b; color: #0f172a; font-weight: bold; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; display: inline-block;">Acceder a BandManager.io</a>
+        </div>
+      </div>
+    `;
+
+    const result = await sendTransactionalEmail({
+      to: recipientEmail,
+      subject: emailSubject,
+      html: htmlBody
+    });
+
+    return res.json({
+      success: true,
+      emailSent: result.success,
+      recipient: recipientEmail,
+      error: result.error
+    });
+  } catch (err: any) {
+    console.error("Error en /bands/trigger-alert-digest:", err);
+    return res.status(500).json({ error: err?.message || "Error al enviar el resumen por email" });
+  }
+});
+
+// POST /api/bands/generate-logo - Generador de logotipos profesionales con IA para bandas amateurs
+router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { style, customPrompt, genre, colors } = req.body || {};
+
+    const state = loadState();
+    const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === bandId || b.id === bandId);
+    let epk: any = null;
+    try {
+      epk = await dbGetEpkConfig(bandId);
+    } catch (_) {}
+
+    const bandName = bandInfo?.nombre_banda || bandInfo?.bandName || epk?.nombreBanda || req.user?.bandName || req.user?.name || "Banda";
+    const bandGenre = genre || epk?.genero || bandInfo?.genero || "Rock / Indie";
+    const bandBio = epk?.biografia || "";
+
+    const selectedStyle = style || "modern_emblem";
+    const styleDescriptions: Record<string, string> = {
+      vintage_rock: "Vintage 70s/80s rock aesthetic, distressed grunge badge, bold retro serif typography, guitar and vinyl motifs, warm amber and gold highlights on dark texture.",
+      minimal_modern: "Ultra-clean modern minimalist geometric emblem, sharp vector lines, high-end Swiss typography, sleek monochromatic with subtle electric amber accents.",
+      neon_synth: "Cyberpunk synthwave neon glow, vibrant magenta and cyan outlines on pitch black, futuristic geometric typography, laser audio waves.",
+      classic_badge: "Heritage circular music crest, collegiate athletic / craft brewery badge style, star accents, curved ribbon banner with establishment year.",
+      bold_typography: "Heavy bold brutalist typographic wordmark with custom stylized lettering, rock poster energy, high contrast black, white and vibrant amber."
+    };
+
+    const visualConcept = styleDescriptions[selectedStyle] || styleDescriptions.minimal_modern;
+    const client = getAiClient();
+
+    let logoDataUrl = "";
+    let generationMethod = "svg_vector";
+
+    // Intento 1: Generación directa con modelo de imagen de Google GenAI si está disponible
+    if (client) {
+      try {
+        const imagePrompt = `Professional music band logo for '${bandName}'. Genre: ${bandGenre}. Style: ${visualConcept}. ${customPrompt ? `Additional creative direction: ${customPrompt}.` : ''} Clean graphic design, centered emblem on dark isolated background, vector art quality, iconic branding.`;
+        
+        const imgResponse: any = await (client.models as any).generateImages({
+          model: 'imagen-3.0-generate-002',
+          prompt: imagePrompt,
+          config: {
+            numberOfImages: 1,
+            outputMimeType: 'image/png',
+            aspectRatio: '1:1',
+          },
+        }).catch(() => null);
+
+        if (imgResponse?.generatedImages?.[0]?.image?.imageBytes) {
+          const base64 = imgResponse.generatedImages[0].image.imageBytes;
+          logoDataUrl = `data:image/png;base64,${base64}`;
+          generationMethod = "imagen_ai";
+        }
+      } catch (imgErr) {
+        console.warn("[Logo Generator] Imagen API no disponible o falló, recurriendo al diseñador vectorial de precisión:", imgErr);
+      }
+    }
+
+    // Intento 2: Si no hubo imagen binaria, usamos el diseñador gráfico vectorial Gemini para crear un SVG de alta fidelidad
+    if (!logoDataUrl && client) {
+      try {
+        const svgPrompt = `Eres un diseñador gráfico senior especializado en branding e identidad visual de bandas de música.
+Crea un logotipo vectorial en formato SVG (código XML SVG puro, listo para renderizar) para la siguiente banda:
+- Nombre de la banda: "${bandName}"
+- Estilo musical / Género: "${bandGenre}"
+- Concepto estético: ${visualConcept}
+- Indicaciones adicionales: ${customPrompt || "Ninguna"}
+
+REQUISITOS ESTRICTOS DEL SVG:
+1. El SVG debe tener viewBox="0 0 500 500" con width="100%" y height="100%".
+2. Debe incluir un fondo estilizado oscuro (rect con fill oscuro como #09090b o degradado #18181b a #0f172a).
+3. Debe incluir el nombre "${bandName}" con tipografía legible, artística e impactante usando etiquetas <text> con font-family sans-serif/serif/display estilizado, text-anchor="middle" y efectos de sombra/glow.
+4. Debe incluir un emblema central o icono gráfico acorde al estilo (guitarra estilizada, notas, vinilo, formas geométricas modernas, rayos, ondas sonoras, alas o escudo).
+5. Usa colores elegantes (dorados #f59e0b, ámbar #fbbf24, blancos, grises y acentos vibrantes).
+6. Responde ÚNICAMENTE con el bloque de código <svg ...>...</svg>, sin markdown extra, sin explicaciones.`;
+
+        const response = await generateContentWithFallback(client, {
+          contents: [{ role: "user", parts: [{ text: svgPrompt }] }],
+          preferredModel: "gemini-3.7-flash",
+          timeoutMs: 30000,
+          bandId
+        });
+
+        const rawText = response?.text || response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const svgMatch = rawText.match(/<svg[\s\S]*?<\/svg>/i);
+        if (svgMatch && svgMatch[0]) {
+          const cleanSvg = svgMatch[0].trim();
+          const base64Svg = Buffer.from(cleanSvg, "utf8").toString("base64");
+          logoDataUrl = `data:image/svg+xml;base64,${base64Svg}`;
+          generationMethod = "gemini_vector_svg";
+        }
+      } catch (svgErr) {
+        console.warn("[Logo Generator] Falló generación SVG con IA:", svgErr);
+      }
+    }
+
+    // Intento 3: Fallback local algorítmico si no hay conexión a modelos externos
+    if (!logoDataUrl) {
+      const initials = bandName.split(/\s+/).slice(0, 2).map((w: string) => w[0]?.toUpperCase() || '').join('') || 'BM';
+      const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="50%" stop-color="#09090b"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="500" height="500" rx="32" fill="url(#bgGrad)"/>
+  <circle cx="250" cy="250" r="190" fill="none" stroke="url(#goldGrad)" stroke-width="3" stroke-dasharray="8 6" opacity="0.4"/>
+  <circle cx="250" cy="250" r="160" fill="none" stroke="url(#goldGrad)" stroke-width="4" opacity="0.8"/>
+  <polygon points="250,110 370,320 130,320" fill="none" stroke="url(#goldGrad)" stroke-width="3" opacity="0.3"/>
+  <circle cx="250" cy="210" r="65" fill="#18181b" stroke="url(#goldGrad)" stroke-width="3"/>
+  <text x="250" y="228" font-family="-apple-system, system-ui, sans-serif" font-size="52" font-weight="900" fill="url(#goldGrad)" text-anchor="middle" filter="url(#glow)">${initials}</text>
+  <text x="250" y="380" font-family="-apple-system, system-ui, sans-serif" font-size="32" font-weight="800" letter-spacing="4" fill="#f8fafc" text-anchor="middle" text-transform="uppercase">${bandName.slice(0, 18)}</text>
+  <text x="250" y="415" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="6" fill="#fbbf24" text-anchor="middle" opacity="0.9">${bandGenre.slice(0, 24).toUpperCase()}</text>
+</svg>`;
+      const base64Svg = Buffer.from(fallbackSvg, "utf8").toString("base64");
+      logoDataUrl = `data:image/svg+xml;base64,${base64Svg}`;
+      generationMethod = "local_geometric_vector";
+    }
+
+    return res.json({
+      success: true,
+      logoUrl: logoDataUrl,
+      bandName,
+      style: selectedStyle,
+      generationMethod
+    });
+  } catch (err: any) {
+    console.error("Error generating band logo with AI:", err);
+    return res.status(500).json({ error: err?.message || "Error al generar el logo con IA." });
+  }
+});
+
 export default router;
+

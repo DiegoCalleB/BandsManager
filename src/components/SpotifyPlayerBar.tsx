@@ -566,6 +566,7 @@ export default function SpotifyPlayerBar({
  en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
       <audio
         ref={audioRefA}
+        crossOrigin="anonymous"
         src={SILENT_AUDIO_URI}
         preload="metadata"
         onError={(e) => {
@@ -586,6 +587,7 @@ export default function SpotifyPlayerBar({
       />
       <audio
         ref={audioRefB}
+        crossOrigin="anonymous"
         src={SILENT_AUDIO_URI}
         preload="metadata"
         onError={(e) => {

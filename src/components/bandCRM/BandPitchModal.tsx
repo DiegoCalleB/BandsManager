@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BandContact } from '../../types';
 import { Repeat, X, Check, Copy, MessageCircle, Send } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 
 interface BandPitchModalProps {
   isOpen: boolean;
@@ -129,9 +130,12 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               {/* WhatsApp Link if phone is present */}
               {band.telefono && (
                 <a
-                  href={`https://wa.me/${band.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(pitchText)}`}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={getWhatsAppUrl(band.telefono, pitchText)}
+                  target={WHATSAPP_WINDOW_NAME}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openWhatsAppChat(band.telefono, pitchText);
+                  }}
                   className="px-2 py-1 bg-[var(--surface)]/15 hover:bg-[var(--surface)]/15 text-[var(--ink)] font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5"
                 >
                   <MessageCircle className="w-4 h-4" />

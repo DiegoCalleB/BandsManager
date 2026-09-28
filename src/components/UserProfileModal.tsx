@@ -29,6 +29,7 @@ import {
   Calendar,
   Bot,
   Heart,
+  BellRing,
 } from 'lucide-react';
 import { User, ThemeName } from '../types';
 import { THEMES } from '../utils/theme';
@@ -46,6 +47,10 @@ import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from '../u
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 import { ModalPortal } from './common/ModalPortal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
 
 // Fase beta: crear un proyecto adicional desde aquí va directo al plan Promo, sin pasar por
 // este selector legacy de 3 planes de pago (mismo criterio que BandSwitcherModal.tsx y
@@ -79,6 +84,7 @@ interface UserProfileModalProps {
   onOpenBandSwitcher?: () => void;
   onNavigateToPlanes?: () => void;
   onOpenProfileWizard?: () => void;
+  onOpenNotificationSettings?: () => void;
 }
 
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
@@ -100,6 +106,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   onOpenBandSwitcher,
   onNavigateToPlanes,
   onOpenProfileWizard,
+  onOpenNotificationSettings,
 }) => {
   const { language, setLanguage } = useLanguage();
   const [name, setName] = useState(currentUser.name || '');
@@ -155,22 +162,20 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     setUploadingLogo(true);
     setError(null);
     setSuccessMsg(null);
-    if (!currentUser.band_id) {
+    const targetBand = selectedMainBandId || currentUser.band_id;
+    if (!targetBand) {
       setError('No hay ninguna banda activa para actualizar el logo.');
       setUploadingLogo(false);
       return;
     }
     try {
-      const userBandId = currentUser.band_id;
-      const url = await uploadFileToServer(file, {
-        bandId: userBandId,
-        category: 'logo',
-      });
+      const userBandId = targetBand;
+      const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
       setBandLogoUrl(url);
 
       const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
       const authHeaders = getAuthHeaders() as Record<string, string>;
-      await fetch('/api/users/upload-logo', {
+      const res = await fetch('/api/users/upload-logo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,6 +184,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         },
         body: JSON.stringify({ logoUrl: url, bandId: userBandId }),
       });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Error al actualizar el logotipo en el servidor');
+      }
 
       if (onUpdateEpkConfig) {
         await onUpdateEpkConfig(updatedEpk);
@@ -271,6 +281,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         setSuccessMsg(`¡Proyecto"${createBandName.trim()}" creado y configurado con éxito!`);
         setShowCreateBandSection(false);
         setCreateBandName('');
+        setCreateBandLeaderName(currentUser.name || currentUser.username || '');
         setCreateBandStyle('');
         if (onRefreshData) await onRefreshData();
       } else {
@@ -1074,6 +1085,32 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <span className="text-[11px] font-sans font-bold text-[var(--acc)] flex items-center gap-1">
                     <span>Abrir</span>
+                    <ChevronDown className="w-3.5 h-3.5 -rotate-90" />
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {onOpenNotificationSettings && (
+              <div className="pt-3 border-t border-neutral-800/80">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenNotificationSettings();
+                  }}
+                  className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                    isStitchLight
+                      ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <BellRing className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs font-mono font-semibold">Notificaciones Push del Navegador</span>
+                  </div>
+                  <span className="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1">
+                    <span>Configurar</span>
                     <ChevronDown className="w-3.5 h-3.5 -rotate-90" />
                   </span>
                 </button>

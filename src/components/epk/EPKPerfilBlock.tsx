@@ -1,5 +1,22 @@
-import React from 'react';
-import { FileText, Info, Mail, Share2, Trash2, Upload, Loader2, Instagram, User as UserIcon, Users, Globe } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  FileText,
+  Info,
+  Mail,
+  Share2,
+  Trash2,
+  Upload,
+  Loader2,
+  Instagram,
+  User as UserIcon,
+  Users,
+  Globe,
+  Music2,
+  Tag,
+  Sparkles,
+  Plus,
+  X,
+} from 'lucide-react';
 import { EPKConfig, BandMember } from '../../types';
 import { EPKBlockWrapper } from './EPKBlockWrapper';
 import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
@@ -42,6 +59,28 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
   onSave,
   isAllView = false,
 }) => {
+  const [similarBandInput, setSimilarBandInput] = useState('');
+
+  const handleAddSimilarBand = () => {
+    const val = similarBandInput.trim();
+    if (!val) return;
+    const current = config.bandasSimilares || [];
+    if (!current.some((b) => b.toLowerCase() === val.toLowerCase())) {
+      setConfig((prev) => ({
+        ...prev,
+        bandasSimilares: [...(prev.bandasSimilares || []), val],
+      }));
+    }
+    setSimilarBandInput('');
+  };
+
+  const handleRemoveSimilarBand = (bandToRemove: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      bandasSimilares: (prev.bandasSimilares || []).filter((b) => b !== bandToRemove),
+    }));
+  };
+
   return (
     <EPKBlockWrapper
       meta={EPK_BLOCKS[0]}
@@ -173,6 +212,135 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </div>
         </div>
 
+        {/* IDENTIDAD SONORA, GÉNERO & BANDAS AFINES (FFO) */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <Music2 className="w-5 h-5 text-amber-400" />
+              <h3 className="text-base sm:text-lg font-bold text-amber-400">
+                Identidad Sonora, Género & Bandas Afines (FFO - For Fans Of)
+              </h3>
+            </div>
+            <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              Agentes IA & Radar de Booking
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Género musical */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5 text-amber-400" />
+                Género / Estilo Musical Principal
+              </label>
+              <input
+                type="text"
+                value={config.genero || ''}
+                onChange={(e) => setConfig({ ...config, genero: e.target.value })}
+                placeholder="Ej. Mestizaje, Indie Rock, Balkan-Ska, Pop-Rock, Flamenco Fusión..."
+                className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-200 outline-none"
+              />
+              <p className="text-[11px] text-slate-400">Estilo sonoro representativo de vuestro show en vivo.</p>
+            </div>
+
+            {/* Toggle mostrar en EPK público */}
+            <div className="space-y-1.5 flex flex-col justify-between">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5 text-amber-400" />
+                Visibilidad en el Dossier Público
+              </label>
+              <label className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input
+                  type="checkbox"
+                  checked={config.mostrarBandasSimilares !== false}
+                  onChange={(e) => setConfig({ ...config, mostrarBandasSimilares: e.target.checked })}
+                  className="rounded border-slate-700 text-amber-400 focus:ring-amber-400 h-4 w-4 bg-slate-900 cursor-pointer"
+                />
+                <div className="text-xs">
+                  <span className="font-semibold text-slate-200">Mostrar bloque &quot;Para fans de (FFO)&quot; en el EPK web público</span>
+                  <p className="text-[11px] text-slate-400">
+                    {config.mostrarBandasSimilares !== false
+                      ? 'Visible para programadores y prensa en el dossier público.'
+                      : 'Oculto en el dossier público (solo activo para el motor de IA y Scout).'}
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Bandas similares / FFO Tag manager */}
+          <div className="space-y-2.5 pt-2 border-t border-slate-800/80">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-amber-400" />
+                Grupos y Artistas de Sonido Afín / Referencias (&quot;Para fans de...&quot;)
+              </label>
+              <span className="text-[10px] text-zinc-400 font-mono">{config.bandasSimilares?.length || 0} referencias añadidas</span>
+            </div>
+
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Un programador de sala o festival tarda menos de 15 segundos en descartar un dossier. Si ve referencias claras de grupos de su
+              circuito que llenan salas similares, sabrá al instante qué tipo de noche puede organizar. Los agentes de IA de BandManager.io
+              usan estas bandas para rastrear salas del circuito donde han tocado (*Efecto Espejo*) y redactar pitches adaptados.
+            </p>
+
+            {/* Chip tags list */}
+            <div className="flex flex-wrap items-center gap-2 min-h-[36px] p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+              {!config.bandasSimilares || config.bandasSimilares.length === 0 ? (
+                <span className="text-xs text-slate-500 italic">
+                  Ninguna banda similar añadida. Escribe el nombre de un artista o grupo afín abajo y pulsa Enter.
+                </span>
+              ) : (
+                config.bandasSimilares.map((band, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm"
+                  >
+                    <span>{band}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSimilarBand(band)}
+                      className="text-amber-400 hover:text-red-400 transition cursor-pointer p-0.5 rounded-full hover:bg-red-500/20"
+                      title={`Eliminar ${band}`}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))
+              )}
+            </div>
+
+            {/* Input to add new tag */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={similarBandInput}
+                  onChange={(e) => setSimilarBandInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddSimilarBand();
+                    }
+                  }}
+                  placeholder="Escribe el nombre de un grupo similar (ej. Vetusta Morla, Cala Vento, La Pegatina) y pulsa Enter..."
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-200 outline-none placeholder:text-slate-600 font-sans"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleAddSimilarBand}
+                disabled={!similarBandInput.trim()}
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-40 disabled:hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-sm cursor-pointer shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Añadir</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* FORMACIÓN DE LA BANDA */}
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-5 sm:p-6 space-y-4 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
@@ -200,8 +368,8 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {miembros.map((m) => (
-              <div key={m.id} className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2.5">
+            {miembros.map((m, idx) => (
+              <div key={m.id || `miembro-${idx}-${m.nombre || ''}`} className="rounded-[var(--r-m)] bg-[var(--surface)] p-3.5 space-y-2.5">
                 <div className="flex items-start gap-3">
                   <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
                     <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">

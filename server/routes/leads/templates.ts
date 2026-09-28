@@ -5,7 +5,10 @@ import {
   getAutonomyConfigForBand,
 } from '../../state.js';
 import { getTargetBandId } from '../../utils/bandAccess.js';
-import { DEFAULT_CATEGORY_TEMPLATES } from '../../promptsManager.js';
+import {
+  DEFAULT_CATEGORY_TEMPLATES,
+  type CategoryTemplateConfig,
+} from '../../promptsManager.js';
 import {
   getGlobalPitchFeedbackSummary,
   formatGlobalPitchFeedbackForPrompt,
@@ -16,6 +19,7 @@ import {
 } from '../../db/categoryTemplates.js';
 import {
   generateOptimizedCategoryTemplate,
+  generateAllCategoryTemplatesFromBase,
   autoOptimizeCategoryTemplateIfDue,
   resolveBandNameAndBio,
 } from '../../utils/templateOptimizer.js';
@@ -278,8 +282,22 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
     });
 
     const existing = await dbGetCategoryTemplates(bandId);
-    const current = existing[category];
-    const feedbackLogs = current.feedbackLogs || [];
+    const current: CategoryTemplateConfig = existing?.[category] ||
+      DEFAULT_CATEGORY_TEMPLATES[category] || {
+        category,
+        title: category,
+        subject: currentSubject || '',
+        body: currentBody || '',
+        guidelines: currentGuidelines || '',
+        toneRating: 5,
+        contentRating: 5,
+        customInstruction: '',
+        feedbackLogs: [],
+        updatedAt: new Date().toISOString(),
+      };
+    const feedbackLogs = Array.isArray(current.feedbackLogs)
+      ? [...current.feedbackLogs]
+      : [];
     feedbackLogs.push({
       timestamp: new Date().toISOString(),
       toneRating: toneRating || undefined,
@@ -289,7 +307,7 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
     });
 
     const saved = await dbUpsertCategoryTemplate(bandId, category, {
-      title: current.title,
+      title: current.title || category,
       subject: result.subject,
       body: result.body,
       guidelines: result.guidelines,
@@ -313,8 +331,111 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
   } catch (error: any) {
     console.error('Error in POST /api/templates/optimize:', error);
     res.status(500).json({
+      success: false,
       error: error?.message || 'Error al optimizar la plantilla con IA.',
     });
+  }
+});
+
+// Genera simultáneamente las 7 plantillas y sus 7 pautas adaptadas a partir de una única propuesta base
+router.post('/templates/generate-all', requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { baseProposal, campaignContext, saveToDatabase = true } = req.body;
+
+    if (
+      !baseProposal ||
+      typeof baseProposal !== 'string' ||
+      !baseProposal.trim()
+    ) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          error: 'Debes aportar una propuesta o descripción base de la banda.',
+        });
+    }
+
+    const state = loadState();
+    const feedbackSummaryLogs = getGlobalPitchFeedbackSummary(state.leads);
+    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const { bandName, bandBio } = resolveBandNameAndBio(state, bandId);
+
+    const generatedResults = await generateAllCategoryTemplatesFromBase({
+      bandName,
+      bandBio,
+      baseProposal: baseProposal.trim(),
+      globalMemory,
+      feedbackCount: feedbackSummaryLogs.length,
+      campaignContext,
+    });
+
+    if (!saveToDatabase) {
+      return res.json({
+        success: true,
+        generatedResults,
+        message:
+          'Se han generado y adaptado con éxito las 7 plantillas para la campaña.',
+      });
+    }
+
+    const existing = await dbGetCategoryTemplates(bandId);
+    const updatedTemplates: Record<string, CategoryTemplateConfig> = {
+      ...existing,
+    };
+
+    for (const [cat, resObj] of Object.entries(generatedResults)) {
+      const current = existing?.[cat] ||
+        DEFAULT_CATEGORY_TEMPLATES[cat] || {
+          category: cat,
+          title: cat,
+          subject: '',
+          body: '',
+          guidelines: '',
+          toneRating: 5,
+          contentRating: 5,
+          customInstruction: '',
+          feedbackLogs: [],
+          updatedAt: new Date().toISOString(),
+        };
+
+      const feedbackLogs = Array.isArray(current.feedbackLogs)
+        ? [...current.feedbackLogs]
+        : [];
+      feedbackLogs.push({
+        timestamp: new Date().toISOString(),
+        comment: `Multi-generada con IA a partir de la propuesta base del mánager.`,
+        source: 'ai_optimization',
+      });
+
+      const saved = await dbUpsertCategoryTemplate(bandId, cat, {
+        title: current.title || cat,
+        subject: resObj.subject,
+        body: resObj.body,
+        guidelines: resObj.guidelines,
+        customInstruction: current.customInstruction,
+        toneRating: current.toneRating,
+        contentRating: current.contentRating,
+        feedbackLogs,
+      });
+
+      updatedTemplates[cat] = saved;
+    }
+
+    res.json({
+      success: true,
+      templates: updatedTemplates,
+      message:
+        'Se han generado y adaptado con éxito las 7 plantillas maestras y sus pautas de IA.',
+    });
+  } catch (error: any) {
+    console.error('Error in POST /api/templates/generate-all:', error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        error: error?.message || 'Error al generar las 7 plantillas con IA.',
+      });
   }
 });
 

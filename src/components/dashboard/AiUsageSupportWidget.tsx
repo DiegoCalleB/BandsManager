@@ -40,10 +40,11 @@ function useAiDebtEur(): number | null {
 
 interface AiSupportWidgetProps {
   variant: 'sidebar' | 'card';
+  isStitchLight?: boolean;
 }
 
 /** CTA de apoyo económico a BandManager.io. Independiente de la tarjeta de consumo de IA. */
-export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => {
+export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isStitchLight = false }) => {
   const owedEur = useAiDebtEur();
   const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;
 

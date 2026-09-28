@@ -52,6 +52,14 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
             existing.telefono = String(rawLead.telefono).trim();
             updated = true;
           }
+          if (!existing.telefono_movil && rawLead.telefono_movil) {
+            existing.telefono_movil = String(rawLead.telefono_movil).trim();
+            updated = true;
+          }
+          if (!existing.telefono_fijo && rawLead.telefono_fijo) {
+            existing.telefono_fijo = String(rawLead.telefono_fijo).trim();
+            updated = true;
+          }
           if (!existing.website && rawLead.website) {
             existing.website = rawLead.website.trim();
             updated = true;
@@ -117,7 +125,9 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
           genero: (rawLead.genero || (resolvedType === 'ayuntamiento' ? 'Fiestas Patronales / Cultura' : 'Música en Directo / Variado')).trim(),
           tipo: resolvedType as any,
           email_contacto: (rawLead.email_contacto || rawLead.email || "").trim(),
-          telefono: String(rawLead.telefono || "").trim(),
+          telefono: String(rawLead.telefono || rawLead.telefono_movil || rawLead.telefono_fijo || "").trim(),
+          telefono_movil: String(rawLead.telefono_movil || "").trim(),
+          telefono_fijo: String(rawLead.telefono_fijo || "").trim(),
           instagram: (rawLead.instagram || "").trim(),
           website: (rawLead.website || "").trim(),
           contacto_nombre: (rawLead.contacto_nombre || rawLead.contacto || "").trim(),

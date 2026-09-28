@@ -1,6 +1,10 @@
 import { SongStudioCubaseHelpModal } from './song_studio/SongStudioCubaseHelpModal';
 import { SongStudioDeleteConfirmModal } from './song_studio/SongStudioDeleteConfirmModal';
 import { SongStudioAiGeneratorModal } from './song_studio/SongStudioAiGeneratorModal';
+import { SongStudioMoisesStemsModal } from './song_studio/SongStudioMoisesStemsModal';
+import { SongStudioAiTrackGenModal } from './song_studio/SongStudioAiTrackGenModal';
+import { SongStudioStemProgressModal } from './song_studio/SongStudioStemProgressModal';
+
 import { SongStudioAiMusicModal } from './song_studio/SongStudioAiMusicModal';
 import { SongStudioAiComposerModal } from './song_studio/SongStudioAiComposerModal';
 import {
@@ -90,6 +94,7 @@ import {
   Database,
   MoreVertical,
   GripVertical,
+  Zap,
 } from 'lucide-react';
 
 // Live microphone waveform visualization component for Cubase-style real-time recording
@@ -243,7 +248,9 @@ interface SongStudioModalProps {
 
 // Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
 // una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
-const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+const IRIS_ENGINE_COST_EUR: Record<'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+  fal: 0.01,
+  lalalai: 0.05,
   'mvsep-mdx23': 0.08,
   demucs: 0.03,
   'dsp-server': 0,
@@ -414,6 +421,111 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
   ];
 }
 
+export type MoisesSeparationPreset = '2_stems' | '4_stems' | '6_stems' | 'custom';
+
+export interface MoisesStemOption {
+  id: string;
+  name: string;
+  shortName: string;
+  icon: string;
+  tag: string;
+  desc: string;
+  badgeBg: string;
+}
+
+export const MOISES_AVAILABLE_STEMS: MoisesStemOption[] = [
+  {
+    id: 'Voz',
+    name: 'Voz Principal (Vocals)',
+    shortName: 'Voz',
+    icon: '🎤',
+    tag: 'Acapella / Melodía',
+    desc: 'Voz aislada en alta pureza espectral. Permite silenciar la voz original para ensayar cantando o directos.',
+    badgeBg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+  },
+  {
+    id: 'Instrumental',
+    name: 'Base Instrumental (Playback)',
+    shortName: 'Instrumental',
+    icon: '🎵',
+    tag: 'Karaoke / Backing Track',
+    desc: 'Mezcla musical completa sin voz principal. La opción predilecta para directos con playback o práctica vocal.',
+    badgeBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+  },
+  {
+    id: 'Batería',
+    name: 'Batería & Percusión (Drums)',
+    shortName: 'Batería',
+    icon: '🥁',
+    tag: 'Ritmo & Platos',
+    desc: 'Aislamiento de bombo, caja, timbales y platos (>1800Hz) para practicar con metrónomo y batería real.',
+    badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+  },
+  {
+    id: 'Bajo',
+    name: 'Bajo Eléctrico (Bass)',
+    shortName: 'Bajo',
+    icon: '🎸',
+    tag: 'Sub-Bass & Graves',
+    desc: 'Frecuencias fundamentales y transitorios de bajo (<180Hz) para estudiar la línea o tocar encima.',
+    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+  },
+  {
+    id: 'Guitarras',
+    name: 'Guitarras (Rítmicas & Solos)',
+    shortName: 'Guitarras',
+    icon: '🎸',
+    tag: 'Eléctricas & Acústicas',
+    desc: 'Guitarras eléctricas, distorsiones y acústicas sin bleed de voz ni percusión.',
+    badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+  },
+  {
+    id: 'Teclados',
+    name: 'Teclados & Piano (Keys)',
+    shortName: 'Teclados',
+    icon: '🎹',
+    tag: 'Pianos & Sintes',
+    desc: 'Pianos acústicos, sintetizadores polifónicos y teclados aislados para acompañamiento armónico.',
+    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+  },
+  {
+    id: 'Arreglos',
+    name: 'Arreglos, Vientos & Cuerdas (Other)',
+    shortName: 'Arreglos',
+    icon: '🎺',
+    tag: 'Metales & Efectos',
+    desc: 'Secciones de viento metal, cuartetos de cuerda, solos y efectos secundarios de mezcla.',
+    badgeBg: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+  },
+];
+
+export const MOISES_PRESETS_CONFIG: Record<MoisesSeparationPreset, { label: string; badge: string; subtitle: string; stems: string[] }> = {
+  '2_stems': {
+    label: '🎤 2 Pistas',
+    badge: 'Karaoke / Playback',
+    subtitle: 'Voz Principal + Base Instrumental completa',
+    stems: ['Voz', 'Instrumental'],
+  },
+  '4_stems': {
+    label: '🥁 4 Pistas',
+    badge: 'Moises Estándar',
+    subtitle: 'Voz, Batería, Bajo y Guitarras/Armonía',
+    stems: ['Voz', 'Batería', 'Bajo', 'Guitarras'],
+  },
+  '6_stems': {
+    label: '🎛️ 6 Pistas',
+    badge: 'Estudio Completo',
+    subtitle: 'Voz, Batería, Bajo, Guitarras, Teclados y Arreglos',
+    stems: ['Voz', 'Batería', 'Bajo', 'Guitarras', 'Teclados', 'Arreglos'],
+  },
+  custom: {
+    label: '⚡ A Tu Medida',
+    badge: 'Personalizado',
+    subtitle: 'Selección manual de instrumentos a aislar',
+    stems: [],
+  },
+};
+
 export default function SongStudioModal({
   song,
   colors,
@@ -429,9 +541,36 @@ export default function SongStudioModal({
   }, [song]);
 
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
-  // Máxima sencillez: cada idea empieza PLEGADA (solo título + escuchar + menú de opciones),
-  // el mezclador completo y las acciones secundarias solo aparecen al expandir a propósito.
-  const [expandedIdeaIds, setExpandedIdeaIds] = useState<Set<string>>(new Set());
+  // Auto-expandir de inicio cualquier idea que ya contenga pistas separadas por Iris
+  const [expandedIdeaIds, setExpandedIdeaIds] = useState<Set<string>>(() => {
+    const initialSet = new Set<string>();
+    if (song.audioIdeas) {
+      song.audioIdeas.forEach((idea) => {
+        if ((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed) {
+          initialSet.add(idea.id);
+        }
+      });
+    }
+    return initialSet;
+  });
+
+  // Mantener expandidas las ideas con stems en cuanto cambie song.audioIdeas
+  useEffect(() => {
+    if (song.audioIdeas) {
+      setExpandedIdeaIds((prev) => {
+        const next = new Set(prev);
+        let changed = false;
+        song.audioIdeas?.forEach((idea) => {
+          if (((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed) && !next.has(idea.id)) {
+            next.add(idea.id);
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
+      });
+    }
+  }, [song.audioIdeas]);
+
   const toggleIdeaExpanded = (ideaId: string) => {
     setExpandedIdeaIds((prev) => {
       const next = new Set(prev);
@@ -496,20 +635,59 @@ export default function SongStudioModal({
   const trackMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const trackAudioChunksRef = useRef<Blob[]>([]);
   const trackRecordingTimerRef = useRef<any>(null);
+  const stemSeparationAbortRef = useRef<AbortController | null>(null);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
-  const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('demucs');
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server'>('fal');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
+  const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('6_stems');
+  const [selectedStemsToExtract, setSelectedStemsToExtract] = useState<string[]>([
+    'Voz',
+    'Batería',
+    'Bajo',
+    'Guitarras',
+    'Teclados',
+    'Arreglos',
+  ]);
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
 
-  // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo"Procesar con Iris"
+  const handleSelectMoisesPreset = (preset: MoisesSeparationPreset) => {
+    setMoisesPreset(preset);
+    if (preset !== 'custom') {
+      setSelectedStemsToExtract(MOISES_PRESETS_CONFIG[preset].stems);
+    }
+  };
+
+  const handleToggleStem = (stemId: string) => {
+    let next: string[];
+    if (selectedStemsToExtract.includes(stemId)) {
+      if (selectedStemsToExtract.length <= 1) return; // Mantener al menos 1 pista seleccionada
+      next = selectedStemsToExtract.filter((s) => s !== stemId);
+    } else {
+      next = [...selectedStemsToExtract, stemId];
+    }
+    setSelectedStemsToExtract(next);
+
+    // Comprobar si la combinación actual coincide con un preset estándar
+    const matchingPreset = (Object.keys(MOISES_PRESETS_CONFIG) as MoisesSeparationPreset[]).find((p) => {
+      if (p === 'custom') return false;
+      const pStems = MOISES_PRESETS_CONFIG[p].stems;
+      return pStems.length === next.length && pStems.every((s) => next.includes(s));
+    });
+    setMoisesPreset(matchingPreset || 'custom');
+  };
+
+  // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo "Procesar con Iris"
   useEffect(() => {
     if (initialOpenIrisModal) {
       const existingIrisIdea = getSongIrisStemIdea(song);
       if (existingIrisIdea) {
-        setShowMoisesStemsModal(existingIrisIdea);
+        // La canción YA tiene pistas separadas: asegurar que quede expandida en el mezclador multipista
+        // de inmediato para que el usuario vea todos los canales (Voz, Batería, Bajo, Guitarras...)
+        setExpandedIdeaIds((prev) => new Set([...prev, existingIrisIdea.id]));
+        setShowMoisesStemsModal(null);
       } else if (song.audioIdeas && song.audioIdeas.length > 0) {
         setShowMoisesStemsModal(song.audioIdeas[0]);
       } else {
@@ -571,7 +749,7 @@ export default function SongStudioModal({
     degraded?: boolean;
     degradedReason?: string;
     separationEngine?: string;
-    engineChoice?: 'mvsep-mdx23' | 'demucs' | 'dsp-server';
+    engineChoice?: 'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server';
     stemsAdded?: number;
     stemsInfo?: Array<{
       instrument: string;
@@ -582,7 +760,7 @@ export default function SongStudioModal({
     }>;
     errorMessage?: string;
     errorDetail?: string;
-    errorProvider?: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
+    errorProvider?: 'fal' | 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
     errorType?: string;
     errorTitle?: string;
     actionAdvice?: string;
@@ -636,18 +814,42 @@ export default function SongStudioModal({
     return resultado;
   };
 
-  // Separación de pistas con IA (motor propio"Iris", con dos niveles de calidad + fallback local)
-  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
+  const handleCancelStemSeparation = () => {
+    if (stemSeparationAbortRef.current) {
+      stemSeparationAbortRef.current.abort();
+      stemSeparationAbortRef.current = null;
+    }
+    setIsSeparatingStemsAi(false);
+    setStemProgressModal(null);
+  };
+
+  // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
+  const handlePerformAiStemSeparation = async (
+    targetIdea: SongAudioIdea,
+    overrideEngine?: 'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server',
+    stemsToInclude?: string[]
+  ) => {
+    if (stemSeparationAbortRef.current) {
+      stemSeparationAbortRef.current.abort();
+    }
+    const abortController = new AbortController();
+    stemSeparationAbortRef.current = abortController;
+
     setIsSeparatingStemsAi(true);
     setSeparationElapsedSeconds(0);
     const engineToUse = overrideEngine || selectedStemEngine;
+    const activeStemsToInclude = stemsToInclude || selectedStemsToExtract;
 
     const stepInitText =
-      engineToUse === 'mvsep-mdx23'
-        ? 'Iniciando Iris Studio (red neuronal de máxima calidad)...'
-        : engineToUse === 'demucs'
-          ? 'Iniciando Iris Cloud (red neuronal en la nube)...'
-          : 'Iniciando Iris Básico (procesamiento local, gratis)...';
+      engineToUse === 'fal'
+        ? 'Iniciando Iris Ultra (Fal.ai GPU A100 ~10s)...'
+        : engineToUse === 'lalalai'
+          ? 'Iniciando Iris Pro (LALAL.AI Commercial Engine ~15s)...'
+          : engineToUse === 'mvsep-mdx23'
+            ? 'Iniciando Iris Studio (MDX-Net / Demucs v4 GPU)...'
+            : engineToUse === 'demucs'
+              ? 'Iniciando Iris Cloud (HT-Demucs v4 Neural)...'
+              : 'Iniciando Iris Básico (procesamiento local, gratis)...';
 
     setStemProgressModal({
       isOpen: true,
@@ -661,6 +863,10 @@ export default function SongStudioModal({
     });
 
     const elapsedTimer = setInterval(() => {
+      if (abortController.signal.aborted) {
+        clearInterval(elapsedTimer);
+        return;
+      }
       setSeparationElapsedSeconds((prev) => prev + 1);
     }, 1000);
 
@@ -668,6 +874,10 @@ export default function SongStudioModal({
     // ya NO toca progressPct, solo el texto explicativo — así nunca compiten dos relojes distintos
     // por el mismo valor y la barra no retrocede (ver demucsStartedAt más arriba).
     const progressTimer = setInterval(() => {
+      if (abortController.signal.aborted) {
+        clearInterval(progressTimer);
+        return;
+      }
       setStemProgressModal((prev) => {
         if (!prev || prev.stage === 'completed' || prev.stage === 'error') return prev;
         if (prev.stage === 'preparing') {
@@ -675,7 +885,15 @@ export default function SongStudioModal({
         }
         if (prev.stage === 'demucs') {
           const elapsedSec = prev.demucsStartedAt ? (Date.now() - prev.demucsStartedAt) / 1000 : 0;
-          return { ...prev, progressPct: Math.min(45 + elapsedSec / 3, 88) };
+          const targetCap =
+            prev.engineChoice === 'fal'
+              ? Math.min(35 + Math.floor(elapsedSec * 6), 94)
+              : prev.engineChoice === 'mvsep-mdx23'
+                ? Math.min(30 + Math.floor(elapsedSec / 5.5), 92)
+                : prev.engineChoice === 'demucs'
+                  ? Math.min(35 + Math.floor(elapsedSec / 1.5), 90)
+                  : Math.min(30 + Math.floor(elapsedSec * 4), 92);
+          return { ...prev, progressPct: targetCap };
         }
         if (prev.stage === 'persisting') {
           return { ...prev, progressPct: Math.min(prev.progressPct + 1, 96) };
@@ -700,13 +918,18 @@ export default function SongStudioModal({
       );
 
       const sendableAudioUrl = await resolverAudioUrlParaSubida(targetIdea.audioUrl);
+      if (abortController.signal.aborted) return;
 
       const stepProcessingText =
-        engineToUse === 'mvsep-mdx23'
-          ? 'Iris Studio aislando pistas vocales e instrumentales...'
-          : engineToUse === 'demucs'
-            ? 'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
-            : 'Iris Básico realizando filtrado de frecuencias (gratis)...';
+        engineToUse === 'fal'
+          ? 'Iris Ultra aislando pistas en GPU A100 (~10-15s)...'
+          : engineToUse === 'lalalai'
+            ? 'Iris Pro aislando pistas con LALAL.AI (~15s)...'
+            : engineToUse === 'mvsep-mdx23'
+              ? 'Iris Studio aislando pistas vocales e instrumentales...'
+              : engineToUse === 'demucs'
+                ? 'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
+                : 'Iris Básico realizando filtrado de frecuencias (gratis)...';
 
       setStemProgressModal((prev) =>
         prev
@@ -720,19 +943,47 @@ export default function SongStudioModal({
           : null
       );
 
-      const kickoff = await apiFetch('/api/ai-stem-separation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          songTitle: song.titulo,
-          sectionName: targetIdea.seccion,
-          audioUrl: sendableAudioUrl,
-          bpm: song.bpm,
-          key: song.tonalidad,
-          forceEngine: engineToUse,
-        }),
-      });
+      let kickoff: any;
+      try {
+        kickoff = await apiFetch('/api/ai-stem-separation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            songTitle: song.titulo,
+            sectionName: targetIdea.seccion,
+            audioUrl: sendableAudioUrl,
+            bpm: song.bpm,
+            key: song.tonalidad,
+            forceEngine: engineToUse,
+            requestedStems: activeStemsToInclude,
+          }),
+        });
+      } catch (kickoffErr: any) {
+        const isNet =
+          String(kickoffErr?.message || '').includes('Failed to fetch') || String(kickoffErr?.message || '').includes('NetworkError');
+        if (isNet && !abortController.signal.aborted) {
+          // Reintento rápido en caso de micro-corte o reconexión de red
+          await new Promise((r) => setTimeout(r, 1200));
+          if (abortController.signal.aborted) return;
+          kickoff = await apiFetch('/api/ai-stem-separation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              songTitle: song.titulo,
+              sectionName: targetIdea.seccion,
+              audioUrl: sendableAudioUrl,
+              bpm: song.bpm,
+              key: song.tonalidad,
+              forceEngine: engineToUse,
+              requestedStems: activeStemsToInclude,
+            }),
+          });
+        } else {
+          throw kickoffErr;
+        }
+      }
 
+      if (abortController.signal.aborted) return;
       let data = kickoff;
 
       // El servidor responde al instante (202) y sigue procesando en segundo plano para no
@@ -740,21 +991,43 @@ export default function SongStudioModal({
       // polling ligero del resultado en vez de mantener esta petición abierta varios minutos.
       if (kickoff?.status === 'processing') {
         const pollStartedAt = Date.now();
-        const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
-        const engineLabel = engineToUse === 'mvsep-mdx23' ? 'Iris Studio' : engineToUse === 'demucs' ? 'Iris Cloud' : 'Iris Básico';
+        const maxWaitMs = engineToUse === 'fal' ? 240 * 1000 : 20 * 60 * 1000;
+        const engineLabel =
+          engineToUse === 'fal'
+            ? 'Iris Ultra (Fal.ai GPU)'
+            : engineToUse === 'lalalai'
+              ? 'Iris Pro (LALAL.AI)'
+              : engineToUse === 'mvsep-mdx23'
+                ? 'Iris Studio (MDX-Net)'
+                : engineToUse === 'demucs'
+                  ? 'Iris Cloud (HT-Demucs)'
+                  : 'Iris Básico (DSP Local)';
+        let consecutiveNetworkFailures = 0;
+
         while (true) {
-          await new Promise((r) => setTimeout(r, 4000));
+          if (abortController.signal.aborted) return;
+          await new Promise((r) => setTimeout(r, 3000));
+          if (abortController.signal.aborted) return;
+
           const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
           // Fases explicativas: qué está pasando realmente en cada tramo de tiempo de la GPU en
           // la nube (no es una barra ficticia: refleja subida, cold-start del contenedor e inferencia).
           const phaseText =
             engineToUse === 'dsp-server'
-              ? `${stepProcessingText} (${elapsedSec}s transcurridos)`
-              : elapsedSec < 12
-                ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
-                : elapsedSec < 40
-                  ? `🧊 Arrancando el motor — si llevaba un rato sin usarse, tarda hasta ~1 min en"despertar"... (${elapsedSec}s)`
-                  : `🎛️ ${engineLabel} separando voz, batería, bajo, guitarras, teclados y arreglos por frecuencia... (${elapsedSec}s transcurridos, puede tardar varios minutos)`;
+              ? `⚙️ Iris Básico procesando filtrado espectral local... (${elapsedSec}s transcurridos)`
+              : engineToUse === 'fal'
+                ? elapsedSec < 6
+                  ? `⚡ Conectando con GPU NVIDIA A100 en Fal.ai... (${elapsedSec}s)`
+                  : elapsedSec < 60
+                    ? `⚡ Iris Ultra (Fal.ai GPU A100) aislando pistas vocales e instrumentales... (${elapsedSec}s transcurridos)`
+                    : `⚡ Iris Ultra procesando canción completa en alta fidelidad... (${elapsedSec}s transcurridos — temas largos suelen tardar entre 60 y 90s)`
+                : elapsedSec < 12
+                  ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
+                  : elapsedSec < 45
+                    ? `🧊 Reservando GPU e inicializando contenedor neuronal en la nube para ${engineLabel}... (${elapsedSec}s)`
+                    : engineToUse === 'mvsep-mdx23'
+                      ? `✨ Iris Studio (MDX-Net + Demucs4) procesando 6 pasadas de alta precisión... (${elapsedSec}s transcurridos — este ensamble de estudio tarda ~4-6 min en aislar temas completos)`
+                      : `🎛️ ${engineLabel} aislando canales de frecuencia en la nube... (${elapsedSec}s transcurridos, suele tardar 1-2 min)`;
           setStemProgressModal((prev) =>
             prev
               ? {
@@ -765,14 +1038,37 @@ export default function SongStudioModal({
               : null
           );
 
-          const statusRes = await apiFetch(
-            `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
-          );
+          let statusRes: any = null;
+          try {
+            statusRes = await apiFetch(
+              `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
+            );
+            consecutiveNetworkFailures = 0;
+          } catch (pollErr: any) {
+            const isPollNetErr =
+              String(pollErr?.message || '').includes('Failed to fetch') || String(pollErr?.message || '').includes('NetworkError');
+            if (isPollNetErr && consecutiveNetworkFailures < 4 && !abortController.signal.aborted) {
+              consecutiveNetworkFailures++;
+              console.warn(
+                `[Stem Polling] Fallo transitorio de red (${consecutiveNetworkFailures}/4). Reintentando en el próximo ciclo...`
+              );
+              continue;
+            }
+            throw pollErr;
+          }
+
+          if (abortController.signal.aborted) return;
+
           if (statusRes?.status === 'completed') {
             data = statusRes;
             break;
           }
           if (Date.now() - pollStartedAt > maxWaitMs) {
+            if (engineToUse === 'fal') {
+              throw new Error(
+                'Iris Ultra (Fal.ai) ha tardado más de 4 minutos en responder. Puedes cancelarlo, reintentar o usar Iris Básico gratis en 1 segundo.'
+              );
+            }
             throw new Error(
               'La separación sigue procesándose en el servidor tras 20 minutos. Cierra esta ventana e inténtalo de nuevo en un rato: el resultado quedará guardado y no se repetirá el gasto en GPU.'
             );
@@ -782,6 +1078,8 @@ export default function SongStudioModal({
           // que cae de forma natural en el catch de más abajo con el mismo formato de error enriquecido.
         }
       }
+
+      if (abortController.signal.aborted) return;
 
       setStemProgressModal((prev) =>
         prev
@@ -809,26 +1107,57 @@ export default function SongStudioModal({
       if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
         const engineAuthor = data.degraded
           ? 'Iris Básico (Modo Degradado)'
-          : data.separationEngine?.includes('MVSEP')
-            ? 'Iris Studio'
-            : data.isNeural
-              ? 'Iris Cloud'
-              : 'Iris Básico (gratis)';
+          : data.separationEngine?.includes('Fal.ai') || data.separationEngine?.includes('fal') || engineToUse === 'fal'
+            ? 'Iris Ultra (Fal.ai GPU A100)'
+            : data.separationEngine?.includes('MVSEP')
+              ? 'Iris Studio'
+              : data.isNeural
+                ? 'Iris Cloud'
+                : 'Iris Básico (gratis)';
+
+        // NUNCA descartar pistas separadas por IA de alto coste computacional.
+        // Se preservan todas las pistas en newTracks; si el usuario eligió un preset o selección
+        // específica (activeStemsToInclude), las pistas deseleccionadas se marcan como silenciadas (muted)
+        // por defecto para que la escucha inicial coincida con lo pedido, pero conservando el material
+        // completo en el mezclador para cuando quieran desmutearlo.
+        const normalizeInst = (s: string) =>
+          (s || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+
         data.stems.forEach((st: any) => {
           if (!st.audioUrl) return;
 
           const instClean = (st.instrument || '').toLowerCase();
-          const existingIdx = newTracks.findIndex(
-            (t) =>
-              (t.instrumento && t.instrumento.toLowerCase() === instClean) ||
-              (t.nombre && t.nombre.toLowerCase().includes(instClean)) ||
-              (instClean === 'voz' && t.nombre.toLowerCase().includes('voz')) ||
-              (instClean === 'batería' && (t.nombre.toLowerCase().includes('batería') || t.nombre.toLowerCase().includes('bateria'))) ||
-              (instClean === 'bajo' && t.nombre.toLowerCase().includes('bajo')) ||
-              (instClean === 'guitarras' && t.nombre.toLowerCase().includes('guitarra')) ||
-              (instClean === 'teclados' && (t.nombre.toLowerCase().includes('teclado') || t.nombre.toLowerCase().includes('piano'))) ||
-              (instClean === 'arreglos' && t.nombre.toLowerCase().includes('arreglo'))
-          );
+          const instNorm = normalizeInst(st.instrument);
+
+          // Verificar si esta pista está incluida en la selección activa del usuario
+          const isSelectedByPreset =
+            !activeStemsToInclude ||
+            activeStemsToInclude.length === 0 ||
+            activeStemsToInclude.some((req) => {
+              const reqNorm = normalizeInst(req);
+              if (reqNorm === 'instrumental' && instNorm !== 'voz') return true;
+              return reqNorm === instNorm || instNorm.includes(reqNorm) || reqNorm.includes(instNorm);
+            });
+
+          const existingIdx = newTracks.findIndex((t) => {
+            const tInstNorm = normalizeInst(t.instrumento || '');
+            const tNombreNorm = normalizeInst(t.nombre || '');
+            return (
+              (tInstNorm && tInstNorm === instNorm) ||
+              (tNombreNorm && tNombreNorm.includes(instNorm)) ||
+              (instNorm === 'voz' && tNombreNorm.includes('voz')) ||
+              (instNorm === 'instrumental' && tNombreNorm.includes('instrumental')) ||
+              (instNorm === 'bateria' && tNombreNorm.includes('bateria')) ||
+              (instNorm === 'bajo' && tNombreNorm.includes('bajo')) ||
+              (instNorm === 'guitarras' && (tNombreNorm.includes('guitarra') || tNombreNorm.includes('guitarras'))) ||
+              (instNorm === 'teclados' && (tNombreNorm.includes('teclado') || tNombreNorm.includes('piano'))) ||
+              (instNorm === 'arreglos' && tNombreNorm.includes('arreglo'))
+            );
+          });
 
           const fmt = st.formato || (st.audioUrl.toLowerCase().includes('.wav') ? 'WAV' : 'MP3');
           const sz = st.tamano || '2.5 MB';
@@ -843,6 +1172,7 @@ export default function SongStudioModal({
               formato: fmt,
               tamano: sz,
               volumen: st.recommendedVolume || newTracks[existingIdx].volumen || 1,
+              muted: !isSelectedByPreset,
             };
             stemsAdded++;
           } else {
@@ -856,7 +1186,7 @@ export default function SongStudioModal({
               tamano: sz,
               fecha: new Date().toISOString().split('T')[0],
               volumen: st.recommendedVolume || 1,
-              muted: false,
+              muted: !isSelectedByPreset,
             });
             stemsAdded++;
           }
@@ -864,7 +1194,7 @@ export default function SongStudioModal({
       } else {
         let renderedStems: IsolatedStemResult[] = [];
         try {
-          renderedStems = await separateAudioIntoStems(targetIdea.audioUrl);
+          renderedStems = await separateAudioIntoStems(targetIdea.audioUrl, activeStemsToInclude);
         } catch (renderErr) {
           console.warn('Could not render client audio stem buffers:', renderErr);
         }
@@ -938,13 +1268,22 @@ export default function SongStudioModal({
 
       const finalSeparationEngine = data.degraded
         ? 'Iris Básico (modo degradado)'
-        : engineToUse === 'mvsep-mdx23'
-          ? 'Iris Studio'
-          : engineToUse === 'demucs'
-            ? 'Iris Cloud'
-            : 'Iris Básico';
-      const existingIndex = (song.audioIdeas || []).findIndex((i) => i.id === targetIdea.id);
-      const updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
+        : engineToUse === 'fal'
+          ? 'Iris Ultra'
+          : engineToUse === 'lalalai'
+            ? 'Iris Pro'
+            : engineToUse === 'mvsep-mdx23'
+              ? 'Iris Studio'
+              : engineToUse === 'demucs'
+                ? 'Iris Cloud'
+                : 'Iris Básico';
+      const existingIndex = (song.audioIdeas || []).findIndex(
+        (i) =>
+          i.id === targetIdea.id ||
+          (targetIdea.audioUrl && i.audioUrl === targetIdea.audioUrl) ||
+          (i.titulo && i.titulo === targetIdea.titulo)
+      );
+      let updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
       const updatedIdeaContent: SongAudioIdea = {
         ...targetIdea,
         pistas: newTracks,
@@ -962,6 +1301,9 @@ export default function SongStudioModal({
         updatedIdeas.push(updatedIdeaContent);
       }
       onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+
+      // Asegurar que la idea quede expandida y visible en pantalla de inmediato
+      setExpandedIdeaIds((prev) => new Set([...prev, targetIdea.id, updatedIdeaContent.id]));
 
       const stemsInfo = newTracks.map((t) => ({
         instrument: t.instrumento || 'Pista',
@@ -1001,31 +1343,48 @@ export default function SongStudioModal({
       const data = err?.data || {};
       const errMsg = String(data.message || data.error || err?.message || '');
 
-      // Diferenciar el proveedor origen del error (Replicate, Gemini API Key, Librería FFmpeg, Supabase, etc.)
-      const errorProvider: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system' =
+      const isNetworkError =
+        errMsg.includes('Failed to fetch') ||
+        errMsg.includes('NetworkError') ||
+        errMsg.includes('net::ERR_') ||
+        errMsg.includes('Load failed');
+
+      // Diferenciar el proveedor origen del error (Fal.ai, Replicate, Gemini API Key, Librería FFmpeg, Supabase, etc.)
+      const errorProvider: 'fal' | 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system' =
         data.provider ||
-        (data.errorType?.startsWith('gemini_') ||
-        errMsg.includes('GEMINI_API_KEY') ||
-        errMsg.includes('Gemini') ||
-        errMsg.includes('GoogleGenAI')
-          ? 'gemini'
-          : data.errorType?.startsWith('ffmpeg_') || errMsg.includes('ffmpeg') || errMsg.includes('fluent-ffmpeg')
-            ? 'ffmpeg'
-            : data.errorType?.startsWith('supabase_') || errMsg.includes('supabase') || errMsg.includes('storage')
-              ? 'supabase'
-              : engineToUse !== 'dsp-server' ||
-                  data.engine === 'replicate' ||
-                  data.engine === 'mvsep-mdx23' ||
-                  data.engine === 'demucs' ||
-                  errMsg.includes('replicate') ||
-                  errMsg.includes('r8_')
-                ? 'replicate'
-                : 'system');
+        (isNetworkError
+          ? 'network'
+          : data.engine === 'fal' ||
+              engineToUse === 'fal' ||
+              errMsg.includes('Fal.ai') ||
+              errMsg.includes('fal.ai') ||
+              errMsg.includes('fal.run') ||
+              errMsg.includes('FAL_KEY')
+            ? 'fal'
+            : data.errorType?.startsWith('gemini_') ||
+                errMsg.includes('GEMINI_API_KEY') ||
+                errMsg.includes('Gemini') ||
+                errMsg.includes('GoogleGenAI')
+              ? 'gemini'
+              : data.errorType?.startsWith('ffmpeg_') || errMsg.includes('ffmpeg') || errMsg.includes('fluent-ffmpeg')
+                ? 'ffmpeg'
+                : data.errorType?.startsWith('supabase_') || errMsg.includes('supabase') || errMsg.includes('storage')
+                  ? 'supabase'
+                  : engineToUse !== 'dsp-server' ||
+                      data.engine === 'replicate' ||
+                      data.engine === 'mvsep-mdx23' ||
+                      data.engine === 'demucs' ||
+                      errMsg.includes('replicate') ||
+                      errMsg.includes('r8_')
+                    ? 'replicate'
+                    : 'system');
 
       // Determinar el tipo específico de error
       let errorType = data.errorType;
       if (!errorType) {
-        if (errorProvider === 'gemini') {
+        if (isNetworkError) {
+          errorType = 'network_error';
+        } else if (errorProvider === 'gemini') {
           if (
             errMsg.includes('key') &&
             (errMsg.includes('not valid') || errMsg.includes('API_KEY_INVALID') || err?.status === 400 || err?.status === 401)
@@ -1045,6 +1404,22 @@ export default function SongStudioModal({
             errorType = 'ffmpeg_missing';
           } else {
             errorType = 'ffmpeg_processing_error';
+          }
+        } else if (errorProvider === 'fal') {
+          if (
+            errMsg.includes('TOP_UP') ||
+            errMsg.includes('locked') ||
+            errMsg.includes('balance') ||
+            errMsg.includes('credit') ||
+            err?.status === 403
+          ) {
+            errorType = 'fal_billing_locked';
+          } else if (errMsg.includes('401') || errMsg.includes('auth') || errMsg.includes('Key') || errMsg.includes('unauthorized')) {
+            errorType = 'fal_auth_invalid';
+          } else if (errMsg.includes('429') || errMsg.includes('rate') || errMsg.includes('limit')) {
+            errorType = 'fal_rate_limit';
+          } else {
+            errorType = 'fal_generic';
           }
         } else if (errorProvider === 'supabase') {
           if (errMsg.includes('credentials') || errMsg.includes('URL') || errMsg.includes('KEY')) {
@@ -1073,76 +1448,96 @@ export default function SongStudioModal({
       // Títulos diferenciados por proveedor y tipo
       const errorTitle =
         data.errorTitle ||
-        (errorType === 'gemini_key_missing'
-          ? 'Clave GEMINI_API_KEY No Configurada'
-          : errorType === 'gemini_auth_invalid'
-            ? 'Clave GEMINI_API_KEY Inválida o Revocada'
-            : errorType === 'gemini_quota_exceeded'
-              ? 'Cuota de Gemini API Excedida (HTTP 429)'
-              : errorType === 'gemini_model_unavailable'
-                ? 'Modelo de Gemini no Accesible en tu Región'
-                : errorType === 'gemini_safety_block'
-                  ? 'Bloqueo de Seguridad en Gemini AI'
-                  : errorType === 'gemini_generic'
-                    ? 'Error en la API de Google Gemini'
-                    : errorType === 'ffmpeg_missing'
-                      ? 'Librería FFmpeg no Instalada en Servidor'
-                      : errorType === 'ffmpeg_codec_unsupported'
-                        ? 'Formato de Audio Incompatible con FFmpeg'
-                        : errorType === 'ffmpeg_processing_error'
-                          ? 'Error en Filtros Espectrales FFmpeg'
-                          : errorType === 'supabase_credentials_missing'
-                            ? 'Credenciales de Supabase no Configuradas'
-                            : errorType === 'supabase_storage_error'
-                              ? 'Error de Almacenamiento en Supabase Storage'
-                              : errorType === 'billing_required'
-                                ? 'Saldo o Facturación Requerida en el Servicio de IA (HTTP 402)'
-                                : errorType === 'auth_invalid'
-                                  ? 'Token de Acceso Inválido o Expirado (HTTP 401)'
-                                  : errorType === 'token_missing'
-                                    ? 'Token de Acceso No Configurado'
-                                    : errorType === 'audio_unsupported'
-                                      ? 'Formato de Audio Rechazado por el Servicio de IA (HTTP 422)'
-                                      : errorType === 'rate_limit'
-                                        ? 'Límite de Peticiones Alcanzado (HTTP 429)'
-                                        : errorType === 'timeout'
-                                          ? 'Tiempo de Espera en la Nube Excedido (>120s)'
-                                          : errorType === 'gpu_failure'
-                                            ? 'Fallo en el Contenedor de Procesamiento en la Nube'
-                                            : errorType === 'server_error'
-                                              ? 'Fallo Temporal en la Infraestructura de IA'
-                                              : 'Inconveniente en la Separación de Pistas');
+        (errorType === 'network_error'
+          ? 'Error de Conexión de Red (Failed to fetch)'
+          : errorType === 'fal_billing_locked'
+            ? 'Saldo Agotado en Fal.ai (HTTP 403 - Saldo Requerido TOP_UP)'
+            : errorType === 'fal_auth_invalid'
+              ? 'Clave FAL_KEY Inválida o No Configurada (HTTP 401)'
+              : errorType === 'fal_rate_limit'
+                ? 'Límite de Peticiones en Fal.ai Alcanzado (HTTP 429)'
+                : errorType === 'fal_generic'
+                  ? 'Error en la API de Fal.ai'
+                  : errorType === 'gemini_key_missing'
+                    ? 'Clave GEMINI_API_KEY No Configurada'
+                    : errorType === 'gemini_auth_invalid'
+                      ? 'Clave GEMINI_API_KEY Inválida o Revocada'
+                      : errorType === 'gemini_quota_exceeded'
+                        ? 'Cuota de Gemini API Excedida (HTTP 429)'
+                        : errorType === 'gemini_model_unavailable'
+                          ? 'Modelo de Gemini no Accesible en tu Región'
+                          : errorType === 'gemini_safety_block'
+                            ? 'Bloqueo de Seguridad en Gemini AI'
+                            : errorType === 'gemini_generic'
+                              ? 'Error en la API de Google Gemini'
+                              : errorType === 'ffmpeg_missing'
+                                ? 'Librería FFmpeg no Instalada en Servidor'
+                                : errorType === 'ffmpeg_codec_unsupported'
+                                  ? 'Formato de Audio Incompatible con FFmpeg'
+                                  : errorType === 'ffmpeg_processing_error'
+                                    ? 'Error en Filtros Espectrales FFmpeg'
+                                    : errorType === 'supabase_credentials_missing'
+                                      ? 'Credenciales de Supabase no Configuradas'
+                                      : errorType === 'supabase_storage_error'
+                                        ? 'Error de Almacenamiento en Supabase Storage'
+                                        : errorType === 'billing_required'
+                                          ? 'Saldo o Facturación Requerida en el Servicio de IA (HTTP 402)'
+                                          : errorType === 'auth_invalid'
+                                            ? 'Token de Acceso Inválido o Expirado (HTTP 401)'
+                                            : errorType === 'token_missing'
+                                              ? 'Token de Acceso No Configurado'
+                                              : errorType === 'audio_unsupported'
+                                                ? 'Formato de Audio Rechazado por el Servicio de IA (HTTP 422)'
+                                                : errorType === 'rate_limit'
+                                                  ? 'Límite de Peticiones Alcanzado (HTTP 429)'
+                                                  : errorType === 'timeout'
+                                                    ? 'Tiempo de Espera en la Nube Excedido (>120s)'
+                                                    : errorType === 'gpu_failure'
+                                                      ? 'Fallo en el Contenedor de Procesamiento en la Nube'
+                                                      : errorType === 'server_error'
+                                                        ? 'Fallo Temporal en la Infraestructura de IA'
+                                                        : 'Inconveniente en la Separación de Pistas');
 
-      const specificMsg = data.message || data.error || errMsg || 'No se pudo conectar con el servidor de IA.';
+      const specificMsg = isNetworkError
+        ? 'No se pudo contactar con el backend o la conexión se interrumpió temporalmente (Failed to fetch).'
+        : data.message || data.error || errMsg || 'No se pudo conectar con el servidor de IA.';
 
       // Consejo / Acción guiada según el origen exacto
       const actionAdvice =
         data.actionAdvice ||
-        (errorType === 'gemini_key_missing'
-          ? 'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.'
-          : errorType === 'gemini_auth_invalid'
-            ? 'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.'
-            : errorType === 'gemini_quota_exceeded'
-              ? 'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.'
-              : errorType === 'gemini_model_unavailable'
-                ? 'El modelo solicitado no está activo para tu clave. Se usará el análisis local de respaldo.'
-                : errorType === 'ffmpeg_codec_unsupported'
-                  ? 'Exporta tu pista a MP3 estándar o WAV PCM 16-bit / 44.1kHz antes de subirla.'
-                  : errorType === 'ffmpeg_missing'
-                    ? 'Verifica la instalación de ffmpeg-static en el servidor backend de Railway.'
-                    : errorType === 'supabase_credentials_missing'
-                      ? 'Asegúrate de que SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY estén definidas en Railway.'
-                      : errorType === 'billing_required'
-                        ? 'Tu cuenta de Replicate requiere añadir saldo en replicate.com/account/billing o utilizar el Motor DSP local gratuito.'
-                        : errorType === 'auth_invalid'
-                          ? 'Comprueba que tu API Token comience por r8_ y esté activo en replicate.com/account/api-tokens.'
-                          : errorType === 'token_missing'
-                            ? 'Configura la variable REPLICATE_API_TOKEN en los ajustes de tu proyecto.'
-                            : errorType === 'rate_limit'
-                              ? 'Espera 30-60 segundos antes de enviar una nueva solicitud o utiliza el Motor DSP local.'
-                              : errorType === 'timeout'
-                                ? 'La máquina GPU tardó en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.'
-                                : 'Puedes reintentar o usar la separación con el Motor DSP local que procesa el audio en el propio servidor.');
+        (errorType === 'network_error'
+          ? 'Comprueba tu conexión o pulsa "Separar con Iris Básico" para procesar las pistas al instante de forma local.'
+          : errorType === 'fal_billing_locked'
+            ? 'Tu cuenta de Fal.ai requiere recarga de créditos (Top Up). Puedes recargar en fal.ai/dashboard/billing o separar al instante y gratis con Iris Básico.'
+            : errorType === 'fal_auth_invalid'
+              ? 'Comprueba que tu clave FAL_KEY esté activa en fal.ai/dashboard/keys o en las variables de entorno.'
+              : errorType === 'fal_rate_limit'
+                ? 'Espera unos segundos o utiliza la separación local con Iris Básico.'
+                : errorType === 'gemini_key_missing'
+                  ? 'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.'
+                  : errorType === 'gemini_auth_invalid'
+                    ? 'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.'
+                    : errorType === 'gemini_quota_exceeded'
+                      ? 'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.'
+                      : errorType === 'gemini_model_unavailable'
+                        ? 'El modelo solicitado no está activo para tu clave. Se usará el análisis local de respaldo.'
+                        : errorType === 'ffmpeg_codec_unsupported'
+                          ? 'Exporta tu pista a MP3 estándar o WAV PCM 16-bit / 44.1kHz antes de subirla.'
+                          : errorType === 'ffmpeg_missing'
+                            ? 'Verifica la instalación de ffmpeg-static en el servidor backend de Railway.'
+                            : errorType === 'supabase_credentials_missing'
+                              ? 'Asegúrate de que SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY estén definidas en Railway.'
+                              : errorType === 'billing_required'
+                                ? 'Tu cuenta de Replicate requiere añadir saldo en replicate.com/account/billing o utilizar el Motor DSP local gratuito.'
+                                : errorType === 'auth_invalid'
+                                  ? 'Comprueba que tu API Token comience por r8_ y esté activo en replicate.com/account/api-tokens.'
+                                  : errorType === 'token_missing'
+                                    ? 'Configura la variable REPLICATE_API_TOKEN en los ajustes de tu proyecto.'
+                                    : errorType === 'rate_limit'
+                                      ? 'Espera 30-60 segundos antes de enviar una nueva solicitud o utiliza el Motor DSP local.'
+                                      : errorType === 'timeout'
+                                        ? 'La máquina GPU tardó en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.'
+                                        : 'Puedes reintentar o usar la separación con el Motor DSP local que procesa el audio en el propio servidor.');
       const detailInfo = data.details || data.errorDetail;
 
       setShowStemErrorDetails(false);
@@ -1984,7 +2379,10 @@ export default function SongStudioModal({
       }
 
       if (maxIdeaDuration > 0 && isFinite(maxIdeaDuration)) {
-        setDurationMap((prev) => ({ ...prev, [idea.id]: maxIdeaDuration }));
+        setDurationMap((prev) => {
+          if (prev[idea.id] === maxIdeaDuration) return prev;
+          return { ...prev, [idea.id]: maxIdeaDuration };
+        });
       }
 
       // Check if finished (if loop is disabled)
@@ -4185,7 +4583,7 @@ export default function SongStudioModal({
                             </div>
                           </div>
 
-                          {/* Únicas acciones siempre visibles: escuchar y el menú de más opciones */}
+                          {/* Únicas acciones siempre visibles: escuchar, eliminar directo y el menú de más opciones */}
                           <div className="flex items-center gap-1.5 shrink-0">
                             <button
                               type="button"
@@ -4198,6 +4596,15 @@ export default function SongStudioModal({
                               title="Play / Pausa"
                             >
                               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={(e) => handleDeleteIdea(e, idea.id)}
+                              className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 transition-all cursor-pointer"
+                              title="Eliminar idea"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </button>
 
                             <div className="relative">
@@ -4305,10 +4712,10 @@ export default function SongStudioModal({
                                 <div className="flex items-center rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-amber-600 overflow-hidden">
                                   <button
                                     type="button"
-                                    onClick={() => handlePerformAiStemSeparation(idea)}
+                                    onClick={() => setShowMoisesStemsModal(idea)}
                                     disabled={isSeparatingStemsAi}
                                     className="px-3 py-1.5 hover:bg-[var(--acc)]/60/20 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
-                                    title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
+                                    title="Elegir pistas y aislar voz, batería, bajo, guitarras, etc. (Modo Moises)"
                                   >
                                     <Cpu
                                       className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-[var(--acc-ink)]' : 'text-[var(--acc-ink)]'}`}
@@ -4319,7 +4726,7 @@ export default function SongStudioModal({
                                     type="button"
                                     onClick={() => setShowMoisesStemsModal(idea)}
                                     className="px-2 py-1.5 /60 hover:bg-[var(--acc)]/60/30 text-[var(--on-acc)] transition-all cursor-pointer flex items-center"
-                                    title="Elegir motor de separación (Iris Studio, Iris Cloud o Iris Básico) o comparar calidad"
+                                    title="Elegir pistas y motor de separación (Iris Studio, Iris Cloud o Iris Básico)"
                                   >
                                     <Sliders className="w-3.5 h-3.5" />
                                   </button>
@@ -5683,1438 +6090,29 @@ export default function SongStudioModal({
         )}
 
         {/* MODAL MOISES STEMS SEPARATION & MULTITRACK CONTROL */}
-        {showMoisesStemsModal && (
-          <div className="fixed inset-0 z-[100] bg-[var(--scrim)]/80 flex items-center justify-center p-4">
-            <div className="bg-[var(--bg)] rounded-[var(--r-l)] max-w-2xl w-full p-5 sm:p-6 space-y-5 text-[var(--ink)] max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between /20 pb-3">
-                <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-sm">
-                  <Sliders className="w-5 h-5 text-[var(--acc)]" />
-                  <span>Iris Espectro — Separador de Pistas con IA</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowMoisesStemsModal(null)}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Navigation Tabs */}
-              <div className="flex items-center gap-2 pb-2 font-sans text-xs">
-                <button
-                  type="button"
-                  onClick={() => setMoisesTab('stems')}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    moisesTab === 'stems'
-                      ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black'
-                      : 'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
-                  }`}
-                >
-                  <Sliders className="w-3.5 h-3.5" />
-                  <span>1. Pistas Separadas</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setMoisesTab('how_it_works')}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    moisesTab === 'how_it_works'
-                      ? 'bg-[var(--tentative)] text-[var(--ink)] font-black'
-                      : 'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
-                  }`}
-                >
-                  <Cpu className="w-3.5 h-3.5" />
-                  <span>2. ¿Cómo funciona Iris?</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setMoisesTab('upload')}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    moisesTab === 'upload'
-                      ? 'bg-[var(--ok)] text-[var(--on-ok)] font-black'
-                      : 'bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)]'
-                  }`}
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>3. Subir Pistas Aisladas</span>
-                </button>
-              </div>
-
-              {/* TAB 1: CANALES DE PISTAS SEPARADAS & HABILITACIÓN */}
-              {moisesTab === 'stems' && (
-                <div className="space-y-4 text-xs text-[var(--ink-2)] leading-relaxed">
-                  <p className="text-[var(--ink-2)] font-sans">
-                    BandManager crea canales de pistas independientes (Voz, Batería, Bajo, Guitarras) para controlar el volumen, silenciar
-                    (Mute) o dejar en Solo cada instrumento en tus ensayos y composición.
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-sans text-[11px]">
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--tentative)]/60 space-y-1">
-                      <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">🎤 1. Voz (Vocals)</span>
-                      <p className="text-[10px] text-[var(--ink-2)]">
-                        Filtro DSP de frecuencia centrada en 1200Hz. Silencia la voz para cantar la letra en directo o practicar afinación.
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] space-y-1">
-                      <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">🥁 2. Batería (Drums)</span>
-                      <p className="text-[10px] text-[var(--ink-2)]">
-                        Aísla transitorios de platos (&gt;1800Hz) y golpes de bombo/caja. Ideal para tocar la batería encima sin estorbar.
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink)] space-y-1">
-                      <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">🎸 3. Bajo (Bass)</span>
-                      <p className="text-[10px] text-[var(--ink-2)]">
-                        Filtro sub-bass paso bajo en 220Hz. Apaga la línea de bajo grabada para que el bajista de la banda toque su línea
-                        real.
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--tentative)]/60 space-y-1">
-                      <span className="font-bold text-[var(--ink)] block flex items-center gap-1.5">🎹 4. Guitarras & Armonía</span>
-                      <p className="text-[10px] text-[var(--ink-2)]">
-                        Filtro de espectro medio (350Hz-3.5kHz). Controla el nivel armónico para acompañar con teclado o rítmicas.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--ink)] font-sans text-[11px] space-y-1">
-                    <span className="font-bold text-[var(--acc)]/70 block flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-[var(--acc)]" />
-                      Controles Activos en la Línea de Tiempo:
-                    </span>
-                    <p className="text-[var(--ink-2)]">
-                      Al separar las pistas, cada instrumento tendrá su propia pista con botones <strong>Mute (M)</strong>,{' '}
-                      <strong>Solo (S)</strong>, Fader de Volumen (0-100%), Ecualizador de 3 bandas (Graves, Medios, Agudos) y Paneo L/R
-                      estéreo.
-                    </p>
-                  </div>
-
-                  {/* SELECTOR DE MOTOR IRIS: STUDIO / CLOUD / BÁSICO */}
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)] space-y-3 font-sans text-[11px]">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[var(--ink)] flex items-center gap-1.5">
-                        <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" /> Selecciona el Motor de Iris Espectro:
-                      </span>
-                      <span
-                        className={`text-[10px] px-2 py-0.5 rounded font-bold ${
-                          selectedStemEngine === 'mvsep-mdx23'
-                            ? 'bg-[var(--acc)]/10 text-[var(--acc)]/70 /30'
-                            : selectedStemEngine === 'demucs'
-                              ? 'bg-[var(--tentative)]/10 text-[var(--tentative)]/80/30'
-                              : 'bg-[var(--acc)]/10 text-[var(--acc)]/80/30'
-                        }`}
-                      >
-                        {selectedStemEngine === 'mvsep-mdx23' && '✨ Iris Studio'}
-                        {selectedStemEngine === 'demucs' && '⚡ Iris Cloud'}
-                        {selectedStemEngine === 'dsp-server' && '⚙️ Iris Básico (gratis)'}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                      {/* Iris Studio */}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedStemEngine('mvsep-mdx23')}
-                        className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
-                          selectedStemEngine === 'mvsep-mdx23'
-                            ? 'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-amber-0/50/10/50'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs flex items-center gap-1.5 text-[var(--ink)]">
-                            <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Iris Studio
-                          </span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-black">
-                            Máxima calidad
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-[var(--ink-2)] leading-normal">
-                          Combina dos redes neuronales de alta precisión para aislar voz, bajo, batería y demás fuentes al máximo detalle.
-                        </span>
-                        <span className="text-[9px] text-[var(--acc)]/80 font-bold">
-                          🐢 Más lento, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['mvsep-mdx23'])}€ estimado por canción.
-                        </span>
-                      </button>
-
-                      {/* Iris Cloud */}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedStemEngine('demucs')}
-                        className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
-                          selectedStemEngine === 'demucs'
-                            ? 'bg-[var(--tentative)]/5/60 text-[var(--tentative)]/60 ring-1 ring-purple-500/50/10/50'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs flex items-center gap-1.5 text-[var(--ink)]">
-                            <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" /> Iris Cloud
-                          </span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-black">
-                            Recomendado
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-[var(--ink-2)] leading-normal">
-                          Red neuronal en la nube probada en estudio para aislamiento directo de Voz, Batería, Bajo y Guitarras.
-                        </span>
-                        <span className="text-[9px] text-[var(--ok)] font-bold">
-                          ⚡ Rápido, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['demucs'])}€ estimado por canción.
-                        </span>
-                      </button>
-
-                      {/* Iris Básico (local) */}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedStemEngine('dsp-server')}
-                        className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
-                          selectedStemEngine === 'dsp-server'
-                            ? 'bg-[var(--acc)]/5/60 text-[var(--acc)]/60 ring-1 ring-blue-500/50/10/50'
-                            : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs flex items-center gap-1.5 text-[var(--ink)]">
-                            <Cpu className="w-3.5 h-3.5 text-[var(--acc)]" /> Iris Básico
-                          </span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/80 font-black">
-                            100% Gratis
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-[var(--ink-2)] leading-normal">
-                          Filtros de frecuencia y Mid/Side procesados en nuestro propio servidor. Rápido y sin coste.
-                        </span>
-                      </button>
-                    </div>
-
-                    {/* Banner de Garantía Anti-Duplicación */}
-                    <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok-soft)] text-[var(--ink-2)] text-[10px] flex items-center gap-2">
-                      <span className="text-[var(--ok)] font-bold">🛡️ Cero Coste Duplicado:</span>
-                      <span className="text-[var(--ink-2)]">
-                        Las pistas procesadas se guardan en la nube por hash de canción. Nunca pagarás 2 veces por la misma canción.
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const targetIdea = showMoisesStemsModal;
-                      setShowMoisesStemsModal(null);
-                      if (targetIdea) {
-                        handlePerformAiStemSeparation(targetIdea, selectedStemEngine);
-                      }
-                    }}
-                    className={`w-full py-3 rounded-[var(--r-m)] font-sans text-xs font-black tracking-wider transition-all cursor-pointer text-center flex items-center justify-center gap-2 ${
-                      selectedStemEngine === 'mvsep-mdx23'
-                        ? 'bg-gradient-to-r from-[var(--acc)] via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-[var(--ink)]/20/30'
-                        : selectedStemEngine === 'demucs'
-                          ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-[var(--acc)] hover:to-violet-500 text-[var(--ink)]/20/30'
-                          : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-[var(--ink)]/20/30'
-                    }`}
-                  >
-                    {selectedStemEngine === 'mvsep-mdx23' && (
-                      <>
-                        <Sparkles className="w-4 h-4 text-[var(--acc)]/70" />
-                        <span>✨ Separar con Iris Studio</span>
-                      </>
-                    )}
-                    {selectedStemEngine === 'demucs' && (
-                      <>
-                        <Sparkles className="w-4 h-4 text-[var(--tentative)]/80" />
-                        <span>⚡ Separar con Iris Cloud</span>
-                      </>
-                    )}
-                    {selectedStemEngine === 'dsp-server' && (
-                      <>
-                        <Cpu className="w-4 h-4 text-[var(--acc)]/60" />
-                        <span>⚙️ Separar con Iris Básico (gratis)</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-
-              {/* TAB 2: ¿CÓMO FUNCIONA IRIS? */}
-              {moisesTab === 'how_it_works' && (
-                <div className="space-y-4 text-xs text-[var(--ink-2)] leading-relaxed font-sans">
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--tentative)]/5/40 text-[var(--tentative)]/60 space-y-2">
-                    <h4 className="font-bold text-[var(--ink)] text-sm flex items-center gap-2 font-sans">
-                      <Cpu className="w-4 h-4 text-[var(--tentative)]" />
-                      ¿Cómo consigue Iris Espectro separar audio de forma tan precisa?
-                    </h4>
-                    <p className="text-[var(--ink-2)] leading-normal">
-                      Iris Espectro se apoya en redes neuronales de <strong>Deep Learning (Aprendizaje Profundo)</strong> entrenadas
-                      específicamente para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales).
-                    </p>
-                  </div>
-
-                  <div className="space-y-2.5 font-sans text-[11px]">
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-                      <span className="font-bold text-[var(--acc)]/70 block">1. Transformada de Fourier (STFT) & Espectrogramas 2D:</span>
-                      <p className="text-[var(--ink-2)] font-sans">
-                        El audio estéreo se convierte en un espectrograma 2D donde el eje Y representa la frecuencia (Hz) y el eje X
-                        representa el tiempo (ms).
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-                      <span className="font-bold text-[var(--tentative)]/80 block">
-                        2. Arquitectura de Dominio Dual (Tiempo + Frecuencia):
-                      </span>
-                      <p className="text-[var(--ink-2)] font-sans">
-                        A diferencia de filtros clásicos, la red procesa tanto la forma de onda pura en el tiempo (para transitorios de
-                        batería) como el espectrograma de frecuencias con capas neuronales especializadas.
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-                      <span className="font-bold text-[var(--tentative)]/80 block">
-                        3. Máscaras de Fase Compleja & Estimación Tímbrica:
-                      </span>
-                      <p className="text-[var(--ink-2)] font-sans">
-                        El modelo predice una"máscara" espectral que multiplica el audio original para aislar la firma tímbrica de la voz o
-                        del bajo, preservando la fase original para evitar artefactos chirriantes o cancelación de fase.
-                      </p>
-                    </div>
-
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1">
-                      <span className="font-bold text-[var(--ink-2)] block">4. Entrenamiento Masivo en Clusters de GPUs:</span>
-                      <p className="text-[var(--ink-2)] font-sans">
-                        Estos modelos se entrenan con miles de temas grabados en pistas separadas en estudio. Al procesar, ejecutan
-                        inferencia acelerada en servidores de GPU dedicadas.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/80700 text-[var(--ink-2)] text-[11px] font-sans">
-                    💡 <strong>Integración en BandManager:</strong> Nuestra app combina filtros DSP en tiempo real mediante Web Audio API
-                    con ruteo de nodos `BiquadFilterNode` para silenciar la voz o batería en vivo, y te permite subir pistas ya separadas en
-                    otro programa para máxima calidad.
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 3: SUBIR PISTAS YA SEPARADAS EN OTRO PROGRAMA */}
-              {moisesTab === 'upload' && (
-                <div className="space-y-4 text-xs text-[var(--ink-2)] leading-relaxed font-sans">
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] space-y-1">
-                    <h4 className="font-bold text-[var(--ink)] text-sm flex items-center gap-2 font-sans">
-                      <Upload className="w-4 h-4 text-[var(--ok)]" />
-                      Cargar Pistas Separadas
-                    </h4>
-                    <p className="text-[var(--ink-2)] text-[11px]">
-                      Si ya has procesado un tema en otro programa de separación de pistas y tienes los archivos MP3/WAV independientes,
-                      súbelos aquí para añadirlos directamente a la mezcla multipista de esta sección.
-                    </p>
-                  </div>
-
-                  <div className="space-y-3 font-sans text-[11px]">
-                    <div>
-                      <label className="block text-[var(--ink-2)] mb-1 font-bold">Selecciona el Instrumento de la Pista:</label>
-                      <select
-                        value={uploadingStemInstrument}
-                        onChange={(e) => setUploadingStemInstrument(e.target.value)}
-                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] focus:outline-none"
-                      >
-                        <option value="Voz">🎤 Pista: Voz Aislada</option>
-                        <option value="Batería">🥁 Pista: Batería Aislada</option>
-                        <option value="Bajo">🎸 Pista: Bajo Aislado</option>
-                        <option value="Guitarras">🎹 Pista: Guitarras / Teclados</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[var(--ink-2)] mb-1 font-bold">Seleccionar Archivo de Audio (WAV / MP3 / M4A):</label>
-                      <input
-                        type="file"
-                        accept="audio/*"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (!file || !showMoisesStemsModal) return;
-
-                          try {
-                            const uploadedUrl = await uploadFileToServer(file);
-                            const targetIdea = showMoisesStemsModal;
-                            const existing = getIdeaTracks(targetIdea);
-
-                            const newTrack: AudioTrack = {
-                              id: `stem-file-${uploadingStemInstrument.toLowerCase()}-${Date.now()}`,
-                              nombre: `Pista (${uploadingStemInstrument}): ${file.name.replace(/\.[^/.]+$/, '')}`,
-                              audioUrl: uploadedUrl,
-                              autor: 'Importado (pista externa)',
-                              instrumento: uploadingStemInstrument,
-                              fecha: new Date().toISOString().split('T')[0],
-                              volumen: 1,
-                              muted: false,
-                            };
-
-                            const updatedIdeas = (song.audioIdeas || []).map((i) =>
-                              i.id === targetIdea.id ? { ...i, pistas: [...existing, newTrack] } : i
-                            );
-
-                            onUpdateSong({ ...song, audioIdeas: updatedIdeas });
-                            setShowMoisesStemsModal(null);
-                            alert(`¡Pista de Stem"${file.name}" cargada con éxito en la mezcla!`);
-                          } catch (err) {
-                            console.error('Error al subir archivo Stem:', err);
-                            alert('Ocurrió un error al cargar el archivo de audio Stem.');
-                          }
-                        }}
-                        className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink-2)] text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-[var(--r-s)] file:border-0 file:text-xs file:font-bold file:bg-[var(--ok)] file:text-[var(--on-ok)] hover:file:brightness-110"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/80700 text-[var(--ink-2)] text-[10px] font-sans">
-                    📌 Los archivos subidos se sincronizan con Supabase Storage y estarán disponibles inmediatamente para el resto de
-                    miembros de la banda.
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <SongStudioMoisesStemsModal
+          showMoisesStemsModal={showMoisesStemsModal}
+          setShowMoisesStemsModal={setShowMoisesStemsModal}
+          moisesTab={moisesTab}
+          setMoisesTab={setMoisesTab}
+          moisesPreset={moisesPreset}
+          setMoisesPreset={setMoisesPreset}
+          handlePerformAiStemSeparation={handlePerformAiStemSeparation}
+          song={song}
+          onUpdateSong={onUpdateSong}
+        />
 
         {/* AI Instrument Track Generator Modal */}
-        {showAiTrackGenModal && (
-          <div className="fixed inset-0 z-[120] bg-[var(--scrim)]/80 flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
-            <div className="bg-gradient-to-b from-neutral-900 via-indigo-950/80 to-neutral-950 rounded-[var(--r-l)] max-w-xl w-full p-6 space-y-5 relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between/20 pb-3">
-                <div className="flex items-center gap-2.5 text-[var(--tentative)]/80 font-sans font-bold text-sm">
-                  <Wand2 className="w-5 h-5 text-[var(--tentative)]" />
-                  <span>Generar Pista con IA (Gemini & Lyria)</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAiTrackGenModal(null);
-                    setAiTrackGenPreview(null);
-                    setAiTrackGenError(null);
-                  }}
-                  className="p-1.5 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="space-y-4 text-xs font-sans">
-                <p className="text-[var(--ink-2)] leading-relaxed">
-                  Genera una pista de acompañamiento con IA para <strong>"{showAiTrackGenModal.titulo}"</strong> —{' '}
-                  <strong className="text-[var(--tentative)]/80">escuchando el audio real de la idea</strong> (melodía, acordes y ritmo), no
-                  solo adivinando desde una descripción, para que encaje de verdad. Perfecta para practicar cuando falta un instrumento en
-                  la demo, no para sustituir a nadie de la banda.
-                </p>
-
-                <div>
-                  <label className="block text-[var(--tentative)]/80 font-sans font-bold mb-1.5">Instrumento a generar:</label>
-                  <select
-                    value={aiTrackGenInstrument}
-                    onChange={(e) => setAiTrackGenInstrument(e.target.value)}
-                    className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] font-sans text-xs focus:outline-none"
-                  >
-                    <option value="Guitarra Solista">🎸 Guitarra Solista (Solo / Lead Riff)</option>
-                    <option value="Sintetizador Lead">🎹 Sintetizador Lead / Teclado Moderno</option>
-                    <option value="Bajo Bailable">🎸 Bajo Bailable & Groovy</option>
-                    <option value="Vientos (Trompeta / Saxo)">🎺 Vientos (Sección de Trompeta / Saxo Ska)</option>
-                    <option value="Batería & Percusión">🥁 Percusión Adicional & Batería Rítmica</option>
-                    <option value="Violín / Cuerdas">🎻 Violín Solista / Arreglo de Cuerdas</option>
-                    <option value="Acordeón">🪗 Acordeón Balkan / Folclórico</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[var(--tentative)]/80 font-sans font-bold mb-1.5 flex items-center justify-between">
-                    <span>¿En qué momento de la canción debe empezar a sonar?</span>
-                    <span className="text-[var(--ink)] bg-[var(--sunken)] px-2 py-0.5 rounded-[var(--r-s)] text-[11px]">
-                      Se colocará en {formatTime(aiTrackGenStartOffsetSec)}
-                    </span>
-                  </label>
-
-                  {/* Mini transporte: reproduce la idea real para elegir el punto de oído, no a ciegas con un slider */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <button
-                      type="button"
-                      onClick={() => showAiTrackGenModal && togglePlayIdea(showAiTrackGenModal)}
-                      className="w-8 h-8 rounded-full bg-[var(--tentative)] hover:bg-[var(--tentative)]/60 text-[var(--ink)] flex items-center justify-center shrink-0 cursor-pointer"
-                    >
-                      {showAiTrackGenModal && playingIdeaId === showAiTrackGenModal.id ? (
-                        <Pause className="w-4 h-4 fill-current" />
-                      ) : (
-                        <Play className="w-4 h-4 fill-current ml-0.5" />
-                      )}
-                    </button>
-                    <input
-                      type="range"
-                      min={0}
-                      max={Math.max(1, song.duracionSegundos || 180)}
-                      step={0.1}
-                      value={showAiTrackGenModal ? currentTimeMap[showAiTrackGenModal.id] || 0 : 0}
-                      onChange={(e) => showAiTrackGenModal && handleSeekIdea(showAiTrackGenModal, Number(e.target.value))}
-                      className="flex-1 accent-purple-500"
-                    />
-                    <span className="text-[10px] font-sans text-[var(--ink-2)] w-10 text-right shrink-0">
-                      {formatTime(showAiTrackGenModal ? currentTimeMap[showAiTrackGenModal.id] || 0 : 0)}
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!showAiTrackGenModal) return;
-                      handlePauseIdea(showAiTrackGenModal);
-                      setAiTrackGenStartOffsetSec(Math.floor(currentTimeMap[showAiTrackGenModal.id] || 0));
-                    }}
-                    className="w-full py-2 rounded-[var(--r-s)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/60 text-xs font-sans font-bold flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    📍 Marcar este punto ({formatTime(showAiTrackGenModal ? currentTimeMap[showAiTrackGenModal.id] || 0 : 0)})
-                  </button>
-
-                  <p className="text-[10px] text-[var(--ink-2)] font-sans mt-1">
-                    Dale al play, escucha la canción y pulsa"Marcar este punto" justo donde quieras que entre — Lyria genera clips fieles al
-                    contexto de ~30s, así que elige la sección donde mejor encaje (ej. el puente) en vez de forzar una canción entera.
-                  </p>
-                </div>
-
-                {/* Pestañas Presets / Personalizado */}
-                <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--sunken)] w-fit">
-                  <button
-                    type="button"
-                    onClick={() => setAiTrackGenMode('presets')}
-                    className={`px-3 py-1.5 rounded-[var(--r-s)] font-sans text-[11px] font-bold transition-all ${
-                      aiTrackGenMode === 'presets'
-                        ? 'bg-[var(--tentative)]/30 text-[var(--tentative)]/60'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    Presets
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAiTrackGenMode('custom')}
-                    className={`px-3 py-1.5 rounded-[var(--r-s)] font-sans text-[11px] font-bold transition-all ${
-                      aiTrackGenMode === 'custom'
-                        ? 'bg-[var(--tentative)]/30 text-[var(--tentative)]/60'
-                        : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    Personalizado
-                  </button>
-                </div>
-
-                {aiTrackGenMode === 'presets' ? (
-                  <div className="grid grid-cols-2 gap-2">
-                    {AI_TRACK_STYLE_PRESETS.map((preset) => (
-                      <button
-                        key={preset.key}
-                        type="button"
-                        onClick={() => setAiTrackGenStyle(preset.style)}
-                        className={`p-2.5 rounded-[var(--r-m)] text-left transition-all flex flex-col gap-0.5 ${
-                          aiTrackGenStyle === preset.style
-                            ? 'bg-[var(--tentative)]/5/60 ring-1 ring-purple-500/50'
-                            : 'bg-[var(--sunken)] hover:border-[var(--hair)]'
-                        }`}
-                      >
-                        <span className="font-bold text-[11px] text-[var(--ink)] flex items-center gap-1.5">
-                          <span>{preset.icon}</span> {preset.label}
-                        </span>
-                        <span className="text-[10px] text-[var(--ink-2)] leading-snug">{preset.description}</span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-[var(--tentative)]/80 font-sans font-bold mb-1.5">
-                      Instrucción / Estilo deseado para el Arreglo:
-                    </label>
-                    <textarea
-                      value={aiTrackGenPrompt}
-                      onChange={(e) => setAiTrackGenPrompt(e.target.value)}
-                      placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
-                      className="w-full h-20 bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink)] placeholder-[var(--ink-2)] font-sans text-xs focus:outline-none resize-none"
-                    />
-                  </div>
-                )}
-
-                {aiTrackGenError && (
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/5/40 text-[var(--alert)]/80 text-[11px] font-sans">
-                    ⚠️ {aiTrackGenError}
-                  </div>
-                )}
-
-                {aiTrackGenPreview && (
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--ok-soft)] space-y-2.5 animate-in fade-in duration-200">
-                    <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-sans font-bold text-[11px]">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> {aiTrackGenPreview.trackName}
-                    </div>
-                    <audio controls src={aiTrackGenPreview.audioUrl} className="w-full h-9" onError={(e) => e.preventDefault()} />
-                    <p className="text-[10px] text-[var(--ink-2)] font-sans italic leading-relaxed">{aiTrackGenPreview.arrangementNotes}</p>
-                    <p className="text-[10px] text-[var(--ok)]/80 font-sans">
-                      Escúchala antes de decidir — si no te convence, regenera o prueba otro preset, no se ha tocado aún tu mezcla.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAiTrackGenModal(null);
-                    setAiTrackGenPreview(null);
-                    setAiTrackGenError(null);
-                  }}
-                  className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans text-xs font-bold cursor-pointer"
-                >
-                  Cancelar
-                </button>
-                {aiTrackGenPreview && (
-                  <button
-                    type="button"
-                    onClick={() => showAiTrackGenModal && handleConfirmAddAiTrack(showAiTrackGenModal)}
-                    className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/80 hover:bg-[var(--ok)] text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-95"
-                  >
-                    <Check className="w-4 h-4" /> Añadir a la mezcla
-                  </button>
-                )}
-                <button
-                  type="button"
-                  disabled={isGeneratingAiTrack}
-                  onClick={() => showAiTrackGenModal && handleGenerateAiInstrumentTrack(showAiTrackGenModal)}
-                  className="px-5 py-2.5 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-[var(--ink)] font-sans text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
-                >
-                  {isGeneratingAiTrack ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Generando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Wand2 className="w-4 h-4" />
-                      <span>{aiTrackGenPreview ? 'Regenerar' : 'Generar Pista con IA'}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <SongStudioAiTrackGenModal
+          showAiTrackGenModal={showAiTrackGenModal}
+          setShowAiTrackGenModal={setShowAiTrackGenModal}
+          isGeneratingAiTrack={false}
+          handleGenerateAiInstrumentTrack={() => {}}
+          song={song}
+        />
 
         {/* MODAL DE PROGRESO DE SEPARACIÓN DE STEMS IA */}
-        {stemProgressModal && stemProgressModal.isOpen && !stemProgressModal.minimized && (
-          <div className="fixed inset-0 bg-[var(--scrim)]/85 z-[1200] flex items-center justify-center p-4">
-            <div className="bg-[var(--bg)] rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] space-y-5 animate-in fade-in zoom-in-95 duration-200">
-              {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
- -mx-6 cancela el padding del modal para que ocupe todo el ancho, de borde a borde. */}
-              {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
-                <div className="-mx-6">
-                  <IrisPrismBanner />
-                </div>
-              )}
-
-              {/* Header */}
-              <div className="flex items-center justify-between pb-3">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center relative ${
-                      stemProgressModal.stage === 'completed'
-                        ? 'bg-[var(--ok)]/20/50'
-                        : stemProgressModal.stage === 'error'
-                          ? stemProgressModal.errorType === 'billing_required'
-                            ? 'bg-[var(--acc)]/20 /50'
-                            : stemProgressModal.errorType === 'rate_limit'
-                              ? 'bg-[var(--acc)]/20/50'
-                              : stemProgressModal.errorType === 'timeout'
-                                ? 'bg-[var(--tentative)]/20/50'
-                                : stemProgressModal.errorType === 'audio_unsupported'
-                                  ? 'bg-[var(--acc)]/20/50'
-                                  : stemProgressModal.errorType === 'gpu_failure'
-                                    ? 'bg-[var(--tentative)]/20/50'
-                                    : 'bg-[var(--alert)]/20/50'
-                          : 'bg-[var(--acc)]/20 /50'
-                    }`}
-                  >
-                    {stemProgressModal.stage === 'completed' ? (
-                      <CheckCircle2 className="w-6 h-6 text-[var(--ok)]" />
-                    ) : stemProgressModal.stage === 'error' ? (
-                      stemProgressModal.errorType === 'billing_required' ? (
-                        <CreditCard className="w-5 h-5 text-[var(--acc)]" />
-                      ) : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing' ? (
-                        <Key className="w-5 h-5 text-[var(--alert)]" />
-                      ) : stemProgressModal.errorType === 'audio_unsupported' ? (
-                        <FileAudio className="w-5 h-5 text-[var(--acc)]/80" />
-                      ) : stemProgressModal.errorType === 'rate_limit' ? (
-                        <Clock className="w-5 h-5 text-[var(--ink-2)]" />
-                      ) : stemProgressModal.errorType === 'timeout' ? (
-                        <Timer className="w-5 h-5 text-[var(--tentative)]" />
-                      ) : stemProgressModal.errorType === 'gpu_failure' ? (
-                        <Cpu className="w-5 h-5 text-[var(--tentative)]/80" />
-                      ) : (
-                        <AlertCircle className="w-5 h-5 text-[var(--alert)]" />
-                      )
-                    ) : (
-                      <Cpu className="w-6 h-6 text-[var(--acc)]" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="font-sans font-bold text-sm text-[var(--ink)] flex items-center gap-2">
-                      {stemProgressModal.stage === 'completed'
-                        ? '¡Separación de Pistas Completada!'
-                        : stemProgressModal.stage === 'error'
-                          ? stemProgressModal.errorTitle || 'Error en la Separación'
-                          : 'Iris está separando tus pistas'}
-                    </h3>
-                    <p className="text-[11px] text-[var(--ink-2)] font-sans">
-                      {stemProgressModal.ideaTitle} • <span className="text-[var(--acc)]/70">{stemProgressModal.songTitle}</span>
-                    </p>
-                  </div>
-                </div>
-
-                {stemProgressModal.stage === 'error' ? (
-                  <span
-                    className={`px-2.5 py-1 rounded-full font-sans text-[10px] font-bold flex items-center gap-1.5 ${
-                      stemProgressModal.errorType === 'billing_required'
-                        ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40'
-                        : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing'
-                          ? 'bg-[var(--alert)]/20 text-[var(--ink-2)]/40'
-                          : stemProgressModal.errorType === 'audio_unsupported'
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/60/40'
-                            : stemProgressModal.errorType === 'rate_limit'
-                              ? 'bg-[var(--acc)]/20 text-[var(--ink-3)]/40'
-                              : stemProgressModal.errorType === 'timeout'
-                                ? 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40'
-                                : stemProgressModal.errorType === 'gpu_failure'
-                                  ? 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40'
-                                  : 'bg-[var(--alert)]/20 text-[var(--ink-2)]/40'
-                    }`}
-                  >
-                    {stemProgressModal.errorType === 'billing_required'
-                      ? '💳 HTTP 402 Saldo'
-                      : stemProgressModal.errorType === 'auth_invalid'
-                        ? '🔑 HTTP 401 Auth'
-                        : stemProgressModal.errorType === 'token_missing'
-                          ? '⚙️ Sin Token'
-                          : stemProgressModal.errorType === 'audio_unsupported'
-                            ? '🎵 HTTP 422 Audio'
-                            : stemProgressModal.errorType === 'rate_limit'
-                              ? '⏳ HTTP 429 Límite'
-                              : stemProgressModal.errorType === 'timeout'
-                                ? '⏱️ Timeout >120s'
-                                : stemProgressModal.errorType === 'gpu_failure'
-                                  ? '⚡ Worker GPU'
-                                  : stemProgressModal.errorType === 'server_error'
-                                    ? '☁️ Error del Servicio'
-                                    : '⚠️ Error'}
-                  </span>
-                ) : (
-                  stemProgressModal.stage !== 'completed' && (
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`px-2.5 py-1 rounded-full font-sans text-[10px] font-bold flex items-center gap-1.5 ${
-                          stemProgressModal.engineChoice === 'mvsep-mdx23'
-                            ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 /40'
-                            : stemProgressModal.engineChoice === 'demucs'
-                              ? 'bg-[var(--tentative)]/20 text-[var(--tentative)]/80/40'
-                              : 'bg-[var(--acc)]/20 text-[var(--acc)]/80/40'
-                        }`}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-                        {stemProgressModal.engineChoice === 'mvsep-mdx23'
-                          ? '✨ Iris Studio'
-                          : stemProgressModal.engineChoice === 'demucs'
-                            ? '⚡ Iris Cloud'
-                            : '⚙️ Iris Básico'}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setStemProgressModal((prev) => (prev ? { ...prev, minimized: true } : null))}
-                        className="p-1.5 rounded-[var(--r-s)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer shrink-0"
-                        title="Minimizar y seguir trabajando mientras Iris separa las pistas"
-                      >
-                        <Minimize2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )
-                )}
-              </div>
-
-              {/* Content for Processing States */}
-              {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
-                <div className="space-y-4">
-                  {/* Live Elapsed Time Monitor */}
-                  <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/90 flex items-center justify-between font-sans text-[11px]">
-                    <div className="flex items-center gap-2 text-[var(--acc)]/70 font-bold">
-                      <Clock className="w-4 h-4 text-[var(--acc)] animate-spin" />
-                      <span>⏱️ Monitor de Tiempo:</span>
-                    </div>
-                    <span className="text-[var(--ink)] font-black bg-[var(--sunken)] px-2.5 py-1 rounded text-xs">
-                      {separationElapsedSeconds}s transcurridos
-                    </span>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-sans">
-                      <span className="text-[var(--ink-2)] text-[11px]">Progreso del Proceso</span>
-                      <span className="font-bold text-[var(--acc)]">{Math.round(stemProgressModal.progressPct)}%</span>
-                    </div>
-                    <div className="w-full h-3 bg-[var(--bg)] rounded-full overflow-hidden p-0.5">
-                      <div
-                        className="h-full bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${Math.max(5, stemProgressModal.progressPct)}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Animated Equalizer Visualizer */}
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 h-8">
-                      <div
-                        className="w-1.5 rounded-full animate-[bounce_1s_infinite_100ms]"
-                        style={{
-                          height: '60%',
-                          backgroundColor: IRIS_PRISM_RAY_COLORS[0],
-                        }}
-                      />
-                      <div
-                        className="w-1.5 rounded-full animate-[bounce_1s_infinite_300ms]"
-                        style={{
-                          height: '90%',
-                          backgroundColor: IRIS_PRISM_RAY_COLORS[1],
-                        }}
-                      />
-                      <div
-                        className="w-1.5 rounded-full animate-[bounce_1s_infinite_200ms]"
-                        style={{
-                          height: '40%',
-                          backgroundColor: IRIS_PRISM_RAY_COLORS[2],
-                        }}
-                      />
-                      <div
-                        className="w-1.5 rounded-full animate-[bounce_1s_infinite_400ms]"
-                        style={{
-                          height: '100%',
-                          backgroundColor: IRIS_PRISM_RAY_COLORS[4],
-                        }}
-                      />
-                      <div
-                        className="w-1.5 rounded-full animate-[bounce_1s_infinite_150ms]"
-                        style={{
-                          height: '75%',
-                          backgroundColor: IRIS_PRISM_RAY_COLORS[5],
-                        }}
-                      />
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs font-sans font-bold text-[var(--ink)]">{stemProgressModal.currentStepText}</p>
-                      <p className="text-[10px] text-[var(--ink-2)] font-sans mt-0.5">
-                        Modelos de Inteligencia Artificial separando frecuencias...
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Step Checklist */}
-                  <div className="space-y-2 font-sans text-[11px] pt-1">
-                    <div
-                      className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
-                        stemProgressModal.stage === 'preparing'
-                          ? 'bg-[var(--acc-soft)] /50 text-[var(--ink)]'
-                          : 'bg-[var(--bg)]/60 text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {stemProgressModal.stage === 'preparing' ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--acc)] shrink-0" />
-                      ) : (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                      )}
-                      <span>1. Verificación e ingesta de flujo de audio</span>
-                    </div>
-
-                    <div
-                      className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
-                        stemProgressModal.stage === 'demucs'
-                          ? 'bg-[var(--tentative)]/5/40/50 text-[var(--tentative)]/60'
-                          : stemProgressModal.stage === 'persisting'
-                            ? 'bg-[var(--bg)]/60 text-[var(--ink-2)]'
-                            : 'bg-[var(--bg)]/30 text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {stemProgressModal.stage === 'demucs' ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--tentative)] shrink-0" />
-                      ) : stemProgressModal.stage === 'persisting' ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                      ) : (
-                        <div className="w-3.5 h-3.5 rounded-full shrink-0" />
-                      )}
-                      <span>
-                        {stemProgressModal.engineChoice !== 'dsp-server' || stemProgressModal.isNeural
-                          ? '2. Inferencia Neuronal en la Nube'
-                          : '2. Procesamiento de Señal en el Servidor Local'}
-                      </span>
-                    </div>
-
-                    <div
-                      className={`p-2.5 rounded-[var(--r-s)] flex items-center gap-2.5 transition-all ${
-                        stemProgressModal.stage === 'persisting'
-                          ? 'bg-[var(--ok-soft)]/50 text-[var(--ink)]'
-                          : 'bg-[var(--bg)]/30 text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {stemProgressModal.stage === 'persisting' ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--ok)] shrink-0" />
-                      ) : (
-                        <div className="w-3.5 h-3.5 rounded-full shrink-0" />
-                      )}
-                      <span>3. Codificación MP3 HQ & Carga al Mezclador Multipista</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Completed State */}
-              {stemProgressModal.stage === 'completed' && (
-                <div className="space-y-4">
-                  {stemProgressModal.degraded ? (
-                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--ink)] space-y-2">
-                      <div className="flex items-center gap-2 text-[var(--acc)] font-sans font-bold text-xs">
-                        <AlertCircle className="w-4 h-4 text-[var(--acc)]" />
-                        <span>⚠️ Modo Degradado Activo (Filtros DSP Básicos)</span>
-                      </div>
-                      <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
-                        {stemProgressModal.degradedReason ||
-                          'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Iris Básico (filtrado por frecuencias de señal).'}
-                      </p>
-                      <div className="pt-1 text-[10px] font-sans text-[var(--acc)]/70">
-                        💡 Para separación de calidad de estudio, comprueba la configuración del proveedor de IA en Ajustes.
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--ok-soft)] text-[var(--ink)] space-y-2.5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-[var(--ok)] font-sans font-bold text-xs">
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span>¡Pistas Separadas con Éxito!</span>
-                        </div>
-                        <span
-                          className={`text-[10px] font-sans px-2 py-0.5 rounded font-bold ${
-                            stemProgressModal.isNeural
-                              ? 'bg-[var(--tentative)]/5/80 text-[var(--tentative)]/80/40'
-                              : 'bg-[var(--ok-soft)] text-[var(--ink-2)]/40'
-                          }`}
-                        >
-                          {stemProgressModal.isNeural ? '🧠 Red Neuronal en la Nube' : '⚙️ Motor Local'}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
-                        Procesado con{' '}
-                        <strong className="text-[var(--ink)] bg-[var(--sunken)] px-1.5 py-0.5 rounded">
-                          {stemProgressModal.separationEngine || 'Iris'}
-                        </strong>
-                        . Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>,
-                        fader de volumen y ecualizador en el mezclador.
-                      </p>
-                      {stemProgressModal.engineChoice && (
-                        <p className="text-[10px] text-[var(--ok)]/70 font-sans">
-                          💶 Coste estimado:{' '}
-                          {IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice] > 0
-                            ? `~${formatEurEstimate(IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice])}€`
-                            : 'gratis'}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* TELEMETRY TIMING CARD */}
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)] font-sans text-xs space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[var(--acc)]/70 font-bold flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-[var(--acc)]" /> Telemetría de Rendimiento:
-                      </span>
-                      <span className="text-[var(--ok)] font-black text-xs bg-[var(--ok-soft)] px-2.5 py-0.5 rounded">
-                        ⏱️ {stemProgressModal.executionTimeSec || `${separationElapsedSeconds}s`} Total
-                      </span>
-                    </div>
-
-                    {stemProgressModal.timingBreakdown ? (
-                      <div className="grid grid-cols-3 gap-2 text-[10px] pt-1">
-                        <div className="p-2 rounded bg-[var(--sunken)] text-center">
-                          <span className="text-[var(--ink-2)] block">📥 Prelectura</span>
-                          <span className="font-bold text-[var(--ink)]">{stemProgressModal.timingBreakdown.preloadSec || '0.1s'}</span>
-                        </div>
-                        <div className="p-2 rounded bg-[var(--tentative)]/5/40 text-center">
-                          <span className="text-[var(--tentative)]/80 block">⚡ GPU Inferencia</span>
-                          <span className="font-bold text-[var(--tentative)]/60">
-                            {stemProgressModal.timingBreakdown.gpuInferenceSec || 'GPU Cloud'}
-                          </span>
-                        </div>
-                        <div className="p-2 rounded bg-[var(--ok-soft)] text-center">
-                          <span className="text-[var(--ink-2)] block">☁️ Supabase</span>
-                          <span className="font-bold text-[var(--ink)]">
-                            {stemProgressModal.timingBreakdown.stemsPersistenceSec || 'Stems OK'}
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-[10px] text-[var(--ink-2)] font-sans">
-                        Tiempo de procesamiento total registrado: {stemProgressModal.executionTimeSec || `${separationElapsedSeconds}s`}.
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Stems generated display */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-sans">
-                    <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] flex items-center gap-1.5">
-                      <span>🎤</span> <span className="truncate">Voz Principal</span>
-                    </div>
-                    <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] flex items-center gap-1.5">
-                      <span>🥁</span> <span className="truncate">Batería</span>
-                    </div>
-                    <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] flex items-center gap-1.5">
-                      <span>🎸</span> <span className="truncate">Bajo</span>
-                    </div>
-                    <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] flex items-center gap-1.5">
-                      <span>🎹</span> <span className="truncate">Guitarras/Tecl.</span>
-                    </div>
-                  </div>
-
-                  {/* A/B Quality Comparison / Re-processing Engine Selector */}
-                  {stemProgressModal.targetIdea && (
-                    <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2.5 font-sans text-[11px]">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-[var(--ink)] flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" /> Banco de Pruebas A/B: Comparar Calidad
-                        </span>
-                        <span className="text-[10px] text-[var(--tentative)]/80">Re-separar con otro motor</span>
-                      </div>
-                      <p className="text-[10px] text-[var(--ink-2)] font-sans leading-normal">
-                        ¿Quieres comparar la pureza del aislamiento vocal y sangrado armónico? Selecciona un motor alternativo para
-                        re-procesar:
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-                        {/* Iris Studio */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const idea = stemProgressModal.targetIdea;
-                            if (idea) handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
-                          }}
-                          className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
-                            stemProgressModal.engineChoice === 'mvsep-mdx23'
-                              ? 'bg-[var(--acc)]/20 /60 text-[var(--ink)] ring-1 ring-amber-400/40'
-                              : 'bg-[var(--bg)]/90 text-[var(--ink-2)] hover:/50 hover:bg-[var(--surface)]'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-xs text-[var(--ink)]">✨ Iris Studio</span>
-                            {stemProgressModal.engineChoice === 'mvsep-mdx23' && (
-                              <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--acc)]/60 text-[var(--on-acc)] font-black">
-                                ACTIVO
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[10px] text-[var(--ink-2)]">Máxima calidad (ensamble)</span>
-                        </button>
-
-                        {/* Iris Cloud */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const idea = stemProgressModal.targetIdea;
-                            if (idea) handlePerformAiStemSeparation(idea, 'demucs');
-                          }}
-                          className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
-                            stemProgressModal.engineChoice === 'demucs'
-                              ? 'bg-[var(--tentative)]/20/60 text-[var(--tentative)]/60 ring-1 ring-purple-400/40'
-                              : 'bg-[var(--bg)]/90 text-[var(--ink-2)] hover:border-[var(--acc)]/50 hover:bg-[var(--surface)]'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-xs text-[var(--ink)]">⚡ Iris Cloud</span>
-                            {stemProgressModal.engineChoice === 'demucs' && (
-                              <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--tentative)]/60 text-[var(--ink)] font-black">
-                                ACTIVO
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[10px] text-[var(--ink-2)]">Recomendado (6 canales)</span>
-                        </button>
-
-                        {/* Iris Básico */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const idea = stemProgressModal.targetIdea;
-                            if (idea) handlePerformAiStemSeparation(idea, 'dsp-server');
-                          }}
-                          className={`p-2.5 rounded-[var(--r-m)] text-left transition-all cursor-pointer flex flex-col gap-1 ${
-                            stemProgressModal.engineChoice === 'dsp-server'
-                              ? 'bg-[var(--ok)]/20/60 text-[var(--ink)] ring-1 ring-emerald-400/40'
-                              : 'bg-[var(--bg)]/90 text-[var(--ink-2)] hover:border-[var(--ok)]/50 hover:bg-[var(--surface)]'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-xs text-[var(--ink)]">⚙️ Iris Básico</span>
-                            {stemProgressModal.engineChoice === 'dsp-server' && (
-                              <span className="text-[9px] px-1 py-0.2 rounded bg-[var(--ok)] text-[var(--on-ok)] font-black">ACTIVO</span>
-                            )}
-                          </div>
-                          <span className="text-[10px] text-[var(--ink-2)]">Servidor local (gratis)</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => setStemProgressModal(null)}
-                    className="w-full py-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--ok)] to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-[var(--acc-ink)] font-sans text-xs font-black tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <Sliders className="w-4 h-4" />
-                    <span>Abrir Mezclador Multipista</span>
-                  </button>
-                </div>
-              )}
-
-              {/* Error State */}
-              {stemProgressModal.stage === 'error' && (
-                <div className="space-y-3.5">
-                  {/* Provider Origin Badge */}
-                  <div className="flex items-center justify-between">
-                    <div
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-sans font-bold ${
-                        stemProgressModal.errorProvider === 'replicate'
-                          ? 'bg-[var(--tentative)]/5/70/50 text-[var(--tentative)]/60'
-                          : stemProgressModal.errorProvider === 'gemini'
-                            ? 'bg-[var(--surface)]/70/50 text-[var(--ink-3)]/60'
-                            : stemProgressModal.errorProvider === 'ffmpeg'
-                              ? 'bg-[var(--ok-soft)]/50 text-[var(--ink)]'
-                              : stemProgressModal.errorProvider === 'supabase'
-                                ? 'bg-[var(--acc-soft)] /50 text-[var(--ink)]'
-                                : 'bg-[var(--bg)]700 text-[var(--ink-2)]'
-                      }`}
-                    >
-                      {stemProgressModal.errorProvider === 'replicate' && <Cpu className="w-3.5 h-3.5 text-[var(--tentative)]" />}
-                      {stemProgressModal.errorProvider === 'gemini' && <Bot className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
-                      {stemProgressModal.errorProvider === 'ffmpeg' && <Sliders className="w-3.5 h-3.5 text-[var(--ok)]" />}
-                      {stemProgressModal.errorProvider === 'supabase' && <Database className="w-3.5 h-3.5 text-[var(--acc)]" />}
-                      {(!stemProgressModal.errorProvider ||
-                        stemProgressModal.errorProvider === 'system' ||
-                        stemProgressModal.errorProvider === 'network') && <AlertCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
-                      <span>
-                        {stemProgressModal.errorProvider === 'replicate' && 'Origen: Proveedor de IA en la Nube'}
-                        {stemProgressModal.errorProvider === 'gemini' && 'Origen: Google Gemini API (GenAI)'}
-                        {stemProgressModal.errorProvider === 'ffmpeg' && 'Origen: Librería Local FFmpeg (Motor DSP)'}
-                        {stemProgressModal.errorProvider === 'supabase' && 'Origen: Supabase Storage (Almacenamiento)'}
-                        {(!stemProgressModal.errorProvider ||
-                          stemProgressModal.errorProvider === 'system' ||
-                          stemProgressModal.errorProvider === 'network') &&
-                          'Origen: Sistema Local'}
-                      </span>
-                    </div>
-
-                    <span className="text-[10px] font-sans text-[var(--ink-2)] tracking-wider">
-                      {stemProgressModal.errorType || 'ERROR'}
-                    </span>
-                  </div>
-
-                  {/* Error Banner */}
-                  <div
-                    className={`p-4 rounded-[var(--r-m)] space-y-2 transition-all ${
-                      stemProgressModal.errorType === 'billing_required'
-                        ? 'bg-[var(--acc-soft)] /50 text-[var(--ink)]'
-                        : stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'gemini_quota_exceeded'
-                          ? 'bg-[var(--surface)]/40/50 text-[var(--ink-3)]/60'
-                          : stemProgressModal.errorType === 'timeout'
-                            ? 'bg-[var(--tentative)]/5/40/50 text-[var(--tentative)]/60'
-                            : stemProgressModal.errorType === 'audio_unsupported' ||
-                                stemProgressModal.errorType === 'ffmpeg_codec_unsupported'
-                              ? 'bg-[var(--acc)]/5/40/50 text-[var(--acc)]/40'
-                              : stemProgressModal.errorType === 'gpu_failure'
-                                ? 'bg-[var(--acc)]/20/50 text-[var(--acc)]/40'
-                                : stemProgressModal.errorType === 'server_error'
-                                  ? 'bg-[var(--surface)]/90 /50 text-[var(--ink-2)]'
-                                  : stemProgressModal.errorProvider === 'gemini'
-                                    ? 'bg-[var(--acc)]/5/50/40 text-[var(--acc)]/60'
-                                    : 'bg-[var(--alert-soft)]/40 text-[var(--ink)]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 font-sans font-bold text-xs">
-                      {stemProgressModal.errorType === 'billing_required' ? (
-                        <CreditCard className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                      ) : stemProgressModal.errorType === 'auth_invalid' ||
-                        stemProgressModal.errorType === 'token_missing' ||
-                        stemProgressModal.errorType === 'gemini_key_missing' ||
-                        stemProgressModal.errorType === 'gemini_auth_invalid' ? (
-                        <Key className="w-4 h-4 text-[var(--alert)] shrink-0" />
-                      ) : stemProgressModal.errorType === 'audio_unsupported' ||
-                        stemProgressModal.errorType === 'ffmpeg_codec_unsupported' ? (
-                        <FileAudio className="w-4 h-4 text-[var(--acc)]/80 shrink-0" />
-                      ) : stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'gemini_quota_exceeded' ? (
-                        <Clock className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
-                      ) : stemProgressModal.errorType === 'timeout' ? (
-                        <Timer className="w-4 h-4 text-[var(--tentative)] shrink-0" />
-                      ) : stemProgressModal.errorType === 'gpu_failure' ? (
-                        <Cpu className="w-4 h-4 text-[var(--tentative)]/80 shrink-0" />
-                      ) : (
-                        <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
-                      )}
-                      <span>{stemProgressModal.errorTitle || 'Diagnóstico del Error'}</span>
-                    </div>
-                    <p className="text-[12px] text-[var(--ink-2)] font-sans leading-relaxed whitespace-pre-wrap break-words font-medium">
-                      {stemProgressModal.errorMessage || 'No se pudo completar la separación de pistas.'}
-                    </p>
-                  </div>
-
-                  {/* Recommended Solution Card */}
-                  {stemProgressModal.actionAdvice && (
-                    <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--bg)]/90 space-y-1.5">
-                      <div className="flex items-center gap-2 text-[var(--ok)] font-sans font-bold text-[11px]">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                        <span>💡 Solución Recomendada:</span>
-                      </div>
-                      <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">{stemProgressModal.actionAdvice}</p>
-                    </div>
-                  )}
-
-                  {/* Primary Action Buttons Based on Error Provider & Type */}
-                  <div className="space-y-2">
-                    {/* Replicate Specific Actions */}
-                    {stemProgressModal.errorProvider === 'replicate' && stemProgressModal.errorType === 'billing_required' && (
-                      <a
-                        href="https://replicate.com/account/billing"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-[var(--acc)] to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-[var(--acc-ink)] font-sans text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <CreditCard className="w-4 h-4" />
-                        <span>Recargar Saldo del Proveedor de IA</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-
-                    {stemProgressModal.errorProvider === 'replicate' &&
-                      (stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing') && (
-                        <a
-                          href="https://replicate.com/account/api-tokens"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-[var(--ink)] font-sans text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                          <Key className="w-4 h-4" />
-                          <span>Gestionar Token del Proveedor de IA</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-
-                    {stemProgressModal.errorProvider === 'replicate' &&
-                      (stemProgressModal.errorType === 'rate_limit' ||
-                        stemProgressModal.errorType === 'timeout' ||
-                        stemProgressModal.errorType === 'gpu_failure') && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const idea = stemProgressModal.targetIdea;
-                            if (idea) handlePerformAiStemSeparation(idea, stemProgressModal.engineChoice || 'demucs');
-                          }}
-                          className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-[var(--acc)] hover:to-indigo-500 text-[var(--ink)] font-sans text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                          <RefreshCw className="w-4 h-4" />
-                          <span>Reintentar en la Nube</span>
-                        </button>
-                      )}
-
-                    {stemProgressModal.errorProvider === 'replicate' && stemProgressModal.errorType === 'server_error' && (
-                      <a
-                        href="https://replicatestatus.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-sans text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <Activity className="w-4 h-4" />
-                        <span>Comprobar Estado del Servicio</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-
-                    {/* Gemini API Specific Actions */}
-                    {stemProgressModal.errorProvider === 'gemini' &&
-                      (stemProgressModal.errorType === 'gemini_key_missing' || stemProgressModal.errorType === 'gemini_auth_invalid') && (
-                        <a
-                          href="https://aistudio.google.com/app/apikey"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-[var(--ink)] font-sans text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                          <Key className="w-4 h-4" />
-                          <span>Configurar API Key en Google AI Studio</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-
-                    {stemProgressModal.errorProvider === 'gemini' && stemProgressModal.errorType === 'gemini_quota_exceeded' && (
-                      <a
-                        href="https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-2.5 px-3 rounded-[var(--r-m)] bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-[var(--ink)] font-sans text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <Clock className="w-4 h-4" />
-                        <span>Revisar Cuotas de Gemini en Google Cloud</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-
-                    {/* Fallback and Alternative Engine Buttons */}
-                    <div className="flex gap-2">
-                      {stemProgressModal.targetIdea && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const idea = stemProgressModal.targetIdea;
-                            if (idea) {
-                              if (stemProgressModal.engineChoice === 'dsp-server') {
-                                handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
-                              } else {
-                                handlePerformAiStemSeparation(idea, 'dsp-server');
-                              }
-                            }
-                          }}
-                          className="flex-1 py-2.5 px-3 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-[var(--ok)]" />
-                          <span>
-                            {stemProgressModal.engineChoice === 'dsp-server'
-                              ? 'Probar con Iris Studio'
-                              : 'Separar con Iris Básico (Gratis)'}
-                          </span>
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setStemProgressModal(null)}
-                        className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-sans text-xs font-bold transition-all cursor-pointer"
-                      >
-                        Cerrar
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Collapsible Technical Details */}
-                  {stemProgressModal.errorDetail && (
-                    <div className="pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowStemErrorDetails(!showStemErrorDetails)}
-                        className="text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        {showStemErrorDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                        <span>
-                          {showStemErrorDetails ? 'Ocultar diagnóstico técnico' : 'Ver diagnóstico técnico detallado (logs / error)'}
-                        </span>
-                      </button>
-                      {showStemErrorDetails && (
-                        <div className="mt-2 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] font-sans text-[11px] text-[var(--ink-2)] space-y-2 animate-in fade-in duration-150">
-                          <div className="flex items-center justify-between pb-1.5">
-                            <span className="text-[10px] text-[var(--ink-2)] font-bold tracking-wider">Detalles técnicos del error:</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                navigator.clipboard.writeText(stemProgressModal.errorDetail || '');
-                                setCopiedStemError(true);
-                                setTimeout(() => setCopiedStemError(false), 2000);
-                              }}
-                              className="flex items-center gap-1 text-[10px] text-[var(--acc)]/70 hover:text-[var(--ink)] transition-colors cursor-pointer"
-                            >
-                              <Copy className="w-3 h-3" />
-                              <span>{copiedStemError ? '¡Copiado! ' : 'Copiar'}</span>
-                            </button>
-                          </div>
-                          <div className="max-h-40 overflow-y-auto whitespace-pre-wrap break-all text-[10px] text-[var(--ink-2)] font-sans leading-relaxed select-all">
-                            {stemProgressModal.errorDetail}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Píldora flotante: Iris sigue separando en segundo plano mientras el usuario minimizado
- sigue trabajando en el resto del Studio (reproducir ideas, ver acordes, etc.).
- Al terminar (bien o mal) NO se reabre el modal solo — interrumpiría lo que el usuario
- esté haciendo en ese momento (escribiendo, con el móvil en el bolsillo...). En vez de
- eso, la píldora cambia de color y parpadea para avisar, y él decide cuándo mirarla. */}
-        {stemProgressModal &&
-          stemProgressModal.isOpen &&
-          stemProgressModal.minimized &&
-          (() => {
-            const terminado = stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error';
-            const esError = stemProgressModal.stage === 'error';
-            return (
-              <button
-                type="button"
-                onClick={() => setStemProgressModal((prev) => (prev ? { ...prev, minimized: false } : null))}
-                className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-[var(--r-l)] bg-[var(--bg)]/95 p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
-                  !terminado
-                    ? 'border /40 hover:/70'
-                    : esError
-                      ? 'border-2/70 hover:border-[var(--alert)]'
-                      : 'border-2/70 hover:border-[var(--ok)]'
-                }`}
-                title={terminado ? 'Iris ha terminado — toca para ver el resultado' : 'Reabrir el progreso de Iris'}
-              >
-                <div className="flex items-center gap-2">
-                  {!terminado ? (
-                    <Cpu className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                  ) : esError ? (
-                    <AlertCircle className="w-4 h-4 text-[var(--alert)] shrink-0" />
-                  ) : (
-                    <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p
-                      className={`text-[11px] font-sans font-bold truncate ${!terminado ? 'text-[var(--ink)]' : esError ? 'text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}
-                    >
-                      {!terminado ? 'Iris separando pistas…' : esError ? '¡Iris ha tenido un error! ' : '¡Pistas listas!'}
-                    </p>
-                    <p className="text-[10px] font-sans text-[var(--ink-2)] truncate">{stemProgressModal.ideaTitle}</p>
-                  </div>
-                  {!terminado && (
-                    <span className="font-sans text-xs font-bold text-[var(--acc)] shrink-0">
-                      {Math.round(stemProgressModal.progressPct)}%
-                    </span>
-                  )}
-                  <Maximize2 className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
-                </div>
-                <div className="mt-2 w-full h-1.5 bg-[var(--bg)] rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-300 ${
-                      !terminado
-                        ? 'bg-gradient-to-r from-[var(--acc)] via-purple-500 to-emerald-400'
-                        : esError
-                          ? 'bg-[var(--alert)]'
-                          : 'bg-[var(--ok)]/80'
-                    }`}
-                    style={{
-                      width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct)}%`,
-                    }}
-                  />
-                </div>
-              </button>
-            );
-          })()}
-
-        {/* Tutorial Interactivo Paso a Paso */}
-        <ModuleTutorialModal moduleId="song_studio" isOpen={isTutorialOpen} onClose={closeTutorial} />
+        <SongStudioStemProgressModal stemProgressModal={stemProgressModal} setStemProgressModal={setStemProgressModal} />
       </div>
     </ModalPortal>
   );

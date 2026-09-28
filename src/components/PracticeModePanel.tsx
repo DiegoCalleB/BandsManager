@@ -97,6 +97,15 @@ function formatTime(totalSeconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+interface SmartSongSection {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  startSec: number;
+  endSec: number;
+}
+
 export default function PracticeModePanel({
   song,
   idea,
@@ -113,6 +122,7 @@ export default function PracticeModePanel({
   const [speed, setSpeed] = useState(1);
   const [loopA, setLoopA] = useState<number | null>(null);
   const [loopB, setLoopB] = useState<number | null>(null);
+  const [activeSmartSectionId, setActiveSmartSectionId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -121,14 +131,64 @@ export default function PracticeModePanel({
   const [isAutoBalancing, setIsAutoBalancing] = useState(false);
   const [semitonesOffset, setSemitonesOffset] = useState(0);
   const [metronomeOn, setMetronomeOn] = useState(false);
-  // Instante (en segundos, tiempo"real" de la canción, no afectado por `speed`) del primer golpe de
-  // compás marcado a mano — permite alinear la claqueta con canciones que no empiezan justo en el
-  // beat 1 (intro, silencio, cuenta suelta). 0 = sin marcar, se asume que el compás cae en el segundo 0.
   const [beatAnchorSec, setBeatAnchorSec] = useState(0);
-  // Se incrementa cada vez que ensureAudioLoaded crea elementos <audio> nuevos, para forzar un
-  // re-render y que los puentes de trasposición (TrackPitchShiftBridge) reciban el elemento real
-  // en vez del null inicial — audioRefs es un ref, mutarlo no dispara render por sí solo.
   const [, setAudioReadyTick] = useState(0);
+
+  // Secciones inteligentes calculadas a partir de la duración del audio o ideas registradas
+  const effectiveTotalDuration = duration > 0 ? duration : song.duracionSegundos > 0 ? song.duracionSegundos : 210;
+  const smartSections = useMemo<SmartSongSection[]>(() => {
+    const total = effectiveTotalDuration;
+    if (total <= 10) return [];
+
+    return [
+      { id: 'intro', name: 'Intro', icon: '⚡', color: 'indigo', startSec: 0, endSec: Math.round(total * 0.12) },
+      { id: 'verse1', name: 'Estrofa 1', icon: '🎙️', color: 'sky', startSec: Math.round(total * 0.12), endSec: Math.round(total * 0.32) },
+      {
+        id: 'chorus1',
+        name: 'Estribillo 1',
+        icon: '🔥',
+        color: 'amber',
+        startSec: Math.round(total * 0.32),
+        endSec: Math.round(total * 0.5),
+      },
+      { id: 'verse2', name: 'Estrofa 2', icon: '🎙️', color: 'sky', startSec: Math.round(total * 0.5), endSec: Math.round(total * 0.68) },
+      {
+        id: 'bridge_solo',
+        name: 'Solo / Puente',
+        icon: '🎸',
+        color: 'purple',
+        startSec: Math.round(total * 0.68),
+        endSec: Math.round(total * 0.82),
+      },
+      {
+        id: 'chorus_final',
+        name: 'Estribillo Final',
+        icon: '💥',
+        color: 'rose',
+        startSec: Math.round(total * 0.82),
+        endSec: Math.round(total * 0.94),
+      },
+      { id: 'outro', name: 'Outro', icon: '🏁', color: 'emerald', startSec: Math.round(total * 0.94), endSec: Math.round(total) },
+    ];
+  }, [effectiveTotalDuration]);
+
+  // Detectar en qué sección está el cursor de reproducción actual
+  const currentActiveSection = useMemo(() => {
+    return smartSections.find((s) => currentTime >= s.startSec && currentTime < s.endSec) || null;
+  }, [smartSections, currentTime]);
+
+  const applySmartSectionLoop = (sec: SmartSongSection) => {
+    setLoopA(sec.startSec);
+    setLoopB(sec.endSec);
+    setActiveSmartSectionId(sec.id);
+    seekAll(sec.startSec);
+  };
+
+  const handleClearLoop = () => {
+    setLoopA(null);
+    setLoopB(null);
+    setActiveSmartSectionId(null);
+  };
 
   const metronomeCtxRef = useRef<AudioContext | null>(null);
   const metronomeTimerRef = useRef<number | null>(null);
@@ -345,7 +405,7 @@ export default function PracticeModePanel({
     const ctx = metronomeCtxRef.current;
     if (!ctx) return;
     const secPerBeat = 60 / (song.bpm || 120) / speed;
-    const lookaheadSec = 0.1;
+    const lookaheadSec = 0.15;
     while (metronomeNextClickTimeRef.current < ctx.currentTime + lookaheadSec) {
       const accent = metronomeBeatCounterRef.current % 4 === 0;
       scheduleMetronomeClick(ctx, metronomeNextClickTimeRef.current, accent);
@@ -361,7 +421,7 @@ export default function PracticeModePanel({
     if (metronomeOn && isPlaying) {
       resyncMetronomeAt(currentTime);
       if (metronomeTimerRef.current) window.clearInterval(metronomeTimerRef.current);
-      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 25);
+      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 50);
     } else if (metronomeTimerRef.current) {
       window.clearInterval(metronomeTimerRef.current);
       metronomeTimerRef.current = null;
@@ -587,7 +647,7 @@ export default function PracticeModePanel({
       {/* Puentes de trasposición: uno por pista, siempre montados (ver comentario en
  TrackPitchShiftBridge más arriba — desmontarlos a mitad de sesión dejaría esa pista muda). */}
       {tracks.map((tr) => (
-        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={effectiveSemitones} />
+        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={semitonesOffset} />
       ))}
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
         <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
@@ -666,178 +726,264 @@ export default function PracticeModePanel({
               </button>
             </div>
 
-            {/* Transporte + velocidad + loop */}
-            <div className={`rounded-[var(--r-m)] p-3 space-y-3 ${cardBg}`}>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={togglePlay}
-                  className="w-10 h-10 rounded-full bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 hover:bg-[var(--ok)]"
-                >
-                  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-                </button>
-                <span className="text-[11px] font-sans text-[var(--ink-2)] w-10 text-right">{formatTime(currentTime)}</span>
-                <input
-                  type="range"
-                  min={0}
-                  max={Math.max(duration, 0.1)}
-                  step={0.1}
-                  value={Math.min(currentTime, duration)}
-                  onChange={(e) => handleSeekBarChange(Number(e.target.value))}
-                  className="flex-1 accent-emerald-500"
-                />
-                <span className="text-[11px] font-sans text-[var(--ink-2)] w-10">{formatTime(duration)}</span>
+            {/* Transporte + Looper de Secciones Inteligentes + Velocidad & Tono */}
+            <div className={`rounded-2xl border p-4 space-y-4 shadow-xl ${cardBg}`}>
+              {/* Reproductor principal y barra de tiempo con zona de bucle visual */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={togglePlay}
+                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-zinc-950 flex items-center justify-center shrink-0 hover:brightness-110 shadow-lg shadow-emerald-950/40 transition-all active:scale-95 cursor-pointer"
+                    title={isPlaying ? 'Pausar (Espacio)' : 'Reproducir (Espacio)'}
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
+                  </button>
+
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-white font-bold">{formatTime(currentTime)}</span>
+                        {currentActiveSection && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                            {currentActiveSection.icon} {currentActiveSection.name}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-neutral-400">{formatTime(duration)}</span>
+                    </div>
+
+                    {/* Seek bar interactiva con indicador de bucle A/B */}
+                    <div className="relative flex items-center">
+                      <input
+                        type="range"
+                        min={0}
+                        max={Math.max(duration, 0.1)}
+                        step={0.1}
+                        value={Math.min(currentTime, duration)}
+                        onChange={(e) => handleSeekBarChange(Number(e.target.value))}
+                        className="w-full accent-emerald-400 cursor-pointer h-2 bg-neutral-800 rounded-lg appearance-none"
+                      />
+                      {/* Resaltado visual del bucle A-B */}
+                      {loopA != null && loopB != null && duration > 0 && (
+                        <div
+                          className="absolute h-2 bg-amber-400/40 border-x border-amber-300 pointer-events-none rounded"
+                          style={{
+                            left: `${Math.max(0, Math.min(100, (loopA / duration) * 100))}%`,
+                            width: `${Math.max(0, Math.min(100, ((loopB - loopA) / duration) * 100))}%`,
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1">
-                  <Gauge className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] mr-0.5">Tempo</span>
-                  <button
-                    onClick={() => nudgeBpm(-5)}
-                    title="-5 BPM"
-                    className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
-                  >
-                    -5
-                  </button>
-                  <button
-                    onClick={() => nudgeBpm(-1)}
-                    title="-1 BPM"
-                    className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
-                  >
-                    -1
-                  </button>
-                  <span
-                    className={`text-xs font-sans font-bold w-16 text-center px-1 py-1 rounded-[var(--r-s)] ${speed !== 1 ? 'text-[var(--acc)]/70' : 'text-[var(--ink-2)]'}`}
-                  >
-                    {targetBpm} BPM
-                  </span>
-                  <button
-                    onClick={() => nudgeBpm(1)}
-                    title="+1 BPM"
-                    className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
-                  >
-                    +1
-                  </button>
-                  <button
-                    onClick={() => nudgeBpm(5)}
-                    title="+5 BPM"
-                    className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
-                  >
-                    +5
-                  </button>
-                  {speed !== 1 && (
-                    <button
-                      onClick={() => changeSpeed(1)}
-                      title={`Volver al tempo original (${baseBpm} BPM)`}
-                      className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    >
-                      ↺ {baseBpm}
-                    </button>
-                  )}
-                </div>
+              {/* SECCIONES INTELIGENTES (SMART SECTION LOOPER) */}
+              {smartSections.length > 0 && (
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10 space-y-2 font-mono">
+                  <div className="flex items-center justify-between flex-wrap gap-1 text-[11px]">
+                    <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                      <Repeat className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                      Looper de Secciones Inteligentes:
+                    </span>
+                    {loopA != null && loopB != null ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-emerald-300 font-bold bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-lg">
+                          🔁 Bucle: {formatTime(loopA)} ➔ {formatTime(loopB)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleClearLoop}
+                          className="text-[10px] text-neutral-400 hover:text-white px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                        >
+                          ✕ Quitar
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-[10px] text-neutral-400">Pulsa una sección para ensayarla en bucle infinito</span>
+                    )}
+                  </div>
 
-                <div className="flex items-center gap-1.5">
-                  <Repeat className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                  <span className="text-[10px] font-sans text-[var(--ink-2)]">Bucle</span>
-                  <button
-                    onClick={markLoopA}
-                    className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
-                  >
-                    A {loopA != null ? formatTime(loopA) : '--:--'}
-                  </button>
-                  <button
-                    onClick={markLoopB}
-                    className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)]"
-                  >
-                    B {loopB != null ? formatTime(loopB) : '--:--'}
-                  </button>
-                  {(loopA != null || loopB != null) && (
-                    <button
-                      onClick={clearLoop}
-                      className="text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
-                    >
-                      Quitar
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <ArrowUpDown className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                  <span className="text-[10px] font-sans text-[var(--ink-2)]">Tono</span>
-                  <select
-                    value={semitonesOffset}
-                    onChange={(e) => setSemitonesOffset(Number(e.target.value))}
-                    title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
-                    className={`text-xs font-sans rounded-[var(--r-s)] px-2 py-1 outline-none ${'bg-[var(--surface)]'} ${semitonesOffset !== 0 ? 'text-[var(--ink-2)] font-bold' : ''}`}
-                  >
-                    {TRANSPOSE_SEMITONE_OPTIONS.map((st) => {
-                      const origKey = song.tonalidad?.trim();
-                      let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
-                      if (origKey) {
-                        const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(origKey) ? 'ES' : 'EN';
-                        const targetKey = transposeChordToken(origKey, st, notation);
-                        label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
-                      }
+                  {/* Botones de Secciones */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                    {smartSections.map((sec) => {
+                      const isLoopActive = loopA === sec.startSec && loopB === sec.endSec;
+                      const isPlayheadInside = currentTime >= sec.startSec && currentTime < sec.endSec;
                       return (
-                        <option key={st} value={st}>
-                          {label}
-                        </option>
+                        <button
+                          key={sec.id}
+                          type="button"
+                          onClick={() => applySmartSectionLoop(sec)}
+                          className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                            isLoopActive
+                              ? 'bg-amber-500 text-zinc-950 border-amber-400 shadow-md shadow-amber-950/40 ring-1 ring-amber-300'
+                              : isPlayheadInside
+                                ? 'bg-indigo-500/20 text-indigo-200 border-indigo-500/40'
+                                : 'bg-white/5 border-white/10 text-neutral-300 hover:bg-white/10 hover:border-white/20'
+                          }`}
+                          title={`Poner en bucle ${sec.name} (${formatTime(sec.startSec)} a ${formatTime(sec.endSec)})`}
+                        >
+                          <span>{sec.icon}</span>
+                          <span>{sec.name}</span>
+                          <span className="text-[9px] opacity-75 font-normal">({formatTime(sec.startSec)})</span>
+                        </button>
                       );
                     })}
-                  </select>
+                  </div>
                 </div>
+              )}
 
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => setMetronomeOn((v) => !v)}
-                    title={`Metrónomo (claqueta) — sigue el tempo de arriba, sube y baja a la vez con la canción. Ahora mismo: ${targetBpm} BPM`}
-                    className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
-                      metronomeOn
-                        ? 'bg-[var(--acc)]/20 /40 text-[var(--acc)]/70'
-                        : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
-                  </button>
-                  <button
-                    onClick={markBeatAnchor}
-                    title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
-                    className={`flex items-center gap-1 text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] ${
-                      beatAnchorSec > 0
-                        ? 'bg-[var(--ok)]/20/40 text-[var(--ink-2)]'
-                        : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'
-                    }`}
-                  >
-                    <Target className="w-3.5 h-3.5" /> {beatAnchorSec > 0 ? `Compás ${formatTime(beatAnchorSec)}` : 'Marcar beat de compás'}
-                  </button>
-                  {beatAnchorSec > 0 && (
-                    <button
-                      onClick={() => {
-                        setBeatAnchorSec(0);
-                        if (metronomeOn && isPlaying) resyncMetronomeAt(currentTime, 0);
-                      }}
-                      title="Quitar el compás marcado (volver a asumir que empieza en 0:00)"
-                      className="text-[10px] font-sans px-1.5 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)]"
+              {/* CONTROLES DE TEMPO & TRASPOSICIÓN DE TONO */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Bloque Tempo & Presets de Velocidad */}
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10 space-y-2 font-mono">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-neutral-200 flex items-center gap-1.5">
+                      <Gauge className="w-3.5 h-3.5 text-amber-400" />
+                      Tempo & Velocidad
+                    </span>
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
+                        speed !== 1 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-white/5 text-neutral-300 border-white/10'
+                      }`}
                     >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              </div>
+                      {targetBpm} BPM ({speed.toFixed(2)}x)
+                    </span>
+                  </div>
 
-              <div className="flex items-center gap-2 px-0.5">
-                <span className="text-[10px] font-sans text-[var(--ink-2)] w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
-                <input
-                  type="range"
-                  min={Math.round(baseBpm * 0.4)}
-                  max={Math.round(baseBpm * 1.6)}
-                  step={1}
-                  value={targetBpm}
-                  onChange={(e) => changeSpeed(Number(e.target.value) / baseBpm)}
-                  title="Ajuste fino de tempo — arrastra para cualquier BPM exacto"
-                  className="flex-1 accent-amber-500"
-                />
-                <span className="text-[10px] font-sans text-[var(--ink-2)] w-10">{Math.round(baseBpm * 1.6)}</span>
+                  {/* Presets rápidos de velocidad */}
+                  <div className="grid grid-cols-5 gap-1 text-[10px]">
+                    {[0.5, 0.75, 0.9, 1.0, 1.1].map((spd) => {
+                      const isActive = Math.abs(speed - spd) < 0.01;
+                      return (
+                        <button
+                          key={spd}
+                          type="button"
+                          onClick={() => changeSpeed(spd)}
+                          className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
+                            isActive
+                              ? 'bg-amber-500 text-zinc-950 border-amber-400 font-black'
+                              : 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          {spd === 1.0 ? '1x (Orig)' : `${spd}x`}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Slider y Nudge BPM */}
+                  <div className="flex items-center gap-1 pt-1">
+                    <button
+                      onClick={() => nudgeBpm(-5)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                    >
+                      -5
+                    </button>
+                    <button
+                      onClick={() => nudgeBpm(-1)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                    >
+                      -1
+                    </button>
+                    <input
+                      type="range"
+                      min={Math.round(baseBpm * 0.4)}
+                      max={Math.round(baseBpm * 1.6)}
+                      step={1}
+                      value={targetBpm}
+                      onChange={(e) => changeSpeed(Number(e.target.value) / baseBpm)}
+                      className="flex-1 accent-amber-500 h-1.5 cursor-pointer"
+                    />
+                    <button
+                      onClick={() => nudgeBpm(1)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                    >
+                      +1
+                    </button>
+                    <button
+                      onClick={() => nudgeBpm(5)}
+                      className="text-[10px] px-1.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                    >
+                      +5
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bloque Tono (Pitch Transpose) & Metrónomo */}
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10 space-y-2 font-mono">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-neutral-200 flex items-center gap-1.5">
+                      <ArrowUpDown className="w-3.5 h-3.5 text-sky-400" />
+                      Tono (Sin pitufo)
+                    </span>
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
+                        semitonesOffset !== 0
+                          ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                          : 'bg-white/5 text-neutral-300 border-white/10'
+                      }`}
+                    >
+                      {(() => {
+                        const origKey = song.tonalidad?.trim();
+                        if (!origKey) return semitonesOffset === 0 ? 'Original' : `${semitonesOffset > 0 ? '+' : ''}${semitonesOffset} st`;
+                        const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(origKey) ? 'ES' : 'EN';
+                        const targetKey = transposeChordToken(origKey, semitonesOffset, notation);
+                        return semitonesOffset === 0
+                          ? `${origKey}`
+                          : `${targetKey} (${semitonesOffset > 0 ? '+' : ''}${semitonesOffset} st)`;
+                      })()}
+                    </span>
+                  </div>
+
+                  {/* Presets rápidos de semitonos */}
+                  <div className="grid grid-cols-5 gap-1 text-[10px]">
+                    {[-2, -1, 0, 1, 2].map((st) => {
+                      const isActive = semitonesOffset === st;
+                      return (
+                        <button
+                          key={st}
+                          type="button"
+                          onClick={() => setSemitonesOffset(st)}
+                          className={`py-1 rounded-lg border text-center transition-all cursor-pointer font-bold ${
+                            isActive
+                              ? 'bg-sky-500 text-zinc-950 border-sky-400 font-black'
+                              : 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          {st === 0 ? 'Original' : `${st > 0 ? '+' : ''}${st} st`}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Claqueta / Metrónomo */}
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <button
+                      onClick={() => setMetronomeOn((v) => !v)}
+                      title={`Metrónomo sincronizado: ${targetBpm} BPM`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
+                        metronomeOn
+                          ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                          : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      <Timer className="w-3.5 h-3.5" />
+                      <span>Claqueta ({targetBpm} BPM)</span>
+                    </button>
+                    <button
+                      onClick={markBeatAnchor}
+                      title="Alinear claqueta con el primer beat"
+                      className={`text-[10px] font-bold py-1 px-2 rounded-lg border transition-all cursor-pointer ${
+                        beatAnchorSec > 0
+                          ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                          : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      <Target className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 

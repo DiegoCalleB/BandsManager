@@ -16,6 +16,10 @@ import {
 import { Concert, Rehearsal, ThemeColors } from '../../../types';
 import { CalendarWidgetViewMode } from '../../../types/dashboardWidgets';
 
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+
 export interface CalendarWidgetProps {
   concerts: Concert[];
   rehearsals: Rehearsal[];
@@ -180,6 +184,17 @@ export function CalendarWidget({
     month: 'long',
     year: 'numeric',
   });
+
+  const cardContainerBg = isStitchLight
+    ? 'bg-white border border-zinc-200 shadow-xs'
+    : 'bg-[#18181b]/95 border border-neutral-800/90 shadow-sm';
+  const subCardBg = isStitchLight
+    ? 'bg-zinc-50 border border-zinc-200/80 text-zinc-900 hover:border-indigo-400'
+    : 'bg-[#121214] border border-neutral-800/90 text-neutral-100 hover:border-amber-500/40';
+  const textTitleColor = isStitchLight ? 'text-zinc-900' : 'text-neutral-100';
+  const textSubColor = isStitchLight ? 'text-zinc-500' : 'text-neutral-400';
+  const dividerColor = isStitchLight ? 'border-zinc-200' : 'border-neutral-800/80';
+  const accentColor = isStitchLight ? 'text-indigo-600' : 'text-amber-400';
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-all space-y-4">
@@ -425,8 +440,13 @@ export function CalendarWidget({
 
                   {/* Indicators for events */}
                   <div className="flex items-center gap-0.5 mt-1">
-                    {hasConcert && <span className="w-1.5 h-1.5 rounded-full bg-[var(--acc)]/60" title="Concierto" />}
-                    {hasRehearsal && <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" title="Ensayo" />}
+                    {hasConcert && (
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${isStitchLight ? 'bg-indigo-500' : 'bg-amber-400'} shadow-xs`}
+                        title="Concierto"
+                      />
+                    )}
+                    {hasRehearsal && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-xs" title="Ensayo" />}
                   </div>
                 </button>
               );
@@ -523,7 +543,11 @@ export function CalendarWidget({
                         {e.title}
                       </div>
                     ))}
-                    {dayEvts.length === 0 && <span className="text-[10px] text-[var(--ink-2)] block text-center py-2">Libre</span>}
+                    {dayEvts.length === 0 && (
+                      <span className={`text-[10px] ${isStitchLight ? 'text-zinc-400' : 'text-neutral-600'} block text-center py-2`}>
+                        Libre
+                      </span>
+                    )}
                   </div>
                 </div>
               );

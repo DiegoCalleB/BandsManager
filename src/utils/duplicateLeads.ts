@@ -166,7 +166,8 @@ export function calculateLeadCompletenessScore(lead: Lead): number {
 
   // Campos de contacto esenciales
   if (lead.email_contacto && lead.email_contacto.trim().length > 3) score += 20;
-  if (lead.telefono && lead.telefono.trim().length > 3) score += 10;
+  if ((lead.telefono_movil && lead.telefono_movil.trim().length > 3) || (lead.telefono && lead.telefono.trim().length > 3)) score += 10;
+  if (lead.telefono_fijo && lead.telefono_fijo.trim().length > 3) score += 5;
   if (lead.instagram && lead.instagram.trim().length > 2) score += 8;
   if (lead.website && lead.website.trim().length > 4) score += 8;
   if (lead.contacto_nombre && lead.contacto_nombre.trim().length > 1) score += 8;
@@ -370,6 +371,14 @@ export function mergeTwoLeads(primary: Lead, secondary: Lead): Lead {
 
   if (!merged.telefono?.trim() && secondary.telefono?.trim()) {
     merged.telefono = secondary.telefono.trim();
+  }
+
+  if (!merged.telefono_movil?.trim() && secondary.telefono_movil?.trim()) {
+    merged.telefono_movil = secondary.telefono_movil.trim();
+  }
+
+  if (!merged.telefono_fijo?.trim() && secondary.telefono_fijo?.trim()) {
+    merged.telefono_fijo = secondary.telefono_fijo.trim();
   }
 
   if (!merged.instagram?.trim() && secondary.instagram?.trim()) {

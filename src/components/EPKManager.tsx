@@ -16,6 +16,7 @@ import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
 import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
 import { EPKPlantillasBlock } from './epk/EPKPlantillasBlock';
 import { normalizePlan } from '../utils/planPermissions';
+import { getPublicEpkUrl } from '../utils/bandHash';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 
@@ -31,7 +32,10 @@ interface EPKManagerProps {
 
 const DEFAULT_EPK_CONFIG: EPKConfig = {
   biografia:
-    'Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
+    'Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
+  genero: 'Mestizaje / Balkan-Ska / Reggae / Electrónica',
+  bandasSimilares: ['Macaco', 'La Pegatina', 'Green Valley', 'Ojos de Brujo', 'Bomba Estéreo'],
+  mostrarBandasSimilares: true,
   logoUrl: '/logo_bakandeya.jpg',
   dossierPdfUrl: '',
   dossierPdfName: '',
@@ -95,6 +99,9 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
 // como fallback para rellenar el dossier de una banda nueva o distinta.
 const EMPTY_EPK_CONFIG: EPKConfig = {
   biografia: '',
+  genero: '',
+  bandasSimilares: [],
+  mostrarBandasSimilares: true,
   logoUrl: '',
   dossierPdfUrl: '',
   dossierPdfName: '',
@@ -146,6 +153,15 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
       tiktok: '',
       appleMusic: '',
       bandcamp: '',
+      soundcloud: '',
+      bandsintown: '',
+      songkick: '',
+      wegow: '',
+      tidal: '',
+      deezer: '',
+      amazonMusic: '',
+      twitch: '',
+      threads: '',
       website: '',
       whatsapp: '',
       revolut: '',
@@ -155,60 +171,24 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
 };
 
 const UNIFIED_PLATFORMS = [
-  {
-    key: 'spotify',
-    label: 'Spotify',
-    icon: '🟢',
-    placeholder: 'https://open.spotify.com/artist/...',
-  },
-  {
-    key: 'instagram',
-    label: 'Instagram',
-    icon: '📸',
-    placeholder: 'https://instagram.com/...',
-  },
-  {
-    key: 'youtube',
-    label: 'YouTube',
-    icon: '🔴',
-    placeholder: 'https://youtube.com/...',
-  },
-  {
-    key: 'tiktok',
-    label: 'TikTok',
-    icon: '🎵',
-    placeholder: 'https://tiktok.com/@...',
-  },
-  {
-    key: 'appleMusic',
-    label: 'Apple Music',
-    icon: '🍎',
-    placeholder: 'https://music.apple.com/...',
-  },
-  {
-    key: 'bandcamp',
-    label: 'Bandcamp',
-    icon: '⛺',
-    placeholder: 'https://tubanda.bandcamp.com',
-  },
-  {
-    key: 'website',
-    label: 'Sitio Web Oficial',
-    icon: '🌐',
-    placeholder: 'https://www.tubanda.com',
-  },
-  {
-    key: 'facebook',
-    label: 'Facebook',
-    icon: '📘',
-    placeholder: 'https://facebook.com/...',
-  },
-  {
-    key: 'twitter',
-    label: 'X / Twitter',
-    icon: '🐦',
-    placeholder: 'https://x.com/...',
-  },
+  { key: 'spotify', label: 'Spotify', icon: '🟢', placeholder: 'https://open.spotify.com/artist/...' },
+  { key: 'instagram', label: 'Instagram', icon: '📸', placeholder: 'https://instagram.com/...' },
+  { key: 'youtube', label: 'YouTube', icon: '🔴', placeholder: 'https://youtube.com/...' },
+  { key: 'soundcloud', label: 'SoundCloud', icon: '☁️', placeholder: 'https://soundcloud.com/...' },
+  { key: 'bandsintown', label: 'Bandsintown', icon: '🎪', placeholder: 'https://bandsintown.com/a/...' },
+  { key: 'songkick', label: 'Songkick', icon: '🎫', placeholder: 'https://songkick.com/artists/...' },
+  { key: 'wegow', label: 'Wegow', icon: '🎟️', placeholder: 'https://wegow.com/es-es/artistas/...' },
+  { key: 'tiktok', label: 'TikTok', icon: '🎵', placeholder: 'https://tiktok.com/@...' },
+  { key: 'appleMusic', label: 'Apple Music', icon: '🍎', placeholder: 'https://music.apple.com/...' },
+  { key: 'bandcamp', label: 'Bandcamp', icon: '⛺', placeholder: 'https://tubanda.bandcamp.com' },
+  { key: 'tidal', label: 'TIDAL', icon: '⬛', placeholder: 'https://tidal.com/browse/artist/...' },
+  { key: 'deezer', label: 'Deezer', icon: '🟣', placeholder: 'https://deezer.com/artist/...' },
+  { key: 'amazonMusic', label: 'Amazon Music', icon: '🔷', placeholder: 'https://music.amazon.com/artists/...' },
+  { key: 'twitch', label: 'Twitch', icon: '💜', placeholder: 'https://twitch.tv/...' },
+  { key: 'threads', label: 'Threads', icon: '🧵', placeholder: 'https://threads.net/@...' },
+  { key: 'website', label: 'Sitio Web Oficial', icon: '🌐', placeholder: 'https://www.tubanda.com' },
+  { key: 'facebook', label: 'Facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
+  { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' },
 ];
 
 export const EPKManager: React.FC<EPKManagerProps> = ({
@@ -324,22 +304,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [errorTraduccion, setErrorTraduccion] = useState<string | null>(null);
   const [avisoTraduccion, setAvisoTraduccion] = useState<string | null>(null);
 
-  // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
-  // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
-  // defecto del servidor para resolver de qué banda es el dossier. Sin banda activa, no hay
-  // banda de la que generar un enlace (antes esto generaba, sin querer, un enlace válido al EPK
-  // público real de Bakandeya).
-  const bandQueryParam = activeBandId ? `?band=${encodeURIComponent(activeBandId)}` : '';
-  const rawEpkBase =
-    typeof window !== 'undefined'
-      ? window.location.origin.includes('localhost') ||
-        window.location.origin.includes('ais-dev') ||
-        window.location.origin.includes('ais-pre') ||
-        window.location.origin.includes('run.app')
-        ? `${window.location.origin}/epk`
-        : 'https://bandmanager.io/epk'
-      : 'https://bandmanager.io/epk';
-  const publicEpkUrl = `${rawEpkBase}${bandQueryParam}`;
+  // Genera el enlace público seguro con ID cifrado/hasheado
+  const publicEpkUrl = getPublicEpkUrl(activeBandId);
 
   const handleSave = async () => {
     setSaveError(null);
@@ -534,7 +500,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   // --- Formación de la banda (miembros con foto) ---
-  const miembros: BandMember[] = config.miembros || [];
+  const miembros: BandMember[] = (config.miembros || []).map((m, idx) => ({
+    ...m,
+    id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+  }));
 
   const actualizarMiembros = (nuevos: BandMember[]) => setConfig({ ...config, miembros: nuevos });
 
@@ -566,7 +535,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   // --- Vídeos de directo ---
-  const videos: EPKVideo[] = config.videos || [];
+  const videos: EPKVideo[] = (config.videos || []).map((v, idx) => ({
+    ...v,
+    id: v.id || `v-${idx + 1}-${(v.titulo || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+  }));
 
   const actualizarVideos = (nuevos: EPKVideo[]) => setConfig({ ...config, videos: nuevos });
 

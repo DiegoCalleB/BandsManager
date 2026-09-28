@@ -11,7 +11,8 @@ export type WidgetType =
   | 'social_fans'
   | 'epk_status'
   | 'ai_agent_status'
-  | 'tour_status';
+  | 'tour_status'
+  | 'growth_guidance';
 
 export type CalendarWidgetViewMode = 'list' | 'mini_month' | 'weekly_grid';
 
@@ -236,5 +237,15 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     defaultHSpan: 'normal',
     iconName: 'Truck',
     requiredModule: 'giras',
+  },
+  {
+    type: 'growth_guidance',
+    title: 'Guía de Crecimiento & Promoción',
+    category: 'Promoción & IA',
+    description: 'Plan proactivo semanal y recomendaciones paso a paso para llenar conciertos y ganar audiencia.',
+    defaultWSpan: 6,
+    defaultHSpan: 'normal',
+    iconName: 'Rocket',
+    requiredModule: 'reels',
   },
 ];

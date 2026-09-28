@@ -12,6 +12,7 @@ import {
   Volume2,
   X,
   Music,
+  Music2,
   Radio,
   Sparkles,
   Quote,
@@ -159,17 +160,26 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const videoPrincipal = videos.find((v) => v.destacado) || videos[0] || null;
   const videosSecundarios = videos.filter((v) => v !== videoPrincipal);
   const miembros = (config.miembros || []).filter((m) => m?.nombre || m?.fotoUrl);
+  const normalizedBandPhotos = (config.bandPhotos || [])
+    .map((p) => (typeof p === 'string' ? p : (p as any)?.url || ''))
+    .filter((u) => typeof u === 'string' && u.trim() !== '');
   // Foto de portada del hero: la primera de la Galería de Imagen & Prensa, si existe. Es lo
   // que hace que esto lea como la web real de una banda en directo y no como una tarjeta de
   // dashboard - sin foto real, cae al degradado de siempre.
-  const fotoPortada = (config.bandPhotos || []).find((p) => p && p !== displayLogo) || null;
+  const fotoPortada = normalizedBandPhotos.find((p) => p && p !== displayLogo) || null;
   // Contenido escrito por la banda, resuelto al idioma elegido. Si falta la traducción de un
   // campo concreto, ese campo cae al español: una traducción a medias se lee mezclada, que es
   // mucho mejor que dejar huecos en blanco en un dossier de contratación.
   const contenido = resolverContenidoEpk(config, language);
   const datos = config.datosContratacion || {};
   const hayDatosContratacion = Boolean(
-    datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario
+    datos.numMusicos ||
+    datos.duracionDirecto ||
+    datos.ciudadBase ||
+    datos.formatos ||
+    datos.necesidadesEscenario ||
+    datos.tieneMerchandising !== undefined ||
+    datos.tieneTecnicoSonidoPropio !== undefined
   );
 
   const styles = getTemplateStyles(config.plantilla);
@@ -236,6 +246,26 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             },
             { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
             { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') },
+            {
+              label: 'Técnico de Sonido',
+              valor: datos.tieneTecnicoSonidoPropio
+                ? 'Técnico propio'
+                : datos.tieneTecnicoSonidoPropio === false
+                  ? 'Técnico de la sala'
+                  : '',
+            },
+            {
+              label: 'Merchandising',
+              valor: datos.tieneMerchandising
+                ? datos.detallesMerchandising || 'Puesto disponible'
+                : datos.tieneMerchandising === false
+                  ? 'No disponible'
+                  : '',
+            },
+            {
+              label: 'Transporte',
+              valor: datos.transportePropio ? 'Furgoneta propia' : datos.transportePropio === false ? 'Transporte adaptable' : '',
+            },
           ]
             .filter((d) => d.valor)
             .map((d) => (
@@ -370,6 +400,28 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             {t('seccionBio')}
           </h2>
           <div className="text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 opacity-90">{contenido.biografia}</div>
+
+          {/* Bloque FFO / Para fans de / Sonido afín */}
+          {config.bandasSimilares && config.bandasSimilares.length > 0 && config.mostrarBandasSimilares !== false && (
+            <div className="pt-4 border-t border-white/10 space-y-2.5">
+              <div className="flex items-center gap-2">
+                <Music2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="text-xs font-bold uppercase tracking-wider font-mono opacity-80">
+                  {language === 'en' ? 'For Fans Of (FFO):' : 'Para fans de (FFO) / Sonido afín:'}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {config.bandasSimilares.map((band, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 backdrop-blur-xs"
+                  >
+                    {band}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section
@@ -519,7 +571,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   };
 
   const renderGaleria = () => {
-    const validPhotos = (config.bandPhotos || []).filter(Boolean);
+    const validPhotos = (config.bandPhotos || [])
+      .map((p) => (typeof p === 'string' ? p : (p as any)?.url || ''))
+      .filter((u) => typeof u === 'string' && u.trim() !== '');
     if (validPhotos.length === 0) return null;
     return (
       <section key="galeria" className="mb-16 space-y-6 print:mb-8">

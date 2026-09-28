@@ -2,6 +2,8 @@ import React from 'react';
 import { Navigation, ExternalLink } from 'lucide-react';
 
 interface DirectionsCardProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
   query: string;
   locationName: string;
   address?: string;

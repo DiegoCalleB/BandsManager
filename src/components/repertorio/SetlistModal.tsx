@@ -3,6 +3,10 @@ import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+
 interface SetlistModalProps {
   isOpen: boolean;
   setlistToEdit: Setlist | null;
@@ -28,8 +32,6 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
     }
   }, [setlistToEdit]);
 
-  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
-  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,14 +48,21 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
-        <div className={`w-full max-w-md p-5 rounded-[var(--r-l)] ${colors.card} text-[var(--ink)] my-auto max-h-[90vh] overflow-y-auto`}>
-          <div className="flex justify-between items-center pb-3">
-            <div className="flex items-center gap-2">
-              <Layers className="w-5 h-5 text-[var(--acc)]" />
-              <h3 className="text-sm font-bold font-sans text-[var(--ink)]">
-                {setlistToEdit ? 'Editar Repertorio' : 'Crear Nuevo Repertorio desde Cero'}
-              </h3>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+        <div
+          className={`w-full max-w-md p-5 sm:p-6 rounded-3xl shadow-2xl border ${
+            isStitchLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#16161a] border-neutral-800 text-zinc-100'
+          } my-auto max-h-[90vh] overflow-y-auto`}
+        >
+          <div className="flex justify-between items-center pb-3.5 border-b border-white/10">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                <Layers className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold tracking-tight">{setlistToEdit ? 'Editar Repertorio' : 'Crear Nuevo Repertorio'}</h3>
+                <p className="text-[11px] text-zinc-400 font-normal">Configura los detalles principales de tu setlist</p>
+              </div>
             </div>
             <button onClick={onClose} className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer">
               <X className="w-5 h-5" />
@@ -62,7 +71,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 text-xs font-sans">
             <div>
-              <label className="block text-[var(--ink-2)] font-bold mb-1">Nombre del Repertorio / Setlist *</label>
+              <label className="block text-zinc-200 font-semibold mb-1">Nombre del Repertorio *</label>
               <input
                 type="text"
                 required
@@ -74,7 +83,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
             </div>
 
             <div>
-              <label className="block text-[var(--ink-2)] font-bold mb-1">Formato / Tipo de Concierto</label>
+              <label className="block text-zinc-200 font-semibold mb-1">Formato de Concierto</label>
               <select
                 value={tipoFormato}
                 onChange={(e) => setTipoFormato(e.target.value as any)}
@@ -82,20 +91,24 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
               >
                 <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
                 <option value="sala_larga">🎸 Sala / Show Largo (90-120m)</option>
-                <option value="acustico">🌙 Acústico / Intimo</option>
+                <option value="acustico">🌙 Acústico / Íntimo</option>
                 <option value="ensayo">🥁 Ensayo / Local</option>
-                <option value="otro">📋 Otro</option>
+                <option value="otro">📋 Otro Formato</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-[var(--ink-2)] font-bold mb-1">Descripción / Notas de Escenario</label>
+              <label className="block text-zinc-200 font-semibold mb-1">Notas de Escenario / Descripción</label>
               <textarea
                 rows={3}
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
-                placeholder="ej. Setlist pensado para festivales con ritmo alto sin pausas..."
-                className={`w-full p-2.5 rounded-[var(--r-m)] focus:outline-none ${'bg-[var(--surface)] text-[var(--ink)]'}`}
+                placeholder="ej. Repertorio de ritmo alto pensado para festivales..."
+                className={`w-full p-3 rounded-xl border font-medium text-xs focus:outline-none ${
+                  isStitchLight
+                    ? 'bg-white text-slate-900 border-slate-300 focus:border-amber-500'
+                    : 'bg-neutral-900 text-white border-neutral-800 focus:border-amber-500/50'
+                }`}
               />
             </div>
 

@@ -24,6 +24,10 @@ import {
 } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
 
+// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
+// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
+const isStitchLight = false;
+
 export interface SongCardRowProps {
   song: Song;
   index: number;
@@ -294,23 +298,10 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           )}
         </div>
 
-        {/* Right Section: Direct Quick Actions + Overflow ⋯ Menu */}
+        {/* Right Section: Streamlined Quick Action + Overflow ⋯ Menu */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-1.5" onClick={(e) => e.stopPropagation()}>
-          {/* 1. Direct Acordes / Chords Button */}
-          {onOpenChords && (
-            <button
-              type="button"
-              onClick={onOpenChords}
-              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${'bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ink-2)]/25'}`}
-              title="Ver cifrado de acordes, armonía y letra (LaCuerda.net)"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-xs">Acordes</span>
-            </button>
-          )}
-
-          {/* 2. Direct Studio Button */}
-          {onOpenStudio && (
+          {/* 1. Primary Direct Button: Studio (or Acordes if no studio) */}
+          {onOpenStudio ? (
             <button
               type="button"
               onClick={onOpenStudio}
@@ -327,64 +318,23 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-[var(--ink)] rounded-full text-[10px] font-bold">{ideasCount}</span>
               )}
             </button>
-          )}
-
-          {/* 2b. Direct Iris Stem Separator Button */}
-          {(onOpenIris || onOpenStudio) && (
+          ) : onOpenChords ? (
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onOpenIris) onOpenIris();
-                else if (onOpenStudio) onOpenStudio();
-              }}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                hasIrisStems(song)
-                  ? 'bg-gradient-to-r from-amber-0/20 via-orange-500/20 to-purple-500/20 hover:from-amber-0/30 hover:to-purple-500text-[var(--acc)]/70 /40'
-                  : 'bg-[var(--surface)] hover:bg-[var(--surface)]text-[var(--acc)]/70 /30'
+              onClick={onOpenChords}
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                isStitchLight
+                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
+                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/25'
               }`}
-              title={
-                hasIrisStems(song)
-                  ? 'Ver pistas e instrumentos separados con Iris'
-                  : 'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'
-              }
+              title="Ver cifrado de acordes, armonía y letra"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-              <span className="hidden sm:inline text-xs font-sans">Iris</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span className="hidden xs:inline text-xs">Acordes</span>
             </button>
-          )}
+          ) : null}
 
-          {/* 3. Direct Member Notes Button */}
-          {onOpenMemberNotes && (
-            <button
-              type="button"
-              onClick={onOpenMemberNotes}
-              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer ${
-                hasMemberNotes
-                  ? 'bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70'
-                  : 'bg-[var(--surface)] hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-              title="Ver y editar notas específicas por miembro de la banda"
-            >
-              <Users className={`w-3.5 h-3.5 ${hasMemberNotes ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'}`} />
-              <span className="hidden md:inline text-xs">Notas</span>
-            </button>
-          )}
-
-          {/* 4. Direct Edit Song Button */}
-          {onEditSong && (
-            <button
-              type="button"
-              onClick={onEditSong}
-              className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-[var(--r-s)] text-xs font-medium items-center gap-1.5 transition-all cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)]`}
-              title="Editar canción (título, tonalidad, BPM, afinación, disco...)"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline text-xs">Editar</span>
-            </button>
-          )}
-
-          {/* Reorder Buttons (alternative to drag & drop for accessibility) */}
+          {/* Reorder Buttons (alternative to drag & drop) */}
           {showReorder && (
             <div className="hidden sm:flex flex-col">
               <button
@@ -418,7 +368,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                   ? 'bg-[var(--surface)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'
               }`}
-              title="Más opciones del tema"
+              title="Opciones de la canción"
               aria-label="Más opciones"
             >
               <MoreVertical className="w-4 h-4" />
@@ -430,7 +380,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 className={`absolute right-0 top-full mt-1.5 z-40 w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
               >
                 <div className="py-1 space-y-0.5">
-                  {/* Acordes / Notas / Editar: solo en móvil, en escritorio ya son botones directos */}
+                  {/* Acordes */}
                   {onOpenChords && (
                     <button
                       type="button"
@@ -441,22 +391,11 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ok)]/20 text-[var(--ok)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>Ver Acordes</span>
+                      <span>Ver Acordes y Letra</span>
                     </button>
                   )}
-                  {onOpenMemberNotes && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowMenu(false);
-                        onOpenMemberNotes();
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
-                    >
-                      <Users className="w-3.5 h-3.5" />
-                      <span>Notas por Miembro</span>
-                    </button>
-                  )}
+
+                  {/* Editar Canción */}
                   {onEditSong && (
                     <button
                       type="button"
@@ -466,8 +405,23 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       }}
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--ink)]/10 text-[var(--ink-2)] transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
                     >
-                      <Edit3 className="w-3.5 h-3.5" />
+                      <Edit3 className="w-3.5 h-3.5 text-zinc-400" />
                       <span>Editar Canción</span>
+                    </button>
+                  )}
+
+                  {/* Member Notes */}
+                  {onOpenMemberNotes && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        onOpenMemberNotes();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-xl hover:bg-amber-500/15 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                    >
+                      <Users className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Notas por Miembro</span>
                     </button>
                   )}
 
@@ -497,8 +451,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                       }}
                       className="w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-colors flex items-center gap-2 cursor-pointer font-bold"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
-                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris Separadas' : '✨ Procesar con Iris (IA Stems)'}</span>
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris' : '✨ Separar Stems con Iris'}</span>
                     </button>
                   )}
 

@@ -93,6 +93,7 @@ interface GooglePlacesExplorerModalProps {
   existingLeads?: Lead[];
   bandGenre?: string;
   bandName?: string;
+  similarBands?: string[];
 }
 
 const QUICK_CITIES = [
@@ -194,6 +195,7 @@ export function GooglePlacesExplorerModal({
   existingLeads = [],
   bandGenre = '',
   bandName = '',
+  similarBands = [],
 }: GooglePlacesExplorerModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState(activeCampaign?.targetCities[0] || '');
@@ -405,6 +407,221 @@ export function GooglePlacesExplorerModal({
       setSearchError(err.message || 'Error al ejecutar la búsqueda masiva de recintos de campaña.');
     } finally {
       setIsMassCampaignSearching(false);
+    }
+  };
+
+  const handleSearchSimilarBands = async (targetBand?: string) => {
+    setIsSearching(true);
+    setSearchError('');
+    setImportSuccessMsg('');
+    setExtractStatus('');
+    setDiscardToast('');
+
+    const bandsToQuery = targetBand ? [targetBand] : similarBands && similarBands.length > 0 ? similarBands : ['Macaco', 'La Pegatina'];
+
+    try {
+      const res = await apiFetch('/api/leads/similar-artists-venues', {
+        method: 'POST',
+        body: JSON.stringify({
+          bandName: bandName || 'Tu Banda',
+          genre: bandGenre || 'Música en directo',
+          similarArtists: bandsToQuery,
+          targetCities: selectedCity
+            ? [selectedCity]
+            : activeCampaign?.targetCities?.length
+              ? activeCampaign.targetCities
+              : ['Madrid', 'Barcelona', 'Valencia', 'Sevilla'],
+          limit: searchLimit || 8,
+        }),
+      });
+
+      if (res.success && Array.isArray(res.matches)) {
+        const currentDiscarded = getStoredDiscarded();
+        const isDiscarded = (name: string) => {
+          const norm = (name || '').toLowerCase().trim();
+          return currentDiscarded.some((d) => d.nombre_sala.toLowerCase().trim() === norm);
+        };
+
+        const mapped: PlaceResult[] = res.matches
+          .filter((m: any) => !isDiscarded(m.nombre_sala))
+          .map((m: any, idx: number) => {
+            const normName = (m.nombre_sala || '').toLowerCase().trim();
+            const existingMatch = existingLeads.find((l) => l.nombre_sala && l.nombre_sala.toLowerCase().trim() === normName);
+            return {
+              place_id: `similar-${Date.now()}-${idx}`,
+              nombre_sala: m.nombre_sala,
+              ciudad: m.ciudad || selectedCity || 'España',
+              region: 'España',
+              direccion: m.ciudad || '',
+              telefono: '',
+              website: '',
+              tipo: 'sala',
+              aforo: m.aforo_estimado,
+              genero: m.genero_predominante,
+              descripcion: `${m.razon_recomendacion || ''} (Artistas afines: ${(m.bandas_similares_que_tocaron || []).join(', ')})`,
+              email_contacto: m.contacto_sugerido || '',
+              fuente: `Radar Afinidad (${m.fuente || 'Bandsintown & Setlist.fm'})`,
+              selected: !existingMatch,
+              alreadyInCrm: !!existingMatch,
+              crmStatus: existingMatch ? existingMatch.estado : null,
+              crmId: existingMatch ? existingMatch.id : null,
+              crmNombre: existingMatch ? existingMatch.nombre_sala : null,
+              capacityMatch: true,
+            };
+          });
+
+        setPlaces(mapped);
+        setSearchSource(`Efecto Espejo: Recintos donde han tocado ${bandsToQuery.join(', ')} (${res.matches.length} salas encontradas)`);
+      } else {
+        setSearchError(res.error || 'No se obtuvieron recintos para las bandas afines.');
+      }
+    } catch (err: any) {
+      console.error('Error en búsqueda de bandas afines:', err);
+      setSearchError(err.message || 'Fallo de conexión en el radar de afinidad.');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSearchMultiSource = async () => {
+    setIsSearching(true);
+    setSearchError('');
+    setImportSuccessMsg('');
+    setExtractStatus('');
+    setDiscardToast('');
+
+    const queryCity = selectedCity || activeCampaign?.targetCities?.[0] || 'Madrid';
+
+    try {
+      const res = await apiFetch('/api/leads/multi-source-venues', {
+        method: 'POST',
+        body: JSON.stringify({
+          query: searchQuery || `Salas de conciertos y música en vivo`,
+          ciudad: queryCity,
+          tipo: selectedType || 'sala',
+          limit: searchLimit || 10,
+        }),
+      });
+
+      if (res.success && Array.isArray(res.venues)) {
+        const currentDiscarded = getStoredDiscarded();
+        const isDiscarded = (name: string) => {
+          const norm = (name || '').toLowerCase().trim();
+          return currentDiscarded.some((d) => d.nombre_sala.toLowerCase().trim() === norm);
+        };
+
+        const mapped: PlaceResult[] = res.venues
+          .filter((v: any) => !isDiscarded(v.nombre))
+          .map((v: any, idx: number) => {
+            const normName = (v.nombre || '').toLowerCase().trim();
+            const existingMatch = existingLeads.find((l) => l.nombre_sala && l.nombre_sala.toLowerCase().trim() === normName);
+            const verifiedBadges =
+              Array.isArray(v.fuentes_verificadas) && v.fuentes_verificadas.length > 0 ? v.fuentes_verificadas.join(', ') : v.fuente;
+
+            return {
+              place_id: `multisource-${Date.now()}-${idx}`,
+              nombre_sala: v.nombre,
+              ciudad: v.ciudad || queryCity,
+              region: v.pais || 'España',
+              direccion: v.direccion || v.ciudad || '',
+              telefono: v.telefono || '',
+              website: v.url_oficial || '',
+              tipo: v.tipo || 'sala',
+              aforo: v.capacidad,
+              genero: Array.isArray(v.generos_frecuentes) ? v.generos_frecuentes.join(', ') : '',
+              descripcion: v.detalles_tecnicos || `Verificado en ${verifiedBadges}`,
+              email_contacto: v.email || '',
+              fuente: `Radar Multi-Fuente (${verifiedBadges})`,
+              selected: !existingMatch,
+              alreadyInCrm: !!existingMatch,
+              crmStatus: existingMatch ? existingMatch.estado : null,
+              crmId: existingMatch ? existingMatch.id : null,
+              crmNombre: existingMatch ? existingMatch.nombre_sala : null,
+              capacityMatch: true,
+            };
+          });
+
+        setPlaces(mapped);
+        setSearchSource(
+          `Radar Multi-Fuente: ${res.venues.length} recintos encontrados (${(res.fuentes_consultadas || ['Wegow', 'Songkick', 'Ticketmaster', 'MusicBrainz']).join(' • ')})`
+        );
+      } else {
+        setSearchError(res.error || 'No se obtuvieron recintos con el radar multi-fuente.');
+      }
+    } catch (err: any) {
+      console.error('Error en búsqueda multi-fuente:', err);
+      setSearchError(err.message || 'Fallo al ejecutar el radar multi-fuente.');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSearchPublicCultural = async () => {
+    setIsSearching(true);
+    setSearchError('');
+    setImportSuccessMsg('');
+    setExtractStatus('');
+    setDiscardToast('');
+
+    const queryRegion = selectedCity || activeCampaign?.targetCities?.[0] || 'Madrid';
+
+    try {
+      const res = await apiFetch('/api/leads/public-cultural-radar', {
+        method: 'POST',
+        body: JSON.stringify({
+          provinciaOrRegion: queryRegion,
+          estiloMusical: bandGenre || 'Música en directo',
+          bandName: bandName || 'Tu Banda',
+          limit: searchLimit || 8,
+        }),
+      });
+
+      if (res.success && Array.isArray(res.oportunidades)) {
+        const currentDiscarded = getStoredDiscarded();
+        const isDiscarded = (name: string) => {
+          const norm = (name || '').toLowerCase().trim();
+          return currentDiscarded.some((d) => d.nombre_sala.toLowerCase().trim() === norm);
+        };
+
+        const mapped: PlaceResult[] = res.oportunidades
+          .filter((op: any) => !isDiscarded(op.entidad_o_evento))
+          .map((op: any, idx: number) => {
+            const normName = (op.entidad_o_evento || '').toLowerCase().trim();
+            const existingMatch = existingLeads.find((l) => l.nombre_sala && l.nombre_sala.toLowerCase().trim() === normName);
+
+            return {
+              place_id: `cultural-${Date.now()}-${idx}`,
+              nombre_sala: op.entidad_o_evento,
+              ciudad: op.municipio || queryRegion,
+              region: op.provincia || queryRegion,
+              direccion: op.municipio || '',
+              telefono: op.telefono || '',
+              website: op.url_registro || '',
+              tipo: (op.tipo === 'ayuntamiento' ? 'ayuntamiento' : 'sala') as any,
+              aforo: undefined,
+              genero: bandGenre || 'Cultural',
+              descripcion: `${op.programa_o_ciclo || ''} · ${op.requisitos_o_perfil || ''} (${op.plazo_presentacion || 'Convocatoria'})`,
+              email_contacto: op.email_contacto || '',
+              fuente: `Radar Cultural Público (${op.fuente_datos || 'Datos Abiertos & Municipios'})`,
+              selected: !existingMatch,
+              alreadyInCrm: !!existingMatch,
+              crmStatus: existingMatch ? existingMatch.estado : null,
+              crmId: existingMatch ? existingMatch.id : null,
+              crmNombre: existingMatch ? existingMatch.nombre_sala : null,
+              capacityMatch: true,
+            };
+          });
+
+        setPlaces(mapped);
+        setSearchSource(`Radar Cultural Público: ${res.oportunidades.length} teatros, auditorios y convocatorias en ${queryRegion}`);
+      } else {
+        setSearchError(res.error || 'No se obtuvieron convocatorias en el radar cultural.');
+      }
+    } catch (err: any) {
+      console.error('Error en radar cultural público:', err);
+      setSearchError(err.message || 'Fallo de conexión con el radar cultural.');
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -886,7 +1103,7 @@ export function GooglePlacesExplorerModal({
                 </div>
               </div>
 
-              {/* Advanced Filters Toggle & Drawer (Aforo, etc) */}
+              {/* Advanced Filters Toggle & Action Search Buttons */}
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1800/60">
                 <button
                   type="button"
@@ -894,18 +1111,42 @@ export function GooglePlacesExplorerModal({
                   className="text-[11px] text-[var(--ink-2)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-sans"
                 >
                   <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
-                  <span>{showAdvancedFilters ? 'Ocultar Filtros de Aforo' : 'Filtros Avanzados de Aforo'}</span>
+                  <span>{showAdvancedFilters ? 'Ocultar Filtros de Aforo' : 'Filtros de Aforo'}</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleSearch()}
-                  disabled={isSearching}
-                  className="px-5 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 ml-auto"
-                >
-                  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                  <span>{isSearching ? 'Buscando...' : `Buscar ${searchLimit} Resultados`}</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => handleSearchMultiSource()}
+                    disabled={isSearching}
+                    className="px-3 py-2 bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border border-indigo-500/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
+                  >
+                    <Disc3 className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Radar Multi-Fuente (Wegow/Songkick/TM)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSearchPublicCultural()}
+                    disabled={isSearching}
+                    className="px-3 py-2 bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border border-emerald-500/40 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
+                  >
+                    <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Radar Cultural Público</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSearch()}
+                    disabled={isSearching}
+                    className="px-4 py-2 bg-[#f2ca50] hover:bg-[#d8b03e] text-[#2c2200] font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                  >
+                    {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                    <span>{isSearching ? 'Buscando...' : `Google Places (${searchLimit})`}</span>
+                  </button>
+                </div>
               </div>
 
               {showAdvancedFilters && (
@@ -950,6 +1191,36 @@ export function GooglePlacesExplorerModal({
                   </button>
                 ))}
               </div>
+
+              {/* Quick Similar Bands / FFO Mirror Chips from Dossier */}
+              {similarBands && similarBands.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-zinc-800/60">
+                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider mr-1 flex items-center gap-1">
+                    <Music2 className="w-3 h-3 text-amber-400" />
+                    Efecto Espejo (Dossier):
+                  </span>
+                  {similarBands.map((band, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSearchSimilarBands(band)}
+                      disabled={isSearching}
+                      className="px-2.5 py-0.5 text-[10px] rounded-lg transition-all cursor-pointer font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 disabled:opacity-50"
+                      title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
+                    >
+                      🔍 {band}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => handleSearchSimilarBands()}
+                    disabled={isSearching}
+                    className="px-2.5 py-0.5 text-[10px] rounded-lg font-bold transition-all cursor-pointer bg-gradient-to-r from-amber-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-200 border border-amber-400/40 ml-auto"
+                  >
+                    ⚡ Rastrear Todas
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Status / Errors / Search Source */}

@@ -30,7 +30,10 @@ describe('dbUpsertSong: notas_miembros/notas_por_miembro/guia_sustituto no se re
     vi.clearAllMocks();
     fromMock.mockImplementation(() => {
       const qb = crearQueryBuilderMock(selectResult);
-      qb.upsert = upsertMock.mockReturnValue(qb);
+      // dbUpsertSong escribe con delete + insert (no upsert) desde 78cfa53 en main: el payload
+      // que se comprueba es el del insert.
+      qb.delete = vi.fn(() => qb);
+      qb.insert = upsertMock.mockReturnValue(qb);
       return qb;
     });
   });

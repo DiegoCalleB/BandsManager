@@ -35,10 +35,10 @@ const DEFAULT_PRESET_FILTERS: SavedFilter[] = [
 export function useSavedFilters(
   sectionTab: 'salas' | 'medios' | 'grupos',
   setSectionTab: (tab: 'salas' | 'medios' | 'grupos') => void,
-  initialStatusFilter: LeadStatus | 'todos'
+  initialStatusFilter: LeadStatus | 'todos' | 'seguimientos'
 ) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos' | 'seguimientos'>(initialStatusFilter);
   // Para sectionTab === 'medios', typeFilter también acepta las sub-categorías heurísticas de
   // matchesMedioType en BookingCRM ('radio', 'tv', 'prensa', 'redes', 'podcast'), que no son
   // LeadType reales sino un filtro por palabras clave sobre el lead.

@@ -20,6 +20,8 @@ import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors
 import { api } from '../../../services/api';
 
 export interface ModuleWidgetProps {
+  /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
+  isStitchLight?: boolean;
   leads?: Lead[];
   concerts?: Concert[];
   rehearsals?: Rehearsal[];
@@ -148,7 +150,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
 }
 
 /* 3. FINANCES WIDGET */
-export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps) {
+export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = false }: ModuleWidgetProps) {
   const totalCache = concerts.reduce((acc, c) => acc + (Number(c.cache) || 0), 0);
 
   return (
@@ -192,7 +194,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 }
 
 /* 4. SOCIAL & FANS WIDGET */
-export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
+export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
@@ -227,8 +229,8 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
           onClick={() => onNavigate && onNavigate('fans')}
           className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all flex flex-col items-center justify-center cursor-pointer"
         >
-          <QrCode className="w-5 h-5 text-[var(--acc)] mb-1" />
-          <span className="text-[11px] font-sans font-bold">Generar QR de Concierto</span>
+          <QrCode className={`w-5 h-5 ${isStitchLight ? 'text-indigo-600' : 'text-amber-400'} mb-1`} />
+          <span className="text-[11px] font-sans font-bold">Generar QR Concierto</span>
         </button>
       </div>
     </div>
@@ -236,7 +238,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 }
 
 /* 5. EPK DOSSIER WIDGET */
-export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
+export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
@@ -280,7 +282,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
 }
 
 /* 6. AI AGENT WIDGET */
-export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWidgetProps) {
+export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLight = false }: ModuleWidgetProps) {
   const pendingApprovals = leads.filter((l) => l.estado === 'pendiente_aprobacion').length;
 
   return (
@@ -319,7 +321,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 }
 
 /* 7. TOUR LOGISTICS WIDGET */
-export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) {
+export function TourStatusWidget({ tours = [], onNavigate, isStitchLight = false }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">

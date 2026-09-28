@@ -94,6 +94,7 @@ export interface AgentAutonomyConfig {
   agentSenderName?: string;
   agentReplyToEmail?: string;
   dispatchMode?: 'draft_gmail' | 'direct_send';
+  markAsReadInInbox?: boolean;
 }
 
 interface AgentAutonomySettingsModalProps {
@@ -305,6 +306,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     agentSenderName: initialConfig?.agentSenderName || `${bandName} Management`,
     agentReplyToEmail: initialConfig?.agentReplyToEmail || '',
     dispatchMode: initialConfig?.dispatchMode || 'draft_gmail',
+    markAsReadInInbox: initialConfig?.markAsReadInInbox ?? false,
   });
 
   // Indicador (punto verde en la pestaña) de si la banda tiene YA una bandeja conectada -
@@ -499,6 +501,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             agentSenderName: serverAutonomy.agentSenderName || prev.agentSenderName,
             agentReplyToEmail: serverAutonomy.agentReplyToEmail || prev.agentReplyToEmail,
             dispatchMode: serverAutonomy.dispatchMode || prev.dispatchMode,
+            markAsReadInInbox: Boolean(serverAutonomy.markAsReadInInbox),
             requireHumanForFinalSignOff: true,
           }));
         }
@@ -1394,6 +1397,44 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                         </p>
                       </div>
                     </button>
+                  </div>
+                </div>
+
+                {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
+                <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-3">
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                    <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja de Entrada (Agente Lector)
+                  </h4>
+
+                  <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-3">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        disabled={!isAdmin}
+                        checked={config.markAsReadInInbox || false}
+                        onChange={(e) => setConfig({ ...config, markAsReadInInbox: e.target.checked })}
+                        className="mt-0.5 rounded border-neutral-700 bg-neutral-950 text-amber-500 focus:ring-amber-500 disabled:opacity-60"
+                      />
+                      <div className="space-y-1">
+                        <span className="text-xs font-bold text-zinc-100 block">
+                          Marcar correos como "Leídos" en Gmail / Outlook al procesarlos
+                        </span>
+                        <p className="text-[11px] text-neutral-400 font-sans leading-relaxed">
+                          {config.markAsReadInInbox ? (
+                            <span className="text-amber-300">
+                              ⚠️ Activado: El Agente Lector quitará la marca de "No leído" en tu correo oficial cada vez que analice un
+                              mensaje entrante.
+                            </span>
+                          ) : (
+                            <span className="text-emerald-400 font-medium">
+                              ✓ Desactivado (Recomendado): El Agente Lector analizará y registrará las respuestas en el CRM, pero{' '}
+                              <strong className="text-emerald-300">conservará tus correos SIN LEER en tu Gmail/Outlook</strong> para que no
+                              pierdas visibilidad ni el control de tu bandeja de entrada.
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </label>
                   </div>
                 </div>
               </div>

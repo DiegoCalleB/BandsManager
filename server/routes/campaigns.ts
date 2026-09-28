@@ -9,6 +9,7 @@ import {
   dbRecordCampaignPitchTraining,
   trainCampaignToneDnaManually
 } from "../db.js";
+import { syncActiveCampaignsRadar } from "../services/campaignRadarScheduler.js";
 
 const router = express.Router();
 
@@ -87,6 +88,14 @@ router.post("/campaigns/active", requireAuth, async (req, res) => {
     await dbSetActiveCampaign(id || null, userBandId);
     const campaigns = await dbGetCampaigns(userBandId);
     const active = campaigns.find(c => c.id === id) || null;
+
+    // Disparar sincronización inmediata de radar de carteleras en segundo plano para la campaña activa
+    if (active) {
+      syncActiveCampaignsRadar(userBandId).catch(err => {
+        console.warn("[CampaignsRoute] Error en escaneo en segundo plano al activar campaña:", err);
+      });
+    }
+
     res.json({ success: true, activeCampaign: active, campaigns });
   } catch (error: any) {
     console.error("Error in POST /api/campaigns/active:", error);

@@ -20,6 +20,8 @@ import {
   dbGetConcerts,
   dbUpsertMusicianWaitlist,
   dbGetMusiciansWaitlist,
+  invalidateBandStateCache,
+  cleanBandId,
 } from '../db.js';
 import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { safeParseJson } from '../utils.js';
@@ -38,6 +40,7 @@ import {
 } from '../utils/bandAccess.js';
 import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
+import { decodeBandId } from '../utils/bandHash.js';
 
 const router = express.Router();
 
@@ -189,11 +192,31 @@ router.put('/epk', requireAuth, async (req, res) => {
       state.epkConfigsByBand[k] = newEpkConfig;
     });
 
-    if (cleanUserBandId === 'bakandeya') {
+    if (
+      cleanUserBandId === 'bakandeya' ||
+      (user?.band_id && cleanBandId(user.band_id) === cleanUserBandId)
+    ) {
       state.epkConfig = newEpkConfig;
     }
 
+    if (newEpkConfig.logoUrl && state.registeredBands) {
+      state.registeredBands.forEach((b: any) => {
+        const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
+        if (
+          bClean === cleanUserBandId ||
+          b.band_id === userBandId ||
+          b.id === userBandId
+        ) {
+          b.logo_url = newEpkConfig.logoUrl;
+          b.imagen_url = newEpkConfig.logoUrl;
+        }
+      });
+    }
+
     saveState(state);
+    invalidateBandStateCache(userBandId);
+    invalidateBandStateCache(cleanUserBandId);
+    invalidateBandStateCache(`band-${cleanUserBandId}`);
 
     res.json({ success: true, epkConfig: newEpkConfig });
   } catch (err: any) {
@@ -447,16 +470,19 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
 // Public EPK Data endpoint (No Auth required for public sharing)
 router.get('/public/epk', async (req, res) => {
   try {
-    const rawBandId =
+    const rawParam =
+      (req.query.b as string) ||
+      (req.query.t as string) ||
+      (req.query.token as string) ||
       (req.query.band_id as string) ||
       (req.query.band as string) ||
-      (req.query.b as string) ||
       (req.headers['x-band-id'] as string);
-    if (!rawBandId || !rawBandId.trim()) {
+    if (!rawParam || !rawParam.trim()) {
       return res
         .status(400)
-        .json({ error: 'Falta el identificador de la banda (band_id).' });
+        .json({ error: 'Falta el identificador o token de la banda.' });
     }
+    const rawBandId = decodeBandId(rawParam);
     const cleanBandId = rawBandId.toLowerCase().replace(/^(band|reg)-/, '');
     const reqBandId =
       cleanBandId === 'bakandeya' ? BAKANDEYA_BAND_ID : `band-${cleanBandId}`;
@@ -562,9 +588,7 @@ router.get('/public/epk', async (req, res) => {
         const cBand = (c.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
-        return (
-          cBand === cleanBandId || (!c.band_id && cleanBandId === 'bakandeya')
-        );
+        return cBand === cleanBandId;
       });
     }
 
@@ -579,36 +603,12 @@ router.get('/public/epk', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
 
-    // Default official links for Bakandeya fallback
-    const BAKANDEYA_DEFAULT_SOCIALS = {
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      spotify: 'https://open.spotify.com/artist/bakandeya',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      website: 'https://bandmanager.io',
-    };
-
-    // Filter out bakandeya default logo if this is not bakandeya
     let logoUrl =
       epkConfig?.logoUrl || regBand?.logo_url || regBand?.imagen_url || null;
-    if (
-      logoUrl &&
-      String(logoUrl).includes('bakandeya') &&
-      cleanBandId !== 'bakandeya'
-    ) {
-      logoUrl = null;
-    } else if (!logoUrl && cleanBandId === 'bakandeya') {
-      logoUrl = '/logo_bakandeya.jpg';
-    }
 
     // Ensure social links are present
     let enlacesRedes = epkConfig?.enlacesRedes || {};
-    if (cleanBandId === 'bakandeya') {
-      enlacesRedes = {
-        ...BAKANDEYA_DEFAULT_SOCIALS,
-        ...(enlacesRedes || {}),
-      };
-    } else if (regBand) {
+    if (regBand) {
       if (regBand.instagram && !enlacesRedes.instagram)
         enlacesRedes.instagram = regBand.instagram.startsWith('http')
           ? regBand.instagram
@@ -654,9 +654,7 @@ router.get('/public/epk', async (req, res) => {
         (resolvedAudioPreview?.tituloTema &&
           String(resolvedAudioPreview.tituloTema).trim()) ||
         targetSong?.titulo ||
-        (cleanBandId === 'bakandeya'
-          ? 'Bakandeya · Directo Preview'
-          : `${bandName} · Directo Preview`);
+        `${bandName} · Directo Preview`;
 
       if (resolvedAudioPreview || resolvedAudioUrl || targetSong) {
         resolvedAudioPreview = {
@@ -678,9 +676,7 @@ router.get('/public/epk', async (req, res) => {
       audioPreview: resolvedAudioPreview || epkConfig?.audioPreview,
       contactoBooking: {
         ...(epkConfig?.contactoBooking || {}),
-        nombre:
-          epkConfig?.contactoBooking?.nombre ||
-          (cleanBandId === 'bakandeya' ? 'Booking & Management' : bandName),
+        nombre: epkConfig?.contactoBooking?.nombre || bandName,
         email: epkConfig?.contactoBooking?.email || regBand?.email || '',
         telefono:
           epkConfig?.contactoBooking?.telefono || regBand?.telefono || '',
@@ -900,8 +896,7 @@ router.post('/public/fans', async (req, res) => {
       epkConf = getEpkConfigForBand(state, targetBandId);
     }
     const bandName =
-      epkConf?.contactoBooking?.nombre ||
-      (targetBandId.includes('bakandeya') ? 'Bakandeya' : 'la banda');
+      epkConf?.contactoBooking?.nombre || epkConf?.nombre_banda || 'la banda';
 
     // El incentivo (descarga exclusiva / cupón de merchan) es opcional y lo configura cada banda
     // en el apartado QR de Fans. Antes, si la banda no lo había rellenado, se devolvía un cupón
