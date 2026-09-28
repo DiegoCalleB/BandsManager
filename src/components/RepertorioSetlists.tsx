@@ -4422,8 +4422,8 @@ export default function RepertorioSetlists({
                                                 }
                                                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
                                                   evalPrev?.status === "ok"
-                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--ok)]/70"
-                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--alert)]/70"
+                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
+                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
                                                 }`}
                                                 title={
                                                   evalPrev
@@ -4476,8 +4476,8 @@ export default function RepertorioSetlists({
                                                 }
                                                 className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer active:scale-95 ${
                                                   evalNext?.status === "ok"
-                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--ok)]/70"
-                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35 hover:border-[var(--alert)]/70"
+                                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
+                                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)] hover:text-[var(--ink)]/35"
                                                 }`}
                                                 title={
                                                   evalNext
@@ -4849,13 +4849,11 @@ export default function RepertorioSetlists({
                         }
                         setSelectedSetlistItemId(isSelected ? null : it.id);
                       }}
-                      className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
-                        isDragOver
-                          ? "border-[var(--acc)] scale-[1.01] bg-[var(--ok)]/10"
-                          : ""
-                      } ${
+                      className={`group rounded-[var(--r-m)] transition-all cursor-pointer ${
+                        isDragging ? "opacity-40 scale-[0.98]" : ""
+                      } ${isDragOver ? "scale-[1.01] bg-[var(--ok)]/10" : ""} ${
                         isSelected
-                          ? "border-[var(--acc)] ring-2 ring-indigo-500/20 bg-[var(--ok)]/10"
+                          ? "ring-2 ring-indigo-500/20 bg-[var(--ok)]/10"
                           : "bg-[var(--surface)] hover:bg-[var(--surface)]/80"
                       }`}
                     >
@@ -5243,8 +5241,8 @@ export default function RepertorioSetlists({
                                 }}
                                 className={`px-1.5 py-0.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 ${
                                   evalUnion?.status === "ok"
-                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)]/35 hover:border-[var(--ok)]/60"
-                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)]/35 hover:border-[var(--alert)]/60"
+                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink-2)]/35"
+                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink-2)]/35"
                                 }`}
                                 title={
                                   evalUnion
@@ -5486,12 +5484,12 @@ export default function RepertorioSetlists({
                       onClick={() =>
                         setSelectedSetlistItemId(isSelected ? null : it.id)
                       }
-                      className={`border rounded-[var(--r-s)] transition-all cursor-pointer ${
+                      className={`rounded-[var(--r-s)] transition-all cursor-pointer ${
                         isDragging ? "opacity-40 scale-[0.98]" : ""
                       } ${isDragOver ? "scale-[1.01] bg-[var(--acc)]/10" : ""} ${
                         isSelected
-                          ? "border-[var(--acc)] ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10"
-                          : "border-[var(--acc)]/50 bg-[var(--acc)]/5 hover:border-[var(--acc)]/70"
+                          ? "ring-2 ring-[var(--acc)]/30 bg-[var(--acc)]/10"
+                          : "bg-[var(--acc)]/5 hover:bg-[var(--acc)]/10"
                       }`}
                     >
                       <div className="flex items-center gap-2 px-2.5 py-1.5">
@@ -5815,7 +5813,7 @@ export default function RepertorioSetlists({
               </div>
 
               {/* CATALOG FILTERS BAR — Limpio y minimalista */}
-              <div className="flex items-center gap-3 py-4 border-b border-[var(--hair)]">
+              <div className="flex items-center gap-3 py-4">
                 {/* Album filter */}
                 <select
                   value={catalogAlbumFilter}
@@ -5948,7 +5946,7 @@ export default function RepertorioSetlists({
               )}
 
               {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
-              <div className="rounded-[var(--r-l)] sm:rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] text-[var(--ink-2)]">
+              <div className="rounded-[var(--r-l)] sm:rounded-3xl overflow-hidden bg-[var(--surface)] text-[var(--ink-2)]">
                 <div className="p-4 bg-[var(--sunken)]">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <input

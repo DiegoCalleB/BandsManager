@@ -282,11 +282,10 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       activeDot: "bg-[var(--acc)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)]",
-      hookBorder:
-        "border-[var(--acc)]/25 bg-[var(--tentative)]/10 text-[var(--ink)]",
+      hookBorder: "bg-[var(--tentative)]/10 text-[var(--ink)]",
       highlightText: "text-[var(--acc)]",
-      targetCard: "border-[var(--acc)]/40 bg-[var(--tentative)]/5",
-      targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80/30",
+      targetCard: "bg-[var(--tentative)]/5",
+      targetBadge: "bg-[var(--tentative)]/20 text-[var(--tentative)]/80",
       targetBtn:
         "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/80/40",
     },
@@ -309,11 +308,10 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       activeDot: "bg-[var(--tentative)] w-7",
       primaryBtn:
         "bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold",
-      hookBorder:
-        "border-[var(--acc)]/25 bg-[var(--acc)]/10 text-[var(--tentative)]/40",
+      hookBorder: "bg-[var(--acc)]/10 text-[var(--tentative)]/40",
       highlightText: "text-[var(--ink-2)]",
-      targetCard: "border-[var(--acc)]/40 bg-[var(--acc)]/5",
-      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-3)]/30",
+      targetCard: "bg-[var(--acc)]/5",
+      targetBadge: "bg-[var(--acc)]/20 text-[var(--ink-2)]/30",
       targetBtn:
         "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink-3)]/40",
     },
@@ -323,9 +321,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       activeDot: "bg-[var(--ok)] w-7",
       primaryBtn:
         "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black",
-      hookBorder: "border-[var(--ok)]/25 bg-[var(--ok)]/10 text-[var(--ok)]/40",
+      hookBorder: "bg-[var(--ok)]/10 text-[var(--ok)]/40",
       highlightText: "text-[var(--ok)]",
-      targetCard: "border-[var(--ok)]/40 bg-[var(--ok)]/5",
+      targetCard: "bg-[var(--ok)]/5",
       targetBadge: "bg-[var(--ok)]/20 text-[var(--ink-2)]/30",
       targetBtn:
         "bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)]/40",
@@ -336,10 +334,9 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       activeDot: "bg-[var(--alert)] w-7",
       primaryBtn:
         "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold",
-      hookBorder:
-        "border-[var(--alert)]/25 bg-[var(--alert)]/10 text-[var(--alert)]/40",
+      hookBorder: "bg-[var(--alert)]/10 text-[var(--alert)]/40",
       highlightText: "text-[var(--alert)]",
-      targetCard: "border-[var(--alert)]/40 bg-[var(--alert)]/5",
+      targetCard: "bg-[var(--alert)]/5",
       targetBadge: "bg-[var(--alert)]/20 text-[var(--ink-2)]/30",
       targetBtn:
         "bg-[var(--alert)]/20 hover:bg-[var(--alert)]/30 text-[var(--ink-2)]/40",
@@ -408,7 +405,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           className={
             effectiveFloatingMode
               ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[var(--surface)]/95  rounded-[var(--r-l)] shadow-black/95 overflow-hidden flex flex-col"
-              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] rounded-none md:rounded-[var(--r-l)] shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+              : "relative w-full h-full md:h-auto md:max-w-xl bg-[var(--surface)] rounded-none md:rounded-3xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
           }
         >
           {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
@@ -610,7 +607,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   {currentStep.keyPoints.map((point, i) => (
                     <div
                       key={i}
-                      className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:border-[var(--hair)]/80 transition-colors"
+                      className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex flex-col justify-between space-y-0.5 hover:bg-[var(--surface)] transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
                         <Check
