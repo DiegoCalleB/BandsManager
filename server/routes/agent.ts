@@ -402,12 +402,10 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       });
     } catch (err: any) {
       console.error('Error en Agente Redactor Supabase:', err);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error: `Error en Agente Redactor: ${err.message}`,
-        });
+      return res.status(500).json({
+        success: false,
+        error: `Error en Agente Redactor: ${err.message}`,
+      });
     }
   }
 
@@ -789,12 +787,10 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       });
     } catch (err: any) {
       console.error('Error en Agente Scout Supabase:', err);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error: `Error en Agente Scout: ${err.message}`,
-        });
+      return res.status(500).json({
+        success: false,
+        error: `Error en Agente Scout: ${err.message}`,
+      });
     }
   }
 
@@ -855,14 +851,12 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       });
 
       const status = sinCuenta ? 200 : 500;
-      return res
-        .status(status)
-        .json({
-          success: sinCuenta,
-          agent: 'Lector',
-          message: mensaje,
-          error: sinCuenta ? undefined : mensaje,
-        });
+      return res.status(status).json({
+        success: sinCuenta,
+        agent: 'Lector',
+        message: mensaje,
+        error: sinCuenta ? undefined : mensaje,
+      });
     }
   }
 
@@ -1191,13 +1185,10 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
   try {
     const user = (req as any).user;
     if (user?.role !== 'admin') {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          error:
-            'Solo el admin de la plataforma puede ver el embudo de agentes.',
-        });
+      return res.status(403).json({
+        success: false,
+        error: 'Solo el admin de la plataforma puede ver el embudo de agentes.',
+      });
     }
 
     const bandas = await dbGetRegisteredBands();
@@ -1228,12 +1219,10 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
     res.json({ success: true, funnel: computeAgentFunnel(entradas) });
   } catch (err: any) {
     console.error('Error calculando agent-funnel:', err);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: err.message || 'Error calculando el embudo de agentes.',
-      });
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Error calculando el embudo de agentes.',
+    });
   }
 });
 

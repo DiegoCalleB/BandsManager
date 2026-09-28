@@ -88,12 +88,10 @@ router.post('/autonomy', requireAuth, async (req, res) => {
     res.json({ success: true, autonomyConfig: newAutonomyConfig });
   } catch (err: any) {
     console.error('Error updating autonomy config:', err);
-    res
-      .status(500)
-      .json({
-        error:
-          err?.message || 'Error al actualizar la configuración de autonomía.',
-      });
+    res.status(500).json({
+      error:
+        err?.message || 'Error al actualizar la configuración de autonomía.',
+    });
   }
 });
 
@@ -123,12 +121,10 @@ router.put('/autonomy', requireAuth, async (req, res) => {
     res.json({ success: true, autonomyConfig: newAutonomyConfig });
   } catch (err: any) {
     console.error('Error updating autonomy config:', err);
-    res
-      .status(500)
-      .json({
-        error:
-          err?.message || 'Error al actualizar la configuración de autonomía.',
-      });
+    res.status(500).json({
+      error:
+        err?.message || 'Error al actualizar la configuración de autonomía.',
+    });
   }
 });
 
@@ -202,11 +198,9 @@ router.put('/epk', requireAuth, async (req, res) => {
     res.json({ success: true, epkConfig: newEpkConfig });
   } catch (err: any) {
     console.error('Error updating EPK config:', err);
-    res
-      .status(500)
-      .json({
-        error: err?.message || 'Error al actualizar la configuración del EPK.',
-      });
+    res.status(500).json({
+      error: err?.message || 'Error al actualizar la configuración del EPK.',
+    });
   }
 });
 
@@ -232,11 +226,9 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
       (l) => l.code !== IDIOMA_ORIGEN
     ).map((l) => l.code);
     if (!idiomasDestino.includes(idioma as any)) {
-      return res
-        .status(400)
-        .json({
-          error: `Idioma no soportado: "${idioma}". Disponibles: ${idiomasDestino.join(', ')}.`,
-        });
+      return res.status(400).json({
+        error: `Idioma no soportado: "${idioma}". Disponibles: ${idiomasDestino.join(', ')}.`,
+      });
     }
     const nombreIdioma =
       EPK_LANGUAGES.find((l) => l.code === idioma)?.label || idioma;
@@ -259,12 +251,10 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
 
     const textos = recopilarTextosTraducibles(config);
     if (!hayAlgoQueTraducir(textos)) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'No hay contenido que traducir todavía: rellena al menos la biografía del EPK.',
-        });
+      return res.status(400).json({
+        error:
+          'No hay contenido que traducir todavía: rellena al menos la biografía del EPK.',
+      });
     }
 
     // Guardarraíl de coste: si el texto original no ha cambiado desde la última traducción, no
@@ -284,12 +274,10 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
 
     const ai = getAiClient();
     if (!ai) {
-      return res
-        .status(503)
-        .json({
-          error:
-            'No hay ninguna clave de IA configurada en el servidor (GEMINI_API_KEY).',
-        });
+      return res.status(503).json({
+        error:
+          'No hay ninguna clave de IA configurada en el servidor (GEMINI_API_KEY).',
+      });
     }
 
     const systemPrompt = [
@@ -337,12 +325,10 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
         '[EPK traducir] La IA no devolvió un JSON utilizable. Primeros 200 caracteres:',
         String(textoRespuesta).slice(0, 200)
       );
-      return res
-        .status(502)
-        .json({
-          error:
-            'La IA no devolvió una traducción válida. No se ha guardado nada; vuelve a intentarlo.',
-        });
+      return res.status(502).json({
+        error:
+          'La IA no devolvió una traducción válida. No se ha guardado nada; vuelve a intentarlo.',
+      });
     }
 
     const texto = (v: any): string => (typeof v === 'string' ? v : '');
@@ -412,12 +398,10 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
       Object.keys(videosTraducidos).length
     );
     if (!hayContenido) {
-      return res
-        .status(502)
-        .json({
-          error:
-            'La IA devolvió una traducción vacía. No se ha guardado nada; vuelve a intentarlo.',
-        });
+      return res.status(502).json({
+        error:
+          'La IA devolvió una traducción vacía. No se ha guardado nada; vuelve a intentarlo.',
+      });
     }
 
     const traduccionesActualizadas = {
@@ -850,20 +834,16 @@ router.post('/public/fans', async (req, res) => {
     }
 
     if (!nombre || !email) {
-      return res
-        .status(400)
-        .json({
-          error: 'Por favor, introduce tu nombre y correo electrónico.',
-        });
+      return res.status(400).json({
+        error: 'Por favor, introduce tu nombre y correo electrónico.',
+      });
     }
 
     if (!consentimientoRGPD) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'Es obligatorio aceptar la casilla de consentimiento de privacidad RGPD para registrarte.',
-        });
+      return res.status(400).json({
+        error:
+          'Es obligatorio aceptar la casilla de consentimiento de privacidad RGPD para registrarte.',
+      });
     }
 
     const defaultLevel =
@@ -1084,12 +1064,10 @@ router.post('/public/musicians-waitlist', async (req, res) => {
     } = req.body || {};
 
     if (!nombreBanda || !email) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'Por favor, indica al menos el nombre de la banda y el correo electrónico.',
-        });
+      return res.status(400).json({
+        error:
+          'Por favor, indica al menos el nombre de la banda y el correo electrónico.',
+      });
     }
 
     const waitlistItem = {

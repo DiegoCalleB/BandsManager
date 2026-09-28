@@ -589,14 +589,12 @@ router.post('/auth/register', async (req, res) => {
   });
 
   const { passwordHash, salt: _, ...safeUser } = userToUse;
-  res
-    .status(201)
-    .json({
-      token,
-      user: safeUser,
-      availableBands,
-      multipleBands: availableBands.length > 1,
-    });
+  res.status(201).json({
+    token,
+    user: safeUser,
+    availableBands,
+    multipleBands: availableBands.length > 1,
+  });
 });
 
 // Endpoint to fetch all registered bands from Supabase
@@ -693,11 +691,9 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
   const { email, username, name, password } = req.body;
 
   if (!email || !username || !name || !password) {
-    return res
-      .status(400)
-      .json({
-        error: 'Todos los campos son requeridos para activar tu cuenta.',
-      });
+    return res.status(400).json({
+      error: 'Todos los campos son requeridos para activar tu cuenta.',
+    });
   }
 
   const state = loadState();
@@ -732,11 +728,9 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
   );
 
   if (usernameTaken) {
-    return res
-      .status(400)
-      .json({
-        error: 'El nombre de usuario ya está registrado por otra persona.',
-      });
+    return res.status(400).json({
+      error: 'El nombre de usuario ya está registrado por otra persona.',
+    });
   }
 
   // Hash new password
@@ -1304,11 +1298,9 @@ router.post(
     );
 
     if (!user) {
-      return res
-        .status(404)
-        .json({
-          error: 'No se encontró ningún usuario con ese correo o usuario.',
-        });
+      return res.status(404).json({
+        error: 'No se encontró ningún usuario con ese correo o usuario.',
+      });
     }
 
     // Generate cryptographically secure 6 digit code
@@ -1401,11 +1393,9 @@ router.post(
     }
 
     if (newPassword.trim().length < 6) {
-      return res
-        .status(400)
-        .json({
-          error: 'La nueva contraseña debe tener al menos 6 caracteres.',
-        });
+      return res.status(400).json({
+        error: 'La nueva contraseña debe tener al menos 6 caracteres.',
+      });
     }
 
     const state = loadState();
@@ -1456,12 +1446,10 @@ router.post(
     );
 
     if (!validUser) {
-      return res
-        .status(400)
-        .json({
-          error:
-            'El código de verificación es incorrecto o ha caducado. Solicita un nuevo código.',
-        });
+      return res.status(400).json({
+        error:
+          'El código de verificación es incorrecto o ha caducado. Solicita un nuevo código.',
+      });
     }
 
     // Hash new password
@@ -1914,11 +1902,9 @@ router.post(
       const { passwordHash, salt, ...safeUser } = user;
       res.json({ success: true, user: safeUser, availableBands });
     } catch (err: any) {
-      res
-        .status(500)
-        .json({
-          error: err.message || 'Error al establecer la banda principal',
-        });
+      res.status(500).json({
+        error: err.message || 'Error al establecer la banda principal',
+      });
     }
   }
 );
@@ -2043,11 +2029,9 @@ router.post(
       res.json({ success: true, ui_preferences: updatedPrefs, user: safeUser });
     } catch (err: any) {
       console.error('Error saving ui-preferences:', err);
-      res
-        .status(500)
-        .json({
-          error: err.message || 'Error al guardar preferencias de usuario',
-        });
+      res.status(500).json({
+        error: err.message || 'Error al guardar preferencias de usuario',
+      });
     }
   }
 );
@@ -2157,11 +2141,9 @@ router.post(
       });
     } catch (err: any) {
       console.error('Error updating band logo:', err);
-      res
-        .status(500)
-        .json({
-          error: err.message || 'Error al actualizar el logotipo de la banda',
-        });
+      res.status(500).json({
+        error: err.message || 'Error al actualizar el logotipo de la banda',
+      });
     }
   }
 );
@@ -2557,11 +2539,9 @@ router.post(
 
       const targetBandId = (req as any).user?.band_id;
       if (!targetBandId) {
-        return res
-          .status(401)
-          .json({
-            error: 'Acceso no autorizado. Inicie sesión para continuar.',
-          });
+        return res.status(401).json({
+          error: 'Acceso no autorizado. Inicie sesión para continuar.',
+        });
       }
       const state = loadState();
       const cleanSearch = email.trim().toLowerCase();
@@ -2573,11 +2553,9 @@ router.post(
       );
 
       if (!targetUser) {
-        return res
-          .status(404)
-          .json({
-            error: 'No existe ningún usuario registrado con este email.',
-          });
+        return res.status(404).json({
+          error: 'No existe ningún usuario registrado con este email.',
+        });
       }
 
       if (!state.userBands) state.userBands = [];
@@ -2622,11 +2600,9 @@ router.post(
       res.status(201).json(safeUser);
     } catch (err: any) {
       console.error('Error in /users/associate:', err);
-      res
-        .status(500)
-        .json({
-          error: err?.message || 'Error al asociar el músico a la banda',
-        });
+      res.status(500).json({
+        error: err?.message || 'Error al asociar el músico a la banda',
+      });
     }
   }
 );
@@ -2680,11 +2656,9 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
     req.body;
 
   if (!username || !name || !password) {
-    return res
-      .status(400)
-      .json({
-        error: 'Nombre de usuario, nombre real y contraseña son requeridos',
-      });
+    return res.status(400).json({
+      error: 'Nombre de usuario, nombre real y contraseña son requeridos',
+    });
   }
 
   const state = loadState();
@@ -2798,11 +2772,9 @@ router.put('/users/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
   const loggedUser = (req as any).user;
   if (loggedUser.role !== 'leader' && loggedUser.id !== id) {
-    return res
-      .status(403)
-      .json({
-        error: 'Acceso denegado. Solo puedes modificar tu propia cuenta.',
-      });
+    return res.status(403).json({
+      error: 'Acceso denegado. Solo puedes modificar tu propia cuenta.',
+    });
   }
   const {
     name,
@@ -2870,12 +2842,10 @@ router.put('/users/:id', requireAuth, async (req, res) => {
     );
 
     if (!isPlatformAdmin && !isBandLeaderInUserBands && !isBandOwner) {
-      return res
-        .status(403)
-        .json({
-          error:
-            'Sólo el propietario o un líder de esa banda pueden cambiar su plan de suscripción.',
-        });
+      return res.status(403).json({
+        error:
+          'Sólo el propietario o un líder de esa banda pueden cambiar su plan de suscripción.',
+      });
     }
 
     if (targetBandId) {

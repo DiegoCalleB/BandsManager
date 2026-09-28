@@ -126,12 +126,10 @@ router.post('/templates/save', requireAuth, async (req, res) => {
     );
   } catch (error: any) {
     console.error('Error in POST /api/templates/save:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: 'Error al guardar las plantillas y pautas de IA.',
-      });
+    res.status(500).json({
+      success: false,
+      error: 'Error al guardar las plantillas y pautas de IA.',
+    });
   }
 });
 
@@ -230,12 +228,10 @@ INSTRUCCIONES CLAVE:
     });
   } catch (error: any) {
     console.error('Error in POST /api/templates/preview:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: error?.message || 'Error al generar vista previa del pitch.',
-      });
+    res.status(500).json({
+      success: false,
+      error: error?.message || 'Error al generar vista previa del pitch.',
+    });
   }
 });
 
@@ -316,11 +312,9 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
     });
   } catch (error: any) {
     console.error('Error in POST /api/templates/optimize:', error);
-    res
-      .status(500)
-      .json({
-        error: error?.message || 'Error al optimizar la plantilla con IA.',
-      });
+    res.status(500).json({
+      error: error?.message || 'Error al optimizar la plantilla con IA.',
+    });
   }
 });
 
@@ -376,12 +370,10 @@ ${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"
     });
   } catch (error: any) {
     console.error('Error in POST /api/templates/preview:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: error?.message || 'Error al simular la plantilla con IA.',
-      });
+    res.status(500).json({
+      success: false,
+      error: error?.message || 'Error al simular la plantilla con IA.',
+    });
   }
 });
 
@@ -519,12 +511,10 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
     res.json({ success: true, stats });
   } catch (error: any) {
     console.error('Error in GET /api/templates/stats:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: error?.message || 'Error al obtener estadísticas.',
-      });
+    res.status(500).json({
+      success: false,
+      error: error?.message || 'Error al obtener estadísticas.',
+    });
   }
 });
 
@@ -558,12 +548,10 @@ router.post('/templates/reset', requireAuth, async (req, res) => {
     });
   } catch (error: any) {
     console.error('Error in POST /api/templates/reset:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: error?.message || 'Error al resetear plantilla.',
-      });
+    res.status(500).json({
+      success: false,
+      error: error?.message || 'Error al resetear plantilla.',
+    });
   }
 });
 
