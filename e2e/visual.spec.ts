@@ -275,7 +275,8 @@ test.describe('regresión visual — móvil', () => {
   test('modal añadir widget cubre el viewport y no lo tapa nada', async ({ page }) => {
     await abrirApp(page, true);
 
-    await page.getByText('Personalizar Dashboard').click();
+    await page.locator('#dashboard-settings-gear-btn').click();
+    await page.getByText('Personalizar / Reordenar').click();
     await page.getByText('Añadir Widget').click();
 
     const cerrar = page.getByRole('button', { name: 'Cerrar' });
