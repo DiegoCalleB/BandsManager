@@ -1,0 +1,2 @@
+*.ts merge=prettier
+*.tsx merge=prettier
