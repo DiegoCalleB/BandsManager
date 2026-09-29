@@ -512,8 +512,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <div>
               <label className={labelClass}>Expresiones reales suyas (una por línea)</label>
               <textarea
-                rows={3}
-                className={inputClass}
+                rows={5}
+                className={`${inputClass} min-h-[110px] resize-y`}
                 value={draft.frases_emblematicas_extraidas}
                 onChange={(e) => setDraft({ ...draft, frases_emblematicas_extraidas: e.target.value })}
                 placeholder={'nos vemos en las trincheras\naúpa familia'}
@@ -523,8 +523,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <div>
               <label className={labelClass}>Punto de Conexión</label>
               <textarea
-                rows={2}
-                className={inputClass}
+                rows={4}
+                className={`${inputClass} min-h-[90px] resize-y`}
                 value={draft.puntos_fuertes_para_conectar}
                 onChange={(e) => setDraft({ ...draft, puntos_fuertes_para_conectar: e.target.value })}
               />
@@ -533,8 +533,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <div>
               <label className={labelClass}>Recomendación de Contacto</label>
               <textarea
-                rows={2}
-                className={inputClass}
+                rows={4}
+                className={`${inputClass} min-h-[90px] resize-y`}
                 value={draft.recomendacion_pitch}
                 onChange={(e) => setDraft({ ...draft, recomendacion_pitch: e.target.value })}
               />

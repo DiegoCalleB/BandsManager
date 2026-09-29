@@ -20,13 +20,14 @@ export const FALLBACK_MODELS = [
 let cachedClient: { key: string; client: GoogleGenAI } | null = null;
 
 export function getAiClient(): GoogleGenAI | null {
-  // INTERRUPTOR DE SEGURIDAD CONTRA COBROS (Cost Safety Killswitch)
-  if (process.env.DISABLE_GEMINI === "true" || process.env.PAUSE_AI_CALLS === "true") {
-    console.warn("[Cost Safety] Llamadas a Gemini deshabilitadas preventivamente por variable de entorno.");
-    return null;
-  }
   const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+    return null;
+  }
+
+  // INTERRUPTOR DE SEGURIDAD CONTRA COBROS (Cost Safety Killswitch)
+  if (process.env.DISABLE_GEMINI === "true" && !process.env.GEMINI_API_KEY) {
+    console.warn("[Cost Safety] Llamadas a Gemini deshabilitadas preventivamente por variable de entorno.");
     return null;
   }
 

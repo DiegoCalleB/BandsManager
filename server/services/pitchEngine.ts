@@ -16,6 +16,7 @@ import {
   sanitizeExternalText,
   auditPitchQuality,
   sanitizePitchDeterministically,
+  sanitizeAgentOutput,
   PitchQualityAudit,
   getRecommendedWordRange
 } from "../utils/promptSafety.js";
@@ -544,9 +545,10 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
   }
 
   /**
-   * Sanea determinísticamente un texto sin costes de LLM
+   * Sanea determinísticamente un texto aplicando guardrails de seguridad (Anti-XSS, PII, anti-IA)
    */
   static sanitizePitch(text: string): string {
-    return sanitizePitchDeterministically(text);
+    const safeResult = sanitizeAgentOutput(text);
+    return sanitizePitchDeterministically(safeResult.cleanedText);
   }
 }

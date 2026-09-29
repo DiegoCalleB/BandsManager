@@ -32,15 +32,27 @@ export async function dbUpsertSocialPost(post: any, bandId: string) {
     }
   }
 
-  const payload = {
+  const payload: any = {
     id: finalPostId || `post-${Date.now()}`,
     band_id: targetBandId,
     fecha: post.fecha || new Date().toISOString().split("T")[0],
-    plataforma: post.plataforma || "instagram",
+    plataforma: post.plataforma || "Instagram",
     contenido: post.contenido || "",
     estado: post.estado || "borrador",
     responsable: post.responsable || ""
   };
+
+  if (post.hora_programada !== undefined) payload.hora_programada = post.hora_programada;
+  if (post.video_url !== undefined) payload.video_url = post.video_url;
+  if (post.thumbnail_url !== undefined) payload.thumbnail_url = post.thumbnail_url;
+  if (post.media_type !== undefined) payload.media_type = post.media_type;
+  if (post.auto_publish !== undefined) payload.auto_publish = Boolean(post.auto_publish);
+  if (post.published_id !== undefined) payload.published_id = post.published_id;
+  if (post.published_at !== undefined) payload.published_at = post.published_at;
+  if (post.publish_error !== undefined) payload.publish_error = post.publish_error;
+  if (post.account_handle !== undefined) payload.account_handle = post.account_handle;
+  if (post.hashtags !== undefined) payload.hashtags = post.hashtags;
+  if (post.metrics !== undefined) payload.metrics = post.metrics;
 
   const { data, error } = await sb.from("social_posts").upsert(payload).select().single();
   if (error) throw new Error(`Supabase Error (upsert social_posts): ${error.message}`);
@@ -52,6 +64,73 @@ export async function dbDeleteSocialPost(id: string, bandId: string) {
   const { error } = await sb.from("social_posts").delete().eq("id", id).eq("band_id", cleanBandId(bandId));
   if (error) throw new Error(`Supabase Error (delete social_posts): ${error.message}`);
   return true;
+}
+
+// --- BAND SOCIAL ACCOUNTS (OAuth / Conexión de redes oficiales) ---
+export async function dbGetBandSocialAccounts(bandId: string) {
+  const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
+  try {
+    const { data, error } = await sb
+      .from("band_social_accounts")
+      .select("*")
+      .eq("band_id", cleanId)
+      .order("connected_at", { ascending: false });
+
+    if (error) {
+      console.warn(`[Social DB] band_social_accounts table check: ${error.message}`);
+      return [];
+    }
+    return (data || []).filter((a: any) => cleanBandId(a.band_id) === cleanId);
+  } catch (err: any) {
+    console.warn(`[Social DB] Error getting social accounts: ${err.message}`);
+    return [];
+  }
+}
+
+export async function dbUpsertBandSocialAccount(account: any, bandId: string) {
+  const sb = getSupabase();
+  const targetBandId = cleanBandId(bandId);
+  await ensureRegisteredBandExists(targetBandId);
+
+  const payload = {
+    id: account.id || `soc-acc-${targetBandId}-${account.plataforma?.toLowerCase()}-${Date.now()}`,
+    band_id: targetBandId,
+    plataforma: account.plataforma || "Instagram",
+    handle: account.handle || "",
+    account_name: account.account_name || account.handle || "",
+    avatar_url: account.avatar_url || "",
+    status: account.status || "conectado",
+    auto_publish_enabled: account.auto_publish_enabled !== false,
+    connected_at: account.connected_at || new Date().toISOString(),
+    last_sync_at: new Date().toISOString(),
+    followers_count: Number(account.followers_count || 0),
+    total_views: Number(account.total_views || 0),
+    account_id: account.account_id || `acc-${Date.now()}`
+  };
+
+  try {
+    const { data, error } = await sb.from("band_social_accounts").upsert(payload).select().single();
+    if (error) {
+      console.warn(`[Social DB] Warning upserting to band_social_accounts: ${error.message}`);
+      return payload;
+    }
+    return data;
+  } catch (err: any) {
+    console.warn(`[Social DB] Fallback returning payload for band_social_accounts: ${err.message}`);
+    return payload;
+  }
+}
+
+export async function dbDeleteBandSocialAccount(id: string, bandId: string) {
+  const sb = getSupabase();
+  try {
+    const { error } = await sb.from("band_social_accounts").delete().eq("id", id).eq("band_id", cleanBandId(bandId));
+    if (error) console.warn(`[Social DB] Delete band_social_accounts warning: ${error.message}`);
+    return true;
+  } catch {
+    return true;
+  }
 }
 
 // --- PAYMENTS ---

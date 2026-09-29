@@ -77,6 +77,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   });
 
   const [bandToDelete, setBandToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [selectedBandForSettings, setSelectedBandForSettings] = useState<{
+    band_id: string;
+    bandName: string;
+    role?: string;
+    logoUrl?: string;
+    plan?: string;
+  } | null>(null);
 
   const mainBandId = currentUser?.main_band_id || currentUser?.band_id || '';
   const [localMainBandId, setLocalMainBandId] = useState<string>(mainBandId);
@@ -608,26 +615,20 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       </div>
                     </div>
 
-                    {/* Top Right: Manage Team (Gear) + Delete Button (Trash) */}
+                    {/* Top Right: Manage Settings & Logo (Gear) + Delete Button (Trash) */}
                     <div className="flex items-center gap-1 z-30 shrink-0">
-                      {onOpenBandManagement && (
-                        <button
-                          type="button"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            if (!isActive && onSwitchBand) {
-                              await onSwitchBand(band.band_id);
-                            }
-                            onClose();
-                            onOpenBandManagement(band.band_id);
-                          }}
-                          className="p-1 sm:p-1.5 rounded-lg text-neutral-400 hover:text-amber-300 bg-black/60 hover:bg-neutral-800 border border-neutral-700/80 hover:border-amber-500/60 transition-all cursor-pointer shadow-xs"
-                          title="Gestionar músicos e integrantes"
-                        >
-                          <Settings className="w-3.5 h-3.5" />
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          setSelectedBandForSettings(band);
+                        }}
+                        className="p-1 sm:p-1.5 rounded-lg text-neutral-400 hover:text-amber-300 bg-black/60 hover:bg-neutral-800 border border-neutral-700/80 hover:border-amber-500/60 transition-all cursor-pointer shadow-xs"
+                        title={`Ajustes mínimos y logotipo de ${band.bandName}`}
+                      >
+                        <Settings className="w-3.5 h-3.5" />
+                      </button>
 
                       <button
                         type="button"
@@ -645,8 +646,8 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Central Logo Avatar with Quick Upload Hover */}
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-neutral-950 border border-[#333130] group-hover:border-amber-400/60 transition-all flex items-center justify-center p-2 shadow-inner my-1 shrink-0 group/avatar">
+                  {/* Central Logo Avatar */}
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-neutral-950 border border-[#333130] group-hover:border-amber-400/60 transition-all flex items-center justify-center p-2 shadow-inner my-1 shrink-0">
                     {band.logoUrl && !failedLogos.has(band.band_id) ? (
                       <img
                         src={band.logoUrl}
@@ -664,37 +665,12 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       </div>
                     )}
 
-                    {/* Quick Logo Upload Button on Hover */}
-                    <label
-                      onClick={(e) => e.stopPropagation()}
-                      className="absolute inset-0 bg-black/70 backdrop-blur-xs opacity-0 group-hover/avatar:opacity-100 flex flex-col items-center justify-center text-amber-300 transition-opacity cursor-pointer z-20 gap-0.5"
-                      title="Haz clic para cambiar el logotipo de esta banda"
-                    >
-                      <Upload className="w-4 h-4 text-amber-400 animate-bounce" />
-                      <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-amber-200">
-                        {uploadingBandId === band.band_id ? 'Subiendo...' : 'Logo'}
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        disabled={uploadingBandId === band.band_id}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleUploadLogo(band.band_id, file);
-                          }
-                          e.target.value = '';
-                        }}
-                      />
-                    </label>
-
                     {/* Loading Spinner Overlay */}
-                    {(isSwitching || isSettingMain || isLeavingThis || uploadingBandId === band.band_id) && (
+                    {(isSwitching || isSettingMain || isLeavingThis) && (
                       <div className="absolute inset-0 bg-black/85 backdrop-blur-xs flex flex-col items-center justify-center text-amber-400 gap-1 z-30">
                         <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
                         <span className="text-[9px] font-mono text-amber-300 uppercase font-bold">
-                          {uploadingBandId === band.band_id ? 'Subiendo' : isSettingMain ? 'Guardando' : isLeavingThis ? 'Eliminando' : 'Cambiando'}
+                          {isSettingMain ? 'Guardando' : isLeavingThis ? 'Eliminando' : 'Cambiando'}
                         </span>
                       </div>
                     )}
@@ -789,6 +765,150 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Band Minimal Settings & Logo Modal (Gear Icon) */}
+      {selectedBandForSettings && (
+        <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto">
+          <div className="w-full max-w-md rounded-3xl border border-amber-500/30 bg-[#11100f] text-neutral-100 p-6 sm:p-7 shadow-2xl space-y-5 my-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-[#2b2927] pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <Settings className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base text-white font-display tracking-wide truncate max-w-[200px] sm:max-w-xs" title={selectedBandForSettings.bandName}>
+                    Ajustes de {selectedBandForSettings.bandName}
+                  </h3>
+                  <p className="text-[11px] text-amber-400/80 font-mono">Configuración básica y logotipo</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedBandForSettings(null)}
+                className="p-1.5 rounded-xl text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Logo Upload Section */}
+            <div className="space-y-3 bg-[#181716] border border-[#2b2927] p-4 rounded-2xl">
+              <label className="text-xs font-mono font-semibold text-neutral-300 flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-amber-400" />
+                <span>Logotipo Oficial de la Banda</span>
+              </label>
+
+              <div className="flex items-center gap-4 pt-1">
+                {/* Logo Preview */}
+                <div className="relative w-20 h-20 rounded-2xl bg-black/80 border border-neutral-700 overflow-hidden flex items-center justify-center shrink-0 p-2 shadow-inner">
+                  {(() => {
+                    const clean = cleanBandId(selectedBandForSettings.band_id);
+                    const currentLogo = customLogos[clean] || selectedBandForSettings.logoUrl;
+                    if (currentLogo && !failedLogos.has(selectedBandForSettings.band_id)) {
+                      return (
+                        <img
+                          src={currentLogo}
+                          alt={selectedBandForSettings.bandName}
+                          onError={() => setFailedLogos(prev => new Set(prev).add(selectedBandForSettings.band_id))}
+                          className="w-full h-full object-contain filter drop-shadow-sm"
+                          referrerPolicy="no-referrer"
+                        />
+                      );
+                    }
+                    return (
+                      <div className="flex flex-col items-center justify-center text-amber-400 gap-0.5">
+                        <Guitar className="w-6 h-6 opacity-80" />
+                        <span className="text-[9px] font-black font-mono text-zinc-300">
+                          {selectedBandForSettings.bandName.slice(0, 2).toUpperCase()}
+                        </span>
+                      </div>
+                    );
+                  })()}
+
+                  {uploadingBandId === selectedBandForSettings.band_id && (
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex flex-col items-center justify-center text-amber-400 gap-1">
+                      <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
+                      <span className="text-[8px] font-mono text-amber-300 uppercase">Subiendo</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Upload Button */}
+                <div className="flex-1 space-y-2">
+                  <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 text-xs font-bold transition-all shadow-md cursor-pointer active:scale-95">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingBandId === selectedBandForSettings.band_id ? 'Guardando...' : 'Subir Imagen de Logo'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingBandId === selectedBandForSettings.band_id}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          await handleUploadLogo(selectedBandForSettings.band_id, file);
+                        }
+                      }}
+                    />
+                  </label>
+                  <p className="text-[10px] text-neutral-400 font-sans leading-tight">
+                    PNG, JPG, SVG o WebP. Fondo transparente recomendado.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Band Info */}
+            <div className="bg-[#181716] border border-[#2b2927] p-4 rounded-2xl text-xs space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 font-mono">Nombre del Proyecto:</span>
+                <span className="font-bold text-white uppercase">{selectedBandForSettings.bandName}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 font-mono">Plan Actual:</span>
+                <span className="font-mono font-semibold px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] uppercase">
+                  {selectedBandForSettings.plan || 'Emergente'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 font-mono">ID de Banda:</span>
+                <span className="font-mono text-[10px] text-neutral-500 truncate max-w-[160px]">{cleanBandId(selectedBandForSettings.band_id)}</span>
+              </div>
+            </div>
+
+            {/* Actions: Team Management + Close */}
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-2 border-t border-[#2b2927]">
+              {onOpenBandManagement && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const bId = selectedBandForSettings.band_id;
+                    setSelectedBandForSettings(null);
+                    if (!isSameBandId(bId, currentActiveBandId) && onSwitchBand) {
+                      await onSwitchBand(bId);
+                    }
+                    onClose();
+                    onOpenBandManagement(bId);
+                  }}
+                  className="w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold flex items-center justify-center gap-2 border border-neutral-700 transition-colors cursor-pointer"
+                >
+                  <Users className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Gestionar Músicos</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setSelectedBandForSettings(null)}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#1e1d1b] hover:bg-[#282624] text-neutral-300 text-xs font-medium border border-[#333130] transition-colors cursor-pointer"
+              >
+                Listo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* In-App Create / Add Band Modal with Full 2-Step Flow & Plans */}
       {showCreateBandModal && (

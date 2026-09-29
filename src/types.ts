@@ -788,10 +788,42 @@ export interface SocialPost {
   id: string;
   band_id?: string;
   fecha: string;
+  hora_programada?: string;
   plataforma: 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook';
   contenido: string;
-  estado: 'borrador' | 'aprobado' | 'publicado';
+  estado: 'borrador' | 'aprobado' | 'en_cola' | 'publicando' | 'publicado' | 'fallido';
   responsable: string;
+  video_url?: string;
+  thumbnail_url?: string;
+  media_type?: 'reel' | 'short' | 'video' | 'post' | 'story';
+  auto_publish?: boolean;
+  published_id?: string;
+  published_at?: string;
+  publish_error?: string;
+  account_handle?: string;
+  hashtags?: string[];
+  metrics?: {
+    views?: number;
+    likes?: number;
+    comments?: number;
+    shares?: number;
+  };
+}
+
+export interface BandSocialAccount {
+  id: string;
+  band_id?: string;
+  plataforma: 'Instagram' | 'TikTok' | 'YouTube';
+  handle: string;
+  account_name: string;
+  avatar_url?: string;
+  status: 'conectado' | 'desconectado' | 'expirado';
+  auto_publish_enabled: boolean;
+  connected_at: string;
+  last_sync_at?: string;
+  followers_count?: number;
+  total_views?: number;
+  account_id?: string;
 }
 
 export interface Payment {

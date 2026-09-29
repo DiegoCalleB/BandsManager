@@ -2676,10 +2676,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             {isEditingPitch ? (
               <div className="space-y-2">
                 <textarea
-                  rows={6}
+                  rows={10}
                   value={editedPitch}
                   onChange={(e) => setEditedPitch(e.target.value)}
-                  className="w-full p-3 bg-black/60 rounded-xl border border-amber-500/50 text-xs text-zinc-100 font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  className="w-full p-3 bg-black/60 rounded-xl border border-amber-500/50 text-xs text-zinc-100 font-sans focus:outline-none focus:ring-1 focus:ring-amber-400 min-h-[180px] resize-y"
                 />
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[10px] text-zinc-500 font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa 'Regenerar' con estrellas/comentario y marca 'Solo para esta sala' en vez de editar aquí.">
@@ -2795,11 +2795,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span>Sugerencias o comentarios para mejorar este pitch:</span>
                 </label>
                 <textarea
-                  rows={2}
+                  rows={4}
                   value={feedbackComment}
                   onChange={(e) => setFeedbackComment(e.target.value)}
                   placeholder="Ej: 'Menciona que tocamos en el Viña Rock', 'Hazlo más corto y directo', 'Insiste en fecha para un sábado'..."
-                  className="w-full p-2.5 bg-black/60 rounded-lg border border-zinc-700/80 text-xs text-zinc-200 placeholder-zinc-500 font-sans focus:outline-none focus:border-amber-400"
+                  className="w-full p-2.5 bg-black/60 rounded-lg border border-zinc-700/80 text-xs text-zinc-200 placeholder-zinc-500 font-sans focus:outline-none focus:border-amber-400 min-h-[90px] resize-y"
                 />
               </div>
 
@@ -4208,12 +4208,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Notes textarea */}
             <textarea
-              rows={2}
+              rows={4}
               required
               value={interactionNotes}
               onChange={(e) => setInteractionNotes(e.target.value)}
               placeholder="Ej: Hablé con Carlos por WhatsApp. Pide propuesta de fechas para Noviembre..."
-              className="w-full bg-black/50 rounded-lg p-2.5 text-xs text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#eab308]/50 resize-none font-sans"
+              className="w-full bg-black/50 rounded-lg p-2.5 text-xs text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#eab308]/50 resize-y min-h-[90px] font-sans"
             />
 
             <button

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from 'lucide-react';
+import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2, Upload, ImageIcon, Loader2 } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { ModalPortal } from './common/ModalPortal';
 import { STEM_INSTRUMENT_CATEGORIES, NON_STEM_ROLES } from '../config/stemInstruments';
+import { uploadFileToServer } from '../utils/audioStorage';
 
 interface UserManagementModalProps {
  currentUser: User;
@@ -10,6 +11,11 @@ interface UserManagementModalProps {
  onClose: () => void;
  onRefreshUsers: () => void;
  isStitchLight?: boolean;
+ bandId?: string;
+ bandName?: string;
+ bandLogoUrl?: string;
+ onRefreshData?: () => void;
+ onUpdateLogo?: (newUrl: string) => void;
 }
 
 export const UserManagementModal: React.FC<UserManagementModalProps> = ({
@@ -17,9 +23,64 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  users,
  onClose,
  onRefreshUsers,
- isStitchLight
+ isStitchLight,
+ bandId,
+ bandName,
+ bandLogoUrl,
+ onRefreshData,
+ onUpdateLogo
 }) => {
- const [activeTab, setActiveTab] = useState<'list' | 'create' | 'associate'>('list');
+ const [activeTab, setActiveTab] = useState<'band_info' | 'list' | 'create' | 'associate'>('list');
+ const targetBandId = bandId || currentUser.band_id || '';
+ const [localLogo, setLocalLogo] = useState<string>(bandLogoUrl || '');
+ const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+ useEffect(() => {
+   if (bandLogoUrl) {
+     setLocalLogo(bandLogoUrl);
+   }
+ }, [bandLogoUrl]);
+
+ const handleUploadLogoLocal = async (file: File) => {
+   setIsUploadingLogo(true);
+   setError(null);
+   setSuccessMsg(null);
+   try {
+     const uploadedUrl = await uploadFileToServer(file, { bandId: targetBandId, category: 'logo' });
+     const authHeaders = getHeaders();
+     const res = await fetch('/api/users/upload-logo', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         ...authHeaders,
+         'x-band-id': targetBandId
+       },
+       body: JSON.stringify({
+         bandId: targetBandId,
+         logoUrl: uploadedUrl
+       })
+     });
+
+     if (!res.ok) {
+       const data = await res.json().catch(() => ({}));
+       throw new Error(data.error || 'Error al guardar el logotipo');
+     }
+
+     setLocalLogo(uploadedUrl);
+     if (onUpdateLogo) {
+       onUpdateLogo(uploadedUrl);
+     }
+     if (onRefreshData) {
+       onRefreshData();
+     }
+     setSuccessMsg('¡Logotipo de la banda actualizado con éxito!');
+   } catch (err: any) {
+     console.error('Error uploading logo in UserManagementModal:', err);
+     setError(err.message || 'Error al subir el logo');
+   } finally {
+     setIsUploadingLogo(false);
+   }
+ };
  
  // New user form state
  const [newUsername, setNewUsername] = useState('');
@@ -293,15 +354,26 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
 
  {/* Tab Selection */}
- <div className={`px-6 pt-3 flex gap-2 ${
+ <div className={`px-6 pt-3 flex gap-2 overflow-x-auto ${
  isStitchLight ? '-slate-200 bg-slate-50/50' : '-neutral-800/80 bg-neutral-900/40'
  }`}>
  <button
+   onClick={() => { setActiveTab('band_info'); setError(null); setSuccessMsg(null); }}
+   className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
+     activeTab === 'band_info'
+       ? 'text-amber-400 border-b-2 border-amber-400'
+       : 'text-neutral-400 hover:text-neutral-200'
+   }`}
+ >
+   <ImageIcon className="w-3.5 h-3.5" />
+   <span>Info & Logo de Banda</span>
+ </button>
+ <button
  onClick={() => { setActiveTab('list'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+ className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
  activeTab === 'list'
- ? '-indigo-400 text-indigo-400'
- : '-transparent text-neutral-400 hover:text-neutral-200'
+ ? 'text-indigo-400 border-b-2 border-indigo-400'
+ : 'text-neutral-400 hover:text-neutral-200'
  }`}
  >
  <Users className="w-3.5 h-3.5" />
@@ -309,10 +381,10 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </button>
  <button
  onClick={() => { setActiveTab('create'); setError(null); setSuccessMsg(null); }}
- className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+ className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
  activeTab === 'create'
- ? '-indigo-400 text-indigo-400'
- : '-transparent text-neutral-400 hover:text-neutral-200'
+ ? 'text-indigo-400 border-b-2 border-indigo-400'
+ : 'text-neutral-400 hover:text-neutral-200'
  }`}
  >
  <UserPlus className="w-3.5 h-3.5" />
@@ -320,14 +392,14 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
   </button>
   <button
     onClick={() => { setActiveTab('associate'); setError(null); setSuccessMsg(null); }}
-    className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+    className={`px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
       activeTab === 'associate'
-        ? 'text-indigo-400 border-b border-indigo-400'
+        ? 'text-indigo-400 border-b-2 border-indigo-400'
         : 'text-neutral-400 hover:text-neutral-200'
     }`}
   >
     <Link2 className="w-3.5 h-3.5" />
-    <span>Asociar Músico Existente</span>
+    <span>Asociar Músico</span>
  </button>
  </div>
 
@@ -349,7 +421,88 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
  {/* Tab Body */}
  <div className="p-6 overflow-y-auto flex-1 space-y-4">
- {activeTab === 'list' ? (
+ {activeTab === 'band_info' ? (
+   <div className="space-y-5 animate-in fade-in duration-200">
+     {/* Band Logo Section */}
+     <div className="p-5 rounded-2xl bg-neutral-950/70 border border-neutral-800 space-y-4 shadow-inner">
+       <div>
+         <h4 className="font-bold text-sm text-white flex items-center gap-2">
+           <ImageIcon className="w-4 h-4 text-amber-400" />
+           <span>Logotipo Oficial de la Banda</span>
+         </h4>
+         <p className="text-[11px] text-neutral-400 mt-0.5">
+           Este logo se muestra en el selector de proyectos, tu Dossier EPK y encabezados.
+         </p>
+       </div>
+
+       <div className="flex flex-col sm:flex-row items-center gap-5 pt-2">
+         {/* Logo Box */}
+         <div className="relative w-24 h-24 rounded-2xl bg-black/90 border border-neutral-700 flex items-center justify-center p-2.5 overflow-hidden shadow-md shrink-0">
+           {localLogo ? (
+             <img
+               src={localLogo}
+               alt={bandName || currentUser.bandName || 'Logo de la banda'}
+               className="w-full h-full object-contain filter drop-shadow-md"
+               referrerPolicy="no-referrer"
+             />
+           ) : (
+             <div className="flex flex-col items-center justify-center text-amber-400 gap-1">
+               <Music className="w-8 h-8 opacity-70" />
+               <span className="text-[10px] font-black font-mono text-zinc-400 uppercase">Sin Logo</span>
+             </div>
+           )}
+
+           {isUploadingLogo && (
+             <div className="absolute inset-0 bg-black/85 backdrop-blur-xs flex flex-col items-center justify-center text-amber-400 gap-1.5 z-20">
+               <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+               <span className="text-[9px] font-mono text-amber-300 font-bold uppercase">Subiendo</span>
+             </div>
+           )}
+         </div>
+
+         {/* Upload Action */}
+         <div className="flex-1 space-y-2.5 text-center sm:text-left">
+           <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs transition-all shadow-md cursor-pointer active:scale-98">
+             <Upload className="w-4 h-4" />
+             <span>{isUploadingLogo ? 'Guardando logotipo...' : 'Subir o Cambiar Logo'}</span>
+             <input
+               type="file"
+               accept="image/*"
+               className="hidden"
+               disabled={isUploadingLogo}
+               onChange={async (e) => {
+                 const file = e.target.files?.[0];
+                 if (file) {
+                   await handleUploadLogoLocal(file);
+                 }
+               }}
+             />
+           </label>
+           <p className="text-[11px] text-neutral-400 leading-relaxed font-sans">
+             Formatos soportados: PNG, JPG, WebP o SVG. Se recomienda fondo transparente.
+           </p>
+         </div>
+       </div>
+     </div>
+
+     {/* Band Basic Info */}
+     <div className="p-4 rounded-2xl bg-neutral-950/60 border border-neutral-800 text-xs space-y-3">
+       <h4 className="font-bold text-xs font-mono uppercase tracking-wider text-amber-400/90">
+         Detalles del Proyecto
+       </h4>
+       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+         <div className="p-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800">
+           <span className="text-neutral-400 block text-[10px] font-mono uppercase">Nombre de la Banda</span>
+           <span className="font-bold text-white text-sm">{bandName || currentUser.bandName || 'Mi Banda'}</span>
+         </div>
+         <div className="p-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800">
+           <span className="text-neutral-400 block text-[10px] font-mono uppercase">Total de Músicos</span>
+           <span className="font-bold text-white text-sm">{users.length} miembros registrados</span>
+         </div>
+       </div>
+     </div>
+   </div>
+ ) : activeTab === 'list' ? (
  <div className="space-y-3">
  {users.map((u) => {
  const isLeader = u.role === 'leader';

@@ -17,6 +17,9 @@ export interface HighlightClip {
   confidence?: number;
   energyLevel?: string;
   recommendedCopy?: string;
+  copyViral?: string;
+  copyComunidad?: string;
+  copyConversion?: string;
   hashtags?: string[];
   /** Segundos exactos que devuelve el backend, ya recortados a la duración real del vídeo. */
   startSec?: number;
@@ -28,6 +31,13 @@ export interface HighlightClip {
   copyYouTube?: string;
   copyFacebook?: string;
   cta?: string;
+  lengthCategory?: 'micro_hook' | 'hit_moment' | 'story_bts';
+}
+
+export interface SubtitleCue {
+  start: number;
+  end: number;
+  text: string;
 }
 
 export interface OptimalTime {
@@ -35,6 +45,33 @@ export interface OptimalTime {
   date: string;
   time: string;
   reason: string;
+}
+
+/**
+ * Parses time range string like "01:15 - 01:45" or "01:15-01:45" into start, end, duration numbers
+ */
+export function parseRangeTimes(rangeStr?: string): { start: number; end: number; duration: number } {
+  if (!rangeStr) return { start: 0, end: 0, duration: 0 };
+  const parts = rangeStr.split('-').map(p => p.trim());
+  if (parts.length < 2) return { start: 0, end: 0, duration: 0 };
+
+  const parsePart = (p: string) => {
+    const sub = p.split(':').map(Number);
+    if (sub.length === 2) return (sub[0] || 0) * 60 + (sub[1] || 0);
+    if (sub.length === 3) return (sub[0] || 0) * 3600 + (sub[1] || 0) * 60 + (sub[2] || 0);
+    return Number(p) || 0;
+  };
+
+  const start = parsePart(parts[0]);
+  const end = parsePart(parts[1]);
+  const duration = Math.max(0, end - start);
+  return { start, end, duration };
+}
+
+export function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
 /**

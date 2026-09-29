@@ -15,35 +15,198 @@ interface VenueMapProps {
  activeRegionFilter?: string;
 }
 
-// Available map tile presets for best clarity & readability
-type MapStyleKey = 'voyager' | 'satellite' | 'osm' | 'positron' | 'dark';
+// Available map tile presets for best clarity & readability (100% Free & No API Key Required)
+type MapStyleKey = 'streets' | 'osm' | 'satellite' | 'positron' | 'dark';
 
 const MAP_STYLES: Record<MapStyleKey, { name: string; url: string; attr: string }> = {
- voyager: {
- name: '🗺️ Google / Callejero Claro (Recomendado)',
- url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
- attr: '&copy; OpenStreetMap &copy; CARTO'
- },
- satellite: {
- name: '🛰️ Satélite Híbrido (Estilo Google Maps)',
- url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
- attr: '&copy; Esri World Imagery'
- },
- osm: {
- name: '🏙️ OpenStreetMap Detallado',
- url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
- attr: '&copy; OpenStreetMap'
- },
- positron: {
- name: '⚪ Gris Minimalista',
- url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
- attr: '&copy; CARTO'
- },
- dark: {
- name: '🌙 Oscuro Nocturno',
- url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
- attr: '&copy; CARTO'
- }
+  streets: {
+    name: '🗺️ Callejero Claro (Recomendado)',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri &mdash; OpenStreetMap contributors'
+  },
+  osm: {
+    name: '🏙️ OpenStreetMap Detallado',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attr: '&copy; OpenStreetMap contributors'
+  },
+  satellite: {
+    name: '🛰️ Satélite Híbrido (Estilo Google Maps)',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri World Imagery'
+  },
+  positron: {
+    name: '⚪ Gris Minimalista',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri &mdash; Light Gray Canvas'
+  },
+  dark: {
+    name: '🌙 Oscuro Nocturno',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri &mdash; Dark Gray Canvas'
+  }
+};
+
+// Pre-loaded coordinates dictionary for Iconic Spanish Venues & Concert Halls
+const KNOWN_VENUES_GEO: Record<string, [number, number]> = {
+  // Madrid & alrededores
+  'revilive': [40.4005, -3.5973], // C. los Cavilas, 4, Vicálvaro, 28052 Madrid
+  'revi live': [40.4005, -3.5973],
+  'revirock': [40.4005, -3.5973],
+  'revi rock': [40.4005, -3.5973],
+  'la riviera': [40.4147, -3.7258],
+  'wizink': [40.4239, -3.6717],
+  'wizink center': [40.4239, -3.6717],
+  'palacio de deportes': [40.4239, -3.6717],
+  'ochoymedio': [40.4267, -3.6998],
+  'sala but': [40.4267, -3.6998],
+  'sala el sol': [40.4194, -3.7013],
+  'el sol': [40.4194, -3.7013],
+  'sala copernico': [40.4371, -3.7153],
+  'copernico': [40.4371, -3.7153],
+  'sala mon': [40.4385, -3.7145],
+  'mon live': [40.4385, -3.7145],
+  'sala nazca': [40.4502, -3.6961],
+  'nazca live': [40.4502, -3.6961],
+  'gruta 77': [40.38703, -3.72512], // C. Cuclillo, 6, Carabanchel, 28019 Madrid
+  'gruta77': [40.38703, -3.72512],
+  'gruta 7': [40.38703, -3.72512],
+  'gruta7': [40.38703, -3.72512],
+  'shoko': [40.4093, -3.7118],
+  'shôko': [40.4093, -3.7118],
+  'shoko madrid': [40.4093, -3.7118],
+  'shôko madrid': [40.4093, -3.7118],
+  'independance': [40.4097, -3.6965],
+  'independance club': [40.4097, -3.6965],
+  'moby dick': [40.4552, -3.6923],
+  'moby dick club': [40.4552, -3.6923],
+  'siroco': [40.4285, -3.7061],
+  'cafe la palma': [40.4276, -3.7051],
+  'café la palma': [40.4276, -3.7051],
+  'cafe central': [40.4137, -3.7020],
+  'cafe berlin': [40.4206, -3.7082],
+  'café berlín': [40.4206, -3.7082],
+  'clamores': [40.4308, -3.7011],
+  'sala clamores': [40.4308, -3.7011],
+  'galileo galilei': [40.4378, -3.7093],
+  'honky tonk': [40.4303, -3.6963],
+  'intruso bar': [40.4219, -3.7001],
+  'el perro de la parte de atras': [40.4228, -3.7025],
+  'el perro de la parte de atrás': [40.4228, -3.7025],
+  'cadavra club': [40.4208, -3.7031],
+  'cadavra': [40.4208, -3.7031],
+  'morocco': [40.4204, -3.7005],
+  'sala morocco': [40.4204, -3.7005],
+  'gotham': [40.4421, -3.7151],
+  'gotham the club': [40.4421, -3.7151],
+  'sala villanos': [40.4079, -3.6989],
+  'villanos': [40.4079, -3.6989],
+  'sala caracol': [40.4061, -3.6974],
+  'la paqui': [40.4267, -3.6998],
+  'sala chango': [40.4347, -3.7004],
+
+  // Barcelona & Catalunya
+  'razzmatazz': [41.3977, 2.1911],
+  'sala razzmatazz': [41.3977, 2.1911],
+  'apolo': [41.3744, 2.1697],
+  'sala apolo': [41.3744, 2.1697],
+  'la 2 de apolo': [41.3744, 2.1697],
+  'sidecar': [41.3799, 2.1754],
+  'heliogabal': [41.4034, 2.1585],
+  'heliogàbal': [41.4034, 2.1585],
+  'bikini': [41.3892, 2.1345],
+  'sala bikini': [41.3892, 2.1345],
+  'salamandra': [41.3601, 2.1121],
+  'sala salamandra': [41.3601, 2.1121],
+  'marula cafe': [41.3804, 2.1772],
+  'jamboree': [41.3795, 2.1751],
+  'sala upload': [41.3695, 2.1485],
+  'sala wolf': [41.3982, 2.1925],
+  'barts': [41.3749, 2.1706],
+  'paral·lel 62': [41.3749, 2.1706],
+  'palau sant jordi': [41.3638, 2.1526],
+  'sant jordi club': [41.3638, 2.1526],
+
+  // Valencia
+  'repvblicca': [39.5109, -0.4431],
+  'sala repvblicca': [39.5109, -0.4431],
+  '16 toneladas': [39.4795, -0.3892],
+  'sala moon': [39.4608, -0.3807],
+  'loco club': [39.4793, -0.3798],
+  'matisse club': [39.4735, -0.3546],
+  'sala wah wah': [39.4739, -0.3552],
+
+  // Andalucía (Sevilla, Granada, Málaga...)
+  'sala custom': [37.4045, -5.9555],
+  'custom': [37.4045, -5.9555],
+  'sala x': [37.4026, -5.9926],
+  'malandar': [37.4069, -5.9934],
+  'fanatic': [37.3752, -5.9664],
+  'sala fanatic': [37.3752, -5.9664],
+  'industrial copera': [37.1432, -3.6067],
+  'el tren': [37.2001, -3.6272],
+  'sala el tren': [37.2001, -3.6272],
+  'planta baja': [37.1775, -3.6045],
+  'sala trinchera': [36.6974, -4.4647],
+  'paris 15': [36.6953, -4.4697],
+  'sala paris 15': [36.6953, -4.4697],
+
+  // País Vasco & Norte
+  'santana 27': [43.2505, -2.9099],
+  'kafe antzokia': [43.2625, -2.9295],
+  'dabadaba': [43.3135, -1.9754],
+  'sala jimmy jazz': [42.8447, -2.6713],
+  'helldorado': [42.8415, -2.6821],
+  'escenario santander': [43.4471, -3.8052],
+  'sala acapulco': [43.5385, -5.6644],
+
+  // Murcia, Zaragoza, Galicia...
+  'garaje beat club': [37.9947, -1.1398],
+  'sala rem': [37.9863, -1.1348],
+  'sala oasi': [41.6558, -0.8872],
+  'la casa del loco': [41.6508, -0.8845],
+  'sala capitol': [42.8797, -8.5441],
+  'pelicano': [43.3704, -8.4035],
+  'sala playa club': [43.3687, -8.4116],
+  'master club vigo': [42.2384, -8.7231]
+};
+
+// Madrid & City Districts coordinates for accurate regional placement
+const DISTRICTS_GEO: Record<string, [number, number]> = {
+  'vicalvaro': [40.4038, -3.6062],
+  'vicálvaro': [40.4038, -3.6062],
+  'vallecas': [40.3889, -3.6558],
+  'puente de vallecas': [40.3965, -3.6672],
+  'villa de vallecas': [40.3789, -3.6212],
+  'carabanchel': [40.3855, -3.7397],
+  'villaverde': [40.3475, -3.6975],
+  'usera': [40.3817, -3.7088],
+  'barajas': [40.4735, -3.5786],
+  'hortaleza': [40.4725, -3.6536],
+  'tetuan': [40.4601, -3.6993],
+  'tetuán': [40.4601, -3.6993],
+  'chamberi': [40.4354, -3.7029],
+  'chamberí': [40.4354, -3.7029],
+  'malasaña': [40.4262, -3.7042],
+  'malasana': [40.4262, -3.7042],
+  'chueca': [40.4225, -3.6983],
+  'lavapies': [40.4103, -3.7011],
+  'lavapiés': [40.4103, -3.7011],
+  'la latina': [40.4116, -3.7107],
+  'moncloa': [40.4355, -3.7196],
+  'aluche': [40.3872, -3.7667],
+  'argüelles': [40.4301, -3.7172],
+  'arguelles': [40.4301, -3.7172],
+  'poblenou': [41.4005, 2.2023],
+  'gracia': [41.4026, 2.1568],
+  'gràcia': [41.4026, 2.1568],
+  'sants': [41.3756, 2.1378],
+  'eixample': [41.3887, 2.1611],
+  'sant andreu': [41.4358, 2.1906],
+  'ruzafa': [39.4625, -0.3721],
+  'russafa': [39.4625, -0.3721],
+  'el carmen': [39.4789, -0.3804],
+  'triana': [37.3828, -6.0028],
+  'alameda': [37.4003, -5.9932]
 };
 
 // Pre-loaded coordinates dictionary for Spanish cities, towns, festivals, and provinces
@@ -188,16 +351,34 @@ const SPANISH_CITIES_GEO: Record<string, [number, number]> = {
  'La Rioja': [42.4650, -2.4456]
 };
 
-// Smart normalizer & lookup function to ensure every lead gets realistic coords in its actual city
+// Smart normalizer & lookup function to ensure every lead gets realistic coords in its actual city & venue
 function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
- const rawCity = (lead.ciudad || '').trim();
- const rawRegion = (lead.region || '').trim();
+  const rawVenue = (lead.nombre_sala || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const rawAddress = (lead.direccion || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const rawCity = (lead.ciudad || '').trim();
+  const rawRegion = (lead.region || '').trim();
 
- // 1. Exact match in city
- if (SPANISH_CITIES_GEO[rawCity]) {
- const base = SPANISH_CITIES_GEO[rawCity];
- return offsetCoords(base, index);
- }
+  // 1. Check Known Iconic Venues (Exact & fuzzy match)
+  for (const [vKey, coords] of Object.entries(KNOWN_VENUES_GEO)) {
+    const normKey = vKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (rawVenue.includes(normKey) || normKey.includes(rawVenue) || rawAddress.includes(normKey)) {
+      return coords;
+    }
+  }
+
+  // 2. Check Specific Neighborhoods / Districts in Address or City (e.g. "Vicálvaro", "Vallecas", "Poblenou")
+  for (const [dKey, coords] of Object.entries(DISTRICTS_GEO)) {
+    const normDist = dKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (rawAddress.includes(normDist) || rawVenue.includes(normDist) || rawCity.toLowerCase().includes(normDist)) {
+      return offsetCoords(coords, index, 0.003); // very subtle jitter so nearby venues don't overlap exactly
+    }
+  }
+
+  // 3. Exact match in city
+  if (SPANISH_CITIES_GEO[rawCity]) {
+    const base = SPANISH_CITIES_GEO[rawCity];
+    return offsetCoords(base, index);
+  }
 
  // 2. Clean city name (e.g."Barbate (Cádiz)" ->"Barbate","Lanuza (Huesca)" ->"Lanuza")
  const mainPart = rawCity.split(/[\(\-\/\,]/)[0].trim();
@@ -254,9 +435,9 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
  return [lat, lng];
 }
 
-function offsetCoords(base: [number, number], index: number): [number, number] {
+function offsetCoords(base: [number, number], index: number, radiusMultiplier: number = 0.008): [number, number] {
  const angle = (index * 137.5) * (Math.PI / 180); // Golden angle scatter
- const radius = 0.008 + (index % 5) * 0.004; // Spread ~500m to 2km
+ const radius = radiusMultiplier + (index % 5) * 0.002; // Controlled spread
  return [base[0] + Math.sin(angle) * radius, base[1] + Math.cos(angle) * radius];
 }
 
@@ -308,7 +489,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  const tileLayerRef = useRef<L.TileLayer | null>(null);
  const markersGroup = useRef<any>(null);
 
- const [mapStyle, setMapStyle] = useState<MapStyleKey>('voyager');
+ const [mapStyle, setMapStyle] = useState<MapStyleKey>('streets');
  const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
 
  const [geoPositions, setGeoPositions] = useState<Record<string, [number, number]>>({});
@@ -433,19 +614,21 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
  // Calculate base coords using smart dictionary & fuzzy location resolver
  leads.forEach((lead, index) => {
- const fullKey = `${lead.nombre_sala}-${lead.ciudad}`.toLowerCase();
+ const fullKey = `${lead.nombre_sala}-${lead.ciudad}`.toLowerCase().trim();
 
- if (GEO_CACHE[fullKey]) {
- newCoords[lead.id] = GEO_CACHE[fullKey];
- } else {
- // Instantly resolve accurate local city/town/province coordinates
+ // Instantly resolve accurate local venue/district/city coordinates
  const resolved = resolveLeadCoordinates(lead, index);
  newCoords[lead.id] = resolved;
- 
- // If we want to try fine-tuning exact address via Nominatim in background
- if (!SPANISH_CITIES_GEO[lead.ciudad.trim()]) {
- pendingToGeocode.push({ lead, index });
- }
+
+ // Check if it's already a known iconic venue with pinpoint coordinates
+ const rawVenue = (lead.nombre_sala || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+ const isKnownExactVenue = Object.keys(KNOWN_VENUES_GEO).some(k => 
+   rawVenue.includes(k) || k.includes(rawVenue)
+ );
+
+ // If it has a specific street address or is an unlisted venue/town, queue for fine-tuning door number
+ if (!isKnownExactVenue && (lead.direccion || !SPANISH_CITIES_GEO[lead.ciudad.trim()])) {
+   pendingToGeocode.push({ lead, index });
  }
  });
 
@@ -455,16 +638,18 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  setIsGeocoding(false);
  }
 
- // Background fine-tuning for unknown towns via Nominatim (non-blocking)
- for (const item of pendingToGeocode) {
- if (!isSubscribed) break;
- const { lead, index } = item;
- const query = `${lead.nombre_sala || ''}, ${lead.ciudad}, ${lead.region || 'España'}`;
- try {
- const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
- headers: { 'Accept-Language': 'es' }
- });
- const data = await res.json();
+  // Background fine-tuning for unknown towns & specific addresses via Nominatim (non-blocking)
+  for (const item of pendingToGeocode) {
+  if (!isSubscribed) break;
+  const { lead } = item;
+  const query = lead.direccion 
+    ? `${lead.direccion}, ${lead.ciudad}, España`
+    : `${lead.nombre_sala || ''}, ${lead.ciudad}, ${lead.region || 'España'}`;
+  try {
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
+  headers: { 'Accept-Language': 'es' }
+  });
+  const data = await res.json();
  if (data && data[0]) {
  const lat = parseFloat(data[0].lat);
  const lon = parseFloat(data[0].lon);

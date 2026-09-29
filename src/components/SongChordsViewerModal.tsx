@@ -77,6 +77,71 @@ export function SongChordsViewerModal({
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [showStructureUploadModal, setShowStructureUploadModal] = useState<boolean>(false);
 
+  // Audio playback state
+  const audioUrl = song.audioPrincipalUrl || song.audioUrl || (song.audioIdeas && song.audioIdeas.length > 0 ? song.audioIdeas[0].audioUrl : '');
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [audioCurrentTime, setAudioCurrentTime] = useState<number>(0);
+  const [audioDuration, setAudioDuration] = useState<number>(song.duracionSegundos || 0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Sync audio duration and cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  const handleToggleAudio = () => {
+    if (!audioUrl) {
+      setAiSuccessMsg('⚠️ Esta canción aún no tiene un archivo de audio o maqueta adjunto en el Repertorio.');
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+      return;
+    }
+
+    if (!audioRef.current) return;
+
+    if (isPlayingAudio) {
+      audioRef.current.pause();
+      setIsPlayingAudio(false);
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlayingAudio(true);
+      }).catch(err => {
+        console.error('Error al reproducir audio:', err);
+        setIsPlayingAudio(false);
+        setAiSuccessMsg('⚠️ No se pudo reproducir el audio del tema.');
+        setTimeout(() => setAiSuccessMsg(null), 4000);
+      });
+    }
+  };
+
+  const handleSeekAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value);
+    setAudioCurrentTime(time);
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
+  const handleRestartAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      setAudioCurrentTime(0);
+      if (!isPlayingAudio) {
+        audioRef.current.play().then(() => setIsPlayingAudio(true)).catch(() => {});
+      }
+    }
+  };
+
+  const formatAudioTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds < 0) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   // El estado de edición solo se inicializa desde `song` al montar (useState no vuelve a leer
   // sus argumentos). Cuando la subida de estructura o la generación con IA actualizan `song`
   // desde fuera del formulario de edición, había que cerrar y reabrir el modal para verlo:
@@ -231,15 +296,43 @@ export function SongChordsViewerModal({
         {/* MODAL HEADER */}
         <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-purple-950/40 p-4 pr-12 border-b border-neutral-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400">
-              <Music2 className="w-6 h-6" />
-            </div>
+            {/* INTERACTIVE PLAY / PAUSE BUTTON */}
+            <button
+              type="button"
+              onClick={handleToggleAudio}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                isPlayingAudio
+                  ? 'bg-amber-500 text-black border-amber-400 shadow-lg shadow-amber-500/40 animate-pulse scale-105'
+                  : audioUrl
+                    ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-400 hover:scale-105'
+                    : 'bg-neutral-800/80 border-neutral-700 text-neutral-400 hover:text-white'
+              }`}
+              title={
+                isPlayingAudio
+                  ? 'Pausar audio de la canción'
+                  : audioUrl
+                    ? 'Reproducir audio de la canción (Escuchar mientras lees el cifrado)'
+                    : 'Esta canción no tiene archivo de audio adjunto en Repertorio'
+              }
+            >
+              {isPlayingAudio ? (
+                <Pause className="w-6 h-6 fill-current" />
+              ) : (
+                <Play className="w-6 h-6 fill-current pl-0.5" />
+              )}
+            </button>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold tracking-tight text-white">{formatSongTitle(song.titulo)}</h2>
                 {song.esVersionCovers && (
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-500/30">
                     Cover
+                  </span>
+                )}
+                {isPlayingAudio && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 animate-pulse">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    En reproducción
                   </span>
                 )}
               </div>
@@ -355,6 +448,68 @@ export function SongChordsViewerModal({
           {activeTab === 'chords' && (
             <div className="flex flex-wrap items-center gap-3">
               
+              {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
+              <div className="flex items-center gap-2 bg-black/60 px-3 py-1 rounded-xl border border-amber-500/40 shadow-inner">
+                <button
+                  type="button"
+                  onClick={handleToggleAudio}
+                  className={`p-1.5 rounded-lg font-bold flex items-center justify-center transition cursor-pointer ${
+                    isPlayingAudio
+                      ? 'bg-amber-500 text-black shadow-md shadow-amber-500/40 animate-pulse'
+                      : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 hover:scale-105'
+                  }`}
+                  title={
+                    isPlayingAudio
+                      ? 'Pausar audio de la canción'
+                      : audioUrl
+                        ? 'Reproducir audio de la canción'
+                        : 'Sin archivo de audio adjunto'
+                  }
+                >
+                  {isPlayingAudio ? (
+                    <Pause className="w-3.5 h-3.5 fill-current" />
+                  ) : (
+                    <Play className="w-3.5 h-3.5 fill-current pl-0.5" />
+                  )}
+                </button>
+
+                {audioUrl ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleRestartAudio}
+                      className="p-1 text-neutral-400 hover:text-white transition cursor-pointer"
+                      title="Reiniciar desde el inicio (0:00)"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                    </button>
+                    
+                    <span className="text-[11px] text-amber-300 font-mono min-w-[32px] text-right font-semibold">
+                      {formatAudioTime(audioCurrentTime)}
+                    </span>
+                    
+                    <input
+                      type="range"
+                      min={0}
+                      max={audioDuration || 100}
+                      step={0.1}
+                      value={audioCurrentTime}
+                      onChange={handleSeekAudio}
+                      className="w-20 sm:w-28 h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                      title="Barra de posición de reproducción"
+                    />
+
+                    <span className="text-[11px] text-neutral-400 font-mono min-w-[32px]">
+                      {formatAudioTime(audioDuration)}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-[10px] text-neutral-500 italic">
+                    Sin audio
+                  </span>
+                )}
+              </div>
+
               {/* TRANSPOSITION CONTROL */}
               <div className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded-xl border border-neutral-800">
                 <span className="text-[11px] text-neutral-400 mr-1">Tono:</span>
@@ -738,6 +893,31 @@ export function SongChordsViewerModal({
         onClose={() => setShowStructureUploadModal(false)}
         onUpdateSong={onUpdateSong}
       />
+
+      {/* HIDDEN HTML AUDIO ELEMENT FOR IN-MODAL PLAYBACK */}
+      {audioUrl && (
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          preload="metadata"
+          onTimeUpdate={() => {
+            if (audioRef.current) {
+              setAudioCurrentTime(audioRef.current.currentTime);
+            }
+          }}
+          onLoadedMetadata={() => {
+            if (audioRef.current && audioRef.current.duration) {
+              setAudioDuration(audioRef.current.duration);
+            }
+          }}
+          onEnded={() => {
+            setIsPlayingAudio(false);
+            setAudioCurrentTime(0);
+          }}
+          onPause={() => setIsPlayingAudio(false)}
+          onPlay={() => setIsPlayingAudio(true)}
+        />
+      )}
     </div>
     </ModalPortal>
   );

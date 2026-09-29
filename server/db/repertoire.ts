@@ -433,7 +433,23 @@ export async function dbGetSongs(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
 
-  const songsData = data || [];
+  let songsData = data || [];
+  if (songsData.length === 0) {
+    const seedForBand = INITIAL_SONGS.filter(s =>
+      candidateIds.includes(s.band_id) || candidateIds.includes((s.band_id || '').replace(/^(band|reg)-/, ''))
+    );
+    if (seedForBand.length > 0) {
+      for (const s of seedForBand) {
+        try {
+          await dbUpsertSong(s, bandId);
+        } catch (e) {
+          console.warn("Could not seed song to Supabase:", s.titulo, e);
+        }
+      }
+      songsData = seedForBand as any;
+    }
+  }
+
   return songsData.map(mapSongRecord);
 }
 
@@ -652,7 +668,22 @@ export async function dbGetSetlists(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
 
-  const setlistData = data || [];
+  let setlistData = data || [];
+  if (setlistData.length === 0) {
+    const seedForBand = INITIAL_SETLISTS.filter(sl =>
+      candidateIds.includes(sl.band_id) || candidateIds.includes((sl.band_id || '').replace(/^(band|reg)-/, ''))
+    );
+    if (seedForBand.length > 0) {
+      for (const sl of seedForBand) {
+        try {
+          await dbUpsertSetlist(sl, bandId);
+        } catch (e) {
+          console.warn("Could not seed setlist to Supabase:", sl.nombre, e);
+        }
+      }
+      setlistData = seedForBand as any;
+    }
+  }
 
   return setlistData.map(sl => ({
     ...sl,

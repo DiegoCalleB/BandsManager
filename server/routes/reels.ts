@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import os from "os";
@@ -801,10 +801,11 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     cropMode: cropModeRaw,
     burnSubtitles = false,
     // Resaltado palabra por palabra (estilo TikTok/CapCut) en vez de la línea estática de
-    // siempre: sube la retención y ya teníamos calculados los tiempos por palabra, solo se
-    // enseñaban en pantalla sin llegar a quemarse en el vídeo. Por defecto activado: es
-    // estrictamente una mejora visual sobre el subtítulo plano anterior.
+    // siempre: sube la retención y ya teníamos calculados los tiempos por palabra.
     karaokeSubtitles = true,
+    punchInZoom = false,
+    beatDropFx = false,
+    smartPan = false,
     inlineBase64 = false
   } = req.body || {};
 
@@ -820,8 +821,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
   const inicio = Math.max(0, Math.floor(Number(start) || 0));
   const duracion = Math.max(1, Math.min(MAX_CLIP_SECONDS, Math.floor(Number(duration) || 30)));
 
-  // `cropVertical` es el flag antiguo (booleano); `cropMode` el nuevo con tres opciones.
-  const cropMode: CropMode = ["crop", "blur", "none"].includes(String(cropModeRaw))
+  // `cropVertical` es el flag antiguo (booleano); `cropMode` el nuevo con opciones ampliadas.
+  const cropMode: CropMode = ["crop", "blur", "none", "smart_pan"].includes(String(cropModeRaw))
     ? (String(cropModeRaw) as CropMode)
     : cropVertical
       ? "crop"
@@ -871,7 +872,11 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       if (ajusteSalida > 0) comando.setStartTime(ajusteSalida);
       comando.setDuration(duracion);
 
-      const filtros = buildVerticalFilter(cropMode);
+      const filtros = buildVerticalFilter(cropMode, 1080, 1920, { 
+        punchInZoom: Boolean(punchInZoom),
+        beatDropFx: Boolean(beatDropFx),
+        smartPan: Boolean(smartPan)
+      });
       if (incrustarSubs) {
         const filtroSubs = `subtitles='${escapeFilterPath(rutaAss)}'`;
         if (filtros.length) {
@@ -1140,6 +1145,131 @@ Responde ÚNICAMENTE con JSON válido:
     return res.status(500).json({
       success: false,
       error: `Error al reanalizar el fragmento: ${err?.message || err}`
+    });
+  }
+});
+
+/**
+ * POST /api/reels/ai-hook-doctor
+ * Escanea el gancho visual y el copy para calcular el Cringe Score (0-100),
+ * la retención estimada a los 3 segundos, una mejora automática con el Tone DNA
+ * y el "Primer Comentario Fijado (Pinned Comment)" para disparar el debate en el algoritmo.
+ */
+router.post(["/reels/ai-hook-doctor", "/api/reels/ai-hook-doctor"], requireAuth, iaRateLimiter, async (req: Request, res: Response) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { 
+      hookText = "", 
+      copyText = "", 
+      songTitle = "", 
+      platform = "Instagram", 
+      contentType = "concierto" 
+    } = req.body || {};
+
+    const perfil = await perfilDeLaPeticion(req);
+    const nombreBanda = displayBandName(perfil) || "La Banda";
+
+    const hookLimpio = String(hookText || "").replace(/[\r\n\t]/g, " ").trim();
+    const copyLimpio = String(copyText || "").trim();
+    const temaLimpio = String(songTitle || "").replace(/[\r\n\t]/g, " ").trim();
+
+    const ai = getAiClient();
+    if (ai) {
+      const prompt = `Eres el Director de Virality & Anti-Cringe Strategist de BandManager.io.
+Tu misión es auditar un Reel de una banda de música independiente (${nombreBanda}), eliminar cualquier rastro de marketing amateur/cliché o 'cringe' (postureo falso, pedir favores, frases de teletienda) y maximizar la retención y comentarios orgánicos.
+
+${buildBandContextBlock(perfil)}
+
+DATOS DEL REEL:
+- Banda: "${nombreBanda}"
+- Canción/Tema: "${temaLimpio || 'Directo / Ensayo'}"
+- Plataforma: "${platform}"
+- Tipo de material: "${contentType}"
+- Gancho visual actual (0-3s): "${hookLimpio || '(Vacío)'}"
+- Copy actual: "${copyLimpio || '(Vacío)'}"
+
+TU AUDITORÍA DEBE DEVOLVER:
+1. "cringeScore": Número entero de 0 a 100.
+   - 0-20: Cero cringe, máxima autenticidad y misterio.
+   - 21-50: Aceptable pero con margen de mejora.
+   - 51-100: Cringe alto (suena a influencer de pacotilla, pide likes descaradamente, o suena aburrido).
+2. "estimatedRetention3s": Porcentaje estimado (ej: 88).
+3. "verdict": Dictamen corto y memorable en español (ej: "Potencial Viral Alto", "Demasiado Genérico", "Falta Curiosidad").
+4. "cringeReasons": Array de 1 a 3 motivos honestos de por qué falla o cómo se percibe.
+5. "improvedHook": Gancho de alto impacto (máximo 8 palabras) sin clichés, con curiosidad o debate real.
+6. "improvedCopy": Copy optimizado para ${platform}, con lore/conexión auténtica y llamada sutil.
+7. "pinnedComment": EL PRIMER COMENTARIO FIJADO (Pinned Comment). Una pregunta o reto polarizante para que la gente responda inmediatamente en los primeros 10 minutos de subida (crucial para el algoritmo).
+8. "pinnedCommentGoal": Explicación de por qué este comentario fuerza el debate.
+
+Responde ÚNICAMENTE con JSON válido:
+{
+  "cringeScore": 15,
+  "estimatedRetention3s": 89,
+  "verdict": "Gancho Magnético Auténtico",
+  "cringeReasons": ["..."],
+  "improvedHook": "...",
+  "improvedCopy": "...",
+  "pinnedComment": "...",
+  "pinnedCommentGoal": "..."
+}`;
+
+      try {
+        const response = await ai.models.generateContent({
+          model: GEMINI_MODEL,
+          contents: prompt,
+          config: {
+            responseMimeType: "application/json",
+            temperature: 0.7
+          }
+        });
+
+        const textoJson = response.text || "";
+        const parsed = extractJsonObject(textoJson);
+        if (parsed && typeof parsed === "object") {
+          return res.json({
+            success: true,
+            generatedByAI: true,
+            diagnosis: {
+              cringeScore: Math.min(100, Math.max(0, Number(parsed.cringeScore) || 20)),
+              estimatedRetention3s: Math.min(99, Math.max(30, Number(parsed.estimatedRetention3s) || 85)),
+              verdict: String(parsed.verdict || "Auditoría completada"),
+              cringeReasons: Array.isArray(parsed.cringeReasons) ? parsed.cringeReasons.map(String) : [],
+              improvedHook: String(parsed.improvedHook || hookLimpio),
+              improvedCopy: String(parsed.improvedCopy || copyLimpio),
+              pinnedComment: String(parsed.pinnedComment || "¿Qué nota le dais a este momento del 1 al 10? 👇🎸"),
+              pinnedCommentGoal: String(parsed.pinnedCommentGoal || "Dispara el debate orgánico en comentarios.")
+            }
+          });
+        }
+      } catch (err: any) {
+        console.warn("[AI Hook Doctor Error]:", err?.message || err);
+      }
+    }
+
+    // Fallback inteligente si la IA no está disponible
+    const fallbackDiagnosis = {
+      cringeScore: hookLimpio.includes("nuevo tema") || hookLimpio.includes("escucha") ? 65 : 25,
+      estimatedRetention3s: hookLimpio.length > 5 ? 82 : 60,
+      verdict: hookLimpio.length > 5 ? "Buen Gancho Rítmico" : "Gancho Mejorable",
+      cringeReasons: hookLimpio.includes("nuevo tema") 
+        ? ["Evita anunciar 'nuestro nuevo tema', es más efectivo abrir un hueco de misterio o debate."] 
+        : ["Asegúrate de que los primeros 2 segundos retienen con una pregunta o detalle inesperado."],
+      improvedHook: hookLimpio || `El momento exacto en que la sala entera explotó 🤯⚡`,
+      improvedCopy: copyLimpio || `Nadie en la sala se dio cuenta hasta el final... ¿Vosotros lo habéis visto? Dejadnos en comentarios 👇🎸\n\n#${nombreBanda.replace(/\s+/g, '')} #Directo`,
+      pinnedComment: `Sinceramente... ¿este solo os parece demasiado rápido o está en su punto exacto? Os leemos 👇🥁`,
+      pinnedCommentGoal: "Provoca opiniones polarizadas que aumentan el engagement en la primera hora."
+    };
+
+    return res.json({
+      success: true,
+      generatedByAI: false,
+      diagnosis: fallbackDiagnosis
+    });
+  } catch (err: any) {
+    console.error("[AI Hook Doctor Route Error]:", err);
+    return res.status(500).json({
+      success: false,
+      error: `Error ejecutando AI Hook Doctor: ${err?.message || err}`
     });
   }
 });

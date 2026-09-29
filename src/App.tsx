@@ -1733,6 +1733,16 @@ export default function App() {
  onClose={() => setShowUserManagementModal(false)}
  onRefreshUsers={fetchState}
  isStitchLight={isStitchLight}
+ bandId={currentActiveBandId}
+ bandName={currentActiveBandName}
+ bandLogoUrl={currentActiveBandLogo || epkConfig?.logoUrl}
+ onRefreshData={fetchState}
+ onUpdateLogo={async (newUrl) => {
+   if (handleUpdateEpkConfig) {
+     await handleUpdateEpkConfig({ ...epkConfig, logoUrl: newUrl });
+   }
+   await fetchState();
+ }}
  />
  )}
 

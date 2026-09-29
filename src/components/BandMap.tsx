@@ -11,33 +11,33 @@ interface BandMapProps {
   isStitchLight?: boolean;
 }
 
-type MapStyleKey = 'voyager' | 'satellite' | 'osm' | 'positron' | 'dark';
+type MapStyleKey = 'streets' | 'osm' | 'satellite' | 'positron' | 'dark';
 
 const MAP_STYLES: Record<MapStyleKey, { name: string; url: string; attr: string }> = {
-  voyager: {
+  streets: {
     name: '🗺️ Callejero Claro (Recomendado)',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attr: '&copy; OpenStreetMap &copy; CARTO'
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri &mdash; OpenStreetMap contributors'
+  },
+  osm: {
+    name: '🏙️ OpenStreetMap Detallado',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attr: '&copy; OpenStreetMap contributors'
   },
   satellite: {
     name: '🛰️ Satélite Híbrido',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attr: '&copy; Esri World Imagery'
   },
-  osm: {
-    name: '🏙️ OpenStreetMap Detallado',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attr: '&copy; OpenStreetMap'
-  },
   positron: {
     name: '⚪ Gris Minimalista',
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attr: '&copy; CARTO'
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri &mdash; Light Gray Canvas'
   },
   dark: {
     name: '🌙 Oscuro Nocturno',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attr: '&copy; CARTO'
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attr: '&copy; Esri &mdash; Dark Gray Canvas'
   }
 };
 
@@ -196,7 +196,7 @@ export const BandMap: React.FC<BandMapProps> = ({
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const markersGroup = useRef<any>(null);
 
-  const [mapStyle, setMapStyle] = useState<MapStyleKey>('voyager');
+  const [mapStyle, setMapStyle] = useState<MapStyleKey>('streets');
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
   const [geoPositions, setGeoPositions] = useState<Record<string, [number, number]>>({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
