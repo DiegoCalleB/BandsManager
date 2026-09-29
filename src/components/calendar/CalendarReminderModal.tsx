@@ -52,7 +52,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
-        <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
               <Bell className="w-5 h-5" />
@@ -125,7 +125,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             />
           </div>
 
-          <div className="space-y-2 pt-1 border-t borderbg-[var(--surface)]/60">
+          <div className="space-y-2 pt-1 border-t border-[var(--hair)]">
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -157,11 +157,11 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           </div>
         </div>
 
-        <div className="pt-3 border-t borderbg-[var(--surface)] flex items-center justify-end gap-2">
+        <div className="pt-3 border-t border-[var(--hair)] flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-3 py-1.5 rounded-[var(--r-m)] border border-[var(--hair)] text-xs text-[var(--ink-2)] hover:bgbg-[var(--surface)] font-mono cursor-pointer"
+            className="px-3 py-1.5 rounded-[var(--r-m)] border border-[var(--hair)] text-xs text-[var(--ink-2)] hover:bg-[var(--sunken)] font-mono cursor-pointer"
           >
             Cancelar
           </button>

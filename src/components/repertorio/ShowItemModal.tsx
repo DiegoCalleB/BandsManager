@@ -70,7 +70,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 backdrop-blur-sm">
       <div className={`w-full max-w-lg p-6 rounded-[var(--r-l)] space-y-4 shadow-2xl ${colors.card} border border-[var(--acc)]/30`}>
-        <div className="flex justify-between items-center pb-3 border-b borderbg-[var(--surface)]">
+        <div className="flex justify-between items-center pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
             <span className="p-2 bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-m)]">⚡</span>
             <div>
@@ -87,7 +87,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               onClose();
               setEditingShowItem(null);
             }}
-            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] hover:bgbg-[var(--surface)] cursor-pointer"
+            className="text-[var(--ink-2)] hover:text-[var(--ink)] p-1 rounded-[var(--r-m)] hover:bg-[var(--sunken)] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -180,14 +180,14 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t borderbg-[var(--surface)]">
+          <div className="flex justify-end gap-2 pt-3 border-t border-[var(--hair)]">
             <button
               type="button"
               onClick={() => {
                 onClose();
                 setEditingShowItem(null);
               }}
-              className="px-4 py-2 rounded-[var(--r-m)] border border-[var(--hair)] text-xs font-bold text-[var(--ink-2)] hover:bgbg-[var(--surface)] cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-m)] border border-[var(--hair)] text-xs font-bold text-[var(--ink-2)] hover:bg-[var(--sunken)] cursor-pointer"
             >
               Cancelar
             </button>

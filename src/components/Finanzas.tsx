@@ -532,7 +532,7 @@ export default function Finanzas({
                       <th className="p-3 text-right">Acción</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y dividebg-[var(--surface)]/60">
+                  <tbody className="divide-y divide-[var(--hair)]">
                     {concerts.map((c) => {
                       const g = c.gastosDetalle || {};
                       const gasolina = g.gasolina || 0;

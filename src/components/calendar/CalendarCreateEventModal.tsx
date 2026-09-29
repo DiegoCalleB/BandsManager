@@ -199,7 +199,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
         >
           <button
             onClick={() => setShowCreateModal(null)}
-            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
           >
             ✕
           </button>
@@ -355,7 +355,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t borderbg-[var(--surface)]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--hair)]">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
@@ -450,7 +450,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t borderbg-[var(--surface)]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--hair)]">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
@@ -562,7 +562,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 pt-2 border-t borderbg-[var(--surface)]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--hair)]">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}

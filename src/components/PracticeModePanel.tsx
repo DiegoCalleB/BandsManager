@@ -761,7 +761,7 @@ export default function PracticeModePanel({
                         step={0.1}
                         value={Math.min(currentTime, duration)}
                         onChange={(e) => handleSeekBarChange(Number(e.target.value))}
-                        className="w-full accent-emerald-400 cursor-pointer h-2 bgbg-[var(--surface)] rounded-[var(--r-m)] appearance-none"
+                        className="w-full accent-emerald-400 cursor-pointer h-2 bg-[var(--sunken)] rounded-[var(--r-m)] appearance-none"
                       />
                       {/* Resaltado visual del bucle A-B */}
                       {loopA != null && loopB != null && duration > 0 && (
@@ -876,13 +876,13 @@ export default function PracticeModePanel({
                   <div className="flex items-center gap-1 pt-1">
                     <button
                       onClick={() => nudgeBpm(-5)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       -5
                     </button>
                     <button
                       onClick={() => nudgeBpm(-1)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       -1
                     </button>
@@ -897,13 +897,13 @@ export default function PracticeModePanel({
                     />
                     <button
                       onClick={() => nudgeBpm(1)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       +1
                     </button>
                     <button
                       onClick={() => nudgeBpm(5)}
-                      className="text-[10px] px-1.5 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
+                      className="text-[10px] px-1.5 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
                     >
                       +5
                     </button>
@@ -965,7 +965,7 @@ export default function PracticeModePanel({
                       className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         metronomeOn
                           ? 'bg-[var(--acc)]/20 border-[var(--acc)]/40 text-[var(--acc)]'
-                          : 'bgbg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
+                          : 'bg-[var(--sunken)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
                       <Timer className="w-3.5 h-3.5" />
@@ -977,7 +977,7 @@ export default function PracticeModePanel({
                       className={`text-[10px] font-bold py-1 px-2 rounded-[var(--r-m)] border transition-all cursor-pointer ${
                         beatAnchorSec > 0
                           ? 'bg-[var(--ok)]/20 border-[var(--ok)]/40 text-[var(--ok)]'
-                          : 'bgbg-[var(--surface)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
+                          : 'bg-[var(--sunken)] border-transparent text-[var(--ink-2)] hover:text-[var(--ink)]'
                       }`}
                     >
                       <Target className="w-3.5 h-3.5" />

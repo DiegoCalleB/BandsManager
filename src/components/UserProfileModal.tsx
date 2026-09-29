@@ -1255,7 +1255,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             )}
 
             {onOpenNotificationSettings && (
-              <div className="pt-3 border-t borderbg-[var(--surface)]/80">
+              <div className="pt-3 border-t border-[var(--hair)]">
                 <button
                   type="button"
                   onClick={() => {

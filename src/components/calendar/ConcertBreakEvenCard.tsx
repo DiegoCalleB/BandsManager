@@ -46,11 +46,11 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2 pt-1">
-        <div className="bg-[var(--sunken)] p-1.5 rounded-[var(--r-m)] border borderbg-[var(--surface)]/40">
+        <div className="bg-[var(--sunken)] p-1.5 rounded-[var(--r-m)] border border-[var(--hair)]">
           <span className="text-[9px] text-[var(--ink-2)] block font-mono">Gastos Estimados</span>
           <span className="text-xs font-bold text-[var(--alert)] font-mono">{analysis.gastosTotalesEstimados} €</span>
         </div>
-        <div className="bg-[var(--sunken)] p-1.5 rounded-[var(--r-m)] border borderbg-[var(--surface)]/40">
+        <div className="bg-[var(--sunken)] p-1.5 rounded-[var(--r-m)] border border-[var(--hair)]">
           <span className="text-[9px] text-[var(--ink-2)] block font-mono">Para Cubrir Gastos</span>
           <span className="text-xs font-bold text-[var(--acc)] font-mono">
             {analysis.entradasParaBreakEven > 0 ? `${analysis.entradasParaBreakEven} entradas` : 'Cubierto'}
@@ -58,7 +58,7 @@ export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
         </div>
       </div>
 
-      <div className="text-[10px] font-mono leading-relaxed pt-1 flex items-center justify-between border-t borderbg-[var(--surface)]/30">
+      <div className="text-[10px] font-mono leading-relaxed pt-1 flex items-center justify-between border-t border-[var(--hair)]">
         <span className={textSub}>Resultado neto estimado:</span>
         <span className={`font-bold font-mono ${net >= 0 ? 'text-[var(--ok)]' : 'text-[var(--alert)]'}`}>
           {net >= 0 ? `+${net}€ Neto` : `${net}€ En pérdidas`}

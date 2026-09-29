@@ -368,7 +368,7 @@ export function TemplateConfigSection({
         </div>
 
         {/* Right Column: Live Preview Sandbox (5 cols) */}
-        <div className="lg:col-span-5 bg-[var(--surface)] border borderbg-[var(--surface)] rounded-[var(--r-l)] p-4 flex flex-col justify-between min-h-[360px]">
+        <div className="lg:col-span-5 bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-l)] p-4 flex flex-col justify-between min-h-[360px]">
           <div className="space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-[var(--hair)]/5">
               <div className="flex items-center gap-2">
@@ -392,7 +392,7 @@ export function TemplateConfigSection({
                 {testPromptResult}
               </div>
             ) : (
-              <div className="py-16 px-4 text-center space-y-2 border border-dashed borderbg-[var(--surface)] rounded-[var(--r-m)]">
+              <div className="py-16 px-4 text-center space-y-2 border border-dashed border-[var(--hair)] rounded-[var(--r-m)]">
                 <Eye className="w-6 h-6 text-[var(--ink-2)] mx-auto" />
                 <p className="text-xs text-[var(--ink-2)] font-medium">Ninguna simulación activa</p>
                 <p className="text-[11px] text-[var(--ink-2)] max-w-xs mx-auto">

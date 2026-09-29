@@ -37,7 +37,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           'bg-[var(--surface)] border-[var(--hair)] text-[var(--ink)]'
         }`}
       >
-        <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[var(--acc)]">
               <Calendar className="w-5 h-5" />
@@ -136,7 +136,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           </a>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-[var(--r-m)] bgbg-[var(--surface)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
           >
             Cerrar
           </button>

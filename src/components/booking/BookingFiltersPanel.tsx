@@ -89,7 +89,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       <div className="space-y-3 pb-3 border-b border-[var(--hair)]/10">
         <div>
           <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider mb-1.5">Categoría de Contactos</p>
-          <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] border borderbg-[var(--surface)]">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)]">
             <button
               type="button"
               onClick={() => handleSelectSectionTab('salas')}
@@ -125,7 +125,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
         <div className="sm:hidden">
           <p className="text-[10px] font-bold text-[var(--ink-2)] uppercase tracking-wider mb-1.5">Modo de Vista</p>
-          <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] border borderbg-[var(--surface)]">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] border border-[var(--hair)]">
             <button
               type="button"
               onClick={() => {
@@ -173,7 +173,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as any)}
-            className="w-full px-3 py-2 bg-[var(--sunken)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-semibold font-sans border borderbg-[var(--surface)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)]/30 cursor-pointer"
+            className="w-full px-3 py-2 bg-[var(--sunken)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-semibold font-sans border border-[var(--hair)] focus:border-[var(--acc)] focus:ring-1 focus:ring-[var(--acc)]/30 cursor-pointer"
           >
             {sectionTab === 'medios' ? (
               <>
@@ -230,7 +230,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             className={`px-2.5 py-1.5 rounded-[var(--r-m)] border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               onlyFavoritesFilter
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50'
-                : 'bg-[var(--sunken)] text-[var(--ink-2)] borderbg-[var(--surface)] hover:text-[var(--ink)]'
+                : 'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]'
             }`}
           >
             <span>⭐ Favoritos</span>
@@ -243,14 +243,14 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             className={`px-2.5 py-1.5 rounded-[var(--r-m)] border text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               onlyVerifiedFilter
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] border-[var(--acc)]/50'
-                : 'bg-[var(--sunken)] text-[var(--ink-2)] borderbg-[var(--surface)] hover:text-[var(--ink)]'
+                : 'bg-[var(--sunken)] text-[var(--ink-2)] border-[var(--hair)] hover:text-[var(--ink)]'
             }`}
           >
             <span>✔ Verificados</span>
             {onlyVerifiedFilter && <X className="w-3 h-3 ml-0.5" />}
           </button>
 
-          <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-m)] border borderbg-[var(--surface)] text-xs">
+          <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-m)] border border-[var(--hair)] text-xs">
             <span className="text-[var(--ink-2)]">Aforo mín:</span>
             <input
               type="number"

@@ -326,7 +326,7 @@ export function AddLeadModal({
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
                         </button>
-                        <label className="cursor-pointer px-2.5 py-1 bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all border border-[var(--hair)]">
+                        <label className="cursor-pointer px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all border border-[var(--hair)]">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
                           <input
@@ -349,7 +349,7 @@ export function AddLeadModal({
                     </div>
 
                     {newLeadData.imagen_url ? (
-                      <div className="flex items-center gap-3 p-2 bg-[var(--surface)] rounded-[var(--r-m)] border borderbg-[var(--surface)]">
+                      <div className="flex items-center gap-3 p-2 bg-[var(--surface)] rounded-[var(--r-m)] border border-[var(--hair)]">
                         <img
                           src={newLeadData.imagen_url}
                           alt="Logo"
@@ -376,7 +376,7 @@ export function AddLeadModal({
                             className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-all cursor-pointer ${
                               newLeadData.icono === emoji
                                 ? 'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-xs'
-                                : 'bgbg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+                                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
                             }`}
                           >
                             {emoji}

@@ -1219,7 +1219,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <th className="p-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y dividebg-[var(--surface)]/50">
+                <tbody className="divide-y divide-[var(--hair)]">
                   {filteredFans.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="p-12">

@@ -211,7 +211,7 @@ export function ConvocarEnsayoModal({
               <button
                 type="button"
                 onClick={() => setShowAdvanced((prev) => !prev)}
-                className="w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors hover:bgbg-[var(--surface)]/60 cursor-pointer text-[var(--ink-2)]"
+                className="w-full px-3.5 py-2.5 flex items-center justify-between font-medium text-xs transition-colors hover:bg-[var(--sunken)] cursor-pointer text-[var(--ink-2)]"
               >
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -263,7 +263,7 @@ export function ConvocarEnsayoModal({
                               className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${
                                 isSelected
                                   ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/40 font-bold'
-                                  : 'bgbg-[var(--surface)]/60 text-[var(--ink-2)] hover:border-[var(--hair)]'
+                                  : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:border-[var(--hair)]'
                               }`}
                             >
                               <Users className="w-3 h-3" />
@@ -320,7 +320,7 @@ export function ConvocarEnsayoModal({
                       <button
                         type="button"
                         onClick={handleAddObjetivo}
-                        className="px-3 py-1.5 rounded-[var(--r-m)] bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>

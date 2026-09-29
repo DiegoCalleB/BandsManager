@@ -81,7 +81,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
                   className={`p-2.5 rounded-[var(--r-m)] border text-center transition-all cursor-pointer font-bold ${
                     aiTrackGenInstrument === item.id
                       ? 'bg-[var(--acc)] text-[var(--ink)] border-[var(--acc)] shadow-md'
-                      : 'bg-[var(--sunken)] borderbg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
+                      : 'bg-[var(--sunken)] border-[var(--hair)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
                   }`}
                 >
                   {item.label}

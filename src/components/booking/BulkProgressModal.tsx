@@ -125,7 +125,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
           </div>
 
           {/* Items List */}
-          <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y dividebg-[var(--surface)]/40">
+          <div className="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-[var(--hair)]">
             {items.map((item, idx) => (
               <div
                 key={item.id || idx}

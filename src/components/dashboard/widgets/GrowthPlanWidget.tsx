@@ -23,9 +23,9 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
   const channelPlaybooks = growthPlan?.channelPlaybooks || [];
 
   return (
-    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/95 border borderbg-[var(--surface)]/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/95 border border-[var(--hair)] shadow-sm space-y-4">
       {/* Widget Header */}
-      <div className="flex items-center justify-between pb-3 border-b borderbg-[var(--surface)]">
+      <div className="flex items-center justify-between pb-3 border-b border-[var(--hair)]">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)] border border-[var(--acc)]/30">
             <Rocket className="w-5 h-5" />
@@ -95,24 +95,24 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
           </div>
         </div>
       ) : (
-        <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-xs text-[var(--ink-2)]">
+        <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-xs text-[var(--ink-2)]">
           Recomendaciones estratégicas personalizadas para el crecimiento de {activeBandName}.
         </div>
       )}
 
       {/* 3 Pillars / Quick metrics status */}
       <div className="grid grid-cols-3 gap-2.5 pt-1">
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-center">
           <span className="text-base font-bold font-mono text-[var(--acc)]">{channelPlaybooks.length || 3}</span>
           <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Canales Activos</p>
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-center">
           <span className="text-base font-bold font-mono text-[var(--acc)]">{growthPlan?.weeklyBlueprint?.length || 7}</span>
           <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Hitos Semanales</p>
         </div>
 
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-center">
           <span className="text-base font-bold font-mono text-[var(--ok)]">{totalPillars}</span>
           <p className="text-[10px] font-mono text-[var(--ink-2)] uppercase tracking-wider mt-0.5">Pilares Clave</p>
         </div>

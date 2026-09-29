@@ -689,7 +689,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <button
                       onClick={handleCancelEdit}
                       disabled={isSaving}
-                      className="py-2.5 px-4 rounded-[var(--r-m)] bgbg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+                      className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
                     >
                       <XCircle className="w-3.5 h-3.5" /> Cancelar
                     </button>
@@ -776,7 +776,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     {/* Extracted Quotes from Reels/Posts */}
                     {toneData.frases_emblematicas_extraidas &&
                       toneData.frases_emblematicas_extraidas.length > 0 && (
-                        <div className="pt-1.5 border-t borderbg-[var(--surface)] space-y-1">
+                        <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]/90 block">
                             💬 Expresiones extraídas de sus Reels & Posts:
                           </span>
@@ -785,7 +785,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               (quote, idx) => (
                                 <p
                                   key={idx}
-                                  className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded border borderbg-[var(--surface)]/60"
+                                  className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded border border-[var(--hair)]"
                                 >
                                   "{quote}"
                                 </p>
@@ -798,7 +798,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     {/* Frases reales de directo: se acumulan solas desde transcripciones de conciertos, no se editan aquí. */}
                     {toneData.frases_directo_extraidas &&
                       toneData.frases_directo_extraidas.length > 0 && (
-                        <div className="pt-1.5 border-t borderbg-[var(--surface)] space-y-1">
+                        <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--ok)]/90 block">
                             🎤 Frases reales dichas en directo (de vuestros
                             propios conciertos):
@@ -808,7 +808,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               (quote, idx) => (
                                 <p
                                   key={idx}
-                                  className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded border borderbg-[var(--surface)]/60"
+                                  className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded border border-[var(--hair)]"
                                 >
                                   "{quote}"
                                 </p>
@@ -823,7 +823,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       Object.values(toneData.matices_por_red).some(
                         (v) => v && v.trim(),
                       ) && (
-                        <div className="pt-1.5 border-t borderbg-[var(--surface)] space-y-1.5">
+                        <div className="pt-1.5 border-t border-[var(--hair)] space-y-1.5">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[var(--acc)]/90 block">
                             🎚️ Matices de tono según la red:
                           </span>
@@ -839,7 +839,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               toneData.matices_por_red?.[key] ? (
                                 <p
                                   key={key}
-                                  className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded border borderbg-[var(--surface)]/60"
+                                  className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded border border-[var(--hair)]"
                                 >
                                   <span className="text-[var(--acc)] font-bold">
                                     {label}:
@@ -896,7 +896,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               toneData.pitch_personalizado_ejemplo || "",
                             )
                           }
-                          className="px-2 py-1 rounded bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+                          className="px-2 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
                         >
                           {copied ? (
                             <Check className="w-3 h-3 text-[var(--ok)]" />
@@ -1076,7 +1076,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       }}
                                       placeholder="🔒 + añadir regla manual (protegida)..."
                                       disabled={savingManual}
-                                      className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] border borderbg-[var(--surface)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
+                                      className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] border border-[var(--hair)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
                                     />
                                     <button
                                       onClick={() =>
@@ -1256,7 +1256,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     }}
                                     placeholder="🔒 + añadir regla manual (protegida)..."
                                     disabled={savingManual}
-                                    className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] border borderbg-[var(--surface)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
+                                    className="flex-1 px-2 py-1 rounded bg-[var(--sunken)] border border-[var(--hair)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:border-[var(--acc)] disabled:opacity-50"
                                   />
                                   <button
                                     onClick={() =>

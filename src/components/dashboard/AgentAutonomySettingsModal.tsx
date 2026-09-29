@@ -1650,13 +1650,13 @@ export const AgentAutonomySettingsModal: React.FC<
                 </div>
 
                 {/* 4. Control de Estado de Lectura en Bandeja (Agente Lector) */}
-                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
+                <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-3">
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--acc)] flex items-center gap-1.5">
                     <Mail className="w-4 h-4" /> 4. Control de Estado en Bandeja
                     de Entrada (Agente Lector)
                   </h4>
 
-                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border borderbg-[var(--surface)] space-y-3">
+                  <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"

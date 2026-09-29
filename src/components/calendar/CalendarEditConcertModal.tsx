@@ -82,7 +82,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
         >
           <button
             onClick={() => setViewingConcert(null)}
-            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
           >
             ✕
           </button>
@@ -229,7 +229,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               />
             </div>
 
-            <div className="pt-2 flex items-center justify-between border-t borderbg-[var(--surface)]">
+            <div className="pt-2 flex items-center justify-between border-t border-[var(--hair)]">
               {onDeleteConcert && (
                 <button
                   type="button"
@@ -249,7 +249,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 <button
                   type="button"
                   onClick={() => setViewingConcert(null)}
-                  className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-m)] text-[var(--ink-2)] hover:bgbg-[var(--surface)] transition-colors cursor-pointer"
+                  className="px-2 py-1 text-[10px] font-mono rounded-[var(--r-m)] text-[var(--ink-2)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>

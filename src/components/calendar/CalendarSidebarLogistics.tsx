@@ -375,7 +375,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   </div>
 
                   {camp.notes && (
-                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border borderbg-[var(--surface)]">
+                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] border border-[var(--hair)]">
                       &ldquo;{camp.notes}&rdquo;
                     </p>
                   )}
@@ -791,7 +791,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               </div>
             )}
             {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
-              <div className="flex flex-col gap-1.5 pt-2 mt-1 border-t borderbg-[var(--surface)]/40">
+              <div className="flex flex-col gap-1.5 pt-2 mt-1 border-t border-[var(--hair)]">
                 {selectedEventDetails.entradasUrl && (
                   <a
                     href={selectedEventDetails.entradasUrl}
@@ -823,7 +823,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
 
             {selectedConcert?.giraNombre && (
-              <div className="flex items-center gap-2 text-[10px] pt-2 border-t borderbg-[var(--surface)]/60 mt-2">
+              <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-[var(--hair)] mt-2">
                 <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Gira:</span>
                 <span className="font-bold font-mono text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
@@ -831,7 +831,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
 
             {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
-              <div className="flex items-center gap-2 text-[10px] pt-2 border-t borderbg-[var(--surface)]/60 mt-2">
+              <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-[var(--hair)] mt-2">
                 <Users className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Convocatoria:</span>
                 <span className="font-bold font-mono text-[var(--acc)]">
@@ -1509,7 +1509,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--surface)]/60 border borderbg-[var(--surface)]">
+                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--surface)]/60 border border-[var(--hair)]">
                       <span className="text-[var(--ink-2)]">
                         Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong>
                       </span>
@@ -1590,7 +1590,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         {progress}%
                       </span>
                     </div>
-                    <div className="w-full bgbg-[var(--surface)] rounded-[var(--r-pill)] h-1.5 overflow-hidden">
+                    <div className="w-full bg-[var(--sunken)] rounded-[var(--r-pill)] h-1.5 overflow-hidden">
                       <div
                         className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-[var(--ok)]' : 'bg-[var(--acc)]'}`}
                         style={{ width: `${progress}%` }}
@@ -1614,7 +1614,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             className="rounded text-[var(--acc)] h-3 w-3 cursor-pointer"
                           />
                           <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
-                          <span className="text-[8px] font-mono uppercase px-1 rounded bgbg-[var(--surface)] text-[var(--ink-2)] shrink-0">
+                          <span className="text-[8px] font-mono uppercase px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
                             {item.categoria}
                           </span>
                         </div>

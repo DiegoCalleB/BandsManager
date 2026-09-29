@@ -107,7 +107,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               {editingBand ? `Editar Banda: ${editingBand.nombre_banda}` : 'Añadir Nueva Banda al CRM'}
             </h3>
           </div>
-          <button onClick={() => onClose()} className="p-1 hover:bgbg-[var(--surface)] rounded-[var(--r-m)] transition-colors">
+          <button onClick={() => onClose()} className="p-1 hover:bg-[var(--sunken)] rounded-[var(--r-m)] transition-colors">
             <X className="w-5 h-5 text-[var(--ink-2)]" />
           </button>
         </div>
@@ -319,12 +319,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             )}
 
             {/* Icono o Imagen / Logo de la Banda */}
-            <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--surface)]/60 rounded-[var(--r-m)] border borderbg-[var(--surface)]">
+            <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--surface)]/60 rounded-[var(--r-m)] border border-[var(--hair)]">
               <label className="block text-[10px] font-mono uppercase text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Preview current avatar */}
-                <div className="w-10 h-10 rounded-[var(--r-pill)] bgbg-[var(--surface)] border border-[var(--hair)] flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-10 h-10 rounded-[var(--r-pill)] bg-[var(--sunken)] border border-[var(--hair)] flex items-center justify-center overflow-hidden shrink-0">
                   {formImageUrl ? (
                     <img src={formImageUrl} alt="Logo Banda" className="w-full h-full object-cover" />
                   ) : (
@@ -346,7 +346,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                         className={`w-7 h-7 rounded-[var(--r-m)] text-sm flex items-center justify-center transition-all cursor-pointer ${
                           formIcon === emoji && !formImageUrl
                             ? 'bg-[var(--acc)]/20 border border-[var(--acc)] text-[var(--ink)] scale-110'
-                            : 'bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
+                            : 'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
                         }`}
                       >
                         {emoji}
@@ -358,7 +358,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                 {/* Upload file button */}
                 <div className="shrink-0 space-y-1">
                   <span className="text-[10px] text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
-                  <label className="cursor-pointer px-2.5 py-1.5 bgbg-[var(--surface)] hover:bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-all active:scale-95">
+                  <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] border border-[var(--hair)] rounded-[var(--r-m)] text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-all active:scale-95">
                     {isUploadingLogo ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
                     ) : (
@@ -534,7 +534,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             <button
               type="button"
               onClick={() => onClose()}
-              className="px-2 py-1 bgbg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
+              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
             >
               Cancelar
             </button>
