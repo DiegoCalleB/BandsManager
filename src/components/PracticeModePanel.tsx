@@ -1035,7 +1035,7 @@ export default function PracticeModePanel({
                       <button
                         onClick={() => toggleSolo(tr.id)}
                         title="Solo (aislar, solo en mi mezcla)"
-                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--on-acc)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+                        className={`w-6 h-6 rounded text-[10px] font-sans font-bold ${eff.solo ? 'bg-[var(--acc)]/60 text-[var(--acc-ink)]' : 'bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
                       >
                         S
                       </button>

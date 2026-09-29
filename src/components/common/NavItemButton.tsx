@@ -41,7 +41,7 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
           badge !== undefined && (
             <span
               className={`text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums transition-colors ${
-                isSelected ? 'bg-[var(--acc)]/20 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                isSelected ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
               }`}
             >
               {badge}
@@ -77,7 +77,7 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
         {badge !== undefined && isAllowed && (
           <span
             className={`text-xs px-2 py-0.5 rounded-[var(--r-pill)] font-sans font-bold tabular-nums ${
-              isSelected ? 'bg-[var(--acc)]/20 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+              isSelected ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
             }`}
           >
             {badge}

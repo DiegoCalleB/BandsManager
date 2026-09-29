@@ -2256,7 +2256,7 @@ export default function CalendarView({
                   onChange={(e) => setCalendarSearchTerm(e.target.value)}
                   placeholder="Buscar evento, sala, ciudad, artista, notas (ej. Joy Eslava, Madrid, acústico)..."
                   className={`w-full px-2.5 py-1.5 text-xs font-sans bg-transparent outline-none ${
-                    'text-[var(--ink)] placeholder:text-[var(--ink-3)]'
+                    'text-[var(--ink)] placeholder:text-[var(--ink-2)]'
                   }`}
                 />
                 {calendarSearchTerm && (

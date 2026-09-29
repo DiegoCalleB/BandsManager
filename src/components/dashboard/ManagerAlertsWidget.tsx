@@ -374,7 +374,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
 
                     {/* Quick action button footer */}
                     <div
-                      className={`pt-2.5 border-t ${'border-[var(--hair)]'} flex flex-col sm:flex-row sm:items-center justify-between gap-2`}
+                      className={`pt-2.5 border-t ${'border-[var(--hair)]'} flex flex-col gap-2`}
                     >
                       <span
                         className={`text-[10px] font-mono ${'text-[var(--ink-2)]'} flex items-center gap-1`}
@@ -383,7 +383,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                         Acciones disponibles
                       </span>
 
-                      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end">
+                      <div className="flex items-center gap-2 flex-wrap">
                         {alert.actions && alert.actions.length > 0 ? (
                           alert.actions.map((act, actIdx) => (
                             <button

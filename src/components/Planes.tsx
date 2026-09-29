@@ -687,7 +687,7 @@ export const Planes: React.FC<PlanesProps> = ({
               onClick={() => setBillingPeriod("annual")}
               className={`relative px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
                 billingPeriod === "annual"
-                  ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-black"
+                  ? "bg-[var(--acc)]/60 text-[var(--acc-ink)] font-black"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
             >
@@ -838,7 +838,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       <div
                         className={`p-1.5 rounded-[var(--r-m)] shrink-0 ${
                           plan.isPopular
-                            ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
+                            ? "bg-[var(--acc)]/60 text-[var(--acc-ink)]"
                             : plan.id === "cabeza_de_cartel"
                               ? "bg-[var(--ok)] text-[var(--ink)]"
                               : "bg-[var(--surface)] text-[var(--ink)]"
@@ -901,7 +901,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           <div
                             className={`p-0.5 rounded-full mt-0.5 shrink-0 ${
                               plan.isPopular
-                                ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
+                                ? "bg-[var(--acc)]/60 text-[var(--acc-ink)]"
                                 : "bg-[var(--ok)]/20 text-[var(--ok)]"
                             }`}
                           >

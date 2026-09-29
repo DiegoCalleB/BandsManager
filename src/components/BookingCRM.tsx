@@ -1801,7 +1801,7 @@ export default function BookingCRM({
                         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
                         <span>{filterByCampaign ? 'Campaña' : 'Campaña'}</span>
                         {filterByCampaign && (
-                          <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-[10px] font-semibold tabular-nums">
+                          <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
                             {filteredLeads.length}
                           </span>
                         )}
@@ -2037,7 +2037,7 @@ export default function BookingCRM({
                     <span>{tab.label}</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
-                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
+                        isSelected ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                       }`}
                     >
                       {count}

@@ -979,7 +979,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             {isSelected ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--on-acc)] text-[9px] font-black font-sans">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--acc)]/60 text-[var(--acc-ink)] text-[9px] font-black font-sans">
                                 <Star className="w-2.5 h-2.5 fill-[var(--ink)]" />
                                 <span>Principal</span>
                               </span>
