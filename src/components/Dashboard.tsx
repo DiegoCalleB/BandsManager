@@ -176,7 +176,7 @@ export default function Dashboard({
   onOpenProfileModal,
   isPromoPlan: isPromoPlanProp,
 }: DashboardProps) {
-  const { setSongs: setPlayerSongs, setCurrentSong, currentSong } = usePlayer();
+  const { setSongs: setPlayerSongs } = usePlayer();
   const [searchTerm, setSearchTerm] = useState("");
   const [cityFilter, setCityFilter] = useState("todos");
   const [genreFilter, setGenreFilter] = useState("todos");
@@ -259,9 +259,6 @@ export default function Dashboard({
             setSongs(songsRes.songs);
             setSongsCount(songsRes.songs.length);
             setPlayerSongs(songsRes.songs);
-            if (!currentSong && songsRes.songs.length > 0) {
-              setCurrentSong(songsRes.songs[0]);
-            }
           }
           if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
             setSetlists(setlistsRes.setlists);
@@ -281,7 +278,7 @@ export default function Dashboard({
     return () => {
       isMounted = false;
     };
-  }, [currentBandId, currentSong, setPlayerSongs, setCurrentSong]);
+  }, [currentBandId, setPlayerSongs]);
 
   const storedSongsCount = songsCount;
 
