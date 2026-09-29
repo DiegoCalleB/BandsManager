@@ -34,14 +34,14 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       title={isFavorite ? "Quitar de favoritos" : "Marcar como favorito"}
-      className={`p-1.5 rounded-[var(--r-m)] transition-all duration-200 flex items-center justify-center shrink-0 ${
+      className={`p-1.5 rounded-[var(--r-m)] transition-ui duration-200 flex items-center justify-center shrink-0 ${
         isFavorite
           ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30"
           : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70  hover:bg-[var(--acc)]/10"
       } ${className}`}
     >
       <Star
-        className={`${iconSizes[size]} transition-all duration-200 ${
+        className={`${iconSizes[size]} transition-ui duration-200 ${
           isFavorite || hovered
             ? "fill-[var(--acc)] text-[var(--acc)] scale-105"
             : "text-[var(--ink-2)]"

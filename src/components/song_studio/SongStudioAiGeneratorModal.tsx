@@ -66,7 +66,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
             <p className="font-semibold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Pista de Referencia Orientativa
             </p>
-            <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Genera una secuencia rítmica sintetizada de bajo y batería para escuchar cómo sonaría tu guitarra o voz con acompañamiento.
               Podrás añadirla como una pista más en el mezclador multipista.
             </p>
@@ -109,7 +109,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
               <label className="text-xs font-sans text-[var(--ink-2)] block">Instrumentos a incluir:</label>
               <div className="grid grid-cols-2 gap-3">
                 <label
-                  className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
+                  className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-ui ${
                     includeDrums ? 'bg-[var(--acc)]/30 text-[var(--ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                   }`}
                 >
@@ -123,7 +123,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                 </label>
 
                 <label
-                  className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-all ${
+                  className={`p-3 rounded-[var(--r-m)] flex items-center gap-2 cursor-pointer transition-ui ${
                     includeBass ? 'bg-[var(--acc)]/30 text-[var(--ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                   }`}
                 >
@@ -148,7 +148,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
                       key={style}
                       type="button"
                       onClick={() => setDrumStyle(style)}
-                      className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
+                      className={`py-2 px-1 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                         drumStyle === style
                           ? 'bg-[var(--acc)] text-[var(--ink)]'
                           : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'

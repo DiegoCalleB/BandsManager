@@ -59,11 +59,11 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isSti
       >
         <div className="flex items-center gap-1.5 min-w-0">
           <Zap className="w-3 h-3 text-[var(--acc-ink)] shrink-0" />
-          <span className="text-[10px] text-[var(--ink-2)] truncate">
+          <span className="text-micro text-[var(--ink-2)] truncate">
             IA este mes: <strong className="text-[var(--ink)]">{costeLabel}</strong>
           </span>
         </div>
-        <span className="text-[10px] font-bold text-[var(--acc-ink)] transition-colors flex items-center gap-1.5 shrink-0">
+        <span className="text-micro font-bold text-[var(--acc-ink)] transition-colors flex items-center gap-1.5 shrink-0">
           <span className="w-5 h-5 rounded-[var(--r-s)] overflow-hidden shrink-0">
             <img src={BUCKET_ICON_SRC} alt="" className="w-full h-full object-cover" />
           </span>
@@ -85,11 +85,11 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isSti
       </span>
       <div className="flex-1 min-w-0">
         <h3 className="text-xs sm:text-sm font-bold text-[var(--acc-ink)] transition-colors">Apoya BandManager económicamente</h3>
-        <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+        <p className="text-xs text-[var(--ink-2)] mt-0.5">
           Cualquier aportación ayuda a mantener el proyecto y sus agentes de IA en marcha.
         </p>
       </div>
-      <span className="text-[10px] text-[var(--ink-2)] shrink-0 hidden sm:block">vía Ko-fi →</span>
+      <span className="text-micro text-[var(--ink-2)] shrink-0 hidden sm:block">vía Ko-fi →</span>
     </a>
   );
 };
@@ -116,7 +116,7 @@ export const AiUsageCard: React.FC<AiUsageCardProps> = () => {
       </div>
       <div>
         <h3 className="text-xs font-bold">Consumo de IA este mes</h3>
-        <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+        <p className="text-xs text-[var(--ink-2)] mt-0.5">
           Tu banda ha gastado <strong className="text-[var(--acc-ink)]">{costeLabel}</strong> en generación de IA (copys, acordes, música,
           análisis de reels).
         </p>

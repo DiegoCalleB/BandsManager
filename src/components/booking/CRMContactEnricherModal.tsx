@@ -140,11 +140,11 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
 
             {enrichedResults.length > 0 && (
               <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
-                <span className="text-[11px] font-semibold text-[var(--ink-2)]">Contactos actualizados:</span>
+                <span className="text-xs font-semibold text-[var(--ink-2)]">Contactos actualizados:</span>
                 {enrichedResults.map((r, i) => (
                   <div key={i} className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 flex flex-col gap-1">
                     <span className="font-bold text-[var(--ink-2)]">{r.name}</span>
-                    <div className="flex flex-wrap gap-3 text-[11px] text-[var(--ink-2)]">
+                    <div className="flex flex-wrap gap-3 text-xs text-[var(--ink-2)]">
                       {r.email && (
                         <span className="flex items-center gap-1">
                           <Mail className="w-3 h-3 text-[var(--ok)]" /> {r.email}
@@ -180,7 +180,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
               type="button"
               onClick={handleStartEnrichment}
               disabled={isProcessing || incompleteLeads.length === 0}
-              className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 text-xs font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] transition-ui flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <>

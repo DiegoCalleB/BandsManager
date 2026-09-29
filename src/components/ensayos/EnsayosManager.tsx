@@ -195,7 +195,7 @@ export function EnsayosManager({
             setEditingRehearsal(null);
             setShowConvocarModal(true);
           }}
-          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-black text-sm hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-95"
+          className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-bold text-sm hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
         >
           <Plus className="w-4 h-4" />
           <span>Convocar Primer Ensayo</span>
@@ -246,7 +246,7 @@ export function EnsayosManager({
 
               {/* Status Badge */}
               <span
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold ${
                   currentRehearsal?.estado === "completado"
                     ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
                     : currentRehearsal?.estado === "en_curso"
@@ -316,7 +316,7 @@ export function EnsayosManager({
                 setEditingRehearsal(null);
                 setShowConvocarModal(true);
               }}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Convocar Ensayo</span>
@@ -328,14 +328,14 @@ export function EnsayosManager({
         <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-[var(--sunken)] rounded-[var(--r-l)]">
           <button
             onClick={() => setActiveTab("orden_del_dia")}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
               activeTab === "orden_del_dia"
-                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
             <ListOrdered className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-[11px] leading-tight font-bold">
+            <span className="sm:hidden text-xs leading-tight font-bold">
               1. Agenda
             </span>
             <span className="hidden sm:inline">1. Orden del Día</span>
@@ -343,14 +343,14 @@ export function EnsayosManager({
 
           <button
             onClick={() => setActiveTab("modo_local")}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
               activeTab === "modo_local"
-                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
             <Radio className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-[11px] leading-tight font-bold">
+            <span className="sm:hidden text-xs leading-tight font-bold">
               2. En Vivo
             </span>
             <span className="hidden sm:inline">2. Modo Local en Vivo</span>
@@ -358,14 +358,14 @@ export function EnsayosManager({
 
           <button
             onClick={() => setActiveTab("grabacion_acta")}
-            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer text-center ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-1 sm:px-3 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer text-center ${
               activeTab === "grabacion_acta"
-                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-black"
+                ? "bg-[var(--acc)]/60 text-[var(--ink)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80"
             }`}
           >
             <Mic className="w-4 h-4 shrink-0" />
-            <span className="sm:hidden text-[11px] leading-tight font-bold">
+            <span className="sm:hidden text-xs leading-tight font-bold">
               3. Acta IA
             </span>
             <span className="hidden sm:inline">3. Grabación & Acta</span>

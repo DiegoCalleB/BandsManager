@@ -726,7 +726,7 @@ export function BulkAlbumAudioUploaderModal({
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`p-8 rounded-[var(--r-l)] text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
+            className={`p-8 rounded-[var(--r-l)] text-center cursor-pointer transition-ui flex flex-col items-center justify-center gap-3 ${
               items.length > 0
                 ? "bg-[var(--ok)]/10"
                 : "bg-[var(--surface)]/5 hover:bg-[var(--ok)]/10"
@@ -797,7 +797,7 @@ export function BulkAlbumAudioUploaderModal({
               </div>
               <div className="w-full h-2 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
                 <div
-                  className="h-full bg-[var(--surface)] transition-all duration-300 rounded-[var(--r-pill)]"
+                  className="h-full bg-[var(--surface)] transition-ui duration-300 rounded-[var(--r-pill)]"
                   style={{
                     width: `${(uploadProgress.current / Math.max(1, uploadProgress.total)) * 100}%`,
                   }}
@@ -827,7 +827,7 @@ export function BulkAlbumAudioUploaderModal({
                   return (
                     <div
                       key={item.id || idx}
-                      className={`p-3.5 rounded-[var(--r-l)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 ${
+                      className={`p-3.5 rounded-[var(--r-l)] transition-ui flex flex-col md:flex-row md:items-center justify-between gap-3 ${
                         item.status === "success"
                           ? "bg-[var(--ok)]/10"
                           : item.status === "error"
@@ -840,7 +840,7 @@ export function BulkAlbumAudioUploaderModal({
                         <button
                           type="button"
                           onClick={() => togglePlayAudio(idx)}
-                          className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-all cursor-pointer ${
+                          className={`w-9 h-9 rounded-[var(--r-m)] flex items-center justify-center shrink-0 transition-ui cursor-pointer ${
                             isPlaying
                               ? "bg-[var(--surface)] text-[var(--ink)]"
                               : "bg-[var(--ink)]/10 hover:bg-[var(--surface)] hover:text-[var(--ink)] text-[var(--ink-2)]"
@@ -876,7 +876,7 @@ export function BulkAlbumAudioUploaderModal({
                               <span className="truncate">{item.fileName}</span>
                             </p>
                           )}
-                          <p className="text-[11px] font-sans text-[var(--ink-2)] mt-0.5">
+                          <p className="text-xs font-sans text-[var(--ink-2)] mt-0.5">
                             {item.fileSizeFormatted} •{" "}
                             {formatSecondsToMmSs(item.durationSeconds)}
                           </p>
@@ -948,7 +948,7 @@ export function BulkAlbumAudioUploaderModal({
                         <div className="flex items-center justify-end">
                           {item.status === "success" && (
                             <span
-                              className={`px-2 py-1 rounded text-[11px] font-sans flex items-center gap-1 ${
+                              className={`px-2 py-1 rounded text-xs font-sans flex items-center gap-1 ${
                                 item.chordsSource === "plantilla_generica"
                                   ? "bg-[var(--acc)]/20 text-[var(--acc)]"
                                   : "bg-[var(--ok)]/20 text-[var(--ok)]"
@@ -971,13 +971,13 @@ export function BulkAlbumAudioUploaderModal({
                             </span>
                           )}
                           {item.status === "uploading" && (
-                            <span className="px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-sans flex items-center gap-1">
+                            <span className="px-2 py-1 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-xs font-sans flex items-center gap-1">
                               <RefreshCw className="w-3.5 h-3.5 animate-spin" />{" "}
                               Subiendo
                             </span>
                           )}
                           {item.status === "transcribing" && (
-                            <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-[11px] font-sans flex items-center gap-1">
+                            <span className="px-2 py-1 rounded bg-[var(--tentative)]/10 text-[var(--tentative)]/80 text-xs font-sans flex items-center gap-1">
                               <RefreshCw className="w-3.5 h-3.5 animate-spin" />{" "}
                               Analizando acordes (IA)
                             </span>

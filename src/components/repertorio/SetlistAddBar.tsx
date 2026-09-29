@@ -149,7 +149,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
           <button
             type="button"
             onClick={() => setIsAddSongsModalOpen(true)}
-            className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all shrink-0"
+            className="px-3 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--ok)]/15 text-[var(--ink-2)] hover:bg-[var(--ok)]/25 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-ui shrink-0"
             title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
           >
             <ListPlus className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -195,7 +195,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                   "⚡ Bloque Nuevo",
                 )
               }
-              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all"
+              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--tentative)]/10 text-[var(--tentative)]/50 hover:bg-[var(--tentative)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-ui"
               title="Añadir un encabezado de bloque para estructurar el concierto"
             >
               <span>⚡</span>
@@ -206,7 +206,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
             <button
               type="button"
               onClick={() => setShowEventMenu((v) => !v)}
-              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-all"
+              className="px-2.5 py-1.5 text-xs rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink-2)] hover:bg-[var(--acc)]/20 whitespace-nowrap cursor-pointer font-medium flex items-center gap-1.5 transition-ui"
               title="Añadir saludos, presentaciones, descansos, bises o eventos personalizados"
             >
               <Zap className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -227,7 +227,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
               <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 p-2 space-y-2 text-xs">
                 {/* Standard Preset Events */}
                 <div>
-                  <div className="text-[10px] text-[var(--ink-2)] px-2 py-1 font-semibold">
+                  <div className="text-micro text-[var(--ink-2)] px-2 py-1 font-semibold">
                     Eventos de Show
                   </div>
                   <div className="grid grid-cols-1 gap-0.5">
@@ -245,7 +245,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                           <span>{ev.icon}</span>
                           <span>{ev.label}</span>
                         </span>
-                        <span className="text-[10px] text-[var(--ink-2)]">
+                        <span className="text-micro text-[var(--ink-2)]">
                           Añadir
                         </span>
                       </button>
@@ -272,14 +272,14 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                 {/* Custom Band Shortcuts */}
                 <div className="pt-1">
                   <div className="flex items-center justify-between px-2 py-1">
-                    <span className="text-[10px] text-[var(--ok)] font-semibold">
+                    <span className="text-micro text-[var(--ok)] font-semibold">
                       Accesos Rápidos de la Banda
                     </span>
                     {!isAddingShortcut && (
                       <button
                         type="button"
                         onClick={() => setIsAddingShortcut(true)}
-                        className="text-[10px] text-[var(--ok)] hover:underline flex items-center gap-0.5 cursor-pointer"
+                        className="text-micro text-[var(--ok)] hover:underline flex items-center gap-0.5 cursor-pointer"
                       >
                         <Plus className="w-3 h-3" /> Nuevo
                       </button>

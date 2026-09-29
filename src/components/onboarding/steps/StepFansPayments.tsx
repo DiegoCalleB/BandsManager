@@ -100,7 +100,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Descripción del Regalo</label>
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Descripción del Regalo</label>
             <input
               type="text"
               value={fanRewardDescription}
@@ -111,7 +111,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">Código de Descuento en Merch (Opcional)</label>
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">Código de Descuento en Merch (Opcional)</label>
             <input
               type="text"
               value={discountCode}
@@ -187,7 +187,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <Smartphone className="w-3 h-3 text-[var(--acc)]" /> Bizum (Teléfono)
             </label>
             <input
@@ -200,7 +200,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <CreditCard className="w-3 h-3 text-[var(--acc)]" /> Revolut (@Tag)
             </label>
             <input
@@ -213,7 +213,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <DollarSign className="w-3 h-3 text-[var(--tentative)]" /> PayPal (Email / Me)
             </label>
             <input
@@ -226,7 +226,7 @@ export const StepFansPayments: React.FC<StepFansPaymentsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1 flex items-center gap-1">
               <CreditCard className="w-3 h-3 text-[var(--ok)]" /> IBAN / Transferencia
             </label>
             <input

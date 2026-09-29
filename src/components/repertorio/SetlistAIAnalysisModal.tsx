@@ -616,7 +616,7 @@ export function SetlistAIAnalysisModal({
                   <button
                     onClick={onUndo}
                     onMouseDown={(e) => e.stopPropagation()}
-                    className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-sans font-medium flex items-center gap-1"
+                    className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                     title="Deshacer el último reordenamiento del setlist"
                   >
                     ↩️ Deshacer
@@ -665,7 +665,7 @@ export function SetlistAIAnalysisModal({
                   return (
                     <span
                       key={i}
-                      className={`px-2 py-0.5 rounded text-[9.5px] font-sans font-medium flex items-center gap-1 transition ${
+                      className={`px-2 py-0.5 rounded text-micro font-sans font-medium flex items-center gap-1 transition ${
                         w.type === "warning"
                           ? "bg-[var(--acc)]/10 text-[var(--acc)]/70 "
                           : w.type === "success"
@@ -771,7 +771,7 @@ export function SetlistAIAnalysisModal({
                   </div>
                   <div className="w-full bg-[var(--surface)]/70 rounded-[var(--r-pill)] h-1.5">
                     <div
-                      className="bg-[var(--acc)]  h-1.5 rounded-[var(--r-pill)] transition-all"
+                      className="bg-[var(--acc)]  h-1.5 rounded-[var(--r-pill)] transition-ui"
                       style={{ width: `${analysis.overallScore}%` }}
                     />
                   </div>
@@ -855,7 +855,7 @@ export function SetlistAIAnalysisModal({
                                     <p className="text-sm font-semibold text-[var(--ink-2)]">
                                       {sugg.title}
                                     </p>
-                                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                                    <p className="text-xs text-[var(--ink-2)] mt-0.5">
                                       {getCategoryIcon(sugg.category)}{" "}
                                       {sugg.category}
                                     </p>
@@ -867,7 +867,7 @@ export function SetlistAIAnalysisModal({
                                       if (isInvalid) {
                                         return (
                                           <span
-                                            className="text-[10px] text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
+                                            className="text-micro text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
                                             title="Un cambio anterior afectó a la canción que esta sugerencia necesitaba"
                                           >
                                             ⚠️ Ya no aplica
@@ -885,7 +885,7 @@ export function SetlistAIAnalysisModal({
                                               e.stopPropagation();
                                               handleUndoSuggestion(idx);
                                             }}
-                                            className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-sans transition whitespace-nowrap"
+                                            className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                                             title="Deshacer este cambio de orden"
                                           >
                                             ↩️ Deshacer
@@ -896,7 +896,7 @@ export function SetlistAIAnalysisModal({
                                         // Se aplicó, pero luego se aplicó/arrastró otra cosa encima — el
                                         // snapshot de un solo nivel ya no puede revertir justo esto.
                                         return (
-                                          <span className="text-[10px] text-[var(--ok)] font-sans font-medium whitespace-nowrap">
+                                          <span className="text-micro text-[var(--ok)] font-sans font-medium whitespace-nowrap">
                                             ✓ Aplicado
                                           </span>
                                         );
@@ -908,7 +908,7 @@ export function SetlistAIAnalysisModal({
                                             e.stopPropagation();
                                             handleApplySuggestion(idx);
                                           }}
-                                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] font-sans transition whitespace-nowrap"
+                                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc)]/50 hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro font-sans transition whitespace-nowrap"
                                           title="Mover la canción a la posición sugerida"
                                         >
                                           ✓ Aplicar

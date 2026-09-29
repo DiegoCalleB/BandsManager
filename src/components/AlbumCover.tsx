@@ -40,7 +40,7 @@ export const AlbumCover: React.FC<AlbumCoverProps> = ({
   return (
     <div
       onClick={onPlay}
-      className={`aspect-square bg-cover bg-center bg-[var(--surface)]/80 flex items-center justify-center relative transition-all group overflow-hidden ${onPlay ? 'cursor-pointer' : ''} ${className || 'w-full h-full'}`}
+      className={`aspect-square bg-cover bg-center bg-[var(--surface)]/80 flex items-center justify-center relative transition-ui group overflow-hidden ${onPlay ? 'cursor-pointer' : ''} ${className || 'w-full h-full'}`}
       style={{ backgroundImage: resolvedUrl ? `url(${resolvedUrl})` : 'none' }}
     >
       {!resolvedUrl && <Disc3 className="w-16 h-16 opacity-20 text-[var(--ink)]" />}
@@ -53,7 +53,7 @@ export const AlbumCover: React.FC<AlbumCoverProps> = ({
             e.stopPropagation();
             if (onPlay) onPlay(e);
           }}
-          className={`absolute bottom-3 right-3 w-12 h-12 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center transform transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95 z-20 ${
+          className={`absolute bottom-3 right-3 w-12 h-12 rounded-[var(--r-pill)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] flex items-center justify-center transform transition-ui duration-200 cursor-pointer active:scale-[0.97] z-20 ${
             isPlaying
               ? 'translate-y-0 opacity-100 ring-2 ring-white/50 scale-105'
               : 'translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'

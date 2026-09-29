@@ -219,7 +219,7 @@ export function AIBandScoutModal({
               <button
                 onClick={handleSearch}
                 disabled={isSearching}
-                className="px-6 py-2.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold rounded-[var(--r-m)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-2.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold rounded-[var(--r-m)] transition-ui disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSearching ? (
                   <>
@@ -259,7 +259,7 @@ export function AIBandScoutModal({
                     <div
                       key={idx}
                       onClick={() => toggleSelection(idx)}
-                      className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-between
+                      className={`p-4 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center justify-between
  ${selectedBands.has(idx) ? "bg-[var(--acc)]/5" : `${borderColor} ${inputBg} opacity-70 hover:opacity-100`}`}
                     >
                       <div className="flex items-center gap-4">
@@ -315,7 +315,7 @@ export function AIBandScoutModal({
             <button
               onClick={handleImport}
               disabled={selectedBands.size === 0}
-              className="px-6 py-2 bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-m)] transition-all shadow disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--surface)]/80 font-bold text-sm rounded-[var(--r-m)] transition-ui shadow disabled:opacity-50 flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Importar {selectedBands.size} Bandas al CRM

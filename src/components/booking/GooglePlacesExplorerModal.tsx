@@ -1033,11 +1033,11 @@ export function GooglePlacesExplorerModal({
                   <h2 className="text-base font-bold font-display text-[var(--acc)]">
                     Buscador de Salas & Nuevos Leads (Scout Descubridor)
                   </h2>
-                  <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-sans font-bold">
+                  <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-sans font-bold">
                     IA + Google Places
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                <p className="text-xs text-[var(--ink-2)] font-sans">
                   Busca y categoriza nuevas salas, ayuntamientos, festivales,
                   grupos y agencias en cualquier ciudad y enriquece sus correos
                   sin alucinar.
@@ -1050,7 +1050,7 @@ export function GooglePlacesExplorerModal({
                 <button
                   type="button"
                   onClick={() => setShowDiscardedModal(true)}
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] transition-all cursor-pointer"
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--ink-2)] transition-ui cursor-pointer"
                   title="Ver y gestionar sugerencias marcadas como no deseadas"
                 >
                   <Ban className="w-3.5 h-3.5 text-[var(--alert)]" />
@@ -1082,12 +1082,12 @@ export function GooglePlacesExplorerModal({
                         Prospección Masiva de Campaña
                       </span>
                       {activeCampaign && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans">
+                        <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--ink)] font-sans">
                           {activeCampaign.name}
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                    <p className="text-xs text-[var(--ink-2)] mt-0.5">
                       Descubre simultáneamente todos los recintos, salas,
                       locales y discotecas del aforo (
                       {aforoMin || activeCampaign?.minCapacity || "0"} -{" "}
@@ -1101,7 +1101,7 @@ export function GooglePlacesExplorerModal({
                   type="button"
                   onClick={handleMassCampaignSearch}
                   disabled={isMassCampaignSearching || isSearching}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] font-black text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all/20 cursor-pointer disabled:opacity-50 shrink-0"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-ui/20 cursor-pointer disabled:opacity-50 shrink-0"
                 >
                   {isMassCampaignSearching ? (
                     <>
@@ -1120,7 +1120,7 @@ export function GooglePlacesExplorerModal({
               {/* Selector de Tipos de Espacio para la prospección masiva */}
               <div className="pt-2800/80 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] font-bold mr-1">
+                  <span className="text-micro font-sans text-[var(--ink-2)] font-bold mr-1">
                     Espacios a rastrear:
                   </span>
                   {[
@@ -1150,7 +1150,7 @@ export function GooglePlacesExplorerModal({
                             setMassFilterTipos([...massFilterTipos, item.id]);
                           }
                         }}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 transition-ui cursor-pointer ${
                           isChecked
                             ? "bg-[var(--acc)]/60 text-[var(--acc)]/70 "
                             : "bg-[var(--bg)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -1165,7 +1165,7 @@ export function GooglePlacesExplorerModal({
 
                 {activeCampaign?.targetCities &&
                   activeCampaign.targetCities.length > 0 && (
-                    <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                    <span className="text-micro text-[var(--ink-2)] font-sans">
                       Ciudades ({activeCampaign.targetCities.length}):{" "}
                       <strong className="text-[var(--ink)]">
                         {activeCampaign.targetCities.join(",")}
@@ -1196,14 +1196,14 @@ export function GooglePlacesExplorerModal({
               {/* Category Selector Pills (8 Categorías) */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-[10px] font-sans text-[var(--ink-2)] font-bold">
+                  <label className="block text-micro font-sans text-[var(--ink-2)] font-bold">
                     Categoría a Descubrir:
                   </label>
                   {discardedList.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setShowDiscardedModal(true)}
-                      className="sm:hidden text-[10px] text-[var(--alert)] underline font-sans flex items-center gap-1 cursor-pointer"
+                      className="sm:hidden text-micro text-[var(--alert)] underline font-sans flex items-center gap-1 cursor-pointer"
                     >
                       <Ban className="w-3 h-3" />
                       {discardedList.length} no deseadas
@@ -1218,7 +1218,7 @@ export function GooglePlacesExplorerModal({
                         key={cat.id}
                         type="button"
                         onClick={() => handleCategoryChange(cat.id)}
-                        className={`px-2 py-1.5 rounded-[var(--r-s)] text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                        className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                           isSelected
                             ? "bg-[var(--acc)] text-[var(--on-acc)]"
                             : "bg-[var(--bg)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
@@ -1277,7 +1277,7 @@ export function GooglePlacesExplorerModal({
 
                 {/* Number of Venues limit (1 a 10) */}
                 <div className="md:col-span-3 flex items-center gap-1.5 bg-[var(--surface)] px-3 py-1 rounded-[var(--r-m)]">
-                  <span className="text-[10px] font-sans text-[var(--ink-2)] whitespace-nowrap">
+                  <span className="text-micro font-sans text-[var(--ink-2)] whitespace-nowrap">
                     Cantidad:
                   </span>
                   <input
@@ -1299,7 +1299,7 @@ export function GooglePlacesExplorerModal({
                 <button
                   type="button"
                   onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                  className="text-[11px] text-[var(--ink-2)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-sans"
+                  className="text-xs text-[var(--ink-2)] hover:text-[var(--acc)]/70 flex items-center gap-1 cursor-pointer font-sans"
                 >
                   <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>
@@ -1314,7 +1314,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchMultiSource()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--acc)]/80 hover:bg-[var(--acc)]/90 text-[var(--acc)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     title="Escanear salas y festivales vía Wegow, Songkick, Ticketmaster, Entradium y MusicBrainz"
                   >
                     <Disc3 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -1325,7 +1325,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchPublicCultural()}
                     disabled={isSearching}
-                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-3 py-2 bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] font-semibold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     title="Convocatorias públicas, teatros y auditorios municipales de Datos Abiertos"
                   >
                     <Building2 className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -1336,7 +1336,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearch()}
                     disabled={isSearching}
-                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)] font-bold text-xs rounded-[var(--r-m)] flex items-center justify-center gap-2 transition-ui cursor-pointer disabled:opacity-50"
                   >
                     {isSearching ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1355,7 +1355,7 @@ export function GooglePlacesExplorerModal({
               {showAdvancedFilters && (
                 <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] grid grid-cols-2 sm:grid-cols-2 gap-3 animate-fadeIn text-xs">
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                    <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Aforo Mínimo (personas)
                     </label>
                     <input
@@ -1367,7 +1367,7 @@ export function GooglePlacesExplorerModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-sans text-[var(--ink-2)] mb-1">
+                    <label className="block text-micro font-sans text-[var(--ink-2)] mb-1">
                       Aforo Máximo (personas)
                     </label>
                     <input
@@ -1383,14 +1383,14 @@ export function GooglePlacesExplorerModal({
 
               {/* Quick City Chips */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[10px] text-[var(--ink-2)] font-bold mr-1">
+                <span className="text-micro text-[var(--ink-2)] font-bold mr-1">
                   Ciudades rápidas:
                 </span>
                 {QUICK_CITIES.map((city) => (
                   <button
                     key={city}
                     onClick={() => handleQuickCityClick(city)}
-                    className={`px-2.5 py-0.5 text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer font-medium ${
+                    className={`px-2.5 py-0.5 text-micro rounded-[var(--r-s)] transition-ui cursor-pointer font-medium ${
                       selectedCity === city
                         ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : "bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
@@ -1404,7 +1404,7 @@ export function GooglePlacesExplorerModal({
               {/* Quick Similar Bands / FFO Mirror Chips from Dossier */}
               {similarBands && similarBands.length > 0 && (
                 <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[var(--hair)]/60">
-                  <span className="text-[10px] text-[var(--acc)] font-bold mr-1 flex items-center gap-1">
+                  <span className="text-micro text-[var(--acc)] font-bold mr-1 flex items-center gap-1">
                     <Music2 className="w-3 h-3 text-[var(--acc)]" />
                     Efecto Espejo (Dossier):
                   </span>
@@ -1414,7 +1414,7 @@ export function GooglePlacesExplorerModal({
                       type="button"
                       onClick={() => handleSearchSimilarBands(band)}
                       disabled={isSearching}
-                      className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50"
+                      className="px-2.5 py-0.5 text-micro rounded-[var(--r-m)] transition-ui cursor-pointer font-medium bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50"
                       title={`Rastrear salas donde ha tocado ${band} en Bandsintown y Setlist.fm`}
                     >
                       🔍 {band}
@@ -1424,7 +1424,7 @@ export function GooglePlacesExplorerModal({
                     type="button"
                     onClick={() => handleSearchSimilarBands()}
                     disabled={isSearching}
-                    className="px-2.5 py-0.5 text-[10px] rounded-[var(--r-m)] font-bold transition-all cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
+                    className="px-2.5 py-0.5 text-micro rounded-[var(--r-m)] font-bold transition-ui cursor-pointer bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] ml-auto"
                   >
                     ⚡ Rastrear Todas
                   </button>
@@ -1434,7 +1434,7 @@ export function GooglePlacesExplorerModal({
 
             {/* Status / Errors / Search Source */}
             {searchSource && (
-              <div className="flex items-center justify-between text-[11px] px-2 text-[var(--ink-2)]">
+              <div className="flex items-center justify-between text-xs px-2 text-[var(--ink-2)]">
                 <span>
                   Fuente:{" "}
                   <strong className="text-[var(--acc)]">{searchSource}</strong>
@@ -1499,7 +1499,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       onClick={handleExtractBatchEmails}
                       disabled={isExtractingBatch || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                       title="Agente Enriquecedor: Investiga las páginas oficiales y fuentes públicas sin inventar emails"
                     >
                       {isExtractingBatch ? (
@@ -1513,7 +1513,7 @@ export function GooglePlacesExplorerModal({
                     <button
                       onClick={handleImportToCRM}
                       disabled={isImporting || selectedCount === 0}
-                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                      className="px-3.5 py-1.5 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                     >
                       {isImporting ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1530,7 +1530,7 @@ export function GooglePlacesExplorerModal({
                   {places.map((place) => (
                     <div
                       key={place.place_id}
-                      className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-2.5 ${
+                      className={`p-3.5 rounded-[var(--r-m)] transition-ui flex flex-col justify-between space-y-2.5 ${
                         place.selected
                           ? "bg-[var(--bg)]/50"
                           : "bg-[var(--bg)]/60/80 opacity-70"
@@ -1563,7 +1563,7 @@ export function GooglePlacesExplorerModal({
                                 </h4>
                                 {place.alreadyInCrm && (
                                   <span
-                                    className="text-[9px] px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold shrink-0"
+                                    className="text-micro px-1.5 py-0.2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded font-bold shrink-0"
                                     title="Este contacto ya existe en tu CRM de Leads"
                                   >
                                     En CRM ({place.crmStatus || "Registrado"})
@@ -1571,14 +1571,14 @@ export function GooglePlacesExplorerModal({
                                 )}
                                 {place.capacityMatch === false && (
                                   <span
-                                    className="text-[9px] px-1.5 py-0.2 bg-[var(--alert)]/20 text-[var(--ink-2)] rounded font-medium shrink-0"
+                                    className="text-micro px-1.5 py-0.2 bg-[var(--alert)]/20 text-[var(--ink-2)] rounded font-medium shrink-0"
                                     title="El aforo estimado difiere de los filtros de la campaña"
                                   >
                                     ⚠️ Aforo fuera de rango
                                   </span>
                                 )}
                               </div>
-                              <p className="text-[10px] text-[var(--ink-2)] flex items-center gap-1">
+                              <p className="text-micro text-[var(--ink-2)] flex items-center gap-1">
                                 <MapPin className="w-3 h-3 text-[var(--acc)] shrink-0" />
                                 <span className="truncate">
                                   {place.ciudad} ({place.region})
@@ -1589,11 +1589,11 @@ export function GooglePlacesExplorerModal({
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             {place.rating && (
-                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc)] rounded-[var(--r-s)] text-[10px] font-bold">
+                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--acc)]/10 text-[var(--acc)] rounded-[var(--r-s)] text-micro font-bold">
                                 <Star className="w-3 h-3 fill-[var(--acc)]" />
                                 <span>{place.rating}</span>
                                 {place.user_ratings_total && (
-                                  <span className="text-[8px] text-[var(--ink-2)]">
+                                  <span className="text-micro text-[var(--ink-2)]">
                                     ({place.user_ratings_total})
                                   </span>
                                 )}
@@ -1603,7 +1603,7 @@ export function GooglePlacesExplorerModal({
                             <button
                               type="button"
                               onClick={() => handleDiscardPlace(place)}
-                              className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/15 transition-all cursor-pointer"
+                              className="p-1 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--alert)] hover:bg-[var(--alert)]/15 transition-ui cursor-pointer"
                               title="Marcar como no deseada (descartar para futuras búsquedas)"
                             >
                               <Ban className="w-3.5 h-3.5" />
@@ -1612,7 +1612,7 @@ export function GooglePlacesExplorerModal({
                         </div>
 
                         {/* Category & Tags Row */}
-                        <div className="flex flex-wrap items-center justify-between gap-1.5 pt-0.5 text-[10px]">
+                        <div className="flex flex-wrap items-center justify-between gap-1.5 pt-0.5 text-micro">
                           <div className="flex items-center gap-1.5">
                             <span className="text-[var(--ink-2)] font-sans">
                               Categoría:
@@ -1625,7 +1625,7 @@ export function GooglePlacesExplorerModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="bg-[var(--bg)] text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-[10px] focus:outline-none focus:cursor-pointer"
+                              className="bg-[var(--bg)] text-[var(--acc)]/70 font-bold rounded px-2 py-0.5 text-micro focus:outline-none focus:cursor-pointer"
                             >
                               {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
@@ -1637,7 +1637,7 @@ export function GooglePlacesExplorerModal({
 
                           <div className="flex items-center gap-1.5">
                             {place.genero && (
-                              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
+                              <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 font-medium">
                                 <Music2 className="w-2.5 h-2.5 shrink-0" />
                                 <span className="truncate max-w-[130px]">
                                   {place.genero}
@@ -1645,7 +1645,7 @@ export function GooglePlacesExplorerModal({
                               </span>
                             )}
                             {place.aforo ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] font-sans shrink-0">
+                              <span className="inline-flex items-center gap-1 text-micro px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] font-sans shrink-0">
                                 <Users className="w-2.5 h-2.5 text-[var(--ink-2)]" />
                                 <span>~{place.aforo}</span>
                               </span>
@@ -1655,7 +1655,7 @@ export function GooglePlacesExplorerModal({
 
                         {/* Informative Description of the Proposal */}
                         {place.descripcion && (
-                          <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)]/80 text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+                          <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)]/80 text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                             <div className="flex items-start gap-1.5">
                               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
                               <p className="line-clamp-2">
@@ -1666,7 +1666,7 @@ export function GooglePlacesExplorerModal({
                         )}
 
                         {/* Address & Phone */}
-                        <div className="text-[10px] text-[var(--ink-2)] space-y-1 bg-[var(--bg)] p-2 rounded-[var(--r-s)] font-sans">
+                        <div className="text-micro text-[var(--ink-2)] space-y-1 bg-[var(--bg)] p-2 rounded-[var(--r-s)] font-sans">
                           {place.direccion && (
                             <p className="truncate text-[var(--ink-2)]">
                               {place.direccion}
@@ -1701,19 +1701,19 @@ export function GooglePlacesExplorerModal({
                         {/* Email Status & Extractor */}
                         <div className="pt-1">
                           {place.email_contacto ? (
-                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)] text-[11px] flex items-center justify-between font-sans">
+                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--ok)]/10 text-[var(--ink-2)] text-xs flex items-center justify-between font-sans">
                               <div className="flex items-center gap-1.5 truncate">
                                 <Check className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
                                 <span className="font-bold truncate">
                                   {place.email_contacto}
                                 </span>
                               </div>
-                              <span className="text-[9px] px-1.5 py-0.5 bg-[var(--ok)]/20 text-[var(--ink-2)] rounded font-bold shrink-0">
+                              <span className="text-micro px-1.5 py-0.5 bg-[var(--ok)]/20 text-[var(--ink-2)] rounded font-bold shrink-0">
                                 Verificado
                               </span>
                             </div>
                           ) : (
-                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] text-[10px] flex items-center justify-between gap-2">
+                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--bg)] text-micro flex items-center justify-between gap-2">
                               <span className="text-[var(--ink-2)] italic">
                                 Sin correo extraído aún
                               </span>
@@ -1722,7 +1722,7 @@ export function GooglePlacesExplorerModal({
                                   handleExtractSingleEmail(place.place_id)
                                 }
                                 disabled={place.extractingEmail}
-                                className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-[var(--r-s)] font-bold text-[10px] flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50 shrink-0"
+                                className="px-2.5 py-1 bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 rounded-[var(--r-s)] font-bold text-micro flex items-center gap-1 transition-ui cursor-pointer disabled:opacity-50 shrink-0"
                                 title="Agente Enriquecedor: Buscar email oficial verificado en la web de esta propuesta"
                               >
                                 {place.extractingEmail ? (
@@ -1800,7 +1800,7 @@ export function GooglePlacesExplorerModal({
                           <p className="font-bold text-[var(--ink)] truncate">
                             {item.nombre_sala}
                           </p>
-                          <p className="text-[10px] text-[var(--ink-2)] font-sans">
+                          <p className="text-micro text-[var(--ink-2)] font-sans">
                             {item.ciudad ? `${item.ciudad} • ` : ""}Descartada
                             el{" "}
                             {new Date(item.discarded_at).toLocaleDateString()}
@@ -1809,7 +1809,7 @@ export function GooglePlacesExplorerModal({
                         <button
                           type="button"
                           onClick={() => handleRestorePlace(item.nombre_sala)}
-                          className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-all"
+                          className="px-2.5 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 rounded-[var(--r-s)] text-micro font-bold flex items-center gap-1 cursor-pointer shrink-0 transition-ui"
                           title="Volver a permitir en sugerencias futuras"
                         >
                           <RotateCcw className="w-3 h-3" />

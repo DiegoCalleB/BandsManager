@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
+import '@fontsource-variable/onest';
 import './index.css';
 import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './utils/temaEspectro';
 

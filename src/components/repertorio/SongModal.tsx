@@ -134,7 +134,7 @@ export function SongModal({
               </div>
               <div>
                 <h3 className="text-sm font-bold tracking-tight">{editingSong ? 'Editar Canción' : 'Añadir Nueva Canción'}</h3>
-                <p className="text-[11px] text-[var(--ink-2)] font-normal">
+                <p className="text-xs text-[var(--ink-2)] font-normal">
                   {editingSong ? 'Modifica los datos del tema en tu repertorio' : 'Añade un tema rápido a tu catálogo'}
                 </p>
               </div>
@@ -144,14 +144,14 @@ export function SongModal({
             </button>
           </div>
 
-          <form onSubmit={onSave} className="space-y-3 text-[10px] font-sans flex flex-col flex-1 overflow-hidden pt-3">
+          <form onSubmit={onSave} className="space-y-3 text-micro font-sans flex flex-col flex-1 overflow-hidden pt-3">
             <input type="hidden" name="audioPrincipalUrl" value={audioFileName ? '' : audioFileUrl} />
             <input type="hidden" name="albumDisco" value={finalAlbumValue} />
 
             <div className="space-y-4 overflow-y-auto pr-1 flex-1 pb-2">
               {/* Audio Upload Area (Compact & Clean) */}
               <div
-                className={`p-3 rounded-[var(--r-l)] transition-all ${
+                className={`p-3 rounded-[var(--r-l)] transition-ui ${
                   'bg-[var(--sunken)] '
                 } hover:brightness-95`}
               >
@@ -162,7 +162,7 @@ export function SongModal({
                     </div>
                     <div className="min-w-0">
                       <span className="font-semibold text-xs block text-[var(--ink-2)]">Audio Demo (mp3, wav, m4a)</span>
-                      <span className="text-[10px] text-[var(--ink-2)] truncate block">
+                      <span className="text-micro text-[var(--ink-2)] truncate block">
                         {audioFileName || (audioFileUrl ? 'Audio subido previamente' : 'Opcional — autodetección de duración')}
                       </span>
                     </div>
@@ -170,7 +170,7 @@ export function SongModal({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-2.5 py-1 text-[10px] rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold cursor-pointer transition-transform active:scale-95"
+                    className="px-2.5 py-1 text-micro rounded-[var(--r-s)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-extrabold cursor-pointer transition-transform active:scale-[0.97]"
                   >
                     Examinar...
                   </button>
@@ -190,7 +190,7 @@ export function SongModal({
                   </div>
                 )}
                 {detectedDurationMsg && (
-                  <div className="mt-1.5 text-[11px] font-semibold text-[var(--ok)] flex items-center gap-1">
+                  <div className="mt-1.5 text-xs font-semibold text-[var(--ok)] flex items-center gap-1">
                     <Sparkles className="w-3 h-3" />
                     <span>{detectedDurationMsg}</span>
                   </div>
@@ -287,7 +287,7 @@ export function SongModal({
               {/* Music Essentials Row (Key, BPM, Energy) */}
               <div className="grid grid-cols-3 gap-2.5">
                 <div>
-                  <label className="block text-[var(--ink-2)] text-[11px] font-semibold mb-1">Tonalidad</label>
+                  <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">Tonalidad</label>
                   <input
                     name="tonalidad"
                     type="text"
@@ -300,7 +300,7 @@ export function SongModal({
                 </div>
 
                 <div>
-                  <label className="block text-[var(--ink-2)] text-[11px] font-semibold mb-1">BPM</label>
+                  <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">BPM</label>
                   <input
                     name="bpm"
                     type="number"
@@ -313,7 +313,7 @@ export function SongModal({
                 </div>
 
                 <div>
-                  <label className="block text-[var(--ink-2)] text-[11px] font-semibold mb-1">Energía</label>
+                  <label className="block text-[var(--ink-2)] text-xs font-semibold mb-1">Energía</label>
                   <select
                     name="energia"
                     defaultValue={energiaDefault}
@@ -329,7 +329,7 @@ export function SongModal({
 
               {/* Collapsible Accordion: Advanced Options & Notes */}
               <div
-                className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
+                className={`rounded-[var(--r-l)] transition-ui overflow-hidden ${
                   'bg-[var(--sunken)] '
                 }`}
               >
@@ -343,7 +343,7 @@ export function SongModal({
                   <div className="flex items-center gap-2">
                     <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span className="font-semibold">Opciones avanzadas y notas</span>
-                    <span className="text-[10px] text-[var(--ink-2)] font-normal">(Género, afinación, partitura, notas por miembro)</span>
+                    <span className="text-micro text-[var(--ink-2)] font-normal">(Género, afinación, partitura, notas por miembro)</span>
                   </div>
                   {showAdvancedOptions ? (
                     <ChevronUp className="w-4 h-4 text-[var(--ink-2)]" />
@@ -357,7 +357,7 @@ export function SongModal({
                     {/* Style & Type */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[var(--ink-2)] text-[11px] mb-1">Género / Estilo</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Género / Estilo</label>
                         <input
                           name="genero"
                           type="text"
@@ -370,7 +370,7 @@ export function SongModal({
                       </div>
 
                       <div>
-                        <label className="block text-[var(--ink-2)] text-[11px] mb-1">Tipo de Tema</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Tipo de Tema</label>
                         <select
                           name="tipo"
                           defaultValue={editingSong?.tipo || 'propio'}
@@ -388,7 +388,7 @@ export function SongModal({
                     {/* Maturity & Voice */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[var(--ink-2)] text-[11px] mb-1">Estado de Madurez</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Estado de Madurez</label>
                         <select
                           name="estadoTema"
                           defaultValue={editingSong?.estadoTema || 'listo'}
@@ -404,7 +404,7 @@ export function SongModal({
                       </div>
 
                       <div>
-                        <label className="block text-[var(--ink-2)] text-[11px] mb-1">Voz Principal</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Voz Principal</label>
                         <input
                           name="cantantePrincipal"
                           type="text"
@@ -420,7 +420,7 @@ export function SongModal({
                     {/* Tuning & Sheet Music Link */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[var(--ink-2)] text-[11px] mb-1">Afinación</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Afinación</label>
                         <input
                           name="afinacion"
                           type="text"
@@ -433,7 +433,7 @@ export function SongModal({
                       </div>
 
                       <div>
-                        <label className="block text-[var(--ink-2)] text-[11px] mb-1">Enlace a Partitura / Drive</label>
+                        <label className="block text-[var(--ink-2)] text-xs mb-1">Enlace a Partitura / Drive</label>
                         <input
                           name="enlaceAcordes"
                           type="url"
@@ -448,7 +448,7 @@ export function SongModal({
 
                     {/* Internal Notes */}
                     <div>
-                      <label className="block text-[var(--ink-2)] text-[11px] mb-1">Notas Internas de Ejecución</label>
+                      <label className="block text-[var(--ink-2)] text-xs mb-1">Notas Internas de Ejecución</label>
                       <textarea
                         name="notasInternas"
                         rows={2}
@@ -472,7 +472,7 @@ export function SongModal({
                         <button
                           type="button"
                           onClick={() => setShowMemberNotesSection((p) => !p)}
-                          className="text-[10px] text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+                          className="text-micro text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
                         >
                           {showMemberNotesSection ? 'Ocultar' : 'Mostrar'}
                         </button>
@@ -481,7 +481,7 @@ export function SongModal({
                       {showMemberNotesSection && (
                         <div className="space-y-2 pt-1">
                           <div>
-                            <label className="block text-[var(--ink-2)] text-[10px] mb-1">📌 Nota General para todo el grupo</label>
+                            <label className="block text-[var(--ink-2)] text-micro mb-1">📌 Nota General para todo el grupo</label>
                             <input
                               name="notasRepertorio"
                               type="text"
@@ -497,7 +497,7 @@ export function SongModal({
                             const memberKey = member.name.toLowerCase();
                             return (
                               <div key={member.id || member.name} className="space-y-0.5">
-                                <span className="text-[10px] font-medium text-[var(--ink-2)] flex items-center gap-1">
+                                <span className="text-micro font-medium text-[var(--ink-2)] flex items-center gap-1">
                                   <span
                                     className="w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block"
                                     style={{ backgroundColor: member.avatarColor || '#6366f1' }}
@@ -535,7 +535,7 @@ export function SongModal({
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer"
+                className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer"
               >
                 Guardar Canción
               </button>

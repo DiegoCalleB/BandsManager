@@ -689,7 +689,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("fans")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <QrCode className="w-4 h-4 text-[var(--acc)]" />
               <span>Códigos QR & Fans</span>
@@ -697,7 +697,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("epk")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--tentative)]/15 hover:bg-[var(--tentative)]/25 text-[var(--tentative)]/80 font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <BookOpen className="w-4 h-4 text-[var(--acc)]" />
               <span>Dossier EPK</span>
@@ -706,7 +706,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("repertorio")}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink-2)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
               >
                 <Disc3 className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Repertorio</span>
@@ -715,7 +715,7 @@ export default function Dashboard({
             <button
               type="button"
               onClick={() => onNavigate && onNavigate("calendario")}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-sans text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 active:scale-[0.97]"
             >
               <Calendar className="w-4 h-4" />
               <span>Calendario</span>
@@ -750,16 +750,16 @@ export default function Dashboard({
                 <button
                   id="dashboard-promo-agenda-all-bands-btn"
                   onClick={() => setAgendaFilterMode("all")}
-                  className={`px-2.5 py-1 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                  className={`px-2.5 py-1 text-micro font-sans font-bold rounded-[var(--r-s)] transition-ui flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
                     agendaFilterMode === "all"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                   }`}
                   title="Ver eventos de todas las bandas"
                 >
                   <Users className="w-3 h-3 shrink-0" />
                   <span>Todas</span>
-                  <span className="ml-1 text-[9px] font-sans opacity-80">
+                  <span className="ml-1 text-micro font-sans opacity-80">
                     ({concerts.length + rehearsals.length})
                   </span>
                 </button>
@@ -767,9 +767,9 @@ export default function Dashboard({
                 <button
                   id="dashboard-promo-agenda-active-band-btn"
                   onClick={() => setAgendaFilterMode("active")}
-                  className={`px-2.5 py-1 text-[10px] font-sans font-bold rounded-[var(--r-s)] transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                  className={`px-2.5 py-1 text-micro font-sans font-bold rounded-[var(--r-s)] transition-ui flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
                     agendaFilterMode === "active"
-                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-black"
+                      ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                       : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
                   }`}
                   title={`Ver solo eventos de ${activeBandName}`}
@@ -778,7 +778,7 @@ export default function Dashboard({
                   <span className="truncate max-w-[90px] sm:max-w-none">
                     {activeBandName}
                   </span>
-                  <span className="ml-1 text-[9px] font-sans opacity-80">
+                  <span className="ml-1 text-micro font-sans opacity-80">
                     ({activeBandConcerts.length + activeBandRehearsals.length})
                   </span>
                 </button>
@@ -807,14 +807,14 @@ export default function Dashboard({
                       selectedDate: item.dateStr,
                     })
                   }
-                  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
+                  className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]  transition-ui flex flex-col justify-between cursor-pointer "
                 >
                   <div className="flex items-start gap-3.5">
                     <div className="w-12 h-12 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)] flex flex-col items-center justify-center shrink-0">
-                      <span className="text-lg font-sans font-black leading-none text-[var(--acc)]">
+                      <span className="text-lg font-sans font-bold leading-none text-[var(--acc)]">
                         {item.day}
                       </span>
-                      <span className="text-[10px] font-sans font-extrabold text-[var(--acc)]/70 mt-0.5">
+                      <span className="text-micro font-sans font-extrabold text-[var(--acc)]/70 mt-0.5">
                         {item.month}
                       </span>
                     </div>
@@ -822,7 +822,7 @@ export default function Dashboard({
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded font-sans font-bold ${
+                          className={`text-micro px-2 py-0.5 rounded font-sans font-bold ${
                             item.type === "concierto"
                               ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                               : "bg-[var(--ok)]/20 text-[var(--ink-2)]"
@@ -832,12 +832,12 @@ export default function Dashboard({
                         </span>
                         {(agendaFilterMode === "all" || hasMultipleBands) &&
                           item.bandName && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded font-sans font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70 truncate max-w-[120px] flex items-center gap-1">
+                            <span className="text-micro px-1.5 py-0.5 rounded font-sans font-semibold bg-[var(--surface)]/60 text-[var(--acc)]/70 truncate max-w-[120px] flex items-center gap-1">
                               <Music className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
                               <span className="truncate">{item.bandName}</span>
                             </span>
                           )}
-                        <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <span className="text-micro font-sans text-[var(--ink-2)]">
                           • {item.badge}
                         </span>
                       </div>
@@ -879,7 +879,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("calendario")}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-sans font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer inline-flex items-center gap-1.5 mx-auto"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Ir al Calendario</span>
@@ -891,7 +891,7 @@ export default function Dashboard({
         {/* 2. TARJETAS RÁPIDAS DE CAPTURA QR, FANS Y DOSSIER */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Card 1: Códigos QR & Captura de Fans */}
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4  transition-all">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4  transition-ui">
             <div>
               <div className="flex items-center justify-between pb-3">
                 <div className="flex items-center gap-2.5">
@@ -902,12 +902,12 @@ export default function Dashboard({
                     <h3 className="text-sm font-bold font-display text-[var(--ink-2)]">
                       Captura QR & Fans
                     </h3>
-                    <p className="text-[11px] font-sans text-[var(--ink-2)]">
+                    <p className="text-xs font-sans text-[var(--ink-2)]">
                       QRs para directos, flyers y captación de audiencia
                     </p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
+                <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/10 text-[var(--acc)]/70">
                   {totalFansCount} / {maxPromoFans} Fans
                 </span>
               </div>
@@ -922,7 +922,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("fans")}
-                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
               >
                 <QrCode className="w-4 h-4" />
                 <span>Gestionar QRs y Fans</span>
@@ -931,7 +931,7 @@ export default function Dashboard({
           </div>
 
           {/* Card 2: Dossier EPK Digital */}
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:bg-[var(--acc-soft)] transition-all">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/90 flex flex-col justify-between space-y-4 hover:bg-[var(--acc-soft)] transition-ui">
             <div>
               <div className="flex items-center justify-between pb-3">
                 <div className="flex items-center gap-2.5">
@@ -942,12 +942,12 @@ export default function Dashboard({
                     <h3 className="text-sm font-bold font-display text-[var(--ink-2)]">
                       Dossier (EPK) Digital
                     </h3>
-                    <p className="text-[11px] font-sans text-[var(--ink-2)]">
+                    <p className="text-xs font-sans text-[var(--ink-2)]">
                       Prensa, rider técnico, vídeos y bio online
                     </p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--tentative)]/10 text-[var(--tentative)]/80">
+                <span className="px-2 py-0.5 rounded text-micro font-sans font-bold bg-[var(--tentative)]/10 text-[var(--tentative)]/80">
                   Público
                 </span>
               </div>
@@ -961,7 +961,7 @@ export default function Dashboard({
               <button
                 type="button"
                 onClick={() => onNavigate && onNavigate("epk")}
-                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+                className="flex-1 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97]"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Editar Dossier EPK</span>
@@ -1168,7 +1168,7 @@ export default function Dashboard({
                     <Eye className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                     <span>Modo Vista</span>
                   </div>
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
+                  <span className="text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {viewDensityMode === "clean" ? "Esencial" : "Completa"}
                   </span>
                 </button>

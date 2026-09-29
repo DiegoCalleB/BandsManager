@@ -14,7 +14,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+            className="absolute top-4 right-4 p-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -26,7 +26,7 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
             <div>
               <h3 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2">
                 Atajos de Teclado Tipo Cubase DAW
-                <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">Modo Studio</span>
+                <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/30 text-[var(--acc)]/40">Modo Studio</span>
               </h3>
               <p className="text-xs text-[var(--ink-2)]">
                 Controla la reproducción y grabación multipista directamente con tu teclado en tiempo real.
@@ -97,14 +97,14 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
           </div>
 
           <div className="pt-2 flex items-center justify-between">
-            <span className="text-[11px] text-[var(--ink-2)] font-sans">
+            <span className="text-xs text-[var(--ink-2)] font-sans">
               💡 Presiona <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">K</kbd> o{' '}
               <kbd className="px-1 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)]">?</kbd> en cualquier momento para abrir este menú.
             </span>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-all cursor-pointer"
+              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--acc)] hover:bg-[var(--tentative)] transition-ui cursor-pointer"
             >
               Entendido
             </button>

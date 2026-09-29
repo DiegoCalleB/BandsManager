@@ -146,7 +146,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             <button
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-[var(--r-m)] font-semibold text-[var(--on-acc)] bg-[var(--acc)] hover:bg-[var(--acc)] disabled:opacity-50 transition-ui flex items-center justify-center gap-2"
             >
               {isGenerating ? (
                 <span className="animate-pulse">Generando respuesta con Gemini IA...</span>
@@ -162,13 +162,13 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
               <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 space-y-3">
                 <div className="flex items-center justify-between pb-2">
                   <span className="font-semibold text-[var(--ink-2)]">Vista Previa del Mensaje</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">Listo para registrar</span>
+                  <span className="text-micro px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">Listo para registrar</span>
                 </div>
                 <textarea
                   rows={5}
                   value={simulationMessage}
                   onChange={(e) => setSimulationMessage(e.target.value)}
-                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] font-sans text-[11px] outline-none"
+                  className="w-full p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] font-sans text-xs outline-none"
                 />
               </div>
             )}
@@ -184,7 +184,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
             <button
               onClick={handleCommit}
               disabled={!simulationMessage}
-              className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 transition-all flex items-center gap-2"
+              className="px-5 py-2 rounded-[var(--r-m)] font-semibold text-[var(--on-ok)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 transition-ui flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
               Registrar en Hilo de Emails

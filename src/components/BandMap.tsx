@@ -615,7 +615,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
           <MapPin className="w-4 h-4 text-[var(--acc)] animate-bounce" />
           <div>
             <span className="font-bold">Mapa de Bandas Amigas</span>
-            <span className="ml-2 text-[10px] opacity-75">
+            <span className="ml-2 text-micro opacity-75">
               ({bands.length} {bands.length === 1 ? "banda" : "bandas"})
             </span>
           </div>
@@ -623,7 +623,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
         <div className="pointer-events-auto flex items-center gap-2 relative">
           {isGeocoding && (
-            <div className="px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center gap-1.5 bg-[var(--acc-soft)] text-[var(--ink)]">
+            <div className="px-3 py-1.5 rounded-[var(--r-m)] text-micro font-sans flex items-center gap-1.5 bg-[var(--acc-soft)] text-[var(--ink)]">
               <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
               <span>Geolocalizando bandas...</span>
             </div>
@@ -632,7 +632,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
           <div className="relative">
             <button
               onClick={() => setShowStyleMenu(!showStyleMenu)}
-              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${"bg-[var(--surface)]/95 text-[var(--ink)]"}`}
+              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${"bg-[var(--surface)]/95 text-[var(--ink)]"}`}
             >
               <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Capa</span>
@@ -647,7 +647,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
                       setMapStyle(key);
                       setShowStyleMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                    className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-xs font-bold transition-ui cursor-pointer flex items-center justify-between gap-2 ${
                       mapStyle === key
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "hover:bg-[var(--surface)] text-[var(--ink-2)]"
@@ -663,7 +663,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
           <button
             onClick={handleRecenter}
-            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${"bg-[var(--surface)] text-[var(--ink)]"}`}
           >
             <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Centrar</span>

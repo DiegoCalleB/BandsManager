@@ -415,7 +415,7 @@ export const SongStudioStructureUploadModal: React.FC<
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-semibold">Estructura actual guardada</p>
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] flex items-center gap-1 shrink-0 ${
+                      className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] flex items-center gap-1 shrink-0 ${
                         song.estructuraVerificada
                           ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
                           : "bg-[var(--acc)]/20 text-[var(--acc)]/70"
@@ -486,7 +486,7 @@ export const SongStudioStructureUploadModal: React.FC<
                   {showComparison && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2/20">
                       <div className="space-y-1.5">
-                        <p className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <p className="text-micro font-sans text-[var(--ink-2)]">
                           Documento original
                         </p>
                         <div className="bg-[var(--sunken)] rounded-[var(--r-s)] overflow-hidden max-h-96">
@@ -517,11 +517,11 @@ export const SongStudioStructureUploadModal: React.FC<
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <p className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <p className="text-micro font-sans text-[var(--ink-2)]">
                           Acordes extraídos (guardados)
                         </p>
                         <div className="bg-[var(--sunken)] rounded-[var(--r-s)] p-3 h-96 overflow-y-auto">
-                          <pre className="text-[11px] font-sans text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
+                          <pre className="text-xs font-sans text-[var(--acc)] whitespace-pre-wrap leading-relaxed">
                             {song.cifradoTexto ||
                               "Sin acordes guardados todavía."}
                           </pre>

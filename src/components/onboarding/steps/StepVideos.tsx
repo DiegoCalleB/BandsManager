@@ -61,12 +61,12 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                       {vid.titulo}
                     </span>
                     {(vid as any).tipo && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
+                      <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
                         {(vid as any).tipo}
                       </span>
                     )}
                     {vid.destacado && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium flex items-center gap-1">
+                      <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium flex items-center gap-1">
                         <Award className="w-3 h-3" /> Destacado
                       </span>
                     )}

@@ -492,7 +492,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs transition-all shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -535,7 +535,7 @@ export const Planes: React.FC<PlanesProps> = ({
             type="button"
             onClick={handleOpenCustomerPortal}
             disabled={isOpeningPortal}
-            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs transition-all shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 font-bold text-xs transition-ui shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isOpeningPortal ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -570,7 +570,7 @@ export const Planes: React.FC<PlanesProps> = ({
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+            <p className="text-xs text-[var(--ink-2)] mt-0.5">
               Tus pagos, facturas, tarjetas y cancelaciones se gestionan de
               forma 100% segura con Stripe.
             </p>
@@ -581,7 +581,7 @@ export const Planes: React.FC<PlanesProps> = ({
           type="button"
           onClick={handleOpenCustomerPortal}
           disabled={isOpeningPortal}
-          className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-bold font-sans transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          className="w-full sm:w-auto px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-bold font-sans transition-ui flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {isOpeningPortal ? (
             <>
@@ -631,7 +631,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   if (deGiraBtn)
                     deGiraBtn.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-ui active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
               </button>
@@ -674,7 +674,7 @@ export const Planes: React.FC<PlanesProps> = ({
             <button
               type="button"
               onClick={() => setBillingPeriod("monthly")}
-              className={`px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-ui cursor-pointer ${
                 billingPeriod === "monthly"
                   ? "bg-[var(--surface)]/80 text-[var(--ink)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -685,15 +685,15 @@ export const Planes: React.FC<PlanesProps> = ({
             <button
               type="button"
               onClick={() => setBillingPeriod("annual")}
-              className={`relative px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
+              className={`relative px-5 py-2 rounded-[var(--r-m)] text-xs sm:text-sm font-bold transition-ui cursor-pointer flex items-center gap-2 ${
                 billingPeriod === "annual"
-                  ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-black"
+                  ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
               }`}
             >
               <span>Anual</span>
               <span
-                className={`text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-extrabold ${
+                className={`text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-extrabold ${
                   billingPeriod === "annual"
                     ? "bg-[var(--sunken)] text-[var(--acc)]/70"
                     : "bg-[var(--ok)]/20 text-[var(--ok)]"
@@ -733,16 +733,16 @@ export const Planes: React.FC<PlanesProps> = ({
               case "silver":
                 return "bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)]";
               case "gold":
-                return "bg-[var(--acc)]  hover:brightness-110 text-[var(--ink)] font-black";
+                return "bg-[var(--acc)]  hover:brightness-110 text-[var(--ink)] font-bold";
               case "emerald":
-                return "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black";
+                return "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold";
             }
           };
 
           return (
             <div
               key={plan.id}
-              className={`relative flex flex-col justify-between rounded-[var(--r-l)] p-6 transition-all duration-300 ${
+              className={`relative flex flex-col justify-between rounded-[var(--r-l)] p-6 transition-ui duration-300 ${
                 plan.isPopular
                   ? "bg-[var(--surface)]   lg:-translate-y-2.5 z-10"
                   : "bg-[var(--surface)] hover:"
@@ -751,7 +751,7 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Popular Floating Badge */}
               {plan.isPopular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] text-[10px] font-black font-sans">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] text-micro font-bold font-sans">
                     <Star className="w-3 h-3 fill-[var(--ink)]" />
                     <span>MÁS POPULAR</span>
                   </span>
@@ -761,11 +761,11 @@ export const Planes: React.FC<PlanesProps> = ({
               {/* Card Header */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-black font-display text-[var(--ink)]">
+                  <h3 className="text-xl font-bold font-display text-[var(--ink)]">
                     {plan.name}
                   </h3>
                   <span
-                    className={`px-2.5 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${getBadgeStyle(plan.badgeType)}`}
+                    className={`px-2.5 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold ${getBadgeStyle(plan.badgeType)}`}
                   >
                     {plan.badgeLabel}
                   </span>
@@ -787,7 +787,7 @@ export const Planes: React.FC<PlanesProps> = ({
                   </div>
 
                   {isAnnual && plan.annualPrice > 0 && (
-                    <p className="text-[11px] font-sans text-[var(--ok)] mt-1">
+                    <p className="text-xs font-sans text-[var(--ok)] mt-1">
                       Equivalente a{" "}
                       {plan.annualEquivalentMonthly
                         .toFixed(2)
@@ -796,7 +796,7 @@ export const Planes: React.FC<PlanesProps> = ({
                     </p>
                   )}
                   {isAnnual && plan.annualPrice === 0 && (
-                    <p className="text-[11px] font-sans text-[var(--ink-2)] mt-1">
+                    <p className="text-xs font-sans text-[var(--ink-2)] mt-1">
                       Para siempre sin coste
                     </p>
                   )}
@@ -814,10 +814,10 @@ export const Planes: React.FC<PlanesProps> = ({
                     className={`w-4 h-4 mt-0.5 shrink-0 ${plan.isPopular ? "text-[var(--acc)]" : "text-[var(--ink-2)]"}`}
                   />
                   <div className="flex flex-col">
-                    <span className="text-xs font-sans font-black tracking-wide">
+                    <span className="text-xs font-sans font-bold tracking-wide">
                       {plan.creditsLabel}
                     </span>
-                    <span className="text-[10px] text-[var(--ink-2)] leading-tight">
+                    <span className="text-micro text-[var(--ink-2)] leading-tight">
                       {plan.creditsSub}
                     </span>
                   </div>
@@ -826,7 +826,7 @@ export const Planes: React.FC<PlanesProps> = ({
                 {/* 🎁 Sticker Gift */}
                 {plan.stickerGift ? (
                   <div
-                    className={`p-3 rounded-[var(--r-l)] transition-all relative overflow-hidden ${
+                    className={`p-3 rounded-[var(--r-l)] transition-ui relative overflow-hidden ${
                       plan.isPopular
                         ? "bg-[var(--acc)]/20  "
                         : plan.id === "cabeza_de_cartel"
@@ -849,7 +849,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
                           <span
-                            className={`text-[10px] font-sans font-black px-1.5 py-0.5 rounded ${
+                            className={`text-micro font-sans font-black px-1.5 py-0.5 rounded ${
                               plan.isPopular
                                 ? "bg-[var(--acc)]/60 text-[var(--acc)]/70"
                                 : plan.id === "cabeza_de_cartel"
@@ -859,14 +859,14 @@ export const Planes: React.FC<PlanesProps> = ({
                           >
                             {plan.stickerGift.tag}
                           </span>
-                          <span className="text-[9px] font-sans text-[var(--ink-2)]">
+                          <span className="text-micro font-sans text-[var(--ink-2)]">
                             Regalo
                           </span>
                         </div>
-                        <p className="text-[11px] font-bold text-[var(--ink)] leading-snug">
+                        <p className="text-xs font-bold text-[var(--ink)] leading-snug">
                           🎁 {plan.stickerGift.qty}
                         </p>
-                        <p className="text-[10px] text-[var(--ink-2)] leading-tight mt-0.5">
+                        <p className="text-micro text-[var(--ink-2)] leading-tight mt-0.5">
                           {plan.stickerGift.description}
                         </p>
                       </div>
@@ -876,11 +876,11 @@ export const Planes: React.FC<PlanesProps> = ({
                   <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 flex items-center justify-between gap-2 text-[var(--ink-2)]">
                     <div className="flex items-center gap-2">
                       <Gift className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                      <span className="text-[10px] font-sans">
+                      <span className="text-micro font-sans">
                         Pack de pegatinas de bienvenida
                       </span>
                     </div>
-                    <span className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
+                    <span className="text-micro font-sans font-bold text-[var(--ink-2)]">
                       Solo pago
                     </span>
                   </div>
@@ -888,7 +888,7 @@ export const Planes: React.FC<PlanesProps> = ({
 
                 {/* Feature List */}
                 <div className="pt-2 space-y-2.5">
-                  <p className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
+                  <p className="text-micro font-sans font-bold text-[var(--ink-2)]">
                     Características:
                   </p>
                   <ul className="space-y-2">
@@ -942,7 +942,7 @@ export const Planes: React.FC<PlanesProps> = ({
                         type="button"
                         onClick={handleOpenCustomerPortal}
                         disabled={isOpeningPortal}
-                        className="w-full py-2 px-3 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] text-[11px] font-sans transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        className="w-full py-2 px-3 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                       >
                         <CreditCard className="w-3.5 h-3.5" />
                         <span>Gestionar en Stripe</span>
@@ -969,12 +969,12 @@ export const Planes: React.FC<PlanesProps> = ({
                       type="button"
                       onClick={handleOpenCustomerPortal}
                       disabled={isOpeningPortal}
-                      className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-bold font-sans transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-bold font-sans transition-ui flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       <ExternalLink className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Bajar a {plan.name}</span>
                     </button>
-                    <p className="text-[10px] text-[var(--ink-2)] font-sans text-center leading-tight">
+                    <p className="text-micro text-[var(--ink-2)] font-sans text-center leading-tight">
                       Efectivo al fin de ciclo en Stripe Portal
                     </p>
                   </div>
@@ -1027,10 +1027,10 @@ export const Planes: React.FC<PlanesProps> = ({
             <div className="col-span-2 text-center text-[var(--ink-2)]">
               Local (12€/m)
             </div>
-            <div className="col-span-2 text-center text-[var(--acc)]/70 font-black">
+            <div className="col-span-2 text-center text-[var(--acc)]/70 font-bold">
               De Gira (29€/m) ⭐
             </div>
-            <div className="col-span-2 text-center text-[var(--ok)] font-black">
+            <div className="col-span-2 text-center text-[var(--ok)] font-bold">
               Cabeza de Cartel (79€/m)
             </div>
           </div>
@@ -1081,14 +1081,14 @@ export const Planes: React.FC<PlanesProps> = ({
                               {row.name}
                             </p>
                             {row.description && (
-                              <p className="text-[11px] text-[var(--ink-2)]">
+                              <p className="text-xs text-[var(--ink-2)]">
                                 {row.description}
                               </p>
                             )}
                           </div>
 
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
-                            <span className="lg:hidden text-[10px] font-sans text-[var(--ink-2)]">
+                            <span className="lg:hidden text-micro font-sans text-[var(--ink-2)]">
                               Ensayo:
                             </span>
                             {typeof row.ensayo === "boolean" ? (
@@ -1105,7 +1105,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           </div>
 
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
-                            <span className="lg:hidden text-[10px] font-sans text-[var(--ink-2)]">
+                            <span className="lg:hidden text-micro font-sans text-[var(--ink-2)]">
                               Local:
                             </span>
                             {typeof row.local === "boolean" ? (
@@ -1122,7 +1122,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           </div>
 
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs bg-[var(--acc)]/5 lg:bg-transparent p-2 lg:p-0 rounded-[var(--r-s)]">
-                            <span className="lg:hidden text-[10px] font-sans text-[var(--acc)] font-bold">
+                            <span className="lg:hidden text-micro font-sans text-[var(--acc)] font-bold">
                               De Gira (⭐):
                             </span>
                             {typeof row.de_gira === "boolean" ? (
@@ -1141,7 +1141,7 @@ export const Planes: React.FC<PlanesProps> = ({
                           </div>
 
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
-                            <span className="lg:hidden text-[10px] font-sans text-[var(--ok)] font-bold">
+                            <span className="lg:hidden text-micro font-sans text-[var(--ok)] font-bold">
                               Cabeza de Cartel:
                             </span>
                             {typeof row.cabeza_de_cartel === "boolean" ? (

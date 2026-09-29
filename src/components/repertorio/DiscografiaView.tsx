@@ -510,7 +510,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   return (
     <div className="w-full flex flex-col gap-4" data-modulo="discografia">
       {/* Header: Stats */}
-      <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] transition-all bg-[var(--surface)]">
+      <div className="p-3.5 sm:p-6 md:p-8 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] transition-ui bg-[var(--surface)]">
         <p className="text-[var(--ink-2)] text-xs">
           {safeSongs.length > 1 ? "lanzamientos" : "lanzamiento"} •{" "}
           {safeSongs.length} temas
@@ -522,7 +522,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         <button
           type="button"
           onClick={() => setExportModalData({ isOpen: true, albumName: "all" })}
-          className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+          className={`px-3.5 py-1.5 rounded-[var(--r-m)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-ui ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
           title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
         >
           <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -533,7 +533,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           <button
             type="button"
             onClick={() => setShowCreateAlbumMenu((v) => !v)}
-            className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+            className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Nuevo Disco</span>
@@ -554,14 +554,14 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       setShowCreateAlbumMenu(false);
                       onCreateAlbum();
                     }}
-                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
+                    className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                   >
                     <Plus className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                     <span>
                       <span className="text-xs font-semibold text-[var(--ink)] block">
                         Disco vacío
                       </span>
-                      <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
+                      <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                         Crea el disco y añade canciones después, una a una.
                       </span>
                     </span>
@@ -573,14 +573,14 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     setShowCreateAlbumMenu(false);
                     setBulkUploadAlbum({ name: "", songs: [] });
                   }}
-                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
+                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                 >
                   <FolderUp className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--ok)] block">
                       Subir Disco (MP3/WAV)
                     </span>
-                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
+                    <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Arrastra archivos de audio desde tu ordenador.
                     </span>
                   </span>
@@ -591,14 +591,14 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     setShowCreateAlbumMenu(false);
                     setIsSpotifyModalOpen(true);
                   }}
-                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
+                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                 >
                   <Disc className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--ok)] block">
                       🟢 Traer de Spotify
                     </span>
-                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
+                    <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Importa la discografía completa de la banda.
                     </span>
                   </span>
@@ -609,14 +609,14 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     setShowCreateAlbumMenu(false);
                     setIsLiveConcertModalOpen(true);
                   }}
-                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
+                  className={`w-full text-left p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-start gap-2.5 ${"hover:bg-[var(--surface)]"}`}
                 >
                   <Scissors className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
                   <span>
                     <span className="text-xs font-semibold text-[var(--acc)] block">
                       🔴 Concierto en Vivo a Disco
                     </span>
-                    <span className="block text-[11px] text-[var(--ink-2)] mt-0.5">
+                    <span className="block text-xs text-[var(--ink-2)] mt-0.5">
                       Recorta y cataloga a partir del vídeo o audio de un
                       concierto en vivo.
                     </span>
@@ -638,7 +638,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar canción, tono, letra..."
-            className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-all focus:outline-none focus:ring-2 focus:ring-[var(--acc)]/40 ${"bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]"}`}
+            className={`w-full pl-8 pr-7 py-1.5 rounded-[var(--r-m)] text-xs transition-ui focus:outline-none focus:ring-2 focus:ring-[var(--acc)]/40 ${"bg-[var(--sunken)] text-[var(--ink)] placeholder-[var(--ink-2)] focus:bg-[var(--surface)]"}`}
           />
           {searchQuery && (
             <button
@@ -660,7 +660,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilterTab("todos")}
-              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-ui cursor-pointer ${
                 activeFilterTab === "todos"
                   ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -671,7 +671,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilterTab("albumes")}
-              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-ui cursor-pointer ${
                 activeFilterTab === "albumes"
                   ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -682,7 +682,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilterTab("singles")}
-              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-medium transition-ui cursor-pointer ${
                 activeFilterTab === "singles"
                   ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -698,7 +698,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               <button
                 type="button"
                 onClick={toggleAllAlbums}
-                className={`p-1.5 rounded-[var(--r-m)] transition-all cursor-pointer ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
+                className={`p-1.5 rounded-[var(--r-m)] transition-ui cursor-pointer ${"bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
                 title={
                   areAllExpanded
                     ? "Plegar todos los discos"
@@ -716,7 +716,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   type="button"
                   onClick={handleAnalyzeAllDynamics}
                   disabled={dynamicsAnalysis?.running}
-                  className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-2)] hover:text-[var(--ok)]/40 font-bold text-[11px] font-sans flex items-center gap-1 cursor-pointer transition-all"
+                  className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 disabled:opacity-70 disabled:cursor-wait text-[var(--ink-2)] hover:text-[var(--ok)]/40 font-bold text-xs font-sans flex items-center gap-1 cursor-pointer transition-ui"
                   title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
                 >
                   {dynamicsAnalysis?.running ? (
@@ -795,7 +795,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             return (
               <div
                 key={album}
-                className={`rounded-[var(--r-l)] overflow-hidden transition-all duration-200 ${"bg-[var(--surface)]"}`}
+                className={`rounded-[var(--r-l)] overflow-hidden transition-ui duration-200 ${"bg-[var(--surface)]"}`}
               >
                 {/* Compact Album Header Bar */}
                 <div
@@ -818,7 +818,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-[10px] font-medium tracking-wide inline-flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)]/70 text-micro font-medium tracking-wide inline-flex items-center gap-1">
                           <Disc3 className="w-3 h-3 text-[var(--acc)]" />
                           {album === "Singles / Sin Disco"
                             ? "SENCILLOS & INÉDITAS"
@@ -862,7 +862,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       <button
                         type="button"
                         onClick={handlePlayAlbum}
-                        className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1 transition-all cursor-pointer"
+                        className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-medium text-xs flex items-center gap-1 transition-ui cursor-pointer"
                         title={
                           isPlayingAlbum ? "Pausar disco" : "Reproducir disco"
                         }
@@ -904,7 +904,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                             albumName: album,
                           });
                         }}
-                        className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${"bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]"}`}
+                        className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${"bg-[var(--surface)]/80 text-[var(--acc)]/70 hover:bg-[var(--surface)]/70 hover:text-[var(--ink)]"}`}
                         title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
                       >
                         <Download className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -922,7 +922,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                             songs: sortedAlbumSongs,
                           })
                         }
-                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${"bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"}`}
+                        className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${"bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"}`}
                         title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
                       >
                         <FolderUp className="w-3.5 h-3.5" />
@@ -951,7 +951,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                         e.stopPropagation();
                         toggleAlbumExpand(album);
                       }}
-                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${
                         isExpanded
                           ? "bg-[var(--acc)]/15  text-[var(--acc)]/70"
                           : "bg-[var(--sunken)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]"
@@ -1120,7 +1120,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="mt-3 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-all cursor-pointer inline-flex items-center gap-1.5 mx-auto"
+                  className="mt-3 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/20 text-[var(--ok)]/30 text-xs font-sans font-bold hover:bg-[var(--surface)]/30 transition-ui cursor-pointer inline-flex items-center gap-1.5 mx-auto"
                 >
                   <X className="w-3.5 h-3.5" />
                   <span>Limpiar búsqueda</span>

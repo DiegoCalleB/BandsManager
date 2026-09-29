@@ -91,7 +91,7 @@ export function EnsayoCronometro({
         </span>
         <button
           onClick={toggleTimer}
-          className={`p-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
+          className={`p-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
             isActive
               ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30"
               : "bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30"
@@ -126,14 +126,14 @@ export function EnsayoCronometro({
             <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
               Cronómetro de Ensayo
             </h4>
-            <p className="text-[10px] font-sans text-[var(--ink-2)]">
+            <p className="text-micro font-sans text-[var(--ink-2)]">
               Objetivo: {totalEstimatedMin} min planificados
             </p>
           </div>
         </div>
 
         {isOvertime && (
-          <span className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)]">
+          <span className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--alert)]/15 text-[var(--ink-2)]">
             <AlertCircle className="w-3 h-3" /> Tiempo excedido
           </span>
         )}
@@ -162,7 +162,7 @@ export function EnsayoCronometro({
         <div className="flex items-center gap-1.5">
           <button
             onClick={toggleTimer}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer active:scale-95 ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer active:scale-[0.97] ${
               isActive
                 ? "bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]/60"
                 : "bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)]"
@@ -195,7 +195,7 @@ export function EnsayoCronometro({
       <div className="mt-3">
         <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-hidden">
           <div
-            className={`h-full rounded-[var(--r-pill)] transition-all duration-300 ${
+            className={`h-full rounded-[var(--r-pill)] transition-ui duration-300 ${
               isOvertime
                 ? "bg-[var(--alert)] "
                 : progressPct > 80
@@ -205,7 +205,7 @@ export function EnsayoCronometro({
             style={{ width: `${progressPct}%` }}
           />
         </div>
-        <div className="flex justify-between items-center text-[10px] font-sans text-[var(--ink-2)] mt-1">
+        <div className="flex justify-between items-center text-micro font-sans text-[var(--ink-2)] mt-1">
           <span>{progressPct}% completado</span>
           <span>
             {Math.max(0, Math.round((totalTargetSec - seconds) / 60))} min

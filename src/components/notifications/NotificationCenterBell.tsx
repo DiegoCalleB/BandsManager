@@ -98,7 +98,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             // keep unread until user chooses or marks read
           }
         }}
-        className={`relative p-2 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-center ${
+        className={`relative p-2 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center justify-center ${
           isOpen
             ? 'bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs'
             : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]/80'
@@ -110,7 +110,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
 
         {/* Unread badge count */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-[10px] font-black font-mono text-[var(--ink)]">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)] text-micro font-bold font-mono text-[var(--ink)]">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -134,7 +134,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
               <BellRing className="w-4 h-4 text-[var(--acc)]" />
               <span className="font-bold text-xs text-[var(--ink-2)] font-display">Notificaciones</span>
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[10px] font-mono text-[var(--acc)] font-bold">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-micro font-mono text-[var(--acc)] font-bold">
                   {unreadCount} nuevas
                 </span>
               )}
@@ -145,7 +145,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <button
                   type="button"
                   onClick={onMarkAllAsRead}
-                  className="text-[10px] font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
+                  className="text-micro font-mono text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] hover:bg-[var(--acc)]/10 transition-colors cursor-pointer"
                   title="Marcar todas como leídas"
                 >
                   <CheckCheck className="w-3 h-3" />
@@ -171,7 +171,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
             <div className="p-2.5 bg-[var(--acc)]/40 border-b border-[var(--hair)] flex items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-1.5 text-[var(--acc)] min-w-0">
                 <AlertTriangle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                <span className="text-[11px] truncate">
+                <span className="text-xs truncate">
                   {permission === 'denied' ? 'Avisos bloqueados en el navegador' : 'Activa avisos en escritorio'}
                 </span>
               </div>
@@ -179,7 +179,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 <button
                   type="button"
                   onClick={onRequestPermission}
-                  className="px-2 py-0.5 rounded bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] shrink-0 cursor-pointer shadow-xs"
+                  className="px-2 py-0.5 rounded bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro shrink-0 cursor-pointer shadow-xs"
                 >
                   Activar
                 </button>
@@ -190,7 +190,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                     setIsOpen(false);
                     onOpenSettings();
                   }}
-                  className="text-[10px] text-[var(--acc)] hover:underline shrink-0 cursor-pointer"
+                  className="text-micro text-[var(--acc)] hover:underline shrink-0 cursor-pointer"
                 >
                   Ver ayuda
                 </button>
@@ -223,11 +223,11 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                       <h4 className={`text-xs truncate ${item.read ? 'text-[var(--ink-2)] font-medium' : 'text-[var(--ink-2)] font-bold'}`}>
                         {item.title}
                       </h4>
-                      <span className="text-[9px] font-mono text-[var(--ink-2)] shrink-0">{formatRelativeTime(item.timestamp)}</span>
+                      <span className="text-micro font-mono text-[var(--ink-2)] shrink-0">{formatRelativeTime(item.timestamp)}</span>
                     </div>
-                    <p className="text-[11px] text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
+                    <p className="text-xs text-[var(--ink-2)] line-clamp-2 leading-tight">{item.body}</p>
                     {item.leadName && (
-                      <span className="inline-block text-[9px] font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
+                      <span className="inline-block text-micro font-mono text-[var(--acc)]/90 font-bold bg-[var(--acc)]/10 px-1.5 py-0.5 rounded mt-1">
                         📍 {item.leadName}
                       </span>
                     )}
@@ -239,7 +239,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
               <div className="py-8 px-4 text-center space-y-2">
                 <Bell className="w-8 h-8 text-[var(--ink-2)] mx-auto stroke-1" />
                 <p className="text-xs text-[var(--ink-2)] font-medium">Sin notificaciones recientes</p>
-                <p className="text-[11px] text-[var(--ink-2)] max-w-xs mx-auto">
+                <p className="text-xs text-[var(--ink-2)] max-w-xs mx-auto">
                   Aquí aparecerán los avisos cuando tus salas cambien de estado o te envíen un mensaje.
                 </p>
               </div>
@@ -247,12 +247,12 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="p-2.5 border-t border-[var(--hair)] bg-[var(--sunken)] flex items-center justify-between text-[11px]">
+          <div className="p-2.5 border-t border-[var(--hair)] bg-[var(--sunken)] flex items-center justify-between text-xs">
             {history.length > 0 ? (
               <button
                 type="button"
                 onClick={onClearHistory}
-                className="text-[10px] text-[var(--ink-2)] hover:text-[var(--alert)] flex items-center gap-1 transition-colors cursor-pointer px-1.5 py-0.5 rounded hover:bg-[var(--surface)]"
+                className="text-micro text-[var(--ink-2)] hover:text-[var(--alert)] flex items-center gap-1 transition-colors cursor-pointer px-1.5 py-0.5 rounded hover:bg-[var(--surface)]"
               >
                 <Trash2 className="w-3 h-3" />
                 <span>Borrar historial</span>
@@ -267,7 +267,7 @@ export const NotificationCenterBell: React.FC<NotificationCenterBellProps> = ({
                 setIsOpen(false);
                 onOpenSettings();
               }}
-              className="text-[10px] font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
+              className="text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1 transition-colors cursor-pointer px-2 py-1 rounded bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 "
             >
               <Settings className="w-3 h-3" />
               <span>Configurar avisos</span>

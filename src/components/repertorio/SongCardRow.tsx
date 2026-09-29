@@ -134,7 +134,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       onDragEnd={onDragEnd}
-      className={`group relative rounded-[var(--r-m)] transition-all duration-150 ${
+      className={`group relative rounded-[var(--r-m)] transition-ui duration-150 ${
         isDragging
           ? 'opacity-30 scale-[0.98]'
           : isDragOver
@@ -175,7 +175,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           <button
             type="button"
             onClick={onPlay}
-            className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-[var(--r-pill)] flex items-center justify-center transition-all cursor-pointer ${
+            className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-[var(--r-pill)] flex items-center justify-center transition-ui cursor-pointer ${
               isPlaying
                 ? 'bg-[var(--ok)] text-[var(--ink)] scale-105'
                 : 'bg-[var(--surface)] hover:bg-[var(--ok)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -229,7 +229,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 e.stopPropagation();
                 onToggleFavorite();
               }}
-              className={`p-1 rounded-[var(--r-pill)] transition-all cursor-pointer shrink-0 ${
+              className={`p-1 rounded-[var(--r-pill)] transition-ui cursor-pointer shrink-0 ${
                 song.favoritoGeneral
                   ? 'text-[var(--acc)] hover:text-[var(--acc)]/70'
                   : 'text-[var(--ink-2)] hover:text-[var(--acc)] opacity-60 hover:opacity-100'
@@ -245,7 +245,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             {/* Tone & BPM pill */}
             <span
               title={song.bpmDetectadoEn || song.tonalidadDetectadaEn ? 'Detectado automáticamente por Iris desde el audio' : undefined}
-              className="px-2 py-0.5 rounded-[var(--r-pill)] text-[11px] font-medium bg-[var(--surface)] text-[var(--ink-2)]"
+              className="px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--surface)] text-[var(--ink-2)]"
             >
               {song.tonalidad || '—'}
               {song.bpm ? ` • ${song.bpm} BPM` : ''}
@@ -258,7 +258,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             {/* Status badge */}
             {song.estadoTema && (
               <span
-                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-medium tracking-wide ${
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-medium tracking-wide ${
                   song.estadoTema === 'listo'
                     ? 'bg-[var(--ok)]/15 text-[var(--ink-2)]'
                     : song.estadoTema === 'ensayando'
@@ -280,12 +280,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
             {/* Audio Indicator */}
             {song.audioPrincipalUrl ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink-2)]">
+              <span className="hidden xs:inline-flex items-center gap-1 text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ink-2)]">
                 <Volume2 className="w-2.5 h-2.5" />
                 <span>{isDriveAudio ? 'Drive' : 'Audio'}</span>
               </span>
             ) : ideasCount > 0 ? (
-              <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
+              <span className="hidden xs:inline-flex items-center gap-1 text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--tentative)]/15 text-[var(--tentative)]/50">
                 <Headphones className="w-2.5 h-2.5" />
                 <span>{ideasCount} ideas</span>
               </span>
@@ -294,7 +294,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
           {/* Subtle Notes Preview (desktop only to save vertical mobile space) */}
           {song.notasInternas && (
-            <p className="hidden md:block text-[10px] text-[var(--ink-2)] line-clamp-1 italic mt-0.5 font-sans">{song.notasInternas}</p>
+            <p className="hidden md:block text-micro text-[var(--ink-2)] line-clamp-1 italic mt-0.5 font-sans">{song.notasInternas}</p>
           )}
         </div>
 
@@ -305,7 +305,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={onOpenStudio}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-s)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer ${
                 ideasCount > 0
                   ? 'bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--ink)]'
                   : 'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]'
@@ -315,14 +315,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               <Headphones className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
               <span className="hidden xs:inline text-xs">Studio</span>
               {ideasCount > 0 && (
-                <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-[var(--ink)] rounded-[var(--r-pill)] text-[10px] font-bold">{ideasCount}</span>
+                <span className="px-1.5 py-0.2 bg-[var(--acc)]/40 text-[var(--ink)] rounded-[var(--r-pill)] text-micro font-bold">{ideasCount}</span>
               )}
             </button>
           ) : onOpenChords ? (
             <button
               type="button"
               onClick={onOpenChords}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-m)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
                 'bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ok)] '
               }`}
               title="Ver cifrado de acordes, armonía y letra"
@@ -361,7 +361,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             <button
               type="button"
               onClick={() => setShowMenu((prev) => !prev)}
-              className={`p-1.5 rounded-[var(--r-s)] transition-all cursor-pointer ${
+              className={`p-1.5 rounded-[var(--r-s)] transition-ui cursor-pointer ${
                 showMenu
                   ? 'bg-[var(--surface)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface)]/80'

@@ -286,7 +286,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               type="button"
               onClick={() => goToAdjacentEvent(-1)}
               disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
               title="Evento anterior (←)"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -294,9 +294,9 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             </button>
 
             <div className="flex flex-col items-center min-w-0">
-              <span className="text-[9px] font-mono text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
+              <span className="text-micro font-mono text-[var(--acc)]/80 font-bold">Ficha de Evento</span>
               {modalPosLabel && (
-                <span className={`text-[10px] font-mono font-bold ${'text-[var(--ink-2)]'}`}>
+                <span className={`text-micro font-mono font-bold ${'text-[var(--ink-2)]'}`}>
                   {modalPosLabel}
                 </span>
               )}
@@ -309,7 +309,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 disabled={
                   allChronologicalEvents.length === 0 || activeChronoIndex < 0 || activeChronoIndex >= allChronologicalEvents.length - 1
                 }
-                className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold text-[var(--acc)] hover:bg-[var(--acc)]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                 title="Evento siguiente (→)"
               >
                 <span className="hidden sm:inline">Siguiente</span>
@@ -343,16 +343,16 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   />
                 ) : null}
                 <span
-                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-black ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
+                  className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-[var(--r-l)] shrink-0 flex items-center justify-center text-xl font-bold ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}
                 >
                   {modalBandInfo.initials}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] inline-flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] inline-flex items-center gap-1">
                     🎸 {modalBandInfo.name}
                   </span>
                   <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
-                  <p className={`text-[11px] font-mono mt-0.5 ${textSub}`}>
+                  <p className={`text-xs font-mono mt-0.5 ${textSub}`}>
                     {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                   </p>
                   {modalWeatherAlerts.length > 0 && (
@@ -375,7 +375,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       if (selectedConcert) setViewingConcert(selectedConcert);
                       if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
                     }}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--sunken)] text-[var(--acc)] hover:brightness-110 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--sunken)] text-[var(--acc)] hover:brightness-110 flex items-center gap-1"
                     title="Editar todos los campos de este evento"
                   >
                     ✎ Editar
@@ -384,7 +384,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--ok)]/40 text-[var(--ok)] hover:bg-[var(--ok)]/50 flex items-center gap-1"
                     title="Compartir convocatoria por WhatsApp"
                   >
                     <Share2 className="w-3.5 h-3.5" />
@@ -394,7 +394,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--acc)]/40 text-[var(--acc)] hover:bg-[var(--acc)]/50 flex items-center gap-1"
                     title="Enviar recordatorio / notificación push a los músicos"
                   >
                     <Bell className="w-3.5 h-3.5" />
@@ -404,7 +404,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
-                    className={`px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                    className={`px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
                       copiedEventModalId === modalEvent.id
                         ? 'bg-[var(--ok)] text-[var(--ink)]'
                         : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110'
@@ -418,7 +418,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => setDeletingEventConfirmId(modalEvent.id)}
-                    className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
                     title="Eliminar este evento del calendario"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -437,7 +437,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <p className="text-xs font-mono font-bold text-[var(--alert)]">
                       ¿Confirmas que deseas eliminar este {isConcert ? 'concierto' : 'ensayo'}?
                     </p>
-                    <p className="text-[10px] text-[var(--alert)]/80 font-sans">
+                    <p className="text-micro text-[var(--alert)]/80 font-sans">
                       Esta acción es definitiva y retirará el evento del calendario y agenda de la banda.
                     </p>
                   </div>
@@ -479,7 +479,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('resumen')}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'resumen'
                     ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -490,7 +490,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('tecnica')}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'tecnica'
                     ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -502,7 +502,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('contactos')}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'contactos'
                     ? 'bg-[var(--ok)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -511,7 +511,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Phone className="w-3.5 h-3.5" />
                 <span>2. Contactos Clave</span>
                 {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--surface)] font-mono">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro bg-[var(--surface)] font-mono">
                     {modalRoadbook.contactosClave.length}
                   </span>
                 )}
@@ -519,7 +519,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('merchan')}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'merchan'
                     ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -528,7 +528,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Shirt className="w-3.5 h-3.5" />
                 <span>3. Control Merchandising</span>
                 {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] bg-[var(--surface)] font-mono">
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro bg-[var(--surface)] font-mono">
                     {modalRoadbook.merchControl.items.length}
                   </span>
                 )}
@@ -536,7 +536,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <button
                 type="button"
                 onClick={() => setModalActiveTab('postshow')}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'postshow'
                     ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -545,13 +545,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <Users className="w-3.5 h-3.5" />
                 <span>4. Público & Post-Show</span>
                 {selectedConcert?.es_hito_destacado && (
-                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[9px] bg-[var(--acc)] text-[var(--ink)] font-black">⭐ Hito</span>
+                  <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro bg-[var(--acc)] text-[var(--ink)] font-bold">⭐ Hito</span>
                 )}
               </button>
               <button
                 type="button"
                 onClick={() => setModalActiveTab('cierre')}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui cursor-pointer shrink-0 flex items-center gap-1.5 ${
                   modalActiveTab === 'cierre'
                     ? 'bg-[var(--acc)] text-[var(--ink)]'
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -561,8 +561,8 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <span>5. Cierre Material</span>
                 {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
                   <span
-                    className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-mono ${
-                      modalRoadbook.cierreMaterial.every((i) => i.checked) ? 'bg-[var(--ok)] text-[var(--ink)] font-black' : 'bg-[var(--surface)]'
+                    className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-mono ${
+                      modalRoadbook.cierreMaterial.every((i) => i.checked) ? 'bg-[var(--ok)] text-[var(--ink)] font-bold' : 'bg-[var(--surface)]'
                     }`}
                   >
                     {modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/{modalRoadbook.cierreMaterial.length}
@@ -577,20 +577,20 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <div
                   className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--sunken)]'}`}
                 >
-                  <div className="flex items-center gap-2 text-[11px]">
+                  <div className="flex items-center gap-2 text-xs">
                     <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
                     <span className={`font-mono ${textSub}`}>Hora:</span>
                     <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>
                       {selectedEventDetails.time}
                     </span>
                   </div>
-                  <div className="flex items-start gap-2 text-[11px]">
+                  <div className="flex items-start gap-2 text-xs">
                     <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
                     <div className="flex-1 min-w-0">
                       <span className={`font-mono ${textSub}`}>Lugar:</span>
                       <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
                       {selectedEventDetails.direccion && (
-                        <p className={`text-[11px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
+                        <p className={`text-xs font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
                           <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
                         </p>
                       )}
@@ -607,7 +607,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     </div>
                   )}
                   {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-                    <div className="flex items-center gap-2 text-[11px] pt-2">
+                    <div className="flex items-center gap-2 text-xs pt-2">
                       <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                       <span className={`font-mono ${textSub}`}>Compensación:</span>
                       <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
@@ -621,13 +621,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             href={selectedEventDetails.entradasUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
+                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
                           >
                             <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                           </a>
                         )}
                         {selectedEventDetails.entradasLugarFisico && (
-                          <div className="flex items-center gap-2 text-[11px]">
+                          <div className="flex items-center gap-2 text-xs">
                             <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
                             <span className={`font-mono ${textSub}`}>También en:</span>
                             <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
@@ -636,14 +636,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
                     )}
                   {selectedConcert?.giraNombre && (
-                    <div className="flex items-center gap-2 text-[11px] pt-2">
+                    <div className="flex items-center gap-2 text-xs pt-2">
                       <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
                       <span className={`font-mono ${textSub}`}>Gira:</span>
                       <span className="font-bold font-mono text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
                     </div>
                   )}
                   {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
-                    <div className="flex items-center gap-2 text-[11px] pt-2">
+                    <div className="flex items-center gap-2 text-xs pt-2">
                       <Users className="w-4 h-4 text-[var(--acc)] shrink-0" />
                       <span className={`font-mono ${textSub}`}>Convocatoria:</span>
                       <span className="font-bold font-mono text-[var(--acc)]">
@@ -660,7 +660,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   )}
                   {selectedEventDetails.notes && (
                     <div
-                      className={`text-[11px] font-sans italic pt-2 leading-relaxed ${'text-[var(--ink-2)]'}`}
+                      className={`text-xs font-sans italic pt-2 leading-relaxed ${'text-[var(--ink-2)]'}`}
                     >
                       &ldquo;{selectedEventDetails.notes}&rdquo;
                     </div>
@@ -671,7 +671,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                   <div
                     onClick={() => setModalActiveTab('tecnica')}
-                    className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:brightness-95 ${
+                    className={`p-3 rounded-[var(--r-m)] transition-ui cursor-pointer hover:brightness-95 ${
                       'bg-[var(--acc-soft)]/70'
                     }`}
                   >
@@ -679,17 +679,17 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <Wrench className="w-3.5 h-3.5" />
                       <span>1. Logística Técnica</span>
                     </div>
-                    <p className={`text-[11px] font-mono ${textSub}`}>
+                    <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.horaPruebaSonido ? `Prueba: ${modalRoadbook.horaPruebaSonido}` : 'Configurar rider, P.A. y horarios'}
                     </p>
-                    <span className="text-[10px] text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
+                    <span className="text-micro text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
                       Abrir sección técnica →
                     </span>
                   </div>
 
                   <div
                     onClick={() => setModalActiveTab('contactos')}
-                    className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:brightness-95 ${
+                    className={`p-3 rounded-[var(--r-m)] transition-ui cursor-pointer hover:brightness-95 ${
                       'bg-[var(--ok-soft)]/70'
                     }`}
                   >
@@ -697,19 +697,19 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <Phone className="w-3.5 h-3.5" />
                       <span>2. Contactos Clave</span>
                     </div>
-                    <p className={`text-[11px] font-mono ${textSub}`}>
+                    <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0
                         ? `${modalRoadbook.contactosClave.length} contactos (WhatsApp directo)`
                         : 'Añadir contactos de sala y técnicos'}
                     </p>
-                    <span className="text-[10px] text-[var(--ok)] font-mono font-semibold underline mt-1 inline-block">
+                    <span className="text-micro text-[var(--ok)] font-mono font-semibold underline mt-1 inline-block">
                       Ver directorio →
                     </span>
                   </div>
 
                   <div
                     onClick={() => setModalActiveTab('merchan')}
-                    className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:brightness-95 ${
+                    className={`p-3 rounded-[var(--r-m)] transition-ui cursor-pointer hover:brightness-95 ${
                       'bg-[var(--acc-soft)]/70'
                     }`}
                   >
@@ -717,19 +717,19 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <Shirt className="w-3.5 h-3.5" />
                       <span>3. Control Merchandising</span>
                     </div>
-                    <p className={`text-[11px] font-mono ${textSub}`}>
+                    <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0
                         ? `${modalRoadbook.merchControl.items.length} productos | ${(modalRoadbook.merchControl.ingresosEfectivo || 0) + (modalRoadbook.merchControl.ingresosBizum || 0)}€ arqueo`
                         : 'Stock furgón vs final, Bizum y efectivo'}
                     </p>
-                    <span className="text-[10px] text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
+                    <span className="text-micro text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
                       Abrir control de ventas →
                     </span>
                   </div>
 
                   <div
                     onClick={() => setModalActiveTab('cierre')}
-                    className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer hover:brightness-95 ${
+                    className={`p-3 rounded-[var(--r-m)] transition-ui cursor-pointer hover:brightness-95 ${
                       'bg-[var(--acc-soft)]/70'
                     }`}
                   >
@@ -737,12 +737,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <ShieldCheck className="w-3.5 h-3.5" />
                       <span>5. Cierre Material</span>
                     </div>
-                    <p className={`text-[11px] font-mono ${textSub}`}>
+                    <p className={`text-xs font-mono ${textSub}`}>
                       {modalRoadbook.cierreMaterial
                         ? `${modalRoadbook.cierreMaterial.filter((i) => i.checked).length}/${modalRoadbook.cierreMaterial.length} verificados`
                         : 'Checklist de carga de furgoneta'}
                     </p>
-                    <span className="text-[10px] text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
+                    <span className="text-micro text-[var(--acc)] font-mono font-semibold underline mt-1 inline-block">
                       Hacer checklist →
                     </span>
                   </div>
@@ -755,12 +755,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black bg-[var(--acc)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--ink)]">
                       Sección 1
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Logística Técnica, Horarios & Rider</h3>
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--ink-2)]">Guardado automático local</span>
+                  <span className="text-micro font-mono text-[var(--ink-2)]">Guardado automático local</span>
                 </div>
 
                 {/* Horarios de Producción */}
@@ -773,7 +773,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaLlegada || '17:00'}
@@ -785,7 +785,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
@@ -797,7 +797,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaAperturaPuertas || '20:30'}
@@ -809,7 +809,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 text-[var(--acc)]`}>Show / Directo</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaShow || '21:30'}
@@ -821,7 +821,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>Toque de Queda</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Toque de Queda</label>
                       <input
                         type="text"
                         value={modalRoadbook.horaCierreToque || '01:00'}
@@ -845,7 +845,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                         Especificaciones P.A. de Sala
                       </label>
                       <textarea
@@ -859,7 +859,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                         Monitoreo (In-Ears / Cuñas)
                       </label>
                       <textarea
@@ -874,7 +874,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     </div>
                   </div>
                   <div>
-                    <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>
+                    <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                       Canales de Envíos Auxiliares
                     </label>
                     <input
@@ -899,7 +899,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>Backline (Sala vs Banda)</label>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>Backline (Sala vs Banda)</label>
                       <textarea
                         rows={3}
                         value={modalRoadbook.backlineInfo || ''}
@@ -911,7 +911,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       />
                     </div>
                     <div>
-                      <label className={`block text-[10px] font-mono font-bold mb-1 ${textSub}`}>
+                      <label className={`block text-micro font-mono font-bold mb-1 ${textSub}`}>
                         Potencia y Tomas Eléctricas en Escenario
                       </label>
                       <textarea
@@ -936,7 +936,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <span>🎛️</span>
                       <span>Input List / Lista de Canales de Microfonía</span>
                     </h4>
-                    <span className="text-[10px] font-mono text-[var(--ink-2)]">
+                    <span className="text-micro font-mono text-[var(--ink-2)]">
                       {(modalRoadbook.inputList || '').split('\n').filter(Boolean).length} canales especificados
                     </span>
                   </div>
@@ -955,7 +955,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 <div
                   className={`p-4 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--sunken)]'}`}
                 >
-                  <label className={`block text-[10px] font-mono font-bold ${textSub}`}>
+                  <label className={`block text-micro font-mono font-bold ${textSub}`}>
                     Notas de Acceso, Muelle de Carga & Observaciones
                   </label>
                   <textarea
@@ -976,7 +976,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black bg-[var(--ok)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--ok)] text-[var(--ink)]">
                       Sección 2
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Directorio de Contactos Clave de Producción</h3>
@@ -984,7 +984,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <button
                     type="button"
                     onClick={() => setShowAddContactForm(!showAddContactForm)}
-                    className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                    className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
                   >
                     <span>+</span> Añadir Contacto
                   </button>
@@ -1001,7 +1001,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <h4 className="text-xs font-mono font-bold text-[var(--ok)]">Nuevo Contacto Clave</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                       <div>
-                        <label className="block text-[10px] font-mono font-bold text-[var(--ink-2)] mb-1">
+                        <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">
                           Nombre y Apellidos *
                         </label>
                         <input
@@ -1016,7 +1016,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-mono font-bold text-[var(--ink-2)] mb-1">Rol / Cargo</label>
+                        <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Rol / Cargo</label>
                         <select
                           value={newContactRol}
                           onChange={(e) => setNewContactRol(e.target.value)}
@@ -1035,7 +1035,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-mono font-bold text-[var(--ink-2)] mb-1">
+                        <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">
                           Teléfono (WhatsApp) *
                         </label>
                         <input
@@ -1050,7 +1050,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-mono font-bold text-[var(--ink-2)] mb-1">Email</label>
+                        <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Email</label>
                         <input
                           type="email"
                           value={newContactEmail}
@@ -1063,7 +1063,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-mono font-bold text-[var(--ink-2)] mb-1">Notas u observaciones</label>
+                      <label className="block text-micro font-mono font-bold text-[var(--ink-2)] mb-1">Notas u observaciones</label>
                       <input
                         type="text"
                         value={newContactNotas}
@@ -1097,7 +1097,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   {(modalRoadbook.contactosClave || []).length === 0 ? (
                     <div className="text-center py-6 text-[var(--ink-2)] font-mono text-xs">
                       No hay contactos clave registrados para este concierto.
-                      <p className="text-[10px] mt-1 text-[var(--ok)]">
+                      <p className="text-micro mt-1 text-[var(--ok)]">
                         Pulsa en &ldquo;+ Añadir Contacto&rdquo; para registrar promotor, técnico de sonido o producción.
                       </p>
                     </div>
@@ -1105,14 +1105,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     (modalRoadbook.contactosClave || []).map((contact) => (
                       <div
                         key={contact.id}
-                        className={`p-3.5 rounded-[var(--r-m)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                        className={`p-3.5 rounded-[var(--r-m)] transition-ui flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                           'bg-[var(--sunken)] hover:brightness-95'
                         }`}
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <span className="text-xs font-mono font-bold text-[var(--ink)]">{contact.nombre}</span>
-                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[9px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)]">
+                            <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)]">
                               {contact.rol}
                             </span>
                           </div>
@@ -1121,7 +1121,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             {contact.email && <span className="ml-2 text-[var(--ink-2)]">✉️ {contact.email}</span>}
                           </p>
                           {contact.notas && (
-                            <p className="text-[11px] font-sans text-[var(--ink-2)] mt-1 italic">&ldquo;{contact.notas}&rdquo;</p>
+                            <p className="text-xs font-sans text-[var(--ink-2)] mt-1 italic">&ldquo;{contact.notas}&rdquo;</p>
                           )}
                         </div>
 
@@ -1130,7 +1130,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <button
                             type="button"
                             onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
-                            className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                            className="px-2.5 py-1 rounded-[var(--r-m)] text-xs font-mono font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97]"
                             title="Abrir WhatsApp directo con mensaje predefinido"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
@@ -1209,12 +1209,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     {/* Cabecera de la Sección de Merchan */}
                     <div className="flex items-center justify-between pb-1 flex-wrap gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black bg-[var(--acc)] text-[var(--ink)]">
+                        <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--ink)]">
                           Sección 3
                         </span>
                         <div>
                           <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Control de Merchandising por Bolo</h3>
-                          <p className={`text-[11px] font-mono ${textSub}`}>
+                          <p className={`text-xs font-mono ${textSub}`}>
                             Inventario que sube a la furgoneta vs. stock final de noche, arqueo de Efectivo y Bizum
                           </p>
                         </div>
@@ -1223,7 +1223,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <button
                           type="button"
                           onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
-                          className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 transition-colors flex items-center gap-1 cursor-pointer"
                           title="Copiar arqueo y balance para WhatsApp"
                         >
                           {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-[var(--ok)]" /> : <Copy className="w-3.5 h-3.5" />}
@@ -1232,7 +1232,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <button
                           type="button"
                           onClick={() => setShowAddMerchForm(!showAddMerchForm)}
-                          className="px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)] transition-colors flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>{showAddMerchForm ? 'Cerrar' : '+ Añadir Producto'}</span>
@@ -1257,66 +1257,66 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <div
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
-                        <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                           <Truck className="w-3 h-3 text-[var(--acc)]" /> Sube a Furgón
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalInicial}</span>
-                          <span className="text-[10px] text-[var(--ink-2)] font-mono">uds</span>
+                          <span className="text-micro text-[var(--ink-2)] font-mono">uds</span>
                         </div>
-                        <p className="text-[9px] text-[var(--ink-2)] font-mono">Inventario de salida</p>
+                        <p className="text-micro text-[var(--ink-2)] font-mono">Inventario de salida</p>
                       </div>
 
                       <div
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
-                        <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                           <ShoppingBag className="w-3 h-3 text-[var(--acc)]" /> Stock Final
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalFinal}</span>
-                          <span className="text-[10px] text-[var(--ink-2)] font-mono">uds</span>
+                          <span className="text-micro text-[var(--ink-2)] font-mono">uds</span>
                         </div>
-                        <p className="text-[9px] text-[var(--ink-2)] font-mono">Quedan en furgoneta</p>
+                        <p className="text-micro text-[var(--ink-2)] font-mono">Quedan en furgoneta</p>
                       </div>
 
                       <div
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
-                        <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                           <Zap className="w-3 h-3 text-[var(--ok)]" /> Vendidas
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className="text-lg font-bold font-mono text-[var(--ok)]">{totalVendidas}</span>
-                          <span className="text-[10px] text-[var(--ok)]/70 font-mono font-bold">({porcentajeVendido}%)</span>
+                          <span className="text-micro text-[var(--ok)]/70 font-mono font-bold">({porcentajeVendido}%)</span>
                         </div>
-                        <p className="text-[9px] text-[var(--ink-2)] font-mono">Salidas del bolo</p>
+                        <p className="text-micro text-[var(--ink-2)] font-mono">Salidas del bolo</p>
                       </div>
 
                       <div
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
-                        <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                           <Calculator className="w-3 h-3 text-[var(--acc)]" /> Venta Teórica
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className="text-lg font-bold font-mono text-[var(--acc)]">{totalVentaTeorica.toFixed(2)}</span>
-                          <span className="text-[10px] text-[var(--ink-2)] font-mono">€</span>
+                          <span className="text-micro text-[var(--ink-2)] font-mono">€</span>
                         </div>
-                        <p className="text-[9px] text-[var(--ink-2)] font-mono">Según inventario</p>
+                        <p className="text-micro text-[var(--ink-2)] font-mono">Según inventario</p>
                       </div>
 
                       <div
                         className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                       >
-                        <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                           <Coins className="w-3 h-3 text-[var(--ok)]" /> Cobrado Real
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
                           <span className="text-lg font-bold font-mono text-[var(--ok)]">{totalCobradoReal.toFixed(2)}</span>
-                          <span className="text-[10px] text-[var(--ink-2)] font-mono">€</span>
+                          <span className="text-micro text-[var(--ink-2)] font-mono">€</span>
                         </div>
-                        <p className="text-[9px] text-[var(--ink-2)] font-mono">Efectivo + Bizum</p>
+                        <p className="text-micro text-[var(--ink-2)] font-mono">Efectivo + Bizum</p>
                       </div>
 
                       <div
@@ -1328,7 +1328,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                               : 'bg-[var(--alert)]'
                         }`}
                       >
-                        <span className="text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                           <ShieldCheck className="w-3 h-3" /> Cuadre Caja
                         </span>
                         <div className="mt-1 flex items-baseline gap-1">
@@ -1343,10 +1343,10 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 ? `+${diferenciaCuadre.toFixed(2)}`
                                 : diferenciaCuadre.toFixed(2)}
                           </span>
-                          <span className="text-[10px] font-mono text-[var(--ink-2)]">€</span>
+                          <span className="text-micro font-mono text-[var(--ink-2)]">€</span>
                         </div>
                         <p
-                          className={`text-[9px] font-mono font-bold ${
+                          className={`text-micro font-mono font-bold ${
                             diferenciaCuadre === 0 ? 'text-[var(--ok)]' : diferenciaCuadre > 0 ? 'text-[var(--acc)]' : 'text-[var(--alert)]'
                           }`}
                         >
@@ -1382,7 +1382,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-mono">
                             <div className="md:col-span-2">
-                              <label className={`block text-[10px] mb-1 ${textSub}`}>Nombre del Producto *</label>
+                              <label className={`block text-micro mb-1 ${textSub}`}>Nombre del Producto *</label>
                               <input
                                 type="text"
                                 required
@@ -1396,7 +1396,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             </div>
 
                             <div>
-                              <label className={`block text-[10px] mb-1 ${textSub}`}>Categoría</label>
+                              <label className={`block text-micro mb-1 ${textSub}`}>Categoría</label>
                               <select
                                 value={newMerchCategoria}
                                 onChange={(e) => setNewMerchCategoria(e.target.value as any)}
@@ -1413,7 +1413,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             </div>
 
                             <div>
-                              <label className={`block text-[10px] mb-1 ${textSub}`}>Talla / Versión</label>
+                              <label className={`block text-micro mb-1 ${textSub}`}>Talla / Versión</label>
                               <input
                                 type="text"
                                 placeholder="Ej: M, L, XL, 12'', Pack..."
@@ -1427,7 +1427,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                             <div className="grid grid-cols-2 gap-1.5">
                               <div>
-                                <label className={`block text-[10px] mb-1 ${textSub}`}>Precio (€)</label>
+                                <label className={`block text-micro mb-1 ${textSub}`}>Precio (€)</label>
                                 <input
                                   type="number"
                                   step="0.5"
@@ -1440,7 +1440,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                 />
                               </div>
                               <div>
-                                <label className={`block text-[10px] mb-1 ${textSub}`}>Furgón (uds)</label>
+                                <label className={`block text-micro mb-1 ${textSub}`}>Furgón (uds)</label>
                                 <input
                                   type="number"
                                   min="0"
@@ -1475,7 +1475,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <span className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                           <Shirt className="w-4 h-4" /> Inventario de Merchandising ({items.length} productos)
                         </span>
-                        <span className={`text-[11px] font-mono ${textSub}`}>
+                        <span className={`text-xs font-mono ${textSub}`}>
                           Ajusta las unidades al subir a la furgoneta y al terminar el bolo
                         </span>
                       </div>
@@ -1515,12 +1515,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       <h4 className={`text-xs font-bold font-sans ${textTitle}`}>{item.nombre}</h4>
                                       {item.talla && (
-                                        <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[var(--surface)] text-[var(--ink-2)]">
+                                        <span className="px-1.5 py-0.2 rounded text-micro font-mono font-bold bg-[var(--surface)] text-[var(--ink-2)]">
                                           {item.talla}
                                         </span>
                                       )}
                                     </div>
-                                    <div className="flex items-center gap-2 mt-0.5 text-[10px] font-mono text-[var(--ink-2)]">
+                                    <div className="flex items-center gap-2 mt-0.5 text-micro font-mono text-[var(--ink-2)]">
                                       <span>
                                         Precio: <strong className="text-[var(--acc)]">{item.precioUnitario}€</strong>
                                       </span>
@@ -1536,7 +1536,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   <div
                                     className={`p-1.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
                                   >
-                                    <span className="block text-[9px] font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1">
+                                    <span className="block text-micro font-mono text-[var(--ink-2)] mb-1 flex items-center gap-1">
                                       <Truck className="w-2.5 h-2.5 text-[var(--acc)]" /> Sube Furgón
                                     </span>
                                     <div className="flex items-center gap-1">
@@ -1583,13 +1583,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                     className={`p-1.5 rounded-[var(--r-m)] ${'bg-[var(--surface)]'}`}
                                   >
                                     <div className="flex items-center justify-between mb-1">
-                                      <span className="text-[9px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                                      <span className="text-micro font-mono text-[var(--ink-2)] flex items-center gap-1">
                                         <DoorClosed className="w-2.5 h-2.5 text-[var(--acc)]" /> Stock Final
                                       </span>
                                       <button
                                         type="button"
                                         onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
-                                        className="text-[8px] font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
+                                        className="text-micro font-mono px-1 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 cursor-pointer"
                                         title="Marcar como agotado tras el concierto"
                                       >
                                         Agotado (0)
@@ -1637,12 +1637,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                                   {/* Resumen Ventas del Artículo */}
                                   <div className="col-span-2 sm:col-span-1 flex flex-col items-end justify-center pr-2">
                                     <div className="text-right">
-                                      <span className="text-xs font-mono font-black text-[var(--acc)]">{vendidas} vendidas</span>
+                                      <span className="text-xs font-mono font-bold text-[var(--acc)]">{vendidas} vendidas</span>
                                       <span className="block text-xs font-mono font-bold text-[var(--ok)]">{subtotal.toFixed(2)} €</span>
                                     </div>
                                     <div className="w-20 bg-[var(--surface)] rounded-[var(--r-pill)] h-1 mt-1 overflow-hidden">
                                       <div
-                                        className="h-full bg-[var(--acc)] transition-all duration-300"
+                                        className="h-full bg-[var(--acc)] transition-ui duration-300"
                                         style={{ width: `${Math.min(100, pctVendido)}%` }}
                                       />
                                     </div>
@@ -1677,7 +1677,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                         <span className="text-xs font-mono font-bold text-[var(--ok)] flex items-center gap-1.5">
                           <Coins className="w-4 h-4" /> Arqueo de Caja y Métodos de Cobro
                         </span>
-                        <span className="text-[10px] font-mono text-[var(--ink-2)]">
+                        <span className="text-micro font-mono text-[var(--ink-2)]">
                           Introduce los importes reales cobrados durante la noche
                         </span>
                       </div>
@@ -1693,7 +1693,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             <Banknote className="w-4 h-4" />
                             <span>Efectivo en Caja (€)</span>
                           </div>
-                          <p className="text-[10px] text-[var(--ink-2)] font-mono mb-2">Billetes y monedas cobrados en el bolo</p>
+                          <p className="text-micro text-[var(--ink-2)] font-mono mb-2">Billetes y monedas cobrados en el bolo</p>
                           <div className="flex items-center gap-1.5">
                             <input
                               type="number"
@@ -1723,7 +1723,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             <Smartphone className="w-4 h-4" />
                             <span>Bizum / TPV (€)</span>
                           </div>
-                          <p className="text-[10px] text-[var(--ink-2)] font-mono mb-2">Pagos por móvil y datáfono del bolo</p>
+                          <p className="text-micro text-[var(--ink-2)] font-mono mb-2">Pagos por móvil y datáfono del bolo</p>
                           <div className="flex items-center gap-1.5">
                             <input
                               type="number"
@@ -1753,7 +1753,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                             <Coins className="w-4 h-4" />
                             <span>Fondo de Caja (€)</span>
                           </div>
-                          <p className="text-[10px] text-[var(--ink-2)] font-mono mb-2">Cambio que se llevó al inicio para la mesa</p>
+                          <p className="text-micro text-[var(--ink-2)] font-mono mb-2">Cambio que se llevó al inicio para la mesa</p>
                           <div className="flex items-center gap-1.5">
                             <input
                               type="number"
@@ -1782,12 +1782,12 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       >
                         <div className="space-y-0.5">
                           <span className="text-xs font-mono font-bold text-[var(--ink-2)]">Resumen del Dinero Recaudado en el Puesto:</span>
-                          <p className="text-[11px] font-mono text-[var(--ink-2)]">
+                          <p className="text-xs font-mono text-[var(--ink-2)]">
                             💵 {(merch.ingresosEfectivo || 0).toFixed(2)}€ Efectivo + 📱 {(merch.ingresosBizum || 0).toFixed(2)}€ Bizum ={' '}
                             <strong className="text-[var(--ok)]">{totalCobradoReal.toFixed(2)}€ Total Ventas</strong>
                           </p>
                           {merch.fondoCajaInicial ? (
-                            <p className="text-[10px] font-mono text-[var(--ink-2)]">
+                            <p className="text-micro font-mono text-[var(--ink-2)]">
                               (Efectivo físico total a retirar del cajón incluyendo fondo de caja:{' '}
                               {((merch.ingresosEfectivo || 0) + (merch.fondoCajaInicial || 0)).toFixed(2)} €)
                             </p>
@@ -1826,7 +1826,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
 
                       {/* Observaciones y Notas del Puesto de Merch */}
                       <div>
-                        <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
+                        <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
                           Notas del Puesto de Merchandising / Incidencias
                         </label>
                         <textarea
@@ -1849,7 +1849,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black bg-[var(--acc)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--ink)]">
                       Sección 4
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
@@ -1881,33 +1881,33 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   <div
                     className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)]/60'}`}
                   >
-                    <div className="text-[10px] font-mono text-[var(--acc)] font-bold mb-1">
+                    <div className="text-micro font-mono text-[var(--acc)] font-bold mb-1">
                       👥 Asistencia Propia Estimada
                     </div>
                     <div className="text-2xl font-black font-mono text-[var(--acc)]">
                       {selectedConcert?.asistencia_propia ?? selectedConcert?.aforo_vendido ?? 0}{' '}
                       <span className="text-xs font-normal text-[var(--ink-2)]">espectadores</span>
                     </div>
-                    <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1">Público que acudió específicamente a ver a la banda.</p>
+                    <p className="text-micro font-mono text-[var(--ink-2)] mt-1">Público que acudió específicamente a ver a la banda.</p>
                   </div>
 
                   <div
                     className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                   >
-                    <div className="text-[10px] font-mono text-[var(--ink-2)] font-bold mb-1">
+                    <div className="text-micro font-mono text-[var(--ink-2)] font-bold mb-1">
                       🎸 Público de Otros Grupos
                     </div>
                     <div className="text-2xl font-black font-mono text-[var(--ink)]">
                       {selectedConcert?.asistencia_otras_bandas ?? 0}{' '}
                       <span className="text-xs font-normal text-[var(--ink-2)]">espectadores</span>
                     </div>
-                    <p className="text-[10px] font-mono text-[var(--ink-2)] mt-1">Afluencia aportada por el resto del cartel.</p>
+                    <p className="text-micro font-mono text-[var(--ink-2)] mt-1">Afluencia aportada por el resto del cartel.</p>
                   </div>
 
                   <div
                     className={`p-3.5 rounded-[var(--r-m)] ${'bg-[var(--sunken)]'}`}
                   >
-                    <div className="text-[10px] font-mono text-[var(--ink-2)] font-bold mb-1">⭐ Hito de Booking</div>
+                    <div className="text-micro font-mono text-[var(--ink-2)] font-bold mb-1">⭐ Hito de Booking</div>
                     <div className="text-sm font-bold font-mono mt-1">
                       {selectedConcert?.es_hito_destacado ? (
                         <span className="px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ok)] inline-flex items-center gap-1">
@@ -1960,7 +1960,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-1 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-black bg-[var(--acc)] text-[var(--ink)]">
+                    <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)] text-[var(--ink)]">
                       Sección 5
                     </span>
                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>Checklist de Cierre de Material & Carga de Furgoneta</h3>
@@ -1969,14 +1969,14 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <button
                       type="button"
                       onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
-                      className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 transition-colors cursor-pointer"
                     >
                       ✓ Marcar Todo
                     </button>
                     <button
                       type="button"
                       onClick={() => handleToggleAllCierreItems(modalRoadbookKey, false)}
-                      className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded text-micro font-mono font-bold bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
                     >
                       ↺ Desmarcar
                     </button>
@@ -2001,7 +2001,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       </div>
                       <div className="w-full h-2.5 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-hidden">
                         <div
-                          className={`h-full transition-all duration-300 ${
+                          className={`h-full transition-ui duration-300 ${
                             isCompleted ? 'bg-[var(--ok)]' : pct > 50 ? 'bg-[var(--acc)]' : 'bg-[var(--acc)]'
                           }`}
                           style={{ width: `${pct}%` }}
@@ -2045,7 +2045,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     >
                       <div className="flex items-center justify-between">
                         <h4 className="text-xs font-mono font-bold text-[var(--acc)]">{catLabel}</h4>
-                        <span className="text-[10px] font-mono text-[var(--ink-2)]">
+                        <span className="text-micro font-mono text-[var(--ink-2)]">
                           {catItems.filter((i) => i.checked).length}/{catItems.length}
                         </span>
                       </div>
@@ -2054,7 +2054,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                           <div
                             key={item.id}
                             onClick={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
-                            className={`p-2.5 rounded-[var(--r-m)] transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
+                            className={`p-2.5 rounded-[var(--r-m)] transition-ui flex items-center justify-between gap-2.5 cursor-pointer select-none ${
                               item.checked
                                 ? 'bg-[var(--ok)]/30 text-[var(--ink-2)] line-through'
                                 : 'bg-[var(--surface)] text-[var(--ink)] hover:brightness-95'

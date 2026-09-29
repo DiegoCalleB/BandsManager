@@ -38,18 +38,18 @@ export function AssignSetlistModal({
             </button>
           </div>
 
-          <p className="text-[10px] text-[var(--ink-2)] font-sans">
+          <p className="text-micro text-[var(--ink-2)] font-sans">
             Selecciona el concierto o ensayo al que deseas vincular el repertorio{''}
             <strong className="text-[var(--acc)] font-sans">"{assigningSetlist.nombre}"</strong>:
           </p>
 
-          <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-[10px] font-sans">
-            <div className="text-[10px] text-[var(--acc)] font-bold pt-1">Próximos Conciertos:</div>
+          <div className="space-y-2 max-h-60 overflow-y-auto pr-1 text-micro font-sans">
+            <div className="text-micro text-[var(--acc)] font-bold pt-1">Próximos Conciertos:</div>
             {concerts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-6">
                 <PublicoSilhouette opacity={0.12} size="small" />
-                <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin conciertos</p>
-                <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
+                <p className="mt-3 font-medium text-[var(--ink)] text-micro">Sin conciertos</p>
+                <p className="mt-1 text-[var(--ink-2)] text-micro text-center">Crea uno en Calendario para asignar este setlist.</p>
               </div>
             ) : (
               concerts.map((c) => (
@@ -71,19 +71,19 @@ export function AssignSetlistModal({
                       <div className="font-bold text-[var(--ink)]">
                         {c.sala} ({c.ciudad})
                       </div>
-                      <div className="text-[10px] text-[var(--ink-2)]">{c.fecha}</div>
+                      <div className="text-micro text-[var(--ink-2)]">{c.fecha}</div>
                     </div>
                   </div>
                 </label>
               ))
             )}
 
-            <div className="text-[10px] text-[var(--ok)] font-bold pt-3">Próximos Ensayos:</div>
+            <div className="text-micro text-[var(--ok)] font-bold pt-3">Próximos Ensayos:</div>
             {rehearsals.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-6">
                 <PublicoSilhouette opacity={0.12} size="small" />
-                <p className="mt-3 font-medium text-[var(--ink)] text-[10px]">Sin ensayos</p>
-                <p className="mt-1 text-[var(--ink-2)] text-[9px] text-center">Crea uno en Calendario para asignar este setlist.</p>
+                <p className="mt-3 font-medium text-[var(--ink)] text-micro">Sin ensayos</p>
+                <p className="mt-1 text-[var(--ink-2)] text-micro text-center">Crea uno en Calendario para asignar este setlist.</p>
               </div>
             ) : (
               rehearsals.map((r) => (
@@ -103,7 +103,7 @@ export function AssignSetlistModal({
                     />
                     <div>
                       <div className="font-bold text-[var(--ink)]">Ensayo en {r.lugar}</div>
-                      <div className="text-[10px] text-[var(--ink-2)]">
+                      <div className="text-micro text-[var(--ink-2)]">
                         {r.fecha} a las {r.hora}
                       </div>
                     </div>
@@ -114,13 +114,13 @@ export function AssignSetlistModal({
           </div>
 
           <div className="pt-3 flex justify-end gap-2">
-            <button onClick={onClose} className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-[10px] font-sans">
+            <button onClick={onClose} className="px-2 py-1 rounded-[var(--r-s)] text-[var(--ink-2)] text-micro font-sans">
               Cancelar
             </button>
             <button
               onClick={onSave}
               disabled={!selectedConcertToAssign}
-              className={`px-2 py-1 rounded-[var(--r-s)] text-[10px] font-sans font-bold disabled:opacity-40 ${'bg-[var(--acc)] text-[var(--on-acc)]'}`}
+              className={`px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold disabled:opacity-40 ${'bg-[var(--acc)] text-[var(--on-acc)]'}`}
             >
               Guardar Asignación
             </button>

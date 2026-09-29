@@ -47,7 +47,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-all cursor-pointer active:scale-95"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-xs font-sans font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 transition-ui cursor-pointer active:scale-[0.97]"
         title="Estilizar nombre de la banda con fuentes Rock, estilo KoЯn y símbolos"
       >
         <Sparkles className="w-3 h-3 text-[var(--acc)]" />
@@ -75,7 +75,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                     <span>Estilos de Banda & Tipografía</span>
                     <Zap className="w-3 h-3 text-[var(--acc)]" />
                   </h4>
-                  <p className="text-[10px] text-[var(--ink-2)] font-sans">
+                  <p className="text-micro text-[var(--ink-2)] font-sans">
                     100% compatible con Supabase y móviles
                   </p>
                 </div>
@@ -91,7 +91,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Notification Badge */}
             {copiedNotification && (
-              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
+              <div className="py-1 px-2.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-micro font-sans font-bold flex items-center justify-center gap-1.5 animate-in fade-in">
                 <Check className="w-3 h-3 text-[var(--ok)]" />
                 <span>¡Estilo aplicado al nombre!</span>
               </div>
@@ -99,7 +99,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Presets Grid */}
             <div className="space-y-1.5">
-              <label className="text-[10px] font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
+              <label className="text-micro font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
                 <span>Transformar Nombre Actual:</span>
                 <span className="text-[var(--acc)]/80 font-normal">
                   Clic para aplicar
@@ -116,9 +116,9 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                       key={preset.id}
                       type="button"
                       onClick={() => handleApplyPreset(preset.apply)}
-                      className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/80  hover:bg-[var(--surface)] text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[52px]"
+                      className="p-2 rounded-[var(--r-m)] bg-[var(--surface)]/80  hover:bg-[var(--surface)] text-left transition-ui cursor-pointer group flex flex-col justify-between min-h-[52px]"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-sans group-hover:text-[var(--acc)]/70">
+                      <div className="flex items-center justify-between text-micro text-[var(--ink-2)] font-sans group-hover:text-[var(--acc)]/70">
                         <span>{preset.label}</span>
                         <span className="text-xs">{preset.icon}</span>
                       </div>
@@ -136,7 +136,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
 
             {/* Quick Symbols Palette */}
             <div className="space-y-1.5 pt-1">
-              <label className="text-[10px] font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
+              <label className="text-micro font-sans text-[var(--ink-2)] font-bold flex items-center justify-between">
                 <span>Insertar Carácter o Símbolo:</span>
                 <span className="text-[var(--ink-2)] font-normal">
                   Añadir al nombre
@@ -148,7 +148,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => handleInsertSymbol(sym)}
-                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--sunken)] hover:hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-all cursor-pointer active:scale-95"
+                    className="w-7 h-7 rounded-[var(--r-s)] bg-[var(--sunken)] hover:hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--ink)] font-bold text-xs flex items-center justify-center transition-ui cursor-pointer active:scale-[0.97]"
                     title={`Insertar ${sym}`}
                   >
                     {sym}
@@ -162,7 +162,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
               <button
                 type="button"
                 onClick={handleClean}
-                className="inline-flex items-center gap-1 text-[10px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 text-micro font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors cursor-pointer"
                 title="Restaurar a texto estándar sin caracteres especiales"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -171,7 +171,7 @@ export const BandNameStylerHelper: React.FC<BandNameStylerHelperProps> = ({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans text-[11px] font-bold transition-colors cursor-pointer"
+                className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] font-sans text-xs font-bold transition-colors cursor-pointer"
               >
                 Listo
               </button>

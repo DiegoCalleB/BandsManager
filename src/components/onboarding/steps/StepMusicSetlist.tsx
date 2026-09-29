@@ -112,7 +112,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab("spotify")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
             musicSubTab === "spotify"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -124,7 +124,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab("upload")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
             musicSubTab === "upload"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -136,7 +136,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
         <button
           type="button"
           onClick={() => setMusicSubTab("manual")}
-          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 px-3 rounded-[var(--r-s)] text-xs font-medium transition-ui flex items-center justify-center gap-2 ${
             musicSubTab === "manual"
               ? "bg-[var(--acc)] text-[var(--on-acc)] font-semibold"
               : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -192,7 +192,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                         <h4 className="text-xs font-semibold text-[var(--ink)]">
                           {album.name}
                         </h4>
-                        <span className="text-[10px] text-[var(--ink-2)]">
+                        <span className="text-micro text-[var(--ink-2)]">
                           {album.releaseYear} · {album.totalTracks} temas
                         </span>
                       </div>
@@ -200,7 +200,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     <button
                       type="button"
                       onClick={() => onSelectAllTracksInAlbum(album)}
-                      className="text-[11px] text-[var(--acc)] hover:text-[var(--acc)]/70 font-medium"
+                      className="text-xs text-[var(--acc)] hover:text-[var(--acc)]/70 font-medium"
                     >
                       Seleccionar todas
                     </button>
@@ -221,7 +221,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                           }`}
                         >
                           <span className="truncate pr-2">{track.name}</span>
-                          <span className="text-[10px] text-[var(--ink-2)] flex-shrink-0">
+                          <span className="text-micro text-[var(--ink-2)] flex-shrink-0">
                             {track.durationFormatted}
                           </span>
                         </button>
@@ -431,7 +431,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
             </h4>
           </div>
           {createdSetlistName && (
-            <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
+            <span className="text-xs px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" /> {createdSetlistName} Creado
             </span>
           )}

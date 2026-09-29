@@ -375,7 +375,7 @@ export const ProfileCompletenessCard: React.FC<
 
   return (
     <div
-      className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-all bg-[var(--surface)] text-[var(--ink)]`}
+      className={`p-4 sm:p-5 rounded-[var(--r-l)] transition-ui bg-[var(--surface)] text-[var(--ink)]`}
     >
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3/60">
@@ -390,12 +390,12 @@ export const ProfileCompletenessCard: React.FC<
                 Entrenamiento & Preparación de Agentes IA
               </h3>
               <span
-                className={`text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-semibold ${badgeInfo.color}`}
+                className={`text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] font-semibold ${badgeInfo.color}`}
               >
                 {badgeInfo.label}
               </span>
             </div>
-            <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+            <p className="text-xs text-[var(--ink-2)] mt-0.5">
               {completedPillarsCount} de {pillars.length} factores configurados
               para {bandName}.
             </p>
@@ -406,7 +406,7 @@ export const ProfileCompletenessCard: React.FC<
           {onOpenAutonomyModal && (
             <button
               onClick={() => onOpenAutonomyModal()}
-              className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+              className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
             >
               <Sliders className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span className="hidden xs:inline">Autonomía & Caché</span>
@@ -415,7 +415,7 @@ export const ProfileCompletenessCard: React.FC<
 
           <button
             onClick={() => setShowAuditModal(true)}
-            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-sans font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink-2)] text-xs font-sans font-medium transition-ui flex items-center gap-1.5 cursor-pointer active:scale-[0.97]"
           >
             <HelpCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
             <span>Info</span>
@@ -423,7 +423,7 @@ export const ProfileCompletenessCard: React.FC<
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--acc)] text-xs font-sans font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+            className="px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--acc)] text-xs font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer active:scale-[0.97]"
             title="Expandir/colapsar checklist"
           >
             <span>{isExpanded ? "Ocultar" : "Ver checklist"}</span>
@@ -440,11 +440,11 @@ export const ProfileCompletenessCard: React.FC<
       <div className="pt-3 space-y-1.5">
         <div className="w-full h-2 rounded-[var(--r-pill)] bg-[var(--surface)]/80 overflow-hidden relative">
           <div
-            className="h-full rounded-[var(--r-pill)] bg-[var(--ok)]  transition-all duration-500"
+            className="h-full rounded-[var(--r-pill)] bg-[var(--ok)]  transition-ui duration-300"
             style={{ width: `${percentage}%` }}
           />
         </div>
-        <div className="flex justify-between items-center text-[10px] font-mono text-[var(--ink-2)]">
+        <div className="flex justify-between items-center text-micro font-mono text-[var(--ink-2)]">
           <span>0%</span>
           <span className="text-[var(--acc)] font-semibold">
             {percentage}% completado
@@ -460,7 +460,7 @@ export const ProfileCompletenessCard: React.FC<
             {pillars.map((p) => (
               <span
                 key={`badge-${p.id}`}
-                className={`inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-s)] ${
+                className={`inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-s)] ${
                   p.completed
                     ? "bg-[var(--ok-soft)]/20 text-[var(--ok)]"
                     : "bg-[var(--surface)]/80 text-[var(--ink-2)]"
@@ -478,7 +478,7 @@ export const ProfileCompletenessCard: React.FC<
 
           <button
             onClick={() => setIsExpanded(true)}
-            className="text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors"
+            className="text-[var(--acc)] hover:text-[var(--acc)]/70 font-sans text-xs font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors"
           >
             <span>Ver detalles y configurar</span>
             <ChevronDown className="w-3 h-3" />
@@ -495,14 +495,14 @@ export const ProfileCompletenessCard: React.FC<
               <button
                 key={pillar.id}
                 onClick={() => handlePillarClick(pillar.view)}
-                className={`p-2.5 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-1 cursor-pointer group active:scale-95 ${
+                className={`p-2.5 rounded-[var(--r-m)] text-left transition-ui flex flex-col justify-between gap-1 cursor-pointer group active:scale-[0.97] ${
                   pillar.completed
                     ? "bg-[var(--ok-soft)]/20 text-[var(--ink-2)] hover:bg-[var(--ok-soft)]"
                     : "bg-[var(--acc-soft)] text-[var(--ink)] hover:bg-[var(--acc-soft)]"
                 }`}
               >
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-[11px] font-sans font-bold truncate">
+                  <span className="text-xs font-sans font-bold truncate">
                     {pillar.title}
                   </span>
                   {pillar.completed ? (
@@ -513,7 +513,7 @@ export const ProfileCompletenessCard: React.FC<
                 </div>
 
                 <span
-                  className={`text-[9px] font-sans font-medium truncate ${
+                  className={`text-micro font-sans font-medium truncate ${
                     pillar.completed
                       ? "text-[var(--ok)]/80"
                       : "text-[var(--acc)] group-hover:underline"
@@ -555,7 +555,7 @@ export const ProfileCompletenessCard: React.FC<
                         {pillar.title}
                       </span>
                     </div>
-                    <p className="text-[10px] text-[var(--ink-2)] leading-snug">
+                    <p className="text-micro text-[var(--ink-2)] leading-snug">
                       {pillar.agentImpact}
                     </p>
                   </div>
@@ -563,7 +563,7 @@ export const ProfileCompletenessCard: React.FC<
                   {!pillar.completed && (
                     <button
                       onClick={() => handlePillarClick(pillar.view)}
-                      className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-[10px] shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--on-acc)] font-sans font-bold text-micro shrink-0 hover:bg-[var(--acc)]/60 transition-colors cursor-pointer"
                     >
                       Configurar
                     </button>

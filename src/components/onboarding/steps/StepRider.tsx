@@ -65,7 +65,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
       {/* Quick Specs Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+          <label className="block text-xs font-medium text-[var(--ink-2)]">
             Canales de Mesa Mínimos
           </label>
           <input
@@ -81,7 +81,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         <button
           type="button"
           onClick={() => setLlevaMicrofoniaPropia(!llevaMicrofoniaPropia)}
-          className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
+          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
             llevaMicrofoniaPropia
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
               : "bg-[var(--bg)] text-[var(--ink-2)] "
@@ -93,7 +93,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
               <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
             )}
           </div>
-          <span className="text-[10px] text-[var(--ink-2)] block mt-1">
+          <span className="text-micro text-[var(--ink-2)] block mt-1">
             Llevamos set propio de micros
           </span>
         </button>
@@ -101,7 +101,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         <button
           type="button"
           onClick={() => setLlevaInEars(!llevaInEars)}
-          className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
+          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
             llevaInEars
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
               : "bg-[var(--bg)] text-[var(--ink-2)] "
@@ -111,7 +111,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
             <span className="text-xs font-semibold">Monitoraje In-Ears</span>
             {llevaInEars && <Check className="w-3.5 h-3.5 text-[var(--acc)]" />}
           </div>
-          <span className="text-[10px] text-[var(--ink-2)] block mt-1">
+          <span className="text-micro text-[var(--ink-2)] block mt-1">
             Sistema propio de monitores
           </span>
         </button>
@@ -119,7 +119,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
         <button
           type="button"
           onClick={() => setNecesitaBacklineBateria(!necesitaBacklineBateria)}
-          className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
+          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
             necesitaBacklineBateria
               ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
               : "bg-[var(--bg)] text-[var(--ink-2)] "
@@ -131,7 +131,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
               <Check className="w-3.5 h-3.5 text-[var(--acc)]" />
             )}
           </div>
-          <span className="text-[10px] text-[var(--ink-2)] block mt-1">
+          <span className="text-micro text-[var(--ink-2)] block mt-1">
             Batería básica aportada por sala
           </span>
         </button>
@@ -159,7 +159,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
                 <span className="text-xs font-semibold text-[var(--ink-2)] block">
                   {riderPdfName || "Rider_Tecnico_Oficial.pdf"}
                 </span>
-                <span className="text-[10px] text-[var(--ok)]/80">
+                <span className="text-micro text-[var(--ok)]/80">
                   Documento listo en el EPK interactivo
                 </span>
               </div>
@@ -193,7 +193,7 @@ export const StepRider: React.FC<StepRiderProps> = ({
             <span className="text-xs font-medium text-[var(--ink-2)] block">
               Subir PDF de Rider Técnico o imagen de Stage Plot
             </span>
-            <span className="text-[10px] text-[var(--ink-2)]">
+            <span className="text-micro text-[var(--ink-2)]">
               PDF, JPG o PNG hasta 20 MB
             </span>
             {isUploadingRider && (

@@ -251,7 +251,7 @@ export const PublicFanCapture: React.FC = () => {
                 <span>
                   Acepto recibir novedades, lanzamientos y fechas de conciertos
                   de <strong>Bakandeya</strong>.
-                  <span className="block text-[10px] text-[var(--ink-2)] mt-0.5">
+                  <span className="block text-micro text-[var(--ink-2)] mt-0.5">
                     Responsable: Bakandeya. Puedes darte de baja en cualquier
                     momento con 1 clic.
                   </span>
@@ -282,7 +282,7 @@ export const PublicFanCapture: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-xl font-black text-[var(--ink)]">
+              <h2 className="text-xl font-bold text-[var(--ink)]">
                 ¡MUCHAS GRACIAS, {nombre.split("")[0].toUpperCase()}!
               </h2>
               <p className="text-[var(--ink-2)] text-sm leading-relaxed">
@@ -302,7 +302,7 @@ export const PublicFanCapture: React.FC = () => {
         <div className="pt-2">
           <a
             href="/musicos"
-            className="group block p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80  transition-all text-left"
+            className="group block p-3.5 rounded-[var(--r-m)] bg-[var(--surface)]/80  transition-ui text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-[var(--r-s)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] shrink-0">
@@ -312,7 +312,7 @@ export const PublicFanCapture: React.FC = () => {
                 <p className="text-xs font-bold text-[var(--ink-2)] group-hover:text-[var(--acc)]/70 transition-colors">
                   ¿Eres músico o tienes una banda?
                 </p>
-                <p className="text-[11px] text-[var(--ink-2)]">
+                <p className="text-xs text-[var(--ink-2)]">
                   Consigue una página como esta para tu grupo con BandManager →
                 </p>
               </div>
@@ -320,7 +320,7 @@ export const PublicFanCapture: React.FC = () => {
           </a>
         </div>
 
-        <footer className="text-center text-[11px] text-[var(--ink-2)]">
+        <footer className="text-center text-xs text-[var(--ink-2)]">
           Bakandeya Official Community • Powered by BandManager
         </footer>
       </div>

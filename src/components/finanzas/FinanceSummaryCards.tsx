@@ -16,7 +16,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div
         id="finances-kpi-ingresos"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}
@@ -41,7 +41,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
 
       <div
         id="finances-kpi-gastos"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}
@@ -66,7 +66,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
 
       <div
         id="finances-kpi-beneficio"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}
@@ -87,7 +87,7 @@ export const FinanceSummaryCards: React.FC<FinanceSummaryCardsProps> = ({ colors
 
       <div
         id="finances-kpi-margen"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}

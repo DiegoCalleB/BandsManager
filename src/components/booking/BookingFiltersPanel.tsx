@@ -88,12 +88,12 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* 0. Filter drawer Category and View Mode Selectors */}
       <div className="space-y-3 pb-3 border-b border-[var(--hair)]/10">
         <div>
-          <p className="text-[10px] font-bold text-[var(--ink-2)] mb-1.5">Categoría de Contactos</p>
+          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Categoría de Contactos</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
             <button
               type="button"
               onClick={() => handleSelectSectionTab('salas')}
-              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                 sectionTab === 'salas' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -103,7 +103,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             <button
               type="button"
               onClick={() => handleSelectSectionTab('medios')}
-              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                 sectionTab === 'medios' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -113,7 +113,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             <button
               type="button"
               onClick={() => handleSelectSectionTab('grupos')}
-              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                 sectionTab === 'grupos' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -124,7 +124,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         </div>
 
         <div className="sm:hidden">
-          <p className="text-[10px] font-bold text-[var(--ink-2)] mb-1.5">Modo de Vista</p>
+          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Modo de Vista</p>
           <div className="grid grid-cols-3 gap-1 p-1 bg-[var(--sunken)] rounded-[var(--r-m)] ">
             <button
               type="button"
@@ -132,7 +132,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 setViewMode('grid');
                 onClose();
               }}
-              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                 viewMode === 'grid' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -145,7 +145,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 setViewMode('table');
                 onClose();
               }}
-              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                 viewMode === 'table' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold shadow-xs' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
             >
@@ -158,7 +158,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 setViewMode('map');
                 onClose();
               }}
-              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              className={`py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                 viewMode === 'map' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold shadow-xs' : 'bg-[var(--acc)]/15 text-[var(--acc)] '
               }`}
             >
@@ -169,7 +169,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
         </div>
 
         <div>
-          <p className="text-[10px] font-bold text-[var(--ink-2)] mb-1.5">Tipo de Espacio</p>
+          <p className="text-micro font-bold text-[var(--ink-2)] mb-1.5">Tipo de Espacio</p>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as any)}
@@ -222,12 +222,12 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
       {/* 1. Quick Toggles (Favoritos, Verificados, Aforo) */}
       <div className="space-y-1.5">
-        <p className="text-[10px] font-bold text-[var(--ink-2)]">Opciones rápidas</p>
+        <p className="text-micro font-bold text-[var(--ink-2)]">Opciones rápidas</p>
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
             onClick={() => setOnlyFavoritesFilter(!onlyFavoritesFilter)}
-            className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer ${
               onlyFavoritesFilter
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -240,7 +240,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <button
             type="button"
             onClick={() => setOnlyVerifiedFilter(!onlyVerifiedFilter)}
-            className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer ${
               onlyVerifiedFilter
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -271,7 +271,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
             <button
               type="button"
               onClick={() => setIsSavingFilterOpen(true)}
-              className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-all cursor-pointer"
+              className="px-2.5 py-1.5 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer"
               title="Guardar la combinación de filtros actual en 1 clic"
             >
               <BookmarkCheck className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -308,14 +308,14 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* Saved Filters List */}
       {savedFilters.length > 0 && (
         <div className="space-y-1.5">
-          <p className="text-[10px] font-bold text-[var(--ink-2)]">Búsquedas guardadas</p>
+          <p className="text-micro font-bold text-[var(--ink-2)]">Búsquedas guardadas</p>
           <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs">
             {savedFilters.map((sf) => {
               const isActive = activeSavedFilterId === sf.id;
               return (
                 <div
                   key={sf.id}
-                  className={`group relative shrink-0 flex items-center rounded-[var(--r-pill)] transition-all cursor-pointer ${
+                  className={`group relative shrink-0 flex items-center rounded-[var(--r-pill)] transition-ui cursor-pointer ${
                     isActive
                       ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold shadow-xs'
                       : 'bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)]'
@@ -328,7 +328,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                   >
                     <span>📌 {sf.nombre}</span>
                     {sf.minCapacityFilter ? (
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-[var(--acc)]">&gt;{sf.minCapacityFilter}</span>
+                      <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/30 text-[var(--acc)]">&gt;{sf.minCapacityFilter}</span>
                     ) : null}
                   </button>
                   <button
@@ -348,7 +348,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
 
       {/* 2. Tipo Filter */}
       <div className="space-y-1.5">
-        <p className="text-[10px] font-bold text-[var(--ink-2)]">Tipo de espacio / contacto</p>
+        <p className="text-micro font-bold text-[var(--ink-2)]">Tipo de espacio / contacto</p>
         <div className="flex items-center gap-1.5 flex-wrap">
           {(sectionTab === 'medios'
             ? ([
@@ -380,7 +380,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
               key={t.key}
               type="button"
               onClick={() => setTypeFilter(t.key)}
-              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-semibold transition-ui cursor-pointer ${
                 typeFilter === t.key ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
               }`}
             >
@@ -393,12 +393,12 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
       {/* 3. Ciudad Filter */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold text-[var(--ink-2)]">Ciudad / Localidad</p>
+          <p className="text-micro font-bold text-[var(--ink-2)]">Ciudad / Localidad</p>
           {selectedCityFilter && (
             <button
               type="button"
               onClick={() => setSelectedCityFilter('')}
-              className="text-[10px] text-[var(--acc)] hover:underline cursor-pointer"
+              className="text-micro text-[var(--acc)] hover:underline cursor-pointer"
             >
               Ver todas
             </button>
@@ -408,7 +408,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <button
             type="button"
             onClick={() => setSelectedCityFilter('')}
-            className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium shrink-0 transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium shrink-0 transition-ui cursor-pointer ${
               selectedCityFilter === ''
                 ? 'bg-[var(--sunken)] text-[var(--acc)] font-bold '
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] '
@@ -424,14 +424,14 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
                 key={cityName}
                 type="button"
                 onClick={() => setSelectedCityFilter(isSelected ? '' : cityName)}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs shrink-0 transition-ui cursor-pointer flex items-center gap-1 ${
                   isSelected
                     ? 'bg-[var(--acc)]/20 text-[var(--acc)] font-bold '
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] '
                 }`}
               >
                 <span>{cityName}</span>
-                {count > 0 && <span className="opacity-70 text-[10px]">({count})</span>}
+                {count > 0 && <span className="opacity-70 text-micro">({count})</span>}
               </button>
             );
           })}

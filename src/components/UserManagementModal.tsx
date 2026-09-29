@@ -369,11 +369,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
               <div>
                 <h3 className="font-bold font-display text-base flex items-center gap-2">
                   <span>Gestión de Miembros de la Banda</span>
-                  <span className="text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink-2)] ">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                     Panel Admin
                   </span>
                 </h3>
-                <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                <p className="text-xs text-[var(--ink-2)] font-sans">
                   Crea cuentas, administra roles y gestiona contraseñas para el
                   equipo
                 </p>
@@ -395,7 +395,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-mono tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-4 py-2 text-xs font-bold font-mono tracking-wider transition-ui flex items-center gap-1.5 shrink-0 ${
                 activeTab === "band_info"
                   ? "text-[var(--acc-ink)] border-b-2 border-[var(--hair)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -410,7 +410,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 ${
                 activeTab === "list"
                   ? " text-[var(--tentative)]"
                   : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -425,7 +425,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 ${
                 activeTab === "create"
                   ? " text-[var(--tentative)]"
                   : " text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -440,7 +440,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 setError(null);
                 setSuccessMsg(null);
               }}
-              className={`px-4 py-2 text-xs font-bold font-sans transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-4 py-2 text-xs font-bold font-sans transition-ui flex items-center gap-1.5 shrink-0 ${
                 activeTab === "associate"
                   ? "text-[var(--tentative)]"
                   : "text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -478,7 +478,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       <ImageIcon className="w-4 h-4 text-[var(--acc-ink)]" />
                       <span>Logotipo Oficial de la Banda</span>
                     </h4>
-                    <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                    <p className="text-xs text-[var(--ink-2)] mt-0.5">
                       Este logo se muestra en el selector de proyectos, tu
                       Dossier EPK y encabezados.
                     </p>
@@ -501,7 +501,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       ) : (
                         <div className="flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1">
                           <Music className="w-8 h-8 opacity-70" />
-                          <span className="text-[10px] font-black font-mono text-[var(--ink-2)] ">
+                          <span className="text-micro font-bold font-mono text-[var(--ink-2)] ">
                             Sin Logo
                           </span>
                         </div>
@@ -510,7 +510,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       {isUploadingLogo && (
                         <div className="absolute inset-0 bg-[var(--scrim)]/85 flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1.5 z-20">
                           <Loader2 className="w-6 h-6 animate-spin text-[var(--acc-ink)]" />
-                          <span className="text-[9px] font-mono text-[var(--acc-ink)] font-bold ">
+                          <span className="text-micro font-mono text-[var(--acc-ink)] font-bold ">
                             Subiendo
                           </span>
                         </div>
@@ -519,7 +519,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
                     {/* Upload Action */}
                     <div className="flex-1 space-y-2.5 text-center sm:text-left">
-                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs transition-all cursor-pointer active:scale-98">
+                      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] font-bold text-xs transition-ui cursor-pointer active:scale-[0.97]">
                         <Upload className="w-4 h-4" />
                         <span>
                           {isUploadingLogo
@@ -539,7 +539,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                           }}
                         />
                       </label>
-                      <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+                      <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                         Formatos soportados: PNG, JPG, WebP o SVG. Se recomienda
                         fondo transparente.
                       </p>
@@ -554,7 +554,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
-                      <span className="text-[var(--ink-2)] block text-[10px] font-mono ">
+                      <span className="text-[var(--ink-2)] block text-micro font-mono ">
                         Nombre de la Banda
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm">
@@ -562,7 +562,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                       </span>
                     </div>
                     <div className="p-2.5 rounded-xl bg-[var(--sunken)]/80 ">
-                      <span className="text-[var(--ink-2)] block text-[10px] font-mono ">
+                      <span className="text-[var(--ink-2)] block text-micro font-mono ">
                         Total de Músicos
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm">
@@ -582,7 +582,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                   return (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-[var(--r-m)] transition-all bg-[var(--sunken)] hover:-neutral-300`}
+                      className={`p-4 rounded-[var(--r-m)] transition-ui bg-[var(--sunken)] hover:-neutral-300`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -603,17 +603,17 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 @{u.username}
                               </span>
                               {isLeader ? (
-                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/30 flex items-center gap-1">
+                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/30 flex items-center gap-1">
                                   <Shield className="w-2.5 h-2.5" />
                                   <span>Admin</span>
                                 </span>
                               ) : (
-                                <span className="px-2 py-0.5 text-[9px] font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] ">
+                                <span className="px-2 py-0.5 text-micro font-sans font-bold rounded bg-[var(--acc)]/15 text-[var(--ink-2)] ">
                                   Miembro
                                 </span>
                               )}
                               {isSelf && (
-                                <span className="px-1.5 py-0.5 text-[9px] font-sans rounded bg-[var(--surface)]/15 text-[var(--ok)]">
+                                <span className="px-1.5 py-0.5 text-micro font-sans rounded bg-[var(--surface)]/15 text-[var(--ok)]">
                                   Tú
                                 </span>
                               )}
@@ -645,7 +645,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                                 ? "No puedes cambiar tu propio rol desde aquí"
                                 : "Cambiar rol del usuario"
                             }
-                            className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-all ${
+                            className={`px-2 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold outline-none cursor-pointer transition-ui ${
                               u.role === "leader"
                                 ? "bg-[var(--acc)]/15 text-[var(--acc)] -[var(--acc)]/40 hover:bg-[var(--acc)]/25"
                                 : "bg-[var(--surface)] text-[var(--acc)]/80 hover:bg-[var(--surface)]/80"
@@ -812,7 +812,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
                     className={`w-full px-3 py-2 rounded-[var(--r-m)] text-xs outline-none bg-[var(--sunken)]`}
                   />
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Usa uno de los nombres sugeridos (Voz, Batería, Bajo,
                     Guitarras, Teclados, Arreglos) para que el modo Ensayo
                     Individual y Mi Monitor encuentren su pista aislada
@@ -844,7 +844,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
+                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
                 >
                   {loading ? (
                     <span>Creando miembro...</span>
@@ -916,7 +916,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 <button
                   type="submit"
                   disabled={loading || !assocEmail.trim()}
-                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-98"
+                  className="w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] disabled:opacity-50 text-[var(--ink)] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4 active:scale-[0.97]"
                 >
                   {loading ? (
                     <span>Asociando músico...</span>

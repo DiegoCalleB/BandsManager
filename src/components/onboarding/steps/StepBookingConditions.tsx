@@ -65,7 +65,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
       {/* Caché estimado por formato */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+          <label className="block text-xs font-medium text-[var(--ink-2)]">
             Caché Acústico / Showcase (€)
           </label>
           <div className="relative">
@@ -82,7 +82,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+          <label className="block text-xs font-medium text-[var(--ink-2)]">
             Caché Sala / Concierto Estándar (€)
           </label>
           <div className="relative">
@@ -99,7 +99,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)]">
+          <label className="block text-xs font-medium text-[var(--ink-2)]">
             Caché Festival / Fiesta Mayor (€)
           </label>
           <div className="relative">
@@ -136,7 +136,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           <button
             type="button"
             onClick={() => setRequiereAlojamiento(!requiereAlojamiento)}
-            className={`w-full p-3 rounded-[var(--r-m)] text-left transition-all flex items-center justify-between ${
+            className={`w-full p-3 rounded-[var(--r-m)] text-left transition-ui flex items-center justify-between ${
               requiereAlojamiento
                 ? "bg-[var(--acc)]/10  text-[var(--acc)]/70"
                 : "bg-[var(--bg)] text-[var(--ink-2)]"
@@ -148,7 +148,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
                 <span className="text-xs font-semibold block">
                   Hotel si distancia &gt; 150 km
                 </span>
-                <span className="text-[10px] text-[var(--ink-2)]">
+                <span className="text-micro text-[var(--ink-2)]">
                   Incluir pernocta en presupuestos fuera de la provincia
                 </span>
               </div>
@@ -168,7 +168,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Nombre / Cargo
             </label>
             <input
@@ -181,7 +181,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Email de Contratación
             </label>
             <input
@@ -194,7 +194,7 @@ export const StepBookingConditions: React.FC<StepBookingConditionsProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+            <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
               Teléfono Directo
             </label>
             <input

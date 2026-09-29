@@ -193,7 +193,7 @@ export function MemberNotesModal({
               </div>
               <div>
                 <h3
-                  className={`text-base font-black font-display ${"text-[var(--ink)]"}`}
+                  className={`text-base font-bold font-display ${"text-[var(--ink)]"}`}
                 >
                   Notas para Repertorio por Miembro
                 </h3>
@@ -226,7 +226,7 @@ export function MemberNotesModal({
               allMembersToDisplay.length,
             );
             return (
-              <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-sans">
+              <div className="flex items-center gap-2 flex-wrap pt-3 text-xs font-sans">
                 <span className="text-[var(--ink-2)] font-bold">
                   Preparación de la banda:
                 </span>
@@ -324,7 +324,7 @@ export function MemberNotesModal({
                     <button
                       type="button"
                       onClick={handleAddCustomMember}
-                      className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-95"
+                      className="px-3 py-2 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] cursor-pointer transition-transform active:scale-[0.97]"
                     >
                       Añadir
                     </button>
@@ -348,7 +348,7 @@ export function MemberNotesModal({
                 return (
                   <div
                     key={member.id || member.name}
-                    className={`p-3.5 rounded-[var(--r-m)] transition-all ${
+                    className={`p-3.5 rounded-[var(--r-m)] transition-ui ${
                       hasNote ? "bg-[var(--surface)]/90" : "bg-[var(--bg)]/70"
                     }`}
                   >
@@ -368,14 +368,14 @@ export function MemberNotesModal({
                           >
                             {member.name}
                           </span>
-                          <span className="ml-2 text-[11px] px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans">
+                          <span className="ml-2 text-xs px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ink)]/10 text-[var(--ink-2)] font-sans">
                             {member.instrument}
                           </span>
                         </div>
                       </div>
 
                       {hasNote && (
-                        <span className="text-[10px] font-sans font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-[var(--r-pill)] flex items-center gap-1">
+                        <span className="text-micro font-sans font-bold text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded-[var(--r-pill)] flex items-center gap-1">
                           <Check className="w-3 h-3" /> Con notas
                         </span>
                       )}
@@ -391,7 +391,7 @@ export function MemberNotesModal({
                             handleReadinessChange(memberKey, level.value)
                           }
                           title={level.label}
-                          className={`text-[10px] font-sans px-2 py-1 rounded-[var(--r-s)] transition-all ${
+                          className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] transition-ui ${
                             memberReadiness[memberKey] === level.value
                               ? level.colorClass
                               : "bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10"
@@ -429,7 +429,7 @@ export function MemberNotesModal({
             <button
               type="button"
               onClick={handleSave}
-              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer ${
+              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-[0.97] cursor-pointer ${
                 savedSuccess
                   ? "bg-[var(--ok)] text-[var(--ink)]"
                   : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)]"

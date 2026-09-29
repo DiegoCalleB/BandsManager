@@ -399,7 +399,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
             className="absolute top-0 bottom-0 right-0 bg-[var(--surface)] flex items-center justify-end px-3 pointer-events-none z-10"
             style={{ left: `${trackWidthPercent}%` }}
           >
-            <span className="text-[9px] font-sans text-[var(--ink-2)] font-semibold">
+            <span className="text-micro font-sans text-[var(--ink-2)] font-semibold">
               Fin de pista ({formatSecs(effTrackDur)})
             </span>
           </div>
@@ -415,7 +415,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
 
         {/* Loading Overlay */}
         {!isLoaded && !loadError && (
-          <div className="absolute inset-0 flex items-center justify-center text-[10px] text-[var(--ink-2)] font-sans bg-[var(--scrim)]/70 z-30">
+          <div className="absolute inset-0 flex items-center justify-center text-micro text-[var(--ink-2)] font-sans bg-[var(--scrim)]/70 z-30">
             ⚡ Cargando onda de audio...
           </div>
         )}

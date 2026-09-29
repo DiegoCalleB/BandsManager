@@ -85,7 +85,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
               <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones
               (Revolut, PayPal & Bizum)
             </h3>
-            <span className="text-[10px] font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-micro font-bold text-[var(--ink-2)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Crowdfunding Directo
             </span>
           </div>
@@ -103,7 +103,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                   <span className="text-xs font-bold text-[var(--ink)]">
                     Mostrar tarjeta de donación
                   </span>
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Activa o desactiva la opción de colaboración
                   </p>
                 </div>
@@ -141,7 +141,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     </label>
                   </div>
                   <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:ring-1 focus-within:ring-[var(--acc)] rounded-[var(--r-s)] px-2.5">
-                    <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                    <span className="text-micro text-[var(--ink-2)] font-sans">
                       revolut.me/
                     </span>
                     <input
@@ -188,7 +188,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                     </label>
                   </div>
                   <div className="flex items-center gap-1 bg-[var(--surface)] focus-within:ring-1 focus-within:ring-[var(--acc)] rounded-[var(--r-s)] px-2.5">
-                    <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                    <span className="text-micro text-[var(--ink-2)] font-sans">
                       paypal.me/
                     </span>
                     <input
@@ -236,7 +236,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                   </label>
                 </div>
                 <div className="flex items-center gap-1 bg-[var(--sunken)] focus-within:ring-1 focus-within:ring-[var(--ok)] rounded-[var(--r-s)] px-2.5">
-                  <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                  <span className="text-micro text-[var(--ink-2)] font-sans">
                     TLF:
                   </span>
                   <input
@@ -378,13 +378,13 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
             {/* Vista previa en vivo */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                <span className="text-micro font-sans text-[var(--ink-2)]">
                   Previsualización en vivo
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowFansPreviewModal(true)}
-                  className="text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
+                  className="text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)] font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
                   title="Abrir simulador interactivo del formulario Únete"
                 >
                   <Eye className="w-3.5 h-3.5" /> Ver Formulario Únete
@@ -405,18 +405,18 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                           {config.donacionRevolut?.titulo ||
                             "Colabora con la banda"}
                         </h3>
-                        <span className="text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
+                        <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
                           Contribución
                         </span>
                       </div>
-                      <p className="text-[11px] text-[var(--ink)]/90 leading-relaxed mt-1">
+                      <p className="text-xs text-[var(--ink)]/90 leading-relaxed mt-1">
                         {config.donacionRevolut?.descripcion ||
                           "Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."}
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-1 flex items-center justify-between text-[10px] text-[var(--ink-2)]">
+                  <div className="pt-1 flex items-center justify-between text-micro text-[var(--ink-2)]">
                     <span className="flex items-center gap-1">
                       <LockIcon className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
                       <span>Pago seguro sin comisiones para la banda</span>
@@ -483,7 +483,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       {idioma.label}
                     </span>
                     {hayTraduccion && !desactualizada && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)]">
+                      <span className="text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/15 text-[var(--ok)]">
                         Al día
                       </span>
                     )}
@@ -556,7 +556,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                           className="grid grid-cols-1 lg:grid-cols-2 gap-3"
                         >
                           <div>
-                            <label className="block text-[10px] text-[var(--ink-2)] font-semibold mb-1.5">
+                            <label className="block text-micro text-[var(--ink-2)] font-semibold mb-1.5">
                               {f.etiqueta} — original (ES)
                             </label>
                             <div className="w-full bg-[var(--surface)]/60 rounded-[var(--r-s)] p-3 text-xs text-[var(--ink-2)] whitespace-pre-line max-h-40 overflow-y-auto">
@@ -564,7 +564,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                             </div>
                           </div>
                           <div>
-                            <label className="block text-[10px] text-[var(--acc)]/80 font-semibold mb-1.5">
+                            <label className="block text-micro text-[var(--acc)]/80 font-semibold mb-1.5">
                               {f.etiqueta} — {idioma.label}
                             </label>
                             <textarea
@@ -587,7 +587,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                       (m) => (m.rol || "").trim() || (m.bio || "").trim(),
                     ).length > 0 && (
                       <div className="space-y-3 pt-2">
-                        <p className="text-[10px] text-[var(--ink-2)] font-semibold">
+                        <p className="text-micro text-[var(--ink-2)] font-semibold">
                           Formación
                         </p>
                         {miembros
@@ -604,7 +604,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                               </p>
                               {(m.rol || "").trim() && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                  <div className="text-[11px] text-[var(--ink-2)] pt-1.5">
+                                  <div className="text-xs text-[var(--ink-2)] pt-1.5">
                                     {m.rol}
                                   </div>
                                   <input
@@ -627,7 +627,7 @@ export const EPKDonacionesBlock: React.FC<EPKDonacionesBlockProps> = ({
                               )}
                               {(m.bio || "").trim() && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                  <div className="text-[11px] text-[var(--ink-2)]">
+                                  <div className="text-xs text-[var(--ink-2)]">
                                     {m.bio}
                                   </div>
                                   <textarea

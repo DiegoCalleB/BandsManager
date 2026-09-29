@@ -24,7 +24,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div
         id="booking-kpi-total"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}
@@ -47,7 +47,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
 
       <div
         id="booking-kpi-aprobados"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}
@@ -73,7 +73,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
 
       <div
         id="booking-kpi-respuesta"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}
@@ -96,7 +96,7 @@ export const BookingMetricsCards: React.FC<BookingMetricsCardsProps> = ({
 
       <div
         id="booking-kpi-aforo"
-        className="p-5 rounded-[var(--r-l)] transition-all"
+        className="p-5 rounded-[var(--r-l)] transition-ui"
         style={{
           backgroundColor: colors.card,
         }}

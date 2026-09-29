@@ -90,7 +90,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <span className="font-bold block text-sm">Permiso concedido en este navegador</span>
-                  <p className="text-[11px] text-[var(--ok)]/80 mt-0.5">
+                  <p className="text-xs text-[var(--ok)]/80 mt-0.5">
                     Recibirás alertas nativas en tu escritorio o móvil incluso si estás en otra pestaña.
                   </p>
                 </div>
@@ -100,7 +100,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                 <AlertTriangle className="w-5 h-5 text-[var(--alert)] shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-1">
                   <span className="font-bold block text-sm">Permiso bloqueado en el navegador</span>
-                  <p className="text-[11px] text-[var(--alert)]/80">
+                  <p className="text-xs text-[var(--alert)]/80">
                     Las notificaciones están bloqueadas en los ajustes de tu navegador. Para recibirlas, haz clic en el icono del candado 🔒
                     junto a la URL y permite las "Notificaciones".
                   </p>
@@ -112,7 +112,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   <Bell className="w-5 h-5 text-[var(--acc)] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold block text-sm">Activar permiso del navegador</span>
-                    <p className="text-[11px] text-[var(--acc)]/80 mt-0.5">
+                    <p className="text-xs text-[var(--acc)]/80 mt-0.5">
                       Haz clic para permitir que BandManager.io te avise cuando una sala responda.
                     </p>
                   </div>
@@ -137,7 +137,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   </div>
                   <div>
                     <span className="font-bold text-[var(--ink-2)] block text-xs">Notificaciones Push Activas</span>
-                    <span className="text-[11px] text-[var(--ink-2)]">Interruptor general de avisos en este dispositivo</span>
+                    <span className="text-xs text-[var(--ink-2)]">Interruptor general de avisos en este dispositivo</span>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -154,14 +154,14 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                   </div>
                   <div>
                     <span className="font-bold text-[var(--ink-2)] block text-xs">Sonido de Alerta</span>
-                    <span className="text-[11px] text-[var(--ink-2)]">Chime suave con cada notificación</span>
+                    <span className="text-xs text-[var(--ink-2)]">Chime suave con cada notificación</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={onTriggerTestSound}
-                    className="text-[10px] text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition-colors cursor-pointer"
+                    className="text-micro text-[var(--ink-2)] hover:text-[var(--acc)] px-2 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] rounded-[var(--r-s)] transition-colors cursor-pointer"
                     title="Reproducir sonido de prueba"
                   >
                     🔊 Probar
@@ -182,7 +182,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
 
             {/* Event Specific Config */}
             <div className="space-y-2">
-              <span className="text-[11px] font-mono font-bold text-[var(--ink-2)] block px-1">
+              <span className="text-xs font-mono font-bold text-[var(--ink-2)] block px-1">
                 Eventos a Notificar
               </span>
 
@@ -193,7 +193,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     <RefreshCw className="w-4 h-4 text-[var(--ok)] mt-0.5 shrink-0" />
                     <div>
                       <span className="font-bold text-[var(--ink-2)] block text-xs">Cambios de Estado en Leads CRM</span>
-                      <p className="text-[11px] text-[var(--ink-2)]">Avisar cuando una sala cambie de estado (ej: negociando, aplazado, etc.).</p>
+                      <p className="text-xs text-[var(--ink-2)]">Avisar cuando una sala cambie de estado (ej: negociando, aplazado, etc.).</p>
                     </div>
                   </div>
                   <input
@@ -211,7 +211,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     <MessageSquare className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
                       <span className="font-bold text-[var(--ink-2)] block text-xs">Nuevas Respuestas y Mensajes Recibidos</span>
-                      <p className="text-[11px] text-[var(--ink-2)]">
+                      <p className="text-xs text-[var(--ink-2)]">
                         Avisar cuando una sala o festival conteste a tus pitches o envíe un nuevo mensaje.
                       </p>
                     </div>
@@ -231,7 +231,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     <Sparkles className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
                       <span className="font-bold text-[var(--ink-2)] block text-xs">Agentes IA: Propuestas Listas para Aprobación</span>
-                      <p className="text-[11px] text-[var(--ink-2)]">
+                      <p className="text-xs text-[var(--ink-2)]">
                         Avisar cuando el Redactor o Lector prepare un pitch pendiente de tu revisión.
                       </p>
                     </div>
@@ -251,7 +251,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     <PartyPopper className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
                       <span className="font-bold text-[var(--ink-2)] block text-xs">Conciertos Confirmados y Fechas Cerradas</span>
-                      <p className="text-[11px] text-[var(--ink-2)]">Avisar cuando un lead pase formalmente a bolo cerrado en la gira.</p>
+                      <p className="text-xs text-[var(--ink-2)]">Avisar cuando un lead pase formalmente a bolo cerrado en la gira.</p>
                     </div>
                   </div>
                   <input
@@ -269,7 +269,7 @@ export const NotificationSettingsModal: React.FC<NotificationSettingsModalProps>
                     <Radio className="w-4 h-4 text-[var(--acc)] mt-0.5 shrink-0" />
                     <div>
                       <span className="font-bold text-[var(--ink-2)] block text-xs">Nuevas Salas Detectadas por el Scout</span>
-                      <p className="text-[11px] text-[var(--ink-2)]">
+                      <p className="text-xs text-[var(--ink-2)]">
                         Avisar cuando el agente Scout incorpore nuevos espacios a la base de datos.
                       </p>
                     </div>

@@ -294,7 +294,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--acc)]/20 text-[var(--acc)] ",
       activeDot: "bg-[var(--acc)]/60 w-7",
       primaryBtn:
-        "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-black",
+        "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold",
       hookBorder: " bg-[var(--acc)]/10 text-[var(--acc)]",
       highlightText: "text-[var(--acc)]",
       targetCard: " bg-[var(--acc)]/5",
@@ -320,7 +320,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       iconBox: "bg-[var(--ok)]/20 text-[var(--ok)]/30",
       activeDot: "bg-[var(--ok)] w-7",
       primaryBtn:
-        "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-black",
+        "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold",
       hookBorder: "bg-[var(--ok)]/10 text-[var(--ok)]/40",
       highlightText: "text-[var(--ok)]",
       targetCard: "bg-[var(--ok)]/5",
@@ -358,7 +358,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
       {targetRect && effectiveFloatingMode && (
         <div className="fixed inset-0 z-[9999] pointer-events-none">
           <div
-            className="absolute sm:border-3 rounded-[var(--r-m)] transition-all duration-300 pointer-events-none"
+            className="absolute sm:border-3 rounded-[var(--r-m)] transition-ui duration-300 pointer-events-none"
             style={{
               top: Math.max(0, targetRect.top - 4),
               left: Math.max(0, targetRect.left - 4),
@@ -374,7 +374,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
             {/* Target Tooltip Badge */}
             <div
-              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-[10px] flex items-center gap-1 whitespace-nowrap`}
+              className={`absolute ${targetRect.top < 36 ? "-bottom-7" : "-top-7"} left-0 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)] text-[var(--ink)] font-sans font-bold text-micro flex items-center gap-1 whitespace-nowrap`}
             >
               <span>👉 {currentStep.uiTarget?.label || "Aquí"}</span>
             </div>
@@ -386,7 +386,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
         id={`tutorial-modal-overlay-${moduleId}`}
         className={
           effectiveFloatingMode
-            ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-all duration-300`
+            ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-ui duration-300`
             : "fixed inset-0 z-[10000] bg-[var(--scrim)]/85 flex items-center justify-center p-0 md:p-4 overflow-y-auto"
         }
         onClick={(e) => {
@@ -412,11 +412,11 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           <div className="p-3.5 sm:p-4/70 flex items-center justify-between bg-[var(--surface)]/80 shrink-0">
             <div className="flex items-center gap-2">
               <span
-                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-sans font-bold ${accentStyles.badgeBg}`}
+                className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold ${accentStyles.badgeBg}`}
               >
                 {tutorialConfig.badge}
               </span>
-              <span className="text-[11px] font-sans text-[var(--ink-2)] hidden xs:inline">
+              <span className="text-xs font-sans text-[var(--ink-2)] hidden xs:inline">
                 Paso {currentStepIndex + 1}/{totalSteps}
               </span>
             </div>
@@ -433,7 +433,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                       setTimeout(() => locateTargetElement(true), 150);
                     }
                   }}
-                  className="p-1.5 px-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-sans"
+                  className="p-1.5 px-2 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--acc)]/70 hover:bg-[var(--surface)]/60 transition-colors cursor-pointer flex items-center gap-1 text-xs font-sans"
                   title={
                     isFloatingMode
                       ? "Expandir a tarjeta centrada"
@@ -461,7 +461,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`h-1.5 rounded-[var(--r-pill)] transition-all duration-300 cursor-pointer ${
+                    className={`h-1.5 rounded-[var(--r-pill)] transition-ui duration-300 cursor-pointer ${
                       idx === currentStepIndex
                         ? accentStyles.activeDot
                         : "w-1.5 bg-[var(--sunken)] hover:bg-[var(--sunken)]"
@@ -504,7 +504,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     <CurrentIcon className="w-5 h-5" />
                   </div>
                   <div className="space-y-0.5 min-w-0">
-                    <span className="text-[10px] font-sans text-[var(--ink-2)] font-semibold block">
+                    <span className="text-micro font-sans text-[var(--ink-2)] font-semibold block">
                       {currentStep.badge}
                     </span>
                     <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-[var(--ink)] leading-snug">
@@ -531,7 +531,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-[var(--r-pill)] bg-[var(--acc)]/60 opacity-75"></span>
                           <span className="relative inline-flex rounded-[var(--r-pill)] h-2 w-2 bg-[var(--acc)]"></span>
                         </span>
-                        <span className="text-[10px] font-sans font-bold text-[var(--acc)]/70">
+                        <span className="text-micro font-sans font-bold text-[var(--acc)]/70">
                           {currentStep.uiTarget.type === "button"
                             ? "🔘 Botón en pantalla"
                             : currentStep.uiTarget.type === "tab"
@@ -552,7 +552,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                             setIsFloatingMode(true);
                             setTimeout(() => locateTargetElement(true), 100);
                           }}
-                          className={`text-[11px] font-sans font-bold px-2.5 py-1 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer active:scale-95 ${accentStyles.targetBtn}`}
+                          className={`text-xs font-sans font-bold px-2.5 py-1 rounded-[var(--r-s)] flex items-center gap-1.5 transition cursor-pointer active:scale-[0.97] ${accentStyles.targetBtn}`}
                           title="Fijar modo flotante y enfocar este elemento en la pantalla"
                         >
                           <Target className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -563,7 +563,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
 
                     {/* Nombre del elemento simulando botón o control */}
                     <div className="flex items-center gap-2 p-2 rounded-[var(--r-m)] bg-[var(--bg)]/90 text-xs">
-                      <span className="text-[var(--acc)] font-sans font-black text-xs shrink-0">
+                      <span className="text-[var(--acc)] font-sans font-bold text-xs shrink-0">
                         {currentStep.uiTarget.type === "button" ? "▶" : "▪"}
                       </span>
                       <span className="font-bold text-[var(--ink)] font-sans truncate">
@@ -572,7 +572,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                     </div>
 
                     {/* Ubicación y Para qué sirve */}
-                    <div className="grid grid-cols-1 gap-1.5 text-[11px] font-sans text-[var(--ink-2)]/80">
+                    <div className="grid grid-cols-1 gap-1.5 text-xs font-sans text-[var(--ink-2)]/80">
                       <div className="flex items-start gap-1.5 text-[var(--ink-2)]">
                         <MapPin className="w-3.5 h-3.5 text-[var(--acc)] shrink-0 mt-0.5" />
                         <span className="leading-tight">
@@ -617,7 +617,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                           {point.title}
                         </h4>
                       </div>
-                      <p className="text-[11px] text-[var(--ink-2)] leading-normal pl-5">
+                      <p className="text-xs text-[var(--ink-2)] leading-normal pl-5">
                         {point.desc}
                       </p>
                     </div>
@@ -630,7 +630,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
           {/* BOTTOM ACTIONS BAR */}
           <div className="p-3.5 sm:p-4/80 bg-[var(--bg)]/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
             {/* Don't show again toggle */}
-            <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]/80">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-xs font-sans text-[var(--ink-2)] hover:text-[var(--ink-2)]/80">
               <input
                 id={`tutorial-dont-show-again-checkbox-${moduleId}`}
                 type="checkbox"
@@ -650,7 +650,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                   id={`tutorial-prev-btn-${moduleId}`}
                   type="button"
                   onClick={handlePrev}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink)]/80 text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 hover:bg-[var(--sunken)] text-[var(--ink)]/80 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1 active:scale-[0.97]"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Anterior</span>
@@ -661,7 +661,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
                 id={`tutorial-next-btn-${moduleId}`}
                 type="button"
                 onClick={handleNext}
-                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 ${accentStyles.primaryBtn}`}
+                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.97] ${accentStyles.primaryBtn}`}
               >
                 {isLastStep ? (
                   <>

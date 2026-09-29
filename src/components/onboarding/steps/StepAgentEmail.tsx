@@ -72,7 +72,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
             placeholder="contacto@tubanda.com o tubandaoficial@gmail.com"
             className="w-full px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] placeholder-[var(--ink-2)] text-xs focus:outline-none"
           />
-          <p className="text-[11px] text-[var(--ink-2)] mt-1">
+          <p className="text-xs text-[var(--ink-2)] mt-1">
             Podrás conectar tu cuenta de Gmail con 1-clic o configurar IMAP/SMTP
             en Ajustes de Correo en cualquier momento.
           </p>
@@ -86,7 +86,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+              <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
                 Nombre del Remitente
               </label>
               <input
@@ -99,7 +99,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+              <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
                 Cargo / Rol
               </label>
               <input
@@ -112,7 +112,7 @@ export const StepAgentEmail: React.FC<StepAgentEmailProps> = ({
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-[var(--ink-2)] mb-1">
+              <label className="block text-xs font-medium text-[var(--ink-2)] mb-1">
                 Teléfono en la firma
               </label>
               <input

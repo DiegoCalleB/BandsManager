@@ -66,7 +66,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
                 className="px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-xs flex items-center gap-2"
               >
                 <span className="font-semibold text-[var(--ink-2)]">{key}</span>
-                <span className="font-black text-[var(--acc-ink)] tabular-nums">
+                <span className="font-bold text-[var(--acc-ink)] tabular-nums">
                   {count} {count === 1 ? 'clic' : 'clics'}
                 </span>
               </div>
@@ -84,7 +84,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
                 <TrendingUp className="w-4 h-4 text-[var(--acc)]" />
                 Crecimiento de la comunidad
               </p>
-              <p className="text-[11px] text-[var(--ink-2)]">Fans acumulados de {effectiveBandName}, mes a mes</p>
+              <p className="text-xs text-[var(--ink-2)]">Fans acumulados de {effectiveBandName}, mes a mes</p>
             </div>
             <span className="text-xs font-bold text-[var(--acc-ink)] bg-[var(--acc-soft)] px-2.5 py-1 rounded-[var(--r-pill)] shrink-0 tabular-nums">
               {fans.length} fans
@@ -109,7 +109,7 @@ export const FansDashboardView: React.FC<FansDashboardViewProps> = ({
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 min-h-[22rem] flex flex-col">
           <div className="mb-4">
             <p className="text-xs font-bold text-[var(--ink-2)]">Canal de origen</p>
-            <p className="text-[11px] text-[var(--ink-2)]">De dónde llegan los registros</p>
+            <p className="text-xs text-[var(--ink-2)]">De dónde llegan los registros</p>
           </div>
 
           {originData.length > 0 ? (

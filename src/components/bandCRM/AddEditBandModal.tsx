@@ -117,12 +117,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             {/* Nombre de la Banda */}
             <div className="space-y-1 md:col-span-2">
               <div className="flex items-center justify-between">
-                <label className="block text-[10px] font-mono text-[var(--ink-2)]">Nombre de la Banda / Artista *</label>
+                <label className="block text-micro font-mono text-[var(--ink-2)]">Nombre de la Banda / Artista *</label>
                 <button
                   type="button"
                   onClick={handleAiLookup}
                   disabled={isAiSearching || !formName.trim()}
-                  className="flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] transition-all disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 text-micro font-mono font-bold px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] transition-ui disabled:opacity-50 cursor-pointer"
                 >
                   {isAiSearching ? (
                     <>
@@ -175,7 +175,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <button
                       type="button"
                       onClick={handleApplyAllAiData}
-                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-[10px] hover:bg-[var(--acc-soft)] transition-all cursor-pointer flex items-center gap-1 shadow"
+                      className="px-3 py-1 bg-[var(--acc)] text-[var(--on-acc)] font-bold rounded-[var(--r-m)] text-micro hover:bg-[var(--acc-soft)] transition-ui cursor-pointer flex items-center gap-1 shadow"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Aplicar Todo</span>
@@ -191,7 +191,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[var(--ink-2)]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[var(--ink-2)]">
                   {aiProposal.estilo_musical && (
                     <div className="flex items-center justify-between bg-[var(--sunken)]/70 p-2 rounded-[var(--r-m)] ">
                       <div className="truncate pr-2">
@@ -200,7 +200,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormStyle(aiProposal.estilo_musical)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -215,7 +215,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormLocation(aiProposal.localizacion)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -230,7 +230,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormContactName(aiProposal.contacto_nombre)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -245,7 +245,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormEmail(aiProposal.email)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -260,7 +260,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormPhone(aiProposal.telefono)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -275,7 +275,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormInstagram(aiProposal.instagram)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -290,7 +290,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setFormSpotifyYoutube(aiProposal.spotify_url || aiProposal.youtube_url)}
-                        className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                        className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                       >
                         Usar
                       </button>
@@ -306,12 +306,12 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                           onClick={() =>
                             setFormNotes((prev) => (prev ? `${prev}\n\n[Bio IA]: ${aiProposal.biografia}` : aiProposal.biografia))
                           }
-                          className="text-[10px] font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
+                          className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer shrink-0"
                         >
                           Añadir a Notas
                         </button>
                       </div>
-                      <p className="text-[10px] text-[var(--ink-2)] italic leading-relaxed">{aiProposal.biografia}</p>
+                      <p className="text-micro text-[var(--ink-2)] italic leading-relaxed">{aiProposal.biografia}</p>
                     </div>
                   )}
                 </div>
@@ -320,7 +320,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Icono o Imagen / Logo de la Banda */}
             <div className="space-y-2 sm:col-span-2 p-3 bg-[var(--sunken)]/60 rounded-[var(--r-m)] ">
-              <label className="block text-[10px] font-mono text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
+              <label className="block text-micro font-mono text-[var(--acc)] font-bold">Icono o Logo / Foto de la Banda</label>
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Preview current avatar */}
@@ -334,7 +334,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
                 {/* Emoji preset selection */}
                 <div className="flex-1 space-y-1">
-                  <span className="text-[10px] text-[var(--ink-2)] block font-mono">Seleccionar icono emoji:</span>
+                  <span className="text-micro text-[var(--ink-2)] block font-mono">Seleccionar icono emoji:</span>
                   <div className="flex flex-wrap gap-1">
                     {['🎸', '🎹', '🥁', '🎤', '🎷', '🎺', '🎧', '🪕', '🎻', '⚡', '🔥', '🌟', '🎶'].map((emoji) => (
                       <button
@@ -343,7 +343,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                         onClick={() => {
                           setFormIcon(emoji);
                         }}
-                        className={`w-7 h-7 rounded-[var(--r-m)] text-sm flex items-center justify-center transition-all cursor-pointer ${
+                        className={`w-7 h-7 rounded-[var(--r-m)] text-sm flex items-center justify-center transition-ui cursor-pointer ${
                           formIcon === emoji && !formImageUrl
                             ? 'bg-[var(--acc)]/20 text-[var(--ink)] scale-110'
                             : 'bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]'
@@ -357,8 +357,8 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
                 {/* Upload file button */}
                 <div className="shrink-0 space-y-1">
-                  <span className="text-[10px] text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
-                  <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] text-[10px] font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-all active:scale-95">
+                  <span className="text-micro text-[var(--ink-2)] block font-mono">O subir logo (Supabase):</span>
+                  <label className="cursor-pointer px-2.5 py-1.5 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] text-micro font-mono text-[var(--ink-2)] flex items-center gap-1.5 transition-ui active:scale-[0.97]">
                     {isUploadingLogo ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--acc)]" />
                     ) : (
@@ -379,7 +379,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setFormImageUrl('')}
-                      className="text-[9px] text-[var(--alert)] hover:underline block text-center"
+                      className="text-micro text-[var(--alert)] hover:underline block text-center"
                     >
                       Quitar imagen
                     </button>
@@ -390,37 +390,37 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Estilo Musical */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Estilo Musical *</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Estilo Musical *</label>
               <input
                 type="text"
                 required
                 value={formStyle}
                 onChange={(e) => setFormStyle(e.target.value)}
                 placeholder="Ej: Balkan Ska, Reggae, Punk, Mestizaje..."
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Localización / Ciudad */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Localización / Ciudad Principal *</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Localización / Ciudad Principal *</label>
               <input
                 type="text"
                 required
                 value={formLocation}
                 onChange={(e) => setFormLocation(e.target.value)}
                 placeholder="Ej: Barcelona, Madrid, Valencia, Sevilla..."
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Estado de la Relación */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Estado de la Relación</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Estado de la Relación</label>
               <select
                 value={formStatus}
                 onChange={(e) => setFormStatus(e.target.value as BandRelationshipStatus)}
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50 cursor-pointer"
               >
                 <option value="sin_contactar">📡 Sin Contactar</option>
                 <option value="intercambio_propuesto">🔄 Intercambio Propuesto (Date Swap)</option>
@@ -433,91 +433,91 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
 
             {/* Persona de Contacto */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Persona de Contacto / Rol</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Persona de Contacto / Rol</label>
               <input
                 type="text"
                 value={formContactName}
                 onChange={(e) => setFormContactName(e.target.value)}
                 placeholder="Ej: Carlos (Mánager / Teclista)"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Último Contacto */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Fecha de Último Contacto</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Fecha de Último Contacto</label>
               <input
                 type="date"
                 value={formLastContact}
                 onChange={(e) => setFormLastContact(e.target.value)}
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Email */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Email de Contacto / Booking</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Email de Contacto / Booking</label>
               <input
                 type="email"
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
                 placeholder="ejemplo@banda.com"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Teléfono */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Teléfono / WhatsApp</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Teléfono / WhatsApp</label>
               <input
                 type="text"
                 value={formPhone}
                 onChange={(e) => setFormPhone(e.target.value)}
                 placeholder="+34 600 000 000"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Instagram */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Instagram</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Instagram</label>
               <input
                 type="text"
                 value={formInstagram}
                 onChange={(e) => setFormInstagram(e.target.value)}
                 placeholder="@nombrebanda"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
 
             {/* Aforo habitual */}
             <div className="space-y-1">
-              <label className="block text-[10px] font-mono text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
+              <label className="block text-micro font-mono text-[var(--ink-2)]">Aforo Promedio que Mueven</label>
               <input
                 type="number"
                 value={formAforo}
                 onChange={(e) => setFormAforo(Number(e.target.value))}
                 placeholder="300"
-                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+                className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
               />
             </div>
           </div>
 
           {/* Enlace Spotify / YouTube */}
           <div className="space-y-1">
-            <label className="block text-[10px] font-mono text-[var(--ink-2)]">Enlace Spotify / YouTube / Dossier</label>
+            <label className="block text-micro font-mono text-[var(--ink-2)]">Enlace Spotify / YouTube / Dossier</label>
             <input
               type="url"
               value={formSpotifyYoutube}
               onChange={(e) => setFormSpotifyYoutube(e.target.value)}
               placeholder="https://open.spotify.com/artist/..."
-              className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-[10px] font-mono focus:outline-none focus:-[#f2ca50]/50"
+              className="w-full bg-[var(--sunken)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-m)] text-micro font-mono focus:outline-none focus:-[#f2ca50]/50"
             />
           </div>
 
           {/* Notas de Colaboración */}
           <div className="space-y-1">
-            <label className="block text-[10px] font-mono text-[var(--ink-2)]">
+            <label className="block text-micro font-mono text-[var(--ink-2)]">
               Notas de Colaboración / Salas propuestas / Intercambios
             </label>
             <textarea
@@ -525,7 +525,7 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
               value={formNotes}
               onChange={(e) => setFormNotes(e.target.value)}
               placeholder="Escribe notas relevantes para la colaboración (ej. Dispuestos a compartir fecha en Sala Apolo, proponen fecha en Noviembre)..."
-              className="w-full bg-[var(--sunken)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-[10px] font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
+              className="w-full bg-[var(--sunken)] text-[var(--ink)] p-3 rounded-[var(--r-m)] text-micro font-sans leading-relaxed focus:outline-none focus:-[#f2ca50]/50"
             />
           </div>
 
@@ -534,13 +534,13 @@ export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
             <button
               type="button"
               onClick={() => onClose()}
-              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[10px] rounded-[var(--r-m)] transition-colors cursor-pointer"
+              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-micro rounded-[var(--r-m)] transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-[10px] rounded-[var(--r-m)] transition-all cursor-pointer"
+              className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono font-bold text-micro rounded-[var(--r-m)] transition-ui cursor-pointer"
             >
               {editingBand ? 'Guardar Cambios' : 'Añadir Banda'}
             </button>

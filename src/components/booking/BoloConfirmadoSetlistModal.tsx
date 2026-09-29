@@ -194,11 +194,11 @@ export const BoloConfirmadoSetlistModal: React.FC<
           {/* Header */}
           <div className="flex justify-between items-start800/80 pb-3">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[10px] font-black mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-micro font-bold mb-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Concierto Confirmado
               </div>
-              <h3 className="text-lg sm:text-xl font-black font-sans text-[var(--ink)]">
+              <h3 className="text-lg sm:text-xl font-bold font-sans text-[var(--ink)]">
                 {lead.nombre_sala}
               </h3>
               <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -249,7 +249,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
               <span>Duración pactada para el pase:</span>
               <span className="text-[var(--ok)]">{targetDurationMin} min</span>
             </label>
-            <div className="grid grid-cols-4 gap-1.5 font-sans text-[11px]">
+            <div className="grid grid-cols-4 gap-1.5 font-sans text-xs">
               {[45, 60, 75, 90].map((mins) => (
                 <button
                   key={mins}
@@ -258,7 +258,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                     setTargetDurationMin(mins);
                     setGenerateNewSetlist(false);
                   }}
-                  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-all cursor-pointer text-center ${
+                  className={`py-2 px-1 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer text-center ${
                     targetDurationMin === mins
                       ? "bg-[var(--surface)]/20 text-[var(--ok)]"
                       : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -280,7 +280,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
               <button
                 type="button"
                 onClick={() => setGenerateNewSetlist(!generateNewSetlist)}
-                className={`text-[11px] underline decoration-dotted transition-colors ${
+                className={`text-xs underline decoration-dotted transition-colors ${
                   generateNewSetlist
                     ? "text-[var(--ok)] font-bold"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -302,7 +302,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                   <Zap className="w-4 h-4 text-[var(--ok)]" />
                   <span>Se creará un nuevo setlist automático:</span>
                 </div>
-                <p className="text-[11px] font-sans text-[var(--ink-2)]">
+                <p className="text-xs font-sans text-[var(--ink-2)]">
                   "Bolo {lead.nombre_sala} ({targetDurationMin} min)"
                   seleccionando canciones de tu catálogo según la energía
                   requerida.
@@ -314,7 +314,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 <button
                   type="button"
                   onClick={() => setGenerateNewSetlist(true)}
-                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-bold text-[11px] cursor-pointer"
+                  className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
                 >
                   ⚡ Autogenerar Setlist ({targetDurationMin} min)
                 </button>
@@ -334,7 +334,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                         setSelectedSetlistId(st.id);
                         setGenerateNewSetlist(false);
                       }}
-                      className={`p-3 rounded-[var(--r-l)] transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                      className={`p-3 rounded-[var(--r-l)] transition-ui cursor-pointer flex items-center justify-between gap-2 ${
                         isSelected
                           ? "bg-[var(--acc)]/15 "
                           : isOptimal
@@ -351,12 +351,12 @@ export const BoloConfirmadoSetlistModal: React.FC<
                             {st.nombre}
                           </span>
                           {isOptimal && (
-                            <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-[9px] font-black">
+                            <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ok)] font-sans text-micro font-bold">
                               ✨ Sugerido
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <p className="text-micro font-sans text-[var(--ink-2)]">
                           {durationMin} min aprox. • {st.items?.length || 0}{" "}
                           items
                           {isOptimal && ` • ${bestMatch?.reason}`}
@@ -387,7 +387,7 @@ export const BoloConfirmadoSetlistModal: React.FC<
                 isSubmitting || (!selectedSetlistId && !generateNewSetlist)
               }
               onClick={handleSaveAndLink}
-              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--ink)] font-sans font-black text-xs flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--ok)]  text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-2 hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               <Check className="w-4 h-4 stroke-[3]" />
               <span>

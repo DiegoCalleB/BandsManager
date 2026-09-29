@@ -188,12 +188,12 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <h4 className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-display">
               Copiloto de Cierre, Logística & Rentabilidad
             </h4>
-            <p className="text-[10px] text-[var(--ink-2)] font-sans">Inteligencia financiera y táctica para no perder dinero en carretera</p>
+            <p className="text-micro text-[var(--ink-2)] font-sans">Inteligencia financiera y táctica para no perder dinero en carretera</p>
           </div>
         </div>
 
         {corridorData && (
-          <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-[10px] font-mono text-[var(--acc)] flex items-center gap-1 shrink-0">
+          <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-mono text-[var(--acc)] flex items-center gap-1 shrink-0">
             <Compass className="w-3 h-3 text-[var(--acc)]" />
             {corridorData.info.corridor}
           </span>
@@ -210,7 +210,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             </span>
           </div>
           <span
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
+            className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
               isBreakEvenFeasible
                 ? 'bg-[var(--ok)]/15 text-[var(--ok)]'
                 : 'bg-[var(--acc)]/15 text-[var(--acc)]'
@@ -223,7 +223,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         {/* Inputs de simulación */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
-            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
+            <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
             <select
               value={dealType}
               onChange={(e: any) => setDealType(e.target.value)}
@@ -236,7 +236,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
-            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">
+            <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">
               {dealType === 'cache' ? 'Caché Fijo (€)' : 'Precio Entrada (€)'}
             </label>
             <input
@@ -252,7 +252,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
-            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
+            <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Distancia Ida (km)</label>
             <input
               type="number"
               value={vanKmEstimated}
@@ -262,7 +262,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           </div>
 
           <div className="bg-[var(--surface)] p-2 rounded-[var(--r-m)] ">
-            <label className="text-[9px] font-mono text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
+            <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Hotel + Dietas (€)</label>
             <input
               type="number"
               value={hotelCost + dietsCost}
@@ -279,23 +279,23 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
         {/* Dashboard de Resultados de Rentabilidad */}
         <div className="grid grid-cols-3 gap-2 pt-1 border-t border-[var(--hair)]/80">
           <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/80 text-center">
-            <span className="text-[9px] text-[var(--ink-2)] font-mono block">Gastos Viaje Estimados</span>
+            <span className="text-micro text-[var(--ink-2)] font-mono block">Gastos Viaje Estimados</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--alert)]">{totalTourExpenses} €</span>
-            <span className="text-[9px] text-[var(--ink-2)] block">Gasolina: ~{estimatedFuelExpense}€</span>
+            <span className="text-micro text-[var(--ink-2)] block">Gasolina: ~{estimatedFuelExpense}€</span>
           </div>
 
           <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/80 text-center">
-            <span className="text-[9px] text-[var(--ink-2)] font-mono block">Entradas para Cubrir Costes</span>
+            <span className="text-micro text-[var(--ink-2)] font-mono block">Entradas para Cubrir Costes</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--acc)]">{breakEvenTickets} tickets</span>
-            <span className="text-[9px] text-[var(--ink-2)] block">{breakEvenCapacityPercent}% del aforo</span>
+            <span className="text-micro text-[var(--ink-2)] block">{breakEvenCapacityPercent}% del aforo</span>
           </div>
 
           <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]/80 text-center">
-            <span className="text-[9px] text-[var(--ink-2)] font-mono block">Beneficio con Sala Llena</span>
+            <span className="text-micro text-[var(--ink-2)] font-mono block">Beneficio con Sala Llena</span>
             <span className="text-sm sm:text-base font-bold font-mono text-[var(--ok)]">
               {Math.max(0, Math.round(venueCapacity * revenuePerTicketForBand + guaranteedCache - totalTourExpenses))} €
             </span>
-            <span className="text-[9px] text-[var(--ink-2)] block">Aforo total: {venueCapacity} pax</span>
+            <span className="text-micro text-[var(--ink-2)] block">Aforo total: {venueCapacity} pax</span>
           </div>
         </div>
       </div>
@@ -309,7 +309,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
               2. Asistente Táctico de Cierre (Objeciones & Negociación)
             </span>
           </div>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${sentimentAnalysis.color}`}>
+          <span className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${sentimentAnalysis.color}`}>
             {sentimentAnalysis.label}
           </span>
         </div>
@@ -319,7 +319,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <div className="flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-[var(--acc)] shrink-0 mt-0.5" />
             <div>
-              <span className="text-[11px] font-bold text-[var(--ink-2)] block">Recomendación de Negociación:</span>
+              <span className="text-xs font-bold text-[var(--ink-2)] block">Recomendación de Negociación:</span>
               <p className="text-xs text-[var(--ink-2)] leading-relaxed">{sentimentAnalysis.tactic}</p>
             </div>
           </div>
@@ -327,17 +327,17 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           {/* Plantilla de réplica táctica pre-redactada */}
           <div className="pt-2 border-t border-[var(--hair)]/80">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-mono text-[var(--ink-2)]">Plantilla de Réplica Sugerida:</span>
+              <span className="text-micro font-mono text-[var(--ink-2)]">Plantilla de Réplica Sugerida:</span>
               <button
                 type="button"
                 onClick={() => copyToClipboard(sentimentAnalysis.suggestedDraft, () => {})}
-                className="text-[10px] text-[var(--acc)] hover:text-[var(--acc)] font-mono flex items-center gap-1 cursor-pointer"
+                className="text-micro text-[var(--acc)] hover:text-[var(--acc)] font-mono flex items-center gap-1 cursor-pointer"
               >
                 <Copy className="w-3 h-3" />
                 Copiar respuesta
               </button>
             </div>
-            <p className="text-[11px] font-sans text-[var(--ink-2)] bg-[var(--sunken)]/90 p-2.5 rounded-[var(--r-m)] whitespace-pre-wrap leading-relaxed">
+            <p className="text-xs font-sans text-[var(--ink-2)] bg-[var(--sunken)]/90 p-2.5 rounded-[var(--r-m)] whitespace-pre-wrap leading-relaxed">
               {sentimentAnalysis.suggestedDraft}
             </p>
           </div>
@@ -358,7 +358,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <button
               type="button"
               onClick={() => onOpenRoadbookModal(lead)}
-              className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] font-bold font-mono flex items-center gap-1 transition-all cursor-pointer"
+              className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold font-mono flex items-center gap-1 transition-ui cursor-pointer"
             >
               <FileText className="w-3 h-3" />
               <span>Exportar PDF / Imprimir</span>
@@ -371,24 +371,24 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-2 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Hoja de Ruta (Run of Show)
                 </span>
                 <button
                   type="button"
                   onClick={() => copyToClipboard(roadbookMarkdown, setCopiedRoadbook)}
-                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer"
+                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-micro font-mono flex items-center gap-1 transition-ui cursor-pointer"
                 >
                   {copiedRoadbook ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedRoadbook ? '¡Copiado!' : 'Copiar'}</span>
                 </button>
               </div>
-              <p className="text-[10px] text-[var(--ink-2)] leading-snug">
+              <p className="text-micro text-[var(--ink-2)] leading-snug">
                 Horarios de carga, prueba de sonido, contacto técnico y ruta listos para compartir con los músicos en WhatsApp.
               </p>
             </div>
-            <pre className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-2 rounded overflow-x-auto shrink-0 max-h-24">
+            <pre className="text-micro font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-2 rounded overflow-x-auto shrink-0 max-h-24">
               {roadbookMarkdown}
             </pre>
           </div>
@@ -397,24 +397,24 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
           <div className="p-3 bg-[var(--surface)] rounded-[var(--r-m)] space-y-2 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Acuerdo & Condiciones
                 </span>
                 <button
                   type="button"
                   onClick={() => copyToClipboard(miniContractSummary, setCopiedContract)}
-                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer"
+                  className="px-2 py-0.5 rounded bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] text-micro font-mono flex items-center gap-1 transition-ui cursor-pointer"
                 >
                   {copiedContract ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedContract ? '¡Copiado!' : 'Copiar'}</span>
                 </button>
               </div>
-              <p className="text-[10px] text-[var(--ink-2)] leading-snug">
+              <p className="text-micro text-[var(--ink-2)] leading-snug">
                 Cláusulas clave de sonido (D.I., in-ears), liquidación y hospitalidad listas para formalizar con la sala.
               </p>
             </div>
-            <pre className="text-[9px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-2 rounded overflow-x-auto shrink-0 max-h-24">
+            <pre className="text-micro font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-2 rounded overflow-x-auto shrink-0 max-h-24">
               {miniContractSummary}
             </pre>
           </div>

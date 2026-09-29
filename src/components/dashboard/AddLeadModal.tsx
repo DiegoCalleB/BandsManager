@@ -70,11 +70,11 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
           <form
             onSubmit={onAddSubmit}
-            className="p-5 space-y-4 text-[10px] font-sans"
+            className="p-5 space-y-4 text-micro font-sans"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Nombre de la Sala*
                 </label>
                 <input
@@ -89,7 +89,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Ciudad*
                 </label>
                 <input
@@ -104,7 +104,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Región / Provincia
                 </label>
                 <input
@@ -118,7 +118,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Aforo Estimado (Pax)
                 </label>
                 <input
@@ -131,7 +131,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Género Musical Preferente
                 </label>
                 <input
@@ -144,7 +144,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Categoría de Contacto
                 </label>
                 <select
@@ -175,7 +175,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Usuario de Instagram (@)
                 </label>
                 <input
@@ -190,7 +190,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             </div>
 
             <div className="space-y-1.5 col-span-2">
-              <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+              <label className="block text-micro font-sans text-[var(--ink-2)]">
                 Email de Contacto (Opcional, sino Scout lo buscará)
               </label>
               <input
@@ -204,7 +204,7 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
             </div>
 
             <div className="space-y-1.5 col-span-2">
-              <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+              <label className="block text-micro font-sans text-[var(--ink-2)]">
                 Notas Iniciales
               </label>
               <textarea
@@ -222,14 +222,14 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 id="btn-add-cancel"
                 type="button"
                 onClick={onClose}
-                className="px-2 py-1 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
+                className="px-2 py-1 bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-micro rounded-[var(--r-s)] transition-ui cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 id="btn-add-submit"
                 type="submit"
-                className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer"
+                className="px-2 py-1 bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] font-sans font-bold text-micro rounded-[var(--r-s)] transition-ui cursor-pointer"
               >
                 Confirmar Registro
               </button>

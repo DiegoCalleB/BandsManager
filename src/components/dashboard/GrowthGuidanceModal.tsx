@@ -77,7 +77,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold font-display text-[var(--ink-2)]">Plan Estratégico de Crecimiento & Promoción</h3>
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                   {growthPlan.horizonDays} Días
                 </span>
               </div>
@@ -90,7 +90,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-all cursor-pointer"
+            className="p-2 rounded-[var(--r-m)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] transition-ui cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -101,7 +101,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('blueprint')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'blueprint'
                   ? 'bg-[var(--acc)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -113,7 +113,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
             <button
               onClick={() => setActiveTab('channels')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'channels'
                   ? 'bg-[var(--acc)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -125,7 +125,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
 
             <button
               onClick={() => setActiveTab('pillars')}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'pillars'
                   ? 'bg-[var(--acc)] text-[var(--ink)]'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--sunken)]'
@@ -136,7 +136,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             </button>
           </div>
 
-          <div className="text-[11px] font-mono text-[var(--ink-2)] hidden sm:flex items-center gap-1">
+          <div className="text-xs font-mono text-[var(--ink-2)] hidden sm:flex items-center gap-1">
             <span className="text-[var(--acc)] font-bold">{completedActionIds.length}</span> acciones completadas
           </div>
         </div>
@@ -163,7 +163,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                 {growthPlan.weeklyBlueprint?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:brightness-95"
+                    className="p-3.5 rounded-[var(--r-m)] bg-[var(--surface)] transition-ui flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:brightness-95"
                   >
                     <div className="flex items-start sm:items-center gap-3">
                       <span className="px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--acc)] shrink-0 min-w-[75px] text-center">
@@ -172,7 +172,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-bold text-[var(--ink-2)]">{item.focus}</span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] ">
+                          <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] ">
                             {item.recommendedPlatform}
                           </span>
                         </div>
@@ -181,7 +181,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-[var(--hair)]">
-                      <span className="text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] ">
+                      <span className="text-xs font-mono text-[var(--ink-2)] flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)] ">
                         <Zap className="w-3 h-3 text-[var(--acc)]" />
                         {item.optimalPostingTime}
                       </span>
@@ -203,7 +203,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                     <button
                       key={platform}
                       onClick={() => setSelectedChannel(platform)}
-                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer capitalize ${
+                      className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold transition-ui flex items-center gap-1.5 cursor-pointer capitalize ${
                         isSelected
                           ? 'bg-[var(--acc)] text-[var(--ink)]'
                           : 'bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -225,12 +225,12 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   <div className="p-4 rounded-[var(--r-m)] bg-[var(--surface)] space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-bold text-[var(--ink-2)] font-display">Estrategia para {channelData.name}</h4>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)] ">
+                      <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)] ">
                         {channelData.growthStage}
                       </span>
                     </div>
                     <p className="text-xs text-[var(--ink-2)] leading-relaxed">{channelData.coreStrategy}</p>
-                    <div className="pt-2 text-[11px] font-mono text-[var(--ink-2)] flex items-center gap-1">
+                    <div className="pt-2 text-xs font-mono text-[var(--ink-2)] flex items-center gap-1">
                       <span className="text-[var(--ink-2)] font-bold">Objetivo:</span> {channelData.primaryObjective}
                     </div>
                   </div>
@@ -247,7 +247,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                           <div
                             key={action.id}
                             onClick={() => toggleAction(action.id)}
-                            className={`p-3 rounded-[var(--r-m)] transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                            className={`p-3 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-start justify-between gap-3 ${
                               isDone
                                 ? 'bg-[var(--ok)]/20 opacity-75'
                                 : 'bg-[var(--surface)] '
@@ -262,7 +262,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                                   <span className={`text-xs font-bold ${isDone ? 'line-through text-[var(--ink-2)]' : 'text-[var(--ink-2)]'}`}>
                                     {action.title}
                                   </span>
-                                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--acc)] font-bold">
+                                  <span className="text-micro font-mono px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--acc)] font-bold">
                                     {action.impact}
                                   </span>
                                 </div>
@@ -317,7 +317,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                       <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-hidden">
                         <div className="h-full bg-[var(--acc)] rounded-[var(--r-pill)]" style={{ width: `${p.weightPercentage}%` }} />
                       </div>
-                      <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">{p.description}</p>
+                      <p className="text-xs text-[var(--ink-2)] leading-relaxed">{p.description}</p>
                     </div>
                   ))}
                 </div>
@@ -340,7 +340,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
                   onClose();
                   onNavigate('reels');
                 }}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-xs font-mono font-bold transition-ui flex items-center gap-1 cursor-pointer"
               >
                 <span>Ir al Radar de Redes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -350,7 +350,7 @@ export const GrowthGuidanceModal: React.FC<GrowthGuidanceModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-ui cursor-pointer"
             >
               Cerrar & Empezar
             </button>

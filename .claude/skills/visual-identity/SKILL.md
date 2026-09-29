@@ -5,7 +5,7 @@ description: Sistema de identidad visual «Espectro» de BandManager.io — cero
 
 # 🌈 Skill: Identidad visual «Espectro»
 
-Esta skill es **la autoridad estética del repositorio**. Si otra documentación, un brand book externo o una salida de una herramienta generativa contradice algo de aquí, manda esto.
+Esta skill es **la autoridad estética del repositorio** (qué se ve). Cómo se *siente* —movimiento, tamaños, zonas táctiles, estados— vive en **[`craft-interfaces`](../craft-interfaces/SKILL.md)**; si chocan, manda esta. Si otra documentación, un brand book externo o una salida de una herramienta generativa contradice algo de aquí, manda esto.
 
 > **Por qué existe.** Hasta septiembre de 2026, `fullstack-ux-design` prescribía glassmorphism sobre `slate-900`, degradados `indigo→purple` y semántica de color esmeralda/ámbar/rosa. Cada agente de IA que tocó el repo obedeció, y el resultado medible fue: 2.711 `font-mono`, 154 `backdrop-blur`, 209 degradados, 138 `animate-pulse`, 5 escalas de gris simultáneas y 266 hexadecimales sueltos. La app pasó a parecer un panel de trading de criptomonedas. **El problema no fue de gusto, fue de documentación.** No reintroduzcas nada de aquello.
 
@@ -13,7 +13,7 @@ Esta skill es **la autoridad estética del repositorio**. Si otra documentación
 
 ## ⚖️ 1. Las dos leyes
 
-> ## 1 · Ningún borde. La separación es luz y espacio.
+> ## 1 · Un borde solo existe si significa algo. La separación es luz y espacio.
 > ## 2 · Cada módulo tiene su color. El resto es gris.
 
 **Los músicos pasan de 4 a 6 horas seguidas dentro de la app.** La fatiga visual es la restricción que manda sobre cualquier consideración estética. Las seis causas reales, todas medibles:
@@ -21,7 +21,7 @@ Esta skill es **la autoridad estética del repositorio**. Si otra documentación
 | Causa | Regla |
 |---|---|
 | Contraste extremo | Texto entre **10:1 y 14:1**. Espectro está en 12,4:1. Ni menos (ilegible) ni más (quema). |
-| Exceso de bordes | **Cero `border`.** Separa el escalón de luminancia (superficie más clara que el fondo) y el espacio. |
+| Exceso de bordes | **Ningún borde decorativo.** Las tarjetas se separan por escalón de luminancia (superficie más clara que el fondo) y espacio. Se permite un borde solo si *significa* algo: foco de teclado, campo en reposo, elemento seleccionado, divisor de tabla densa — siempre con `--line` / `--line-strong`. |
 | Mayúsculas | Caja de frase siempre. Las versalitas eliminan la silueta de la palabra. |
 | Tipografía condensada | Prohibida. Humanista de aperturas abiertas. |
 | Negro puro de noche | Nunca `#000`/`#FFF`. Provocan halación con astigmatismo. |
@@ -97,7 +97,7 @@ Cada módulo tiñe `--acc` para que el usuario sepa dónde está sin leer el tí
 ```
 
 ### Prohibiciones duras
-- ❌ **Cualquier `border`.** Es la ley 1. Separa con escalón de luminancia (`--surface` más clara que `--bg`), espacio, o `--sunken` al pasar el ratón.
+- ❌ **Cualquier `border` sin token.** Es la ley 1. Una tarjeta se separa con escalón de luminancia (`--surface` más clara que `--bg`), espacio, o `--sunken`. El borde con significado (foco, campo en reposo, selección, divisor de tabla) usa `border-[var(--line)]` o `border-[var(--line-strong)]`; el anillo de foco de teclado ya está en la base.
 - ❌ Hexadecimal literal en un `.tsx` (`bg-[#f2ca50]`, `text-[#131313]`). Token o nada.
 - ❌ Más de una escala de gris. **`neutral` es la única permitida**; `slate`, `zinc`, `stone` y `gray` quedan retiradas.
 - ❌ `dark:` de Tailwind en componentes. El tema se resuelve en tokens, no en el marcado.
@@ -127,6 +127,8 @@ Cada módulo tiñe `--acc` para que el usuario sepa dónde está sin leer el tí
 - Es humanista, de aperturas abiertas y altura de x generosa: diseñada para leerse, no para impresionar.
 - **Vetadas por delatoras de diseño generado:** Inter, Poppins, Space Grotesk, Plus Jakarta, Bricolage Grotesque, Newsreader, Montserrat, Nunito, Quicksand. *(Inter era la del brand book de Pomelli; se anula a propósito.)*
 - **Nada de tipografía condensada** y **nada de mayúsculas decorativas**: las dos cansan en sesiones largas.
+- **Escala única (px): 11 · 12 · 14 · 16 · 20 · 28 · 40; mínimo absoluto 11 (`text-micro`).** Cuerpo 14 en escritorio, 16 en móvil; campos a 16 en móvil. Pesos 400–700 (`font-black` solo en cifras grandes). Detalle y motivos en **`craft-interfaces`**.
+- **Sin emojis en la interfaz:** los iconos son Lucide (trazo 1,75, tamaños 16/20). Un emoji es contenido del usuario o momento de celebración, nunca un botón, un título ni una insignia.
 - `font-mono` **solo** en dato tabular real: BPM, timecodes, fechas, importes, IDs. El combo `font-mono` + `uppercase` + `tracking-widest` es la gramática de una pantalla de Bloomberg y está **prohibido**.
 - Cifras en columna: `font-variant-numeric: tabular-nums`. Sin cero a la izquierda (`7`, no `07` — es un tic de ticker).
 
@@ -184,7 +186,7 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 
 ## ✅ Checklist antes de PR de UI
 
-- [ ] **Cero `border` nuevos.** ¿Separa el escalón de luminancia y el espacio?
+- [ ] **Ningún borde sin significado ni sin token.** ¿Separa el escalón de luminancia y el espacio?
 - [ ] Cero hexadecimales literales; todo por token.
 - [ ] Cero `slate`/`zinc`/`stone`/`gray` nuevos (solo `neutral`).
 - [ ] El radio sale de la escala y corresponde al peso del objeto.
@@ -192,6 +194,7 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 - [ ] `--acc` viene del módulo (`data-modulo`), no hardcodeado.
 - [ ] Texto entre 10:1 y 14:1 de contraste. `--acc-ink` para texto, `--acc` para relleno.
 - [ ] `font-mono` solo en dato tabular real.
+- [ ] Escala tipográfica (mínimo 11 px), zonas táctiles ≥ 40 px, movimiento y estados según **`craft-interfaces`**.
 - [ ] Probado en **Claro, Oscuro y Clásico**.
 - [ ] Toda serie de datos usa `<Onda>` con puntas redondeadas, no una librería de gráficos.
 - [ ] Estado vacío con voz propia, no «No hay datos».

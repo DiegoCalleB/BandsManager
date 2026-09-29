@@ -35,7 +35,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <h3 className="text-base font-bold font-display text-[var(--ink-2)]">
                 Guía de Crecimiento & Promoción
               </h3>
-              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[9px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                 {growthPlan?.horizonDays || 30}D
               </span>
             </div>
@@ -69,7 +69,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
         <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 flex items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono text-[10px] font-bold">
+              <span className="px-2 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] font-mono text-micro font-bold">
                 {todayBlueprint.day} · {todayBlueprint.recommendedPlatform}
               </span>
               <span className="text-xs font-bold text-[var(--ink-2)] truncate">{todayBlueprint.focus}</span>
@@ -78,7 +78,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
           </div>
 
           <div className="shrink-0 text-right">
-            <span className="text-[10px] font-mono text-[var(--acc)] flex items-center gap-1 justify-end">
+            <span className="text-micro font-mono text-[var(--acc)] flex items-center gap-1 justify-end">
               <Zap className="w-3 h-3" />
               {todayBlueprint.optimalPostingTime}
             </span>
@@ -86,7 +86,7 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
               <button
                 type="button"
                 onClick={onOpenGuidanceModal}
-                className="mt-2 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-[11px] font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                className="mt-2 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-mono font-bold transition-ui cursor-pointer inline-flex items-center gap-1 shadow-xs"
               >
                 <span>Detalles</span>
                 <ChevronRight className="w-3 h-3" />
@@ -104,17 +104,17 @@ export const GrowthGuidanceWidget: React.FC<GrowthGuidanceWidgetProps> = ({
       <div className="grid grid-cols-3 gap-2.5 pt-1">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-center">
           <span className="text-base font-bold font-mono text-[var(--acc)]">{channelPlaybooks.length || 3}</span>
-          <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">Canales Activos</p>
+          <p className="text-micro font-mono text-[var(--ink-2)] mt-0.5">Canales Activos</p>
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-center">
           <span className="text-base font-bold font-mono text-[var(--acc)]">{growthPlan?.weeklyBlueprint?.length || 7}</span>
-          <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">Hitos Semanales</p>
+          <p className="text-micro font-mono text-[var(--ink-2)] mt-0.5">Hitos Semanales</p>
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-center">
           <span className="text-base font-bold font-mono text-[var(--ok)]">{totalPillars}</span>
-          <p className="text-[10px] font-mono text-[var(--ink-2)] mt-0.5">Pilares Clave</p>
+          <p className="text-micro font-mono text-[var(--ink-2)] mt-0.5">Pilares Clave</p>
         </div>
       </div>
     </div>

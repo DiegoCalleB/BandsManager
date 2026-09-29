@@ -122,7 +122,7 @@ export function AddLeadModal({
                       ? 'Nuevo Contacto de Industria'
                       : 'Nueva Sala o Festival'}
                 </h3>
-                <p className="text-[11px] text-[var(--ink-2)] font-normal">Añade un contacto a tu pipeline CRM de booking</p>
+                <p className="text-xs text-[var(--ink-2)] font-normal">Añade un contacto a tu pipeline CRM de booking</p>
               </div>
             </div>
             <button
@@ -137,7 +137,7 @@ export function AddLeadModal({
             {/* Name + AI Scout Auto-fill */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className={`block text-[10px] font-sans ${textSub}`}>
+                <label className={`block text-micro font-sans ${textSub}`}>
                   {sectionTab === 'medios'
                     ? 'Nombre del Medio / Revista *'
                     : sectionTab === 'grupos'
@@ -148,7 +148,7 @@ export function AddLeadModal({
                   type="button"
                   onClick={onModalScrape}
                   disabled={isModalScraping || !newLeadData.nombre_sala}
-                  className={`px-2 py-1 text-[10px] font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'}`}
+                  className={`px-2 py-1 text-micro font-sans rounded-[var(--r-s)] font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${'bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] disabled:opacity-50'}`}
                   title="Buscar automáticamente email, teléfono y ubicación con el Agente Scout IA"
                 >
                   {isModalScraping ? (
@@ -170,7 +170,7 @@ export function AddLeadModal({
                     nombre_sala: e.target.value,
                   }))
                 }
-                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                className={`w-full rounded-[var(--r-m)] px-2 py-1 text-micro focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
               />
             </div>
 
@@ -193,7 +193,7 @@ export function AddLeadModal({
             {/* City & Venue Type */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className={`block text-[10px] font-sans mb-1 ${textSub}`}>Ciudad</label>
+                <label className={`block text-micro font-sans mb-1 ${textSub}`}>Ciudad</label>
                 <input
                   type="text"
                   placeholder="Ej. Madrid, Barcelona"
@@ -204,7 +204,7 @@ export function AddLeadModal({
                       ciudad: e.target.value,
                     }))
                   }
-                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-micro focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
                 />
               </div>
 
@@ -264,7 +264,7 @@ export function AddLeadModal({
                       email_contacto: e.target.value,
                     }))
                   }
-                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-[10px] focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
+                  className={`w-full rounded-[var(--r-m)] px-2 py-1 text-micro focus:outline-none font-sans ${'bg-[var(--sunken)] text-[var(--ink)] focus:ring-[var(--acc)]'}`}
                 />
               </div>
 
@@ -291,7 +291,7 @@ export function AddLeadModal({
 
             {/* Collapsible Advanced Section */}
             <div
-              className={`rounded-[var(--r-l)] transition-all overflow-hidden ${
+              className={`rounded-[var(--r-l)] transition-ui overflow-hidden ${
                 'bg-[var(--sunken)] '
               }`}
             >
@@ -305,7 +305,7 @@ export function AddLeadModal({
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span className="font-semibold">Más datos de contacto y notas</span>
-                  <span className="text-[10px] text-[var(--ink-2)] font-normal">(Logo, dirección, proposal...)</span>
+                  <span className="text-micro text-[var(--ink-2)] font-normal">(Logo, dirección, proposal...)</span>
                 </div>
                 {showAdvanced ? <ChevronUp className="w-4 h-4 text-[var(--ink-2)]" /> : <ChevronDown className="w-4 h-4 text-[var(--ink-2)]" />}
               </button>
@@ -315,18 +315,18 @@ export function AddLeadModal({
                   {/* Logo block */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <label className="text-[11px] font-semibold text-[var(--ink-2)]">Logo o Icono</label>
+                      <label className="text-xs font-semibold text-[var(--ink-2)]">Logo o Icono</label>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={handleAutoSearchLogo}
                           disabled={isSearchingLogo || !newLeadData.nombre_sala}
-                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all cursor-pointer disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-ui cursor-pointer disabled:opacity-50"
                         >
                           <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isSearchingLogo ? 'Buscando...' : 'Buscar Logo'}</span>
                         </button>
-                        <label className="cursor-pointer px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-[10px] rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-all ">
+                        <label className="cursor-pointer px-2.5 py-1 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] text-micro rounded-[var(--r-m)] flex items-center gap-1 font-bold transition-ui ">
                           <Upload className="w-3 h-3 text-[var(--acc)]" />
                           <span>{isUploadingLeadLogo ? 'Subiendo...' : 'Subir'}</span>
                           <input
@@ -356,12 +356,12 @@ export function AddLeadModal({
                           className="w-8 h-8 rounded-[var(--r-m)] object-cover shrink-0 bg-[var(--acc)]/10"
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="text-[10px] text-[var(--ink-2)] font-semibold truncate">{newLeadData.imagen_url}</p>
+                          <p className="text-micro text-[var(--ink-2)] font-semibold truncate">{newLeadData.imagen_url}</p>
                         </div>
                         <button
                           type="button"
                           onClick={() => setNewLeadData((prev) => ({ ...prev, imagen_url: '' }))}
-                          className="text-[10px] text-[var(--alert)] hover:underline px-1 cursor-pointer"
+                          className="text-micro text-[var(--alert)] hover:underline px-1 cursor-pointer"
                         >
                           Quitar
                         </button>
@@ -373,7 +373,7 @@ export function AddLeadModal({
                             key={emoji}
                             type="button"
                             onClick={() => setNewLeadData((prev) => ({ ...prev, icono: emoji }))}
-                            className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-all cursor-pointer ${
+                            className={`w-7 h-7 rounded-[var(--r-m)] text-xs flex items-center justify-center transition-ui cursor-pointer ${
                               newLeadData.icono === emoji
                                 ? 'bg-[var(--acc)] text-[var(--ink)] font-bold scale-105 shadow-xs'
                                 : 'bg-[var(--surface)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -389,7 +389,7 @@ export function AddLeadModal({
                   {/* Address & Region */}
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Dirección</label>
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Dirección</label>
                       <input
                         type="text"
                         placeholder="Calle San Vicente 33"
@@ -401,7 +401,7 @@ export function AddLeadModal({
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Región / Alcance</label>
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Región / Alcance</label>
                       <input
                         type="text"
                         placeholder="Comunidad / Provincia"
@@ -417,7 +417,7 @@ export function AddLeadModal({
                   {/* Secondary email & fixed phone */}
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Email Secundario</label>
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Email Secundario</label>
                       <input
                         type="email"
                         placeholder="promotora@mail.com"
@@ -429,7 +429,7 @@ export function AddLeadModal({
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Teléfono Fijo</label>
+                      <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Teléfono Fijo</label>
                       <input
                         type="tel"
                         placeholder="+34 912 345 678"
@@ -451,7 +451,7 @@ export function AddLeadModal({
 
                   {/* Pitch / Proposal */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Propuesta de Concierto</label>
+                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Propuesta de Concierto</label>
                     <textarea
                       rows={2}
                       placeholder="Propuesta de fecha, caché o taquilla..."
@@ -465,7 +465,7 @@ export function AddLeadModal({
 
                   {/* Internal Notes */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-[var(--ink-2)] mb-1">Notas Internas</label>
+                    <label className="block text-xs font-semibold text-[var(--ink-2)] mb-1">Notas Internas</label>
                     <input
                       type="text"
                       placeholder="Programador principal, aforo 300, etc."
@@ -485,13 +485,13 @@ export function AddLeadModal({
               <button
                 type="button"
                 onClick={onClose}
-                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-[10px] transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
+                className={`px-2 py-1 rounded-[var(--r-m)] font-sans text-micro transition-colors cursor-pointer bg-[var(--sunken)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)]`}
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-[10px] font-bold transition-all cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
+                className={`px-4 py-2 rounded-[var(--r-m)] font-sans text-micro font-bold transition-ui cursor-pointer ${'bg-[var(--acc)] hover:bg-[var(--acc-soft)] text-[var(--on-acc)]'}`}
               >
                 {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
               </button>

@@ -141,8 +141,8 @@ export function TemplateConfigSection({
                   onSelectTemplateTab(tab.id);
                   setShowRecommendations(false);
                 }}
-                className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
+                className={`py-1.5 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                  isActive ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5'
                 }`}
               >
                 <IconComp className="w-3.5 h-3.5" />
@@ -158,7 +158,7 @@ export function TemplateConfigSection({
             <button
               type="button"
               onClick={() => setIsMultiModalOpen(true)}
-              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer hover:brightness-95"
+              className="px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer hover:brightness-95"
               title="Genera las 7 plantillas desde una propuesta base"
             >
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -170,7 +170,7 @@ export function TemplateConfigSection({
             id="template-btn-save"
             type="button"
             onClick={onSaveTemplates}
-            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+            className="px-4 py-1.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Guardar</span>
@@ -195,14 +195,14 @@ export function TemplateConfigSection({
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="text-[var(--ink-2)] flex items-center gap-2">
           <span className="font-bold text-[var(--acc)]">{currentCategory.label}:</span>
-          <span className="text-[var(--ink-2)] text-[11px]">{activeTemplate.desc}</span>
+          <span className="text-[var(--ink-2)] text-xs">{activeTemplate.desc}</span>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setShowRecommendations(!showRecommendations)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-bold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${
               showRecommendations
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--acc)] '
@@ -216,7 +216,7 @@ export function TemplateConfigSection({
           <button
             type="button"
             onClick={() => setShowExamples(!showExamples)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-[11px] font-bold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${
               showExamples
                 ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                 : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:text-[var(--ink)] '
@@ -257,7 +257,7 @@ export function TemplateConfigSection({
               ✕
             </button>
           </div>
-          <p className="text-[11px] text-[var(--ink-2)]">
+          <p className="text-xs text-[var(--ink-2)]">
             Añade correos reales de éxito para que la IA aprenda tu tono natural en esta categoría.
           </p>
           <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
@@ -282,7 +282,7 @@ export function TemplateConfigSection({
         <div className="lg:col-span-7 space-y-3.5">
           {/* Subject */}
           <div className="space-y-1">
-            <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)]">Asunto del Email</label>
+            <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Asunto del Email</label>
             <input
               id="template-subject"
               type="text"
@@ -296,16 +296,16 @@ export function TemplateConfigSection({
           {/* Body */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)]">Cuerpo del Correo</label>
+              <label className="block text-xs font-mono font-bold text-[var(--ink-2)]">Cuerpo del Correo</label>
               {/* Insertable variables chips */}
               <div className="flex items-center gap-1 flex-wrap">
-                <span className="text-[10px] text-[var(--ink-2)] mr-1">Insertar:</span>
+                <span className="text-micro text-[var(--ink-2)] mr-1">Insertar:</span>
                 {TEMPLATE_VARIABLES.map((v) => (
                   <button
                     key={v.tag}
                     type="button"
                     onClick={() => handleInsertTag(v.tag)}
-                    className="px-1.5 py-0.5 rounded bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--acc)] text-[10px] font-mono transition-colors cursor-pointer "
+                    className="px-1.5 py-0.5 rounded bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 text-[var(--ink-2)] hover:text-[var(--acc)] text-micro font-mono transition-colors cursor-pointer "
                     title={`Insertar ${v.label}`}
                   >
                     {v.tag}
@@ -326,7 +326,7 @@ export function TemplateConfigSection({
 
           {/* AI Guidelines */}
           <div className="space-y-1">
-            <label className="block text-[11px] font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
+            <label className="block text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Pautas de Redacción para la IA (Opcional)</span>
             </label>
@@ -347,7 +347,7 @@ export function TemplateConfigSection({
                 type="button"
                 onClick={() => onOptimizeTemplate()}
                 disabled={isOptimizingTemplate}
-                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-[10px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="py-2 px-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)] text-micro font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className={`w-3.5 h-3.5 text-[var(--acc)] ${isOptimizingTemplate ? 'animate-spin' : ''}`} />
                 <span>{isOptimizingTemplate ? 'Optimizando...' : 'Optimizar con IA'}</span>
@@ -359,7 +359,7 @@ export function TemplateConfigSection({
               type="button"
               onClick={onTestPrompt}
               disabled={isTestingPrompt}
-              className={`px-2 py-1 font-sans text-[10px] rounded-[var(--r-s)] transition-all cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
+              className={`px-2 py-1 font-sans text-micro rounded-[var(--r-s)] transition-ui cursor-pointer flex items-center gap-1.5 ${'bg-[var(--surface)] hover:bg-[var(--bg)] text-[var(--ink-2)]'}`}
             >
               <Eye className={`w-3.5 h-3.5 ${isTestingPrompt ? 'animate-spin' : ''}`} />
               <span>{isTestingPrompt ? 'Generando...' : 'Simular Vista Previa'}</span>
@@ -379,7 +379,7 @@ export function TemplateConfigSection({
                 <button
                   type="button"
                   onClick={handleCopyPreview}
-                  className="text-[11px] text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center gap-1 transition-colors"
+                  className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] flex items-center gap-1 transition-colors"
                 >
                   {copiedPreview ? <Check className="w-3 h-3 text-[var(--ok)]" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedPreview ? 'Copiado' : 'Copiar'}</span>
@@ -395,14 +395,14 @@ export function TemplateConfigSection({
               <div className="py-16 px-4 text-center space-y-2 border-dashed rounded-[var(--r-m)]">
                 <Eye className="w-6 h-6 text-[var(--ink-2)] mx-auto" />
                 <p className="text-xs text-[var(--ink-2)] font-medium">Ninguna simulación activa</p>
-                <p className="text-[11px] text-[var(--ink-2)] max-w-xs mx-auto">
+                <p className="text-xs text-[var(--ink-2)] max-w-xs mx-auto">
                   Haz clic en <strong>"Simular Vista Previa"</strong> para ver cómo la IA adapta esta plantilla a un contacto real.
                 </p>
               </div>
             )}
           </div>
 
-          <div className="pt-3 border-t border-[var(--hair)]/5 text-[10px] text-[var(--ink-2)] flex items-center justify-between">
+          <div className="pt-3 border-t border-[var(--hair)]/5 text-micro text-[var(--ink-2)] flex items-center justify-between">
             <span>Redactor IA v2.4</span>
             <span>Salas · Festivales · Medios</span>
           </div>

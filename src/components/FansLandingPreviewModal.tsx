@@ -71,12 +71,12 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               <h2 className="text-xs sm:text-sm font-bold text-[var(--ink)] font-display truncate">
                 {t('previewModalTitle')}
               </h2>
-              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+              <span className="hidden md:inline-flex items-center gap-1 text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
                 <Sparkles className="w-3 h-3 text-[var(--acc)]" />
                 {t('previewProductionSyncBadge')}
               </span>
             </div>
-            <p className="text-[10px] text-[var(--ink-2)] font-sans truncate hidden sm:block">
+            <p className="text-micro text-[var(--ink-2)] font-sans truncate hidden sm:block">
               {effectiveBandName} • {selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : 'Bio / Enlace General'}
             </p>
           </div>
@@ -89,7 +89,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <button
               type="button"
               onClick={() => setPreviewScreen('form')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                 previewScreen === 'form'
                   ? 'bg-[var(--acc)] text-[var(--ink)] font-extrabold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -101,7 +101,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <button
               type="button"
               onClick={() => setPreviewScreen('success')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                 previewScreen === 'success'
                   ? 'bg-[var(--ok)] text-[var(--ink)] font-extrabold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -117,7 +117,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <button
               type="button"
               onClick={() => setDeviceMode('mobile')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                 deviceMode === 'mobile' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title={t('previewMobile')}
@@ -128,7 +128,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
             <button
               type="button"
               onClick={() => setDeviceMode('desktop')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                 deviceMode === 'desktop' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title={t('previewDesktop')}
@@ -146,7 +146,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 key={l.code}
                 type="button"
                 onClick={() => setSelectedLanguage(l.code)}
-                className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-sans transition-all cursor-pointer ${
+                className={`px-2 py-0.5 rounded-[var(--r-s)] text-xs font-sans transition-ui cursor-pointer ${
                   selectedLanguage === l.code
                     ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] opacity-75 hover:opacity-100'
@@ -154,7 +154,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 title={l.label}
               >
                 <span>{l.flag}</span>
-                <span className="ml-1 text-[10px]">{l.code}</span>
+                <span className="ml-1 text-micro">{l.code}</span>
               </button>
             ))}
           </div>
@@ -196,7 +196,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold transition cursor-pointer text-xs font-sans active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-bold transition cursor-pointer text-xs font-sans active:scale-[0.97]"
             title={t('previewClose')}
           >
             <X className="w-4 h-4" />
@@ -212,7 +212,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={() => setPreviewScreen('form')}
-            className={`px-2.5 py-1 rounded text-[11px] font-sans font-bold transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-sans font-bold transition-ui ${
               previewScreen === 'form' ? 'bg-[var(--acc)] text-[var(--ink)]' : 'text-[var(--ink-2)]'
             }`}
           >
@@ -221,7 +221,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={() => setPreviewScreen('success')}
-            className={`px-2.5 py-1 rounded text-[11px] font-sans font-bold transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-sans font-bold transition-ui ${
               previewScreen === 'success' ? 'bg-[var(--ok)] text-[var(--ink)]' : 'text-[var(--ink-2)]'
             }`}
           >
@@ -234,7 +234,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={() => setDeviceMode('mobile')}
-            className={`p-1 rounded text-xs transition-all ${
+            className={`p-1 rounded text-xs transition-ui ${
               deviceMode === 'mobile' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)]'
             }`}
           >
@@ -243,7 +243,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
           <button
             type="button"
             onClick={() => setDeviceMode('desktop')}
-            className={`p-1 rounded text-xs transition-all ${
+            className={`p-1 rounded text-xs transition-ui ${
               deviceMode === 'desktop' ? 'bg-[var(--surface)]/80 text-[var(--acc)]/70' : 'text-[var(--ink-2)]'
             }`}
           >
@@ -258,7 +258,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
               key={l.code}
               type="button"
               onClick={() => setSelectedLanguage(l.code)}
-              className={`px-1.5 py-0.5 rounded text-[11px] font-sans ${
+              className={`px-1.5 py-0.5 rounded text-xs font-sans ${
                 selectedLanguage === l.code ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold' : 'text-[var(--ink-2)] opacity-60'
               }`}
             >
@@ -272,7 +272,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       <main className="w-full flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--surface)] via-[#100f0f] to-[#0a0a0a]">
         {deviceMode === 'mobile' ? (
           /* MOCKUP ELEGANTE DE SMARTPHONE */
-          <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-all duration-200">
+          <div className="relative w-full max-w-[400px] mx-auto my-auto flex flex-col items-center justify-center transition-ui duration-200">
             {/* Chasis exterior del smartphone */}
             <div className="relative w-full rounded-[38px] p-2 sm:p-2.5 bg-[var(--sunken)]">
               {/* Dynamic Island / Altavoz */}
@@ -311,14 +311,14 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--acc)]/80" />
                 <div className="w-2.5 h-2.5 rounded-[var(--r-pill)] bg-[var(--ok)]/80" />
               </div>
-              <div className="bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1 text-[var(--ink-2)] text-[11px] flex-1 max-w-md text-center truncate font-sans">
+              <div className="bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1 text-[var(--ink-2)] text-xs flex-1 max-w-md text-center truncate font-sans">
                 https://bandmanager.io/unete
                 {selectedConcert
                   ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g, '-')}`
                   : ''}
                 ?lang={selectedLanguage}
               </div>
-              <span className="text-[10px] text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded font-bold">HTTPS</span>
+              <span className="text-micro text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded font-bold">HTTPS</span>
             </div>
 
             {/* Contenido de la Landing en Desktop */}
@@ -342,7 +342,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
       </main>
 
       {/* PIE DE PÁGINA INFORMATIVO Y ACCESIBLE */}
-      <footer className="w-full bg-[var(--surface)] px-3 sm:px-4 py-1.5 text-center text-[10px] sm:text-[11px] font-sans text-[var(--ink-2)] shrink-0 flex items-center justify-between">
+      <footer className="w-full bg-[var(--surface)] px-3 sm:px-4 py-1.5 text-center text-micro sm:text-xs font-sans text-[var(--ink-2)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-2 truncate">
           <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0 inline-block" />
           <span className="truncate">{t('previewDisclaimer')}</span>

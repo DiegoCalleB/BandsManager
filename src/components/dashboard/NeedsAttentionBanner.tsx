@@ -88,9 +88,9 @@ export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({
             type="button"
             onClick={onNavigate ? () => onNavigate(item.destino) : undefined}
             disabled={!onNavigate}
-            className={`w-full flex items-center justify-between gap-3 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-left transition-all ${
+            className={`w-full flex items-center justify-between gap-3 p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] text-left transition-ui ${
               onNavigate
-                ? "cursor-pointer hover:brightness-[1.03] active:scale-[0.99]"
+                ? "cursor-pointer hover:brightness-[1.03] active:scale-[0.97]"
                 : "cursor-default"
             }`}
           >

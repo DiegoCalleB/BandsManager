@@ -22,7 +22,7 @@ export function TemplateRecommendationsCard({
 
   return (
     <div
-      className={`rounded-[var(--r-m)] p-4 transition-all duration-200 ${
+      className={`rounded-[var(--r-m)] p-4 transition-ui duration-200 ${
         'bg-[var(--acc-soft)]/70 text-[var(--ink)]'
       }`}
     >
@@ -40,14 +40,14 @@ export function TemplateRecommendationsCard({
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-extrabold text-[var(--acc)]">Recomendaciones del Agente</span>
               <span
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-[var(--r-pill)] ${
+                className={`text-micro font-semibold px-2 py-0.5 rounded-[var(--r-pill)] ${
                   'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                 }`}
               >
                 {rec.badge}
               </span>
             </div>
-            <p className={`text-[11px] font-sans truncate ${'text-[var(--ink-2)]'}`}>{rec.tagline}</p>
+            <p className={`text-xs font-sans truncate ${'text-[var(--ink-2)]'}`}>{rec.tagline}</p>
           </div>
         </div>
 
@@ -56,7 +56,7 @@ export function TemplateRecommendationsCard({
             type="button"
             onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
             disabled={isOptimizing}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-50 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50 ${
               'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-extrabold'
             }`}
             title="Aplica la recomendación del agente y re-redacta la plantilla y pautas con IA"
@@ -85,7 +85,7 @@ export function TemplateRecommendationsCard({
         <div className="mt-4 pt-3.5 border-t border-[var(--hair)] space-y-3.5 animate-in fade-in duration-200">
           {/* Quick AI Tip / Secret */}
           <div
-            className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-2 text-[11px] leading-relaxed ${
+            className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-2 text-xs leading-relaxed ${
               'bg-[var(--sunken)] text-[var(--ink)] '
             } bg-[var(--acc)]/10`}
           >
@@ -108,7 +108,7 @@ export function TemplateRecommendationsCard({
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 <span>Buenas prácticas para {category}</span>
               </div>
-              <ul className="space-y-1 text-[10px] leading-normal text-[var(--ok)]/90 list-disc list-inside">
+              <ul className="space-y-1 text-micro leading-normal text-[var(--ok)]/90 list-disc list-inside">
                 {rec.dos.map((item, idx) => (
                   <li key={`do-${idx}`} className="list-none flex items-start gap-1.5">
                     <span className="text-[var(--ok)] font-bold shrink-0">✓</span>
@@ -128,7 +128,7 @@ export function TemplateRecommendationsCard({
                 <XCircle className="w-3.5 h-3.5 text-[var(--alert)]" />
                 <span>Qué evitar obligatoriamente</span>
               </div>
-              <ul className="space-y-1 text-[10px] leading-normal text-[var(--alert)]/90 list-disc list-inside">
+              <ul className="space-y-1 text-micro leading-normal text-[var(--alert)]/90 list-disc list-inside">
                 {rec.donts.map((item, idx) => (
                   <li key={`dont-${idx}`} className="list-none flex items-start gap-1.5">
                     <span className="text-[var(--alert)] font-bold shrink-0">✕</span>
@@ -140,16 +140,16 @@ export function TemplateRecommendationsCard({
           </div>
 
           {/* Formula Blocks: Opening, Hooks, Call to Action */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-micro">
             <div
               className={`p-2.5 rounded-[var(--r-m)] space-y-1 ${
                 'bg-[var(--sunken)] '
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                 🎯 Apertura Recomendada
               </span>
-              <p className="italic text-[10px] opacity-90">{rec.bestOpening}</p>
+              <p className="italic text-micro opacity-90">{rec.bestOpening}</p>
             </div>
 
             <div
@@ -157,7 +157,7 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--sunken)] '
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">⚡ Ganchos Clave</span>
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">⚡ Ganchos Clave</span>
               <ul className="space-y-0.5">
                 {rec.keyHooks.map((hook, i) => (
                   <li key={i} className="flex items-center gap-1">
@@ -173,26 +173,26 @@ export function TemplateRecommendationsCard({
                 'bg-[var(--sunken)] '
               }`}
             >
-              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">
+              <span className="font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                 📬 Cierre & Llamada a la Acción (CTA)
               </span>
-              <p className="italic text-[10px] opacity-90">{rec.ctaSuggestion}</p>
+              <p className="italic text-micro opacity-90">{rec.ctaSuggestion}</p>
             </div>
           </div>
 
           {/* Quick Action Prompt Footer */}
           <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-            <div className="flex items-center gap-1.5 text-[10px] text-[var(--acc)]/80">
+            <div className="flex items-center gap-1.5 text-micro text-[var(--acc)]/80">
               <MessageSquarePlus className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Instrucción sugerida:</span>
-              <span className="italic truncate max-w-md text-[10px] text-[var(--acc)]">"{rec.quickImprovePrompt}"</span>
+              <span className="italic truncate max-w-md text-micro text-[var(--acc)]">"{rec.quickImprovePrompt}"</span>
             </div>
 
             <button
               type="button"
               onClick={() => onApplyPromptImprovement(rec.quickImprovePrompt)}
               disabled={isOptimizing}
-              className={`px-2.5 py-1 rounded text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50 ${
+              className={`px-2.5 py-1 rounded text-micro font-bold transition-ui flex items-center gap-1 cursor-pointer disabled:opacity-50 ${
                 'bg-[var(--acc)] text-[var(--ink)] hover:bg-[var(--acc)]'
               }`}
             >

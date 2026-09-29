@@ -20,7 +20,7 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
       <button
         id={`nav-btn-${item.id}`}
         onClick={onNavigate}
-        className={`flex items-center justify-between py-2.5 px-3 rounded-[var(--r-pill)] text-[13px] font-sans transition-colors duration-200 cursor-pointer active:scale-95 ${
+        className={`flex items-center justify-between py-2.5 px-3 rounded-[var(--r-pill)] text-sm font-sans transition-colors duration-200 cursor-pointer active:scale-[0.97] ${
           isSelected
             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
             : 'text-[var(--ink-2)] hover:bg-[var(--sunken)] hover:text-[var(--ink)] hover:translate-x-0.5'
@@ -33,14 +33,14 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
           <span className="whitespace-nowrap">{label}</span>
         </div>
         {!isAllowed ? (
-          <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
+          <span className="flex items-center gap-1 text-micro px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
             <Lock className="w-3 h-3" />
             <span>Plan</span>
           </span>
         ) : (
           badge !== undefined && (
             <span
-              className={`text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums transition-colors ${
+              className={`text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums transition-colors ${
                 isSelected ? 'bg-[var(--acc)]/20 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
               }`}
             >
@@ -69,7 +69,7 @@ export const NavItemButton: React.FC<NavItemButtonProps> = ({ item, label, isSel
       </div>
       <div className="flex items-center gap-1.5">
         {!isAllowed && (
-          <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
+          <span className="flex items-center gap-1 text-micro px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
             <Lock className="w-3 h-3" />
             <span>Upgrade</span>
           </span>

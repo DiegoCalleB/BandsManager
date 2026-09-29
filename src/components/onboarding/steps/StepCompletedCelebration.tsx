@@ -102,7 +102,7 @@ export const StepCompletedCelebration: React.FC<
                 Dossier EPK Online
               </h4>
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
+            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
               Para Salas y Festivales
             </span>
           </div>
@@ -145,7 +145,7 @@ export const StepCompletedCelebration: React.FC<
                 Landing & QR de Fans
               </h4>
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
+            <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--alert)]/20 text-[var(--alert)]/60 font-medium">
               Para Conciertos
             </span>
           </div>
@@ -185,7 +185,7 @@ export const StepCompletedCelebration: React.FC<
         <button
           type="button"
           onClick={onFinish}
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-sm hover:scale-[1.02] transition-all"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-[var(--r-l)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-sm transition-ui"
         >
           Entrar a BandManager.ai <ArrowRight className="w-4 h-4" />
         </button>

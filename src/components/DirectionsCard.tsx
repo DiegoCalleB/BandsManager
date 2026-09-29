@@ -24,7 +24,7 @@ export default function DirectionsCard({
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
-      className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-all duration-200 group cursor-pointer ${"bg-[var(--surface)] hover:bg-[var(--acc-soft)] "} ${className}`}
+      className={`inline-flex relative max-w-full w-full sm:w-auto mx-auto justify-center items-center overflow-hidden rounded-[var(--r-m)] transition-ui duration-200 group cursor-pointer ${"bg-[var(--surface)] hover:bg-[var(--acc-soft)] "} ${className}`}
     >
       {/* Tactile Simulated Map Grid */}
       <div className="absolute inset-0 pointer-events-none opacity-20 group-hover:opacity-35 transition-opacity">
@@ -58,7 +58,7 @@ export default function DirectionsCard({
       <div className="relative z-10 p-2.5 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 bg-[var(--bg)]  text-center w-full">
         {address && (
           <span
-            className="text-[10px] font-sans text-[var(--ink-2)] truncate leading-tight max-w-[220px]"
+            className="text-micro font-sans text-[var(--ink-2)] truncate leading-tight max-w-[220px]"
             title={address}
           >
             {address}
@@ -67,7 +67,7 @@ export default function DirectionsCard({
 
         {/* Action: Cómo llegar Button */}
         <div
-          className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-all shrink-0 ${"bg-[var(--sunken)]/90 text-[var(--ink)] group-hover:bg-[var(--acc)] group-hover:text-[var(--ink)]"}`}
+          className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold transition-ui shrink-0 ${"bg-[var(--sunken)]/90 text-[var(--ink)] group-hover:bg-[var(--acc)] group-hover:text-[var(--ink)]"}`}
         >
           <Navigation className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
           <span className="inline">Cómo llegar</span>

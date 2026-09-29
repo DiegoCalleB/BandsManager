@@ -600,7 +600,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </h1>
             {isOffline && (
               <span
-                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] flex items-center gap-1"
+                className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] flex items-center gap-1"
                 title="Modo Escenario Offline Guard activo — Letras y acordes guardados localmente"
               >
                 <WifiOff className="w-3 h-3 text-[var(--acc)]" />
@@ -619,7 +619,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => setModeArchetype("directo")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] transition-ui cursor-pointer ${
                   modeArchetype === "directo"
                     ? glareMode
                       ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
@@ -634,7 +634,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => setModeArchetype("ensayo")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] transition-all flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] transition-ui flex items-center gap-1 cursor-pointer ${
                   modeArchetype === "ensayo"
                     ? "bg-[var(--ok)] text-[var(--ink)]"
                     : glareMode
@@ -663,7 +663,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <span className="hidden sm:inline">Pistas & Repertorio</span>
               <span className="sm:hidden">Temas</span>
               {songsWithIrisCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-sans bg-[var(--ok)]/30 text-[var(--ink-2)]">
+                <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-sans bg-[var(--ok)]/30 text-[var(--ink-2)]">
                   {songsWithIrisCount}
                 </span>
               )}
@@ -788,7 +788,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           <Headphones className="w-4 h-4 shrink-0 text-[var(--ink-2)]" />
                           <span className="flex items-center justify-between flex-1">
                             <span>Separar pistas con Iris</span>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/50 font-sans">
+                            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)]/50 font-sans">
                               Studio
                             </span>
                           </span>
@@ -921,7 +921,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         {/* Segunda línea: datos pasivos que no compiten con el título — posición en el
  repertorio, batería (si el navegador la soporta) y si hace falta revisar los
  acordes de este tema. */}
-        <div className="flex items-center gap-2 mt-1 pl-7 text-[11px] font-sans flex-wrap">
+        <div className="flex items-center gap-2 mt-1 pl-7 text-xs font-sans flex-wrap">
           <span
             className={
               glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"
@@ -964,7 +964,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <button
               type="button"
               onClick={() => handleLaunchPractice()}
-              className={`flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-bold transition-ui cursor-pointer ${
                 glareMode
                   ? "bg-[var(--ok)]/10 text-[var(--ok)] hover:bg-[var(--ok)]/20"
                   : "bg-[var(--ok)]/10 text-[var(--ok)]/30 hover:bg-[var(--ok)]/20"
@@ -1012,7 +1012,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <span className="font-bold text-[var(--ok)]">
                 Modo Ensayo Activo
               </span>
-              <span className="opacity-80 ml-2 font-sans text-[11px]">
+              <span className="opacity-80 ml-2 font-sans text-xs">
                 {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` : ""}
                 {currentSong.bpm ? ` · ${currentSong.bpm} BPM` : ""}
                 {irisStemIdea
@@ -1026,7 +1026,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleLaunchPractice()}
-                className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-95 cursor-pointer"
+                className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-[0.97] cursor-pointer"
               >
                 <Headphones className="w-3.5 h-3.5" />
                 <span>Abrir Sala de Ensayo</span>
@@ -1035,7 +1035,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleLaunchStudio()}
-                className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-95 cursor-pointer"
+                className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition active:scale-[0.97] cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Separar en Studio</span>
@@ -1044,7 +1044,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <button
               type="button"
               onClick={() => handleLaunchStudio()}
-              className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-semibold flex items-center gap-1700 transition active:scale-95 cursor-pointer"
+              className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] text-xs font-semibold flex items-center gap-1700 transition active:scale-[0.97] cursor-pointer"
             >
               <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
               <span>Studio</span>
@@ -1187,7 +1187,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setLiveTransposeOffset(0)}
-                  className="ml-1 text-[10px] px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 cursor-pointer"
+                  className="ml-1 text-micro px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 cursor-pointer"
                   title="Restablecer tono"
                 >
                   {liveTransposeOffset > 0
@@ -1198,7 +1198,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               )}
             </div>
             {effectiveTranspose !== 0 && (
-              <span className="text-[var(--ink-2)] font-sans text-[11px] hidden sm:inline">
+              <span className="text-[var(--ink-2)] font-sans text-xs hidden sm:inline">
                 (original {currentSong?.tonalidad})
               </span>
             )}
@@ -1227,7 +1227,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               <button
                 key={it.id}
                 onClick={() => setCurrentIndex(i)}
-                className={`shrink-0 transition-all ${it.tipoItem === "bloque" ? "rounded-[var(--r-s)]" : "rounded-[var(--r-pill)]"} ${
+                className={`shrink-0 transition-ui ${it.tipoItem === "bloque" ? "rounded-[var(--r-s)]" : "rounded-[var(--r-pill)]"} ${
                   i === currentIndex
                     ? "w-5 h-1.5 bg-[var(--acc)]/60"
                     : it.tipoItem === "bloque"
@@ -1257,7 +1257,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
         {nextItem && (
           <p
-            className={`text-center text-[11px] font-sans truncate ${glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
+            className={`text-center text-xs font-sans truncate ${glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
           >
             Siguiente:{" "}
             <span
@@ -1319,7 +1319,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   <h3 className="text-sm font-bold text-[var(--ink)]">
                     Repertorio & Pistas Iris
                   </h3>
-                  <p className="text-[11px] text-[var(--ink-2)]">
+                  <p className="text-xs text-[var(--ink-2)]">
                     {songsWithIrisCount} de {songsInSetlistCount} temas con
                     pistas Iris listas
                   </p>
@@ -1367,12 +1367,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           <div className="text-xs font-bold text-[var(--ink)]">
                             {item.tituloCustom || meta.label}
                           </div>
-                          <div className="text-[10px] text-[var(--ink-2)] font-sans">
+                          <div className="text-micro text-[var(--ink-2)] font-sans">
                             Bloque de escenario
                           </div>
                         </div>
                       </div>
-                      <span className="px-2 py-1 rounded bg-[var(--sunken)] text-[10px] text-[var(--ink-2)] font-sans">
+                      <span className="px-2 py-1 rounded bg-[var(--sunken)] text-micro text-[var(--ink-2)] font-sans">
                         Ir al bloque
                       </span>
                     </div>
@@ -1393,7 +1393,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         <span
-                          className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center text-[11px] font-sans font-bold shrink-0 ${
+                          className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center text-xs font-sans font-bold shrink-0 ${
                             isCurrent
                               ? "bg-[var(--acc)] text-[var(--on-acc)]"
                               : "bg-[var(--sunken)] text-[var(--ink-2)]"
@@ -1407,7 +1407,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           >
                             {song.titulo}
                           </h4>
-                          <div className="flex items-center gap-2 text-[10px] text-[var(--ink-2)] font-sans">
+                          <div className="flex items-center gap-2 text-micro text-[var(--ink-2)] font-sans">
                             {song.tonalidad && (
                               <span className="text-[var(--acc)]/70">
                                 Tono: {song.tonalidad}
@@ -1422,12 +1422,12 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                       </div>
 
                       {songIrisIdea ? (
-                        <span className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
+                        <span className="shrink-0 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--ok)]/20 text-[var(--ink-2)] flex items-center gap-1">
                           <Headphones className="w-2.5 h-2.5" />
                           {stemCount > 0 ? `${stemCount} pistas` : "Iris"}
                         </span>
                       ) : (
-                        <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] text-[var(--ink-2)] bg-[var(--sunken)]/50">
+                        <span className="shrink-0 px-1.5 py-0.5 rounded text-micro text-[var(--ink-2)] bg-[var(--sunken)]/50">
                           Sin Iris
                         </span>
                       )}
@@ -1441,7 +1441,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             setShowSongListDrawer(false);
                             handleLaunchPractice(song, songIrisIdea);
                           }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
                           title="Modo Ensayo individual con las pistas aisladas de este tema"
                         >
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -1454,7 +1454,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                             setShowSongListDrawer(false);
                             handleLaunchStudio(song);
                           }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                          className="flex-1 py-1.5 px-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]/50 flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
                           title="Separar pistas de este tema con el motor de IA Iris en Modo Studio"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
@@ -1468,7 +1468,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           setShowSongListDrawer(false);
                           handleLaunchStudio(song);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
                         title="Abrir Studio multipista completo de este tema"
                       >
                         <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]/50" />
@@ -1481,7 +1481,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           setCurrentIndex(idx);
                           setShowSongListDrawer(false);
                         }}
-                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-95"
+                        className="py-1.5 px-2.5 rounded-[var(--r-s)] text-xs font-bold bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
                         title="Mostrar en el atril"
                       >
                         <Play className="w-3 h-3 text-[var(--acc)]" />
@@ -1692,7 +1692,7 @@ const ChordSheetPage: React.FC<{
               <button
                 type="button"
                 onClick={() => onLiveTransposeChange(0)}
-                className="ml-1 text-[10px] px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition cursor-pointer"
+                className="ml-1 text-micro px-1 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 hover:bg-[var(--acc)]/30 transition cursor-pointer"
                 title="Restablecer al tono del repertorio"
               >
                 {liveTransposeOffset > 0
@@ -1704,7 +1704,7 @@ const ChordSheetPage: React.FC<{
           </div>
 
           {originalKey && (transpose !== 0 || liveTransposeOffset !== 0) && (
-            <span className="text-[11px] text-[var(--ink-2)] font-normal">
+            <span className="text-xs text-[var(--ink-2)] font-normal">
               (orig: {originalKey})
             </span>
           )}
@@ -1865,7 +1865,7 @@ const ChordSheetPage: React.FC<{
             </div>
 
             {/* Velocidades */}
-            <div className="flex items-center gap-1 text-[11px] font-sans">
+            <div className="flex items-center gap-1 text-xs font-sans">
               <span className="text-[var(--ink-2)] hidden sm:inline mr-1">
                 Vel:
               </span>
@@ -1902,7 +1902,7 @@ const ChordSheetPage: React.FC<{
         // NAVEGACIÓN POR SECCIONES (PEDAL / TAP)
         <div className="flex-1 flex flex-col overflow-hidden">
           <div
-            className={`shrink-0 text-center py-1.5 text-[11px] font-sans ${borderClass} ${glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
+            className={`shrink-0 text-center py-1.5 text-xs font-sans ${borderClass} ${glareMode ? "text-[var(--ink-2)]" : "text-[var(--ink-2)]"}`}
           >
             Parte {currentSectionIndex + 1}/{sections.length}
             {currentSection?.title && (

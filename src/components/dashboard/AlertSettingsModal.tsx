@@ -278,7 +278,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             <div>
               <h2 className="text-lg font-bold text-[var(--ink-2)] tracking-tight flex items-center gap-2">
                 Configuración del Radar de Alertas
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+                <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
                   Mánager Pro
                 </span>
               </h2>
@@ -302,7 +302,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
           <button
             id="tab-alert-rules"
             onClick={() => setActiveTab('rules')}
-            className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-all border-b-2 flex items-center gap-2 ${
+            className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-ui border-b-2 flex items-center gap-2 ${
               activeTab === 'rules'
                 ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -315,7 +315,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
           <button
             id="tab-alert-channels"
             onClick={() => setActiveTab('channels')}
-            className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-all border-b-2 flex items-center gap-2 ${
+            className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-ui border-b-2 flex items-center gap-2 ${
               activeTab === 'channels'
                 ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -328,7 +328,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
           <button
             id="tab-alert-plan"
             onClick={() => setActiveTab('plan')}
-            className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-all border-b-2 flex items-center gap-2 ${
+            className={`px-4 py-2 text-xs font-semibold rounded-t-[var(--r-m)] transition-ui border-b-2 flex items-center gap-2 ${
               activeTab === 'plan'
                 ? 'text-[var(--acc)] bg-[var(--sunken)]/90 bg-[var(--acc)]/10'
                 : 'border-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -345,7 +345,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs text-[var(--ink-2)] pb-1">
                 <span>Define qué acontecimientos deben activar alertas para tu banda:</span>
-                <span className="font-mono text-[11px] text-[var(--acc)] font-semibold">Plan Activo: {userPlan.toUpperCase()}</span>
+                <span className="font-mono text-xs text-[var(--acc)] font-semibold">Plan Activo: {userPlan.toUpperCase()}</span>
               </div>
 
               {config.rules.map((rule) => {
@@ -355,7 +355,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                   <div
                     key={rule.id}
                     id={`alert-rule-card-${rule.id}`}
-                    className={`p-4 rounded-[var(--r-m)] transition-all ${
+                    className={`p-4 rounded-[var(--r-m)] transition-ui ${
                       !isModuleAllowed
                         ? 'bg-[var(--sunken)]/40 opacity-65'
                         : rule.enabled
@@ -369,18 +369,18 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           <h4 className="text-sm font-bold text-[var(--ink-2)] flex items-center gap-2">{rule.name}</h4>
 
                           {!isModuleAllowed ? (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--alert)]/10 text-[var(--alert)] flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded text-micro font-mono font-semibold bg-[var(--alert)]/10 text-[var(--alert)] flex items-center gap-1">
                               <Lock className="w-3 h-3" />
                               Módulo {rule.requiredModule.toUpperCase()} Bloqueado en Plan
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--sunken)] text-[var(--ink-2)] ">
+                            <span className="px-2 py-0.5 rounded text-micro font-mono font-semibold bg-[var(--sunken)] text-[var(--ink-2)] ">
                               {rule.category.toUpperCase()}
                             </span>
                           )}
 
                           {rule.targetRoleOnly && (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded text-micro font-mono font-semibold bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
                               <ShieldCheck className="w-3 h-3" />
                               Solo Mánager
                             </span>
@@ -430,7 +430,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                             <button
                               type="button"
                               onClick={() => handleToggleRuleChannel(rule.id, 'notifyInApp')}
-                              className={`px-2 py-1 rounded text-[10px] font-mono font-semibold transition-all flex items-center gap-1 ${
+                              className={`px-2 py-1 rounded text-micro font-mono font-semibold transition-ui flex items-center gap-1 ${
                                 rule.notifyInApp
                                   ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)] '
@@ -444,7 +444,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                             <button
                               type="button"
                               onClick={() => handleToggleRuleChannel(rule.id, 'notifyEmail')}
-                              className={`px-2 py-1 rounded text-[10px] font-mono font-semibold transition-all flex items-center gap-1 ${
+                              className={`px-2 py-1 rounded text-micro font-mono font-semibold transition-ui flex items-center gap-1 ${
                                 rule.notifyEmail
                                   ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                                   : 'bg-[var(--sunken)] text-[var(--ink-2)] '
@@ -496,14 +496,14 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                           key={f.id}
                           type="button"
                           onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as any }))}
-                          className={`p-3 rounded-[var(--r-m)] text-left transition-all ${
+                          className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
                             config.digestFrequency === f.id
                               ? 'bg-[var(--acc)]/15 text-[var(--ink-2)]'
                               : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]'
                           }`}
                         >
                           <div className="text-xs font-bold mb-0.5">{f.label}</div>
-                          <div className="text-[10px] text-[var(--ink-2)] leading-tight">{f.desc}</div>
+                          <div className="text-micro text-[var(--ink-2)] leading-tight">{f.desc}</div>
                         </button>
                       ))}
                     </div>
@@ -534,7 +534,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                     />
                     <div>
                       <div className="text-xs font-bold text-[var(--ink-2)]">Solo Mánager / Líder de la Banda (Recomendado)</div>
-                      <div className="text-[11px] text-[var(--ink-2)]">Las alertas de booking, cobros y borradores solo llegan a ti.</div>
+                      <div className="text-xs text-[var(--ink-2)]">Las alertas de booking, cobros y borradores solo llegan a ti.</div>
                     </div>
                   </label>
 
@@ -548,7 +548,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                     />
                     <div>
                       <div className="text-xs font-bold text-[var(--ink-2)]">Todos los Músicos e Integrantes</div>
-                      <div className="text-[11px] text-[var(--ink-2)]">Notifica a todo el grupo cuando surja un hito o aviso de ensayo.</div>
+                      <div className="text-xs text-[var(--ink-2)]">Notifica a todo el grupo cuando surja un hito o aviso de ensayo.</div>
                     </div>
                   </label>
                 </div>
@@ -592,7 +592,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               type="button"
               onClick={handleSendTestDigest}
               disabled={sendingTestDigest}
-              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-all flex items-center gap-1.5 disabled:opacity-50"
+              className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--acc)] hover:text-[var(--acc)] text-xs font-semibold transition-ui flex items-center gap-1.5 disabled:opacity-50"
             >
               <Mail className="w-3.5 h-3.5" />
               <span>{sendingTestDigest ? 'Enviando...' : 'Probar Email de Resumen'}</span>
@@ -614,7 +614,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
               id="save-alert-settings-btn"
               type="button"
               onClick={handleSave}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95"
+              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97]"
             >
               {savedSuccess ? (
                 <>

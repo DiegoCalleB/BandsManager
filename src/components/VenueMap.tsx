@@ -969,7 +969,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
   return (
     <div
-      className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden transition-all"
+      className="relative w-full h-[550px] sm:h-[650px] rounded-[var(--r-l)] overflow-hidden transition-ui"
       style={{
         borderColor: "#e2e8f0",
       }}
@@ -1004,7 +1004,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
                   ? `Salas en ${activeRegionFilter}`
                   : "Mapa Global de Salas"}
             </span>
-            <span className="ml-2 text-[10px] opacity-75">
+            <span className="ml-2 text-micro opacity-75">
               ({leads.length} {leads.length === 1 ? "sala" : "salas"})
             </span>
           </div>
@@ -1014,7 +1014,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         <div className="pointer-events-auto flex items-center gap-2 relative">
           {isGeocoding && (
             <div
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center gap-1.5 ${"bg-[var(--acc-soft)]  text-[var(--ink)]"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-micro font-sans flex items-center gap-1.5 ${"bg-[var(--acc-soft)]  text-[var(--ink)]"}`}
             >
               <Loader2 className="w-3 h-3 animate-spin text-[var(--acc)]" />
               <span>Geolocalizando salas...</span>
@@ -1025,7 +1025,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowStyleMenu(!showStyleMenu)}
-              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+              className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/95 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
             >
               <Layers className="w-3.5 h-3.5 text-[var(--acc)]" />
               <span>Estilo Mapa</span>
@@ -1035,9 +1035,9 @@ export const VenueMap: React.FC<VenueMapProps> = ({
               <div
                 className={`absolute left-0 sm:left-auto sm:right-0 top-11 w-64 max-w-[85vw] p-2 rounded-[var(--r-m)] space-y-1 font-sans text-xs z-[1100] ${"bg-[var(--surface)]/95 text-[var(--ink)]"}`}
               >
-                <div className="text-[10px] font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
+                <div className="text-micro font-bold text-[var(--ink-2)] px-2 py-1 flex items-center justify-between">
                   <span>Elegir Capa de Mapa</span>
-                  <span className="text-[9px] font-normal text-[var(--ink-2)]">
+                  <span className="text-micro font-normal text-[var(--ink-2)]">
                     ({Object.keys(MAP_STYLES).length} opciones)
                   </span>
                 </div>
@@ -1048,7 +1048,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
                       setMapStyle(key);
                       setShowStyleMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-[11px] font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                    className={`w-full text-left px-2.5 py-2 rounded-[var(--r-s)] text-xs font-bold transition-ui cursor-pointer flex items-center justify-between gap-2 ${
                       mapStyle === key
                         ? "bg-[var(--tentative)]/80 text-[var(--ink)]"
                         : "hover:bg-[var(--sunken)] text-[var(--ink-2)]"
@@ -1066,7 +1066,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
           <button
             onClick={handleRecenter}
-            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
+            className={`px-3 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold flex items-center gap-1.5 active:scale-[0.97] transition-ui cursor-pointer ${"bg-[var(--ink)]/90 hover:bg-[var(--sunken)] text-[var(--ink)]"}`}
           >
             <Navigation className="w-3.5 h-3.5 text-[var(--acc)]" />
             <span>Centrar Vista</span>
@@ -1076,9 +1076,9 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       {/* Floating Legend */}
       <div
-        className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-[10px] space-y-1 hidden sm:block ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
+        className={`absolute bottom-3 left-3 z-[1000] p-2.5 rounded-[var(--r-m)] font-sans text-micro space-y-1 hidden sm:block ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
       >
-        <div className="font-bold text-[9px] mb-1 text-[var(--ink-2)]">
+        <div className="font-bold text-micro mb-1 text-[var(--ink-2)]">
           Leyenda
         </div>
         <div className="flex items-center gap-2">

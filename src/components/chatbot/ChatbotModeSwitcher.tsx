@@ -26,10 +26,10 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
     >
       <div className="flex items-center gap-2 min-w-0">
         <span className={`w-2 h-2 rounded-[var(--r-pill)] shrink-0 ${agentsEnabled ? 'bg-[var(--acc)]' : 'bg-[var(--ok)]'}`} />
-        <span className="font-bold truncate text-[11px]">
+        <span className="font-bold truncate text-xs">
           {agentsEnabled ? '⚡ Agentes Supabase Activos (Backend & Database)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
         </span>
-        <span className="text-[10px] opacity-75 hidden sm:inline truncate">
+        <span className="text-micro opacity-75 hidden sm:inline truncate">
           {agentsEnabled
             ? '— Ejecuta agentes (Scout, Redactor, Enviador, Lector) en Supabase'
             : '— Asistencia, redacción y consultas directas con Gemini'}
@@ -42,14 +42,14 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             id="open-autonomy-config-btn"
             type="button"
             onClick={onOpenAutonomyModal}
-            className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
+            className={`px-2.5 py-1 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
               'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
             }`}
             title="Configurar niveles de autonomía y negociación de los agentes AI (Solo Administradores)"
           >
             <Sliders className="w-3 h-3 text-[var(--acc)]" />
             <span>Niveles de Autonomía</span>
-            <span className="px-1 py-0.2 rounded text-[8px] bg-[var(--acc)]/50 text-[var(--ink)] font-black">ADMIN</span>
+            <span className="px-1 py-0.2 rounded text-micro bg-[var(--acc)]/50 text-[var(--ink)] font-bold">ADMIN</span>
           </button>
         )}
 
@@ -61,7 +61,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
             onToggleAgents(nextVal);
             localStorage.setItem('bakandeya_agents_enabled', String(nextVal));
           }}
-          className={`px-2.5 py-1 rounded-[var(--r-m)] text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-95 ${
+          className={`px-2.5 py-1 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer flex items-center gap-1.5 shrink-0 active:scale-[0.97] ${
             agentsEnabled
               ? 'bg-[var(--acc-soft)] hover:bg-[var(--acc)]/15 text-[var(--acc)] '
               : 'bg-[var(--ok)] hover:bg-[var(--ok)]/15 text-[var(--on-ok)] '

@@ -378,10 +378,10 @@ export default function Merchan({
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-sans font-black px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
+                <span className="text-xs font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)]">
                   Regalo de Bienvenida · Plan De Gira
                 </span>
-                <span className="text-[10px] font-sans text-[var(--acc)]/70 font-bold">
+                <span className="text-micro font-sans text-[var(--acc)]/70 font-bold">
                   500 uds Vinilo Mate
                 </span>
               </div>
@@ -403,7 +403,7 @@ export default function Merchan({
                 setClaimStep("form");
                 setShowClaimModal(true);
               }}
-              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full md:w-auto px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold font-sans transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
             >
               <PackageCheck className="w-4 h-4" />
               <span>Canjear Pegatinas Gratis</span>
@@ -420,14 +420,14 @@ export default function Merchan({
         >
           <div className="space-y-3">
             <label
-              className={`block text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
+              className={`block text-micro font-sans font-bold ${"text-[var(--ink-2)]"}`}
             >
               1. Tipo de Producto
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setProductType("camiseta")}
-                className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-all ${
+                className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-ui ${
                   productType === "camiseta"
                     ? "bg-[var(--acc)] text-[var(--ink)]/10"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -438,7 +438,7 @@ export default function Merchan({
               </button>
               <button
                 onClick={() => setProductType("pegatina")}
-                className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-all ${
+                className={`py-3 px-4 rounded-[var(--r-m)] font-sans text-xs font-bold flex flex-col items-center justify-center gap-2 transition-ui ${
                   productType === "pegatina"
                     ? "bg-[var(--acc)] text-[var(--ink)]/10"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -452,14 +452,14 @@ export default function Merchan({
 
           <div className="space-y-3">
             <label
-              className={`block text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
+              className={`block text-micro font-sans font-bold ${"text-[var(--ink-2)]"}`}
             >
               2. Origen del Arte Gráfico
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setAssetType("logo")}
-                className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-[10px] font-bold flex flex-col items-center justify-center gap-1 transition-all ${
+                className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "logo"
                     ? "bg-[var(--acc)]/15 text-[var(--acc)]/30"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -470,7 +470,7 @@ export default function Merchan({
               </button>
               <button
                 onClick={() => setAssetType("portada")}
-                className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-[10px] font-bold flex flex-col items-center justify-center gap-1 transition-all ${
+                className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "portada"
                     ? "bg-[var(--acc)]/15 text-[var(--acc)]/30"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -484,7 +484,7 @@ export default function Merchan({
                   setAssetType("custom");
                   if (!customImageUrl) fileInputRef.current?.click();
                 }}
-                className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-[10px] font-bold flex flex-col items-center justify-center gap-1 transition-all ${
+                className={`py-2 px-2 rounded-[var(--r-s)] font-sans text-micro font-bold flex flex-col items-center justify-center gap-1 transition-ui ${
                   assetType === "custom"
                     ? "bg-[var(--acc)]/15 text-[var(--acc)]/30"
                     : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -512,7 +512,7 @@ export default function Merchan({
             >
               <div className="flex items-center justify-between">
                 <label
-                  className={`text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
+                  className={`text-micro font-sans font-bold ${"text-[var(--ink-2)]"}`}
                 >
                   Imagen Personalizada Subida
                 </label>
@@ -557,7 +557,7 @@ export default function Merchan({
               className={`p-4 rounded-[var(--r-m)] ${"bg-[var(--sunken)]"}`}
             >
               <label
-                className={`block text-[10px] font-sans font-bold mb-2 ${"text-[var(--ink-2)]"}`}
+                className={`block text-micro font-sans font-bold mb-2 ${"text-[var(--ink-2)]"}`}
               >
                 Selecciona Álbum / EP
               </label>
@@ -566,7 +566,7 @@ export default function Merchan({
                   <ResolvedBgImage
                     key={idx}
                     onClick={() => setSelectedAlbumIndex(idx)}
-                    className={`shrink-0 w-20 h-20 rounded-[var(--r-s)] bg-cover bg-center transition-all snap-start cursor-pointer ${
+                    className={`shrink-0 w-20 h-20 rounded-[var(--r-s)] bg-cover bg-center transition-ui snap-start cursor-pointer ${
                       selectedAlbumIndex === idx
                         ? "ring-2 ring-[var(--acc)]"
                         : "opacity-50 hover:opacity-100"
@@ -583,12 +583,12 @@ export default function Merchan({
             className={`p-4 rounded-[var(--r-m)] space-y-2 ${"bg-[var(--tentative)]/20"}`}
           >
             <label
-              className={`block text-[10px] font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
+              className={`block text-micro font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
             >
               <Scissors className="w-3.5 h-3.5 text-[var(--acc)]" /> Recorte de
               Fondo (Canvas Layering)
             </label>
-            <p className="text-[10px] font-sans text-[var(--ink-2)]">
+            <p className="text-micro font-sans text-[var(--ink-2)]">
               Aplica el arte directamente en capas sobre la tela sin redibujar
               la prenda.
             </p>
@@ -601,7 +601,7 @@ export default function Merchan({
                 <button
                   key={m.id}
                   onClick={() => setRemoveBgMode(m.id as any)}
-                  className={`py-1.5 px-1 rounded text-[10px] font-sans font-bold transition ${
+                  className={`py-1.5 px-1 rounded text-micro font-sans font-bold transition ${
                     removeBgMode === m.id
                       ? "bg-[var(--acc)] text-[var(--ink)]"
                       : "bg-[var(--surface)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]"
@@ -616,7 +616,7 @@ export default function Merchan({
           {productType === "camiseta" && (
             <div className="space-y-3">
               <label
-                className={`font-sans text-[10px] font-bold ${"text-[var(--ink-2)]"}`}
+                className={`font-sans text-micro font-bold ${"text-[var(--ink-2)]"}`}
               >
                 3. Color de la Prenda
               </label>
@@ -625,7 +625,7 @@ export default function Merchan({
                   <button
                     key={c.id}
                     onClick={() => setShirtColor(c.id)}
-                    className={`w-8 h-8 rounded-[var(--r-pill)] transition-transform hover:scale-110 ${shirtColor === c.id ? "ring-2 ring-[var(--acc)] scale-110" : ""}`}
+                    className={`w-8 h-8 rounded-[var(--r-pill)] transition-transform ${shirtColor === c.id ? "ring-2 ring-[var(--acc)] scale-110" : ""}`}
                     style={{ backgroundColor: c.id }}
                     title={c.name}
                   />
@@ -639,7 +639,7 @@ export default function Merchan({
               className={`p-4 rounded-[var(--r-m)] space-y-3 ${"bg-[var(--tentative)]/10"}`}
             >
               <label
-                className={`block text-[10px] font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
+                className={`block text-micro font-sans font-bold flex items-center gap-1.5 ${"text-[var(--tentative)]"}`}
               >
                 <QrCode className="w-3.5 h-3.5" /> Link de redirección del QR
               </label>
@@ -656,10 +656,10 @@ export default function Merchan({
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className={`w-full py-4 rounded-[var(--r-m)] font-sans text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+            className={`w-full py-4 rounded-[var(--r-m)] font-sans text-sm font-bold flex items-center justify-center gap-2 transition-ui active:scale-[0.97] ${
               isGenerating
                 ? "opacity-70 cursor-not-allowed"
-                : "hover:scale-[1.01]"
+                : ""
             } ${"bg-[var(--acc)]  text-[var(--ink)]/10"}`}
           >
             {isGenerating ? (
@@ -719,10 +719,10 @@ export default function Merchan({
                   return (
                     <div
                       key={design.id}
-                      className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square  transition-all flex flex-col items-center justify-center p-6 ${design.type === "camiseta" ? "bg-[var(--sunken)]" : "bg-[var(--sunken)]"}`}
+                      className={`group relative rounded-[var(--r-l)] overflow-hidden aspect-square  transition-ui flex flex-col items-center justify-center p-6 ${design.type === "camiseta" ? "bg-[var(--sunken)]" : "bg-[var(--sunken)]"}`}
                     >
                       {design.type === "pegatina" ? (
-                        <div className="w-52 h-52 bg-[var(--surface)] flex flex-col relative transform group-hover:scale-105 transition-transform duration-500 rounded-[var(--r-s)] overflow-hidden">
+                        <div className="w-52 h-52 bg-[var(--surface)] flex flex-col relative transform transition-transform duration-300 rounded-[var(--r-s)] overflow-hidden">
                           {design.assetType === "portada" ||
                           design.assetType === "custom" ? (
                             <ResolvedBgImage
@@ -741,7 +741,7 @@ export default function Merchan({
                             </div>
                           )}
                           <div className="h-16 w-full bg-[var(--sunken)] flex items-center justify-between px-3">
-                            <div className="font-sans text-[10px] text-[var(--ink)] font-black leading-tight">
+                            <div className="font-sans text-micro text-[var(--ink)] font-bold leading-tight">
                               {displayBandName.toUpperCase()}
                               <br />
                               <span className="text-[var(--accent-alt)]">
@@ -770,7 +770,7 @@ export default function Merchan({
                         </div>
                       ) : (
                         <div className="w-full h-full relative flex flex-col items-center justify-center z-10 pt-2">
-                          <div className="relative w-44 h-56 transform group-hover:scale-105 transition-transform duration-500">
+                          <div className="relative w-44 h-56 transform transition-transform duration-300">
                             {/* Left Sleeve */}
                             <div
                               className="absolute top-1 -left-6 w-12 h-14 rounded-[var(--r-m)] rotate-[20deg]"
@@ -816,7 +816,7 @@ export default function Merchan({
                                 />
                               ) : (
                                 <div
-                                  className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-all"
+                                  className="w-28 h-28 bg-contain bg-center bg-no-repeat transition-ui"
                                   style={{
                                     backgroundImage: `url(${displayGraphic})`,
                                     filter:
@@ -858,7 +858,7 @@ export default function Merchan({
                       </div>
 
                       <div
-                        className={`absolute bottom-3 left-3 px-2 py-1 rounded-[var(--r-s)] text-[9px] font-sans font-bold z-20 ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
+                        className={`absolute bottom-3 left-3 px-2 py-1 rounded-[var(--r-s)] text-micro font-sans font-bold z-20 ${"bg-[var(--surface)]/90 text-[var(--ink-2)]"}`}
                       >
                         {design.type} •{" "}
                         {design.assetType === "custom"
@@ -885,9 +885,9 @@ export default function Merchan({
                   <Gift className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black font-display text-[var(--ink)] flex items-center gap-2">
+                  <h3 className="text-base font-bold font-display text-[var(--ink)] flex items-center gap-2">
                     <span>Canjear Pack de Pegatinas Gratis</span>
-                    <span className="text-[10px] font-sans font-black px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
+                    <span className="text-micro font-sans font-bold px-2 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--acc)]/70">
                       100 uds
                     </span>
                   </h3>
@@ -921,13 +921,13 @@ export default function Merchan({
                     <div className="p-4 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col sm:flex-row items-center gap-5">
                       {/* Sticker Preview visual */}
                       <div className="relative w-28 h-28 shrink-0 rounded-[var(--r-l)] bg-[var(--surface)] p-2 flex flex-col items-center justify-center transform -rotate-3">
-                        <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-black flex items-center justify-center text-lg font-display mb-1">
+                        <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold flex items-center justify-center text-lg font-display mb-1">
                           {bandInitials}
                         </div>
-                        <span className="text-[9px] font-black font-display text-[var(--ink)]">
+                        <span className="text-micro font-bold font-display text-[var(--ink)]">
                           {displayBandName.toUpperCase()}
                         </span>
-                        <span className="text-[7px] font-sans text-[var(--acc)] font-bold">
+                        <span className="text-micro font-sans text-[var(--acc)] font-bold">
                           Oficial Vinyl
                         </span>
                       </div>
@@ -937,7 +937,7 @@ export default function Merchan({
                           <span className="text-xs font-bold text-[var(--ink)]">
                             Logo {displayBandName} (Oficial)
                           </span>
-                          <span className="text-[10px] font-sans text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded">
+                          <span className="text-micro font-sans text-[var(--ok)] bg-[var(--ok)]/10 px-2 py-0.5 rounded">
                             Alta resolución 300 DPI
                           </span>
                         </div>
@@ -945,7 +945,7 @@ export default function Merchan({
                           Vinilo mate exterior troquelado · 8x8 cm · Resistente
                           al agua, al sol y a fundas de guitarra.
                         </p>
-                        <p className="text-[11px] font-sans text-[var(--acc)]/70 pt-1">
+                        <p className="text-xs font-sans text-[var(--acc)]/70 pt-1">
                           ✨ Cantidad asignada por tu plan:{" "}
                           <strong>500 unidades</strong>
                         </p>
@@ -962,7 +962,7 @@ export default function Merchan({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]">
                       <div className="sm:col-span-2 space-y-1">
-                        <label className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <label className="text-micro font-sans text-[var(--ink-2)]">
                           Nombre del Destinatario / Banda
                         </label>
                         <div className="relative">
@@ -983,7 +983,7 @@ export default function Merchan({
                       </div>
 
                       <div className="sm:col-span-2 space-y-1">
-                        <label className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <label className="text-micro font-sans text-[var(--ink-2)]">
                           Calle, número, piso y puerta
                         </label>
                         <div className="relative">
@@ -1004,7 +1004,7 @@ export default function Merchan({
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <label className="text-micro font-sans text-[var(--ink-2)]">
                           Código Postal (CP)
                         </label>
                         <input
@@ -1022,7 +1022,7 @@ export default function Merchan({
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <label className="text-micro font-sans text-[var(--ink-2)]">
                           Ciudad / Provincia
                         </label>
                         <input
@@ -1040,7 +1040,7 @@ export default function Merchan({
                       </div>
 
                       <div className="sm:col-span-2 space-y-1">
-                        <label className="text-[10px] font-sans text-[var(--ink-2)]">
+                        <label className="text-micro font-sans text-[var(--ink-2)]">
                           Teléfono de Contacto (para el mensajero)
                         </label>
                         <div className="relative">
@@ -1130,7 +1130,7 @@ export default function Merchan({
                   <button
                     type="button"
                     onClick={() => setClaimStep("success")}
-                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-black font-sans hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] text-xs font-bold font-sans active:scale-[0.97] cursor-pointer flex items-center gap-2"
                   >
                     <PackageCheck className="w-4 h-4" />
                     <span>Pedir mis pegatinas</span>

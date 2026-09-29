@@ -225,7 +225,7 @@ export function MetronomeModal({
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)] flex items-center gap-1.5">
                   Metrónomo Pro
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                  <span className="px-1.5 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     WebAudio API
                   </span>
                 </h3>
@@ -276,14 +276,14 @@ export function MetronomeModal({
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setBpm((b) => Math.max(30, b - 5))}
-                  className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-lg text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+                  className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-lg text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] flex items-center justify-center"
                   title="-5 BPM"
                 >
                   -5
                 </button>
                 <button
                   onClick={() => setBpm((b) => Math.max(30, b - 1))}
-                  className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-sm text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+                  className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-sm text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] flex items-center justify-center"
                   title="-1 BPM"
                 >
                   -1
@@ -293,21 +293,21 @@ export function MetronomeModal({
                   <span className="text-5xl font-black font-sans tracking-tight text-[var(--ink)]">
                     {bpm}
                   </span>
-                  <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                  <span className="text-micro font-sans text-[var(--ink-2)]">
                     Pulsaciones por Minuto
                   </span>
                 </div>
 
                 <button
                   onClick={() => setBpm((b) => Math.min(280, b + 1))}
-                  className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-sm text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+                  className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-sm text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] flex items-center justify-center"
                   title="+1 BPM"
                 >
                   +1
                 </button>
                 <button
                   onClick={() => setBpm((b) => Math.min(280, b + 5))}
-                  className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-lg text-[var(--ink)] transition-all cursor-pointer active:scale-95 flex items-center justify-center"
+                  className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--acc)]/20 hover:text-[var(--acc)]/70 font-bold text-lg text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] flex items-center justify-center"
                   title="+5 BPM"
                 >
                   +5
@@ -344,7 +344,7 @@ export function MetronomeModal({
                   return (
                     <div
                       key={idx}
-                      className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-all duration-75 ${
+                      className={`h-12 rounded-[var(--r-m)] flex items-center justify-center font-sans font-bold text-sm transition-ui duration-75 ${
                         isActive
                           ? isAccent
                             ? "bg-[var(--acc)]/60 text-[var(--ink)] scale-105"
@@ -363,7 +363,7 @@ export function MetronomeModal({
             <div className="grid grid-cols-2 gap-3">
               {/* Compás selector */}
               <div className="bg-[var(--ink)]/5 rounded-[var(--r-m)] p-2.5">
-                <label className="text-[11px] font-semibold text-[var(--ink-2)] block mb-1.5">
+                <label className="text-xs font-semibold text-[var(--ink-2)] block mb-1.5">
                   Métrica:
                 </label>
                 <div className="grid grid-cols-3 gap-1">
@@ -386,12 +386,12 @@ export function MetronomeModal({
               {/* Tap Tempo Button */}
               <button
                 onClick={handleTapTempo}
-                className="bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-all active:scale-95 group"
+                className="bg-[var(--acc)]/20  hover:bg-[var(--acc)]/30 rounded-[var(--r-m)] p-2.5 flex flex-col items-center justify-center cursor-pointer transition-ui active:scale-[0.97] group"
               >
-                <span className="text-xs font-black text-[var(--acc)]/70 group-hover:scale-105 transition-transform">
+                <span className="text-xs font-bold text-[var(--acc)]/70 transition-transform">
                   👆 TAP TEMPO
                 </span>
-                <span className="text-[10px] text-[var(--ink-2)]">
+                <span className="text-micro text-[var(--ink-2)]">
                   Toca el ritmo 4 veces
                 </span>
               </button>
@@ -399,7 +399,7 @@ export function MetronomeModal({
 
             {/* Quick BPM Presets */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-semibold text-[var(--ink-2)] block">
+              <span className="text-xs font-semibold text-[var(--ink-2)] block">
                 Presets Rápidos:
               </span>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -429,7 +429,7 @@ export function MetronomeModal({
             <div className="pt-2">
               <button
                 onClick={togglePlay}
-                className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98 ${
+                className={`w-full py-3.5 rounded-[var(--r-m)] font-bold text-base flex items-center justify-center gap-2 transition-ui cursor-pointer active:scale-[0.97] ${
                   isPlaying
                     ? "bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)]"
                     : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"

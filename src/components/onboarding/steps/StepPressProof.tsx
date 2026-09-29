@@ -51,7 +51,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
       {/* Cifras Clave de Impacto */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--ink-2)] flex items-center gap-1">
             <TrendingUp className="w-3.5 h-3.5 text-[var(--ok)]" /> Oyentes Mensuales Spotify
           </label>
           <input
@@ -64,7 +64,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--ink-2)] flex items-center gap-1">
             <Radio className="w-3.5 h-3.5 text-[var(--acc)]" /> Conciertos Realizados
           </label>
           <input
@@ -77,7 +77,7 @@ export const StepPressProof: React.FC<StepPressProofProps> = ({
         </div>
 
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--surface)] space-y-1">
-          <label className="block text-[11px] font-medium text-[var(--ink-2)] flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--ink-2)] flex items-center gap-1">
             <Users className="w-3.5 h-3.5 text-[var(--alert)]" /> Comunidad / Seguidores
           </label>
           <input

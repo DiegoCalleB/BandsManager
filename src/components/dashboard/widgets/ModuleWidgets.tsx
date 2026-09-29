@@ -68,15 +68,15 @@ export function CrmPipelineWidget({ leads = [], onNavigate }: ModuleWidgetProps)
       <div className="grid grid-cols-3 gap-3 text-center">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
           <span className="text-xl font-bold text-[var(--ink)] tabular-nums">{urgentRepliesNeeded.length}</span>
-          <p className="text-[10px] text-[var(--ink-2)] mt-1">Negociando</p>
+          <p className="text-micro text-[var(--ink-2)] mt-1">Negociando</p>
         </div>
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)]">
           <span className="text-xl font-bold text-[var(--acc-ink)] tabular-nums">{urgentApprovalsNeeded.length}</span>
-          <p className="text-[10px] text-[var(--acc-ink)]/75 mt-1">Por aprobar</p>
+          <p className="text-micro text-[var(--acc-ink)]/75 mt-1">Por aprobar</p>
         </div>
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)]">
           <span className="text-xl font-bold text-[var(--ok)] tabular-nums">{confirmedShows.length}</span>
-          <p className="text-[10px] text-[var(--ok)]/75 mt-1">Confirmados</p>
+          <p className="text-micro text-[var(--ok)]/75 mt-1">Confirmados</p>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
             <p className="text-xs font-sans text-[var(--ink-2)]">Temas guardados en catálogo</p>
           </div>
         </div>
-        <span className="text-[10px] font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">Iris IA Activo</span>
+        <span className="text-micro font-sans px-2 py-1 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold">Iris IA Activo</span>
       </div>
     </div>
   );
@@ -180,11 +180,11 @@ export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = fals
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
         <div>
           <span className="text-2xl font-sans font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Suma de cachés de bolos</p>
+          <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Suma de cachés de bolos</p>
         </div>
         <div className="text-right">
           <span className="text-xs font-sans text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)]">
+          <p className="text-micro font-sans text-[var(--ink-2)]">
             Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €
           </p>
         </div>
@@ -222,15 +222,15 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
           <span className="text-2xl font-sans font-bold text-[var(--acc)]">{fans.length}</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-1">Fans Registrados</p>
+          <p className="text-micro font-sans text-[var(--ink-2)] mt-1">Fans Registrados</p>
         </div>
         <button
           type="button"
           onClick={() => onNavigate && onNavigate('fans')}
-          className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-all flex flex-col items-center justify-center cursor-pointer"
+          className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 transition-ui flex flex-col items-center justify-center cursor-pointer"
         >
           <QrCode className={`w-5 h-5 ${'text-[var(--acc)]'} mb-1`} />
-          <span className="text-[11px] font-sans font-bold">Generar QR Concierto</span>
+          <span className="text-xs font-sans font-bold">Generar QR Concierto</span>
         </button>
       </div>
     </div>
@@ -266,13 +266,13 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
         <div>
           <span className="text-xs font-sans font-bold text-[var(--tentative)]/80">EPK Activo & Listo</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)]">Optimizado para agentes y programadores</p>
+          <p className="text-micro font-sans text-[var(--ink-2)]">Optimizado para agentes y programadores</p>
         </div>
         <a
           href="/epk"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-sans text-xs font-bold hover:bg-[var(--tentative)]/30 transition-all"
+          className="px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--tentative)]/20 text-[var(--tentative)]/80 font-sans text-xs font-bold hover:bg-[var(--tentative)]/30 transition-ui"
         >
           Ver EPK Vivo ↗
         </a>
@@ -312,9 +312,9 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
         <div>
           <span className="text-lg font-sans font-bold text-[var(--acc)]">{pendingApprovals} Borradores</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Pendientes de Aprobación Humana</p>
+          <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Pendientes de Aprobación Humana</p>
         </div>
-        <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-[10px] font-sans font-bold">● Activo</span>
+        <span className="px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink-2)] text-micro font-sans font-bold">● Activo</span>
       </div>
     </div>
   );
@@ -349,7 +349,7 @@ export function TourStatusWidget({ tours = [], onNavigate, isStitchLight = false
       <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
         <div>
           <span className="text-sm font-sans font-bold text-[var(--ink-2)]">{tours.length} Giras Programadas</span>
-          <p className="text-[10px] font-sans text-[var(--ink-2)] mt-0.5">Rutas y hoteles unificados</p>
+          <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Rutas y hoteles unificados</p>
         </div>
       </div>
     </div>

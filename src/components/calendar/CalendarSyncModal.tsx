@@ -44,7 +44,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-sm">Sincronización Automática (iCal / Google)</h3>
-              <p className="text-[10px] text-[var(--ink-2)] font-mono">
+              <p className="text-micro text-[var(--ink-2)] font-mono">
                 Sincroniza los bolos y ensayos en tiempo real con tu calendario personal.
               </p>
             </div>
@@ -58,7 +58,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           <div
             className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] '}`}
           >
-            <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1 font-bold">
+            <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">
               URL de Suscripción iCal (Privada)
             </label>
             <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs flex items-center gap-1 transition-ui cursor-pointer shrink-0"
               >
                 {copiedSyncUrl ? (
                   <>
@@ -95,7 +95,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
               href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webCalFeed)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] flex items-center justify-center gap-2 font-bold text-xs transition-ui text-center"
             >
               <Calendar className="w-4 h-4 text-[var(--acc)]" />
               <span>Añadir a Google Calendar</span>
@@ -103,14 +103,14 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
 
             <a
               href={webCalFeed}
-              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-all text-center"
+              className="p-3 rounded-[var(--r-m)] bg-[var(--ok)]/10 hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center gap-2 font-bold text-xs transition-ui text-center"
             >
               <Radio className="w-4 h-4 text-[var(--ok)]" />
               <span>Suscribir en iPhone / Mac</span>
             </a>
           </div>
 
-          <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5 text-[11px] text-[var(--ink-2)]">
+          <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]/60 space-y-1.5 text-xs text-[var(--ink-2)]">
             <p className="font-bold text-[var(--ink-2)]">Pasos en Google Calendar (1 minuto):</p>
             <ol className="list-decimal list-inside space-y-1 text-[var(--ink-2)]">
               <li>
@@ -129,7 +129,7 @@ export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
           <a
             href={rutaFeed || undefined}
             download={`calendar-${activeBandId || 'band'}.ics`}
-            className="text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--acc)] underline flex items-center gap-1"
+            className="text-xs font-mono text-[var(--ink-2)] hover:text-[var(--acc)] underline flex items-center gap-1"
           >
             <Download className="w-3 h-3" />
             <span>O si prefieres, descargar archivo .ics puntual</span>

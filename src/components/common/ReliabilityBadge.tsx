@@ -44,8 +44,8 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <div
-        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold transition-all cursor-help ${badgeColor} ${
-          isSmall ? "text-[10px]" : "text-xs"
+        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold transition-ui cursor-help ${badgeColor} ${
+          isSmall ? "text-micro" : "text-xs"
         }`}
       >
         <Target className={isSmall ? "w-3 h-3" : "w-3.5 h-3.5"} />
@@ -69,12 +69,12 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
 
           <div className="w-full bg-[var(--surface)]/80 h-1.5 rounded-[var(--r-pill)] overflow-hidden mb-2.5">
             <div
-              className={`h-full ${barColor} transition-all duration-300`}
+              className={`h-full ${barColor} transition-ui duration-300`}
               style={{ width: `${score}%` }}
             />
           </div>
 
-          <p className="text-[11px] text-[var(--ink-2)] mb-2 font-sans leading-tight">
+          <p className="text-xs text-[var(--ink-2)] mb-2 font-sans leading-tight">
             Cálculo automático de completitud de datos y calidad de contacto:
           </p>
 
@@ -82,14 +82,14 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
             {details.map((detail, idx) => (
               <li
                 key={idx}
-                className="flex items-center gap-1.5 text-[11px] text-[var(--ink-2)]"
+                className="flex items-center gap-1.5 text-xs text-[var(--ink-2)]"
               >
                 <CheckCircle2 className="w-3 h-3 text-[var(--ok)] shrink-0" />
                 <span>{detail}</span>
               </li>
             ))}
             {details.length === 0 && (
-              <li className="flex items-center gap-1.5 text-[11px] text-[var(--acc)]/70">
+              <li className="flex items-center gap-1.5 text-xs text-[var(--acc)]/70">
                 <AlertCircle className="w-3 h-3 text-[var(--acc)] shrink-0" />
                 <span>
                   Datos de contacto limitados. Añade email o teléfono para subir

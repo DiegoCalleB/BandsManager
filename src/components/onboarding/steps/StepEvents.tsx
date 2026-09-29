@@ -91,7 +91,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                       : "bg-[var(--acc)]/10 text-[var(--acc)]"
                   }`}
                 >
-                  <span className="text-[9px] font-semibold">
+                  <span className="text-micro font-semibold">
                     {ev.fecha
                       ? new Date(ev.fecha).toLocaleDateString("es-ES", {
                           month: "short",
@@ -107,7 +107,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
                     <span className="text-sm font-medium text-[var(--ink)]">
                       {ev.titulo}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
+                    <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
                       {ev.tipo}
                     </span>
                   </div>
@@ -204,11 +204,11 @@ export const StepEvents: React.FC<StepEventsProps> = ({
           {/* Opcional: Datos de Afluencia e Impresiones Post-Show */}
           <div className="sm:col-span-3 p-3 rounded-[var(--r-m)] bg-[var(--acc)]/5 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono font-bold text-[var(--acc)]">
+              <span className="text-xs font-mono font-bold text-[var(--acc)]">
                 📊 Éxito / Afluencia Real (Opcional - Contexto para Agente IA)
               </span>
               {setNewEventIsMilestone && (
-                <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-mono text-[var(--acc)] font-bold bg-[var(--acc)]/20 px-2 py-0.5 rounded ">
+                <label className="flex items-center gap-1.5 cursor-pointer text-micro font-mono text-[var(--acc)] font-bold bg-[var(--acc)]/20 px-2 py-0.5 rounded ">
                   <input
                     type="checkbox"
                     checked={newEventIsMilestone}

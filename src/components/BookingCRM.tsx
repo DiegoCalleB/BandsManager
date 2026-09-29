@@ -1351,9 +1351,9 @@ export default function BookingCRM({
       className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
     >
       {/* 2. LEADS CRM WORKSPACE */}
-      <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}>
+      <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-ui duration-300`}>
         {/* LEADS LIST AREA (Takes 100% width when no lead is selected, or 2/3 when detail panel is open) */}
-        <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}>
+        <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-ui duration-300`}>
           <div className="space-y-3 sm:space-y-4">
             {/* Header: Tabs + Unified Action Buttons */}
             <div className="flex flex-col gap-3">
@@ -1387,7 +1387,7 @@ export default function BookingCRM({
                       });
                       setIsAddingLeadModalOpen(true);
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] active:scale-95 cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] active:scale-[0.97] cursor-pointer"
                     title="Añadir contacto"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
@@ -1403,7 +1403,7 @@ export default function BookingCRM({
                     id="export-leads-btn"
                     type="button"
                     onClick={() => setIsExportLeadsOpen(true)}
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-[0.97] cursor-pointer"
                     title="Exportar base de datos a Excel / CSV o JSON"
                   >
                     <Download className="w-3.5 h-3.5 text-[var(--ink-2)]" />
@@ -1441,13 +1441,13 @@ export default function BookingCRM({
                     <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
                     <span>IA & Herramientas</span>
                     {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
+                      <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-micro font-semibold tabular-nums">
                         {leads.filter((l) => !l.email_contacto || l.email_contacto.trim() === '').length}
                       </span>
                     )}
                     {duplicateGroupsCount > 0 && (
                       <span
-                        className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-bold"
+                        className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-micro font-bold"
                         title={`${duplicateGroupsCount} grupos de duplicados detectados`}
                       >
                         {duplicateGroupsCount} dup
@@ -1483,7 +1483,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleTriggerEnviadorAgent();
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]  hover:bg-[var(--ok)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
                     >
                       <span className="flex items-center gap-2">
                         {isDispatchingEmails ? (
@@ -1505,7 +1505,7 @@ export default function BookingCRM({
                         setIsPlacesExplorerOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)] text-[var(--on-acc)] hover:bg-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <Search className="w-4 h-4" />
@@ -1520,7 +1520,7 @@ export default function BookingCRM({
                         setIsExcelImportOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <FileSpreadsheet className="w-4 h-4 text-[var(--ok)]" />
@@ -1535,18 +1535,18 @@ export default function BookingCRM({
                         setIsDuplicatesModalOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/40 transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <Copy className="w-4 h-4 text-[var(--acc)]" />
                         Detector y Limpiador de Duplicados
                       </span>
                       {duplicateGroupsCount > 0 ? (
-                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)] text-[var(--on-acc)]">
+                        <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)] text-[var(--on-acc)]">
                           {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
                         </span>
                       ) : (
-                        <span className="text-[10px] text-[var(--ink-2)] font-normal">0 duplicados</span>
+                        <span className="text-micro text-[var(--ink-2)] font-normal">0 duplicados</span>
                       )}
                     </button>
 
@@ -1556,7 +1556,7 @@ export default function BookingCRM({
                         setIsContactEnricherOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--tentative)]/60  hover:bg-[var(--tentative)]/80 text-[var(--tentative)]/40 transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--tentative)]/60  hover:bg-[var(--tentative)]/80 text-[var(--tentative)]/40 transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-[var(--tentative)]" />
@@ -1574,7 +1574,7 @@ export default function BookingCRM({
                         setIsAgentConfigOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <Bot className="w-4 h-4 text-[var(--acc)]" />
@@ -1589,7 +1589,7 @@ export default function BookingCRM({
                         setIsQueueMonitorOpen(true);
                         setIsMobileToolsOpen(false);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)]/80 hover:bg-[var(--ok)]/90 text-[var(--ok)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <span className="relative flex h-2 w-2">
@@ -1611,7 +1611,7 @@ export default function BookingCRM({
                           document.getElementById('ai-template-config-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 60);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <MessageSquareText className="w-4 h-4 text-[var(--acc)]" />
@@ -1627,7 +1627,7 @@ export default function BookingCRM({
                         setRoadbookModalLead(selectedLead || leads[0] || null);
                         setIsRoadbookModalOpen(true);
                       }}
-                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-[var(--acc)]" />
@@ -1642,7 +1642,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         setIsExportLeadsOpen(true);
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-all cursor-pointer active:scale-98"
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
                     >
                       <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
                       <span>Exportar Leads (A la vista / Todos / Excel)</span>
@@ -1655,7 +1655,7 @@ export default function BookingCRM({
                         setIsMobileToolsOpen(false);
                         handleEnrichAddresses();
                       }}
-                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-[var(--r-m)] text-xs font-medium bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97] disabled:opacity-50"
                     >
                       <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>{isEnrichingAddresses ? 'Rellenando direcciones...' : 'Autocompletar Direcciones'}</span>
@@ -1780,7 +1780,7 @@ export default function BookingCRM({
                       <Filter className="w-3.5 h-3.5" />
                       <span>Filtros</span>
                       {activeFiltersCount > 0 && (
-                        <span className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-[10px] font-bold flex items-center justify-center">
+                        <span className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold flex items-center justify-center">
                           {activeFiltersCount}
                         </span>
                       )}
@@ -1801,7 +1801,7 @@ export default function BookingCRM({
                         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
                         <span>{filterByCampaign ? 'Campaña' : 'Campaña'}</span>
                         {filterByCampaign && (
-                          <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-[10px] font-semibold tabular-nums">
+                          <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] text-micro font-semibold tabular-nums">
                             {filteredLeads.length}
                           </span>
                         )}
@@ -1857,7 +1857,7 @@ export default function BookingCRM({
             {/* Enrich Status Banner */}
             {enrichStatusMsg && (
               <div
-                className={`p-2.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
+                className={`p-2.5 rounded-[var(--r-m)] text-micro font-sans flex items-center justify-between gap-2 animate-fadeIn ${
                   enrichStatusMsg.includes('¡Éxito!') ? 'bg-[var(--ok-soft)] text-[var(--ok)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
                 }`}
               >
@@ -1916,7 +1916,7 @@ export default function BookingCRM({
             {/* Active Filters Pill Bar (Responsive on all screen sizes) */}
             {activeFiltersCount > 0 && !isMobileFiltersOpen && (
               <div className="flex items-center gap-1.5 overflow-x-auto shrink-0 pb-1 no-scrollbar text-xs animate-in fade-in duration-100">
-                <span className="text-[10px] font-bold text-[var(--acc)] shrink-0">Filtros:</span>
+                <span className="text-micro font-bold text-[var(--acc)] shrink-0">Filtros:</span>
                 {selectedCityFilter && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70 shrink-0">
                     📍 {selectedCityFilter}
@@ -2036,7 +2036,7 @@ export default function BookingCRM({
                   >
                     <span>{tab.label}</span>
                     <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
+                      className={`text-micro px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
                         isSelected ? 'bg-[var(--acc)]/25 text-[var(--on-acc)]' : 'bg-[var(--surface)] text-[var(--ink-2)]'
                       }`}
                     >
@@ -2324,7 +2324,7 @@ export default function BookingCRM({
 
         {/* DETAILED WORKSPACE PANEL (Desktop view - rendered when a lead is selected) */}
         {selectedLead && (
-          <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-all duration-300">
+          <div ref={interventionPanelRef} className="hidden lg:block space-y-6 lg:col-span-1 transition-ui duration-300">
             <VenueDetailPanel
               selectedLead={selectedLead}
               onClose={() => setSelectedLead(null)}
@@ -2388,7 +2388,7 @@ export default function BookingCRM({
               <h3 className="text-sm font-bold font-display flex items-center gap-2 text-[var(--ink)]">
                 Configuración de plantillas y pautas AI (Redactor)
               </h3>
-              <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-2)]">
+              <p className="text-xs font-sans mt-0.5 text-[var(--ink-2)]">
                 Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
               </p>
             </div>
@@ -2604,7 +2604,7 @@ export default function BookingCRM({
           });
           setIsAddingLeadModalOpen(true);
         }}
-        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] active:scale-95 transition-all cursor-pointer animate-bounce"
+        className="sm:hidden fixed bottom-24 right-5 z-40 flex items-center justify-center w-14 h-14 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] active:scale-[0.97] transition-ui cursor-pointer animate-bounce"
         style={{ animationDuration: '3s' }}
         title="Añadir contacto"
       >

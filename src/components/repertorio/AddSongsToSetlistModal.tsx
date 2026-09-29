@@ -128,7 +128,7 @@ export function AddSongsToSetlistModal({
               <select
                 value={albumFilter}
                 onChange={(e) => setAlbumFilter(e.target.value)}
-                className={`text-[10px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${"bg-[var(--sunken)] text-[var(--acc)]"}`}
+                className={`text-micro font-sans py-1.5 px-2.5 rounded-[var(--r-s)] focus:outline-none cursor-pointer font-bold ${"bg-[var(--sunken)] text-[var(--acc)]"}`}
               >
                 {albumsList.map((alb) => (
                   <option key={alb} value={alb}>
@@ -140,7 +140,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={() => setOnlyFavoritos((p) => !p)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer transition-colors ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold cursor-pointer transition-colors ${
                   onlyFavoritos
                     ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                     : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -155,7 +155,7 @@ export function AddSongsToSetlistModal({
               <button
                 type="button"
                 onClick={selectAllFiltered}
-                className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                className="px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
               >
                 Seleccionar todo lo filtrado ({filteredSongs.length})
               </button>
@@ -164,7 +164,7 @@ export function AddSongsToSetlistModal({
                 <button
                   type="button"
                   onClick={clearSelection}
-                  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-[10px] font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
+                  className="px-2.5 py-1.5 rounded-[var(--r-s)] text-micro font-sans font-bold cursor-pointer bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors"
                 >
                   Vaciar selección
                 </button>
@@ -200,7 +200,7 @@ export function AddSongsToSetlistModal({
                     }`}
                   >
                     <div
-                      className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-black transition-all ${
+                      className={`w-6 h-6 rounded-[var(--r-s)] flex items-center justify-center shrink-0 font-sans text-xs font-black transition-ui ${
                         isSelected
                           ? "bg-[var(--sunken)] text-[var(--ink)] scale-105"
                           : "text-[var(--ink-2)]"
@@ -217,17 +217,17 @@ export function AddSongsToSetlistModal({
                           <Star className="w-3 h-3 text-[var(--acc)] fill-[var(--acc)] shrink-0" />
                         )}
                         {alreadyInSetlist && (
-                          <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/70 text-[var(--ink-2)] shrink-0">
+                          <span className="text-micro font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/70 text-[var(--ink-2)] shrink-0">
                             Ya en el repertorio
                           </span>
                         )}
                         {isSelected && (
-                          <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[var(--ok)] font-extrabold shrink-0 ml-auto/40">
+                          <span className="text-micro font-sans px-1.5 py-0.5 rounded bg-[var(--surface)]/20 text-[var(--ok)] font-extrabold shrink-0 ml-auto/40">
                             #{selectedIndex + 1} en orden
                           </span>
                         )}
                       </div>
-                      <div className="text-[10px] text-[var(--ink-2)] font-sans truncate">
+                      <div className="text-micro text-[var(--ink-2)] font-sans truncate">
                         {s.albumDisco || s.album || "Sin álbum"} ·{" "}
                         {s.tonalidad || "—"} ·{" "}
                         {formatSecondsToMmSs(s.duracionSegundos || 0)}
@@ -240,7 +240,7 @@ export function AddSongsToSetlistModal({
           </div>
 
           <div className="pt-3 mt-2 flex items-center justify-between gap-3 shrink-0">
-            <span className="text-[10px] font-sans text-[var(--ink-2)]">
+            <span className="text-micro font-sans text-[var(--ink-2)]">
               {selectedIds.length > 0
                 ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`
                 : "Ninguna canción seleccionada"}
@@ -257,7 +257,7 @@ export function AddSongsToSetlistModal({
                 type="button"
                 disabled={selectedIds.length === 0}
                 onClick={handleSubmit}
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <ListPlus className="w-4 h-4 stroke-[3]" />
                 <span>

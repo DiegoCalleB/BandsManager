@@ -752,7 +752,7 @@ export function ExcelImportModal({
                   <h3 className="text-base sm:text-lg font-bold font-display">
                     Importar Listado de Salas, Ayuntamientos o Bandas
                   </h3>
-                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold font-sans bg-[var(--ok)]/20 text-[var(--ink-2)]">
                     Excel / CSV
                   </span>
                 </div>
@@ -767,7 +767,7 @@ export function ExcelImportModal({
               <button
                 type="button"
                 onClick={handleDownloadTemplate}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] transition-all cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] transition-ui cursor-pointer"
                 title="Descargar archivo Excel de ejemplo con las columnas recomendadas"
               >
                 <Download className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -776,7 +776,7 @@ export function ExcelImportModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-all cursor-pointer"
+                className="p-1.5 rounded-[var(--r-s)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -787,7 +787,7 @@ export function ExcelImportModal({
           <div className="flex items-center justify-between px-6 py-2.5 bg-[var(--bg)]/60 text-xs">
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 1 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 1 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 {step > 1 ? <Check className="w-3 h-3" /> : "1"}
               </div>
@@ -804,7 +804,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 2 ? "bg-[var(--ok)] text-[var(--ink)]" : step > 2 ? "bg-[var(--ok)]/20 text-[var(--on-ok)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 {step > 2 ? <Check className="w-3 h-3" /> : "2"}
               </div>
@@ -821,7 +821,7 @@ export function ExcelImportModal({
             <div className="w-8 h-px bg-[var(--sunken)]" />
             <div className="flex items-center gap-2">
               <div
-                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-[10px] font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+                className={`w-5 h-5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-bold ${step === 3 ? "bg-[var(--ok)] text-[var(--ink)]" : "bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               >
                 3
               </div>
@@ -846,7 +846,7 @@ export function ExcelImportModal({
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleFileDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full max-w-2xl p-10 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-all flex flex-col items-center justify-center text-center cursor-pointer group"
+                  className="w-full max-w-2xl p-10 rounded-[var(--r-l)] bg-[var(--bg)]/40 hover:bg-[var(--ok-soft)] transition-ui flex flex-col items-center justify-center text-center cursor-pointer group"
                 >
                   <input
                     ref={fileInputRef}
@@ -855,7 +855,7 @@ export function ExcelImportModal({
                     onChange={handleFileChange}
                     className="hidden"
                   />
-                  <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-all group-hover:scale-110">
+                  <div className="w-16 h-16 rounded-[var(--r-l)] bg-[var(--ok)]/10 group-hover:bg-[var(--ok)]/20 text-[var(--ok)] flex items-center justify-center mb-4 transition-ui ">
                     <Upload className="w-8 h-8" />
                   </div>
                   <h4 className="text-base font-bold text-[var(--ink)] group-hover:text-[var(--ink-2)] transition-colors">
@@ -868,7 +868,7 @@ export function ExcelImportModal({
                     </strong>{" "}
                     de cualquier hoja de cálculo que use tu banda.
                   </p>
-                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 text-[11px] text-[var(--ink-2)]">
+                  <div className="flex items-center gap-2 mt-4 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)]/80 text-xs text-[var(--ink-2)]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                     <span>
                       Detección automática de salas, ciudades, teléfonos, emails
@@ -894,7 +894,7 @@ export function ExcelImportModal({
                   <button
                     type="button"
                     onClick={handleDownloadTemplate}
-                    className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
+                    className="px-3 py-2 rounded-[var(--r-s)] text-xs font-bold bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink-2)] flex items-center gap-1.5 shrink-0 transition-ui cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Descargar Plantilla</span>
@@ -953,7 +953,7 @@ export function ExcelImportModal({
                         key={cat.id}
                         type="button"
                         onClick={() => setDefaultCategory(cat.id)}
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition-ui cursor-pointer ${
                           defaultCategory === cat.id
                             ? "bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold"
                             : "bg-[var(--bg)] text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -972,7 +972,7 @@ export function ExcelImportModal({
                   <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-1.5">
                     <label className="text-xs font-bold text-[var(--ink-2)] flex items-center justify-between">
                       <span>Nombre Sala / Contacto / Banda *</span>
-                      <span className="text-[10px] text-[var(--ok)] font-sans">
+                      <span className="text-micro text-[var(--ok)] font-sans">
                         Requerido
                       </span>
                     </label>
@@ -1350,7 +1350,7 @@ export function ExcelImportModal({
                         onClick={() =>
                           setFilterDuplicatesOnly(!filterDuplicatesOnly)
                         }
-                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1 transition-ui cursor-pointer ${
                           filterDuplicatesOnly
                             ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--ink-3)]/60"
@@ -1380,7 +1380,7 @@ export function ExcelImportModal({
 
                 {/* IMPORT OPTIONS CARDS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 hover:bg-[var(--ok-soft)] transition-all cursor-pointer">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--bg)]/60 hover:bg-[var(--ok-soft)] transition-ui cursor-pointer">
                     <input
                       type="checkbox"
                       checked={updateDuplicates}
@@ -1398,7 +1398,7 @@ export function ExcelImportModal({
                     </div>
                   </label>
 
-                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 transition-all cursor-pointer">
+                  <label className="flex items-start gap-3 p-3 rounded-[var(--r-m)] bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 transition-ui cursor-pointer">
                     <input
                       type="checkbox"
                       checked={enrichMissingWithAi}
@@ -1473,7 +1473,7 @@ export function ExcelImportModal({
                             <div className="flex items-center gap-1.5">
                               <span>{row.nombre_sala}</span>
                               {row.isDuplicate && (
-                                <span className="px-1.5 py-0.2 rounded text-[9px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                                <span className="px-1.5 py-0.2 rounded text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                                   Existente
                                 </span>
                               )}
@@ -1491,7 +1491,7 @@ export function ExcelImportModal({
                                   e.target.value as LeadType,
                                 )
                               }
-                              className="px-2 py-1 rounded bg-[var(--bg)] text-[var(--ink)] text-[11px] focus:outline-none cursor-pointer"
+                              className="px-2 py-1 rounded bg-[var(--bg)] text-[var(--ink)] text-xs focus:outline-none cursor-pointer"
                             >
                               {CATEGORY_OPTIONS.map((c) => (
                                 <option key={c.id} value={c.id}>
@@ -1543,7 +1543,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Cambiar archivo</span>
@@ -1555,7 +1555,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting}
                   onClick={() => setStep(2)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] transition-ui cursor-pointer disabled:opacity-50"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Revisar mapeo</span>
@@ -1574,7 +1574,7 @@ export function ExcelImportModal({
                 <button
                   type="button"
                   onClick={buildParsedRows}
-                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-95 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-5 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-[0.97] transition-ui cursor-pointer"
                 >
                   <span>Continuar a Vista Previa ({rawRows.length} filas)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1586,7 +1586,7 @@ export function ExcelImportModal({
                   type="button"
                   disabled={isImporting || selectedCount === 0}
                   onClick={handleExecuteImport}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] active:scale-[0.97] transition-ui cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isImporting ? (
                     <>

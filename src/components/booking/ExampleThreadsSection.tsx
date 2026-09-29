@@ -180,20 +180,20 @@ export function ExampleThreadsSection({
   return (
     <div className="space-y-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/5">
       <div className="flex items-center justify-between">
-        <label className="block text-[10px] font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
+        <label className="block text-micro font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
           <MessageSquareText className="w-3.5 h-3.5 text-[var(--acc)]" /> Hilos
           de Email Reales de Ejemplo
         </label>
         <button
           type="button"
           onClick={handleToggleForm}
-          className="text-[9px] font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
+          className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
         >
           <Plus className="w-3 h-3" /> {showForm ? "Cancelar" : "Pegar un hilo"}
         </button>
       </div>
 
-      <p className="text-[9px] text-[var(--acc)]/70 font-sans leading-tight">
+      <p className="text-micro text-[var(--acc)]/70 font-sans leading-tight">
         Pega conversaciones reales (nuestro mensaje + la respuesta de la
         sala/medio, y si la hubo, nuestra respuesta a esa respuesta) para esta
         categoría. Se usan como ejemplo real tanto al redactar el primer
@@ -201,7 +201,7 @@ export function ExampleThreadsSection({
       </p>
 
       {isLoading ? (
-        <div className="text-[10px] text-[var(--acc)]/70 flex items-center gap-1.5">
+        <div className="text-micro text-[var(--acc)]/70 flex items-center gap-1.5">
           <Loader2 className="w-3 h-3 animate-spin" /> Cargando hilos...
         </div>
       ) : threads.length > 0 ? (
@@ -210,7 +210,7 @@ export function ExampleThreadsSection({
             <div
               key={t.id}
               onClick={() => handleEdit(t)}
-              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-[10px] cursor-pointer hover:bg-[var(--acc-soft)] transition-colors"
+              className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-micro cursor-pointer hover:bg-[var(--acc-soft)] transition-colors"
               title="Abrir para ver o editar este hilo"
             >
               <div className="min-w-0">
@@ -250,7 +250,7 @@ export function ExampleThreadsSection({
           ))}
         </div>
       ) : (
-        <div className="text-[10px] text-[var(--acc)]/50 italic">
+        <div className="text-micro text-[var(--acc)]/50 italic">
           Todavía no hay hilos de ejemplo guardados para esta categoría.
         </div>
       )}
@@ -258,7 +258,7 @@ export function ExampleThreadsSection({
       {showForm && (
         <div className="space-y-2.5 pt-2/20">
           {editingId && (
-            <div className="text-[9px] text-[var(--acc)] font-sans font-bold">
+            <div className="text-micro text-[var(--acc)] font-sans font-bold">
               Editando hilo guardado
             </div>
           )}
@@ -267,7 +267,7 @@ export function ExampleThreadsSection({
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="Título del ejemplo (ej: Sala Apolo, negociación de fecha)"
-            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-[10px] focus:outline-none font-sans ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+            className={`w-full rounded-[var(--r-s)] px-2 py-1.5 text-micro focus:outline-none font-sans ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
           />
 
           {mensajes.map((m, idx) => (
@@ -277,7 +277,7 @@ export function ExampleThreadsSection({
                 onChange={(e) =>
                   handleMessageChange(idx, "rol", e.target.value)
                 }
-                className="text-[9px] rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--sunken)] text-[var(--ink)] shrink-0"
+                className="text-micro rounded-[var(--r-s)] px-1.5 py-1.5 bg-[var(--sunken)] text-[var(--ink)] shrink-0"
               >
                 <option value="banda">Banda</option>
                 <option value="sala">Sala</option>
@@ -293,7 +293,7 @@ export function ExampleThreadsSection({
                     ? "Lo que escribimos nosotros..."
                     : "Lo que respondió la sala..."
                 }
-                className={`flex-1 rounded-[var(--r-s)] p-2 text-[10px] focus:outline-none font-sans leading-relaxed ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
+                className={`flex-1 rounded-[var(--r-s)] p-2 text-micro focus:outline-none font-sans leading-relaxed ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
               />
               {mensajes.length > 1 && (
                 <button
@@ -310,13 +310,13 @@ export function ExampleThreadsSection({
           <button
             type="button"
             onClick={handleAddMessageRow}
-            className="text-[9px] font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
+            className="text-micro font-bold text-[var(--acc)] hover:underline cursor-pointer flex items-center gap-1"
           >
             <Plus className="w-3 h-3" /> Añadir mensaje al hilo
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-[9px] text-[var(--ink-2)] font-sans">
+            <span className="text-micro text-[var(--ink-2)] font-sans">
               Resultado:
             </span>
             {(["positiva", "neutral", "negativa"] as const).map((r) => (
@@ -324,7 +324,7 @@ export function ExampleThreadsSection({
                 key={r}
                 type="button"
                 onClick={() => setResultado(r)}
-                className={`text-[9px] px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ? "bg-[var(--acc)]/30 text-[var(--acc)] font-bold" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
+                className={`text-micro px-2 py-1 rounded-[var(--r-s)] font-sans cursor-pointer ${resultado === r ? "bg-[var(--acc)]/30 text-[var(--acc)] font-bold" : "bg-[var(--surface)] text-[var(--ink-2)]"}`}
               >
                 {RESULTADO_LABEL[r]}
               </button>
@@ -332,7 +332,7 @@ export function ExampleThreadsSection({
           </div>
 
           {error && (
-            <div className="text-[9px] text-[var(--alert)] font-sans">
+            <div className="text-micro text-[var(--alert)] font-sans">
               {error}
             </div>
           )}
@@ -341,7 +341,7 @@ export function ExampleThreadsSection({
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-[10px] rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+            className="w-full py-1.5 px-3 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-micro rounded-[var(--r-s)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
           >
             {isSaving ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />

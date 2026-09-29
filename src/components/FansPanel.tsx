@@ -851,7 +851,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               {selectedCityFilter && (
                 <button
                   onClick={() => setSelectedCityFilter("")}
-                  className="text-[11px] font-sans text-[var(--acc)] hover:underline cursor-pointer"
+                  className="text-xs font-sans text-[var(--acc)] hover:underline cursor-pointer"
                 >
                   Limpiar filtro ciudad
                 </button>
@@ -862,7 +862,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedCityFilter("")}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                   selectedCityFilter === ""
                     ? "bg-[var(--acc)] text-[var(--ink)]"
                     : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
@@ -883,7 +883,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <div
                     key={city}
                     onClick={() => setSelectedCityFilter(city)}
-                    className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
+                    className={`group/city inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                       isSelected
                         ? "bg-[var(--acc)] text-[var(--ink)]"
                         : "bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)]"
@@ -891,7 +891,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   >
                     <span>{city}</span>
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-bold ${
+                      className={`text-micro px-1.5 py-0.5 rounded-[var(--r-pill)] font-bold ${
                         isSelected
                           ? "bg-[var(--surface)]/20 text-[var(--ink)]"
                           : "bg-[var(--surface)] text-[var(--acc)]"
@@ -1008,7 +1008,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("feed")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "feed"
                       ? "bg-[var(--acc)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1021,7 +1021,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("grid")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "grid"
                       ? "bg-[var(--acc)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1034,7 +1034,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("table")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "table"
                       ? "bg-[var(--acc)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1047,7 +1047,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setViewMode("map")}
-                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                     viewMode === "map"
                       ? "bg-[var(--acc)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1095,7 +1095,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 filteredFans.map((fan) => (
                   <div
                     key={fan.id}
-                    className="bg-[var(--sunken)]  rounded-[var(--r-l)] p-4 transition-all space-y-3 relative group"
+                    className="bg-[var(--sunken)]  rounded-[var(--r-l)] p-4 transition-ui space-y-3 relative group"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
@@ -1106,7 +1106,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           <h4 className="font-bold text-[var(--ink)] text-sm truncate max-w-[160px]">
                             {fan.nombre}
                           </h4>
-                          <p className="text-[11px] font-sans text-[var(--ink-2)] truncate max-w-[160px]">
+                          <p className="text-xs font-sans text-[var(--ink-2)] truncate max-w-[160px]">
                             {fan.email}
                           </p>
                         </div>
@@ -1125,9 +1125,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 text-[11px] font-sans pt-2 ">
+                    <div className="grid grid-cols-2 gap-2 text-xs font-sans pt-2 ">
                       <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
-                        <span className="text-[var(--ink-2)] text-[9px] block">
+                        <span className="text-[var(--ink-2)] text-micro block">
                           Ciudad
                         </span>
                         <span className="text-[var(--ink-2)] flex items-center gap-1 font-semibold">
@@ -1138,7 +1138,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         </span>
                       </div>
                       <div className="bg-[var(--surface)]/80 p-2 rounded-[var(--r-s)]">
-                        <span className="text-[var(--ink-2)] text-[9px] block">
+                        <span className="text-[var(--ink-2)] text-micro block">
                           Origen / Canal
                         </span>
                         <span className="text-[var(--acc)] truncate block font-semibold">
@@ -1149,7 +1149,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] font-sans text-[var(--ink-2)] pt-1">
+                    <div className="flex items-center justify-between text-micro font-sans text-[var(--ink-2)] pt-1">
                       <span>Registrado: {fan.fechaCaptura || "Reciente"}</span>
                       {fan.consentimientoRGPD && (
                         <span className="text-[var(--ok)] font-bold flex items-center gap-1 bg-[var(--ok)]/10 px-2 py-0.5 rounded-[var(--r-pill)]">
@@ -1195,7 +1195,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             {city}
                           </span>
                         </div>
-                        <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)]">
+                        <span className="bg-[var(--acc)]/20 text-[var(--acc)]/70 text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)]">
                           {count} {count === 1 ? "fan" : "fans"}
                         </span>
                       </div>
@@ -1243,7 +1243,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       >
                         <td className="p-3 font-semibold text-[var(--ink)]">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-[var(--r-pill)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-[10px]">
+                            <div className="w-6 h-6 rounded-[var(--r-pill)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)] font-bold text-micro">
                               {fan.nombre.charAt(0)}
                             </div>
                             {fan.nombre}
@@ -1260,10 +1260,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                             <span className="text-[var(--ink-2)]">-</span>
                           )}
                         </td>
-                        <td className="p-3 font-sans text-[10px] text-[var(--ink-2)]">
+                        <td className="p-3 font-sans text-micro text-[var(--ink-2)]">
                           {fan.comoConocio || "-"}
                         </td>
-                        <td className="p-3 text-[11px] text-[var(--ok)] font-sans">
+                        <td className="p-3 text-xs text-[var(--ok)] font-sans">
                           {fan.conciertoOrigenNombre || "-"}
                         </td>
                         <td className="p-3 text-center">
@@ -1300,7 +1300,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       {activeTab === "qr" && (
         <div className="bg-[var(--surface)] rounded-[var(--r-l)] p-6 lg:p-8 space-y-5">
           <div className="space-y-1 pb-4">
-            <h3 className="text-xl font-black text-[var(--ink)] flex items-center gap-2 font-display">
+            <h3 className="text-xl font-bold text-[var(--ink)] flex items-center gap-2 font-display">
               <QrCode className="w-6 h-6 text-[var(--acc)]" /> Generador de QR
             </h3>
             <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -1312,7 +1312,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           {/* Vínculo a concierto: única decisión que cambia la URL, por eso va siempre visible */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
             <label
-              className="text-[11px] font-bold text-[var(--acc)] font-sans shrink-0"
+              className="text-xs font-bold text-[var(--acc)] font-sans shrink-0"
               title="Los fans que escaneen se registrarán con este origen en el CRM"
             >
               Vincular a:
@@ -1359,7 +1359,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </div>
 
             <div className="space-y-1">
-              <h4 className="font-black text-[var(--ink)] font-display text-lg">
+              <h4 className="font-bold text-[var(--ink)] font-display text-lg">
                 {selectedConcert
                   ? selectedConcert.sala
                   : `Únete a ${effectiveBandName}`}
@@ -1372,13 +1372,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </div>
 
             <div className="w-full flex items-center gap-2 bg-[var(--surface)] rounded-[var(--r-m)] px-3 py-2">
-              <span className="flex-1 min-w-0 truncate font-sans text-[var(--acc)]/70 text-[11px] text-left">
+              <span className="flex-1 min-w-0 truncate font-sans text-[var(--acc)]/70 text-xs text-left">
                 {qrConcertUrl}
               </span>
               <button
                 type="button"
                 onClick={handleCopyQrUrl}
-                className="shrink-0 text-[11px] text-[var(--acc)] hover:underline font-sans cursor-pointer"
+                className="shrink-0 text-xs text-[var(--acc)] hover:underline font-sans cursor-pointer"
               >
                 {copiedQrUrl ? "¡Copiado! " : "Copiar"}
               </button>
@@ -1409,7 +1409,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       className="fixed inset-0 z-30"
                       onClick={() => setShowQrMoreMenu(false)}
                     />
-                    <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-[11px] font-sans">
+                    <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
                       <button
                         type="button"
                         onClick={() => {
@@ -1523,12 +1523,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       Recompensa / Incentivo para el Fan
                     </label>
                     {savedIncentive && (
-                      <span className="text-[11px] font-sans text-[var(--ok)] flex items-center gap-1">
+                      <span className="text-xs font-sans text-[var(--ok)] flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                  <p className="text-xs text-[var(--ink-2)] font-sans">
                     Ofrece algo de valor al fan tras registrarse (un tema en
                     directo exclusivo o descuento de merchan) para disparar la
                     tasa de escaneos.
@@ -1536,7 +1536,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
                   <div className="space-y-3 pt-1">
                     <div>
-                      <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
+                      <label className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
                         <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                         Mensaje de Bienvenida / Agradecimiento:
                       </label>
@@ -1556,7 +1556,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
+                        <label className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
                           <Music className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                           Enlace de Descarga (Tema inédito/directo):
                         </label>
@@ -1574,7 +1574,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
+                        <label className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5 mb-1">
                           <Tag className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                           Código Cupón Merchandising:
                         </label>
@@ -1613,7 +1613,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     Colaboración Económica & Donaciones (Revolut, PayPal y
                     Bizum)
                   </label>
-                  <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                  <p className="text-xs text-[var(--ink-2)] font-sans">
                     {epkConfig?.donacionRevolut?.habilitado !== false &&
                     epkConfig?.donacionRevolut?.revolutTag
                       ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público"Únete" y en la pantalla de confirmación.`
@@ -1646,7 +1646,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       }`}
                     >
                       <span>🌐 Dominio Web Oficial</span>
-                      <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                      <span className="text-micro text-[var(--ink-2)] font-normal">
                         Para impresiones/carteles
                       </span>
                     </button>
@@ -1660,7 +1660,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       }`}
                     >
                       <span>🧪 Servidor Dev</span>
-                      <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                      <span className="text-micro text-[var(--ink-2)] font-normal">
                         Para pruebas en visor actual
                       </span>
                     </button>
@@ -1668,7 +1668,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
                   {useCustomDomain && (
                     <div className="space-y-1">
-                      <label className="text-[11px] font-sans text-[var(--ink-2)]">
+                      <label className="text-xs font-sans text-[var(--ink-2)]">
                         Dominio del Proyecto:
                       </label>
                       <div className="flex items-center gap-2">
@@ -1687,12 +1687,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   )}
 
                   <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-sans text-[var(--ink-2)]">
+                    <label className="text-xs font-sans text-[var(--ink-2)]">
                       Slug personalizado:
                     </label>
                     <div className="flex items-center gap-2">
                       <div className="flex items-center bg-[var(--surface)] rounded-[var(--r-m)] px-2.5 shrink-0">
-                        <span className="text-[11px] font-sans text-[var(--ink-2)]">
+                        <span className="text-xs font-sans text-[var(--ink-2)]">
                           /
                         </span>
                         <input
@@ -1708,7 +1708,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           className="w-16 bg-transparent text-[var(--acc)] text-xs font-sans py-2.5 font-bold outline-none"
                           placeholder="unete"
                         />
-                        <span className="text-[11px] font-sans text-[var(--ink-2)]">
+                        <span className="text-xs font-sans text-[var(--ink-2)]">
                           /
                         </span>
                       </div>
@@ -1730,7 +1730,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </div>
 
                   <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-sans text-[var(--ink-2)]">
+                    <label className="text-xs font-sans text-[var(--ink-2)]">
                       Idioma del formulario para este enlace:
                     </label>
                     {/* grid en vez de flex de una sola fila: con 4+ idiomas (español, inglés,
@@ -1753,7 +1753,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         </button>
                       ))}
                     </div>
-                    <p className="text-[10px] font-sans text-[var(--ink-2)]">
+                    <p className="text-micro font-sans text-[var(--ink-2)]">
                       El formulario se abrirá en este idioma por defecto; quien
                       lo escanee siempre podrá cambiarlo a mano.
                     </p>
@@ -1832,7 +1832,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         <div className="fixed inset-0 bg-[var(--surface)]/80 z-50 flex items-center justify-center p-4">
           <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-lg w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3">
-              <h3 className="text-lg font-black text-[var(--ink)] font-display flex items-center gap-2">
+              <h3 className="text-lg font-bold text-[var(--ink)] font-display flex items-center gap-2">
                 <Users className="w-5 h-5 text-[var(--acc)]" />
                 Registrar Fan / Seguidor Manual
               </h3>
@@ -1847,7 +1847,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             <form onSubmit={handleManualAddSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Nombre *
                   </label>
                   <input
@@ -1860,7 +1860,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Email *
                   </label>
                   <input
@@ -1876,7 +1876,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Ciudad
                   </label>
                   <input
@@ -1888,7 +1888,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Origen / Canal
                   </label>
                   <select
@@ -1911,7 +1911,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Nivel Fan
                   </label>
                   <select
@@ -1926,7 +1926,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                     Instagram (Opcional)
                   </label>
                   <input
@@ -1940,7 +1940,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Canción Favorita (Opcional)
                 </label>
                 <input
@@ -1953,7 +1953,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-[var(--acc)] font-sans mb-1.5 block">
+                <label className="text-micro font-bold text-[var(--acc)] font-sans mb-1.5 block">
                   Mensaje / Dedicatoria para el Muro (Opcional)
                 </label>
                 <textarea
@@ -1975,7 +1975,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-black rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold rounded-[var(--r-m)] transition hover:bg-[var(--acc)]/60 cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" /> Guardar Fan
                 </button>

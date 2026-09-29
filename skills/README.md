@@ -54,6 +54,19 @@ Tiene **precedencia** sobre cualquier otra guía estética del repo, incluido un
 
 ---
 
+### 3b. **craft-interfaces** — cómo se *siente* la interfaz
+**Cuándo usar:** al escribir o revisar componentes, animaciones, transiciones, estados hover/active/focus, tamaños de letra y zonas táctiles
+
+- Escala tipográfica única (mínimo 11 px), campos a 16 px en móvil, Onest
+- Movimiento con criterio (Emil Kowalski): tabla de frecuencia, curvas y duraciones como tokens, nunca `transition-all`/`ease-in`
+- Detalle (Make Interfaces Feel Better): radios concéntricos, zonas táctiles ≥ 40 px, cifras tabulares, alineación óptica
+- Método de revisión (Impeccable) y diales de BandManager (Taste): 3 / 3 / 6·4
+- Sin emojis en la interfaz; iconos Lucide
+
+Complementa a `visual-identity` (que decide el *qué*); en conflicto, manda `visual-identity`.
+
+---
+
 ### 4. **fullstack-ux-design**
 **Cuándo usar:** Crear/refinar componentes UI o handlers de backend
 

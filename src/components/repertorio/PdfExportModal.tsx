@@ -1611,10 +1611,10 @@ export function PdfExportModal({
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-display font-black text-sm sm:text-lg text-[var(--ink)] truncate">
+                  <h3 className="font-display font-bold text-sm sm:text-lg text-[var(--ink)] truncate">
                     Generador de Repertorios
                   </h3>
-                  <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black font-sans bg-[var(--surface)] text-[var(--ink)] shrink-0">
+                  <span className="hidden sm:inline-block px-2 py-0.5 rounded text-micro font-bold font-sans bg-[var(--surface)] text-[var(--ink)] shrink-0">
                     Rock Stage Edition
                   </span>
                 </div>
@@ -1638,7 +1638,7 @@ export function PdfExportModal({
             <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
               <button
                 onClick={() => handlePrint()}
-                className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-black transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-95/20"
+                className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-[var(--r-m)] font-sans text-xs font-bold transition-ui flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] active:scale-[0.97]/20"
               >
                 <Printer className="w-4 h-4" />
                 {/*"Músico(s)", no"Hoja(s)": cada uno puede generar más de una página física según
@@ -1654,7 +1654,7 @@ export function PdfExportModal({
               </button>
               <button
                 onClick={onClose}
-                className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-95 cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
+                className={`p-2 rounded-[var(--r-m)] transition-colors active:scale-[0.97] cursor-pointer ${"hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1695,7 +1695,7 @@ export function PdfExportModal({
                     setPrintMode("all_members");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     printMode === "all_members"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1709,7 +1709,7 @@ export function PdfExportModal({
                     setPrintMode("single_member");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     printMode === "single_member"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1722,7 +1722,7 @@ export function PdfExportModal({
                     setPrintMode("master");
                     setPreviewPageIndex(0);
                   }}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     printMode === "master"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1758,7 +1758,7 @@ export function PdfExportModal({
               <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <button
                   onClick={() => setViewDensity("sentado")}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     viewDensity === "sentado"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1769,7 +1769,7 @@ export function PdfExportModal({
                 </button>
                 <button
                   onClick={() => setViewDensity("de_pie")}
-                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-s)] font-bold flex items-center gap-1.5 cursor-pointer transition-ui ${
                     viewDensity === "de_pie"
                       ? "bg-[var(--sunken)] text-[var(--ink)]"
                       : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -1818,7 +1818,7 @@ export function PdfExportModal({
                   Títulos:
                 </span>
                 <span
-                  className="px-2.5 py-1 rounded text-[11px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70"
+                  className="px-2.5 py-1 rounded text-xs font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70"
                   title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
                 >
                   ⚡ Automático
@@ -1834,7 +1834,7 @@ export function PdfExportModal({
                 <select
                   value={handwritingFont}
                   onChange={(e) => setHandwritingFont(e.target.value as any)}
-                  className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-bold text-[11px] cursor-pointer"
+                  className="p-1 px-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] font-bold text-xs cursor-pointer"
                 >
                   <option value="caveat">✍️ Rotulador Fino (Caveat)</option>
                   <option value="permanent_marker">
@@ -1958,7 +1958,7 @@ export function PdfExportModal({
                   <span className="truncate">
                     👤 {currentPreviewMember.name}
                   </span>
-                  <span className="hidden sm:inline text-[var(--ink-2)] text-[10px] shrink-0">
+                  <span className="hidden sm:inline text-[var(--ink-2)] text-micro shrink-0">
                     ({currentPreviewMember.instrument})
                   </span>
                 </span>
@@ -1995,7 +1995,7 @@ export function PdfExportModal({
             {/* Authentic Real Stage Paper Sheet */}
             <div
               ref={sheetRef}
-              className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 rounded-[var(--r-s)] w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-all"
+              className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 rounded-[var(--r-s)] w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-ui"
               style={{
                 width: "210mm",
                 minHeight: "297mm",
@@ -2025,7 +2025,7 @@ export function PdfExportModal({
                   />
                 ) : (
                   <span
-                    className="whitespace-nowrap font-['Anton',sans-serif] font-black"
+                    className="whitespace-nowrap font-['Anton',sans-serif] font-bold"
                     style={{
                       fontSize: "70pt",
                       letterSpacing: "4px",
@@ -2055,7 +2055,7 @@ export function PdfExportModal({
                       />
                     )}
                     <div>
-                      <h1 className="text-[14pt] font-black tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
+                      <h1 className="text-[14pt] font-bold tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
                         {bandName.toUpperCase()}
                       </h1>
                       <div className="text-[9pt] font-bold text-[var(--ink-2)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
@@ -2070,7 +2070,7 @@ export function PdfExportModal({
                         ? "REPERTORIO PERSONALIZADO"
                         : "COPIA DE CONTROL"}
                     </div>
-                    <div className="text-[10pt] font-black text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
+                    <div className="text-[10pt] font-bold text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
                       👤 {currentPreviewMember.name}
                     </div>
                     <div className="text-[7pt] font-sans font-bold text-[var(--ink)]">
@@ -2250,7 +2250,7 @@ export function PdfExportModal({
                             <div className="flex items-baseline gap-1.5 flex-nowrap">
                               <div className="flex items-baseline gap-2.5 min-w-0 flex-nowrap overflow-hidden">
                                 {showSongNumbers && (
-                                  <span className="font-sans text-[20pt] text-[var(--ink-2)] font-black min-w-[32px] shrink-0">
+                                  <span className="font-sans text-[20pt] text-[var(--ink-2)] font-bold min-w-[32px] shrink-0">
                                     {index + 1}.
                                   </span>
                                 )}
@@ -2272,7 +2272,7 @@ export function PdfExportModal({
                                 </span>
 
                                 {showTonality && s.tonalidad && (
-                                  <span className="font-sans text-[11pt] font-black px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink)] leading-none ml-1 shrink-0">
+                                  <span className="font-sans text-[11pt] font-bold px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink)] leading-none ml-1 shrink-0">
                                     {s.tonalidad}
                                   </span>
                                 )}
@@ -2363,7 +2363,7 @@ export function PdfExportModal({
                             className="flex items-center gap-2 my-0.5"
                           >
                             <div className="flex-1 h-px bg-black" />
-                            <span className="font-['Oswald',sans-serif] text-[10pt] font-black text-[var(--ink)] whitespace-nowrap">
+                            <span className="font-['Oswald',sans-serif] text-[10pt] font-bold text-[var(--ink)] whitespace-nowrap">
                               {item.tituloCustom || "BLOQUE"}
                             </span>
                             <div className="flex-1 h-px bg-black" />
@@ -2379,7 +2379,7 @@ export function PdfExportModal({
                             className="flex items-center gap-2 my-0.5"
                           >
                             <div className="flex-1 h-px bg-black" />
-                            <span className="font-['Oswald',sans-serif] text-[10pt] font-black text-[var(--ink)] whitespace-nowrap">
+                            <span className="font-['Oswald',sans-serif] text-[10pt] font-bold text-[var(--ink)] whitespace-nowrap">
                               {item.tituloCustom || "BIS / ENCORE"}
                             </span>
                             <div className="flex-1 h-px bg-black" />
@@ -2418,7 +2418,7 @@ export function PdfExportModal({
               {showAppBranding && (
                 <div className="flex justify-between items-center pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)]">
                   <div className="flex items-center gap-2">
-                    <span className="font-black text-[var(--ink)]">
+                    <span className="font-bold text-[var(--ink)]">
                       ⚡ BandManager
                     </span>
                     <span>•</span>
@@ -2454,7 +2454,7 @@ export function PdfExportModal({
               className={`rounded-[var(--r-l)] max-w-lg w-full p-6 ${"bg-[var(--surface)]"}`}
             >
               <h3
-                className={`text-lg font-black mb-2 flex items-center gap-2 ${"text-[var(--ink)]"}`}
+                className={`text-lg font-bold mb-2 flex items-center gap-2 ${"text-[var(--ink)]"}`}
               >
                 <Zap className="w-5 h-5 text-[var(--acc)]" />
                 ¿Cómo prefieres el repertorio?
@@ -2473,7 +2473,7 @@ export function PdfExportModal({
                   className="p-4 rounded-[var(--r-m)]  bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
                 >
                   <div
-                    className={`font-black text-sm mb-1 ${"text-[var(--ink)]"}`}
+                    className={`font-bold text-sm mb-1 ${"text-[var(--ink)]"}`}
                   >
                     📄 1 sola hoja (letra más pequeña)
                   </div>
@@ -2491,7 +2491,7 @@ export function PdfExportModal({
                   className="p-4 rounded-[var(--r-m)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
                 >
                   <div
-                    className={`font-black text-sm mb-1 ${"text-[var(--ink)]"}`}
+                    className={`font-bold text-sm mb-1 ${"text-[var(--ink)]"}`}
                   >
                     📄📄 Varias hojas (letra más grande)
                   </div>

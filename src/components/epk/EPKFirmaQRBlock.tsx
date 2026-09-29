@@ -117,7 +117,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
               <AtSign className="w-5 h-5" /> Configurar Firma de Correo
             </h3>
-            <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
+            <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc)]/70">
               HTML Automático
             </span>
           </div>
@@ -212,7 +212,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             <label className="text-xs font-bold text-[var(--ink-2)]">
               Lema / Pie de Firma
             </label>
-            <p className="text-[11px] text-[var(--ink-2)]">
+            <p className="text-xs text-[var(--ink-2)]">
               Una frase corta que sale al pie de los emails y también como
               subtítulo en el EPK.
             </p>
@@ -254,7 +254,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <p className="text-xs font-bold text-[var(--ink)]">
                   Incluir iconos de plataformas musicales y redes
                 </p>
-                <p className="text-[11px] text-[var(--ink-2)]">
+                <p className="text-xs text-[var(--ink-2)]">
                   Añade enlaces directos a Spotify, Instagram, YouTube, etc.
                 </p>
               </div>
@@ -279,7 +279,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <p className="text-xs font-bold text-[var(--ink)]">
                   Adjuntar enlace al Dossier EPK en la firma
                 </p>
-                <p className="text-[11px] text-[var(--ink-2)]">
+                <p className="text-xs text-[var(--ink-2)]">
                   Incluye el botón con enlace al Dossier interactivo en cada
                   propuesta redactada.
                 </p>
@@ -297,7 +297,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToBlock("perfil")}
-                  className="px-2 py-0.5 text-[10px] font-bold text-[var(--acc)] hover:text-[var(--acc)]/70 bg-[var(--acc)]/10 rounded flex items-center gap-1 cursor-pointer"
+                  className="px-2 py-0.5 text-micro font-bold text-[var(--acc)] hover:text-[var(--acc)]/70 bg-[var(--acc)]/10 rounded flex items-center gap-1 cursor-pointer"
                 >
                   <FileText className="w-3 h-3" /> Editar en Bloque 1
                 </button>
@@ -311,7 +311,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   return (
                     <span
                       key={key}
-                      className="px-2 py-0.5 rounded bg-[var(--sunken)] text-[10px] font-sans text-[var(--ink-2)] flex items-center gap-1"
+                      className="px-2 py-0.5 rounded bg-[var(--sunken)] text-micro font-sans text-[var(--ink-2)] flex items-center gap-1"
                     >
                       <span>{platform?.icon || "🔗"}</span>
                       <span className="font-semibold">
@@ -332,13 +332,13 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
                 <Mail className="w-5 h-5" /> Vista Previa de la Firma
               </h3>
-              <span className="text-[10px] text-[var(--ink-2)] font-sans">
+              <span className="text-micro text-[var(--ink-2)] font-sans">
                 Renderizado Email
               </span>
             </div>
 
             <div className="bg-[var(--sunken)] text-[var(--ink)] p-4 sm:p-5 rounded-[var(--r-l)] space-y-3 font-sans text-xs">
-              <p className="text-[var(--ink-2)] italic text-[11px] pb-2">
+              <p className="text-[var(--ink-2)] italic text-xs pb-2">
                 ... [Cuerpo del correo redactado para la sala o festival] ...
               </p>
 
@@ -374,7 +374,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       {config.firmaEmail?.cargo || "Booking & Management Team"}
                     </p>
                     {config.firmaEmail?.textoPie && (
-                      <p className="text-[var(--ink-2)] text-[11px] italic truncate">
+                      <p className="text-[var(--ink-2)] text-xs italic truncate">
                         {config.firmaEmail.textoPie}
                       </p>
                     )}
@@ -402,9 +402,9 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       href={publicEpkUrl || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-semibold transition active:scale-95 cursor-pointer group"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] rounded-[var(--r-s)] text-xs font-semibold transition active:scale-[0.97] cursor-pointer group"
                     >
-                      <FileText className="w-3.5 h-3.5 text-[var(--acc)] group-hover:scale-110 transition-transform" />
+                      <FileText className="w-3.5 h-3.5 text-[var(--acc)] transition-transform" />
                       <span>
                         {config.dossierPdfName
                           ? `Ver Dossier Oficial (${config.dossierPdfName})`
@@ -527,7 +527,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                               href={href}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-block transition-transform hover:scale-105"
+                              className="inline-block transition-transform "
                               title={badgeInfo.label}
                             >
                               <img
@@ -544,7 +544,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               </div>
             </div>
 
-            <p className="text-[11px] text-[var(--ink-2)] flex items-center gap-1">
+            <p className="text-xs text-[var(--ink-2)] flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
               Esta firma se inyecta automáticamente en los correos del CRM y
               ahora puedes exportarla a tu propio correo.
@@ -557,7 +557,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   type="button"
                   id="copy-rich-signature-btn"
                   onClick={handleCopyRichSignature}
-                  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`flex-1 px-4 py-2.5 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer ${
                     copiadoFirma === "rich"
                       ? "bg-[var(--ok)] text-[var(--ink)] ring-2 ring-[var(--ok)]"
                       : "bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)]"
@@ -632,11 +632,11 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         <strong>¡Firma visual copiada!</strong> Ahora ve a los
                         ajustes de firma de tu correo (Gmail, Outlook, Apple
                         Mail...) y pulsa{" "}
-                        <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-[10px]">
+                        <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-micro">
                           Ctrl + V
                         </kbd>{" "}
                         (o{" "}
-                        <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-[10px]">
+                        <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 font-sans text-micro">
                           Cmd + V
                         </kbd>
                         ) para pegarla con todos sus enlaces y logos.
@@ -735,11 +735,11 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         </li>
                         <li>
                           Haz clic dentro del recuadro de firma y pulsa{" "}
-                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">
+                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-micro font-sans">
                             Ctrl + V
                           </kbd>{" "}
                           (o{" "}
-                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">
+                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-micro font-sans">
                             Cmd + V
                           </kbd>{" "}
                           en Mac).
@@ -766,7 +766,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         <li>
                           En <em>Firma de correo electrónico</em>, crea una
                           nueva firma y pega con{" "}
-                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">
+                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-micro font-sans">
                             Ctrl + V
                           </kbd>
                           .
@@ -798,7 +798,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                         </li>
                         <li>
                           Pega en el editor con{" "}
-                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-[10px] font-sans">
+                          <kbd className="px-1 py-0.5 bg-[var(--surface)] rounded text-[var(--acc)]/70 text-micro font-sans">
                             Cmd + V
                           </kbd>
                           .
@@ -817,7 +817,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
               <h3 className="text-base sm:text-lg font-bold text-[var(--acc)] flex items-center gap-2">
                 <QrCode className="w-5 h-5" /> Código QR Oficial del Dossier
               </h3>
-              <span className="text-[10px] font-sans text-[var(--ink-2)]">
+              <span className="text-micro font-sans text-[var(--ink-2)]">
                 Difusión Rápida
               </span>
             </div>

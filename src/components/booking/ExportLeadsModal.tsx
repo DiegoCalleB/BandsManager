@@ -192,11 +192,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   <span className="text-xs font-bold">
                     Contactos a la vista con filtro actual
                   </span>
-                  <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                  <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     {filteredLeads.length} contactos
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                <p className="text-xs text-[var(--ink-2)] mt-0.5">
                   Exporta únicamente las salas o medios que cumplen la búsqueda
                   y los filtros aplicados en este momento.
                 </p>
@@ -221,11 +221,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                   <span className="text-xs font-bold">
                     Todos los contactos del CRM
                   </span>
-                  <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
+                  <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {allLeads.length} contactos
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                <p className="text-xs text-[var(--ink-2)] mt-0.5">
                   Exporta toda la base de datos de salas, festivales, medios y
                   contactos de la banda activa.
                 </p>
@@ -251,11 +251,11 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
                     <span className="text-xs font-bold">
                       Solo contactos seleccionados
                     </span>
-                    <span className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                    <span className="text-xs font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70">
                       {selectedLeads.length} seleccionados
                     </span>
                   </div>
-                  <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                  <p className="text-xs text-[var(--ink-2)] mt-0.5">
                     Exporta únicamente las casillas que has marcado
                     explícitamente en la lista.
                   </p>
@@ -283,7 +283,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <FileSpreadsheet className="w-4 h-4 text-[var(--ok)] shrink-0" />
               <div>
                 <span className="text-xs block">Excel / CSV (.csv)</span>
-                <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                <span className="text-micro text-[var(--ink-2)] font-normal">
                   Compatible UTF-8 Windows
                 </span>
               </div>
@@ -301,7 +301,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
               <FileCode className="w-4 h-4 text-[var(--ink-2)] shrink-0" />
               <div>
                 <span className="text-xs block">JSON Datos (.json)</span>
-                <span className="text-[10px] text-[var(--ink-2)] font-normal">
+                <span className="text-micro text-[var(--ink-2)] font-normal">
                   Objeto raw estructurado
                 </span>
               </div>
@@ -312,7 +312,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
         {/* 3. CSV Options */}
         {exportFormat === "csv" && (
           <div className="p-3 rounded-[var(--r-m)] bg-[var(--bg)]/80 space-y-2">
-            <span className="text-[11px] font-bold text-[var(--ink-2)] block">
+            <span className="text-xs font-bold text-[var(--ink-2)] block">
               Campos adicionales en CSV:
             </span>
             <div className="flex items-center gap-4 text-xs">

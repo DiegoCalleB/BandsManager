@@ -59,7 +59,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-sm">Enviar Recordatorio a la Banda</h3>
-              <p className="text-[10px] text-[var(--ink-2)] font-mono truncate max-w-[200px]">
+              <p className="text-micro text-[var(--ink-2)] font-mono truncate max-w-[200px]">
                 {selectedConcert ? `Concierto: ${selectedConcert.sala}` : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento'}
               </p>
             </div>
@@ -71,13 +71,13 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
 
         <div className="py-4 space-y-4 text-xs">
           {reminderSuccessMsg && (
-            <div className="p-3 bg-[var(--ok)]/10 text-[var(--ok)] rounded-[var(--r-m)] font-mono text-[11px]">
+            <div className="p-3 bg-[var(--ok)]/10 text-[var(--ok)] rounded-[var(--r-m)] font-mono text-xs">
               {reminderSuccessMsg}
             </div>
           )}
 
           {reminderErrorMsg && (
-            <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] font-mono text-[11px]">
+            <div className="p-3 bg-[var(--alert)]/10 text-[var(--alert)] rounded-[var(--r-m)] font-mono text-xs">
               {reminderErrorMsg}
             </div>
           )}
@@ -85,23 +85,23 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           <div
             className={`p-3 rounded-[var(--r-m)] ${'bg-[var(--sunken)] '}`}
           >
-            <div className="font-mono text-[10px] text-[var(--acc)] font-bold mb-1">Detalles del Evento</div>
+            <div className="font-mono text-micro text-[var(--acc)] font-bold mb-1">Detalles del Evento</div>
             <p className="font-semibold">
               {selectedConcert
                 ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})`
                 : selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Ensayo/Reunión'}
             </p>
-            <p className="text-[11px] text-[var(--ink-2)] font-mono mt-0.5">
+            <p className="text-xs text-[var(--ink-2)] font-mono mt-0.5">
               📅 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
               {selectedRehearsal?.hora ? ` a las ${selectedRehearsal.hora}` : ''}
             </p>
           </div>
 
           <div>
-            <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
+            <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
               Destinatarios ({effectiveBandMembers.length} miembros)
             </label>
-            <div className="flex flex-wrap gap-1 font-mono text-[10px]">
+            <div className="flex flex-wrap gap-1 font-mono text-micro">
               {effectiveBandMembers.map((m: any, idx: number) => (
                 <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--acc)] ">
                   👤 {m.name} {m.email ? `(${m.email})` : ''}
@@ -111,7 +111,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[10px] font-mono text-[var(--ink-2)] mb-1">
+            <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
               Nota adicional / Indicaciones (Opcional)
             </label>
             <textarea
@@ -136,7 +136,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
               />
               <label
                 htmlFor="chk-send-push"
-                className="text-[11px] text-[var(--acc)] cursor-pointer font-mono font-medium flex items-center gap-1"
+                className="text-xs text-[var(--acc)] cursor-pointer font-mono font-medium flex items-center gap-1"
               >
                 📱 Notificación Push en móvil / navegador (PWA)
               </label>
@@ -150,7 +150,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
                 onChange={(e) => setReminderSendEmail(e.target.checked)}
                 className="rounded cursor-pointer accent-sky-500"
               />
-              <label htmlFor="chk-send-email" className="text-[11px] text-[var(--ink-2)] cursor-pointer font-mono flex items-center gap-1">
+              <label htmlFor="chk-send-email" className="text-xs text-[var(--ink-2)] cursor-pointer font-mono flex items-center gap-1">
                 📧 Enviar correo electrónico a la banda
               </label>
             </div>
@@ -169,7 +169,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
             type="button"
             disabled={reminderSending}
             onClick={handleSendEventReminder}
-            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-xs font-bold text-[var(--ink)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all"
+            className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-xs font-bold text-[var(--ink)] font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-ui"
           >
             {reminderSending ? (
               <>

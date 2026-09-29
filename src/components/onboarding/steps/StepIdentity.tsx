@@ -73,7 +73,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               Nombre del Proyecto Musical & Ubicación
             </h3>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[11px] text-[var(--ink-2)] font-sans">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-xs text-[var(--ink-2)] font-sans">
             <Globe className="w-3 h-3 text-[var(--acc)]" />
             <span>
               Idioma:{" "}
@@ -134,7 +134,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   key={g}
                   type="button"
                   onClick={() => setGenre(g)}
-                  className={`text-[11px] px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
+                  className={`text-xs px-2.5 py-1 rounded-[var(--r-s)] transition-colors cursor-pointer ${
                     genre.toLowerCase().includes(g.toLowerCase())
                       ? "bg-[var(--acc)]/20 text-[var(--acc)]/70  font-semibold"
                       : "bg-[var(--sunken)]/60 text-[var(--ink-2)] "
@@ -157,7 +157,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               3. Estilo de Tipografía para el Nombre de la Banda
             </h3>
           </div>
-          <span className="text-[11px] font-sans text-[var(--ink-2)]">
+          <span className="text-xs font-sans text-[var(--ink-2)]">
             Se aplicará al Dossier EPK, cartelería y cabeceras
           </span>
         </div>
@@ -176,7 +176,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                 key={f.id}
                 type="button"
                 onClick={() => setFontStyle(f.id)}
-                className={`p-3.5 rounded-[var(--r-m)] text-left transition-all relative overflow-hidden group cursor-pointer ${
+                className={`p-3.5 rounded-[var(--r-m)] text-left transition-ui relative overflow-hidden group cursor-pointer ${
                   isSelected
                     ? "bg-[var(--acc)]/10  ring-1 ring-[var(--acc)]/30"
                     : "bg-[var(--bg)]/90  hover:bg-[var(--bg)]"
@@ -184,7 +184,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span
-                    className={`text-[10px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
+                    className={`text-micro font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
                       isSelected
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
                         : "bg-[var(--sunken)] text-[var(--ink-2)]"
@@ -193,7 +193,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                     {f.badge}
                   </span>
                   {isSelected && (
-                    <span className="flex items-center gap-1 text-[11px] font-bold text-[var(--acc)] font-sans">
+                    <span className="flex items-center gap-1 text-xs font-bold text-[var(--acc)] font-sans">
                       <Check className="w-3.5 h-3.5" /> Seleccionada
                     </span>
                   )}
@@ -211,7 +211,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
                   {previewName}
                 </div>
 
-                <p className="text-[11px] text-[var(--ink-2)] mt-1 line-clamp-2 leading-relaxed">
+                <p className="text-xs text-[var(--ink-2)] mt-1 line-clamp-2 leading-relaxed">
                   {f.description}
                 </p>
               </button>
@@ -234,7 +234,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               </div>
             )}
             <div className="min-w-0">
-              <span className="text-[10px] font-sans text-[var(--acc)] font-bold block">
+              <span className="text-micro font-sans text-[var(--acc)] font-bold block">
                 Previsualización en Dossier EPK
               </span>
               <div
@@ -243,7 +243,7 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
               >
                 {previewName}
               </div>
-              <p className="text-[11px] text-[var(--ink-2)] truncate">
+              <p className="text-xs text-[var(--ink-2)] truncate">
                 {genre || "Género musical"} · {city || "Ciudad"} · {language}
               </p>
             </div>

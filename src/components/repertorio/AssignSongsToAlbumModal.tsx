@@ -196,7 +196,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                     <div
                       key={song.id}
                       onClick={() => toggleSong(song.id)}
-                      className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-all ${
+                      className={`p-2.5 rounded-[var(--r-m)] flex items-center justify-between cursor-pointer transition-ui ${
                         isSelected
                           ? 'bg-[var(--surface)]/50 text-[var(--ink)]'
                           : 'bg-[var(--surface)]/80 hover:bg-[var(--surface)]/80 text-[var(--ink-2)]'
@@ -213,15 +213,15 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                         <div className="truncate">
                           <div className="text-xs font-bold truncate flex items-center gap-1.5">
                             <span>{formatSongTitle(song.titulo)}</span>
-                            {song.tonalidad && <span className="text-[10px] text-[var(--ok)] font-sans">({song.tonalidad})</span>}
+                            {song.tonalidad && <span className="text-micro text-[var(--ok)] font-sans">({song.tonalidad})</span>}
                           </div>
-                          <div className="text-[10px] text-[var(--ink-2)] truncate">
+                          <div className="text-micro text-[var(--ink-2)] truncate">
                             {song.albumDisco ? `Álbum actual: ${song.albumDisco}` : 'Sin álbum asignado'}
                           </div>
                         </div>
                       </div>
 
-                      <span className="text-[10px] font-sans opacity-60 shrink-0">{song.duracion}</span>
+                      <span className="text-micro font-sans opacity-60 shrink-0">{song.duracion}</span>
                     </div>
                   );
                 })}
@@ -248,7 +248,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] transition-transform active:scale-[0.97] cursor-pointer flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4 stroke-[3]" />
                 <span>Guardar Disco ({selectedIds.size} temas)</span>

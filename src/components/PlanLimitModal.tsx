@@ -98,7 +98,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
               <Lock className="w-7 h-7" />
             </div>
             <div>
-              <span className="text-[10px] font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-[var(--r-s)]">
+              <span className="text-micro font-sans font-bold text-[var(--acc)] bg-[var(--acc)]/60 px-2 py-0.5 rounded-[var(--r-s)]">
                 Límite de {currentPlanDef.name} alcanzado
               </span>
               <h3 className="text-xl font-bold font-display tracking-wide text-[var(--ink)] mt-1">
@@ -157,7 +157,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 billingInterval={billingPeriod}
                 bandId={currentUser?.band_id}
                 userEmail={currentUser?.email}
-                className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-black text-xs transition-all hover:scale-[1.02] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-bold text-xs transition-ui active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>
                   Mejorar a {targetPlanDef.name} ({targetPlanDef.price})
@@ -183,7 +183,7 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
                 onClose();
                 onNavigateToPlanes();
               }}
-              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--acc)]/70 text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
             >
               <span>Ver Comparativa Completa</span>
               <ExternalLink className="w-3.5 h-3.5" />

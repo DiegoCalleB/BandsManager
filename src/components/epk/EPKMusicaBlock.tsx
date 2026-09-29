@@ -64,7 +64,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
               <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview
               (Landing de Fans & EPK)
             </h3>
-            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-micro font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Player Interactivo
             </span>
           </div>
@@ -82,7 +82,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   <span className="text-xs font-bold text-[var(--ink)]">
                     Activar reproductor de adelanto
                   </span>
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Si está desactivado, el widget no se mostrará en la landing
                     pública.
                   </p>
@@ -109,7 +109,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                   <label className="text-xs font-semibold text-[var(--ink-2)] flex items-center justify-between">
                     <span>Elegir tema de vuestro repertorio</span>
                     {songs.length > 0 && (
-                      <span className="text-[10px] text-[var(--acc)] font-sans">
+                      <span className="text-micro text-[var(--acc)] font-sans">
                         {songs.length} temas disponibles
                       </span>
                     )}
@@ -221,7 +221,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
 
             {/* Vista previa en vivo del reproductor */}
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col justify-center space-y-3">
-              <span className="text-[10px] font-sans font-bold text-[var(--ink-2)]">
+              <span className="text-micro font-sans font-bold text-[var(--ink-2)]">
                 Previsualización del reproductor
               </span>
               <div
@@ -241,7 +241,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         `${currentUser?.bandName || "Tu Banda"} · Directo Preview`}
                     </span>
                   </div>
-                  <p className="text-[10px] text-[var(--ink-2)] font-sans truncate">
+                  <p className="text-micro text-[var(--ink-2)] font-sans truncate">
                     {config.audioPreview?.subtitulo?.trim() ||
                       "Dale al play para escuchar cómo sonamos"}
                   </p>
@@ -253,7 +253,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                 </div>
               </div>
               {config.audioPreview?.habilitado === false && (
-                <p className="text-[11px] text-[var(--acc)]/90 font-sans text-center">
+                <p className="text-xs text-[var(--acc)]/90 font-sans text-center">
                   ⚠️ Reproductor actualmente desactivado para los fans.
                 </p>
               )}
@@ -457,7 +457,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                     Propio de la banda
                   </button>
                 </div>
-                <p className="text-[11px] text-[var(--ink-2)]">
+                <p className="text-xs text-[var(--ink-2)]">
                   El agente no prometerá técnico propio si marcáis "De la sala".
                 </p>
               </div>
@@ -538,7 +538,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                       : "Hotel no obligatorio"}
                   </button>
                 </div>
-                <p className="text-[11px] text-[var(--ink-2)]">
+                <p className="text-xs text-[var(--ink-2)]">
                   Ayuda a calcular cachés y viabilidad de kilometraje.
                 </p>
               </div>

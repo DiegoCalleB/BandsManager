@@ -45,11 +45,11 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
               <div>
                 <h3 className="font-bold text-sm flex items-center gap-2">
                   <span>Selección de Tipografía & Fuente</span>
-                  <span className="text-[10px] font-sans font-normal px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/15 text-[var(--ok)] ">
+                  <span className="text-micro font-sans font-normal px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--surface)]/15 text-[var(--ok)] ">
                     En tiempo real
                   </span>
                 </h3>
-                <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                <p className="text-xs text-[var(--ink-2)] font-sans">
                   Elige la fuente que mejor se adapte a tu gusto visual
                 </p>
               </div>
@@ -68,7 +68,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
             className={`px-6 py-3 text-xs flex items-center gap-2.5 ${"bg-[var(--tentative)]/5 text-[var(--tentative)]"}`}
           >
             <Info className="w-4 h-4 text-[var(--acc)] shrink-0" />
-            <p className="text-[11px] leading-relaxed font-sans">
+            <p className="text-xs leading-relaxed font-sans">
               ¿La fuente original te resultaba demasiado intensa o pesada?
               Prueba con{" "}
               <strong className="text-[var(--acc)]">Plus Jakarta Sans</strong> u{" "}
@@ -86,7 +86,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                 <div
                   key={preset.id}
                   onClick={() => onSelectFont(preset.id)}
-                  className={`p-4 rounded-[var(--r-m)] transition-all cursor-pointer relative group ${
+                  className={`p-4 rounded-[var(--r-m)] transition-ui cursor-pointer relative group ${
                     isSelected
                       ? "bg-[var(--acc)]/10 ring-2 ring-[var(--acc)]/20"
                       : "bg-[var(--bg)] hover:-neutral-300 hover:bg-[var(--sunken)]/80"
@@ -102,7 +102,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                           {preset.name}
                         </span>
                         <span
-                          className={`text-[9px] font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
+                          className={`text-micro font-sans font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${
                             preset.id === "plus_jakarta"
                               ? "bg-[var(--surface)]/15 text-[var(--ok)] "
                               : preset.isSoft
@@ -113,7 +113,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                           {preset.badge}
                         </span>
                       </div>
-                      <span className="text-[10px] text-[var(--ink-2)] font-sans block mt-0.5">
+                      <span className="text-micro text-[var(--ink-2)] font-sans block mt-0.5">
                         {preset.subtitle}
                       </span>
                     </div>
@@ -135,7 +135,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
 
                   {/* Live Preview Sample */}
                   <div
-                    className={`p-3 rounded-[var(--r-s)] text-sm transition-all ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+                    className={`p-3 rounded-[var(--r-s)] text-sm transition-ui ${"bg-[var(--surface)] text-[var(--ink)]"}`}
                     style={{ fontFamily: preset.displayFont }}
                   >
                     <div className="font-bold text-base tracking-wide mb-1">
@@ -158,12 +158,12 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
           <div
             className={`px-6 py-3 flex justify-between items-center shrink-0 ${" bg-[var(--bg)]"}`}
           >
-            <span className="text-[10px] font-sans text-[var(--ink-2)]">
+            <span className="text-micro font-sans text-[var(--ink-2)]">
               Cambio instantáneo guardado en tu navegador
             </span>
             <button
               onClick={onClose}
-              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer ${"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]"}`}
+              className={`px-5 py-2 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer ${"bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)]"}`}
             >
               Aceptar & Cerrar
             </button>

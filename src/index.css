@@ -6,13 +6,21 @@
 @import "./styles/tokens.css";
 
 :root {
-  --font-sans-current: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-display-current: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans-current: "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display-current: "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 @theme {
-  --font-sans: var(--font-sans-current, "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif);
-  --font-display: var(--font-display-current, "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif);
+  --font-sans: var(--font-sans-current, "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif);
+  --font-display: var(--font-display-current, "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif);
+
+  /* Escala tipográfica: 11 (micro) · 12 (xs) · 14 (sm) · 16 (base). Ver craft-interfaces. */
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.45;
+
+  /* Movimiento por defecto de `transition`: rápido y con salida fuerte, nunca `ease-in`. */
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 html, body {
@@ -70,13 +78,18 @@ html, body {
   scrollbar-width: none;
 }
 
-/* Espectro: Remove borders globally per Law 1 "Ningún borde" */
+/* Espectro: los controles nativos no traen borde propio; si lo llevan, es con token. */
 button, input, textarea, select, iframe {
   border: none;
 }
-/* Focus ring only on interactive elements, not their ancestors */
+/* Foco: el ratón no dibuja anillo, el teclado SIEMPRE (accesibilidad). Antes se apagaba el
+   outline de button/input en todo caso y navegar con Tab era a ciegas. */
 input:focus, textarea:focus, select:focus, button:focus {
   outline: none;
+}
+:where(button, a, input, select, textarea, summary, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 /* Iconography with clean precision */
@@ -363,3 +376,63 @@ textarea::-webkit-resizer {
   background-size: 5px 5px;
 }
 
+
+
+/* ═══════════ CRAFT — detalle y movimiento (skills/craft-interfaces) ═══════════ */
+@layer base {
+  /* Sin el retardo de doble toque y sin el parpadeo gris al pulsar en móvil. */
+  button, a, [role="button"], input, select, textarea, label, summary {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Titulares que no dejan una palabra huérfana; párrafos sin viudas. */
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+
+  /* Cifras en columna: importes, BPM, fechas y cualquier dato tabular (font-mono = dato). */
+  .font-mono, .tabular-nums, input[type="number"], time, table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Un campo por debajo de 16px hace que iOS haga zoom al enfocarlo. */
+  @media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+    select, textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Zona táctil ≥ 44px sin cambiar el diseño: la ampliación es invisible. Solo en dispositivos
+   táctiles y solo para controles que no son ya contenedor posicionado. */
+@media (pointer: coarse) {
+  button:where(:not(.absolute):not(.fixed):not(.sticky):not(.relative):not([data-no-hit])) {
+    position: relative;
+  }
+  button:where(:not([data-no-hit]))::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+}
+
+/* Movimiento reducido: se quita el movimiento, no la información (opacidad y color se quedan). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* `transition-all` está prohibido (anima layout sin querer y cuesta rendimiento). Esta utilidad lo
+   sustituye con una lista explícita: color, opacidad, transform, filtro y las dimensiones que
+   mueven barras y acordeones. Duración y curva salen de los valores por defecto de @theme. */
+@utility transition-ui {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow,
+    transform, translate, scale, rotate, filter, width, height, max-height, flex-basis;
+  transition-timing-function: var(--default-transition-timing-function);
+  transition-duration: var(--default-transition-duration);
+}

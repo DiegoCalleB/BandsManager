@@ -59,13 +59,13 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
           {/* Config Fields */}
           {!activeCampaign?.isActive && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-[10px] font-sans">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-sans">
               <div>
-                <label className="block text-[10px] text-[var(--ink-2)] mb-1">Ciudad de Bakandeya</label>
+                <label className="block text-micro text-[var(--ink-2)] mb-1">Ciudad de Bakandeya</label>
                 <select
                   value={proposedBakandeyaCity}
                   onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
                 >
                   <option value="Madrid">Madrid</option>
                   <option value="Sevilla">Sevilla</option>
@@ -74,22 +74,22 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] text-[var(--ink-2)] mb-1">Sala propuesta en Madrid/Sevilla</label>
+                <label className="block text-micro text-[var(--ink-2)] mb-1">Sala propuesta en Madrid/Sevilla</label>
                 <input
                   type="text"
                   value={proposedVenueBakandeya}
                   onChange={(e) => setProposedVenueBakandeya(e.target.value)}
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] text-[var(--ink-2)] mb-1">Periodo / Mes Estimado</label>
+                <label className="block text-micro text-[var(--ink-2)] mb-1">Periodo / Mes Estimado</label>
                 <input
                   type="text"
                   value={proposedMonth}
                   onChange={(e) => setProposedMonth(e.target.value)}
-                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-[10px]"
+                  className="w-full bg-[var(--surface)] text-[var(--ink)] px-2 py-1 rounded-[var(--r-s)] text-micro"
                 />
               </div>
             </div>
@@ -97,19 +97,19 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
 
           {/* Generated Pitch Preview Box */}
           <div className="space-y-1.5">
-            <label className="block text-[10px] font-sans text-[var(--acc)] flex items-center justify-between">
+            <label className="block text-micro font-sans text-[var(--acc)] flex items-center justify-between">
               <span>Mensaje de Propuesta Generado (Músico a Músico)</span>
-              <span className="text-[10px] text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
+              <span className="text-micro text-[var(--ink-2)] lowercase">editable & listo para enviar</span>
             </label>
 
-            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] text-[10px] font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
+            <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] text-micro font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed select-text max-h-72 overflow-y-auto">
               {pitchText}
             </div>
           </div>
 
           {/* Actions Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div className="text-[10px] font-sans text-[var(--ink-2)]">
+            <div className="text-micro font-sans text-[var(--ink-2)]">
               Destinatario: <strong className="text-[var(--ink)]">{band.contacto_nombre || band.nombre_banda}</strong>
             </div>
 
@@ -121,7 +121,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                   setCopiedPitch(true);
                   setTimeout(() => setCopiedPitch(false), 2000);
                 }}
-                className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-m)] font-sans text-[10px] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-2 py-1 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] rounded-[var(--r-m)] font-sans text-micro transition-ui cursor-pointer flex items-center gap-1.5"
               >
                 {copiedPitch ? <Check className="w-4 h-4 text-[var(--ok)]" /> : <Copy className="w-4 h-4" />}
                 <span>{copiedPitch ? '¡Copiado! ' : 'Copiar Texto'}</span>
@@ -136,7 +136,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
                     e.preventDefault();
                     openWhatsAppChat(band.telefono, pitchText);
                   }}
-                  className="px-2 py-1 bg-[var(--surface)]/15 hover:bg-[var(--surface)]/15 text-[var(--ink)] font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5"
+                  className="px-2 py-1 bg-[var(--surface)]/15 hover:bg-[var(--surface)]/15 text-[var(--ink)] font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>Enviar WhatsApp</span>
@@ -147,7 +147,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
               {band.email && (
                 <a
                   href={`mailto:${band.email}?subject=${encodeURIComponent(`Propuesta Date Swap: Bakandeya x ${band.nombre_banda}`)}&body=${encodeURIComponent(pitchText)}`}
-                  className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] font-sans text-[10px] font-bold rounded-[var(--r-m)] transition-all cursor-pointer flex items-center gap-1.5"
+                  className="px-2 py-1 bg-[var(--acc)]/15 hover:bg-[var(--acc)]/15 text-[var(--ink)] font-sans text-micro font-bold rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center gap-1.5"
                 >
                   <Send className="w-4 h-4" />
                   <span>Enviar Email</span>

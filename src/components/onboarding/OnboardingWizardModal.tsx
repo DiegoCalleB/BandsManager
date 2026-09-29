@@ -1350,7 +1350,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
           <div className="p-5 sm:p-6 flex items-center justify-between bg-[var(--bg)]/50">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold">
+                <span className="text-micro px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc)]/70 font-semibold">
                   Configuración Inicial · Plan{" "}
                   {userPlanId.toUpperCase().replace("_", "")}
                 </span>
@@ -1386,7 +1386,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     key={step.key}
                     type="button"
                     onClick={() => setCurrentStepIndex(idx)}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-[var(--r-s)] text-xs whitespace-nowrap transition-ui ${
                       isCurrent
                         ? "bg-[var(--acc)] text-[var(--on-acc)] font-bold"
                         : isPassed
@@ -1397,7 +1397,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     {isPassed ? (
                       <Check className="w-3 h-3" />
                     ) : (
-                      <span className="text-[10px] opacity-80">{idx + 1}.</span>
+                      <span className="text-micro opacity-80">{idx + 1}.</span>
                     )}
                     <span>{step.shortTitle}</span>
                   </button>
@@ -1741,7 +1741,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 <button
                   type="button"
                   onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-semibold text-xs transition-ui"
                 >
                   {currentStepIndex === activeSteps.length - 1 ? (
                     <>

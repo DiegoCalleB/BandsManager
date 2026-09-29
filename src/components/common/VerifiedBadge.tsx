@@ -19,7 +19,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
   if (!isVerified) return null;
 
   const sizeClasses = {
-    sm: "w-4 h-4 text-[10px]",
+    sm: "w-4 h-4 text-micro",
     md: "w-5 h-5 text-xs",
     lg: "w-6 h-6 text-sm",
   };
@@ -37,14 +37,14 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <span
-        className={`inline-flex items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] font-black ring-1 ring-[var(--acc)]/50 ${sizeClasses[size]}`}
+        className={`inline-flex items-center justify-center rounded-[var(--r-pill)] bg-[var(--acc)]  text-[var(--ink)] font-bold ring-1 ring-[var(--acc)]/50 ${sizeClasses[size]}`}
         title="Lead Verificado • Conversación activa mediante agentes de IA"
       >
         <Check className={`${iconSizes[size]} stroke-[3.5]`} />
       </span>
 
       {showLabel && (
-        <span className="text-[11px] font-bold tracking-wide text-[var(--acc)]/70 bg-[var(--acc)]/10 px-1.5 py-0.5 rounded-[var(--r-s)]">
+        <span className="text-xs font-bold tracking-wide text-[var(--acc)]/70 bg-[var(--acc)]/10 px-1.5 py-0.5 rounded-[var(--r-s)]">
           Verificado
         </span>
       )}
@@ -56,7 +56,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
             <ShieldCheck className="w-4 h-4 text-[var(--acc)]" />
             <span>Lead Verificado por IA</span>
           </div>
-          <p className="text-[11px] text-[var(--ink-2)] leading-tight">
+          <p className="text-xs text-[var(--ink-2)] leading-tight">
             Este contacto ha sido verificado mediante interacción y conversación
             real lograda por los agentes de IA de Booking.
           </p>

@@ -234,7 +234,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   <h2 className="text-base font-bold text-[var(--ink)] font-display">
                     Comparador A/B: DeepSeek 🚀 vs. Gemini ⚡
                   </h2>
-                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)]/70">
                     A/B Testing + Costes Reales (€)
                   </span>
                 </div>
@@ -260,20 +260,20 @@ export const MultiModelPitchComparatorModal: React.FC<
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               {/* Venue Badge */}
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-[var(--ink-2)] font-sans text-[11px]">
+                <span className="text-[var(--ink-2)] font-sans text-xs">
                   SALA DESTINO:
                 </span>
                 <span className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--bg)] text-[var(--acc)]/70 font-bold">
                   🏟️ {lead.nombre_sala} ({lead.ciudad || "España"})
                 </span>
-                <span className="text-[var(--ink-2)] text-[11px]">
+                <span className="text-[var(--ink-2)] text-xs">
                   • Tipo: {lead.tipo || "sala"} • Aforo: {lead.aforo || "N/D"}
                 </span>
               </div>
 
               {/* Provider Selector Badges */}
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-[11px] text-[var(--ink-2)] mr-1 font-sans">
+                <span className="text-xs text-[var(--ink-2)] mr-1 font-sans">
                   Motores activos:
                 </span>
                 {[
@@ -286,7 +286,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                       key={prov.id}
                       type="button"
                       onClick={() => handleToggleProvider(prov.id)}
-                      className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
                         isSelected
                           ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                           : "bg-[var(--bg)]/60 text-[var(--ink-2)] "
@@ -321,7 +321,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 onClick={handleRunComparison}
                 disabled={isLoading || selectedProviders.length === 0}
-                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-all font-sans shrink-0"
+                className="px-4 py-2 bg-[var(--acc)] hover:bg-[var(--acc)]/60 disabled:opacity-50 text-[var(--ink)] font-bold rounded-[var(--r-m)] text-xs flex items-center justify-center gap-2 cursor-pointer transition-ui font-sans shrink-0"
               >
                 {isLoading ? (
                   <>
@@ -347,11 +347,11 @@ export const MultiModelPitchComparatorModal: React.FC<
                   <span className="text-xs font-bold text-[var(--ink)]">
                     Calculadora de Inversión y Coste por Envío:
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.2 bg-[var(--ok)]/10 text-[var(--ink-2)] rounded font-sans">
+                  <span className="text-micro px-1.5 py-0.2 bg-[var(--ok)]/10 text-[var(--ink-2)] rounded font-sans">
                     Tarifas Oficiales 2025/2026
                   </span>
                 </div>
-                <p className="text-[10px] text-[var(--ink-2)]">
+                <p className="text-micro text-[var(--ink-2)]">
                   Calculado sobre tokens de entrada (ADN banda + sala) y salida
                   (cuerpo de email redactado).
                 </p>
@@ -359,13 +359,13 @@ export const MultiModelPitchComparatorModal: React.FC<
             </div>
 
             <div className="flex items-center gap-1 bg-[var(--surface)] p-1 rounded-[var(--r-m)] self-start sm:self-auto">
-              <span className="text-[10px] text-[var(--ink-2)] px-2 font-sans">
+              <span className="text-micro text-[var(--ink-2)] px-2 font-sans">
                 Escala:
               </span>
               <button
                 type="button"
                 onClick={() => setVolumeScale("1")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold cursor-pointer transition-ui ${
                   volumeScale === "1"
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -376,7 +376,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 type="button"
                 onClick={() => setVolumeScale("100")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold cursor-pointer transition-ui ${
                   volumeScale === "100"
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -387,7 +387,7 @@ export const MultiModelPitchComparatorModal: React.FC<
               <button
                 type="button"
                 onClick={() => setVolumeScale("1000")}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] text-[10px] font-bold cursor-pointer transition-all ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] text-micro font-bold cursor-pointer transition-ui ${
                   volumeScale === "1000"
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -462,7 +462,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                   return (
                     <div
                       key={prop.provider + idx}
-                      className={`flex flex-col rounded-[var(--r-m)] transition-all duration-200 ${
+                      className={`flex flex-col rounded-[var(--r-m)] transition-ui duration-200 ${
                         isSelected
                           ? "bg-[var(--surface)]/80 ring-1 ring-[var(--ok)]/40"
                           : "bg-[var(--sunken)] hover:bg-[var(--sunken)]"
@@ -480,14 +480,14 @@ export const MultiModelPitchComparatorModal: React.FC<
                                 {getProviderDisplayName(prop.provider)}
                               </span>
                               <span
-                                className={`text-[9px] px-1.5 py-0.5 rounded font-sans font-semibold ${getProviderBadge(prop.provider)}`}
+                                className={`text-micro px-1.5 py-0.5 rounded font-sans font-semibold ${getProviderBadge(prop.provider)}`}
                               >
                                 {isDeepSeek
                                   ? "🚀 Más Económico"
                                   : "⚡ Instantáneo"}
                               </span>
                             </div>
-                            <p className="text-[10px] text-[var(--ink-2)] font-sans">
+                            <p className="text-micro text-[var(--ink-2)] font-sans">
                               {prop.modelName}{" "}
                               {prop.durationMs > 0 && `• ${prop.durationMs}ms`}
                             </p>
@@ -517,11 +517,11 @@ export const MultiModelPitchComparatorModal: React.FC<
                             <span className="font-bold text-[var(--ink-2)] font-sans text-sm">
                               {displayCost}
                             </span>
-                            <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                            <span className="text-micro text-[var(--ink-2)] font-sans">
                               ({scaleLabel})
                             </span>
                           </div>
-                          <div className="text-[9px] text-[var(--ink-2)] font-sans mt-0.5">
+                          <div className="text-micro text-[var(--ink-2)] font-sans mt-0.5">
                             Tokens: {cost.inputTokens} in / {cost.outputTokens}{" "}
                             out (Total: {cost.totalTokens})
                           </div>
@@ -529,7 +529,7 @@ export const MultiModelPitchComparatorModal: React.FC<
 
                         <div className="text-right">
                           <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                            className={`text-micro font-bold px-2 py-0.5 rounded ${
                               isDeepSeek
                                 ? "bg-[var(--ok)]/15 text-[var(--ink-2)]/30"
                                 : "bg-[var(--acc)]/15 text-[var(--acc)]/70 "
@@ -550,14 +550,14 @@ export const MultiModelPitchComparatorModal: React.FC<
                                 <p className="font-bold text-[var(--acc)]/70">
                                   Aviso de Cuota / Saldo API
                                 </p>
-                                <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+                                <p className="text-xs text-[var(--ink-2)] mt-0.5">
                                   {prop.error}
                                 </p>
                               </div>
                             </div>
                             {prop.fallbackText && (
                               <div className="space-y-1">
-                                <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-sans">
+                                <div className="flex items-center justify-between text-micro text-[var(--ink-2)] font-sans">
                                   <span>
                                     ⚡ Borrador Inteligente Adaptado (Modo
                                     Local):
@@ -577,7 +577,7 @@ export const MultiModelPitchComparatorModal: React.FC<
 
                         {/* Footer Metrics & Selection Button */}
                         <div className="pt-2800/60 space-y-2">
-                          <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] font-sans">
+                          <div className="flex items-center justify-between text-micro text-[var(--ink-2)] font-sans">
                             <span>
                               {wordCount} palabras ({charCount} car.)
                             </span>
@@ -596,7 +596,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                             type="button"
                             onClick={() => handleChooseProposal(prop, idx)}
                             disabled={!prop.text && !prop.fallbackText}
-                            className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                            className={`w-full py-2 px-3 rounded-[var(--r-m)] text-xs font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                               isSelected
                                 ? "bg-[var(--ok)] text-[var(--ink)]"
                                 : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--acc)]/70 "
@@ -629,17 +629,17 @@ export const MultiModelPitchComparatorModal: React.FC<
             {/* TABLA COMPARATIVA DE RENTABILIDAD & TARIFAS */}
             <div className="mt-4 p-3.5 bg-[var(--sunken)] rounded-[var(--r-m)] text-xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-sans">
+                <span className="text-xs font-bold text-[var(--ink-2)] flex items-center gap-1.5 font-sans">
                   <Calculator className="w-3.5 h-3.5 text-[var(--acc)]" />
                   Resumen de Costes & ROI para la Banda
                 </span>
-                <span className="text-[10px] text-[var(--ink-2)] font-sans">
+                <span className="text-micro text-[var(--ink-2)] font-sans">
                   1 USD ≈ 0.925 EUR
                 </span>
               </div>
 
               <div className="overflow-x-auto shrink-0">
-                <table className="w-full text-left text-[11px]">
+                <table className="w-full text-left text-xs">
                   <thead>
                     <tr className="border-b800 text-[var(--ink-2)] font-sans">
                       <th className="py-1.5 px-2">Modelo</th>

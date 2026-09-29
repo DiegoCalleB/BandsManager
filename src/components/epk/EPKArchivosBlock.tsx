@@ -74,7 +74,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             <button
               type="button"
               onClick={() => setShowAiLogoModal(true)}
-              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] rounded-[var(--r-m)] text-[11px] font-bold flex items-center gap-1.5 transition cursor-pointer"
+              className="px-2.5 py-1 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)] hover:text-[var(--acc)] rounded-[var(--r-m)] text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" /> Generar con IA
             </button>
@@ -97,7 +97,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               ) : (
                 <div className="w-28 h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--ink-2)] p-2 text-center">
                   <ImageIcon className="w-8 h-8 text-[var(--ink-2)] mb-1" />
-                  <span className="text-[10px] font-medium text-[var(--ink-2)]">
+                  <span className="text-micro font-medium text-[var(--ink-2)]">
                     Sin Logo
                   </span>
                 </div>
@@ -139,7 +139,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+                <label className="text-xs font-semibold text-[var(--ink-2)]">
                   O introduce URL de la imagen:
                 </label>
                 <input
@@ -182,7 +182,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <p className="font-bold text-xs text-[var(--ink)] truncate">
                       {config.dossierPdfName || "Dossier_Oficial.pdf"}
                     </p>
-                    <p className="text-[10px] text-[var(--acc)] font-medium">
+                    <p className="text-micro text-[var(--acc)] font-medium">
                       Documento adjunto almacenado
                     </p>
                   </div>
@@ -235,7 +235,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <p className="text-xs font-bold text-[var(--ink)]">
                   Sube aquí el Dossier Oficial (PDF o Word)
                 </p>
-                <p className="text-[11px] text-[var(--ink-2)]">
+                <p className="text-xs text-[var(--ink-2)]">
                   PDF, Word o TXT. Estará listo para el envío automático en
                   correos.
                 </p>
@@ -264,7 +264,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           )}
 
           <div className="space-y-1 pt-1">
-            <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+            <label className="text-xs font-semibold text-[var(--ink-2)]">
               O enlace externo al Dossier (Google Drive, Dropbox, etc.):
             </label>
             <input
@@ -292,7 +292,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               <FileDown className="w-5 h-5" /> Rider Técnico (Biblioteca
               Interna)
             </h3>
-            <span className="text-[10px] font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
+            <span className="text-micro font-bold text-[var(--acc)] bg-[var(--acc)]/10 px-2.5 py-1 rounded-[var(--r-pill)]">
               Solo visible aquí
             </span>
           </div>
@@ -317,7 +317,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       <p className="text-xs font-bold text-[var(--ink)] truncate">
                         {config.riderPdfName || "Archivo subido"}
                       </p>
-                      <p className="text-[10px] text-[var(--ink-2)] truncate mt-0.5">
+                      <p className="text-micro text-[var(--ink-2)] truncate mt-0.5">
                         PDF guardado correctamente
                       </p>
                     </div>
@@ -393,7 +393,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             )}
 
             <div className="pt-2 space-y-1">
-              <label className="text-[11px] font-semibold text-[var(--ink-2)]">
+              <label className="text-xs font-semibold text-[var(--ink-2)]">
                 Rider Técnico (Texto)
               </label>
               <textarea
@@ -416,7 +416,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
                 {/* Monitoreo */}
                 <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                  <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Sistema de Monitoreo
                   </label>
                   <select
@@ -441,13 +441,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                     <option value="in_ear">In-Ears propios (IEM)</option>
                     <option value="mixto">Mixto (In-Ears + Cuñas)</option>
                   </select>
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Evita pedir monitores extra si lleváis IEM.
                   </p>
                 </div>
                 {/* Backline */}
                 <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                  <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Backline (Amplis / Batería)
                   </label>
                   <select
@@ -471,13 +471,13 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       Necesitamos backline de sala
                     </option>
                   </select>
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Crucial para pactar dobles carteles.
                   </p>
                 </div>
                 {/* Microfonía */}
                 <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                  <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Microfonía / DIs
                   </label>
                   <div className="flex gap-1.5 pt-0.5">
@@ -492,7 +492,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-xs font-medium transition-colors ${!config.riderConfig?.microfoniaPropia ? "bg-[var(--acc)]/20 text-[var(--acc)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
                     >
                       De la sala
                     </button>
@@ -507,18 +507,18 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                           },
                         })
                       }
-                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-[11px] font-medium transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
+                      className={`flex-1 py-1.5 px-1 rounded-[var(--r-m)] text-xs font-medium transition-colors ${config.riderConfig?.microfoniaPropia ? "bg-[var(--ok)]/20 text-[var(--ok)] " : "bg-[var(--sunken)] text-[var(--ink-2)] "}`}
                     >
                       Propia
                     </button>
                   </div>
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Informa al técnico de la casa.
                   </p>
                 </div>
                 {/* Tiempo de prueba y canales */}
                 <div className="bg-[var(--sunken)]/80 rounded-[var(--r-m)] p-3 space-y-1.5">
-                  <label className="text-[11px] font-semibold text-[var(--ink-2)] block">
+                  <label className="text-xs font-semibold text-[var(--ink-2)] block">
                     Prueba / Canales Mínimos
                   </label>
                   <div className="flex gap-2">
@@ -557,7 +557,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                       className="w-1/2 bg-[var(--sunken)] rounded-[var(--r-m)] px-2 py-1 text-xs text-[var(--ink)] outline-none focus:ring-1 focus:ring-[var(--ink-3)]"
                     />
                   </div>
-                  <p className="text-[10px] text-[var(--ink-2)]">
+                  <p className="text-micro text-[var(--ink-2)]">
                     Minutos y canales de mesa.
                   </p>
                 </div>

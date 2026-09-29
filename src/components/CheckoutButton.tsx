@@ -76,7 +76,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         type="button"
         onClick={handleCheckout}
         disabled={isLoading}
-        className={`w-full py-3 px-6 rounded-[var(--r-m)] font-medium transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 hover:shadow active:scale-98 disabled:opacity-75 disabled:cursor-wait ${className}`}
+        className={`w-full py-3 px-6 rounded-[var(--r-m)] font-medium transition-ui duration-200 cursor-pointer flex items-center justify-center gap-2 hover:shadow active:scale-[0.97] disabled:opacity-75 disabled:cursor-wait ${className}`}
       >
         {isLoading ? (
           <>

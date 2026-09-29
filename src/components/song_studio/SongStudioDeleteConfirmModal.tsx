@@ -33,7 +33,7 @@ export const SongStudioDeleteConfirmModal: React.FC<SongStudioDeleteConfirmModal
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
             >
               Cancelar
             </button>
@@ -44,7 +44,7 @@ export const SongStudioDeleteConfirmModal: React.FC<SongStudioDeleteConfirmModal
                 onClose();
                 action();
               }}
-              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--alert)] hover:bg-[var(--alert)] transition-all cursor-pointer"
+              className="px-5 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink)] bg-[var(--alert)] hover:bg-[var(--alert)] transition-ui cursor-pointer"
             >
               Sí, Eliminar
             </button>

@@ -98,7 +98,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
       {/* Gmail-Style Sticky Top Actions Toolbar for Bands */}
       <div
         id="bulk-band-action-bar"
-        className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-all animate-slide-up ${"bg-[var(--surface)]/95 text-[var(--ink)] shadow-black/80"}`}
+        className={`sticky top-2 z-30 w-full mb-3 rounded-[var(--r-l)] p-2.5 sm:p-3 transition-ui animate-slide-up ${"bg-[var(--surface)]/95 text-[var(--ink)] shadow-black/80"}`}
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
           {/* Left section: Checkbox toggle, counter badge and quick select */}
@@ -139,7 +139,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                       <button
                         type="button"
                         onClick={onSelectAll}
-                        className="text-[11px] text-[var(--acc)] hover:underline font-sans cursor-pointer font-semibold underline-offset-2"
+                        className="text-xs text-[var(--acc)] hover:underline font-sans cursor-pointer font-semibold underline-offset-2"
                         title={`Seleccionar las ${totalFilteredCount} bandas`}
                       >
                         (Seleccionar las {totalFilteredCount})
@@ -168,7 +168,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
               <button
                 type="button"
                 onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"}`}
+                className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"}`}
                 title="Cambiar estado de relación de las bandas seleccionadas"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -189,7 +189,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                     className={`absolute top-full mt-2 right-0 z-50 w-60 rounded-[var(--r-l)] p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${"bg-[var(--surface)]"}`}
                   >
                     <div
-                      className={`px-2 py-1 text-[10px] font-sans font-bold ${"text-[var(--ink-2)]"}`}
+                      className={`px-2 py-1 text-micro font-sans font-bold ${"text-[var(--ink-2)]"}`}
                     >
                       Mover {selectedCount} bandas a:
                     </div>
@@ -203,7 +203,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                             onBulkStatusChange(opt.status);
                             setIsStatusDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer ${"hover:bg-[var(--sunken)]"} ${opt.color}`}
+                          className={`w-full text-left px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-2 transition-ui cursor-pointer ${"hover:bg-[var(--sunken)]"} ${opt.color}`}
                         >
                           <Icon className="w-3.5 h-3.5 shrink-0" />
                           <span className="truncate">{opt.label}</span>
@@ -219,7 +219,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkGeneratePitch}
-              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--acc)]/40"}`}
+              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/80  hover:bg-[var(--acc)] text-[var(--acc)]/40"}`}
               title="Redactar propuestas de intercambio (Date Swaps) con IA"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -231,7 +231,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={() => onBulkToggleFavorite(true)}
-              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-all cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc)]/70"}`}
+              className={`p-1.5 rounded-[var(--r-m)] text-xs transition-ui cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--acc)]/70"}`}
               title="Marcar bandas como favoritas"
             >
               <Star className="w-4 h-4 fill-[var(--acc)]/30 text-[var(--acc)]" />
@@ -241,7 +241,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={onBulkExportCsv}
-              className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-semibold transition-all flex items-center gap-1 cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
+              className={`px-2.5 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-semibold transition-ui flex items-center gap-1 cursor-pointer ${"bg-[var(--sunken)] hover:bg-[var(--sunken)] text-[var(--ink-2)]"}`}
               title="Exportar bandas seleccionadas a CSV"
             >
               <Download className="w-3.5 h-3.5" />
@@ -252,7 +252,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
             <button
               type="button"
               onClick={() => setIsConfirmDeleteOpen(true)}
-              className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-all cursor-pointer"
+              className="p-1.5 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] text-[var(--ink-2)] rounded-[var(--r-m)] transition-ui cursor-pointer"
               title={`Eliminar ${selectedCount} bandas`}
             >
               <Trash2 className="w-4 h-4 text-[var(--alert)]" />

@@ -234,7 +234,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   const totalActionCount = priorityItems.repliedCount + priorityItems.draftCount;
 
   return (
-    <div className="w-full bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden transition-all bg-[var(--acc)]/10">
+    <div className="w-full bg-[var(--surface)] rounded-[var(--r-l)] overflow-hidden transition-ui bg-[var(--acc)]/10">
       {/* HEADER PRINCIPAL / RADAR DE ACCIÓN */}
       <div className="p-3.5 sm:p-4 bg-[var(--acc)]/15  border-b border-[var(--hair)]/80 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -243,16 +243,16 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-[var(--ink)] font-display flex items-center gap-1.5">
+              <h3 className="text-sm font-bold text-[var(--ink)] font-display flex items-center gap-1.5">
                 Morning Briefing • Radar del Mánager
               </h3>
               {totalActionCount > 0 && (
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] text-[10px] font-black font-mono">
+                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--ink)] text-micro font-bold font-mono">
                   {totalActionCount} urgentes
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-[var(--ink-2)]">
+            <p className="text-xs text-[var(--ink-2)]">
               Respuestas calientes, borradores agénticos y optimización de ruta para no perder dinero en carretera
             </p>
           </div>
@@ -267,7 +267,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 setActiveTab('priorities');
                 toggleExpanded(true);
               }}
-              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'priorities' ? 'bg-[var(--acc)] text-[var(--ink)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -281,7 +281,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 setActiveTab('routing');
                 toggleExpanded(true);
               }}
-              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-[var(--r-m)] text-xs font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'routing' ? 'bg-[var(--acc)] text-[var(--ink)] shadow' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -313,7 +313,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                   <h4 className="text-xs font-bold text-[var(--ink-2)] font-sans">
                     ¡Todo al día! No tienes respuestas pendientes ni borradores por aprobar.
                   </h4>
-                  <p className="text-[11px] text-[var(--ink-2)] max-w-md mx-auto">
+                  <p className="text-xs text-[var(--ink-2)] max-w-md mx-auto">
                     El agente Scout y el Enviador están monitorizando las salas en segundo plano. Explora nuevas oportunidades en el mapa o
                     importa contactos.
                   </p>
@@ -323,17 +323,17 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                   {priorityItems.all.map(({ lead, priorityType, tagLabel, tagColor, isDraft, hasDateConflict }) => (
                     <div
                       key={lead.id}
-                      className="bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] transition-all flex flex-col justify-between space-y-3 group hover:brightness-95"
+                      className="bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] transition-ui flex flex-col justify-between space-y-3 group hover:brightness-95"
                     >
                       <div className="space-y-2">
                         {/* Cabecera del Lead */}
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${tagColor}`}>{tagLabel}</span>
+                              <span className={`text-micro font-bold px-2 py-0.5 rounded-[var(--r-pill)] ${tagColor}`}>{tagLabel}</span>
                               {lead.ultimo_sentimiento_score !== undefined && (
                                 <span
-                                  className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                                  className={`text-micro font-mono font-bold px-1.5 py-0.5 rounded ${
                                     lead.ultimo_sentimiento_score >= 0.4
                                       ? 'text-[var(--ok)] bg-[var(--ok)]/10 '
                                       : lead.ultimo_sentimiento_score <= -0.3
@@ -350,7 +350,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             <h4 className="text-sm font-bold text-[var(--ink)] mt-0.5 group-hover:text-[var(--acc)] transition-colors">
                               {lead.nombre_sala}
                             </h4>
-                            <span className="text-[11px] text-[var(--ink-2)] flex items-center gap-1">
+                            <span className="text-xs text-[var(--ink-2)] flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-[var(--acc)] shrink-0" />
                               {lead.ciudad} • Aforo: {lead.aforo || 'n/d'}
                             </span>
@@ -362,20 +362,20 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           lead.condiciones_economicas_detectadas) && (
                           <div className="flex flex-wrap gap-1.5 pt-1">
                             {lead.fechas_propuestas_sala && lead.fechas_propuestas_sala.length > 0 && (
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
+                              <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)] flex items-center gap-1">
                                 <Clock className="w-2.5 h-2.5" />
                                 {lead.fechas_propuestas_sala.slice(0, 2).join(', ')}
                               </span>
                             )}
                             {lead.condiciones_economicas_detectadas?.cifra && (
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] flex items-center gap-1">
+                              <span className="text-micro font-mono px-2 py-0.5 rounded bg-[var(--ok)]/15 text-[var(--ok)] flex items-center gap-1">
                                 <DollarSign className="w-2.5 h-2.5" />
                                 {lead.condiciones_economicas_detectadas.cifra}
                               </span>
                             )}
                             {hasDateConflict && (
                               <span
-                                className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] flex items-center gap-1"
+                                className="text-micro font-mono px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)] flex items-center gap-1"
                                 title="Posible coincidencia de ruta con bolo confirmado"
                               >
                                 <AlertCircle className="w-2.5 h-2.5 text-[var(--acc)]" />
@@ -386,7 +386,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         )}
 
                         {/* Mensaje / Extracto */}
-                        <div className="bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] text-[11px] text-[var(--ink-2)] line-clamp-2 leading-relaxed">
+                        <div className="bg-[var(--surface)] p-2.5 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] line-clamp-2 leading-relaxed">
                           {lead.ultimo_analisis_resumen ||
                             lead.ultimo_mensaje_recibido ||
                             lead.pitch_generado ||
@@ -396,12 +396,12 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
                         {/* Playbook Táctico Sugerido */}
                         {lead.estrategia_playbook && (
-                          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-[10px] text-[var(--acc)]/90 flex items-center justify-between gap-1">
+                          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/10 text-micro text-[var(--acc)]/90 flex items-center justify-between gap-1">
                             <span className="truncate font-medium">⚡ {lead.estrategia_playbook.titulo}</span>
                             <button
                               type="button"
                               onClick={() => onSelectLead(lead, { tab: 'emails', pitchDraft: lead.estrategia_playbook?.propuesta_rapida })}
-                              className="text-[9px] font-bold bg-[var(--acc)] text-[var(--ink)] px-1.5 py-0.5 rounded shrink-0 hover:bg-[var(--acc)] cursor-pointer"
+                              className="text-micro font-bold bg-[var(--acc)] text-[var(--ink)] px-1.5 py-0.5 rounded shrink-0 hover:bg-[var(--acc)] cursor-pointer"
                               title="Aplicar propuesta rápida"
                             >
                               Aplicar
@@ -415,7 +415,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectLead(lead, { tab: 'copilot' })}
-                          className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer"
                         >
                           <TrendingUp className="w-3 h-3" />
                           <span>Copiloto</span>
@@ -457,7 +457,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 <div className="space-y-3">
                   <div className="p-3 bg-[var(--acc)]/10 rounded-[var(--r-m)] flex items-center justify-between text-xs">
                     <span className="text-[var(--acc)] font-medium">🎯 Oportunidades detectadas vinculadas a tus fechas confirmadas</span>
-                    <span className="text-[10px] text-[var(--ink-2)] font-mono">Ahorro medio en furgoneta: ~180€ / bolo</span>
+                    <span className="text-micro text-[var(--ink-2)] font-mono">Ahorro medio en furgoneta: ~180€ / bolo</span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -465,7 +465,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                       <div key={idx} className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] space-y-3">
                         <div className="flex items-start justify-between">
                           <div>
-                            <span className="text-[10px] font-mono text-[var(--acc)] font-bold block">
+                            <span className="text-micro font-mono text-[var(--acc)] font-bold block">
                               EJE LOGÍSTICO: {opp.corridorName}
                             </span>
                             <h4 className="text-sm font-bold text-[var(--ink)] mt-0.5">
@@ -473,13 +473,13 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                             </h4>
                             <p className="text-xs text-[var(--ink-2)] mt-0.5">{opp.suggestedAction}</p>
                           </div>
-                          <span className="px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ok)] text-[10px] font-mono font-bold shrink-0">
+                          <span className="px-2 py-0.5 rounded bg-[var(--ok)]/20 text-[var(--ok)] text-micro font-mono font-bold shrink-0">
                             {opp.candidateLeads.length} salas compatibles
                           </span>
                         </div>
 
                         <div className="space-y-2 pt-2 border-t border-[var(--hair)]">
-                          <span className="text-[10px] font-mono text-[var(--ink-2)] block">
+                          <span className="text-micro font-mono text-[var(--ink-2)] block">
                             Salas candidatas para el fin de semana:
                           </span>
                           <div className="space-y-1.5">
@@ -492,7 +492,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                                   <span className="text-xs font-bold text-[var(--ink-2)] block">
                                     {candidate.nombre_sala} ({candidate.ciudad})
                                   </span>
-                                  <span className="text-[10px] text-[var(--ink-2)]">
+                                  <span className="text-micro text-[var(--ink-2)]">
                                     Aforo: {candidate.aforo || 'n/d'} pax • Estado: {candidate.estado}
                                   </span>
                                 </div>
@@ -500,7 +500,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleLaunchRoutePitch(candidate, opp.concertCity, opp.concertDateStr)}
-                                  className="px-2.5 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--acc)] text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                                  className="px-2.5 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/40 text-[var(--acc)] text-xs font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0"
                                 >
                                   <Send className="w-3 h-3" />
                                   <span>Pitch de Ruta</span>
@@ -521,14 +521,14 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                       <Compass className="w-5 h-5 text-[var(--acc)] shrink-0" />
                       <div>
                         <h4 className="text-xs font-bold text-[var(--ink-2)] font-sans">Simulador de Clúster de Gira y Corredor</h4>
-                        <p className="text-[11px] text-[var(--ink-2)]">
+                        <p className="text-xs text-[var(--ink-2)]">
                           Elige una ciudad ancla para proyectar un fin de semana doble o triple en ruta:
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-[var(--ink-2)]">Ciudad Ancla:</span>
+                      <span className="text-micro font-mono text-[var(--ink-2)]">Ciudad Ancla:</span>
                       <select
                         value={simulatorCity}
                         onChange={(e) => setSimulatorCity(e.target.value)}
@@ -553,9 +553,9 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] flex flex-col justify-between space-y-2.5 shadow"
                         >
                           <div>
-                            <span className="text-[10px] font-mono text-[var(--acc)] block font-bold">{lead.ciudad}</span>
+                            <span className="text-micro font-mono text-[var(--acc)] block font-bold">{lead.ciudad}</span>
                             <h5 className="text-xs font-bold text-[var(--ink-2)] mt-0.5">{lead.nombre_sala}</h5>
-                            <span className="text-[10px] text-[var(--ink-2)] block">
+                            <span className="text-micro text-[var(--ink-2)] block">
                               Aforo: {lead.aforo || 'n/d'} pax • {lead.tipo}
                             </span>
                           </div>
@@ -563,7 +563,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                           <button
                             type="button"
                             onClick={() => handleLaunchRoutePitch(lead, simulatorCity, 'el próximo mes')}
-                            className="w-full py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center justify-center gap-1 transition-all cursor-pointer"
+                            className="w-full py-1.5 rounded-[var(--r-m)] bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-xs font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer"
                           >
                             <Send className="w-3 h-3" />
                             <span>Proponer Fecha Doble</span>

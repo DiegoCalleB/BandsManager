@@ -115,7 +115,7 @@ export function ShareModal({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 onClick={handleWhatsApp}
-                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-semibold text-xs transition-all active:scale-95"
+                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-semibold text-xs transition-ui active:scale-[0.97]"
               >
                 <MessageSquare className="w-4 h-4 fill-[var(--surface)]/20" />
                 <span>WhatsApp</span>
@@ -123,7 +123,7 @@ export function ShareModal({
 
               <button
                 onClick={handleWebShare}
-                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-semibold text-xs transition-all active:scale-95"
+                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)] hover:bg-[var(--acc)] text-[var(--ink)] font-semibold text-xs transition-ui active:scale-[0.97]"
               >
                 <Share2 className="w-4 h-4" />
                 <span>Otras Apps</span>
@@ -131,7 +131,7 @@ export function ShareModal({
 
               <button
                 onClick={handleCopy}
-                className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-all active:scale-95 ${
+                className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-ui active:scale-[0.97] ${
                   copied ? 'bg-[var(--accent-alt)] text-[var(--ink)]' : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]'
                 }`}
               >
@@ -141,7 +141,7 @@ export function ShareModal({
 
               <button
                 onClick={handleEmail}
-                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-semibold text-xs transition-all active:scale-95"
+                className="flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] font-semibold text-xs transition-ui active:scale-[0.97]"
               >
                 <Mail className="w-4 h-4" />
                 <span>Email</span>
@@ -155,7 +155,7 @@ export function ShareModal({
                   <Phone className="w-3.5 h-3.5 text-[var(--ok)]" />
                   Número de WhatsApp (Opcional)
                 </span>
-                <span className="text-[10px] text-[var(--ink-2)]">Déjalo en blanco para elegir contacto en la app</span>
+                <span className="text-micro text-[var(--ink-2)]">Déjalo en blanco para elegir contacto en la app</span>
               </label>
               <input
                 type="text"
@@ -196,7 +196,7 @@ export function ShareModal({
 
           {/* Footer */}
           <div className="p-4 bg-[var(--surface)]/[0.02] flex items-center justify-between">
-            <span className="text-[11px] text-[var(--ink-2)] flex items-center gap-1">
+            <span className="text-xs text-[var(--ink-2)] flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-[var(--acc)]" />
               Listos para WhatsApp, Telegram, Signal o Email
             </span>

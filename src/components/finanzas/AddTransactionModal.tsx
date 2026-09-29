@@ -79,7 +79,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 <button
                   type="button"
                   onClick={() => setTipo('ingreso')}
-                  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
+                  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-ui ${
                     tipo === 'ingreso'
                       ? 'bg-[var(--ok)]/20 text-[var(--ok)]'
                       : 'bg-[var(--surface)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -90,7 +90,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 <button
                   type="button"
                   onClick={() => setTipo('gasto')}
-                  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-all ${
+                  className={`py-2 px-4 rounded-[var(--r-m)] text-sm font-semibold transition-ui ${
                     tipo === 'gasto'
                       ? 'bg-[var(--alert)]/20 text-[var(--alert)]'
                       : 'bg-[var(--surface)]/40 text-[var(--ink-2)] hover:bg-[var(--surface)]'
@@ -162,7 +162,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 <button
                   type="button"
                   onClick={() => setEstado('pagado')}
-                  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
+                  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-ui ${
                     estado === 'pagado' ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--surface)]/40 text-[var(--ink-2)]'
                   }`}
                 >
@@ -171,7 +171,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
                 <button
                   type="button"
                   onClick={() => setEstado('pendiente')}
-                  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-all ${
+                  className={`py-2 px-3 rounded-[var(--r-m)] text-xs font-semibold transition-ui ${
                     estado === 'pendiente' ? 'bg-[var(--acc)]/20 text-[var(--acc)]' : 'bg-[var(--surface)]/40 text-[var(--ink-2)]'
                   }`}
                 >
@@ -184,7 +184,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-all disabled:opacity-50"
+                className="w-full py-3 px-4 rounded-[var(--r-m)] font-bold bg-[var(--tentative)]/80 hover:bg-[var(--tentative)] text-[var(--ink)] transition-ui disabled:opacity-50"
               >
                 {isSubmitting ? 'Guardando...' : 'Guardar Transacción'}
               </button>

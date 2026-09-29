@@ -173,7 +173,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                   <button
                     key={tpl.id}
                     onClick={() => setSelectedTemplate(tpl.id)}
-                    className={`p-3 rounded-[var(--r-m)] text-left transition-all flex flex-col justify-between gap-2 cursor-pointer ${
+                    className={`p-3 rounded-[var(--r-m)] text-left transition-ui flex flex-col justify-between gap-2 cursor-pointer ${
                       isSelected
                         ? "bg-[var(--acc)]/20  text-[var(--acc)]/70"
                         : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)] hover:bg-[var(--surface)]"
@@ -182,7 +182,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
                     <div className="flex items-center justify-between">
                       <IconComp className="w-4 h-4 shrink-0 text-[var(--acc)]" />
                       <span
-                        className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded ${tpl.badgeColor}`}
+                        className={`text-micro font-sans font-bold px-1.5 py-0.5 rounded ${tpl.badgeColor}`}
                       >
                         {tpl.type}
                       </span>
@@ -199,7 +199,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-4">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3">
                 <div>
-                  <span className="text-[10px] font-sans text-[var(--acc)] font-bold">
+                  <span className="text-micro font-sans text-[var(--acc)] font-bold">
                     {currentTpl.type}
                   </span>
                   <h4 className="text-sm font-bold font-display text-[var(--ink)]">
@@ -232,7 +232,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
               {/* Subject preview */}
               <div className="space-y-1">
-                <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                <span className="text-micro font-sans text-[var(--ink-2)]">
                   Asunto del Correo:
                 </span>
                 <div className="p-2 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-sans font-bold text-[var(--acc)]/70">
@@ -242,7 +242,7 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
               {/* Body preview */}
               <div className="space-y-1">
-                <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                <span className="text-micro font-sans text-[var(--ink-2)]">
                   Cuerpo del Mensaje:
                 </span>
                 <pre className="p-4 rounded-[var(--r-s)] bg-[var(--surface)]/90 text-xs font-sans text-[var(--ink-2)] whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto">

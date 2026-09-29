@@ -145,7 +145,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
           )}
 
           <div className="flex flex-col gap-2.5">
-            <label className="w-full p-3 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer">
+            <label className="w-full p-3 bg-[var(--sunken)] hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center justify-between transition-ui cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--surface)] text-[var(--acc)] rounded-[var(--r-s)]">
                   {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
@@ -154,7 +154,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                   <span className="block font-bold text-xs text-[var(--ink)]">
                     {isUploading ? 'Subiendo...' : 'Subir desde dispositivo'}
                   </span>
-                  <span className="block text-[11px] text-[var(--ink-2)] font-sans">Formatos JPG, PNG, WEBP o SVG</span>
+                  <span className="block text-xs text-[var(--ink-2)] font-sans">Formatos JPG, PNG, WEBP o SVG</span>
                 </div>
               </div>
               <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={isUploading || isSearching} />
@@ -164,7 +164,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
               type="button"
               onClick={handleAutoSearchLogo}
               disabled={isSearching || isUploading}
-              className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer disabled:opacity-50"
+              className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 rounded-[var(--r-m)] flex items-center justify-between transition-ui cursor-pointer disabled:opacity-50"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)]">
@@ -176,7 +176,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
                 </div>
                 <div className="text-left">
                   <span className="block font-bold text-xs text-[var(--acc)]/70">Buscar Logo con IA</span>
-                  <span className="block text-[11px] text-[var(--acc)]/80 font-sans">Encuentra fotos o favicons oficiales</span>
+                  <span className="block text-xs text-[var(--acc)]/80 font-sans">Encuentra fotos o favicons oficiales</span>
                 </div>
               </div>
             </button>
@@ -185,7 +185,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
               <button
                 type="button"
                 onClick={() => setShowUrlInput(true)}
-                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
+                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-ui"
               >
                 <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Pegar URL directa de imagen</span>
@@ -213,7 +213,7 @@ export const ChangeBandImageModal: React.FC<ChangeBandImageModalProps> = ({ band
               <button
                 type="button"
                 onClick={handleRemoveImage}
-                className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer"
+                className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert-soft)] rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-ui cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 text-[var(--alert)]" />
                 <span>Eliminar imagen actual</span>

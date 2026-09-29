@@ -113,7 +113,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
   const progressPct = duration > 0 ? Math.min(100, (simulatedTime / duration) * 100) : 0;
 
   return (
-    <div className={`w-full max-w-[340px] mx-auto rounded-[44px] p-3.5 border-4 relative select-none transition-all bg-[var(--sunken)] shadow-black/90 ring-1 ring-[var(--ink)]/10`}>
+    <div className={`w-full max-w-[340px] mx-auto rounded-[44px] p-3.5 border-4 relative select-none transition-ui bg-[var(--sunken)] shadow-black/90 ring-1 ring-[var(--ink)]/10`}>
       
       {/* Sleek Top Control Strip: Audio / SafeZone / Fullscreen */}
       <div className="flex items-center justify-between px-2 pb-2.5">
@@ -129,7 +129,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             id="btn-toggle-safezone"
             type="button"
             onClick={() => setShowSafeZone(!showSafeZone)}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-ui cursor-pointer ${
               showSafeZone 
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' 
                 : 'bg-[var(--sunken)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] '
@@ -143,7 +143,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             id="btn-toggle-sound"
             type="button"
             onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-ui cursor-pointer ${
               isPreviewMuted
                 ? 'bg-[var(--sunken)]/90 text-[var(--alert)] hover:bg-[var(--sunken)] bg-[var(--alert)]/10'
                 : 'bg-[var(--ok)]/20 text-[var(--ok)] '
@@ -157,7 +157,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             id="btn-maximize-preview"
             type="button"
             onClick={() => setIsExpandedPreview(true)}
-            className="w-7 h-7 rounded-full bg-[var(--sunken)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] flex items-center justify-center transition-all cursor-pointer"
+            className="w-7 h-7 rounded-full bg-[var(--sunken)]/90 text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)] flex items-center justify-center transition-ui cursor-pointer"
             title="Ver a pantalla completa"
           >
             <Maximize2 className="w-3.5 h-3.5" />
@@ -167,14 +167,14 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
       {/* Encuadre Rápido (16:9 Completo vs Izquierda/Centro/Derecha) */}
       {activeTab === 'analyzer' && ((inputType === 'youtube' && getYouTubeId(youtubeUrl)) || (inputType === 'file' && localVideoUrl)) && (
-        <div className="mb-2 px-1 flex items-center justify-between bg-[var(--sunken)]/80 p-1 rounded-xl text-[8px] font-mono">
+        <div className="mb-2 px-1 flex items-center justify-between bg-[var(--sunken)]/80 p-1 rounded-xl text-micro font-mono">
           <span className="text-[var(--ink-2)] pl-1">Encuadre:</span>
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setPreviewFraming('fit')}
-              className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
-                previewFraming === 'fit' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+              className={`px-2 py-0.5 rounded-lg transition-ui cursor-pointer ${
+                previewFraming === 'fit' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Muestra el vídeo 16:9 completo sin recortar nada"
             >
@@ -183,8 +183,8 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('left')}
-              className={`px-1.5 py-0.5 rounded-lg transition-all cursor-pointer ${
-                previewFraming === 'left' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+              className={`px-1.5 py-0.5 rounded-lg transition-ui cursor-pointer ${
+                previewFraming === 'left' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Enfoca el tercio izquierdo (Músico/Cantante)"
             >
@@ -193,8 +193,8 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('center')}
-              className={`px-1.5 py-0.5 rounded-lg transition-all cursor-pointer ${
-                previewFraming === 'center' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+              className={`px-1.5 py-0.5 rounded-lg transition-ui cursor-pointer ${
+                previewFraming === 'center' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Enfoca el centro del plano"
             >
@@ -203,8 +203,8 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <button
               type="button"
               onClick={() => setPreviewFraming('right')}
-              className={`px-1.5 py-0.5 rounded-lg transition-all cursor-pointer ${
-                previewFraming === 'right' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
+              className={`px-1.5 py-0.5 rounded-lg transition-ui cursor-pointer ${
+                previewFraming === 'right' ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
               }`}
               title="Enfoca el tercio derecho"
             >
@@ -281,7 +281,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                   <iframe
                     key={`${ytId}-${ytStart}-${ytEnd}-${isPreviewMuted ? 'muted' : 'unmuted'}-${ytLoopCount}-${previewFraming}`}
                     src={`https://www.youtube.com/embed/${ytId}?start=${ytStart}&end=${ytEnd}&autoplay=1&mute=${isPreviewMuted ? 1 : 0}&controls=0&modestbranding=1&loop=1&playlist=${ytId}&showinfo=0&rel=0&iv_load_policy=3`}
-                    className={`absolute w-[280%] h-full pointer-events-none opacity-95 transition-all duration-500 ease-out ${
+                    className={`absolute w-[280%] h-full pointer-events-none opacity-95 transition-ui duration-300 ease-out ${
                       previewFraming === 'left' ? 'left-0' : previewFraming === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'
                     }`}
                     style={{ border: 0 }}
@@ -304,7 +304,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               muted={isPreviewMuted}
               loop
               playsInline
-              className={`w-full h-full ${previewFraming === 'fit' ? 'object-contain' : 'object-cover'} transition-all duration-300`}
+              className={`w-full h-full ${previewFraming === 'fit' ? 'object-contain' : 'object-cover'} transition-ui duration-300`}
               onTimeUpdate={(e) => {
                 const video = e.currentTarget;
                 const { start: fStart, end: fEnd } = parseRangeTimes(phoneDuration);
@@ -331,11 +331,11 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <div className="w-14 h-14 rounded-full bg-[var(--sunken)]/80 flex items-center justify-center text-[var(--acc-ink)] mb-3">
               <Music className="w-6 h-6" />
             </div>
-            <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] text-center">
+            <span className="text-micro font-mono font-bold text-[var(--ink-2)] text-center">
               {activeTab === 'analyzer' && highlights.length > 0 ? 'Clip Listo para Previsualizar' : 'Band Clip Studio'}
             </span>
             {phoneDuration && (
-              <span className="text-[9px] font-mono mt-1 px-2 py-0.5 rounded-full bg-[var(--ink)]/5 text-[var(--ink-2)]">
+              <span className="text-micro font-mono mt-1 px-2 py-0.5 rounded-full bg-[var(--ink)]/5 text-[var(--ink-2)]">
                 {phoneDuration}
               </span>
             )}
@@ -345,13 +345,13 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         {/* Top Header: Authentic Platform Navigation */}
         <div className="flex justify-between items-center z-20 px-3.5 pt-3">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-display font-black text-[var(--ink)] ">
+            <span className="text-xs font-display font-bold text-[var(--ink)] ">
               {selectedPlatform === 'TikTok' ? 'Para ti' : 'Reels'}
             </span>
           </div>
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[var(--scrim)]/40 ">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--alert)]" />
-            <span className="text-[7.5px] font-mono text-[var(--ink-2)] font-semibold ">PREVIEW</span>
+            <span className="text-micro font-mono text-[var(--ink-2)] font-semibold ">PREVIEW</span>
           </div>
         </div>
 
@@ -362,7 +362,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           {highlights[selectedHighlightIndex]?.hookText && (
             <div className="w-full max-w-[260px] animate-in fade-in zoom-in-95 duration-200">
               <div className="bg-[var(--sunken)]/90 px-3 py-1.5 rounded-xl text-center bg-[var(--acc)]/10">
-                <span className="text-[9.5px] font-display font-black text-[var(--acc-ink)] leading-snug block ">
+                <span className="text-micro font-display font-bold text-[var(--acc-ink)] leading-snug block ">
                   {highlights[selectedHighlightIndex].hookText}
                 </span>
               </div>
@@ -371,7 +371,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
           {/* Spotify Pill Sticker */}
           {showSpotifyBadge && (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--scrim)]/85 text-[var(--ok)] text-[7.5px] font-mono font-bold bg-[var(--ok)]/10">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--scrim)]/85 text-[var(--ok)] text-micro font-mono font-bold bg-[var(--ok)]/10">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] animate-ping" />
               <span className="truncate max-w-[180px]">🎧 Escucha · {videoMeta?.title || nombreBanda}</span>
             </div>
@@ -379,7 +379,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
           {/* Tour Date / Ticket Sticker */}
           {showTourSticker && tourStickerText && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[var(--ink)] text-[8px] font-mono font-black ">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[var(--ink)] text-micro font-mono font-bold ">
               <span>🎟️ {tourStickerText}</span>
             </div>
           )}
@@ -391,7 +391,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             {(() => {
               const activeStyleObj = SUBTITLE_STYLES.find(s => s.id === activeSubtitleStyle) || SUBTITLE_STYLES[0];
               return (
-                <span className={`inline-block text-[11px] max-w-[90%] mx-auto leading-relaxed ${activeStyleObj.fontClass} ${activeStyleObj.colorClass} ${activeStyleObj.bgClass}`}>
+                <span className={`inline-block text-xs max-w-[90%] mx-auto leading-relaxed ${activeStyleObj.fontClass} ${activeStyleObj.colorClass} ${activeStyleObj.bgClass}`}>
                   {currentSubtitleText}
                 </span>
               );
@@ -403,19 +403,19 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         {showSafeZone && (
           <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-3 border-2 border-dashed bg-[var(--acc)]/5">
             <div className="bg-[var(--alert)]/20 p-1 rounded text-center">
-              <span className="text-[7px] font-mono text-[var(--alert)] font-bold">Zona Header (Historias / Filtros)</span>
+              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona Header (Historias / Filtros)</span>
             </div>
             <div className="flex justify-between items-center my-auto">
               <div className="p-1.5 border-dashed bg-[var(--ok)]/10 rounded max-w-[70%]">
-                <span className="text-[7.5px] font-mono text-[var(--ok)] font-bold block">✨ SAFE ZONE REELS</span>
-                <span className="text-[6.5px] font-sans text-[var(--ok)]/80">Área libre de botones y texto nativo</span>
+                <span className="text-micro font-mono text-[var(--ok)] font-bold block">✨ SAFE ZONE REELS</span>
+                <span className="text-micro font-sans text-[var(--ok)]/80">Área libre de botones y texto nativo</span>
               </div>
               <div className="bg-[var(--alert)]/20 px-1.5 py-4 rounded text-center">
-                <span className="text-[6.5px] font-mono text-[var(--alert)] font-bold block">Botones</span>
+                <span className="text-micro font-mono text-[var(--alert)] font-bold block">Botones</span>
               </div>
             </div>
             <div className="bg-[var(--alert)]/20 p-1 rounded text-center">
-              <span className="text-[7px] font-mono text-[var(--alert)] font-bold">Zona Inferior (Pie de foto & Audio)</span>
+              <span className="text-micro font-mono text-[var(--alert)] font-bold">Zona Inferior (Pie de foto & Audio)</span>
             </div>
           </div>
         )}
@@ -425,37 +425,37 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           {/* Avatar with Follow Button */}
           <div className="relative mb-1">
             <div className="w-8 h-8 rounded-full p-0.5 flex items-center justify-center ">
-              <span className="w-full h-full rounded-full bg-[var(--sunken)] flex items-center justify-center text-[9px] font-bold text-[var(--ink)] ">
+              <span className="w-full h-full rounded-full bg-[var(--sunken)] flex items-center justify-center text-micro font-bold text-[var(--ink)] ">
                 {nombreBanda.charAt(0)}
               </span>
             </div>
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--alert)] rounded-full flex items-center justify-center text-[var(--on-alert)] text-[9px] font-black leading-none ">
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--alert)] rounded-full flex items-center justify-center text-[var(--on-alert)] text-micro font-bold leading-none ">
               +
             </div>
           </div>
 
           {/* Like */}
           <div className="flex flex-col items-center gap-0.5 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] transition-transform">
               <Heart className="w-4 h-4 fill-[var(--ink)]/10" />
             </div>
-            <span className="text-[8px] font-mono text-[var(--ink)] font-bold ">1.4k</span>
+            <span className="text-micro font-mono text-[var(--ink)] font-bold ">1.4k</span>
           </div>
 
           {/* Comment */}
           <div className="flex flex-col items-center gap-0.5 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] transition-transform">
               <MessageCircle className="w-4 h-4" />
             </div>
-            <span className="text-[8px] font-mono text-[var(--ink)] font-bold ">62</span>
+            <span className="text-micro font-mono text-[var(--ink)] font-bold ">62</span>
           </div>
 
           {/* Share */}
           <div className="flex flex-col items-center gap-0.5 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] transition-transform">
               <Share2 className="w-4 h-4" />
             </div>
-            <span className="text-[8px] font-mono text-[var(--ink)] font-bold ">89</span>
+            <span className="text-micro font-mono text-[var(--ink)] font-bold ">89</span>
           </div>
 
           {/* Rotating Audio Vinyl */}
@@ -468,21 +468,21 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         <div className="z-20 px-3.5 pb-3.5 pr-14 space-y-1.5 mt-auto">
           {/* Profile Handle & Follow */}
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-[var(--ink)] truncate max-w-[120px] ">
+            <span className="text-micro font-bold text-[var(--ink)] truncate max-w-[120px] ">
               @{instagramHandle || nombreBanda.toLowerCase().replace(/\s+/g, '')}
             </span>
-            <span className="px-1.5 py-0.5 rounded bg-[var(--ink)]/20 text-[var(--ink)] text-[7.5px] font-semibold flex items-center gap-0.5">
+            <span className="px-1.5 py-0.5 rounded bg-[var(--ink)]/20 text-[var(--ink)] text-micro font-semibold flex items-center gap-0.5">
               <UserPlus className="w-2.5 h-2.5" /> Seguir
             </span>
           </div>
 
           {/* Post Caption (Clean, 2 lines max, legible) */}
-          <p className="text-[9px] text-[var(--ink)] font-sans leading-snug line-clamp-2 ">
+          <p className="text-micro text-[var(--ink)] font-sans leading-snug line-clamp-2 ">
             {phoneText || phoneTitle || `Nuevo avance en directo de ${nombreBanda} 🔥🎸`}
           </p>
 
           {/* Audio Track Tag */}
-          <div className="flex items-center gap-1.5 text-[8px] font-mono text-[var(--ink-2)] pt-0.5">
+          <div className="flex items-center gap-1.5 text-micro font-mono text-[var(--ink-2)] pt-0.5">
             <Music className="w-2.5 h-2.5 text-[var(--acc-ink)] shrink-0" />
             <span className="truncate max-w-[160px] ">
               {videoMeta?.title ? `${videoMeta.title}` : `Audio original · ${nombreBanda}`}
@@ -493,7 +493,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
         {/* Ultra-thin Scrubber Progress Bar at Bottom Edge */}
         <div className="absolute bottom-0 inset-x-0 h-1 bg-[var(--sunken)]/80 z-30">
           <div 
-            className={`h-full transition-all duration-300 ${
+            className={`h-full transition-ui duration-300 ${
               isSeamlessLoop
                 ? ''
                 : 'bg-[var(--acc)]'
@@ -507,7 +507,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
       {/* ⏱️ Technical Timing Card (Cleanly Placed Below the Smartphone Screen) */}
       {activeTab === 'analyzer' && currentHighlight && (
         <div className="mt-3 p-2.5 rounded-2xl bg-[var(--surface)] space-y-1.5">
-          <div className="flex justify-between items-center text-[8px] font-mono font-bold">
+          <div className="flex justify-between items-center text-micro font-mono font-bold">
             <span className={isSeamlessLoop ? 'text-[var(--alert)] flex items-center gap-1' : 'text-[var(--acc-ink)]'}>
               {isSeamlessLoop ? '🔁 120% SEAMLESS LOOP' : '⏱️ RECORTE SELECCIONADO'}
             </span>
@@ -515,7 +515,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               {formatTime(start + simulatedTime)} / {formatTime(end)}
             </span>
           </div>
-          <div className="flex justify-between text-[7px] font-mono text-[var(--ink-2)] pt-0.5 border-t border-[var(--hair)]">
+          <div className="flex justify-between text-micro font-mono text-[var(--ink-2)] pt-0.5 border-t border-[var(--hair)]">
             <span>Inicio: <strong className="text-[var(--ink-2)]">{formatTime(start)}</strong></span>
             <span>Duración: <strong className="text-[var(--ink-2)]">{duration}s</strong></span>
             <span>Fin: <strong className="text-[var(--ink-2)]">{formatTime(end)}</strong></span>
@@ -525,12 +525,12 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
       {/* Direct Channel Dispatch Status */}
       <div className="flex justify-between items-center pt-3 mt-2 border-t border-[var(--hair)] px-1">
-        <span className="text-[9px] font-mono text-[var(--ink-2)]">Canal de Emisión</span>
+        <span className="text-micro font-mono text-[var(--ink-2)]">Canal de Emisión</span>
         <button
           id="btn-reels-upload"
           onClick={handleSimulateUpload}
           disabled={uploadProgress !== null}
-          className={`text-[9px] font-mono hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40 bg-transparent border-0 text-[var(--acc-ink)]`}
+          className={`text-micro font-mono hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-40 bg-transparent border-0 text-[var(--acc-ink)]`}
         >
           <Upload className="w-3 h-3" /> Subir Directo
         </button>
@@ -538,13 +538,13 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
       {uploadProgress !== null && (
         <div className="space-y-1 mt-2">
-          <div className="flex justify-between items-center text-[8px] font-mono text-[var(--ink-2)]">
+          <div className="flex justify-between items-center text-micro font-mono text-[var(--ink-2)]">
             <span>Transmitiendo a APIs de Redes Sociales...</span>
             <span>{uploadProgress}%</span>
           </div>
           <div className="w-full h-1.5 rounded-full overflow-hidden bg-[var(--surface)] ">
             <div 
-              className={`h-full transition-all duration-200 bg-[var(--acc)]`} 
+              className={`h-full transition-ui duration-200 bg-[var(--acc)]`} 
               style={{ width: `${uploadProgress}%` }}
             />
           </div>
@@ -552,7 +552,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
       )}
 
       {uploadProgress === null && (
-        <div className="flex items-center gap-1.5 text-[9px] font-mono text-[var(--ink-2)] justify-end mt-1.5 px-1">
+        <div className="flex items-center gap-1.5 text-micro font-mono text-[var(--ink-2)] justify-end mt-1.5 px-1">
           <CheckCircle2 className="w-3 h-3 text-[var(--ink-2)]" />
           <span>Todo sincronizado</span>
         </div>

@@ -92,7 +92,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
             <Globe className="w-5 h-5 text-[var(--acc)]" />
           </div>
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-[10px] font-sans font-bold">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/60 text-[var(--acc)]/70 text-micro font-sans font-bold">
               <Sparkles className="w-3 h-3 text-[var(--acc)]" />
               <span>Primer Paso Obligatorio / First Step</span>
             </div>
@@ -138,7 +138,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                   handleSelectLanguage(lang.code, lang.label);
                 }
               }}
-              className={`relative p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between gap-3 ${
+              className={`relative p-4 rounded-[var(--r-l)] text-left transition-ui cursor-pointer flex flex-col justify-between gap-3 ${
                 isSelected
                   ? "bg-[var(--acc)]/20  ring-2 ring-[var(--acc)]/30 scale-[1.01]"
                   : "bg-[var(--surface)]/90 hover:bg-[var(--surface)] "
@@ -162,19 +162,19 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                         {lang.label}
                       </h4>
                       {isSelected && (
-                        <span className="px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)] text-[9px] font-sans font-extrabold">
+                        <span className="px-1.5 py-0.5 rounded bg-[var(--acc)]/60 text-[var(--on-acc)] text-micro font-sans font-extrabold">
                           Activo
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[var(--ink-2)] font-sans">
+                    <p className="text-xs text-[var(--ink-2)] font-sans">
                       {details.nativeName}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center transition-all ${
+                  className={`w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center transition-ui ${
                     isSelected
                       ? "bg-[var(--acc)]/60 text-[var(--on-acc)]"
                       : "ring-1 ring-[var(--hair)] bg-[var(--surface)]/80 text-transparent"
@@ -189,7 +189,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
                 <p className="text-xs text-[var(--ink-2)] leading-snug">
                   {details.description}
                 </p>
-                <div className="flex items-center gap-1.5 text-[11px] text-[var(--acc)]/70 font-sans">
+                <div className="flex items-center gap-1.5 text-xs text-[var(--acc)]/70 font-sans">
                   <Sparkles className="w-3 h-3 text-[var(--acc)] shrink-0" />
                   <span className="truncate">{details.aiNote}</span>
                 </div>
@@ -209,7 +209,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
             <h5 className="text-xs font-bold text-[var(--ink-2)]">
               Panel & Menús
             </h5>
-            <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Todos los módulos, botones y tablas cambian de inmediato en tiempo
               real.
             </p>
@@ -224,7 +224,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
             <h5 className="text-xs font-bold text-[var(--ink-2)]">
               Agentes de IA
             </h5>
-            <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Redacción de propuestas y respuestas a salas afinadas según el
               idioma seleccionado.
             </p>
@@ -239,7 +239,7 @@ export const StepLanguage: React.FC<StepLanguageProps> = ({
             <h5 className="text-xs font-bold text-[var(--ink-2)]">
               Dossier EPK
             </h5>
-            <p className="text-[11px] text-[var(--ink-2)] mt-0.5 leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] mt-0.5 leading-relaxed">
               Biografía oficial y fichas técnicas generadas con este idioma por
               defecto.
             </p>

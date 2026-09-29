@@ -332,9 +332,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
     }
   };
 
-  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-[11px] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 bg-[var(--surface)] text-[var(--ink)]`;
+  const inputClass = `w-full p-2 rounded-[var(--r-s)] font-sans text-xs focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 bg-[var(--surface)] text-[var(--ink)]`;
   const labelClass =
-    "text-[9px] font-sans font-bold text-[var(--ink-2)] block mb-1";
+    "text-micro font-sans font-bold text-[var(--ink-2)] block mb-1";
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -352,7 +352,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 <h3 className="text-sm font-bold font-display text-[var(--acc)]">
                   Análisis de ADN de Expresión y Tono: {band.nombre_banda}
                 </h3>
-                <p className="text-[10px] text-[var(--ink-2)] font-sans">
+                <p className="text-micro text-[var(--ink-2)] font-sans">
                   Rastreo IA Grounding de redes sociales y notas de prensa
                   oficiales
                 </p>
@@ -361,12 +361,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   !isEditing &&
                   isSaved !== undefined &&
                   (isSaved ? (
-                    <p className="text-[10px] text-[var(--ok)] font-sans flex items-center gap-1 mt-0.5">
+                    <p className="text-micro text-[var(--ok)] font-sans flex items-center gap-1 mt-0.5">
                       <Check className="w-3 h-3" /> Guardado: la IA usará este
                       tono en tus próximos Reels, Shorts y TikToks
                     </p>
                   ) : (
-                    <p className="text-[10px] text-[var(--acc)] font-sans mt-0.5">
+                    <p className="text-micro text-[var(--acc)] font-sans mt-0.5">
                       ⚠️ No se pudo guardar de forma permanente. Vuelve a
                       analizarlo antes de usarlo en tus próximos posts.
                     </p>
@@ -406,7 +406,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveModalTab("tone")}
-              className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "tone"
                   ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -418,7 +418,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             <button
               type="button"
               onClick={() => setActiveModalTab("threads")}
-              className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              className={`flex-1 py-2 px-3 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center justify-center gap-2 cursor-pointer ${
                 activeModalTab === "threads"
                   ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -436,7 +436,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   <Brain className="w-4 h-4" /> Aprendizaje Few-Shot con
                   Conversaciones Reales
                 </div>
-                <p className="text-[11px] text-[var(--acc)]/90 leading-relaxed">
+                <p className="text-xs text-[var(--acc)]/90 leading-relaxed">
                   Pega aquí correos y conversaciones reales (tanto iniciales
                   como respuestas a negociaciones) que representen exactamente
                   cómo habla tu banda. La IA usará estos ejemplos reales para
@@ -463,7 +463,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       onClick={() =>
                         setSelectedCategoryThread(cat.id as TemplateCategory)
                       }
-                      className={`py-1 px-2.5 rounded-[var(--r-m)] text-[10px] font-bold transition-all cursor-pointer ${
+                      className={`py-1 px-2.5 rounded-[var(--r-m)] text-micro font-bold transition-ui cursor-pointer ${
                         isActive
                           ? "bg-[var(--acc)] text-[var(--ink)] font-extrabold"
                           : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/5"
@@ -493,7 +493,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <h4 className="text-xs font-bold font-mono text-[var(--acc)]">
                       Scrapeando redes sociales de {band.nombre_banda}...
                     </h4>
-                    <p className="text-[10px] text-[var(--ink-2)] font-mono max-w-md">
+                    <p className="text-micro text-[var(--ink-2)] font-mono max-w-md">
                       Analizando publicaciones de Instagram, TikTok, estilo de
                       comunicación, muletillas y tono de voz con Gemini Search
                       Grounding...
@@ -672,7 +672,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </div>
 
                   {saveError && (
-                    <p className="text-[10px] font-mono text-[var(--alert)]">
+                    <p className="text-micro font-mono text-[var(--alert)]">
                       {saveError}
                     </p>
                   )}
@@ -681,7 +681,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <button
                       onClick={handleSaveEdit}
                       disabled={isSaving}
-                      className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-[10px] flex items-center justify-center gap-2 cursor-pointer transition-all"
+                      className="flex-1 py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] disabled:opacity-50 text-[var(--ink)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
                     >
                       <Save className="w-3.5 h-3.5" />{" "}
                       {isSaving ? "Guardando..." : "Guardar cambios"}
@@ -689,7 +689,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <button
                       onClick={handleCancelEdit}
                       disabled={isSaving}
-                      className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-[10px] flex items-center justify-center gap-2 cursor-pointer transition-all"
+                      className="py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] disabled:opacity-50 text-[var(--ink-2)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer transition-ui"
                     >
                       <XCircle className="w-3.5 h-3.5" /> Cancelar
                     </button>
@@ -698,11 +698,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               ) : toneData ? (
                 <div className="space-y-4">
                   {/* 1. Main Tone Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[10px] font-mono">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-micro font-mono">
                     <div
                       className={`p-3 rounded-[var(--r-m)] ${"bg-[var(--ink-3)] "}`}
                     >
-                      <span className="text-[var(--ink-2)] block text-[9px]">
+                      <span className="text-[var(--ink-2)] block text-micro">
                         Tono General
                       </span>
                       <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
@@ -713,7 +713,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div
                       className={`p-3 rounded-[var(--r-m)] ${"bg-[var(--ink-3)] "}`}
                     >
-                      <span className="text-[var(--ink-2)] block text-[9px]">
+                      <span className="text-[var(--ink-2)] block text-micro">
                         Tratamiento
                       </span>
                       <span className="font-bold text-[var(--acc)] block text-xs mt-0.5">
@@ -724,7 +724,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div
                       className={`p-3 rounded-[var(--r-m)] ${"bg-[var(--ink-3)] "}`}
                     >
-                      <span className="text-[var(--ink-2)] block text-[9px]">
+                      <span className="text-[var(--ink-2)] block text-micro">
                         Nivel de Energía
                       </span>
                       <span className="font-bold text-[var(--ok)] block text-xs mt-0.5">
@@ -738,14 +738,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--ink-3)] "}`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                      <span className="text-micro font-mono font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                         <MessageSquare className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                         Vocabulario Clave & Muletillas
                       </span>
                       {toneData.emojis_frecuentes &&
                         toneData.emojis_frecuentes.length > 0 && (
                           <div className="flex items-center gap-1 text-sm">
-                            <span className="text-[9px] font-mono text-[var(--ink-2)] mr-1">
+                            <span className="text-micro font-mono text-[var(--ink-2)] mr-1">
                               Emojis:
                             </span>
                             {toneData.emojis_frecuentes.map((e, idx) => (
@@ -761,13 +761,13 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         toneData.vocabulario_clave.map((word, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-1 rounded-[var(--r-s)] text-[10px] font-mono bg-[var(--acc)]/10 text-[var(--acc)] "
+                            className="px-2 py-1 rounded-[var(--r-s)] text-micro font-mono bg-[var(--acc)]/10 text-[var(--acc)] "
                           >
                             #{word}
                           </span>
                         ))
                       ) : (
-                        <span className="text-[10px] font-mono text-[var(--ink-2)]">
+                        <span className="text-micro font-mono text-[var(--ink-2)]">
                           No se detectaron términos específicos.
                         </span>
                       )}
@@ -777,7 +777,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     {toneData.frases_emblematicas_extraidas &&
                       toneData.frases_emblematicas_extraidas.length > 0 && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
-                          <span className="text-[9px] font-mono font-bold text-[var(--acc)]/90 block">
+                          <span className="text-micro font-mono font-bold text-[var(--acc)]/90 block">
                             💬 Expresiones extraídas de sus Reels & Posts:
                           </span>
                           <div className="space-y-1">
@@ -785,7 +785,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               (quote, idx) => (
                                 <p
                                   key={idx}
-                                  className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded "
+                                  className="text-micro font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded "
                                 >
                                   "{quote}"
                                 </p>
@@ -799,7 +799,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     {toneData.frases_directo_extraidas &&
                       toneData.frases_directo_extraidas.length > 0 && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1">
-                          <span className="text-[9px] font-mono font-bold text-[var(--ok)]/90 block">
+                          <span className="text-micro font-mono font-bold text-[var(--ok)]/90 block">
                             🎤 Frases reales dichas en directo (de vuestros
                             propios conciertos):
                           </span>
@@ -808,7 +808,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               (quote, idx) => (
                                 <p
                                   key={idx}
-                                  className="text-[10px] font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded "
+                                  className="text-micro font-mono italic text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded "
                                 >
                                   "{quote}"
                                 </p>
@@ -824,7 +824,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         (v) => v && v.trim(),
                       ) && (
                         <div className="pt-1.5 border-t border-[var(--hair)] space-y-1.5">
-                          <span className="text-[9px] font-mono font-bold text-[var(--acc)]/90 block">
+                          <span className="text-micro font-mono font-bold text-[var(--acc)]/90 block">
                             🎚️ Matices de tono según la red:
                           </span>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -839,7 +839,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               toneData.matices_por_red?.[key] ? (
                                 <p
                                   key={key}
-                                  className="text-[10px] font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded "
+                                  className="text-micro font-mono text-[var(--ink-2)] bg-[var(--sunken)] p-1.5 rounded "
                                 >
                                   <span className="text-[var(--acc)] font-bold">
                                     {label}:
@@ -854,15 +854,15 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </div>
 
                   {/* 3. Pitch Recommendation & Connection Points */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-micro">
                     <div
                       className={`p-3 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--acc)]/50 text-[var(--acc)]"}`}
                     >
-                      <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">
+                      <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <Flame className="w-3 h-3" /> Punto de Conexión con
                         Bakandeya
                       </span>
-                      <p className="font-sans leading-relaxed text-[11px]">
+                      <p className="font-sans leading-relaxed text-xs">
                         {toneData.puntos_fuertes_para_conectar ||
                           "Intercambio de público festivo y potencia en directo."}
                       </p>
@@ -871,11 +871,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     <div
                       className={`p-3 rounded-[var(--r-m)] space-y-1 ${"bg-[var(--acc)]/50 text-[var(--acc)]"}`}
                     >
-                      <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-[9px]">
+                      <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <HeartHandshake className="w-3 h-3" /> Recomendación de
                         Contacto
                       </span>
-                      <p className="font-sans leading-relaxed text-[11px]">
+                      <p className="font-sans leading-relaxed text-xs">
                         {toneData.recomendacion_pitch ||
                           "Escríbeles con energía, sin rodeos y proponiendo directo compartido."}
                       </p>
@@ -886,7 +886,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   {toneData.pitch_personalizado_ejemplo && (
                     <div className="space-y-1.5 pt-1">
                       <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-mono font-bold text-[var(--ok)] flex items-center gap-1.5">
+                        <label className="text-micro font-mono font-bold text-[var(--ok)] flex items-center gap-1.5">
                           <MessageCircle className="w-3.5 h-3.5" /> Pitch
                           Adaptado a su Forma de Expresarse
                         </label>
@@ -896,7 +896,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                               toneData.pitch_personalizado_ejemplo || "",
                             )
                           }
-                          className="px-2 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+                          className="px-2 py-1 rounded bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] font-mono text-micro flex items-center gap-1 cursor-pointer transition-colors"
                         >
                           {copied ? (
                             <Check className="w-3 h-3 text-[var(--ok)]" />
@@ -911,7 +911,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         readOnly
                         rows={6}
                         value={toneData.pitch_personalizado_ejemplo}
-                        className={`w-full p-3 rounded-[var(--r-m)] font-mono text-[10px] leading-relaxed focus:outline-none ${"bg-[var(--ink-3)] text-[var(--ink)]"}`}
+                        className={`w-full p-3 rounded-[var(--r-m)] font-mono text-micro leading-relaxed focus:outline-none ${"bg-[var(--ink-3)] text-[var(--ink)]"}`}
                       />
 
                       {onUseTailoredPitch && (
@@ -922,7 +922,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                             );
                             onClose();
                           }}
-                          className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-[10px] flex items-center justify-center gap-2 cursor-pointer/20 transition-all"
+                          className="w-full py-2.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-mono font-bold text-micro flex items-center justify-center gap-2 cursor-pointer/20 transition-ui"
                         >
                           <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch
                           Personalizado en Co-Booking
@@ -937,14 +937,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--acc)]/50 "}`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
+                        <span className="text-micro font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                           <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de
                           tus Correcciones (Self-Refining Tone DNA)
                         </span>
                         <button
                           onClick={handleTrainToneDna}
                           disabled={isTraining}
-                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] font-mono text-micro font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                           title="Fuerza el análisis de tus correcciones acumuladas ahora mismo, en vez de esperar al refinamiento automático"
                         >
                           {isTraining ? (
@@ -959,7 +959,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       </div>
 
                       {trainMessage && (
-                        <p className="text-[10px] font-mono text-[var(--acc)]/90">
+                        <p className="text-micro font-mono text-[var(--acc)]/90">
                           {trainMessage}
                         </p>
                       )}
@@ -978,7 +978,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                   key={cat}
                                   className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-1.5"
                                 >
-                                  <span className="text-[9px] font-mono font-bold text-[var(--acc)]">
+                                  <span className="text-micro font-mono font-bold text-[var(--acc)]">
                                     {CATEGORY_LABELS[cat] || cat}
                                   </span>
                                   {reglas.reglas_manuales &&
@@ -988,7 +988,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                           (r, idx) => (
                                             <li
                                               key={idx}
-                                              className="text-[10px] font-sans text-[var(--acc)] flex items-start justify-between gap-1.5 group"
+                                              className="text-micro font-sans text-[var(--acc)] flex items-start justify-between gap-1.5 group"
                                             >
                                               <span>🔒 {r}</span>
                                               <button
@@ -1019,7 +1019,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                           (r, idx) => (
                                             <li
                                               key={idx}
-                                              className="text-[10px] font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group"
+                                              className="text-micro font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group"
                                             >
                                               <span>⭐ {r}</span>
                                               <button
@@ -1044,7 +1044,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     )}
                                   {reglas.vocabulario_aprendido &&
                                     reglas.vocabulario_aprendido.length > 0 && (
-                                      <p className="text-[9px] font-mono text-[var(--ok)]/80">
+                                      <p className="text-micro font-mono text-[var(--ok)]/80">
                                         Vocabulario favorito:{" "}
                                         {reglas.vocabulario_aprendido.join(
                                           ", ",
@@ -1053,7 +1053,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     )}
                                   {reglas.terminos_a_evitar &&
                                     reglas.terminos_a_evitar.length > 0 && (
-                                      <p className="text-[9px] font-mono text-[var(--alert)]/80">
+                                      <p className="text-micro font-mono text-[var(--alert)]/80">
                                         Términos prohibidos:{" "}
                                         {reglas.terminos_a_evitar.join(", ")}
                                       </p>
@@ -1074,7 +1074,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       }}
                                       placeholder="🔒 + añadir regla manual (protegida)..."
                                       disabled={savingManual}
-                                      className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
+                                      className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                     />
                                     <button
                                       onClick={() =>
@@ -1084,7 +1084,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                         savingManual ||
                                         !(newRuleText[manualKey] || "").trim()
                                       }
-                                      className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                                      className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                                     >
                                       {savingManual ? "..." : "Añadir"}
                                     </button>
@@ -1095,7 +1095,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           )}
                         </div>
                       ) : (
-                        <p className="text-[10px] font-mono text-[var(--ink-2)]">
+                        <p className="text-micro font-mono text-[var(--ink-2)]">
                           Todavía no hay reglas aprendidas. Corrige al menos 2
                           pitches para la misma categoría (Salas, Festivales...)
                           y se generarán solas, o pulsa "Entrenar ADN de tono
@@ -1108,7 +1108,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           .
                         </p>
                       )}
-                      <p className="text-[9px] font-mono text-[var(--ink-2)]">
+                      <p className="text-micro font-mono text-[var(--ink-2)]">
                         🔒 = regla escrita a mano, nunca se pierde al
                         re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se
                         fusiona con lo anterior en cada re-entrenamiento
@@ -1125,14 +1125,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                       className={`p-3.5 rounded-[var(--r-m)] space-y-2.5 ${"bg-[var(--bg)]/20/40"}`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
+                        <span className="text-micro font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
                           <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de
                           tus RESPUESTAS a salas (Self-Refining Tone DNA)
                         </span>
                         <button
                           onClick={handleTrainToneDna}
                           disabled={isTraining}
-                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                          className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] font-mono text-micro font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                           title="Fuerza el análisis de tus correcciones acumuladas ahora mismo (pitches y respuestas), en vez de esperar al refinamiento automático"
                         >
                           {isTraining ? (
@@ -1162,7 +1162,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                 key={cat}
                                 className="p-2.5 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-1.5"
                               >
-                                <span className="text-[9px] font-sans font-bold text-[var(--ink-2)]">
+                                <span className="text-micro font-sans font-bold text-[var(--ink-2)]">
                                   {CATEGORY_LABELS[cat] || cat}
                                 </span>
                                 {reglas.reglas_manuales &&
@@ -1171,7 +1171,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       {reglas.reglas_manuales.map((r, idx) => (
                                         <li
                                           key={idx}
-                                          className="text-[10px] font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group"
+                                          className="text-micro font-sans text-[var(--ink)] flex items-start justify-between gap-1.5 group"
                                         >
                                           <span>🔒 {r}</span>
                                           <button
@@ -1201,7 +1201,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                         (r, idx) => (
                                           <li
                                             key={idx}
-                                            className="text-[10px] font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group"
+                                            className="text-micro font-sans text-[var(--ink-2)] flex items-start justify-between gap-1.5 group"
                                           >
                                             <span>⭐ {r}</span>
                                             <button
@@ -1226,14 +1226,14 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                   )}
                                 {reglas.vocabulario_aprendido &&
                                   reglas.vocabulario_aprendido.length > 0 && (
-                                    <p className="text-[9px] font-mono text-[var(--ok)]/80">
+                                    <p className="text-micro font-mono text-[var(--ok)]/80">
                                       Vocabulario favorito:{" "}
                                       {reglas.vocabulario_aprendido.join(", ")}
                                     </p>
                                   )}
                                 {reglas.terminos_a_evitar &&
                                   reglas.terminos_a_evitar.length > 0 && (
-                                    <p className="text-[9px] font-mono text-[var(--alert)]/80">
+                                    <p className="text-micro font-mono text-[var(--alert)]/80">
                                       Términos prohibidos:{" "}
                                       {reglas.terminos_a_evitar.join(", ")}
                                     </p>
@@ -1254,7 +1254,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                     }}
                                     placeholder="🔒 + añadir regla manual (protegida)..."
                                     disabled={savingManual}
-                                    className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-[10px] text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
+                                    className="flex-1 px-2 py-1 rounded bg-[var(--surface)] text-micro text-[var(--ink-2)] font-sans focus:outline-none focus:ring-1 focus:ring-[var(--ink-3)] disabled:opacity-50"
                                   />
                                   <button
                                     onClick={() =>
@@ -1264,7 +1264,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                                       savingManual ||
                                       !(newRuleText[manualKey] || "").trim()
                                     }
-                                    className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                                    className="px-2 py-1 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] text-micro font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                                   >
                                     {savingManual ? "..." : "Añadir"}
                                   </button>
@@ -1274,7 +1274,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           })}
                         </div>
                       ) : (
-                        <p className="text-[10px] font-mono text-[var(--ink-2)]">
+                        <p className="text-micro font-mono text-[var(--ink-2)]">
                           Todavía no hay reglas aprendidas de respuestas.
                           Corrige al menos 2 respuestas para la misma categoría
                           (Salas, Festivales...) y se generarán solas, o pulsa
@@ -1288,7 +1288,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           .
                         </p>
                       )}
-                      <p className="text-[9px] font-mono text-[var(--ink-2)]">
+                      <p className="text-micro font-mono text-[var(--ink-2)]">
                         🔒 = regla escrita a mano, nunca se pierde al
                         re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se
                         fusiona con lo anterior en cada re-entrenamiento

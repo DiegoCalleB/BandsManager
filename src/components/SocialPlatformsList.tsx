@@ -443,12 +443,12 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => onPlatformClick?.(key, url)}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-all duration-200 ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-ui duration-200 ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
               >
                 <IconComp className="w-4 h-4 shrink-0" />
                 <span>{label}</span>
                 {showClickCounts && typeof count === "number" && count > 0 && (
-                  <span className="text-[10px] font-sans px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
+                  <span className="text-micro font-sans px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {count}
                   </span>
                 )}
@@ -467,7 +467,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
           <p className="text-xs text-[var(--acc)] font-bold">
             {title}
           </p>
-          <p className="text-[11px] text-[var(--ink-2)] mt-0.5">
+          <p className="text-xs text-[var(--ink-2)] mt-0.5">
             {subtitle || getDefaultSubtitle()}
           </p>
         </div>
@@ -509,18 +509,18 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => onPlatformClick?.(key, url)}
-              className={`flex items-center justify-center gap-2.5 p-3 rounded-[var(--r-m)] text-xs font-bold transition-all duration-200 group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+              className={`flex items-center justify-center gap-2.5 p-3 rounded-[var(--r-m)] text-xs font-bold transition-ui duration-200 group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
             >
-              <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+              <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 " />
               <span
                 className={
-                  isFullWidth ? "text-sm font-black tracking-wide" : "truncate"
+                  isFullWidth ? "text-sm font-bold tracking-wide" : "truncate"
                 }
               >
                 {label}
               </span>
               {showClickCounts && typeof count === "number" && count > 0 && (
-                <span className="text-[10px] font-sans px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] shrink-0 ml-auto">
+                <span className="text-micro font-sans px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] shrink-0 ml-auto">
                   {count}
                 </span>
               )}

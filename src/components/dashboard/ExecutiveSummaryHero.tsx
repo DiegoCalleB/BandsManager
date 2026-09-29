@@ -53,9 +53,9 @@ const CardKpi: React.FC<CardKpiProps> = ({
     type="button"
     onClick={onClick}
     disabled={!onClick}
-    className={`p-4 rounded-[var(--r-l)] bg-[var(--surface)] text-left space-y-2 transition-all w-full ${
+    className={`p-4 rounded-[var(--r-l)] bg-[var(--surface)] text-left space-y-2 transition-ui w-full ${
       onClick
-        ? "cursor-pointer hover:brightness-[1.03] active:scale-[0.99]"
+        ? "cursor-pointer hover:brightness-[1.03] active:scale-[0.97]"
         : "cursor-default"
     }`}
   >
@@ -71,7 +71,7 @@ const CardKpi: React.FC<CardKpiProps> = ({
       </div>
       {onClick && <ArrowRight className="w-3.5 h-3.5 text-[var(--ink-2)]" />}
     </div>
-    <p className="text-[10px] font-sans font-semibold text-[var(--ink-2)]">
+    <p className="text-micro font-sans font-semibold text-[var(--ink-2)]">
       {label}
     </p>
     {vacio ? (

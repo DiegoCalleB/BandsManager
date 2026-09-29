@@ -350,7 +350,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 key={d.label}
                 className={`${styles.card} rounded-[var(--r-m)] p-4`}
               >
-                <p className="text-[10px] opacity-60 font-semibold">
+                <p className="text-micro opacity-60 font-semibold">
                   {d.label}
                 </p>
                 <p className="font-bold mt-1 text-sm">{d.valor}</p>
@@ -359,7 +359,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
         {contenido.dato("necesidadesEscenario") && (
           <div className={`${styles.card} rounded-[var(--r-m)] p-4`}>
-            <p className="text-[10px] opacity-60 font-semibold">
+            <p className="text-micro opacity-60 font-semibold">
               {t("etiquetaNecesidades")}
             </p>
             <p className="text-sm mt-1 opacity-80">
@@ -469,7 +469,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   </p>
                 )}
                 {contenido.bioMiembro(m) && (
-                  <p className="text-[11px] opacity-70 mt-1 leading-snug">
+                  <p className="text-xs opacity-70 mt-1 leading-snug">
                     {contenido.bioMiembro(m)}
                   </p>
                 )}
@@ -493,7 +493,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)]/90 hover:bg-[var(--alert-soft)] transition-all duration-200 active:scale-95 text-[var(--ink-2)] hover:text-[var(--ink)]"
+                          className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--surface)]/90 hover:bg-[var(--alert-soft)] transition-ui duration-200 active:scale-[0.97] text-[var(--ink-2)] hover:text-[var(--ink)]"
                           title={interpolate(t("seguirMiembro"), {
                             name: m.nombre,
                           })}
@@ -504,10 +504,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                           <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-[var(--ink)] shrink-0 group-hover/ig:scale-110 transition-transform">
                             <Instagram className="w-full h-full stroke-[2.5]" />
                           </span>
-                          <span className="text-[11px] font-sans font-medium truncate max-w-[85px] sm:max-w-[110px]">
+                          <span className="text-xs font-sans font-medium truncate max-w-[85px] sm:max-w-[110px]">
                             @{username}
                           </span>
-                          <span className="text-[10px] font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)]/60 shrink-0 ml-0.5">
+                          <span className="text-micro font-semibold text-[var(--alert)] group-hover/ig:text-[var(--alert)]/60 shrink-0 ml-0.5">
                             {ctaText.split("")[0]} ↗
                           </span>
                         </a>
@@ -668,7 +668,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </div>
               <div className="pt-3">
                 <span
-                  className={`text-xs font-black ${styles.quoteMedium} font-sans`}
+                  className={`text-xs font-bold ${styles.quoteMedium} font-sans`}
                 >
                   {cita.medio}
                 </span>
@@ -1153,7 +1153,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </button>
               <div className="min-w-0 pr-1">
                 <p
-                  className={`text-[10px] ${styles.accentText} font-bold flex items-center gap-1`}
+                  className={`text-micro ${styles.accentText} font-bold flex items-center gap-1`}
                 >
                   <Music className="w-3 h-3" />{" "}
                   {isCurrentlyPlaying ? t("playerPista") : "Audio Demo"}
@@ -1161,7 +1161,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 <p className="text-xs font-bold truncate">
                   {activeSong.titulo}
                 </p>
-                <p className="text-[11px] opacity-75 truncate">
+                <p className="text-xs opacity-75 truncate">
                   {activeSong.albumDisco || bandName}
                 </p>
               </div>

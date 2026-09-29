@@ -94,7 +94,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
             <div>
               <h3 className="font-bold text-base text-[var(--ink)] flex items-center gap-2">
                 Diseñador de Logotipos con IA
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] ">
+                <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] ">
                   Amateur & Indie
                 </span>
               </h3>
@@ -137,7 +137,7 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
                     <span className="text-xl shrink-0 mt-0.5">{style.icon}</span>
                     <div className="min-w-0">
                       <div className="text-xs font-bold text-[var(--ink-2)]">{style.name}</div>
-                      <div className="text-[11px] text-[var(--ink-2)] leading-tight mt-0.5 line-clamp-2">{style.desc}</div>
+                      <div className="text-xs text-[var(--ink-2)] leading-tight mt-0.5 line-clamp-2">{style.desc}</div>
                     </div>
                   </button>
                 );

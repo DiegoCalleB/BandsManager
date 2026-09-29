@@ -221,7 +221,7 @@ export function CalendarWidget({
   const accentColor = "text-[var(--acc)]";
 
   return (
-    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-all space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-ui space-y-4">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3">
         <div className="flex items-center gap-2.5">
@@ -255,7 +255,7 @@ export function CalendarWidget({
               title="Vista Lista Próximos"
             >
               <List className="w-3.5 h-3.5" />
-              <span className="hidden md:inline text-[10px]">Lista</span>
+              <span className="hidden md:inline text-micro">Lista</span>
             </button>
             <button
               type="button"
@@ -268,7 +268,7 @@ export function CalendarWidget({
               title="Vista Mensual Compacta"
             >
               <CalendarDays className="w-3.5 h-3.5" />
-              <span className="hidden md:inline text-[10px]">Mes</span>
+              <span className="hidden md:inline text-micro">Mes</span>
             </button>
             <button
               type="button"
@@ -281,7 +281,7 @@ export function CalendarWidget({
               title="Vista Agenda Semanal"
             >
               <Grid className="w-3.5 h-3.5" />
-              <span className="hidden md:inline text-[10px]">Semana</span>
+              <span className="hidden md:inline text-micro">Semana</span>
             </button>
           </div>
 
@@ -294,7 +294,7 @@ export function CalendarWidget({
                   agendaFilterMode === "all" ? "active" : "all",
                 )
               }
-              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
                 agendaFilterMode === "all"
                   ? "bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold"
                   : "bg-[var(--sunken)] text-[var(--ink-2)] font-medium"
@@ -319,7 +319,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetFilterType("all")}
-              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                 filterType === "all"
                   ? "bg-[var(--sunken)] text-[var(--acc-ink)] font-semibold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -330,7 +330,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetFilterType("concierto")}
-              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                 filterType === "concierto"
                   ? "bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -341,7 +341,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetFilterType("ensayo")}
-              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 text-xs rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                 filterType === "ensayo"
                   ? "bg-[var(--ok-soft)] text-[var(--ok)] font-semibold"
                   : "text-[var(--ink-2)] hover:text-[var(--ink)]"
@@ -380,13 +380,13 @@ export function CalendarWidget({
                       selectedDate: item.dateStr,
                     })
                   }
-                  className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-110 transition-[filter,transform] flex items-start gap-3 cursor-pointer hover:scale-[1.01]"
+                  className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-110 transition-[filter,transform] flex items-start gap-3 cursor-pointer "
                 >
                   <div className="w-11 h-11 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center shrink-0">
                     <span className="text-base font-bold leading-none text-[var(--acc-ink)] tabular-nums">
                       {item.day}
                     </span>
-                    <span className="text-[9px] font-semibold tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
+                    <span className="text-micro font-semibold tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
                       {item.month}
                     </span>
                   </div>
@@ -394,7 +394,7 @@ export function CalendarWidget({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span
-                        className={`text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tracking-wide ${
+                        className={`text-micro px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tracking-wide ${
                           item.type === "concierto"
                             ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
                             : "bg-[var(--ok-soft)] text-[var(--ok)]"
@@ -403,7 +403,7 @@ export function CalendarWidget({
                         {item.type}
                       </span>
                       {item.bandName && (
-                        <span className="text-[9px] text-[var(--acc-ink)]/70 truncate max-w-[100px]">
+                        <span className="text-micro text-[var(--acc-ink)]/70 truncate max-w-[100px]">
                           {item.bandName}
                         </span>
                       )}
@@ -464,7 +464,7 @@ export function CalendarWidget({
             {["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"].map((d) => (
               <div
                 key={d}
-                className="text-[10px] text-[var(--ink-2)] font-bold py-1"
+                className="text-micro text-[var(--ink-2)] font-bold py-1"
               >
                 {d}
               </div>
@@ -497,7 +497,7 @@ export function CalendarWidget({
                       dateKey === selectedDayStr ? null : dateKey,
                     )
                   }
-                  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-all cursor-pointer relative ${
+                  className={`p-1.5 min-h-[38px] rounded-[var(--r-s)] text-xs flex flex-col items-center justify-between transition-ui cursor-pointer relative ${
                     isSelected
                       ? "bg-[var(--acc)]/20 text-[var(--ink)] font-bold"
                       : isToday
@@ -559,7 +559,7 @@ export function CalendarWidget({
                   >
                     <div>
                       <span
-                        className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
+                        className={`text-micro px-1.5 py-0.5 rounded font-bold ${
                           evt.type === "concierto"
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                             : "bg-[var(--ok)]/20 text-[var(--ink-2)]"
@@ -570,7 +570,7 @@ export function CalendarWidget({
                       <p className="font-bold text-[var(--ink-2)] mt-1">
                         {evt.title}
                       </p>
-                      <p className="text-[var(--ink-2)] text-[11px]">
+                      <p className="text-[var(--ink-2)] text-xs">
                         {evt.location}
                       </p>
                     </div>
@@ -607,14 +607,14 @@ export function CalendarWidget({
               return (
                 <div
                   key={dateStr}
-                  className={`p-2.5 rounded-[var(--r-m)] text-xs flex flex-col justify-between min-h-[90px] transition-all ${
+                  className={`p-2.5 rounded-[var(--r-m)] text-xs flex flex-col justify-between min-h-[90px] transition-ui ${
                     dayEvts.length > 0
                       ? "bg-[var(--sunken)]"
                       : "bg-[var(--sunken)]/50"
                   }`}
                 >
                   <div className="flex items-center justify-between pb-1">
-                    <span className=" text-[10px] text-[var(--ink-2)] font-bold">
+                    <span className=" text-micro text-[var(--ink-2)] font-bold">
                       {dayName}
                     </span>
                     <span className="font-bold text-[var(--acc)]">
@@ -633,7 +633,7 @@ export function CalendarWidget({
                             selectedDate: e.dateStr,
                           })
                         }
-                        className={`text-[9px] p-1 rounded font-bold truncate cursor-pointer ${
+                        className={`text-micro p-1 rounded font-bold truncate cursor-pointer ${
                           e.type === "concierto"
                             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70"
                             : "bg-[var(--ok)]/20 text-[var(--ink-2)]"
@@ -645,7 +645,7 @@ export function CalendarWidget({
                     ))}
                     {dayEvts.length === 0 && (
                       <span
-                        className={`text-[10px] ${"text-[var(--ink-2)]"} block text-center py-2`}
+                        className={`text-micro ${"text-[var(--ink-2)]"} block text-center py-2`}
                       >
                         Libre
                       </span>

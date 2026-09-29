@@ -145,7 +145,7 @@ const FanFormLanguageSwitcher: React.FC<{
         type="button"
         onClick={() => onChange(l.code)}
         title={l.label}
-        className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+        className={`px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
           language === l.code
             ? "bg-[var(--acc)]/20  text-[var(--acc)]/70 scale-105"
             : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:hover:text-[var(--ink)] opacity-80 hover:opacity-100"
@@ -850,14 +850,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick("revolut", revolutUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-all duration-200 ease-out text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)]  transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
               aria-hidden="true"
             />
             <div
-              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
+              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow transition-transform`}
             >
               <svg
                 className="w-full h-full fill-[var(--ink)]"
@@ -873,7 +873,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 Revolut
               </span>
               <span
-                className={`${isFull ? "text-xs" : "text-[10px]"} text-[var(--ink-2)] font-sans block truncate group-hover:text-[var(--ink-2)] leading-tight`}
+                className={`${isFull ? "text-xs" : "text-micro"} text-[var(--ink-2)] font-sans block truncate group-hover:text-[var(--ink-2)] leading-tight`}
               >
                 {revolutDisplay.replace(/^revolut\.me\//, "@")}
               </span>
@@ -890,14 +890,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick("paypal", paypalUrl, contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-all duration-200 ease-out text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow-delayed" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--sunken)] transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow-delayed" : ""}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
               aria-hidden="true"
             />
             <div
-              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[#003087] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}
+              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--sunken)] text-[#003087] flex items-center justify-center shrink-0 shadow transition-transform`}
             >
               <PayPalLogo className="w-full h-full" />
             </div>
@@ -908,7 +908,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 PayPal
               </span>
               <span
-                className={`${isFull ? "text-xs" : "text-[10px]"} text-[var(--tentative)]/40 font-sans block truncate group-hover:text-[var(--ink)] leading-tight`}
+                className={`${isFull ? "text-xs" : "text-micro"} text-[var(--tentative)]/40 font-sans block truncate group-hover:text-[var(--ink)] leading-tight`}
               >
                 {paypalDisplay.replace(/^paypal\.me\//, "@")}
               </span>
@@ -923,14 +923,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             key={`bizum-${variant}`}
             type="button"
             onClick={() => handleCopyBizum(contextType)}
-            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok)]/20 transition-all duration-200 ease-out text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
+            className={`group relative w-full flex items-center justify-center ${isFull ? "gap-3.5 p-4 min-h-[64px]" : "gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]"} rounded-[var(--r-m)] bg-[var(--ok-soft)] hover:bg-[var(--ok)]/20 transition-ui duration-200 ease-out text-center active:scale-[0.97] cursor-pointer overflow-hidden ${isFull ? "animate-donate-cta-glow" : ""}`}
           >
             <span
               className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-[var(--ok)]/15 to-transparent animate-donate-sheen"
               aria-hidden="true"
             />
             <div
-              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}
+              className={`${isFull ? "w-8 h-8 sm:w-9 sm:h-9 p-1.5" : "w-6 h-6 p-1"} rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] flex items-center justify-center shrink-0 shadow font-bold transition-transform`}
             >
               <BizumLogo className="w-full h-full" />
             </div>
@@ -941,7 +941,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 Bizum
               </span>
               <span
-                className={`${isFull ? "text-xs" : "text-[10px]"} text-[var(--ok)] font-sans block truncate group-hover:text-[var(--ink-2)] leading-tight`}
+                className={`${isFull ? "text-xs" : "text-micro"} text-[var(--ok)] font-sans block truncate group-hover:text-[var(--ink-2)] leading-tight`}
               >
                 {bizumPhone}
               </span>
@@ -964,7 +964,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           isSuccessScreen ? "pt-3 text-left" : isFormScreen ? "pt-2" : "pt-1.5"
         }
       >
-        <div className="relative rounded-[var(--r-l)] bg-[var(--surface)]/95   p-3.5 sm:p-4 transition-all duration-300 text-left overflow-hidden">
+        <div className="relative rounded-[var(--r-l)] bg-[var(--surface)]/95   p-3.5 sm:p-4 transition-ui duration-300 text-left overflow-hidden">
           {/* Halo ambiental sutil */}
           <div
             className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl"
@@ -973,11 +973,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {/* Cabecera de la tarjeta: Screenshot / Imagen + Título + Badge */}
           <div className="relative flex items-start gap-3 sm:gap-3.5">
-            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center shrink-0 transition-transform">
               <img
                 src="/Screenshot_20260824_164054_Google.jpg"
                 alt={t("revolutBadge") || "Colaboración"}
-                className="w-full h-full object-cover scale-110 group-hover:scale-115 transition-transform duration-300"
+                className="w-full h-full object-cover scale-110 transition-transform duration-300"
                 onError={(e) => {
                   (e.currentTarget as HTMLElement).style.display = "none";
                 }}
@@ -988,11 +988,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] tracking-tight leading-snug">
                   {label}
                 </h3>
-                <span className="text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
+                <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold shrink-0">
                   {t("revolutBadge") || "Contribución"}
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--ink-2)]/90 leading-relaxed mt-1">
+              <p className="text-xs text-[var(--ink-2)]/90 leading-relaxed mt-1">
                 {descText}
               </p>
             </div>
@@ -1031,7 +1031,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           </div>
 
           {/* Pie de seguridad y métricas */}
-          <div className="pt-2.5 flex items-center justify-between text-[10px] text-[var(--ink-2)]">
+          <div className="pt-2.5 flex items-center justify-between text-micro text-[var(--ink-2)]">
             <span className="flex items-center gap-1">
               <LockIcon className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
               <span>
@@ -1040,7 +1040,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </span>
             </span>
             {totalClicks > 0 && (
-              <span className="text-[9px] font-sans text-[var(--ink-2)] bg-[var(--surface)] px-1.5 py-0.5 rounded">
+              <span className="text-micro font-sans text-[var(--ink-2)] bg-[var(--surface)] px-1.5 py-0.5 rounded">
                 {totalClicks}{" "}
                 {totalClicks === 1 ? t("clickSingular") : t("clickPlural")}
               </span>
@@ -1134,7 +1134,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="absolute top-0 inset-x-0 h-1 bg-[var(--acc)] " />
 
           {isPreview && (
-            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans flex items-center justify-between gap-2">
+            <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-xs font-sans flex items-center justify-between gap-2">
               <span className="flex items-center gap-1 font-bold">
                 <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
                 {t("interactiveSimulation")}
@@ -1189,7 +1189,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           {tieneBeneficios && (
             <div className="bg-[var(--sunken)] rounded-[var(--r-m)] p-6 mt-6 space-y-4">
-              <h3 className="text-[var(--acc)] font-black text-xs font-sans">
+              <h3 className="text-[var(--acc)] font-bold text-xs font-sans">
                 {t("benefitsTitle")}
               </h3>
 
@@ -1209,7 +1209,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
               {codigoDescuentoFan && (
                 <div className="pt-2">
-                  <p className="text-[10px] text-[var(--ink-2)] font-bold mb-1">
+                  <p className="text-micro text-[var(--ink-2)] font-bold mb-1">
                     {t("merchCode")}
                   </p>
                   <div className="flex items-center justify-center gap-2 p-3 bg-[var(--surface)] rounded-[var(--r-s)]">
@@ -1231,7 +1231,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 {t("shareWithFriend") || "Pásaselo a un colega"}
               </span>
             </div>
-            <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] font-sans leading-relaxed">
               {t("shareCardPrompt") ||
                 "¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos."}
             </p>
@@ -1239,7 +1239,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <button
                 type="button"
                 onClick={handleShareWithFriend}
-                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95"
+                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97]"
               >
                 {copiedShareLink ? (
                   <>
@@ -1279,7 +1279,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== "undefined" ? window.location.href : ""}`;
                   openWhatsAppChat(undefined, msg);
                 }}
-                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
+                className="py-2.5 px-3 rounded-[var(--r-s)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] font-sans font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-[0.97] text-center"
               >
                 <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
               </a>
@@ -1330,11 +1330,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       <Briefcase className="w-3.5 h-3.5 text-[var(--acc)]" />{" "}
                       {t("bookingTitle")}
                     </div>
-                    <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70">
+                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70">
                       {t("bookingBadgeLive")}
                     </span>
                   </div>
-                  <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
+                  <p className="text-xs font-sans text-[var(--ink-2)] leading-relaxed">
                     {renderBold(t("bookingQuestion", { bandName }))}
                   </p>
                   <div className="space-y-1.5 pt-1">
@@ -1376,7 +1376,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                               t("bookingWhatsappText", { bandName }),
                             );
                           }}
-                          className="px-2 py-0.5 text-[9px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
+                          className="px-2 py-0.5 text-micro font-sans text-[var(--ok)] bg-[var(--ok-soft)] rounded flex items-center gap-1 shrink-0 ml-2"
                         >
                           <MessageCircle className="w-3 h-3" /> WhatsApp
                         </a>
@@ -1394,7 +1394,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                 <span>{t("musicianBannerTitle")}</span>
               </div>
-              <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
+              <p className="text-xs font-sans text-[var(--ink-2)] leading-relaxed">
                 {t("musicianBannerSubtitle")}
               </p>
               <div className="pt-1">
@@ -1402,7 +1402,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   href="/musicos"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans text-xs font-bold transition-all hover:scale-[1.01]"
+                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans text-xs font-bold transition-ui "
                 >
                   {t("musicianBannerCTA")}
                 </a>
@@ -1446,7 +1446,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           ) : (
             <div className="w-24 h-24 mx-auto rounded-[var(--r-l)]  bg-[var(--sunken)]  flex flex-col items-center justify-center p-2">
               <Flame className="w-10 h-10 text-[var(--acc)] mb-0.5" />
-              <span className="text-[10px] font-black text-[var(--acc)]/70 font-display line-clamp-1">
+              <span className="text-micro font-bold text-[var(--acc)]/70 font-display line-clamp-1">
                 {bandName}
               </span>
             </div>
@@ -1455,7 +1455,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <h1 className="text-3xl font-black text-[var(--ink)] font-display">
               {t("joinTitle", { bandName })}
             </h1>
-            <p className="text-[var(--acc)]/80 text-[10px] font-sans font-bold">
+            <p className="text-[var(--acc)]/80 text-micro font-sans font-bold">
               {t("officialChannel")}
             </p>
           </div>
@@ -1502,7 +1502,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     ? t("audioPreviewPause") || "Pausar audio"
                     : t("audioPreviewPlay") || "Reproducir audio"
                 }
-                className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0 transition-all active:scale-95"
+                className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center shrink-0 transition-ui active:scale-[0.97]"
               >
                 {isPlayingAudioPreview ? (
                   <Pause className="w-5 h-5 fill-bg-[var(--surface)]" />
@@ -1519,7 +1519,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       `${bandName} · Directo Preview`}
                   </span>
                 </div>
-                <p className="text-[10px] text-[var(--ink-2)] font-sans truncate">
+                <p className="text-micro text-[var(--ink-2)] font-sans truncate">
                   {isPlayingAudioPreview
                     ? t("audioPreviewPlaying") || "Sonando adelanto en vivo..."
                     : audioPreviewConfig?.subtitulo?.trim() ||
@@ -1531,16 +1531,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               {/* Animación de ondas de audio */}
               <div className="flex items-center gap-1 h-5 shrink-0 px-2">
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-5" : "h-1.5"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-5" : "h-1.5"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-3 animate-bounce" : "h-2"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-3 animate-bounce" : "h-2"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-4" : "h-1"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-4" : "h-1"}`}
                 />
                 <span
-                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-all duration-300 ${isPlayingAudioPreview ? "h-2 animate-bounce" : "h-2.5"}`}
+                  className={`w-1 bg-[var(--acc)]/60 rounded-[var(--r-pill)] transition-ui duration-300 ${isPlayingAudioPreview ? "h-2 animate-bounce" : "h-2.5"}`}
                 />
               </div>
             </div>
@@ -1551,9 +1551,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab("redes")}
-            className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
               activeTab === "redes"
-                ? "bg-[var(--acc)]  text-[var(--ink)] font-black"
+                ? "bg-[var(--acc)]  text-[var(--ink)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -1562,9 +1562,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab("form")}
-            className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-all text-center flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-[var(--r-m)] font-bold transition-ui text-center flex items-center justify-center gap-2 ${
               activeTab === "form"
-                ? "bg-[var(--acc)]  text-[var(--ink)] font-black"
+                ? "bg-[var(--acc)]  text-[var(--ink)] font-bold"
                 : "text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
           >
@@ -1579,7 +1579,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <p className="text-xs font-bold text-[var(--acc)]">
                 {t("followHelpTitle")}
               </p>
-              <p className="text-[11px] text-[var(--ink-2)] font-sans leading-relaxed">
+              <p className="text-xs text-[var(--ink-2)] font-sans leading-relaxed">
                 {renderBold(t("followHelpBody"))}
               </p>
             </div>
@@ -1600,14 +1600,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick("epk", epkUrl, "redes")}
-              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]  transition-all duration-300  text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+              className="group relative flex items-center gap-3.5 p-4 rounded-[var(--r-l)] bg-[var(--sunken)]  transition-ui duration-300  text-left cursor-pointer overflow-hidden active:scale-[0.97]"
             >
               {logoUrl && !imgError && (
                 <img
                   src={logoUrl}
                   alt=""
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-35 scale-110 group-hover:scale-125 transition-all duration-500"
+                  className="pointer-events-none absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-35 scale-110 transition-ui duration-300"
                 />
               )}
               <div
@@ -1615,10 +1615,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 aria-hidden="true"
               />
               <div
-                className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-500"
+                className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-[var(--r-pill)] bg-[var(--acc)]/10 blur-2xl group-hover:bg-[var(--acc)]/20 transition-colors duration-300"
                 aria-hidden="true"
               />
-              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-[var(--acc)]/25  text-[var(--acc)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+              <div className="relative w-11 h-11 rounded-[var(--r-m)] bg-[var(--acc)]/25  text-[var(--acc)] flex items-center justify-center shrink-0 transition-transform overflow-hidden">
                 {logoUrl && !imgError ? (
                   <img
                     src={logoUrl}
@@ -1634,7 +1634,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <span className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--acc)]/70 transition block truncate tracking-tight">
                   {t("epkCardTitle") || `Conócenos · ${bandName || "La Banda"}`}
                 </span>
-                <span className="text-[11px] text-[var(--ink-2)] font-sans block truncate mt-0.5">
+                <span className="text-xs text-[var(--ink-2)] font-sans block truncate mt-0.5">
                   {t("epkCardSubtitle") ||
                     "Historia, miembros, fotos y dossier"}
                 </span>
@@ -1646,7 +1646,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   {miembros.slice(0, 3).map((m, idx) => (
                     <div
                       key={m.id || idx}
-                      className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--surface)]/80 flex items-center justify-center text-[10px] font-bold text-[var(--acc)]/70 overflow-hidden"
+                      className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--surface)]/80 flex items-center justify-center text-micro font-bold text-[var(--acc)]/70 overflow-hidden"
                       title={`${m.nombre}${m.rol ? ` (${m.rol})` : ""}`}
                     >
                       {m.fotoUrl ? (
@@ -1663,14 +1663,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     </div>
                   ))}
                   {miembros.length > 3 && (
-                    <div className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--surface)]/80 flex items-center justify-center text-[9px] font-bold text-[var(--ink-2)]">
+                    <div className="w-7 h-7 rounded-[var(--r-pill)] bg-[var(--surface)]/80 flex items-center justify-center text-micro font-bold text-[var(--ink-2)]">
                       +{miembros.length - 3}
                     </div>
                   )}
                 </div>
               )}
 
-              <ChevronRight className="relative w-5 h-5 text-[var(--ink-2)] group-hover:text-[var(--acc)] group-hover:translate-x-1 transition-all shrink-0" />
+              <ChevronRight className="relative w-5 h-5 text-[var(--ink-2)] group-hover:text-[var(--acc)] group-hover:translate-x-1 transition-ui shrink-0" />
             </a>
 
             {/* Aportación Económica / Revolut debajo de links de redes */}
@@ -1684,7 +1684,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     <Calendar className="w-3.5 h-3.5" />{" "}
                     {t("upcomingShowsTitle") || "Próximos Conciertos"}
                   </span>
-                  <span className="text-[9px] font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
                     {upcomingConcerts.length}{" "}
                     {upcomingConcerts.length === 1 ? "fecha" : "fechas"}
                   </span>
@@ -1705,12 +1705,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                           <p className="font-bold text-[var(--ink)] truncate">
                             {c.sala}
                           </p>
-                          <p className="text-[11px] text-[var(--ink-2)] truncate flex items-center gap-1">
+                          <p className="text-xs text-[var(--ink-2)] truncate flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-[var(--acc)]/80 shrink-0" />{" "}
                             {c.ciudad}
                           </p>
                         </div>
-                        <span className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[10px] font-bold shrink-0 font-sans">
+                        <span className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-micro font-bold shrink-0 font-sans">
                           {c.fecha}
                         </span>
                       </div>
@@ -1721,13 +1721,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                               href={c.entradasUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] text-[10px] font-bold hover:bg-[var(--ok)] transition-colors"
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--ink)] text-micro font-bold hover:bg-[var(--ok)] transition-colors"
                             >
                               <Ticket className="w-3 h-3" /> Comprar Entradas
                             </a>
                           )}
                           {c.entradasLugarFisico && (
-                            <span className="text-[10px] text-[var(--ink-2)] truncate">
+                            <span className="text-micro text-[var(--ink-2)] truncate">
                               📍 También en: {c.entradasLugarFisico}
                             </span>
                           )}
@@ -1740,7 +1740,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowAllConcerts((v) => !v)}
-                    className="w-full flex items-center justify-center gap-1 text-[11px] font-sans font-bold text-[var(--acc)]/90 hover:text-[var(--acc)]/70 transition-colors pt-0.5"
+                    className="w-full flex items-center justify-center gap-1 text-xs font-sans font-bold text-[var(--acc)]/90 hover:text-[var(--acc)]/70 transition-colors pt-0.5"
                   >
                     {showAllConcerts ? (
                       <>
@@ -1783,7 +1783,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
             {/* CAMPOS OBLIGATORIOS (Rápidos y sin fricción) */}
             <div>
-              <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+              <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                 {t("labelName")} *
               </label>
               <input
@@ -1798,7 +1798,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+              <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                 {t("labelEmail")} *
               </label>
               <input
@@ -1837,7 +1837,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {showOptionalFields && (
               <div className="space-y-3.5 pt-1 pl-1 pr-1 animate-in fade-in duration-200">
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelCity")}
                   </label>
                   <input
@@ -1851,7 +1851,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelHowFound")}
                   </label>
                   <select
@@ -1871,7 +1871,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelFavSong", { bandName })}
                   </label>
                   <input
@@ -1889,7 +1889,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelInstagram")}
                   </label>
                   <input
@@ -1904,7 +1904,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-[var(--ink-2)] font-sans mb-1.5 block">
+                  <label className="text-micro font-bold text-[var(--ink-2)] font-sans mb-1.5 block">
                     {t("labelMessage")}
                   </label>
                   <textarea
@@ -1940,7 +1940,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     strokeWidth={4}
                   />
                 </div>
-                <span className="text-[10px] text-[var(--ink-2)] font-sans leading-relaxed group-hover:text-[var(--ink-2)] transition-colors pt-0.5">
+                <span className="text-micro text-[var(--ink-2)] font-sans leading-relaxed group-hover:text-[var(--ink-2)] transition-colors pt-0.5">
                   {t("consentPrefix")}
                   <button
                     type="button"
@@ -1961,7 +1961,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 mt-1 bg-[var(--acc)]  hover:bg-[var(--acc-soft)] text-[#121111] font-black text-sm font-sans rounded-[var(--r-m)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
+              className="w-full py-4 mt-1 bg-[var(--acc)]  hover:bg-[var(--acc-soft)] text-[#121111] font-bold text-sm font-sans rounded-[var(--r-m)] transition-ui active:scale-[0.97] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
             >
               {loading ? (
                 <>
@@ -1979,7 +1979,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {/* Social Links shown below form as well */}
             {socialLinks && Object.values(socialLinks).some(Boolean) && (
               <div className="pt-4 space-y-2">
-                <p className="text-[11px] font-bold text-[var(--ink-2)] font-sans text-center">
+                <p className="text-xs font-bold text-[var(--ink-2)] font-sans text-center">
                   {t("followUsAlso")}
                 </p>
                 <SocialPlatformsList
@@ -2004,16 +2004,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[var(--acc)]">
                     <Briefcase className="w-4 h-4 text-[var(--acc)]" />
-                    <span className="text-xs font-sans font-black">
+                    <span className="text-xs font-sans font-bold">
                       {t("bookingTitle")}
                     </span>
                   </div>
-                  <span className="text-[9px] font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
+                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc)]/15 text-[var(--acc)]/70 font-bold">
                     {t("bookingBadgeLive")}
                   </span>
                 </div>
 
-                <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
+                <p className="text-xs font-sans text-[var(--ink-2)] leading-relaxed">
                   {renderBold(t("bookingQuestion", { bandName }))}
                 </p>
 
@@ -2058,7 +2058,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                               t("bookingWhatsappText", { bandName }),
                             );
                           }}
-                          className="px-2.5 py-1 text-[10px] font-sans text-[var(--ok)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
+                          className="px-2.5 py-1 text-micro font-sans text-[var(--ok)] bg-[var(--ok-soft)] hover:bg-[var(--ok-soft)] rounded transition-colors flex items-center gap-1.5 font-bold"
                         >
                           <MessageCircle className="w-3.5 h-3.5 text-[var(--ok)]" />
                           <span>WhatsApp</span>
@@ -2078,7 +2078,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <Sparkles className="w-4 h-4 text-[var(--acc)]" />
               <span>{t("musicianBannerTitle")}</span>
             </div>
-            <p className="text-[11px] font-sans text-[var(--ink-2)] leading-relaxed">
+            <p className="text-xs font-sans text-[var(--ink-2)] leading-relaxed">
               {t("musicianBannerSubtitle")}
             </p>
             <div className="pt-1">
@@ -2086,7 +2086,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 href="/musicos"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans text-xs font-bold transition-all hover:scale-[1.01]"
+                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-[var(--acc)]/70 font-sans text-xs font-bold transition-ui "
               >
                 {t("musicianBannerCTA")}
               </a>

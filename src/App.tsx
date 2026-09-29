@@ -1160,7 +1160,7 @@ export default function App() {
   return (
     <PlayerProvider>
       <div
-        className={`h-screen ${colors.bg} flex flex-col md:flex-row transition-colors duration-500 font-sans w-full max-w-[100vw] overflow-hidden`}
+        className={`h-screen ${colors.bg} flex flex-col md:flex-row transition-colors duration-300 font-sans w-full max-w-[100vw] overflow-hidden`}
       >
         {/* LEFT SIDEBAR */}
         {/* MOBILE TOP BAR */}
@@ -1169,7 +1169,7 @@ export default function App() {
           <div className="flex items-center justify-between px-4 pt-3 pb-2">
             <div
               onClick={() => setShowBandSwitcherModal(true)}
-              className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-colors p-1 -ml-1 rounded-[var(--r-m)] hover:bg-[var(--sunken)]"
+              className="flex items-center gap-3 cursor-pointer group active:scale-[0.97] transition-colors p-1 -ml-1 rounded-[var(--r-m)] hover:bg-[var(--sunken)]"
               title="Toca para cambiar de banda"
             >
               <div className="relative shrink-0">
@@ -1206,7 +1206,7 @@ export default function App() {
                     e.stopPropagation();
                     setShowUserProfileModal(true);
                   }}
-                  className="inline-flex items-center gap-1 px-1.5 py-0.5 mt-0.5 rounded-[var(--r-pill)] text-[9px] font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] w-fit cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-1 px-1.5 py-0.5 mt-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] w-fit cursor-pointer transition-colors"
                   title="Plan actual. Clic para gestionar suscripción (Upgrade / Downgrade)"
                 >
                   <Sparkles className="w-2 h-2" />
@@ -1237,7 +1237,7 @@ export default function App() {
                 title="Guía rápida: ¿Por dónde empezar?"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span className="text-[10px] hidden xs:inline">Guía</span>
+                <span className="text-micro hidden xs:inline">Guía</span>
               </button>
               {!isPromoPlan && (
                 <button
@@ -1250,7 +1250,7 @@ export default function App() {
                   title="Gestionar Campañas de Booking"
                 >
                   <Target className="w-3.5 h-3.5" />
-                  <span className="text-[10px] hidden xs:inline">
+                  <span className="text-micro hidden xs:inline">
                     {activeCampaign ? "Campaña" : "Campañas"}
                   </span>
                 </button>
@@ -1328,7 +1328,7 @@ export default function App() {
                     setIsMobileMenuOpen((prev) => !prev);
                   }
                 }}
-                className="flex-1 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+                className="flex-1 flex items-center justify-center cursor-pointer active:scale-[0.97] transition-transform"
                 aria-label={slotLabel}
                 title={slotLabel}
               >
@@ -1362,7 +1362,7 @@ export default function App() {
                 />
                 <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[var(--surface)] rounded-t-[var(--r-xl)]">
                   <div className="w-9 h-1 rounded-[var(--r-pill)] bg-[var(--sunken)] mx-auto mt-2.5 mb-1" />
-                  <div className="px-4 pt-1 pb-2 text-[12px] font-semibold text-[var(--ink-2)]">
+                  <div className="px-4 pt-1 pb-2 text-xs font-semibold text-[var(--ink-2)]">
                     {t(group.titleKey, group.titleDefault)}
                   </div>
                   <div className="px-3 pb-4 flex flex-col gap-1">
@@ -1438,7 +1438,7 @@ export default function App() {
                       <span
                         className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === "synced" ? "bg-[var(--ok)]/30" : syncStatus === "error" ? "bg-[var(--alert)]" : "bg-[var(--ink-3)]"}`}
                       />
-                      <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                      <span className="text-micro font-sans text-[var(--ink-2)]">
                         Banda activa
                       </span>
                     </div>
@@ -1573,23 +1573,23 @@ export default function App() {
                       <div className="flex items-center justify-between gap-1 mb-1.5">
                         <div className="flex items-center gap-1.5">
                           <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
-                          <span className="text-[11px] font-semibold text-[var(--ink-2)]">
+                          <span className="text-xs font-semibold text-[var(--ink-2)]">
                             Créditos IA
                           </span>
                         </div>
-                        <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">
+                        <span className="text-micro font-semibold tabular-nums text-[var(--ink-2)]">
                           {estimatedUsed} / {totalCredits}
                         </span>
                       </div>
                       <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
                         <div
-                          className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
+                          className={`h-full rounded-[var(--r-pill)] transition-ui duration-300 ${
                             pct > 85 ? "bg-[var(--alert)]" : "bg-[var(--acc)]"
                           }`}
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
+                      <div className="flex items-center justify-between text-micro text-[var(--ink-2)] mt-1">
                         <span className="truncate max-w-[100px]">
                           Plan {pDef.name}
                         </span>
@@ -1619,7 +1619,7 @@ export default function App() {
                       className="flex items-center gap-3 w-full cursor-pointer text-left group"
                     >
                       <div
-                        className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
+                        className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform "
                         style={{
                           backgroundColor:
                             currentUser.avatarColor || "var(--acc)",
@@ -1628,11 +1628,11 @@ export default function App() {
                         {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
                       </div>
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
+                        <span className="text-xs font-bold font-sans text-[var(--ink)] truncate">
                           {currentUser.name}
                         </span>
                         <span
-                          className="text-[10px] text-[var(--ink-2)] truncate"
+                          className="text-micro text-[var(--ink-2)] truncate"
                           title={currentUser.email || currentUser.username}
                         >
                           {currentUser.email || currentUser.username}
@@ -1646,11 +1646,11 @@ export default function App() {
                     <img
                       src="/logo_bandmanager_symbol.png?v=4"
                       alt="BandManager.io"
-                      className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
+                      className="w-7 h-7 object-contain shrink-0 transition-ui cursor-pointer"
                       referrerPolicy="no-referrer"
                     />
                     <div className="flex flex-col text-left">
-                      <span className="text-[9px] font-bold font-display text-[var(--ink-2)] leading-none">
+                      <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none">
                         BANDMANAGER
                         <span className="text-[var(--acc)]">.io</span>
                       </span>
@@ -1684,13 +1684,13 @@ export default function App() {
                 <img
                   src={currentActiveBandLogo}
                   alt="Logo"
-                  className="w-24 h-24 xl:w-28 xl:h-28 object-contain p-2 bg-[var(--sunken)] rounded-[var(--r-l)] group-hover:scale-105 transition-transform duration-300 shrink-0"
+                  className="w-24 h-24 xl:w-28 xl:h-28 object-contain p-2 bg-[var(--sunken)] rounded-[var(--r-l)] transition-transform duration-300 shrink-0"
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="w-24 h-24 xl:w-28 xl:h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1 p-2 shrink-0 group-hover:scale-105 transition-transform duration-300">
-                  <Guitar className="w-6 h-6 opacity-80 group-hover:scale-110 transition-transform" />
-                  <span className="text-[9px] font-bold text-[var(--ink-2)] text-center">
+                <div className="w-24 h-24 xl:w-28 xl:h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1 p-2 shrink-0 transition-transform duration-300">
+                  <Guitar className="w-6 h-6 opacity-80 transition-transform" />
+                  <span className="text-micro font-bold text-[var(--ink-2)] text-center">
                     {currentActiveBandName}
                   </span>
                 </div>
@@ -1715,7 +1715,7 @@ export default function App() {
                 </h1>
                 <ChevronDown className="w-4 h-4 text-[var(--acc-ink)] group-hover:translate-y-0.5 transition-transform shrink-0" />
               </div>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc-soft)] text-[var(--acc-ink)]">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc-soft)] text-[var(--acc-ink)]">
                 <Sparkles className="w-2.5 h-2.5" />
                 {getPlanDefinition(currentActiveBandPlan).name}
               </span>
@@ -1726,7 +1726,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setShowOnboardingModal(true)}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--r-pill)] text-[11px] font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] transition-colors cursor-pointer active:scale-95"
+              className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] transition-colors cursor-pointer active:scale-[0.97]"
               title="Guía interactiva para nuevos músicos"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -1816,12 +1816,12 @@ export default function App() {
           {!isPromoPlan && (
             <div className="px-3 pt-3 pb-2 space-y-1.5">
               <div className="flex items-center justify-between px-1">
-                <p className="text-[11px] font-semibold text-[var(--ink-2)]">
+                <p className="text-xs font-semibold text-[var(--ink-2)]">
                   Campañas
                 </p>
                 <button
                   onClick={() => setShowCampaignModal(true)}
-                  className="text-[11px] font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
                   title="Gestionar Campañas de Booking"
                 >
                   <Target className="w-3 h-3" />
@@ -1846,17 +1846,17 @@ export default function App() {
                     <Target className="w-3.5 h-3.5" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[11px] font-bold truncate leading-tight">
+                    <span className="text-xs font-bold truncate leading-tight">
                       {activeCampaign ? activeCampaign.name : "Modo Campaña"}
                     </span>
-                    <span className="text-[10px] text-[var(--ink-2)] truncate">
+                    <span className="text-micro text-[var(--ink-2)] truncate">
                       {activeCampaign
                         ? `${activeCampaign.targetDates?.length || 0} fechas en calendario`
                         : "Sin campaña activa"}
                     </span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] shrink-0">
+                <span className="text-micro font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--on-acc)] shrink-0">
                   {activeCampaign ? "Activa" : "Elegir"}
                 </span>
               </button>
@@ -1894,23 +1894,23 @@ export default function App() {
                   <div className="flex items-center justify-between gap-1 mb-1.5">
                     <div className="flex items-center gap-1.5">
                       <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
-                      <span className="text-[11px] font-semibold text-[var(--ink-2)]">
+                      <span className="text-xs font-semibold text-[var(--ink-2)]">
                         Créditos IA
                       </span>
                     </div>
-                    <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">
+                    <span className="text-micro font-semibold tabular-nums text-[var(--ink-2)]">
                       {estimatedUsed} / {totalCredits}
                     </span>
                   </div>
                   <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
                     <div
-                      className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
+                      className={`h-full rounded-[var(--r-pill)] transition-ui duration-300 ${
                         pct > 85 ? "bg-[var(--alert)]" : "bg-[var(--acc)]"
                       }`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[10px] text-[var(--ink-2)] mt-1">
+                  <div className="flex items-center justify-between text-micro text-[var(--ink-2)] mt-1">
                     <span className="truncate max-w-[100px]">
                       Plan {pDef.name}
                     </span>
@@ -1933,7 +1933,7 @@ export default function App() {
                   className="flex items-center gap-3 w-full cursor-pointer text-left group"
                 >
                   <div
-                    className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform group-hover:scale-105"
+                    className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-[var(--ink)] text-xs font-sans shrink-0 transition-transform "
                     style={{
                       backgroundColor: currentUser.avatarColor || "var(--acc)",
                     }}
@@ -1941,11 +1941,11 @@ export default function App() {
                     {currentUser.name ? currentUser.name.slice(0, 2) : "US"}
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
+                    <span className="text-xs font-bold font-sans text-[var(--ink)] truncate">
                       {currentUser.name}
                     </span>
                     <span
-                      className="text-[10px] text-[var(--ink-2)] truncate"
+                      className="text-micro text-[var(--ink-2)] truncate"
                       title={currentUser.email || currentUser.username}
                     >
                       {currentUser.email || currentUser.username}
@@ -1960,11 +1960,11 @@ export default function App() {
                 <img
                   src="/logo_bandmanager_symbol.png?v=4"
                   alt="BandManager.io"
-                  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
+                  className="w-7 h-7 object-contain shrink-0 transition-ui cursor-pointer"
                   referrerPolicy="no-referrer"
                 />
                 <div className="flex flex-col text-left">
-                  <span className="text-[9px] font-bold font-display text-[var(--ink-2)] leading-none">
+                  <span className="text-micro font-bold font-display text-[var(--ink-2)] leading-none">
                     BANDMANAGER<span className="text-[var(--acc)]">.io</span>
                   </span>
                 </div>
@@ -2028,7 +2028,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => fetchState()}
-                className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)]/60 font-sans text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
+                className="px-3 py-1.5 bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 text-[var(--alert)]/60 font-sans text-micro rounded-md transition-ui cursor-pointer whitespace-nowrap active:scale-[0.97]"
               >
                 Reintentar Conexión
               </button>
@@ -2416,7 +2416,7 @@ export default function App() {
           {/* Floating Chatbot Overlay */}
           {currentView !== "chat" && !isPromoPlan && (
             <div
-              className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-all duration-200 ${
+              className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-ui duration-200 ${
                 isFloatingChatOpen
                   ? "block animate-in slide-in-from-bottom-5"
                   : "hidden"
@@ -2451,12 +2451,12 @@ export default function App() {
             <button
               id="floating-chat-trigger-btn"
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
-              className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
+              className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
                 isFloatingChatOpen
                   ? "bg-[var(--alert)] text-[var(--ink)] hover:bg-[var(--alert)]"
                   : isChatLoading
                     ? "bg-[var(--tentative)]/80 text-[var(--ink)] hover:bg-[var(--tentative)] ring-2 ring-cyan-400/50"
-                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] hover:scale-105"
+                    : "bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] "
               }`}
               title={
                 isChatLoading

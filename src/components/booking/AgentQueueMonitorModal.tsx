@@ -107,31 +107,31 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     switch (type) {
       case 'lector_inbox_check':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
             📥 Lector Inbox
           </span>
         );
       case 'redactor_pitch_dispatch':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--ok)]/20 text-[var(--ok)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--ok)]/20 text-[var(--ok)] ">
             📤 Redactor Dispatch
           </span>
         );
       case 'scout_enrichment':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
             🔍 Scout Enrichment
           </span>
         );
       case 'campaign_radar_sync':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
             🛰️ Radar Sync
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--sunken)]/50 text-[var(--ink-2)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--sunken)]/50 text-[var(--ink-2)] ">
             {type}
           </span>
         );
@@ -142,25 +142,25 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     switch (status) {
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--ok)]/20 text-[var(--ok)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--ok)]/20 text-[var(--ok)] ">
             ✓ Completado
           </span>
         );
       case 'processing':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
             ● En Proceso
           </span>
         );
       case 'pending':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--acc)]/20 text-[var(--acc)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--acc)]/20 text-[var(--acc)] ">
             ⏳ En Cola
           </span>
         );
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-black bg-[var(--alert)]/20 text-[var(--alert)] ">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-bold bg-[var(--alert)]/20 text-[var(--alert)] ">
             ✕ Fallido
           </span>
         );
@@ -182,14 +182,14 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-base font-bold text-[var(--ink)] tracking-wide">Monitor de Cola & Workers en Vivo</h2>
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-pill)] text-[11px] font-semibold bg-[var(--ok)]/15 text-[var(--ok)] ">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-semibold bg-[var(--ok)]/15 text-[var(--ok)] ">
                     <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] animate-ping" />
                     Worker Online
                   </span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)]">
                   Arquitectura distribuida de agentes de IA con persistencia en Supabase (
-                  <code className="text-[var(--ink-2)] text-[10px] font-mono">agent_jobs_queue</code>)
+                  <code className="text-[var(--ink-2)] text-micro font-mono">agent_jobs_queue</code>)
                 </p>
               </div>
             </div>
@@ -199,7 +199,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 type="button"
                 onClick={() => fetchMetrics(true)}
                 disabled={refreshing}
-                className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer disabled:opacity-50"
+                className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer disabled:opacity-50"
                 title="Refrescar métricas"
               >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[var(--acc)]' : ''}`} />
@@ -207,7 +207,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+                className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]/80 hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -224,7 +224,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <Clock className="w-3.5 h-3.5 text-[var(--acc)]" />
                 </div>
                 <span className="text-2xl font-black text-[var(--acc)] font-mono">{stats.pending}</span>
-                <span className="text-[10px] text-[var(--ink-2)] mt-1">Trabajos esperando turno</span>
+                <span className="text-micro text-[var(--ink-2)] mt-1">Trabajos esperando turno</span>
               </div>
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col">
@@ -233,7 +233,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)] animate-spin" />
                 </div>
                 <span className="text-2xl font-black text-[var(--acc)] font-mono">{stats.processing}</span>
-                <span className="text-[10px] text-[var(--ink-2)] mt-1">Ejecutando en worker</span>
+                <span className="text-micro text-[var(--ink-2)] mt-1">Ejecutando en worker</span>
               </div>
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col">
@@ -242,7 +242,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)]" />
                 </div>
                 <span className="text-2xl font-black text-[var(--ok)] font-mono">{stats.completed}</span>
-                <span className="text-[10px] text-[var(--ink-2)] mt-1">Procesados con éxito</span>
+                <span className="text-micro text-[var(--ink-2)] mt-1">Procesados con éxito</span>
               </div>
 
               <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-col">
@@ -251,7 +251,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <AlertTriangle className="w-3.5 h-3.5 text-[var(--alert)]" />
                 </div>
                 <span className="text-2xl font-black text-[var(--alert)] font-mono">{stats.failed}</span>
-                <span className="text-[10px] text-[var(--ink-2)] mt-1">Reintentos exponenciales</span>
+                <span className="text-micro text-[var(--ink-2)] mt-1">Reintentos exponenciales</span>
               </div>
             </div>
 
@@ -270,7 +270,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <Server className="w-4 h-4 text-[var(--acc)]" />
                   <span>Mantenimiento & Retención Automática (Auto-Vacuum)</span>
                 </div>
-                <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
+                <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   Las tareas completadas se archivan automáticamente tras 7 días para preservar la máxima velocidad de lectura en
                   PostgreSQL.
                 </p>
@@ -279,7 +279,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                 type="button"
                 onClick={handlePruneCompleted}
                 disabled={isPruning}
-                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition-all text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+                className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] font-bold transition-ui text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
               >
                 <Trash2 className="w-3.5 h-3.5 text-[var(--acc)]" />
                 <span>{isPruning ? 'Podando...' : 'Podar Completados'}</span>
@@ -293,7 +293,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                   <Activity className="w-3.5 h-3.5 text-[var(--acc)]" />
                   <span>Historial de Trabajos en la Cola (Últimos 10 eventos)</span>
                 </h3>
-                <span className="text-[11px] text-[var(--ink-2)] font-mono">Sondeo worker: 3s</span>
+                <span className="text-xs text-[var(--ink-2)] font-mono">Sondeo worker: 3s</span>
               </div>
 
               {loading ? (
@@ -321,17 +321,17 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
                             <div className="flex items-center gap-2 flex-wrap">
                               {getAgentBadge(job.agent_type)}
                               {getStatusBadge(job.status)}
-                              <span className="font-mono text-[10px] text-[var(--ink-2)]">{job.id}</span>
+                              <span className="font-mono text-micro text-[var(--ink-2)]">{job.id}</span>
                             </div>
                             {job.error_message && (
-                              <p className="text-[11px] text-[var(--alert)]/90 font-mono bg-[var(--alert)]/20 px-2 py-1 rounded ">
+                              <p className="text-xs text-[var(--alert)]/90 font-mono bg-[var(--alert)]/20 px-2 py-1 rounded ">
                                 {job.error_message}
                               </p>
                             )}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 text-[11px] text-[var(--ink-2)] shrink-0 self-end sm:self-center font-mono">
+                        <div className="flex items-center gap-4 text-xs text-[var(--ink-2)] shrink-0 self-end sm:self-center font-mono">
                           {job.duration_ms !== undefined && <span className="text-[var(--ink-2)] font-semibold">{job.duration_ms}ms</span>}
                           <span className="text-[var(--ink-2)]">
                             {new Date(job.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
@@ -354,7 +354,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold transition-all cursor-pointer"
+              className="px-4 py-1.5 rounded-[var(--r-m)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] font-bold transition-ui cursor-pointer"
             >
               Cerrar
             </button>

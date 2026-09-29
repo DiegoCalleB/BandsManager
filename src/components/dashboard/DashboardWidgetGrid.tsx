@@ -524,7 +524,7 @@ export function DashboardWidgetGrid({
                 <span className="text-sm font-semibold text-[var(--ink)]">
                   Editando tu panel
                 </span>
-                <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
+                <span className="text-xs px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
                   Arrastra para reordenar
                 </span>
               </div>
@@ -580,7 +580,7 @@ export function DashboardWidgetGrid({
             <Info className="w-4 h-4 shrink-0" />
             <span>Modo de Edición Activo:</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-[var(--acc-ink)]/85 pt-1">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-[var(--acc-ink)]/85 pt-1">
             <div className="flex items-center gap-1.5">
               <GripVertical className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
@@ -627,7 +627,7 @@ export function DashboardWidgetGrid({
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, widget.id)}
               onDragEnd={handleDragEnd}
-              className={`${colSpanClass} relative transition-all duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
+              className={`${colSpanClass} relative transition-ui duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
                 isDragOver
                   ? "ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10"
                   : ""
@@ -657,7 +657,7 @@ export function DashboardWidgetGrid({
                           onClick={() => handleChangeWSpan(widget.id, span)}
                           title={label}
                           aria-label={`Ancho: ${label}`}
-                          className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
+                          className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center ${
                             widget.wSpan === span
                               ? "bg-[var(--acc)]"
                               : "hover:bg-[var(--sunken)]"
@@ -684,7 +684,7 @@ export function DashboardWidgetGrid({
                           onClick={() => handleChangeHSpan(widget.id, val)}
                           title={label}
                           aria-label={`Alto: ${label}`}
-                          className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center ${
+                          className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center ${
                             (widget.hSpan || "normal") === val
                               ? "bg-[var(--acc)]"
                               : "hover:bg-[var(--sunken)]"
@@ -743,7 +743,7 @@ export function DashboardWidgetGrid({
       {/* WIDGET IMPRESCINDIBLE: APOYO A BANDMANAGER (NO SE PUEDE QUITAR) */}
       <div className="pt-2 space-y-3">
         {isEditMode && (
-          <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-[11px] font-sans font-bold flex items-center gap-1.5 w-fit">
+          <div className="px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--acc)]/70 text-xs font-sans font-bold flex items-center gap-1.5 w-fit">
             <Info className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
             <span>
               Módulo Fijo: Apoyo a BandManager (Permanente, no se puede quitar)
@@ -785,7 +785,7 @@ export function DashboardWidgetGrid({
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="p-2 rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+                className="p-2 rounded-[var(--r-m)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -805,7 +805,7 @@ export function DashboardWidgetGrid({
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-all ${
+                  className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-bold whitespace-nowrap cursor-pointer transition-ui ${
                     selectedCategory === cat
                       ? "bg-[var(--acc)] text-[var(--on-acc)]"
                       : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink-2)]"
@@ -826,14 +826,14 @@ export function DashboardWidgetGrid({
                 return (
                   <div
                     key={item.type}
-                    className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  transition-all flex items-center justify-between gap-4"
+                    className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)]  transition-ui flex items-center justify-between gap-4"
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold text-[var(--ink-2)]">
                           {item.title}
                         </span>
-                        <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--acc)]">
+                        <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--acc)]">
                           {item.category}
                         </span>
                       </div>
@@ -846,10 +846,10 @@ export function DashboardWidgetGrid({
                       type="button"
                       onClick={() => handleAddWidget(item.type)}
                       disabled={isAlreadyAdded}
-                      className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-all shrink-0 flex items-center gap-1 ${
+                      className={`px-3.5 py-2 rounded-[var(--r-m)] font-sans text-xs font-bold transition-ui shrink-0 flex items-center gap-1 ${
                         isAlreadyAdded
                           ? "bg-[var(--surface)] text-[var(--ink-2)] cursor-default"
-                          : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-95"
+                          : "bg-[var(--acc)] hover:bg-[var(--acc)]/60 text-[var(--on-acc)] cursor-pointer active:scale-[0.97]"
                       }`}
                     >
                       {isAlreadyAdded ? (

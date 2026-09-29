@@ -207,7 +207,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
           {/* Options Stack */}
           <div className="flex flex-col gap-2.5">
             {/* Option 1: File Upload */}
-            <label className="w-full p-3 bg-[var(--sunken)] hover:bg-[var(--surface)]  rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group">
+            <label className="w-full p-3 bg-[var(--sunken)] hover:bg-[var(--surface)]  rounded-[var(--r-m)] flex items-center justify-between transition-ui cursor-pointer group">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--surface)] group-hover:bg-[var(--acc)]/20 text-[var(--acc)] rounded-[var(--r-s)] transition-colors">
                   {isUploading ? (
@@ -222,7 +222,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                       ? "Subiendo imagen..."
                       : "Subir desde dispositivo"}
                   </span>
-                  <span className="block text-[11px] text-[var(--ink-2)] font-sans">
+                  <span className="block text-xs text-[var(--ink-2)] font-sans">
                     Formatos JPG, PNG, WEBP o SVG
                   </span>
                 </div>
@@ -241,7 +241,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
               type="button"
               onClick={handleAutoSearchLogo}
               disabled={isSearching || isUploading}
-              className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20  rounded-[var(--r-m)] flex items-center justify-between transition-all cursor-pointer group disabled:opacity-50"
+              className="w-full p-3 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20  rounded-[var(--r-m)] flex items-center justify-between transition-ui cursor-pointer group disabled:opacity-50"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-[var(--acc)]/20 text-[var(--acc)]/70 rounded-[var(--r-s)]">
@@ -257,7 +257,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
                       ? "Buscando logo oficial..."
                       : "Buscar Logo con IA & Google"}
                   </span>
-                  <span className="block text-[11px] text-[var(--acc)]/80 font-sans">
+                  <span className="block text-xs text-[var(--acc)]/80 font-sans">
                     Encuentra fotos de recintos o favicons oficiales
                   </span>
                 </div>
@@ -269,14 +269,14 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
               <button
                 type="button"
                 onClick={() => setShowUrlInput(true)}
-                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-all"
+                className="w-full p-2.5 bg-[var(--bg)]/60 hover:bg-[var(--surface)] rounded-[var(--r-m)] flex items-center gap-2.5 text-xs text-[var(--ink-2)] font-medium transition-ui"
               >
                 <LinkIcon className="w-4 h-4 text-[var(--ink-2)]" />
                 <span>Pegar URL directa de imagen</span>
               </button>
             ) : (
               <div className="p-3 bg-[var(--sunken)] rounded-[var(--r-m)] space-y-2">
-                <label className="block text-[10px] font-sans text-[var(--ink-2)]">
+                <label className="block text-micro font-sans text-[var(--ink-2)]">
                   Pegar enlace de imagen (URL)
                 </label>
                 <div className="flex gap-2">
@@ -304,7 +304,7 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
               <button
                 type="button"
                 onClick={handleRemoveImage}
-                className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert)]/20 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-all cursor-pointer mt-1"
+                className="w-full p-2 bg-[var(--alert-soft)] hover:bg-[var(--alert)]/20 rounded-[var(--r-m)] flex items-center justify-center gap-2 text-xs text-[var(--ink-2)] transition-ui cursor-pointer mt-1"
               >
                 <Trash2 className="w-4 h-4 text-[var(--alert)]" />
                 <span>Eliminar imagen actual y restablecer icono</span>

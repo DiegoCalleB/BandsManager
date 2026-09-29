@@ -168,13 +168,13 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
         <div className="w-full lg:w-[460px] bg-[var(--sunken)]/80 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-[var(--hair)] relative select-none shrink-0">
           <div className="absolute top-4 left-6 flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" />
-            <span className="text-[10px] font-mono text-[var(--ink-2)] font-bold ">MODO CINE ACTIVO</span>
+            <span className="text-micro font-mono text-[var(--ink-2)] font-bold ">MODO CINE ACTIVO</span>
           </div>
 
           <button
             id="btn-close-theater-mobile"
             onClick={onClose}
-            className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-[var(--sunken)]/80 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer lg:hidden"
+            className="absolute top-3 right-4 z-50 p-2.5 rounded-full bg-[var(--sunken)]/80 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer lg:hidden"
             title="Cerrar modo cine"
           >
             <X className="w-5 h-5" />
@@ -224,7 +224,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
                       {currentSubtitleText && !renderedBurnedSubs && (
                         <div className="absolute bottom-20 left-3 right-3 z-40 bg-[var(--scrim)]/80 px-2 py-1.5 rounded-xl text-center bg-[var(--acc)]/10">
-                          <span className="text-[10px] font-sans font-black text-[var(--acc-ink)] leading-tight">
+                          <span className="text-micro font-sans font-bold text-[var(--acc-ink)] leading-tight">
                             ✨ {currentSubtitleText} ✨
                           </span>
                         </div>
@@ -292,35 +292,35 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
             {/* Video Info Overlays inside the phone */}
             <div className="z-10 flex justify-between items-center">
-              <span className="text-[8px] font-mono text-[var(--acc-ink)] font-extrabold bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
+              <span className="text-micro font-mono text-[var(--acc-ink)] font-extrabold bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
                 Clip #{selectedHighlightIndex + 1}
               </span>
               <div className="flex gap-1 items-center bg-[var(--scrim)]/40 py-1 px-2 rounded-full ">
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--alert)] animate-ping" />
-                <span className="text-[8px] font-mono text-[var(--alert)] font-bold">1080P HD</span>
+                <span className="text-micro font-mono text-[var(--alert)] font-bold">1080P HD</span>
               </div>
             </div>
 
             <div className="z-10 space-y-2 mt-auto text-left">
               <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-[8px] font-mono font-bold text-[var(--acc-ink)]">{nombreBanda.charAt(0).toUpperCase()}</span>
+                <span className="w-5 h-5 rounded-full bg-[var(--acc)]/20 flex items-center justify-center text-micro font-mono font-bold text-[var(--acc-ink)]">{nombreBanda.charAt(0).toUpperCase()}</span>
                 <div>
-                  <span className="text-[9px] font-bold text-[var(--ink)] block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
-                  <span className="text-[7px] font-mono text-[var(--ink-2)] block truncate max-w-[120px]">{nombreBanda}</span>
+                  <span className="text-micro font-bold text-[var(--ink)] block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
+                  <span className="text-micro font-mono text-[var(--ink-2)] block truncate max-w-[120px]">{nombreBanda}</span>
                 </div>
               </div>
 
               {highlights[selectedHighlightIndex] && (
-                <h4 className="text-[10px] text-[var(--ink)] font-bold line-clamp-1">
+                <h4 className="text-micro text-[var(--ink)] font-bold line-clamp-1">
                   🎬 {highlights[selectedHighlightIndex]?.title}
                 </h4>
               )}
 
-              <p className="text-[9px] text-[var(--ink)] line-clamp-3 leading-normal font-sans">
+              <p className="text-micro text-[var(--ink)] line-clamp-3 leading-normal font-sans">
                 {editedCopy || (highlights[selectedHighlightIndex]?.recommendedCopy || '')}
               </p>
 
-              <div className="flex items-center gap-1 text-[8px] font-mono bg-[var(--scrim)]/60 text-[var(--acc-ink)] py-1 px-2 rounded-full max-w-[150px] truncate">
+              <div className="flex items-center gap-1 text-micro font-mono bg-[var(--scrim)]/60 text-[var(--acc-ink)] py-1 px-2 rounded-full max-w-[150px] truncate">
                 <Music className="w-2.5 h-2.5 shrink-0" />
                 <span className="truncate">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
               </div>
@@ -333,7 +333,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <button
               id="expanded-mute-btn"
               onClick={() => setIsPreviewMuted(!isPreviewMuted)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-neutral-850 active:scale-95 transition-all cursor-pointer select-none text-xs font-mono font-bold"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-neutral-850 active:scale-[0.97] transition-ui cursor-pointer select-none text-xs font-mono font-bold"
             >
               {isPreviewMuted ? (
                 <>
@@ -357,10 +357,10 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+                  <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
                     Highlight de Alto Impacto
                   </span>
-                  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
+                  <span className="px-2 py-0.5 rounded text-micro font-mono font-extrabold bg-[var(--acc)]/15 text-[var(--acc-ink)] ">
                     {highlights[selectedHighlightIndex]?.range || 'N/D'}
                   </span>
                 </div>
@@ -372,7 +372,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               <button
                 id="btn-close-theater"
                 onClick={onClose}
-                className="p-2 rounded-xl bg-[var(--sunken)]/50 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-all cursor-pointer"
+                className="p-2 rounded-xl bg-[var(--sunken)]/50 hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer"
                 title="Cerrar modo cine"
               >
                 <X className="w-5 h-5" />
@@ -382,7 +382,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             {/* Virality Card & Reason */}
             <div className="p-4 rounded-2xl bg-[var(--sunken)]/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-[10px] font-mono text-[var(--ink-2)] block">Por qué este momento es viral</span>
+                <span className="text-micro font-mono text-[var(--ink-2)] block">Por qué este momento es viral</span>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed max-w-xl">
                   {highlights[selectedHighlightIndex]?.description || 'La IA está analizando los ganchos emocionales de este intervalo.'}
                 </p>
@@ -390,7 +390,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               
               <div className="flex items-center gap-3 shrink-0 bg-[var(--sunken)] p-3 rounded-xl ">
                 <div className="relative w-12 h-12 flex items-center justify-center">
-                  <span className="text-[11px] font-mono font-extrabold text-[var(--ink)]">
+                  <span className="text-xs font-mono font-extrabold text-[var(--ink)]">
                     {highlights[selectedHighlightIndex]?.virality || 95}%
                   </span>
                 </div>
@@ -399,7 +399,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                     <Flame className="w-3.5 h-3.5 text-[var(--acc-ink)] fill-[var(--acc)]" />
                     <span className="text-xs font-bold text-[var(--ink)]">Viralidad</span>
                   </div>
-                  <span className="text-[9px] font-mono text-[var(--acc-ink)] block font-bold">POTENCIAL MÁXIMO</span>
+                  <span className="text-micro font-mono text-[var(--acc-ink)] block font-bold">POTENCIAL MÁXIMO</span>
                 </div>
               </div>
             </div>
@@ -465,13 +465,13 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           Línea de Tiempo Interactiva
                         </span>
                       </div>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
+                      <span className="px-2 py-0.5 rounded text-micro font-mono font-bold bg-[var(--acc)]/10 text-[var(--acc-ink)]">
                         REPRODUCIENDO CROP
                       </span>
                     </div>
 
                     <div className="space-y-1.5">
-                      <div className="text-[10px] text-[var(--ink-2)] font-mono flex justify-between px-1">
+                      <div className="text-micro text-[var(--ink-2)] font-mono flex justify-between px-1">
                         <span>00:00</span>
                         <span>{formatTime(totalDuration)}</span>
                       </div>
@@ -485,9 +485,9 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           className="absolute top-1 bottom-1 bg-[var(--acc)]/20 rounded-md flex items-center justify-between px-2"
                           style={{ left: `${startPct}%`, width: `${activeWidth}%` }}
                         >
-                          <span className="text-[8px] font-mono text-[var(--acc-ink)] font-extrabold">START</span>
-                          <span className="text-[8px] font-mono text-[var(--acc-ink)]">Recorte ({duration}s)</span>
-                          <span className="text-[8px] font-mono text-[var(--acc-ink)] font-extrabold">END</span>
+                          <span className="text-micro font-mono text-[var(--acc-ink)] font-extrabold">START</span>
+                          <span className="text-micro font-mono text-[var(--acc-ink)]">Recorte ({duration}s)</span>
+                          <span className="text-micro font-mono text-[var(--acc-ink)] font-extrabold">END</span>
                         </div>
 
                         <div 
@@ -496,7 +496,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                         />
                       </div>
 
-                      <div className="flex justify-between text-[10px] font-mono text-[var(--ink-2)] px-1">
+                      <div className="flex justify-between text-micro font-mono text-[var(--ink-2)] px-1">
                         <span>⏱️ Inicio: <strong className="text-[var(--ink)] font-bold">{formatTime(start)}</strong></span>
                         <span className="text-[var(--acc-ink)] bg-[var(--acc)]/10 px-2.5 py-0.5 rounded-full font-bold">
                           Duración: {duration} segundos
@@ -507,7 +507,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[var(--hair)]">
                       <div className="space-y-1.5 text-left">
-                        <span className="text-[10.5px] font-mono text-[var(--ink-2)] font-extrabold block">⬅️ Ajustar Inicio</span>
+                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block">⬅️ Ajustar Inicio</span>
                         <div className="flex gap-2">
                           <button
                             type="button"
@@ -530,7 +530,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       </div>
 
                       <div className="space-y-1.5 text-left">
-                        <span className="text-[10.5px] font-mono text-[var(--ink-2)] font-extrabold block">➡️ Ajustar Fin</span>
+                        <span className="text-micro font-mono text-[var(--ink-2)] font-extrabold block">➡️ Ajustar Fin</span>
                         <div className="flex gap-2">
                           <button
                             type="button"
@@ -570,7 +570,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <span className="block text-[9px] font-mono text-[var(--ink-2)] ">Encuadre vertical</span>
+                    <span className="block text-micro font-mono text-[var(--ink-2)] ">Encuadre vertical</span>
                     <div className="grid grid-cols-3 gap-1">
                       {([
                         { valor: 'crop' as const, etiqueta: 'Recortar' },
@@ -582,7 +582,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                           type="button"
                           onClick={() => setCropMode(opcion.valor)}
                           disabled={isCuttingVideo}
-                          className={`px-2 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer transition-all ${
+                          className={`px-2 py-1.5 rounded-lg text-micro font-mono font-bold cursor-pointer transition-ui ${
                             cropMode === opcion.valor
                               ? 'bg-[var(--acc)] text-[var(--on-acc)]'
                               : 'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -595,12 +595,12 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <span className="block text-[9px] font-mono text-[var(--ink-2)] ">Subtítulos</span>
+                    <span className="block text-micro font-mono text-[var(--ink-2)] ">Subtítulos</span>
                     <button
                       type="button"
                       onClick={() => setBurnSubtitles(v => !v)}
                       disabled={isCuttingVideo}
-                      className={`w-full px-3 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all ${
+                      className={`w-full px-3 py-1.5 rounded-lg text-micro font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-ui ${
                         burnSubtitles
                           ? 'bg-[var(--ok)]/15 text-[var(--ok)]'
                           : 'bg-[var(--sunken)] text-[var(--ink-2)]'
@@ -620,7 +620,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                         RENDERIZANDO ARCHIVOS...
                       </span>
                     </div>
-                    <p className="text-[11px] text-[var(--acc-ink)] font-mono pl-8">
+                    <p className="text-xs text-[var(--acc-ink)] font-mono pl-8">
                       ⚡ {cuttingProgressText}
                     </p>
                   </div>
@@ -638,7 +638,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       <a
                         href={renderedClipUrl}
                         download={`reel-${highlights[selectedHighlightIndex]?.range || 'clip'}.mp4`}
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-[var(--sunken)] text-[11px] font-mono font-bold text-[var(--acc-ink)] flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="flex-1 px-3 py-1.5 rounded-lg bg-[var(--sunken)] text-xs font-mono font-bold text-[var(--acc-ink)] flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>Descargar MP4</span>
@@ -649,7 +649,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                   <button
                     type="button"
                     onClick={handleCutPhysicalVideo}
-                    className="w-full py-3 px-4 rounded-xl font-black text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-all"
+                    className="w-full py-3 px-4 rounded-xl font-bold text-xs text-[var(--ink)] flex items-center justify-center gap-2 cursor-pointer transition-ui"
                   >
                     <Sparkles className="w-4 h-4 text-[var(--ink)] fill-[var(--ink-3)]" />
                     <span>✂️ Renderizar Reel Físico + Auto-Subtítulos (9:16)</span>
@@ -685,7 +685,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
             {/* Scheduling controls */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[var(--sunken)]/30 ">
               <div>
-                <label className="block text-[9px] font-mono text-[var(--ink-2)] mb-1 font-bold">Plataforma</label>
+                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Plataforma</label>
                 <select
                   value={selectedPlatform}
                   onChange={(e) => {
@@ -703,7 +703,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[9px] font-mono text-[var(--ink-2)] mb-1 font-bold">Fecha</label>
+                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Fecha</label>
                 <input
                   type="date"
                   value={scheduledDate}
@@ -713,7 +713,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[9px] font-mono text-[var(--ink-2)] mb-1 font-bold">Hora</label>
+                <label className="block text-micro font-mono text-[var(--ink-2)] mb-1 font-bold">Hora</label>
                 <input
                   type="time"
                   value={scheduledTime}
@@ -731,7 +731,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
               {schedulingSuccess ? (
                 <span className="text-[var(--ok)] text-xs font-bold font-mono">¡Clip programado con éxito!</span>
               ) : (
-                <span className="text-[10px] font-mono text-[var(--ink-2)]">Se sincroniza con el calendario</span>
+                <span className="text-micro font-mono text-[var(--ink-2)]">Se sincroniza con el calendario</span>
               )}
             </div>
 
@@ -748,7 +748,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 type="button"
                 onClick={(e) => handleSchedulePost(e)}
                 disabled={isScheduling || !editedCopy.trim()}
-                className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] active:scale-95 transition-all text-xs font-mono cursor-pointer disabled:opacity-40"
+                className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[var(--acc)] text-[var(--on-acc)] font-bold hover:bg-[var(--acc)] active:scale-[0.97] transition-ui text-xs font-mono cursor-pointer disabled:opacity-40"
               >
                 {isScheduling ? 'Guardando...' : 'Aprobar y Programar Post'}
               </button>

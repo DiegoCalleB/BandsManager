@@ -370,7 +370,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 {/* INTEGRATED LOGO INSIDE CARD */}
                 <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
-                    <div className="transition-transform duration-300 group-hover:scale-[1.01]">
+                    <div className="transition-transform duration-300 ">
                       <LoginBrandVideo />
                     </div>
                   </div>
@@ -434,7 +434,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-pill)] bg-[var(--ink)] hover:brightness-105 text-[var(--bg)] font-semibold text-sm transition-[filter,transform] duration-200 active:scale-[0.99] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-pill)] bg-[var(--ink)] hover:brightness-105 text-[var(--bg)] font-semibold text-sm transition-[filter,transform] duration-200 active:scale-[0.97] disabled:opacity-50 flex items-center justify-center cursor-pointer"
                   >
                     {loading ? 'Entrando...' : 'Entrar a mi cuenta'}
                   </button>
@@ -473,7 +473,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   </button>
                 </p>
 
-                <div className="pt-3 text-center text-[11px] text-[var(--ink-2)] flex items-center justify-center gap-1.5">
+                <div className="pt-3 text-center text-xs text-[var(--ink-2)] flex items-center justify-center gap-1.5">
                   <Music className="w-3.5 h-3.5" />
                   <span>Tus salas, tu repertorio y tu gira, en el mismo sitio</span>
                 </div>
@@ -485,7 +485,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                 {/* INTEGRATED LOGO INSIDE CARD */}
                 <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
-                    <div className="transition-transform duration-300 group-hover:scale-[1.01]">
+                    <div className="transition-transform duration-300 ">
                       <LoginBrandVideo />
                     </div>
                   </div>
@@ -551,7 +551,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-4 mt-2 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm tracking-wide transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {loading ? (
                       'Creando cuenta...'
@@ -628,7 +628,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
+                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-ui disabled:opacity-50 cursor-pointer"
                     >
                       {loading ? 'Enviando...' : 'Enviar código de recuperación'}
                     </button>
@@ -663,7 +663,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
+                      className="w-full py-3.5 px-4 rounded-[var(--r-l)] bg-[var(--ink)] hover:brightness-110 text-[var(--bg)] font-bold text-sm transition-ui disabled:opacity-50 cursor-pointer"
                     >
                       {loading ? 'Guardando...' : 'Guardar nueva contraseña'}
                     </button>

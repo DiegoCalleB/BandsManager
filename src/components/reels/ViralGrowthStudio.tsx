@@ -43,7 +43,7 @@ export const SUBTITLE_STYLES: SubtitleStyleConfig[] = [
   {
     id: 'gold',
     name: 'Indie Gold (Viral Bounce)',
-    colorClass: 'text-[var(--acc-ink)] font-black drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]',
+    colorClass: 'text-[var(--acc-ink)] font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]',
     bgClass: 'bg-[var(--scrim)]/50 px-2.5 py-1 rounded-xl bg-[var(--acc)]/10',
     fontClass: 'font-display',
     preview: 'CUANDO EL SOLO EXPLOTA 🔥🎸'
@@ -51,7 +51,7 @@ export const SUBTITLE_STYLES: SubtitleStyleConfig[] = [
   {
     id: 'neon',
     name: 'Cyber Neon (Hyperpop)',
-    colorClass: 'text-[var(--acc-ink)] font-black drop-shadow-[0_0_12px_rgba(6,182,212,0.9)]',
+    colorClass: 'text-[var(--acc-ink)] font-bold drop-shadow-[0_0_12px_rgba(6,182,212,0.9)]',
     bgClass: 'bg-[var(--sunken)]/80 px-2.5 py-1 rounded-xl bg-[var(--acc)]/10',
     fontClass: 'font-mono',
     preview: 'ESTE RIFF CAMBIÓ TODO ⚡'
@@ -296,7 +296,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
   };
 
   return (
-    <div className={`rounded-2xl p-4 sm:p-5 space-y-4 transition-all `}>
+    <div className={`rounded-2xl p-4 sm:p-5 space-y-4 transition-ui `}>
       
       {/* Header with Title & Quick Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--hair)]">
@@ -306,14 +306,14 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xs sm:text-sm font-display font-black text-[var(--ink)]">
+              <h3 className="text-xs sm:text-sm font-display font-bold text-[var(--ink)]">
                 Viral Retention Engine 4.0
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[8.5px] font-mono font-bold bg-[var(--alert)]/20 text-[var(--alert)] ">
+              <span className="px-2 py-0.5 rounded-full text-micro font-mono font-bold bg-[var(--alert)]/20 text-[var(--alert)] ">
                 PRO VIRALITY
               </span>
             </div>
-            <p className="text-[10px] font-mono text-[var(--ink-2)]">
+            <p className="text-micro font-mono text-[var(--ink-2)]">
               Ganchos 0-3s, bucles 120%, subtítulos kinetic, beat-drops, smart-pan y capas virales.
             </p>
           </div>
@@ -326,7 +326,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               id="btn-magic-autopilot"
               type="button"
               onClick={onTriggerMagicAutopilot}
-              className="px-3 py-1.5 rounded-xl hover:brightness-110 active:scale-95 text-[var(--ink)] text-[10px] font-mono font-black flex items-center gap-1.5 cursor-pointer transition-all select-none bg-[var(--acc)]/10"
+              className="px-3 py-1.5 rounded-xl hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-ui select-none bg-[var(--acc)]/10"
               title="Aplica automáticamente el combo óptimo: Mejor hook, punch-in zoom, beat-drop, subtítulos oro y sincronía con gira"
             >
               <Sparkles className="w-3.5 h-3.5 fill-[var(--ink-3)] animate-spin" />
@@ -350,7 +350,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveStudioTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
+                  className={`px-3 py-1.5 rounded-lg text-micro font-mono font-bold flex items-center gap-1.5 transition-ui cursor-pointer whitespace-nowrap ${
                     isActive
                       ? 'bg-[var(--acc)] text-[var(--on-acc)] '
                       : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]/60'
@@ -371,9 +371,9 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           {/* Live Hook Score Meter */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             <div className="md:col-span-8 space-y-1.5">
-              <label className="text-[10px] font-mono font-bold text-[var(--ink-2)] flex items-center justify-between">
+              <label className="text-micro font-mono font-bold text-[var(--ink-2)] flex items-center justify-between">
                 <span>Gancho Visual en Pantalla (0 a 3 segundos):</span>
-                <span className="text-[9px] text-[var(--ink-2)]">{currentHook.length} caracteres</span>
+                <span className="text-micro text-[var(--ink-2)]">{currentHook.length} caracteres</span>
               </label>
               <div className="relative">
                 <input
@@ -388,7 +388,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     type="button"
                     onClick={handleRunHookDoctor}
                     disabled={isAnalyzingDoctor}
-                    className="px-2.5 h-full rounded-lg bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-[9.5px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+                    className="px-2.5 h-full rounded-lg bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
                     title="Auditoría Anti-Cringe y Primer Comentario Fijado con IA"
                   >
                     <Stethoscope className={`w-3 h-3 ${isAnalyzingDoctor ? 'animate-spin' : ''}`} />
@@ -398,7 +398,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     type="button"
                     onClick={handleGenerateABVariants}
                     disabled={isGeneratingVariants}
-                    className="px-2.5 h-full rounded-lg hover:brightness-110 text-[var(--ink)] text-[9.5px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+                    className="px-2.5 h-full rounded-lg hover:brightness-110 text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
                     title="Generar 3 variantes optimizadas para el algoritmo"
                   >
                     <Sparkles className={`w-3 h-3 ${isGeneratingVariants ? 'animate-spin' : ''}`} />
@@ -412,16 +412,16 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             <div className="md:col-span-4">
               <div className={`p-3 rounded-xl flex items-center justify-between gap-2.5 ${hookAnalysis.bg}`}>
                 <div className="space-y-0.5">
-                  <span className="text-[8.5px] font-mono font-bold text-[var(--ink-2)] block">
+                  <span className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                     Viral Hook Score
                   </span>
                   <div className="flex items-center gap-1.5">
-                    <span className={`text-xl font-mono font-black ${hookAnalysis.color}`}>
+                    <span className={`text-xl font-mono font-bold ${hookAnalysis.color}`}>
                       {hookAnalysis.score}
                     </span>
-                    <span className="text-[10px] font-mono text-[var(--ink-2)]">/ 100</span>
+                    <span className="text-micro font-mono text-[var(--ink-2)]">/ 100</span>
                   </div>
-                  <span className={`text-[9px] font-bold block ${hookAnalysis.color}`}>
+                  <span className={`text-micro font-bold block ${hookAnalysis.color}`}>
                     {hookAnalysis.label}
                   </span>
                 </div>
@@ -451,7 +451,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     <h4 className="text-xs font-mono font-bold text-[var(--ink)] ">
                       Diagnóstico AI Hook Doctor & Anti-Cringe
                     </h4>
-                    <span className="text-[9.5px] font-sans text-[var(--acc-ink)]">
+                    <span className="text-micro font-sans text-[var(--acc-ink)]">
                       "{doctorDiagnosis.verdict}"
                     </span>
                   </div>
@@ -459,7 +459,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
 
                 <div className="flex items-center gap-2">
                   {/* Cringe Score Badge */}
-                  <div className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 ${
+                  <div className={`px-2.5 py-1 rounded-lg text-micro font-mono font-bold flex items-center gap-1.5 ${
                     doctorDiagnosis.cringeScore <= 25 
                       ? 'bg-[var(--ok)]/15 text-[var(--ok)] '
                       : doctorDiagnosis.cringeScore <= 55
@@ -467,13 +467,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                         : 'bg-[var(--alert)]/15 text-[var(--alert)] '
                   }`}>
                     <span>Cringe Factor: {doctorDiagnosis.cringeScore}/100</span>
-                    <span className="text-[8.5px] opacity-80">
+                    <span className="text-micro opacity-80">
                       {doctorDiagnosis.cringeScore <= 25 ? '✓ Auténtico' : '⚠️ Cliché'}
                     </span>
                   </div>
 
                   {/* Estimated Retention Badge */}
-                  <div className="px-2.5 py-1 rounded-lg bg-[var(--acc)]/15 text-[var(--acc-ink)] text-[10px] font-mono font-bold flex items-center gap-1">
+                  <div className="px-2.5 py-1 rounded-lg bg-[var(--acc)]/15 text-[var(--acc-ink)] text-micro font-mono font-bold flex items-center gap-1">
                     <TrendingUp className="w-3 h-3 text-[var(--acc-ink)]" />
                     <span>Retención 0-3s: {doctorDiagnosis.estimatedRetention3s}%</span>
                   </div>
@@ -483,10 +483,10 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               {/* Reasons / Anti-Cringe Advice */}
               {doctorDiagnosis.cringeReasons.length > 0 && (
                 <div className="space-y-1">
-                  <span className="text-[9px] font-mono font-bold text-[var(--acc-ink)]">Observaciones del Doctor:</span>
+                  <span className="text-micro font-mono font-bold text-[var(--acc-ink)]">Observaciones del Doctor:</span>
                   <div className="space-y-1">
                     {doctorDiagnosis.cringeReasons.map((reason, rIdx) => (
-                      <div key={rIdx} className="text-[10px] font-sans text-[var(--ink-2)] flex items-start gap-1.5">
+                      <div key={rIdx} className="text-micro font-sans text-[var(--ink-2)] flex items-start gap-1.5">
                         <span className="text-[var(--acc-ink)] mt-0.5">•</span>
                         <span>{reason}</span>
                       </div>
@@ -502,7 +502,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 <div className="p-3 rounded-xl bg-[var(--scrim)]/50 space-y-2 flex flex-col justify-between bg-[var(--acc)]/10">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
+                      <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-[var(--acc-ink)]" /> Gancho y Copy Mejorado
                       </span>
                     </div>
@@ -510,7 +510,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                       "{doctorDiagnosis.improvedHook}"
                     </p>
                     {doctorDiagnosis.improvedCopy && (
-                      <p className="text-[9.5px] text-[var(--ink-2)] font-sans line-clamp-2">
+                      <p className="text-micro text-[var(--ink-2)] font-sans line-clamp-2">
                         {doctorDiagnosis.improvedCopy}
                       </p>
                     )}
@@ -519,7 +519,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <button
                     type="button"
                     onClick={handleApplyDoctorImprovement}
-                    className="w-full py-1.5 rounded-lg hover:brightness-110 active:scale-95 text-[var(--ink)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                    className="w-full py-1.5 rounded-lg hover:brightness-110 active:scale-[0.97] text-[var(--ink)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui"
                   >
                     <CheckCheck className="w-3.5 h-3.5" />
                     <span>Aplicar Mejora al Reel</span>
@@ -530,15 +530,15 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 <div className="p-3 rounded-xl bg-[var(--scrim)]/50 space-y-2 flex flex-col justify-between bg-[var(--acc)]/10">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
+                      <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1">
                         <MessageSquareQuote className="w-3 h-3 text-[var(--acc-ink)]" /> Primer Comentario Fijado (Pinned Comment)
                       </span>
-                      <span className="text-[8px] font-mono text-[var(--acc-ink)]/80 bg-[var(--acc)]/60 px-1 rounded">5x Comentarios</span>
+                      <span className="text-micro font-mono text-[var(--acc-ink)]/80 bg-[var(--acc)]/60 px-1 rounded">5x Comentarios</span>
                     </div>
                     <p className="text-xs font-bold text-[var(--acc-ink)]">
                       "{doctorDiagnosis.pinnedComment}"
                     </p>
-                    <p className="text-[9px] text-[var(--ink-2)] font-mono">
+                    <p className="text-micro text-[var(--ink-2)] font-mono">
                       🎯 {doctorDiagnosis.pinnedCommentGoal}
                     </p>
                   </div>
@@ -546,9 +546,9 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <button
                     type="button"
                     onClick={handleCopyPinnedComment}
-                    className={`w-full py-1.5 rounded-lg text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-all ${
+                    className={`w-full py-1.5 rounded-lg text-micro font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-ui ${
                       copiedPinnedComment
-                        ? 'bg-[var(--ok)] text-[var(--on-ok)] font-black'
+                        ? 'bg-[var(--ok)] text-[var(--on-ok)] font-bold'
                         : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] '
                     }`}
                   >
@@ -574,11 +574,11 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           {hookVariants.length > 0 && (
             <div className="space-y-2 pt-2 border-t border-[var(--hair)]">
               <div className="flex items-center justify-between">
-                <span className="text-[9.5px] font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
+                <span className="text-micro font-mono font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
                   <Shuffle className="w-3.5 h-3.5" />
                   3 Variantes de Gancho para Test A/B/C:
                 </span>
-                <span className="text-[8.5px] font-mono text-[var(--ink-2)]">Haz clic en una para aplicarla</span>
+                <span className="text-micro font-mono text-[var(--ink-2)]">Haz clic en una para aplicarla</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
@@ -588,7 +588,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     <div
                       key={variant.id}
                       onClick={() => handleApplyVariant(variant)}
-                      className={`p-3 rounded-xl transition-all cursor-pointer flex flex-col justify-between text-left space-y-2 relative ${
+                      className={`p-3 rounded-xl transition-ui cursor-pointer flex flex-col justify-between text-left space-y-2 relative ${
                         isSelected
                           ? 'bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]'
                           : 'bg-[var(--sunken)]/70 hover:bg-[var(--sunken)]/90'
@@ -596,22 +596,22 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-mono font-bold text-[var(--ink-2)]">
+                          <span className="text-micro font-mono font-bold text-[var(--ink-2)]">
                             {variant.title}
                           </span>
-                          <span className="text-[8.5px] font-mono font-black text-[var(--alert)] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 ">
+                          <span className="text-micro font-mono font-bold text-[var(--alert)] px-1.5 py-0.5 rounded bg-[var(--alert)]/10 ">
                             {variant.score} pts
                           </span>
                         </div>
                         <p className="text-xs font-bold font-sans text-[var(--acc-ink)] line-clamp-2">
                           "{variant.hookText}"
                         </p>
-                        <p className="text-[9px] font-mono text-[var(--ink-2)] line-clamp-2 leading-tight">
+                        <p className="text-micro font-mono text-[var(--ink-2)] line-clamp-2 leading-tight">
                           {variant.reason}
                         </p>
                       </div>
 
-                      <div className="pt-1 flex items-center justify-between text-[8.5px] font-mono font-bold">
+                      <div className="pt-1 flex items-center justify-between text-micro font-mono font-bold">
                         <span className={isSelected ? 'text-[var(--acc-ink)]' : 'text-[var(--ink-2)]'}>
                           {isSelected ? '✓ Activo en Reel' : 'Aplicar esta variante'}
                         </span>
@@ -648,7 +648,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--alert)]"></div>
                 </label>
               </div>
-              <p className="text-[9.5px] font-sans text-[var(--ink-2)] leading-relaxed">
+              <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
                 Ajusta los microsegundos finales con crossfade invisible para que la última nota enlace con el inicio sin pausa.
               </p>
             </div>
@@ -670,7 +670,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
-              <p className="text-[9.5px] font-sans text-[var(--ink-2)] leading-relaxed">
+              <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
                 Aplica un zoom cinemático dinámico del 10% en el gancho inicial para evitar que el usuario deslice en los primeros segundos.
               </p>
             </div>
@@ -692,7 +692,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
-              <p className="text-[9.5px] font-sans text-[var(--ink-2)] leading-relaxed">
+              <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
                 Sincroniza micro-impactos luminosos y de contraste en los golpes de batería y drops de guitarra para máxima potencia física.
               </p>
             </div>
@@ -718,7 +718,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   <div className="w-9 h-5 bg-[var(--sunken)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--ink)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[var(--acc)]"></div>
                 </label>
               </div>
-              <p className="text-[9.5px] font-sans text-[var(--ink-2)] leading-relaxed">
+              <p className="text-micro font-sans text-[var(--ink-2)] leading-relaxed">
                 Barrido horizontal inteligente que sigue los movimientos de los músicos por el escenario en lugar de un recorte ciego estático.
               </p>
             </div>
@@ -731,11 +731,11 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
       {activeStudioTab === 'subtitles' && (
         <div className="space-y-3 animate-fade-in">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold text-[var(--ink-2)]">
+            <span className="text-micro font-mono font-bold text-[var(--ink-2)]">
               Estilos cinemáticos de subtítulos (Karaoke Word-by-Word):
             </span>
             <div className="flex items-center gap-2">
-              <label className="text-[9.5px] font-mono text-[var(--acc-ink)] flex items-center gap-1.5 cursor-pointer">
+              <label className="text-micro font-mono text-[var(--acc-ink)] flex items-center gap-1.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={injectEmojis}
@@ -755,26 +755,26 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   key={style.id}
                   type="button"
                   onClick={() => onChangeSubtitleStyle(style.id)}
-                  className={`p-3 rounded-xl text-left transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
+                  className={`p-3 rounded-xl text-left transition-ui cursor-pointer flex flex-col justify-between space-y-3 ${
                     isSelected
                       ? 'bg-[var(--acc)]/15 ring-1 ring-[var(--acc)]'
                       : 'bg-[var(--sunken)]/70 hover:bg-[var(--sunken)]'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-[10px] font-mono font-bold text-[var(--ink)]">
+                    <span className="text-micro font-mono font-bold text-[var(--ink)]">
                       {style.name}
                     </span>
                     {isSelected && <Check className="w-3.5 h-3.5 text-[var(--acc-ink)]" />}
                   </div>
 
                   <div className="w-full py-2 flex items-center justify-center bg-[var(--scrim)]/60 rounded-lg ">
-                    <span className={`text-[10.5px] ${style.fontClass} ${style.colorClass} ${style.bgClass}`}>
+                    <span className={`text-micro ${style.fontClass} ${style.colorClass} ${style.bgClass}`}>
                       {style.preview}
                     </span>
                   </div>
 
-                  <span className="text-[8.5px] font-mono text-[var(--ink-2)] block">
+                  <span className="text-micro font-mono text-[var(--ink-2)] block">
                     Resaltado activo palabra por palabra
                   </span>
                 </button>
@@ -790,7 +790,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             
             {/* Spotify Pill */}
-            <div className={`p-3 rounded-xl space-y-2 transition-all ${
+            <div className={`p-3 rounded-xl space-y-2 transition-ui ${
               showSpotifyBadge ? 'bg-[var(--ok)]/10 ' : 'bg-[var(--sunken)]/70 '
             }`}>
               <div className="flex items-center justify-between">
@@ -805,13 +805,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   className="rounded bg-[var(--sunken)] text-[var(--ok)] focus:ring-0 cursor-pointer"
                 />
               </div>
-              <p className="text-[9px] font-mono text-[var(--ink-2)]">
+              <p className="text-micro font-mono text-[var(--ink-2)]">
                 Pill flotante que anima al usuario a buscar el single en plataformas.
               </p>
             </div>
 
             {/* Retention Bar */}
-            <div className={`p-3 rounded-xl space-y-2 transition-all ${
+            <div className={`p-3 rounded-xl space-y-2 transition-ui ${
               showRetentionProgressBar ? 'bg-[var(--alert)]/10 ' : 'bg-[var(--sunken)]/70 '
             }`}>
               <div className="flex items-center justify-between">
@@ -826,13 +826,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   className="rounded bg-[var(--sunken)] text-[var(--alert)] focus:ring-0 cursor-pointer"
                 />
               </div>
-              <p className="text-[9px] font-mono text-[var(--ink-2)]">
+              <p className="text-micro font-mono text-[var(--ink-2)]">
                 Línea de progreso luminosa para mantener al usuario hasta el solo final.
               </p>
             </div>
 
             {/* Tour / Concert Sticker */}
-            <div className={`p-3 rounded-xl space-y-2 transition-all ${
+            <div className={`p-3 rounded-xl space-y-2 transition-ui ${
               showTourSticker ? 'bg-[var(--acc)]/10 ' : 'bg-[var(--sunken)]/70 '
             }`}>
               <div className="flex items-center justify-between">
@@ -852,13 +852,13 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                 value={tourStickerText}
                 onChange={(e) => onUpdateTourStickerText(e.target.value)}
                 placeholder="Ej: 🎟️ Gira 2026 · Próxima parada: Madrid"
-                className="w-full text-[9.5px] font-mono rounded bg-[var(--scrim)]/60 px-2 py-1 text-[var(--acc-ink)] focus:outline-none"
+                className="w-full text-micro font-mono rounded bg-[var(--scrim)]/60 px-2 py-1 text-[var(--acc-ink)] focus:outline-none"
               />
               {onSyncFromTourCRM && (
                 <button
                   type="button"
                   onClick={onSyncFromTourCRM}
-                  className="w-full text-[8.5px] font-mono text-[var(--acc-ink)] hover:text-[var(--acc-ink)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-all bg-[var(--acc)]/10"
+                  className="w-full text-micro font-mono text-[var(--acc-ink)] hover:text-[var(--acc-ink)] bg-[var(--scrim)]/40 hover:bg-[var(--scrim)]/60 rounded py-1 flex items-center justify-center gap-1 cursor-pointer transition-ui bg-[var(--acc)]/10"
                 >
                   <Sparkles className="w-2.5 h-2.5" /> Sincronizar con Próxima Fecha CRM
                 </button>
@@ -876,7 +876,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             
             {/* Multi-angle layout selector */}
             <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2.5 text-left">
-              <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] block">
+              <span className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                 Encuadre de Vídeo (Formato Vertical 9:16 Nativo):
               </span>
               <div className="grid grid-cols-2 gap-2">
@@ -888,14 +888,14 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                     key={l.id}
                     type="button"
                     onClick={() => onChangeLayoutMode(l.id)}
-                    className={`p-2.5 rounded-lg text-left transition-all cursor-pointer ${
+                    className={`p-2.5 rounded-lg text-left transition-ui cursor-pointer ${
                       layoutMode === l.id
                         ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold '
                         : 'bg-[var(--sunken)] text-[var(--ink-2)] '
                     }`}
                   >
-                    <span className="text-[10px] font-mono block">{l.label}</span>
-                    <span className="text-[7.5px] font-sans opacity-80 block truncate">{l.desc}</span>
+                    <span className="text-micro font-mono block">{l.label}</span>
+                    <span className="text-micro font-sans opacity-80 block truncate">{l.desc}</span>
                   </button>
                 ))}
               </div>
@@ -904,10 +904,10 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
             {/* Safe Zone Overlay Toggle */}
             <div className="p-3.5 rounded-xl bg-[var(--sunken)]/80 space-y-2.5 text-left flex flex-col justify-between">
               <div>
-                <span className="text-[10px] font-mono font-bold text-[var(--ink-2)] block">
+                <span className="text-micro font-mono font-bold text-[var(--ink-2)] block">
                   Simulador de Safe-Zone (Zona Segura):
                 </span>
-                <p className="text-[9.5px] font-sans text-[var(--ink-2)] mt-1">
+                <p className="text-micro font-sans text-[var(--ink-2)] mt-1">
                   Muestra las áreas donde los botones de Like, comentarios y el reproductor de TikTok/Instagram tapan la cara o los textos.
                 </p>
               </div>
@@ -915,7 +915,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
               <button
                 type="button"
                 onClick={onToggleSafeZone}
-                className={`py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-ui cursor-pointer ${
                   showSafeZone
                     ? 'bg-[var(--acc)]/20 text-[var(--acc-ink)] '
                     : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--sunken)]'

@@ -100,7 +100,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
 
             <div className="w-full h-2.5 bg-[var(--sunken)] rounded-[var(--r-pill)] overflow-hidden">
               <div
-                className={`h-full transition-all duration-300 rounded-[var(--r-pill)] ${
+                className={`h-full transition-ui duration-300 rounded-[var(--r-pill)] ${
                   isCompleted
                     ? "bg-[var(--ok)] "
                     : "bg-[var(--acc)] "
@@ -150,7 +150,7 @@ export const BulkProgressModal: React.FC<BulkProgressModalProps> = ({
                 </div>
 
                 <span
-                  className={`text-[11px] shrink-0 truncate max-w-[180px] ${
+                  className={`text-xs shrink-0 truncate max-w-[180px] ${
                     item.status === "processing"
                       ? "text-[var(--acc)]"
                       : item.status === "success"

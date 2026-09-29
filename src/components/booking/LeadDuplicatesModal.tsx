@@ -231,7 +231,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
     <ModalPortal>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-[var(--scrim)]/80 animate-in fade-in duration-200">
         <div
-          className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-all ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+          className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden transition-ui ${"bg-[var(--surface)] text-[var(--ink)]"}`}
         >
           {/* Header */}
           <div
@@ -380,16 +380,16 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
               duplicateGroups.map((group) => (
                 <div
                   key={group.id}
-                  className={`rounded-[var(--r-l)] p-4 transition-all ${"bg-[var(--bg)]/70"}`}
+                  className={`rounded-[var(--r-l)] p-4 transition-ui ${"bg-[var(--bg)]/70"}`}
                 >
                   {/* Group Top Info */}
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 ">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[11px] font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-[var(--r-s)] text-xs font-semibold bg-[var(--acc)]/15 text-[var(--acc)]/70 flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         {group.matchReasonLabel}
                       </span>
-                      <span className="text-[11px] text-[var(--ink-2)]">
+                      <span className="text-xs text-[var(--ink-2)]">
                         {group.confidence}% de certeza
                       </span>
                     </div>
@@ -401,7 +401,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                           new Set(prev).add(group.id),
                         )
                       }
-                      className="text-[11px] text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
+                      className="text-xs text-[var(--ink-2)] hover:text-[var(--ink)] underline cursor-pointer"
                     >
                       Ignorar (No son duplicados)
                     </button>
@@ -416,7 +416,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                       return (
                         <div
                           key={lead.id}
-                          className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-all ${
+                          className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-ui ${
                             isSuggested
                               ? "bg-[var(--accent-alt)]/10"
                               : "bg-[var(--surface)]"
@@ -430,7 +430,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                     {lead.nombre_sala}
                                   </h4>
                                   {isSuggested && (
-                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--acc)] text-[var(--on-acc)]">
+                                    <span className="px-1.5 py-0.5 rounded text-micro font-bold bg-[var(--acc)] text-[var(--on-acc)]">
                                       ⭐ Recomendado
                                     </span>
                                   )}
@@ -442,7 +442,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                 </div>
                               </div>
 
-                              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-semibold bg-[var(--surface)]/80 text-[var(--ink-2)] capitalize shrink-0">
+                              <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-semibold bg-[var(--surface)]/80 text-[var(--ink-2)] capitalize shrink-0">
                                 {lead.estado || "nuevo"}
                               </span>
                             </div>
@@ -457,7 +457,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                   </span>
                                 </div>
                               ) : (
-                                <div className="text-[11px] text-[var(--ink-2)] italic">
+                                <div className="text-xs text-[var(--ink-2)] italic">
                                   Sin correo electrónico
                                 </div>
                               )}
@@ -486,7 +486,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                                 )}
 
                               {lead.website && (
-                                <div className="flex items-center gap-1.5 truncate text-[11px] text-[var(--ink-2)]">
+                                <div className="flex items-center gap-1.5 truncate text-xs text-[var(--ink-2)]">
                                   <Globe className="w-3 h-3 shrink-0" />
                                   <span className="truncate">
                                     {lead.website}
@@ -495,7 +495,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               )}
 
                               {lead.aforo ? (
-                                <div className="text-[11px] text-[var(--ink-2)]">
+                                <div className="text-xs text-[var(--ink-2)]">
                                   Aforo:{" "}
                                   <span className="font-medium text-[var(--ink)]">
                                     {lead.aforo} personas
@@ -504,7 +504,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                               ) : null}
 
                               {lead.notas && (
-                                <p className="text-[11px] text-[var(--ink-2)] line-clamp-2 bg-[var(--sunken)] p-1.5 rounded-[var(--r-s)] mt-1">
+                                <p className="text-xs text-[var(--ink-2)] line-clamp-2 bg-[var(--sunken)] p-1.5 rounded-[var(--r-s)] mt-1">
                                   {lead.notas}
                                 </p>
                               )}

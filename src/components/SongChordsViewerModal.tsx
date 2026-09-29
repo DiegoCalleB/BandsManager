@@ -336,7 +336,7 @@ export function SongChordsViewerModal({
               <button
                 type="button"
                 onClick={handleToggleAudio}
-                className={`p-2.5 rounded-[var(--r-m)] transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                className={`p-2.5 rounded-[var(--r-m)] transition-ui cursor-pointer flex items-center justify-center shrink-0 ${
                   isPlayingAudio
                     ? "bg-[var(--acc)] text-[var(--on-acc)]"
                     : audioUrl
@@ -363,12 +363,12 @@ export function SongChordsViewerModal({
                     {formatSongTitle(song.titulo)}
                   </h2>
                   {song.esVersionCovers && (
-                    <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
+                    <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/60 text-[var(--acc)]/80">
                       Cover
                     </span>
                   )}
                   {isPlayingAudio && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--ok)]/80 text-[var(--ok)]">
+                    <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-full bg-[var(--ok)]/80 text-[var(--ok)]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"></span>
                       En reproducción
                     </span>
@@ -420,7 +420,7 @@ export function SongChordsViewerModal({
                 type="button"
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-sans text-xs font-bold flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
                 title={
                   song.audioPrincipalUrl
                     ? "Reanalizar escuchando el audio real de la canción"
@@ -518,7 +518,7 @@ export function SongChordsViewerModal({
                     className={`p-1.5 rounded-lg font-bold flex items-center justify-center transition cursor-pointer ${
                       isPlayingAudio
                         ? "bg-[var(--acc)] text-[var(--on-acc)]"
-                        : "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] hover:scale-105"
+                        : "bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc-ink)] "
                     }`}
                     title={
                       isPlayingAudio
@@ -546,7 +546,7 @@ export function SongChordsViewerModal({
                         <RotateCcw className="w-3 h-3" />
                       </button>
 
-                      <span className="text-[11px] text-[var(--acc-ink)] font-mono min-w-[32px] text-right font-semibold">
+                      <span className="text-xs text-[var(--acc-ink)] font-mono min-w-[32px] text-right font-semibold">
                         {formatAudioTime(audioCurrentTime)}
                       </span>
 
@@ -561,12 +561,12 @@ export function SongChordsViewerModal({
                         title="Barra de posición de reproducción"
                       />
 
-                      <span className="text-[11px] text-[var(--ink-2)] font-mono min-w-[32px]">
+                      <span className="text-xs text-[var(--ink-2)] font-mono min-w-[32px]">
                         {formatAudioTime(audioDuration)}
                       </span>
                     </>
                   ) : (
-                    <span className="text-[10px] text-[var(--ink-2)] italic">
+                    <span className="text-micro text-[var(--ink-2)] italic">
                       Sin audio
                     </span>
                   )}
@@ -574,7 +574,7 @@ export function SongChordsViewerModal({
 
                 {/* TRANSPOSITION CONTROL */}
                 <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
-                  <span className="text-[11px] text-[var(--ink-2)] mr-1">
+                  <span className="text-xs text-[var(--ink-2)] mr-1">
                     Tono:
                   </span>
                   <button
@@ -647,7 +647,7 @@ export function SongChordsViewerModal({
 
                   {isAutoScrolling && (
                     <div className="flex items-center gap-1 ml-1">
-                      <span className="text-[10px] text-[var(--ink-2)]">
+                      <span className="text-micro text-[var(--ink-2)]">
                         Vel:
                       </span>
                       {[1, 2, 3].map((v) => (
@@ -655,7 +655,7 @@ export function SongChordsViewerModal({
                           key={v}
                           type="button"
                           onClick={() => setScrollSpeed(v)}
-                          className={`w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center transition cursor-pointer ${
+                          className={`w-5 h-5 rounded text-micro font-bold flex items-center justify-center transition cursor-pointer ${
                             scrollSpeed === v
                               ? "bg-[var(--ok)] text-[var(--on-ok)]"
                               : "bg-[var(--ink)]/10 text-[var(--ink-2)]"
@@ -746,7 +746,7 @@ export function SongChordsViewerModal({
                         </span>
                         <button
                           onClick={() => setActiveTab("substitute")}
-                          className="text-[10px] underline text-[var(--acc)] hover:text-[var(--ink)]"
+                          className="text-micro underline text-[var(--acc)] hover:text-[var(--ink)]"
                         >
                           Ver Ficha Completa →
                         </button>
@@ -786,7 +786,7 @@ export function SongChordsViewerModal({
                     {/* GUIDES GRID */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--acc)] font-bold block text-[11px]">
+                        <span className="text-[var(--acc)] font-bold block text-xs">
                           1. Estructura Exacta del Tema
                         </span>
                         <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -796,7 +796,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--ok)] font-bold block text-[11px]">
+                        <span className="text-[var(--ok)] font-bold block text-xs">
                           2. Progresión Armónica Clave
                         </span>
                         <p className="text-[var(--ink)] text-sm font-semibold leading-relaxed">
@@ -806,7 +806,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--alert)] font-bold block text-[11px]">
+                        <span className="text-[var(--alert)] font-bold block text-xs">
                           3. Cortes, Entradas y Claves
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
@@ -816,7 +816,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--tentative)]/80 font-bold block text-[11px]">
+                        <span className="text-[var(--tentative)]/80 font-bold block text-xs">
                           4. Capo / Afinación
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
@@ -825,7 +825,7 @@ export function SongChordsViewerModal({
                       </div>
 
                       <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
-                        <span className="text-[var(--acc)] font-bold block text-[11px]">
+                        <span className="text-[var(--acc)] font-bold block text-xs">
                           5. Protagonismo de Instrumentos / Arreglos
                         </span>
                         <p className="text-[var(--ink-2)] leading-relaxed">
@@ -1147,9 +1147,9 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
       {shape ? (
         <div className="flex justify-center pt-1">
           {/* Simple 6-string Guitar Fretboard Grid Representation */}
-          <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-[9px] font-sans">
+          <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-micro font-sans">
             {shape.baseFret && shape.baseFret > 1 && (
-              <div className="text-[8px] text-[var(--acc)] font-bold text-left pl-1">
+              <div className="text-micro text-[var(--acc)] font-bold text-left pl-1">
                 Traste {shape.baseFret}
               </div>
             )}
@@ -1181,7 +1181,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
           </div>
         </div>
       ) : (
-        <p className="text-[10px] text-[var(--ink-2)] font-sans">
+        <p className="text-micro text-[var(--ink-2)] font-sans">
           [Acorde Estándar]
         </p>
       )}

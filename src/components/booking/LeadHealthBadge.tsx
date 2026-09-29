@@ -123,12 +123,12 @@ export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({ lead, showDesc
   return (
     <div className="inline-flex flex-col items-start gap-0.5">
       <span
-        className={`inline-flex items-center gap-1 rounded-[var(--r-pill)] px-2 py-0.5 text-[10px] sm:text-xs ${health.badgeClass}`}
+        className={`inline-flex items-center gap-1 rounded-[var(--r-pill)] px-2 py-0.5 text-micro sm:text-xs ${health.badgeClass}`}
         title={health.description}
       >
         <span>{health.label}</span>
       </span>
-      {showDescription && <span className="text-[10px] text-[var(--ink-2)] font-sans tracking-tight pl-1">{health.description}</span>}
+      {showDescription && <span className="text-micro text-[var(--ink-2)] font-sans tracking-tight pl-1">{health.description}</span>}
     </div>
   );
 };

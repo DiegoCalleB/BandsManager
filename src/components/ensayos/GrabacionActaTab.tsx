@@ -306,7 +306,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     return (
                       <div
                         key={i}
-                        className="w-1.5 bg-[var(--alert)]  rounded-[var(--r-pill)] transition-all duration-150"
+                        className="w-1.5 bg-[var(--alert)]  rounded-[var(--r-pill)] transition-ui duration-150"
                         style={{ height: `${height}%` }}
                       />
                     );
@@ -316,7 +316,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-95 transition-all"
+                  className="px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 mx-auto cursor-pointer active:scale-[0.97] transition-ui"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Detener Grabación ({formatTime(recordDuration)})</span>
@@ -326,7 +326,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
               <button
                 type="button"
                 onClick={startRecording}
-                className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-black text-xs flex items-center gap-2 cursor-pointer active:scale-95 transition-all"
+                className="px-6 py-3 rounded-[var(--r-l)] bg-[var(--acc)]/60 hover:bg-[var(--acc)] text-[var(--ink)] font-sans font-bold text-xs flex items-center gap-2 cursor-pointer active:scale-[0.97] transition-ui"
               >
                 <Mic className="w-4 h-4" />
                 <span>Iniciar Grabación con Micrófono</span>
@@ -432,13 +432,13 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                       <span className="text-xs font-bold text-[var(--ink)] truncate">
                         {rec.titulo}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-sans bg-[var(--surface)]/80 text-[var(--acc)]/70">
+                      <span className="px-2 py-0.5 rounded text-micro font-sans bg-[var(--surface)]/80 text-[var(--acc)]/70">
                         {rec.tipo.replace("_", "")}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[10px] font-sans text-[var(--ink-2)]">
+                      <span className="text-micro font-sans text-[var(--ink-2)]">
                         {formatTime(rec.duracionSegundos)}
                       </span>
                       <button
@@ -480,7 +480,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             <button
               onClick={handleGenerateAIActa}
               disabled={isGeneratingActa}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[var(--r-m)] bg-[var(--acc)]/60 text-[var(--ink)] hover:bg-[var(--acc)] disabled:opacity-50 text-xs font-sans font-bold transition-ui cursor-pointer"
             >
               {isGeneratingActa ? (
                 <>
@@ -500,7 +500,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
             {acta && (
               <button
                 onClick={handleCopyToWhatsApp}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink-2)] hover:bg-[var(--ok)]/30 text-xs font-sans font-bold transition-ui cursor-pointer"
                 title="Copiar formato listo para WhatsApp"
               >
                 {copied ? (

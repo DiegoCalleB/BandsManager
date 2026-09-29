@@ -543,7 +543,7 @@ export function EnergyChart({
             const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
             return (
               <div
-                className="absolute z-20 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-[12px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap"
+                className="absolute z-20 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap"
                 style={{
                   boxShadow: `0 0 0 2px ${info.hexColor}66`,
                   ...(isTouch
@@ -579,7 +579,7 @@ export function EnergyChart({
         {draggingFromIndex !== null &&
           dragAxis !== "y" &&
           hoverIndex !== null && (
-            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-[11px] font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
+            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-[var(--surface)] rounded-[var(--r-s)] px-3 py-1.5 text-xs font-sans text-[var(--ink)] pointer-events-none whitespace-nowrap">
               <span className="text-[var(--acc)]/70 font-bold">
                 {chartData[draggingFromIndex]?.name}
               </span>
@@ -771,7 +771,7 @@ export function EnergyChart({
 
         {/* Tooltip con ratón real; en táctil el detalle vive en el panel de debajo. */}
         {isPointerFine && tip && draggingFromIndex === null && chartData[tip.i] && (
-          <div className="absolute z-30 top-1 -translate-x-1/2 bg-[var(--surface)] text-[var(--ink)] text-[10px] font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px] pointer-events-none" style={{ left: tip.left }}>
+          <div className="absolute z-30 top-1 -translate-x-1/2 bg-[var(--surface)] text-[var(--ink)] text-micro font-sans px-2.5 py-1.5 rounded-[var(--r-s)] max-w-[180px] pointer-events-none" style={{ left: tip.left }}>
             <p className="font-bold text-[var(--acc-ink)] truncate">{chartData[tip.i].name}</p>
             <p className="text-[var(--ink-2)] truncate">
               {chartData[tip.i].icon} {chartData[tip.i].label} ({typeof chartData[tip.i].score === "number" ? Math.round((chartData[tip.i].score as number) / 2) : "–"}/10)
@@ -825,7 +825,7 @@ export function EnergyChart({
         (() => {
           const d = activePoint;
           return (
-            <div className="mt-2 bg-[var(--sunken)] text-[var(--ink)] text-[9px] font-sans py-1.5 px-2.5 rounded-[var(--r-s)] relative">
+            <div className="mt-2 bg-[var(--sunken)] text-[var(--ink)] text-micro font-sans py-1.5 px-2.5 rounded-[var(--r-s)] relative">
               <button
                 type="button"
                 onClick={() => setDismissedId(d.id)}
@@ -834,7 +834,7 @@ export function EnergyChart({
               >
                 ✕
               </button>
-              <p className="font-bold text-[var(--acc)] text-[10px] pr-4">
+              <p className="font-bold text-[var(--acc)] text-micro pr-4">
                 #{d.idx + 1} {d.name}
               </p>
               {d.isSpeechEvent ? (
@@ -876,7 +876,7 @@ export function EnergyChart({
                     <div className="mt-1.5 pt-1">
                       <div className="flex items-center gap-1 font-bold">
                         <span
-                          className={`w-3.5 h-3.5 rounded-[var(--r-pill)] flex items-center justify-center text-[9px] font-black shrink-0 ${
+                          className={`w-3.5 h-3.5 rounded-[var(--r-pill)] flex items-center justify-center text-micro font-black shrink-0 ${
                             d.transitionFromPrev.status === "ok"
                               ? "bg-[var(--ok)]/20 text-[var(--ink-2)]"
                               : "bg-[var(--alert)]/20 text-[var(--ink-2)]"
@@ -893,7 +893,7 @@ export function EnergyChart({
                         </span>
                       </div>
                       {d.transitionFromPrev.motivos.length > 0 && (
-                        <p className="text-[8px] text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
+                        <p className="text-micro text-[var(--ink-2)] pl-4 mt-0.5 leading-tight">
                           {d.transitionFromPrev.motivos.join("·")}
                         </p>
                       )}

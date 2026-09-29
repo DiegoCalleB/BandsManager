@@ -286,7 +286,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     }
   };
 
-  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-sans transition-all outline-none bg-[var(--surface)] text-[var(--ink-2)]`;
+  const inputClass = `w-full p-2.5 rounded-[var(--r-m)] text-xs font-sans transition-ui outline-none bg-[var(--surface)] text-[var(--ink-2)]`;
   const labelClass =
     "text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2";
 
@@ -305,7 +305,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
 
   return (
     <div
-      className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-all ${"bg-[var(--surface)]"}`}
+      className={`space-y-5 p-5 sm:p-6 rounded-[var(--r-l)] transition-ui ${"bg-[var(--surface)]"}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 ">
         <div className="flex items-center gap-2">
@@ -324,7 +324,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         </div>
 
         {status.connected && !editing && (
-          <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] text-[11px] font-sans">
+          <div className="flex items-center gap-1.5 self-start sm:self-auto px-2.5 py-1 rounded-[var(--r-pill)] bg-[var(--ok)]/10 text-[var(--ok)] text-xs font-sans">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Conectado</span>
           </div>
@@ -370,7 +370,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
               type="button"
               onClick={handleDisconnectGmailOAuth}
               disabled={gmailOAuthDisconnecting}
-              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-[11px] font-sans font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
             >
               {gmailOAuthDisconnecting ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
@@ -385,7 +385,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             type="button"
             onClick={handleConnectGmailOAuth}
             disabled={gmailOAuthConnecting}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {gmailOAuthConnecting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -402,7 +402,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
 
         {gmailOAuthFeedback && (
           <div
-            className={`p-2.5 rounded-[var(--r-s)] text-[11px] flex items-center gap-2 animate-fadeIn ${
+            className={`p-2.5 rounded-[var(--r-s)] text-xs flex items-center gap-2 animate-fadeIn ${
               gmailOAuthFeedback.type === "success"
                 ? "bg-[var(--ok)]/10 text-[var(--ink-2)]"
                 : "bg-[var(--alert)]/10 text-[var(--ink-2)]"
@@ -418,7 +418,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         )}
       </div>
 
-      <div className="flex items-center gap-3 text-[11px] font-sans text-[var(--ink-2)]">
+      <div className="flex items-center gap-3 text-xs font-sans text-[var(--ink-2)]">
         <div className="h-px flex-1 bg-[var(--surface)]/80" />
         <span>o conecta por SMTP/IMAP (Outlook u otro proveedor)</span>
         <div className="h-px flex-1 bg-[var(--surface)]/80" />
@@ -441,7 +441,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-[11px] font-sans font-bold transition-all cursor-pointer flex items-center gap-1.5"
+              className="shrink-0 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5"
             >
               <RefreshCw className="w-3 h-3" />
               Cambiar cuenta
@@ -460,7 +460,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                   key={p}
                   type="button"
                   onClick={() => handleProviderChange(p)}
-                  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-all cursor-pointer ${
+                  className={`p-2.5 rounded-[var(--r-m)] text-xs font-sans font-bold transition-ui cursor-pointer ${
                     provider === p
                       ? "bg-[var(--acc)]/20 text-[var(--tentative)]/40"
                       : "bg-[var(--bg)] text-[var(--ink-2)] hover:bg-[var(--sunken)]"
@@ -507,7 +507,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           </div>
 
           <div
-            className={`p-3 rounded-[var(--r-m)] text-[11px] flex items-start gap-2 ${"bg-[var(--tentative)]/5 text-[var(--tentative)]"}`}
+            className={`p-3 rounded-[var(--r-m)] text-xs flex items-start gap-2 ${"bg-[var(--tentative)]/5 text-[var(--tentative)]"}`}
           >
             <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[var(--ink-2)]" />
             <span>
@@ -549,7 +549,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                     className={`${inputClass} w-20`}
                   />
                 </div>
-                <label className="flex items-center gap-1.5 text-[11px] font-sans text-[var(--ink-2)] cursor-pointer">
+                <label className="flex items-center gap-1.5 text-xs font-sans text-[var(--ink-2)] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={smtpSecure}
@@ -611,7 +611,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
                 setEditing(false);
                 setFeedback(null);
               }}
-              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold text-xs font-sans transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] font-bold text-xs font-sans transition-ui cursor-pointer"
             >
               Cancelar
             </button>
@@ -620,7 +620,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--ink)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {saving ? (
               <>

@@ -122,7 +122,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
       id="manager-alerts-container"
       className={`mb-4 rounded-[var(--r-l)] ${
         'bg-[var(--surface)] shadow-xs text-[var(--ink)]'
-      } overflow-hidden transition-all`}
+      } overflow-hidden transition-ui`}
     >
       {/* Panel Header */}
       <div
@@ -147,7 +147,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
           <div className="flex items-center gap-2">
             <h3 className={`text-xs font-bold ${'text-[var(--ink)]'} tracking-tight`}>Radar del Mánager</h3>
             <span
-              className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-[10px] font-mono font-bold ${
+              className={`px-1.5 py-0.2 rounded-[var(--r-pill)] text-micro font-mono font-bold ${
                 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
               }`}
             >
@@ -163,7 +163,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               onClick={handleMarkAllRead}
               className={`px-2 py-1 rounded-[var(--r-s)] ${
                 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]'
-              } text-[11px] font-medium transition-all flex items-center gap-1 cursor-pointer`}
+              } text-xs font-medium transition-ui flex items-center gap-1 cursor-pointer`}
               title="Marcar todas como leídas"
             >
               <Check className="w-3 h-3 text-[var(--ok)]" />
@@ -193,14 +193,14 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             } flex items-center justify-between gap-2 overflow-x-auto`}
           >
             <div className="flex items-center gap-1.5 text-xs">
-              <span className={`${'text-[var(--ink-2)]'} font-medium text-[11px] mr-1 hidden sm:inline`}>
+              <span className={`${'text-[var(--ink-2)]'} font-medium text-xs mr-1 hidden sm:inline`}>
                 Filtrar:
               </span>
 
               <button
                 id="filter-alerts-all"
                 onClick={() => setFilterMode('all')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-all text-xs cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs cursor-pointer ${
                   filterMode === 'all'
                     ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -212,7 +212,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-unread"
                 onClick={() => setFilterMode('unread')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-all text-xs flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'unread'
                     ? 'bg-[var(--sunken)] text-[var(--ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -225,7 +225,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-urgent"
                 onClick={() => setFilterMode('urgent')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-all text-xs flex items-center gap-1 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs flex items-center gap-1 cursor-pointer ${
                   filterMode === 'urgent'
                     ? 'bg-[var(--alert)]/15 text-[var(--alert)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -234,7 +234,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                 <span>Urgentes</span>
                 {urgentAlerts.length > 0 && (
                   <span
-                    className={`px-1.5 py-0.2 rounded text-[10px] ${'bg-[var(--alert)]/15 text-[var(--alert)]'} font-mono`}
+                    className={`px-1.5 py-0.2 rounded text-micro ${'bg-[var(--alert)]/15 text-[var(--alert)]'} font-mono`}
                   >
                     {urgentAlerts.length}
                   </span>
@@ -244,7 +244,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-booking"
                 onClick={() => setFilterMode('booking')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-all text-xs cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs cursor-pointer ${
                   filterMode === 'booking'
                     ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -256,7 +256,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="filter-alerts-finanzas"
                 onClick={() => setFilterMode('finanzas')}
-                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-all text-xs cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[var(--r-s)] font-medium transition-ui text-xs cursor-pointer ${
                   filterMode === 'finanzas'
                     ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
                     : 'text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]'
@@ -270,7 +270,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
               <button
                 id="reset-dismissed-inline-btn"
                 onClick={handleResetDismissed}
-                className={`text-[11px] ${'text-[var(--ink-2)] hover:text-[var(--ink)]'} underline font-mono shrink-0 cursor-pointer`}
+                className={`text-xs ${'text-[var(--ink-2)] hover:text-[var(--ink)]'} underline font-mono shrink-0 cursor-pointer`}
               >
                 Restablecer {dismissedIds.length} descartadas
               </button>
@@ -315,7 +315,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                   <div
                     key={alert.id}
                     id={`alert-card-${alert.id}`}
-                    className={`p-4 rounded-[var(--r-l)] transition-all duration-200 relative group flex flex-col justify-between ${cardBg}`}
+                    className={`p-4 rounded-[var(--r-l)] transition-ui duration-200 relative group flex flex-col justify-between ${cardBg}`}
                   >
                     <div>
                       {/* Top status bar */}
@@ -324,14 +324,14 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                           {!isRead && <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--ok)] shrink-0" title="Sin leer" />}
 
                           <span
-                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold ${badgeStyle}`}
+                            className={`px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold ${badgeStyle}`}
                           >
                             {alert.category}
                           </span>
 
                           {alert.monthRange && (
                             <span
-                              className={`text-[11px] font-medium ${'text-[var(--ink-2)]'} flex items-center gap-1`}
+                              className={`text-xs font-medium ${'text-[var(--ink-2)]'} flex items-center gap-1`}
                             >
                               <Calendar className={`w-3 h-3 ${'text-[var(--ink-2)]'}`} />
                               {alert.monthRange}
@@ -381,7 +381,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                       className={`pt-2.5 border-t ${'border-[var(--hair)]'} flex flex-col gap-2`}
                     >
                       <span
-                        className={`text-[10px] font-mono ${'text-[var(--ink-2)]'} flex items-center gap-1`}
+                        className={`text-micro font-mono ${'text-[var(--ink-2)]'} flex items-center gap-1`}
                       >
                         <Zap className={`w-3 h-3 ${'text-[var(--acc)]'} shrink-0`} />
                         Acciones disponibles
@@ -399,7 +399,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                                 }
                                 onExecuteAction(alert, act);
                               }}
-                              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer ${
+                              className={`px-3 py-1.5 rounded-[var(--r-m)] text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97] shrink-0 cursor-pointer ${
                                 act.variant === 'secondary'
                                   ? 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)]'
                                   : actionBtnStyle
@@ -418,7 +418,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
                               }
                               onExecuteAction(alert);
                             }}
-                            className={`px-3.5 py-1.5 rounded-[var(--r-m)] ${actionBtnStyle} text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer`}
+                            className={`px-3.5 py-1.5 rounded-[var(--r-m)] ${actionBtnStyle} text-xs font-bold transition-ui flex items-center gap-1.5 active:scale-[0.97] shrink-0 cursor-pointer`}
                           >
                             <span>{alert.actionLabel}</span>
                             <ArrowRight className="w-3.5 h-3.5" />

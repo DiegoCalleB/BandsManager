@@ -69,7 +69,7 @@ export const StepMembers: React.FC<StepMembersProps> = ({
                     {m.name}
                   </span>
                   {m.isLeader && (
-                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
+                    <span className="text-micro px-1.5 py-0.2 rounded bg-[var(--acc)]/20 text-[var(--acc)]/70 font-medium">
                       Líder / Creador
                     </span>
                   )}

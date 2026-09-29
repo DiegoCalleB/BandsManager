@@ -217,7 +217,7 @@ export function RepertorioEnergyChartWidget({
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       {/* Repertorio/Setlist Selector - Above the chart */}
       <div className="flex flex-col gap-2 pb-3">
-        <label className="text-[10px] font-semibold text-[var(--ink-2)]">
+        <label className="text-micro font-semibold text-[var(--ink-2)]">
           Repertorio
         </label>
         <div className="relative">
@@ -250,7 +250,7 @@ export function RepertorioEnergyChartWidget({
             <h3 className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
               Energía del repertorio
             </h3>
-            <p className="text-[11px] text-[var(--ink-2)]">
+            <p className="text-xs text-[var(--ink-2)]">
               {activeSetlist
                 ? activeSetlist.nombre || "Setlist activo"
                 : "Perfil de ritmo del bolo"}
@@ -275,13 +275,13 @@ export function RepertorioEnergyChartWidget({
       {/* Stats Summary Bar */}
       <div className="grid grid-cols-3 gap-2 text-center text-xs">
         <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">Temas</span>
+          <span className="text-micro text-[var(--ink-2)] block">Temas</span>
           <span className="font-semibold text-[var(--acc-ink)] text-sm tabular-nums">
             {chartData.length}
           </span>
         </div>
         <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">
+          <span className="text-micro text-[var(--ink-2)] block">
             Energía media
           </span>
           <span className="font-semibold text-[var(--ink)] text-sm tabular-nums">
@@ -289,7 +289,7 @@ export function RepertorioEnergyChartWidget({
           </span>
         </div>
         <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">
+          <span className="text-micro text-[var(--ink-2)] block">
             Duración
           </span>
           <span className="font-semibold text-[var(--ok)] text-sm tabular-nums">
@@ -369,7 +369,7 @@ export function BookingFunnelChartWidget({
             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
               Embudo de Contrataciones
             </h3>
-            <p className="text-[11px] font-sans text-[var(--ink-2)]">
+            <p className="text-xs font-sans text-[var(--ink-2)]">
               Conversión de Salas & Festivales
             </p>
           </div>
@@ -484,7 +484,7 @@ export function FinancesChartWidget({
             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
               Evolución Financiera & Caché
             </h3>
-            <p className="text-[11px] font-sans text-[var(--ink-2)]">
+            <p className="text-xs font-sans text-[var(--ink-2)]">
               Ingresos vs Gastos de Directos
             </p>
           </div>
@@ -504,7 +504,7 @@ export function FinancesChartWidget({
 
       <div className="grid grid-cols-2 gap-2 font-sans text-xs text-center">
         <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">
+          <span className="text-micro text-[var(--ink-2)] block">
             Ingresos Totales
           </span>
           <span className="font-bold text-[var(--ok)] text-sm">
@@ -512,7 +512,7 @@ export function FinancesChartWidget({
           </span>
         </div>
         <div className="p-2 rounded-[var(--r-m)] bg-[var(--sunken)]">
-          <span className="text-[10px] text-[var(--ink-2)] block">
+          <span className="text-micro text-[var(--ink-2)] block">
             Neto / Beneficio
           </span>
           <span className="font-bold text-[var(--acc)] text-sm">
@@ -583,7 +583,7 @@ export function SocialFansGrowthWidget({
             <h3 className="text-sm font-bold font-display text-[var(--ink)]">
               Captación de Fans & QR
             </h3>
-            <p className="text-[11px] font-sans text-[var(--ink-2)]">
+            <p className="text-xs font-sans text-[var(--ink-2)]">
               Crecimiento en Registro de Seguidores
             </p>
           </div>

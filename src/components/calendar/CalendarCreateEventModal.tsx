@@ -212,9 +212,9 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 setShowCreateModal('concert');
                 setConcIsPosible(false);
               }}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                 showCreateModal === 'concert' && !concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
+                  ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -224,9 +224,9 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <button
               type="button"
               onClick={() => setShowCreateModal('rehearsal')}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                 showCreateModal === 'rehearsal'
-                  ? 'bg-[var(--ok)] text-[var(--ink)] font-black'
+                  ? 'bg-[var(--ok)] text-[var(--ink)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -236,8 +236,8 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             <button
               type="button"
               onClick={() => setShowCreateModal('reunion')}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
-                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
+                showCreateModal === 'reunion' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
               <span>💬</span>
@@ -249,9 +249,9 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 setShowCreateModal('concert');
                 setConcIsPosible(true);
               }}
-              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 px-1.5 rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1 transition-ui cursor-pointer ${
                 showCreateModal === 'concert' && concIsPosible
-                  ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
+                  ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
               }`}
             >
@@ -266,7 +266,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
             {showCreateModal === 'concert' && concIsPosible && <span className="text-[var(--acc)]">❓ Fecha Posible / Pre-reserva</span>}
             {showCreateModal === 'concert' && !concIsPosible && <span className="text-[var(--acc)]">🎸 Agendar Concierto Confirmado</span>}
           </h3>
-          <p className="text-[11px] font-mono text-[var(--ink-2)] mb-4">
+          <p className="text-xs font-mono text-[var(--ink-2)] mb-4">
             Fecha: <strong className="text-[var(--ink)]">{formattedDateStr}</strong>
           </p>
 
@@ -359,13 +359,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
-                  className="px-3 py-1.5 text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-all cursor-pointer"
+                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] transition-ui cursor-pointer"
                 >
                   Convocar Reunión
                 </button>
@@ -454,13 +454,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
-                  className="px-3 py-1.5 text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-all cursor-pointer font-bold"
+                  className="px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--ink)] transition-ui cursor-pointer font-bold"
                 >
                   Guardar Ensayo
                 </button>
@@ -566,16 +566,16 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(null)}
-                  className="px-3 py-1.5 text-[11px] font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-mono text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-1.5 text-[11px] font-mono font-bold rounded-[var(--r-m)] transition-all cursor-pointer ${
+                  className={`px-4 py-1.5 text-xs font-mono font-bold rounded-[var(--r-m)] transition-ui cursor-pointer ${
                     concIsPosible
-                      ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'
-                      : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-black'
+                      ? 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold'
+                      : 'bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold'
                   }`}
                 >
                   {concIsPosible ? 'Guardar Pre-reserva' : 'Guardar Concierto'}

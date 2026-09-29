@@ -73,14 +73,29 @@ const CHECKS = {
     severity: 'error',
   },
   bordeDeCaja: {
-    description: 'border de caja (clase `border` sola, o hover:/focus:border-…) — Ley 1 de visual-identity: separa el escalón de luminancia (--surface / --sunken) o el espacio. Solo se toleran divisores de una cara (border-t/b/l/r/x/y) con --hair',
-    pattern: /(?<![\w:\[-])(?:border(?![\w\[:-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
+    description: 'border sin token — Ley 1 (nueva) de visual-identity: un borde solo existe si significa algo (foco, campo en reposo, selección, divisor de tabla) y siempre con border-[var(--line)] o border-[var(--line-strong)]. Las tarjetas se separan por luz y espacio, nunca por borde',
+    pattern: /className=\{?[`"'](?![^`"']*border-\[var\(--line)[^`"']*(?<![\w:\[-])(?:border(?![\w\[:-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
     severity: 'error',
   },
-  textoSobreRelleno: {
-    description: 'texto del mismo color que su relleno sólido (bg-[var(--acc)] + text-[var(--acc)]/acc-ink, ídem ok/alert) — en Oscuro queda invisible; usa text-[var(--on-acc|on-ok|on-alert)]',
-    pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink)\)\](?![\w\/-])/g,
+  tamanoMinimoTexto: {
+    description: 'texto por debajo de 11px (text-[7px]…text-[10.5px]) — craft-interfaces: 11px (text-micro) es el mínimo absoluto, solo para ejes y metadatos; por debajo, la lectura de horas cansa y en móvil es ilegible',
+    pattern: /(?<![\w\[-])(?:[a-z0-9-]+:)*text-\[(?:[0-9]|10)(?:\.\d+)?px\]/g,
     severity: 'error',
+  },
+  transitionAll: {
+    description: 'transition-all — craft-interfaces: anima layout sin querer y cuesta rendimiento. Usa transition-ui (lista explícita de propiedades) o transition-[propiedad]',
+    pattern: /(?<![\w:\[-])transition-all(?![\w-])/g,
+    severity: 'error',
+  },
+  easeIn: {
+    description: 'ease-in en interfaz — craft-interfaces: retrasa el arranque y se siente lento. Usa ease-out (entradas/salidas) o ease-in-out (movimiento en pantalla)',
+    pattern: /(?<![\w:\[-])ease-in(?![\w-])/g,
+    severity: 'error',
+  },
+  hoverScale: {
+    description: 'hover:scale-* — craft-interfaces: el movimiento al pasar el ratón cansa y es firma de plantilla; el feedback de hover es de color/brillo. La escala es solo para :active (scale-[0.97])',
+    pattern: /(?<![\w\[-])(?:group-)?hover:scale-/g,
+    severity: 'warning',
   },
   mayusculasDecorativas: {
     description: 'uppercase de Tailwind — visual-identity §1/§6: caja de frase siempre; las versalitas eliminan la silueta de la palabra y cansan en sesiones largas (un literal ya escrito en mayúsculas en el JSX no lo detecta esta regla)',

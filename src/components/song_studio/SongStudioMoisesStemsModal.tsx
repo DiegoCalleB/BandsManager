@@ -51,8 +51,8 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('stems')}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+              moisesTab === 'stems' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" /> Separar Pistas
@@ -60,9 +60,9 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('how_it_works')}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
               moisesTab === 'how_it_works'
-                ? 'bg-[var(--acc)] text-[var(--ink)] font-black'
+                ? 'bg-[var(--acc)] text-[var(--ink)] font-bold'
                 : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
@@ -71,8 +71,8 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <button
             type="button"
             onClick={() => setMoisesTab('upload')}
-            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--ink)] font-black' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
+            className={`px-3 py-1.5 rounded-[var(--r-m)] font-bold transition-ui cursor-pointer flex items-center gap-1.5 ${
+              moisesTab === 'upload' ? 'bg-[var(--acc)] text-[var(--ink)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)]'
             }`}
           >
             <Upload className="w-3.5 h-3.5" /> Subir Pistas
@@ -83,13 +83,13 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           <div className="space-y-4 text-xs">
             <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/30 space-y-1">
               <p className="font-bold text-[var(--acc)] font-mono">Pista a procesar: {targetIdea.titulo}</p>
-              <p className="text-[11px] text-[var(--ink-2)] font-sans">
+              <p className="text-xs text-[var(--ink-2)] font-sans">
                 Aislamiento de voz, batería, bajo e instrumentos utilizando red neuronal en la nube.
               </p>
             </div>
 
             <div>
-              <label className="block text-[11px] font-mono font-bold text-[var(--ink-2)] mb-2">
+              <label className="block text-xs font-mono font-bold text-[var(--ink-2)] mb-2">
                 Selecciona tipo de separación:
               </label>
               <div className="grid grid-cols-2 gap-2 font-mono">
@@ -100,14 +100,14 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                       key={presetKey}
                       type="button"
                       onClick={() => setMoisesPreset && setMoisesPreset(presetKey)}
-                      className={`p-3 rounded-[var(--r-m)] text-left transition-all cursor-pointer ${
+                      className={`p-3 rounded-[var(--r-m)] text-left transition-ui cursor-pointer ${
                         moisesPreset === presetKey
                           ? 'bg-[var(--acc)]/20 text-[var(--ink)]'
                           : 'bg-[var(--sunken)]/60 text-[var(--ink-2)] hover:bg-[var(--surface)]'
                       }`}
                     >
                       <p className="font-bold text-[var(--acc)]">{cfg.label}</p>
-                      <p className="text-[10px] text-[var(--ink-2)] mt-0.5">{cfg.subtitle}</p>
+                      <p className="text-micro text-[var(--ink-2)] mt-0.5">{cfg.subtitle}</p>
                     </button>
                   );
                 })}
@@ -130,7 +130,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                     setShowMoisesStemsModal(null);
                   }
                 }}
-                className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-black flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                className="px-5 py-2 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Comenzar Separación</span>
@@ -154,7 +154,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
         {moisesTab === 'upload' && (
           <div className="space-y-3 text-xs text-[var(--ink-2)] leading-relaxed font-sans">
             <p className="font-bold text-[var(--acc)]">Subir stems generados externamente</p>
-            <p className="text-[11px] text-[var(--ink-2)]">
+            <p className="text-xs text-[var(--ink-2)]">
               Si ya separaste las pistas en otro software, sube los archivos de audio aquí para integrarlos directamente en la mezcla.
             </p>
             <input

@@ -3,7 +3,9 @@
    Autoridad: skills/visual-identity/SKILL.md
 
    Dos leyes:
-     1 · Ningún borde. La separación es luz y espacio.
+     1 · Un borde solo existe si significa algo (foco, campo en reposo,
+         selección, divisor de tabla densa) y siempre con token --line /
+         --line-strong. Nunca decora: las tarjetas se separan por luz y espacio.
      2 · Cada módulo tiene su color. El resto es gris.
 
    Los músicos pasan de 4 a 6 horas seguidas aquí dentro: la fatiga visual
@@ -17,6 +19,22 @@
 
 /* ───────────────────────── CLARO (por defecto) ───────────────────────── */
 :root {
+  /* Movimiento — ver skills/craft-interfaces. Solo transform y opacity; la salida
+     siempre más rápida que la entrada; nada de ease-in en interfaz. */
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-inout:  cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-sheet:  cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-press:   120ms;
+  --dur-hover:   150ms;
+  --dur-pop:     180ms;
+  --dur-modal:   260ms;
+
+  /* Escala tipográfica (px): 11 · 12 · 14 · 16 · 20 · 28 · 40. Mínimo absoluto: 11. */
+  --fs-micro: 11px;  /* metadatos y ejes */
+  --fs-xs:    12px;
+  --fs-sm:    14px;
+  --fs-base:  16px;
+
   /* Superficies — la tarjeta es MÁS clara que el fondo. Ese escalón es lo
      que separa: no hay bordes. */
   --bg:       #F6F7F9;
@@ -29,6 +47,9 @@
   --ink-3:    #5D6A7A;
   --ink-rgb:  42, 46, 53;
   --hair:     rgba(42, 46, 53, 0.065);
+  --line:        rgba(42, 46, 53, 0.16);   /* borde CON significado: campo en reposo, divisor de tabla */
+  --line-strong: rgba(42, 46, 53, 0.42);   /* seleccionado / foco / hover de campo */
+  --ring:        rgb(42, 46, 53);          /* anillo de foco de teclado */
 
   /* Estado — sin semántica verde-sube/rojo-baja: eso es lenguaje de bolsa */
   --ok:       #17998C;
@@ -86,7 +107,7 @@
   --r-l:    24px;
   --r-xl:   32px;
 
-  --font-ui: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ui: "Onest Variable", "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   color-scheme: light;
 }
@@ -106,6 +127,9 @@
   --ink-3:    #6B7380;
   --ink-rgb:  227, 231, 236;
   --hair:     rgba(227, 231, 236, 0.08);
+  --line:        rgba(227, 231, 236, 0.16);   /* borde CON significado: campo en reposo, divisor de tabla */
+  --line-strong: rgba(227, 231, 236, 0.42);   /* seleccionado / foco / hover de campo */
+  --ring:        rgb(227, 231, 236);          /* anillo de foco de teclado */
 
   --ok:       #4FC7B8;
   --ok-soft:  #122D29;
@@ -156,6 +180,9 @@
   --ink-3:    #71717A;
   --ink-rgb:  244, 244, 245;
   --hair:     rgba(244, 244, 245, 0.09);
+  --line:        rgba(244, 244, 245, 0.16);   /* borde CON significado: campo en reposo, divisor de tabla */
+  --line-strong: rgba(244, 244, 245, 0.42);   /* seleccionado / foco / hover de campo */
+  --ring:        rgb(244, 244, 245);          /* anillo de foco de teclado */
 
   --ok:       #10B981;
   --ok-soft:  #062C22;

@@ -87,7 +87,7 @@ export const StepPhotos: React.FC<StepPhotosProps> = ({
           ) : (
             <>
               <Upload className="w-5 h-5 text-[var(--ink-2)] mb-1" />
-              <span className="text-[11px] font-medium text-[var(--ink-2)]">
+              <span className="text-xs font-medium text-[var(--ink-2)]">
                 Subir desde dispositivo
               </span>
             </>

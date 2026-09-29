@@ -80,7 +80,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
               }`}
             />
           </h4>
-          <span className="text-[9px] font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
+          <span className="text-micro font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
         </div>
       </div>
 
@@ -89,7 +89,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenAutonomyModal}
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-semibold transition-ui cursor-pointer active:scale-[0.97] ${
               'bg-[var(--acc-soft)] hover:bg-[var(--acc)] text-[var(--acc)] '
             }`}
             title="Configurar niveles de autonomía de los agentes (Solo Administradores)"
@@ -98,11 +98,11 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             <span>
               Autonomía: {dispatchLabel} • Min {minCache}€
             </span>
-            <span className="px-1 py-0.2 text-[8px] rounded font-black bg-[var(--acc)]/40 text-[var(--acc)] ml-0.5">ADMIN</span>
+            <span className="px-1 py-0.2 text-micro rounded font-bold bg-[var(--acc)]/40 text-[var(--acc)] ml-0.5">ADMIN</span>
           </button>
         ) : (
           <div
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-[10px] font-mono font-semibold opacity-80 ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-semibold opacity-80 ${
               'bg-[var(--acc-soft)] text-[var(--acc)] '
             }`}
             title="Límites de autonomía configurados (Configuración restringida a Administradores)"
@@ -117,7 +117,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
         <button
           id="clear-chat-btn"
           onClick={handleClearChat}
-          className={`text-[9px] font-mono transition-all flex items-center gap-1 hover:underline cursor-pointer active:scale-95 ${
+          className={`text-micro font-mono transition-ui flex items-center gap-1 hover:underline cursor-pointer active:scale-[0.97] ${
             'text-[var(--ink-2)] hover:text-[var(--acc)]'
           }`}
         >
@@ -127,7 +127,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
           <button
             id="close-floating-chat-btn"
             onClick={onClose}
-            className={`p-1.5 rounded transition-all cursor-pointer flex items-center justify-center active:scale-95 ${
+            className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center active:scale-[0.97] ${
               'bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
             title="Cerrar Chat"

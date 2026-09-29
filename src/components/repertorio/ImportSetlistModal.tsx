@@ -309,7 +309,7 @@ export function ImportSetlistModal({
           {reviewItems && (
             <div className="space-y-4">
               <div>
-                <label className="text-[11px] font-sans text-[var(--ink-2)] block mb-1">
+                <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">
                   Nombre del repertorio
                 </label>
                 <input
@@ -320,7 +320,7 @@ export function ImportSetlistModal({
                 />
               </div>
 
-              <p className="text-[11px] font-sans text-[var(--ink-2)] flex items-center gap-1.5">
+              <p className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-1.5">
                 <ListChecks className="w-3.5 h-3.5" />
                 {matchedCount}/{songItemsCount} temas ya vinculados
                 automáticamente al catálogo
@@ -343,7 +343,7 @@ export function ImportSetlistModal({
                         <button
                           type="button"
                           onClick={() => toggleBlockIncluded(idx)}
-                          className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] font-sans"
+                          className="text-micro px-2 py-0.5 rounded bg-[var(--surface)]/70 hover:bg-[var(--sunken)] text-[var(--ink-2)] font-sans"
                         >
                           {it.included ? "Descartar" : "Incluir"}
                         </button>
@@ -363,7 +363,7 @@ export function ImportSetlistModal({
                           "{it.detectedTitle}"
                         </span>
                         {it.action === "link_matched" && (
-                          <span className="text-[10px] text-[var(--ok)] font-sans whitespace-nowrap">
+                          <span className="text-micro text-[var(--ok)] font-sans whitespace-nowrap">
                             ✓ {it.matchedSongTitle}
                           </span>
                         )}
@@ -376,7 +376,7 @@ export function ImportSetlistModal({
                               action: e.target.value as SongAction,
                             })
                           }
-                          className="text-[10px] bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
+                          className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] font-sans"
                         >
                           {it.matchedSongId && (
                             <option value="link_matched">
@@ -401,7 +401,7 @@ export function ImportSetlistModal({
                               updateSongItem(idx, { newTitle: e.target.value })
                             }
                             placeholder="Título de la canción nueva"
-                            className="text-[10px] bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
+                            className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           />
                         )}
                         {it.action === "link_other" && (
@@ -412,7 +412,7 @@ export function ImportSetlistModal({
                                 linkedSongId: e.target.value,
                               })
                             }
-                            className="text-[10px] bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
+                            className="text-micro bg-[var(--surface)] rounded px-1.5 py-1 text-[var(--ink-2)] flex-1 min-w-[140px]"
                           >
                             <option value="">
                               Elige una canción del catálogo...

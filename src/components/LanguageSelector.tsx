@@ -44,7 +44,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-medium transition-all duration-200 cursor-pointer active:scale-95 ${
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-m)] text-xs font-sans font-medium transition-ui duration-200 cursor-pointer active:scale-[0.97] ${
           isOpen
             ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
             : "bg-[var(--sunken)] text-[var(--ink-2)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"
@@ -57,7 +57,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             {currentLangObj.label}
           </span>
         )}
-        <span className="text-[10px] text-[var(--acc)]/90 font-sans">
+        <span className="text-micro text-[var(--acc)]/90 font-sans">
           ({currentLangObj.code})
         </span>
         <ChevronDown
@@ -67,7 +67,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-44 rounded-[var(--r-m)] bg-[var(--surface)] z-50 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
-          <div className="px-3 py-1.5/60 text-[10px] font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+          <div className="px-3 py-1.5/60 text-micro font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
             <Globe className="w-3 h-3 text-[var(--acc)]" />
             <span>Seleccionar Idioma</span>
           </div>

@@ -53,7 +53,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="tab-btn-canciones"
             onClick={() => setActiveTab('canciones')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-ui ${
               activeTab === 'canciones' ? '' : 'hover:opacity-80'
             }`}
             style={{
@@ -67,7 +67,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="tab-btn-setlists"
             onClick={() => setActiveTab('setlists')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--r-s)] text-xs font-semibold transition-ui ${
               activeTab === 'setlists' ? '' : 'hover:opacity-80'
             }`}
             style={{
@@ -85,7 +85,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="btn-nueva-cancion"
             onClick={onOpenNewSongModal}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] hover:brightness-110 active:scale-95 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] hover:brightness-110 active:scale-[0.97] transition-ui"
             style={{ backgroundColor: colors.primary }}
           >
             <Plus className="w-4 h-4" />
@@ -95,7 +95,7 @@ export const RepertorioHeader: React.FC<RepertorioHeaderProps> = ({
           <button
             id="btn-nuevo-setlist"
             onClick={onOpenNewSetlistModal}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] hover:brightness-110 active:scale-95 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-[var(--r-m)] font-semibold text-xs text-[var(--ink)] hover:brightness-110 active:scale-[0.97] transition-ui"
             style={{ backgroundColor: colors.primary }}
           >
             <Plus className="w-4 h-4" />

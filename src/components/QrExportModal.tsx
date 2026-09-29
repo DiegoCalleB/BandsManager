@@ -129,7 +129,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-[var(--ink)] font-display tracking-wide">
+              <h3 className="text-lg font-bold text-[var(--ink)] font-display tracking-wide">
                 Exportar & Imprimir QR en Máxima Calidad
               </h3>
               <p className="text-xs text-[var(--ink-2)] font-sans">
@@ -156,22 +156,22 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             <button
               type="button"
               onClick={() => setSelectedFormat("poster-a4")}
-              className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+              className={`p-4 rounded-[var(--r-l)] text-left transition-ui cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "poster-a4"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                   : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
+                <span className="font-bold text-sm flex items-center gap-2 text-[var(--ink)]">
                   <FileText className="w-4 h-4 text-[var(--acc)]" />
                   Cartel A4 Completo
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
+                <span className="text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Recomendado
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+              <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                 Cartel vertical A4 maquetado a 300 DPI con nombre de la banda,
                 sala, fecha, instrucciones y QR central.
               </p>
@@ -180,22 +180,22 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             <button
               type="button"
               onClick={() => setSelectedFormat("svg")}
-              className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+              className={`p-4 rounded-[var(--r-l)] text-left transition-ui cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "svg"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                   : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
+                <span className="font-bold text-sm flex items-center gap-2 text-[var(--ink)]">
                   <FileCode className="w-4 h-4 text-[var(--acc)]" />
                   Vectorial SVG (.svg)
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-[var(--r-s)]">
+                <span className="text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink-2)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Imprentas / Lonas
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+              <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                 Curvas matemáticas vectoriales sin pérdida de calidad. Escala
                 infinita para lonas gigantes o diseñadores.
               </p>
@@ -204,22 +204,22 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             <button
               type="button"
               onClick={() => setSelectedFormat("png-4k")}
-              className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+              className={`p-4 rounded-[var(--r-l)] text-left transition-ui cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "png-4k"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                   : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
+                <span className="font-bold text-sm flex items-center gap-2 text-[var(--ink)]">
                   <ImageIcon className="w-4 h-4 text-[var(--acc)]" />
                   PNG Ultra HD 4K
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
+                <span className="text-micro font-sans font-bold bg-[var(--tentative)]/20 text-[var(--acc)] px-2 py-0.5 rounded-[var(--r-s)]">
                   3000 x 3000 px
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+              <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                 Código QR aislado en altísima resolución con fondo blanco y logo
                 central. Para insertar en flyers o redes.
               </p>
@@ -228,22 +228,22 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             <button
               type="button"
               onClick={() => setSelectedFormat("badge")}
-              className={`p-4 rounded-[var(--r-l)] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+              className={`p-4 rounded-[var(--r-l)] text-left transition-ui cursor-pointer flex flex-col justify-between space-y-2 ${
                 selectedFormat === "badge"
                   ? "bg-[var(--acc)]/10 text-[var(--ink)]"
                   : "bg-[var(--sunken)] text-[var(--ink-2)] hover:"
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-black text-sm flex items-center gap-2 text-[var(--ink)]">
+                <span className="font-bold text-sm flex items-center gap-2 text-[var(--ink)]">
                   <Layers className="w-4 h-4 text-[var(--acc)]" />
                   Pegatina / Stand de Merchan
                 </span>
-                <span className="text-[10px] font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-[var(--r-s)]">
+                <span className="text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ok)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Cuadrado 2400px
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--ink-2)] leading-relaxed font-sans">
+              <p className="text-xs text-[var(--ink-2)] leading-relaxed font-sans">
                 Formato cuadrado con marco y título. Perfecto para pegar en la
                 mesa de venta de camisetas o vinilos.
               </p>
@@ -259,7 +259,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
 
           {selectedFormat === "poster-a4" && (
             <div className="space-y-1.5">
-              <label className="text-[11px] font-sans text-[var(--ink-2)]">
+              <label className="text-xs font-sans text-[var(--ink-2)]">
                 Texto de llamada a la acción (Titular):
               </label>
               <input
@@ -286,7 +286,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
             </label>
           )}
 
-          <div className="pt-2  flex items-center justify-between text-[11px] font-sans text-[var(--ink-2)]">
+          <div className="pt-2  flex items-center justify-between text-xs font-sans text-[var(--ink-2)]">
             <span>
               Destino QR:{" "}
               <strong className="text-[var(--acc)]/70">{url}</strong>

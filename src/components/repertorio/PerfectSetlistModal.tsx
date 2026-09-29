@@ -268,7 +268,7 @@ export function PerfectSetlistModal({
               {canUndo && (
                 <button
                   onClick={onUndo}
-                  className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-[11px] font-sans font-medium flex items-center gap-1"
+                  className="px-2 py-1 rounded-[var(--r-s)] bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] transition text-xs font-sans font-medium flex items-center gap-1"
                   title="Deshacer el último cambio del setlist"
                 >
                   ↩️ Deshacer
@@ -371,7 +371,7 @@ export function PerfectSetlistModal({
                       </div>
                       {isInvalid ? (
                         <span
-                          className="shrink-0 text-[10px] text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
+                          className="shrink-0 text-micro text-[var(--ink-2)] font-sans font-medium whitespace-nowrap"
                           title="Un cambio anterior afectó al item que esta acción necesitaba"
                         >
                           ⚠️ Ya no aplica
@@ -380,18 +380,18 @@ export function PerfectSetlistModal({
                         <button
                           type="button"
                           onClick={() => handleUndo(idx)}
-                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-[10px] font-sans transition whitespace-nowrap"
+                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--acc-soft)] hover:bg-[var(--acc-soft)] text-[var(--acc)]/70 hover:text-[var(--acc)] font-bold text-micro font-sans transition whitespace-nowrap"
                           title="Deshacer este cambio"
                         >
                           ↩️ Deshacer
                         </button>
                       ) : isApplied ? (
-                        <span className="shrink-0 text-[10px] text-[var(--ok)] font-sans font-medium whitespace-nowrap">✓ Aplicado</span>
+                        <span className="shrink-0 text-micro text-[var(--ok)] font-sans font-medium whitespace-nowrap">✓ Aplicado</span>
                       ) : (
                         <button
                           type="button"
                           onClick={() => handleApply(idx)}
-                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-[10px] font-sans transition whitespace-nowrap"
+                          className="shrink-0 px-2 py-0.5 rounded bg-[var(--ok)]/50 hover:bg-[var(--ok)] text-[var(--ok)] font-bold text-micro font-sans transition whitespace-nowrap"
                           title="Aplicar este cambio al setlist"
                         >
                           ✓ Aplicar
@@ -412,7 +412,7 @@ export function PerfectSetlistModal({
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--surface)]/60 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] font-sans text-[var(--ink-2)]">Intensidad</span>
+                  <span className="text-micro font-sans text-[var(--ink-2)]">Intensidad</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`intensidad-${star}`}
@@ -426,7 +426,7 @@ export function PerfectSetlistModal({
                   ))}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] font-sans text-[var(--ink-2)]">Contenido</span>
+                  <span className="text-micro font-sans text-[var(--ink-2)]">Contenido</span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`contenido-${star}`}
@@ -445,14 +445,14 @@ export function PerfectSetlistModal({
                 value={comentarioFeedback}
                 onChange={(e) => setComentarioFeedback(e.target.value)}
                 placeholder="Ej:'Evita más de una balada seguida','el bis siempre un tema conocido'..."
-                className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-[11px] text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
+                className="w-full p-2 bg-[var(--sunken)] rounded-[var(--r-s)] text-xs text-[var(--ink-2)] placeholder-[var(--ink-2)] font-sans focus:outline-none"
               />
-              <div className="flex items-center gap-1.5 text-[10px] font-sans">
+              <div className="flex items-center gap-1.5 text-micro font-sans">
                 <span className="text-[var(--ink-2)]">Alcance:</span>
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('este_setlist')}
-                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all ${
+                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-ui ${
                     feedbackScope === 'este_setlist'
                       ? 'bg-[var(--surface)]/70 text-[var(--ink)] font-bold'
                       : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -463,7 +463,7 @@ export function PerfectSetlistModal({
                 <button
                   type="button"
                   onClick={() => setFeedbackScope('global')}
-                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-all flex items-center gap-1 ${
+                  className={`px-2 py-1 rounded-[var(--r-s)] cursor-pointer transition-ui flex items-center gap-1 ${
                     feedbackScope === 'global'
                       ? 'bg-[var(--acc)]/20 text-[var(--acc)]/70 font-bold'
                       : 'bg-transparent text-[var(--ink-2)] hover:text-[var(--ink-2)]'

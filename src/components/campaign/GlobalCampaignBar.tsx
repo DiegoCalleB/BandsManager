@@ -70,7 +70,7 @@ export function GlobalCampaignBar({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[8px] font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
+              <span className="text-micro font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc)]/40 shrink-0">
                 🎯 CAMPAÑA
               </span>
               <h2
@@ -82,7 +82,7 @@ export function GlobalCampaignBar({
             </div>
 
             {/* Desktop / Tablet Inline details */}
-            <div className="hidden sm:flex flex-wrap items-center gap-2 text-[10px] text-[var(--ink-2)] mt-0.5">
+            <div className="hidden sm:flex flex-wrap items-center gap-2 text-micro text-[var(--ink-2)] mt-0.5">
               <span className="inline-flex items-center gap-1 text-[var(--ink-2)] font-medium truncate max-w-[200px]">
                 <MapPin className="w-2.5 h-2.5 text-[var(--ink-2)] shrink-0" />
                 {campaign.targetCities?.join(",") || "Todas las ciudades"}
@@ -126,7 +126,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("booking", { campaignFilter: campaign.id })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "booking"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -143,7 +143,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("calendario", { selectedDate: firstTargetDate })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "calendario"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -160,7 +160,7 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("bandas", { campaignCities: campaign.targetCities })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-[9px] sm:text-[10px] font-sans font-bold transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-s)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "bandas"
                 ? "bg-[var(--hair)] text-[var(--ink)]"
                 : "bg-[var(--acc)]/90 hover:bg-[var(--acc)]/80 text-[var(--acc)]/40"
@@ -196,7 +196,7 @@ export function GlobalCampaignBar({
 
       {/* Mobile Collapsible Details */}
       {isMobileExpanded && (
-        <div className="sm:hidden pt-2 mt-2/20 text-[10px] text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
+        <div className="sm:hidden pt-2 mt-2/20 text-micro text-[var(--ink-2)] flex flex-col gap-1 animate-fade-in relative z-10">
           <div className="flex items-center gap-1.5 text-[var(--ink-2)] font-medium">
             <MapPin className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
             <span>

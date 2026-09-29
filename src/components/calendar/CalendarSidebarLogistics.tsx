@@ -339,10 +339,10 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     <Target className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono font-extrabold text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-[var(--r-pill)] ">
+                    <span className="text-micro font-mono font-extrabold text-[var(--acc)] bg-[var(--acc)]/20 px-2 py-0.5 rounded-[var(--r-pill)] ">
                       🎯 Fecha Objetivo de Campaña
                     </span>
-                    <p className="text-[11px] font-mono text-[var(--ink-2)] font-bold mt-0.5">
+                    <p className="text-xs font-mono text-[var(--ink-2)] font-bold mt-0.5">
                       {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                     </p>
                   </div>
@@ -357,25 +357,25 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       {camp.name}
                     </h4>
                     {camp.isActive && (
-                      <span className="text-[8px] font-mono font-black px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--ink)]">
+                      <span className="text-micro font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)] text-[var(--ink)]">
                         ACTIVA
                       </span>
                     )}
                   </div>
 
                   <div className="flex flex-wrap gap-2 text-xs text-[var(--ink-2)]">
-                    <span className="inline-flex items-center gap-1 text-[var(--acc)] text-[11px]">
+                    <span className="inline-flex items-center gap-1 text-[var(--acc)] text-xs">
                       <MapPin className="w-3 h-3 text-[var(--acc)]" />
                       {camp.targetCities?.join(', ') || 'Cualquier ciudad'}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-[var(--acc)] text-[11px]">
+                    <span className="inline-flex items-center gap-1 text-[var(--acc)] text-xs">
                       <Users className="w-3 h-3 text-[var(--acc)]" />
                       {camp.minCapacity} - {camp.maxCapacity} pax
                     </span>
                   </div>
 
                   {camp.notes && (
-                    <p className="text-[11px] text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
+                    <p className="text-xs text-[var(--ink-2)] italic bg-[var(--sunken)] p-2 rounded-[var(--r-m)] ">
                       &ldquo;{camp.notes}&rdquo;
                     </p>
                   )}
@@ -385,7 +385,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <button
                         type="button"
                         onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
-                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/30 hover:bg-[var(--acc)]/50 text-[var(--acc)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
                       >
                         <Building2 className="w-3 h-3 text-[var(--acc)]" />
                         <span>Salas CRM</span>
@@ -400,7 +400,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
                         setShowCreateModal('concert');
                       }}
-                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                      className="flex-1 py-1.5 px-2.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] flex items-center justify-center gap-1.5 transition-ui cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Confirmar Concierto</span>
@@ -421,7 +421,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
                 </p>
                 <h4 className={`text-sm font-bold font-display mt-1 ${textTitle}`}>Día sin eventos agendados</h4>
-                <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
+                <p className={`text-micro font-mono mt-1 ${textSub}`}>
                   Selecciona un día con concierto en el calendario para ver su logística y ubicación GPS.
                 </p>
               </div>
@@ -429,7 +429,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
-                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     'bg-[var(--ok)]/15 text-[var(--ok)] hover:bg-[var(--ok)]/25'
                   }`}
                 >
@@ -440,7 +440,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('concert')}
-                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-3 rounded-[var(--r-m)] text-micro font-mono font-bold flex items-center justify-center gap-1.5 transition-ui cursor-pointer ${
                     'bg-[var(--acc)]/15 text-[var(--acc)] hover:bg-[var(--acc)]/25'
                   }`}
                 >
@@ -473,7 +473,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   <button
                     key={f.id}
                     onClick={() => setUpcomingFilter(f.id as any)}
-                    className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
+                    className={`px-1.5 py-0.5 rounded text-micro font-mono font-bold transition-ui cursor-pointer ${
                       upcomingFilter === f.id
                         ? 'bg-[var(--acc)]/20 text-[var(--acc)] '
                         : 'text-[var(--ink-2)] hover:text-[var(--ink-2)]'
@@ -492,7 +492,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 if (upcomingFilter === 'campañas') return evt.type === 'campaña';
                 return true;
               }).length === 0 ? (
-                <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay próximas fechas con el filtro seleccionado.</p>
+                <p className={`text-micro italic text-center py-4 ${textMuted}`}>No hay próximas fechas con el filtro seleccionado.</p>
               ) : (
                 upcomingCalendarEvents
                   .filter((evt) => {
@@ -513,7 +513,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           }
                         }
                       }}
-                      className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-all cursor-pointer ${
+                      className={`p-2.5 rounded-[var(--r-m)] flex items-start gap-3 transition-ui cursor-pointer ${
                         evt.type === 'campaña'
                           ? 'bg-[var(--acc)]/20 '
                           : 'bg-[var(--sunken)] '
@@ -535,7 +535,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           {evt.day}
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-extrabold mt-0.5 ${
+                          className={`text-micro font-mono font-extrabold mt-0.5 ${
                             evt.type === 'campaña' ? 'text-[var(--acc)]' : 'text-[var(--ink-2)]'
                           }`}
                         >
@@ -546,7 +546,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span
-                            className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                            className={`text-micro px-1.5 py-0.5 rounded font-mono font-bold ${
                               evt.type === 'concierto'
                                 ? 'bg-[var(--acc)]/15 text-[var(--acc)]'
                                 : evt.type === 'campaña'
@@ -558,7 +558,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           </span>
                           {evt.bandName && (
                             <span
-                              className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--sunken)]/80 text-[var(--acc)] truncate max-w-[100px]"
+                              className="text-micro px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--sunken)]/80 text-[var(--acc)] truncate max-w-[100px]"
                               title={evt.bandName}
                             >
                               {evt.bandName}
@@ -566,7 +566,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           )}
                         </div>
                         <div className="text-xs sm:text-sm font-bold font-display text-[var(--ink-2)] mt-1 truncate">{evt.title}</div>
-                        {evt.direccion && <p className={`text-[10px] font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>}
+                        {evt.direccion && <p className={`text-micro font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>}
                         {evt.type !== 'campaña' ? (
                           <div className="mt-1 flex justify-center">
                             <DirectionsCard
@@ -577,7 +577,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             />
                           </div>
                         ) : (
-                          <p className="text-[10px] font-mono text-[var(--acc)]/80 mt-0.5">{evt.salaOrLugar}</p>
+                          <p className="text-micro font-mono text-[var(--acc)]/80 mt-0.5">{evt.salaOrLugar}</p>
                         )}
                       </div>
                     </div>
@@ -595,11 +595,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 'bg-[var(--sunken)] text-[var(--ink)]'
               }`}
             >
-              <span className={`text-base font-mono font-black leading-none ${'text-[var(--acc)]'}`}>
+              <span className={`text-base font-mono font-bold leading-none ${'text-[var(--acc)]'}`}>
                 {selectedDate.getDate()}
               </span>
               <span
-                className={`text-[9px] font-mono font-extrabold mt-0.5 ${'text-[var(--ink-2)]'}`}
+                className={`text-micro font-mono font-extrabold mt-0.5 ${'text-[var(--ink-2)]'}`}
               >
                 {monthNames[selectedDate.getMonth()]?.slice(0, 3).toUpperCase()}
               </span>
@@ -607,18 +607,18 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <div
-                  className={`text-[10px] font-mono font-bold ${'text-[var(--acc)]'}`}
+                  className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}
                 >
                   Logística de Ensayos y Conciertos
                 </div>
                 {(selectedConcert || selectedRehearsal) && (
-                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-[var(--r-s)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] shadow-xs flex items-center gap-1">
                     🎸 Banda: {getEventBandName(selectedConcert || selectedRehearsal)}
                   </span>
                 )}
               </div>
               <h3 className={`text-lg font-bold font-display tracking-wide mt-0.5 ${textTitle}`}>{selectedEventTitle}</h3>
-              <p className={`text-[10px] font-mono mt-0.5 ${textSub}`}>
+              <p className={`text-micro font-mono mt-0.5 ${textSub}`}>
                 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
               </p>
             </div>
@@ -627,7 +627,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setShowEventFichaModal(true)}
-                  className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer items-center gap-1 ${
+                  className={`hidden lg:flex px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer items-center gap-1 ${
                     'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Ampliar esta ficha en un modal centrado"
@@ -645,7 +645,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     setReminderErrorMsg(null);
                     setShowReminderModal(true);
                   }}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Enviar un recordatorio por correo/notificación a los convocados"
@@ -657,7 +657,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingConcert(selectedConcert)}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--acc-soft)] text-[var(--acc)] hover:bg-[var(--acc-soft)]'
                   }`}
                   title="Editar ficha completa del concierto"
@@ -669,7 +669,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 <button
                   type="button"
                   onClick={() => setViewingRehearsal(selectedRehearsal)}
-                  className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer flex items-center gap-1 ${
                     'bg-[var(--ok-soft)] text-[var(--ok)] hover:bg-[var(--ok-soft)]'
                   }`}
                   title="Editar ficha completa del ensayo"
@@ -686,7 +686,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteConcert(selectedConcert.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -700,7 +700,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onDeleteRehearsal(selectedRehearsal.id);
                     }
                   }}
-                  className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
+                  className="px-2.5 py-1.5 text-micro font-mono font-bold rounded-[var(--r-m)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--alert)] hover:bg-[var(--alert)]/50"
                 >
                   🗑 Eliminar
                 </button>
@@ -719,7 +719,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     key={evt.id}
                     type="button"
                     onClick={() => setSelectedEventId(evt.id)}
-                    className={`px-2 py-1 rounded-[var(--r-pill)] text-[9px] font-mono font-bold transition-colors cursor-pointer ${
+                    className={`px-2 py-1 rounded-[var(--r-pill)] text-micro font-mono font-bold transition-colors cursor-pointer ${
                       isActive
                         ? evt.kind === 'concert'
                           ? 'bg-[var(--acc)]/30 text-[var(--acc)]'
@@ -754,20 +754,20 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
           {/* Core Info */}
           <div className={`space-y-3 mb-6 rounded-[var(--r-m)] p-3 ${'bg-[var(--surface)]'}`}>
-            <div className="flex items-center gap-2 text-[10px]">
+            <div className="flex items-center gap-2 text-micro">
               <Clock className={`w-4 h-4 shrink-0 ${'text-[var(--acc)]'}`} />
               <span className={`font-mono ${textSub}`}>Hora:</span>
               <span className={`font-bold font-mono ${'text-[var(--acc)]'}`}>
                 {selectedEventDetails.time}
               </span>
             </div>
-            <div className="flex items-start gap-2 text-[10px]">
+            <div className="flex items-start gap-2 text-micro">
               <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${'text-[var(--acc)]'}`} />
               <div className="flex-1">
                 <span className={`font-mono ${textSub}`}>Lugar:</span>
                 <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
                 {selectedEventDetails.direccion && (
-                  <p className={`text-[10px] font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
+                  <p className={`text-micro font-sans mt-1 ${'text-[var(--ink-2)]'}`}>
                     <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
                   </p>
                 )}
@@ -784,7 +784,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               </div>
             )}
             {!isPromoPlan && selectedEventDetails.type === 'concert' && (
-              <div className={`flex items-center gap-2 text-[10px] pt-2 mt-1 ${'-slate-100'}`}>
+              <div className={`flex items-center gap-2 text-micro pt-2 mt-1 ${'-slate-100'}`}>
                 <Sparkles className="w-4 h-4 text-[var(--ok)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Compensación:</span>
                 <span className="text-[var(--ok)] font-bold font-mono">{selectedEventDetails.fee}</span>
@@ -797,13 +797,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     href={selectedEventDetails.entradasUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--ok)] text-[var(--ink)] hover:bg-[var(--ok)] transition-colors w-fit"
                   >
                     <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
                   </a>
                 )}
                 {selectedEventDetails.entradasLugarFisico && (
-                  <div className="flex items-center gap-2 text-[10px]">
+                  <div className="flex items-center gap-2 text-micro">
                     <MapPin className="w-4 h-4 text-[var(--ok)] shrink-0" />
                     <span className={`font-mono ${textSub}`}>También en:</span>
                     <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
@@ -816,14 +816,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
             {selectedEventDetails.notes && (
               <div
-                className={`text-[10px] font-sans italic pt-2 leading-relaxed ${'-slate-100 text-[var(--ink-2)]'}`}
+                className={`text-micro font-sans italic pt-2 leading-relaxed ${'-slate-100 text-[var(--ink-2)]'}`}
               >
                 &ldquo;{selectedEventDetails.notes}&rdquo;
               </div>
             )}
 
             {selectedConcert?.giraNombre && (
-              <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-[var(--hair)] mt-2">
+              <div className="flex items-center gap-2 text-micro pt-2 border-t border-[var(--hair)] mt-2">
                 <Navigation className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Gira:</span>
                 <span className="font-bold font-mono text-[var(--acc)]">🚐 {selectedConcert.giraNombre}</span>
@@ -831,7 +831,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             )}
 
             {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
-              <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-[var(--hair)] mt-2">
+              <div className="flex items-center gap-2 text-micro pt-2 border-t border-[var(--hair)] mt-2">
                 <Users className="w-4 h-4 text-[var(--acc)] shrink-0" />
                 <span className={`font-mono ${textSub}`}>Convocatoria:</span>
                 <span className="font-bold font-mono text-[var(--acc)]">
@@ -863,7 +863,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className={`mt-3 pt-3 border-t ${'border-[var(--hair)]'}`}>
                     <div className="flex items-center justify-between gap-1 mb-2">
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+                      <div className="flex items-center gap-1.5 text-micro font-mono font-bold text-[var(--acc)]">
                         <QrCode className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
                         <span>QR Bolo & Captación Fans:</span>
                       </div>
@@ -871,7 +871,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         <button
                           type="button"
                           onClick={() => onNavigate('fans', { concertId: selectedConcert.id })}
-                          className="text-[9px] font-mono text-[var(--acc)]/90 hover:text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer font-bold"
+                          className="text-micro font-mono text-[var(--acc)]/90 hover:text-[var(--acc)] hover:underline flex items-center gap-1 cursor-pointer font-bold"
                           title="Configurar el QR y la experiencia del fan para este concierto"
                         >
                           <Settings className="w-3 h-3 text-[var(--acc)]" />
@@ -887,7 +887,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     >
                       <div
                         onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
-                        className="p-1 bg-[var(--surface)] rounded-[var(--r-m)] shadow shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                        className="p-1 bg-[var(--surface)] rounded-[var(--r-m)] shadow shrink-0 cursor-pointer transition-transform"
                         title="Haz clic para abrir la configuración del QR"
                       >
                         <QRCode value={targetQrUrl} size={58} level="M" />
@@ -895,7 +895,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
                       <div className="flex-1 min-w-0 space-y-1.5">
                         <p
-                          className="text-[9px] font-mono text-[var(--ink-2)] truncate break-all bg-[var(--sunken)]/60 p-1 rounded text-[var(--acc)] font-semibold"
+                          className="text-micro font-mono text-[var(--ink-2)] truncate break-all bg-[var(--sunken)]/60 p-1 rounded text-[var(--acc)] font-semibold"
                           title={targetQrUrl}
                         >
                           {targetQrUrl}
@@ -905,7 +905,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             href={targetQrUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors"
+                            className="px-2 py-0.5 bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--acc)] rounded text-micro font-mono font-bold flex items-center gap-1 transition-colors"
                           >
                             <ExternalLink className="w-2.5 h-2.5" /> Abrir
                           </a>
@@ -916,7 +916,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                               setCopiedQrId(selectedConcert.id);
                               setTimeout(() => setCopiedQrId(null), 2000);
                             }}
-                            className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-[9px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                            className="px-2 py-0.5 bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink-2)] rounded text-micro font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
                           >
                             {copiedQrId === selectedConcert.id ? (
                               <>
@@ -940,11 +940,11 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             {selectedRehearsal?.tipo_evento === 'reunion' && (
               <div className={`mt-3 pt-3 border-t ${'border-[var(--hair)]'}`}>
                 <div className="flex items-center justify-between gap-1 mb-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+                  <div className="flex items-center gap-1.5 text-micro font-mono font-bold text-[var(--acc)]">
                     <Video className="w-3.5 h-3.5 shrink-0 text-[var(--acc)]" />
                     <span>Detalles de la Reunión:</span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] ">
+                  <span className="text-micro font-mono px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/15 text-[var(--acc)] ">
                     🤝 Coordinación
                   </span>
                 </div>
@@ -955,9 +955,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   }`}
                 >
                   {selectedRehearsal.asunto && (
-                    <div className="text-[11px] font-semibold text-[var(--acc)]">📌 {selectedRehearsal.asunto}</div>
+                    <div className="text-xs font-semibold text-[var(--acc)]">📌 {selectedRehearsal.asunto}</div>
                   )}
-                  <div className="text-[10px] text-[var(--ink-2)] flex items-center gap-1.5">
+                  <div className="text-micro text-[var(--ink-2)] flex items-center gap-1.5">
                     <span>📍 {selectedRehearsal.lugar}</span>
                   </div>
 
@@ -971,7 +971,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5/20 transition-all cursor-pointer"
+                        className="flex-1 px-3 py-1.5 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] rounded-[var(--r-m)] text-xs font-mono font-bold flex items-center justify-center gap-1.5/20 transition-ui cursor-pointer"
                       >
                         <Video className="w-3.5 h-3.5" />
                         <span>Unirse a Videollamada</span>
@@ -987,12 +987,12 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             {(!isPromoPlan || hasModuleAccess(currentUser?.plan, 'repertorio')) && (selectedConcert || selectedRehearsal) && (
               <div className={` pt-2.5 mt-2.5 ${'-slate-100'}`}>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[var(--acc)]">
+                  <div className="flex items-center gap-1.5 text-micro font-mono font-bold text-[var(--acc)]">
                     <Disc3 className="w-3.5 h-3.5 shrink-0 animate-spin-slow" />
                     <span>Repertorio Asignado:</span>
                   </div>
                   {assignedSetlist && (
-                    <span className="text-[10px] font-mono px-2 py-1 rounded bg-[var(--ok)]/15 text-[var(--ok)] font-bold">
+                    <span className="text-micro font-mono px-2 py-1 rounded bg-[var(--ok)]/15 text-[var(--ok)] font-bold">
                       {assignedSetlist.items?.length || 0} canciones/ítems
                     </span>
                   )}
@@ -1008,7 +1008,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       onUpdateRehearsal(selectedRehearsal.id, { setlistId: val });
                     }
                   }}
-                  className={`w-full text-[10px] font-mono p-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
+                  className={`w-full text-micro font-mono p-1.5 rounded-[var(--r-m)] focus:outline-none cursor-pointer ${
                     'bg-[var(--sunken)] text-[var(--ink)]'
                   }`}
                 >
@@ -1029,7 +1029,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
                         setActiveStageSetlist(assignedSetlist);
                       }}
-                      className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-all cursor-pointer"
+                      className="flex-1 py-2 px-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-mono font-bold text-xs flex items-center justify-center gap-2/20 transition-ui cursor-pointer"
                       title="Lanzar Modo Escenario / Vista de Directo para este evento"
                     >
                       <Radio className="w-3.5 h-3.5 text-[var(--ink)]" />
@@ -1046,7 +1046,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-runofshow"
               onClick={() => setActiveTab('runofshow')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors ${
                 activeTab === 'runofshow'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1057,7 +1057,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-tecnica"
               onClick={() => setActiveTab('tecnica')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'tecnica'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1069,7 +1069,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-contactos"
               onClick={() => setActiveTab('contactos')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'contactos'
                   ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1081,7 +1081,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-merchan"
               onClick={() => setActiveTab('merchan')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'merchan'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1093,7 +1093,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-cierre"
               onClick={() => setActiveTab('cierre')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors flex items-center gap-1 ${
                 activeTab === 'cierre'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1105,7 +1105,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-roadbook"
               onClick={() => setActiveTab('roadbook')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors ${
                 activeTab === 'roadbook'
                   ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1116,7 +1116,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
             <button
               id="calendar-subtab-gear"
               onClick={() => setActiveTab('gear')}
-              className={`px-2 py-1 text-[10px] font-mono rounded cursor-pointer transition-colors ${
+              className={`px-2 py-1 text-micro font-mono rounded cursor-pointer transition-colors ${
                 activeTab === 'gear'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc)] font-bold'
                   : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -1128,7 +1128,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
           {/* Content for Subtabs */}
           {activeTab === 'roadbook' ? (
-            <div className="space-y-3 max-h-80 overflow-y-auto pr-1 text-[10px]">
+            <div className="space-y-3 max-h-80 overflow-y-auto pr-1 text-micro">
               {(() => {
                 const currentRb = allRoadbooks[selectedDateKey] || {
                   contactoPromotor: 'Manuel (Producción)',
@@ -1145,61 +1145,61 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   <div className="space-y-3">
                     <div className={`p-3 rounded-[var(--r-m)] space-y-2 ${'bg-[var(--surface)]'}`}>
                       <div className="flex items-center justify-between">
-                        <span className={`text-[10px] font-mono font-bold ${'text-[var(--acc)]'}`}>
+                        <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
                           📞 Contacto Producción & Hotel
                         </span>
                       </div>
-                      <div className="grid grid-cols-2 gap-2 text-[10px]">
+                      <div className="grid grid-cols-2 gap-2 text-micro">
                         <div>
-                          <label className={`block text-[10px] font-mono ${textSub}`}>Promotor / Sala</label>
+                          <label className={`block text-micro font-mono ${textSub}`}>Promotor / Sala</label>
                           <input
                             type="text"
                             value={currentRb.contactoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, contactoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
+                            className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
                           />
                         </div>
                         <div>
-                          <label className={`block text-[10px] font-mono ${textSub}`}>Teléfono</label>
+                          <label className={`block text-micro font-mono ${textSub}`}>Teléfono</label>
                           <input
                             type="text"
                             value={currentRb.telefonoPromotor}
                             onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, telefonoPromotor: e.target.value })}
-                            className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
+                            className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className={`block text-[10px] font-mono ${textSub}`}>Hotel Alojamientos</label>
+                        <label className={`block text-micro font-mono ${textSub}`}>Hotel Alojamientos</label>
                         <input
                           type="text"
                           value={currentRb.hotelNombre}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, hotelNombre: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
+                          className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
                         />
                       </div>
 
                       <div>
-                        <label className={`block text-[10px] font-mono ${textSub}`}>Catering & Menús</label>
+                        <label className={`block text-micro font-mono ${textSub}`}>Catering & Menús</label>
                         <input
                           type="text"
                           value={currentRb.cateringInfo}
                           onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, cateringInfo: e.target.value })}
-                          className={`w-full px-2 py-1 rounded text-[10px] ${'bg-[var(--sunken)]'}`}
+                          className={`w-full px-2 py-1 rounded text-micro ${'bg-[var(--sunken)]'}`}
                         />
                       </div>
                     </div>
 
                     <div className={`p-3 rounded-[var(--r-m)] space-y-1.5 ${'bg-[var(--surface)]'}`}>
-                      <span className={`text-[10px] font-mono font-bold ${'text-[var(--acc)]'}`}>
+                      <span className={`text-micro font-mono font-bold ${'text-[var(--acc)]'}`}>
                         🎸 Input List / Rider de Canales
                       </span>
                       <textarea
                         rows={4}
                         value={currentRb.inputList}
                         onChange={(e) => saveRoadbook(selectedDateKey, { ...currentRb, inputList: e.target.value })}
-                        className={`w-full p-2 rounded font-mono text-[10px] ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
+                        className={`w-full p-2 rounded font-mono text-micro ${'bg-[var(--sunken)] text-[var(--ink)]'}`}
                       />
                     </div>
 
@@ -1309,7 +1309,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
  `);
                         printWindow.document.close();
                       }}
-                      className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-[10px] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                      className={`w-full py-2 px-3 rounded-[var(--r-m)] font-mono text-micro font-bold flex items-center justify-center gap-2 cursor-pointer transition-ui ${
                         'bg-[var(--acc)]  text-[var(--ink)]'
                       }`}
                     >
@@ -1321,7 +1321,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               })()}
             </div>
           ) : activeTab === 'tecnica' ? (
-            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-micro">
               {(() => {
                 const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                 return (
@@ -1330,7 +1330,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       className={`p-2.5 rounded-[var(--r-m)] ${'bg-[var(--acc-soft)]/70 '}`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold flex items-center gap-1 text-[var(--acc)] font-mono text-[10px]">
+                        <span className="font-bold flex items-center gap-1 text-[var(--acc)] font-mono text-micro">
                           <Wrench className="w-3 h-3" /> 1. Logística Técnica
                         </span>
                         <button
@@ -1339,32 +1339,32 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             setModalActiveTab('tecnica');
                             setShowEventFichaModal(true);
                           }}
-                          className="text-[9px] underline text-[var(--acc)] hover:text-[var(--acc)] font-mono cursor-pointer"
+                          className="text-micro underline text-[var(--acc)] hover:text-[var(--acc)] font-mono cursor-pointer"
                         >
                           Editar Completo →
                         </button>
                       </div>
-                      <div className="grid grid-cols-2 gap-1.5 text-[9px]">
+                      <div className="grid grid-cols-2 gap-1.5 text-micro">
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-[var(--ink-2)] font-mono text-[8px]">Prueba de Sonido</span>
+                          <span className="block text-[var(--ink-2)] font-mono text-micro">Prueba de Sonido</span>
                           <span className="font-bold text-[var(--acc)]">{currentRb.horaPruebaSonido || '18:00'}</span>
                         </div>
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-[var(--ink-2)] font-mono text-[8px]">Horario Show</span>
+                          <span className="block text-[var(--ink-2)] font-mono text-micro">Horario Show</span>
                           <span className="font-bold text-[var(--ok)]">{currentRb.horaShow || '21:30'}</span>
                         </div>
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-[var(--ink-2)] font-mono text-[8px]">Técnico Sonido FOH</span>
+                          <span className="block text-[var(--ink-2)] font-mono text-micro">Técnico Sonido FOH</span>
                           <span className="font-medium truncate">{currentRb.tecnicoSonido || 'Propio / Sala'}</span>
                         </div>
                         <div className={`p-1.5 rounded ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-[var(--ink-2)] font-mono text-[8px]">Sistema P.A.</span>
+                          <span className="block text-[var(--ink-2)] font-mono text-micro">Sistema P.A.</span>
                           <span className="font-medium truncate">{currentRb.paEspecificaciones ? 'Especificado' : 'Estándar Sala'}</span>
                         </div>
                       </div>
                       {currentRb.backlineInfo && (
-                        <div className={`mt-2 p-1.5 rounded text-[9px] ${'bg-[var(--surface)]'}`}>
-                          <span className="block text-[var(--ink-2)] font-mono text-[8px]">Backline & Rider</span>
+                        <div className={`mt-2 p-1.5 rounded text-micro ${'bg-[var(--surface)]'}`}>
+                          <span className="block text-[var(--ink-2)] font-mono text-micro">Backline & Rider</span>
                           <p className="line-clamp-2 text-[var(--ink-2)]">{currentRb.backlineInfo}</p>
                         </div>
                       )}
@@ -1375,7 +1375,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('tecnica');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Wrench className="w-3 h-3" />
                       <span>Abrir Logística Técnica Completa</span>
@@ -1385,14 +1385,14 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               })()}
             </div>
           ) : activeTab === 'contactos' ? (
-            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-micro">
               {(() => {
                 const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                 const contacts = currentRb.contactosClave || [];
                 return (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-[var(--ok)] text-[10px] flex items-center gap-1">
+                      <span className="font-mono font-bold text-[var(--ok)] text-micro flex items-center gap-1">
                         <Users className="w-3 h-3" /> 2. Contactos Clave ({contacts.length})
                       </span>
                       <button
@@ -1401,13 +1401,13 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           setModalActiveTab('contactos');
                           setShowEventFichaModal(true);
                         }}
-                        className="text-[9px] underline text-[var(--ok)] hover:text-[var(--ok)] font-mono cursor-pointer"
+                        className="text-micro underline text-[var(--ok)] hover:text-[var(--ok)] font-mono cursor-pointer"
                       >
                         + Gestionar →
                       </button>
                     </div>
                     {contacts.length === 0 ? (
-                      <p className={`text-[10px] italic text-center py-3 ${textMuted}`}>No hay contactos clave agregados.</p>
+                      <p className={`text-micro italic text-center py-3 ${textMuted}`}>No hay contactos clave agregados.</p>
                     ) : (
                       <div className="space-y-1.5">
                         {contacts.map((c) => (
@@ -1416,9 +1416,9 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             className={`p-2 rounded-[var(--r-m)] flex items-center justify-between gap-2 ${'bg-[var(--sunken)] '}`}
                           >
                             <div className="min-w-0">
-                              <div className="font-bold truncate text-[10px]">{c.nombre}</div>
-                              <div className="text-[9px] text-[var(--ink-2)] font-mono flex items-center gap-1">
-                                <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-[8px]">{c.rol}</span>
+                              <div className="font-bold truncate text-micro">{c.nombre}</div>
+                              <div className="text-micro text-[var(--ink-2)] font-mono flex items-center gap-1">
+                                <span className="px-1 py-0.2 rounded bg-[var(--ok)]/10 text-[var(--ok)] text-micro">{c.rol}</span>
                                 <span>{c.telefono}</span>
                               </div>
                             </div>
@@ -1457,7 +1457,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('contactos');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--ok)]/20 text-[var(--ok)] hover:bg-[var(--ok)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Añadir Contactos Clave</span>
@@ -1467,7 +1467,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               })()}
             </div>
           ) : activeTab === 'merchan' ? (
-            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-micro">
               {(() => {
                 const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                 const merch = currentRb.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
@@ -1485,31 +1485,31 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
+                      <span className="font-mono font-bold text-[var(--acc)] text-micro flex items-center gap-1">
                         <Shirt className="w-3 h-3" /> 3. Merch ({totalVendidas}/{totalInicial} uds)
                       </span>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
+                      <span className="text-micro font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--acc)]/20 text-[var(--acc)]">
                         {totalTeorico.toFixed(0)}€ ventas
                       </span>
                     </div>
 
                     {/* Arqueo Rápido */}
-                    <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
+                    <div className="grid grid-cols-2 gap-1.5 text-micro font-mono">
                       <div className="p-1.5 rounded bg-[var(--ok)]/10 flex flex-col">
-                        <span className="text-[var(--ok)]/80 text-[8px] flex items-center gap-0.5">
+                        <span className="text-[var(--ok)]/80 text-micro flex items-center gap-0.5">
                           <Banknote className="w-2.5 h-2.5" /> Efectivo
                         </span>
-                        <span className="font-bold text-[var(--ok)] text-[11px]">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
+                        <span className="font-bold text-[var(--ok)] text-xs">{(merch.ingresosEfectivo || 0).toFixed(0)}€</span>
                       </div>
                       <div className="p-1.5 rounded bg-[var(--acc)]/10 flex flex-col">
-                        <span className="text-[var(--acc)]/80 text-[8px] flex items-center gap-0.5">
+                        <span className="text-[var(--acc)]/80 text-micro flex items-center gap-0.5">
                           <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
                         </span>
-                        <span className="font-bold text-[var(--acc)] text-[11px]">{(merch.ingresosBizum || 0).toFixed(0)}€</span>
+                        <span className="font-bold text-[var(--acc)] text-xs">{(merch.ingresosBizum || 0).toFixed(0)}€</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-[var(--sunken)]/60 ">
+                    <div className="flex items-center justify-between text-micro font-mono px-1 py-0.5 rounded bg-[var(--sunken)]/60 ">
                       <span className="text-[var(--ink-2)]">
                         Total cobrado: <strong className="text-[var(--ink)]">{totalCobrado.toFixed(0)}€</strong>
                       </span>
@@ -1536,16 +1536,16 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             }`}
                           >
                             <div className="truncate pr-2">
-                              <p className="font-medium truncate text-[9.5px]">
+                              <p className="font-medium truncate text-micro">
                                 {item.nombre} {item.talla ? `(${item.talla})` : ''}
                               </p>
-                              <p className="text-[8px] text-[var(--ink-2)] font-mono">
+                              <p className="text-micro text-[var(--ink-2)] font-mono">
                                 {item.stockInicial} furgón ➔ {item.stockFinal} quedan
                               </p>
                             </div>
                             <div className="text-right shrink-0">
-                              <span className="text-[9px] font-mono font-bold text-[var(--acc)]">{vendidas} vend.</span>
-                              <p className="text-[8px] font-mono text-[var(--ink-2)]">{(vendidas * item.precioUnitario).toFixed(0)}€</p>
+                              <span className="text-micro font-mono font-bold text-[var(--acc)]">{vendidas} vend.</span>
+                              <p className="text-micro font-mono text-[var(--ink-2)]">{(vendidas * item.precioUnitario).toFixed(0)}€</p>
                             </div>
                           </div>
                         );
@@ -1553,7 +1553,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     </div>
 
                     {items.length > 4 && (
-                      <p className="text-[8px] text-center font-mono text-[var(--ink-2)]">+{items.length - 4} productos más en inventario</p>
+                      <p className="text-micro text-center font-mono text-[var(--ink-2)]">+{items.length - 4} productos más en inventario</p>
                     )}
 
                     <button
@@ -1562,7 +1562,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('merchan');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Shirt className="w-3 h-3" />
                       <span>Control Merchandising Completo</span>
@@ -1572,7 +1572,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               })()}
             </div>
           ) : activeTab === 'cierre' ? (
-            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-micro">
               {(() => {
                 const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
                 const items = currentRb.cierreMaterial || [];
@@ -1581,18 +1581,18 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 return (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-[var(--acc)] text-[10px] flex items-center gap-1">
+                      <span className="font-mono font-bold text-[var(--acc)] text-micro flex items-center gap-1">
                         <ShieldCheck className="w-3 h-3" /> 5. Cierre Material ({checkedCount}/{items.length})
                       </span>
                       <span
-                        className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--acc)]/20 text-[var(--acc)]'}`}
+                        className={`text-micro font-mono font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-[var(--ok)]/20 text-[var(--ok)]' : 'bg-[var(--acc)]/20 text-[var(--acc)]'}`}
                       >
                         {progress}%
                       </span>
                     </div>
                     <div className="w-full bg-[var(--sunken)] rounded-[var(--r-pill)] h-1.5 overflow-hidden">
                       <div
-                        className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-[var(--ok)]' : 'bg-[var(--acc)]'}`}
+                        className={`h-full transition-ui duration-300 ${progress === 100 ? 'bg-[var(--ok)]' : 'bg-[var(--acc)]'}`}
                         style={{ width: `${progress}%` }}
                       />
                     </div>
@@ -1613,8 +1613,8 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             onChange={() => {}}
                             className="rounded text-[var(--acc)] h-3 w-3 cursor-pointer"
                           />
-                          <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
-                          <span className="text-[8px] font-mono px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
+                          <span className="flex-1 truncate text-micro">{item.item}</span>
+                          <span className="text-micro font-mono px-1 rounded bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
                             {item.categoria}
                           </span>
                         </div>
@@ -1626,7 +1626,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                         setModalActiveTab('cierre');
                         setShowEventFichaModal(true);
                       }}
-                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-[10px] font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="w-full py-1.5 px-2 rounded-[var(--r-m)] text-micro font-mono font-bold bg-[var(--acc)]/20 text-[var(--acc)] hover:bg-[var(--acc)]/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <ShieldCheck className="w-3 h-3" />
                       <span>Checklist Cierre Completo</span>
@@ -1646,7 +1646,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       placeholder="17:30"
                       value={newRunTime}
                       onChange={(e) => setNewRunTime(e.target.value)}
-                      className={`w-16 px-2 py-1 text-[10px] font-mono rounded outline-none ${
+                      className={`w-16 px-2 py-1 text-micro font-mono rounded outline-none ${
                         'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
                     />
@@ -1655,7 +1655,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       placeholder="Nueva actividad/horario..."
                       value={newRunActivity}
                       onChange={(e) => setNewRunActivity(e.target.value)}
-                      className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${
+                      className={`flex-1 px-2 py-1 text-micro rounded outline-none ${
                         'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
                     />
@@ -1676,7 +1676,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                       placeholder="Añadir instrumento, cable o cacharro de directo..."
                       value={newGearLabel}
                       onChange={(e) => setNewGearLabel(e.target.value)}
-                      className={`flex-1 px-2 py-1 text-[10px] rounded outline-none ${
+                      className={`flex-1 px-2 py-1 text-micro rounded outline-none ${
                         'bg-[var(--sunken)] text-[var(--ink)]'
                       }`}
                     />
@@ -1697,7 +1697,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
               <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
                 {activeTab === 'runofshow' ? (
                   currentRunOfShow.length === 0 ? (
-                    <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay horarios registrados para este día.</p>
+                    <p className={`text-micro italic text-center py-4 ${textMuted}`}>No hay horarios registrados para este día.</p>
                   ) : (
                     currentRunOfShow.map((item) => {
                       const isItemDone = item.done;
@@ -1712,7 +1712,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           }`}
                         >
                           <span
-                            className={`font-mono text-[10px] font-bold shrink-0 ${
+                            className={`font-mono text-micro font-bold shrink-0 ${
                               isItemDone
                                 ? 'text-[var(--ink-2)]'
                                 : 'text-[var(--acc)]'
@@ -1720,7 +1720,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                           >
                             {item.time}
                           </span>
-                          <p className="text-[10px] font-sans leading-normal flex-1">{item.activity}</p>
+                          <p className="text-micro font-sans leading-normal flex-1">{item.activity}</p>
                           <button
                             type="button"
                             onClick={(e) => handleDeleteRunOfShow(item.id, e)}
@@ -1734,7 +1734,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                     })
                   )
                 ) : currentGear.length === 0 ? (
-                  <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>No hay material registrado para este día.</p>
+                  <p className={`text-micro italic text-center py-4 ${textMuted}`}>No hay material registrado para este día.</p>
                 ) : (
                   currentGear.map((item) => {
                     const isChecked = item.checked;
@@ -1756,7 +1756,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                             '-slate-300 text-[var(--acc)] bg-[var(--sunken)]'
                           }`}
                         />
-                        <p className="text-[10px] font-sans leading-normal flex-1">{item.label}</p>
+                        <p className="text-micro font-sans leading-normal flex-1">{item.label}</p>
                         <button
                           type="button"
                           onClick={(e) => handleDeleteGear(item.id, e)}
@@ -1777,7 +1777,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
 
       {/* Footer info */}
       <div
-        className={` pt-4 mt-6 flex justify-between items-center text-[10px] font-mono ${
+        className={` pt-4 mt-6 flex justify-between items-center text-micro font-mono ${
           '-slate-100 text-[var(--ink-2)]'
         }`}
       >

@@ -55,14 +55,14 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
                 onUnassignSongs(data.albumName);
                 onClose();
               }}
-              className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-all cursor-pointer group flex items-center gap-3"
+              className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 transition-ui cursor-pointer group flex items-center gap-3"
             >
-              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)] group-hover:scale-105 transition-transform shrink-0">
+              <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--acc)] transition-transform shrink-0">
                 <FolderMinus className="w-5 h-5" />
               </div>
               <div>
                 <div className="text-xs font-bold text-[var(--acc)]/70">Desvincular canciones (Recomendado)</div>
-                <div className="text-[11px] text-[var(--ink)]/70 mt-0.5">
+                <div className="text-xs text-[var(--ink)]/70 mt-0.5">
                   Elimina el disco de la discografía pero mantiene sus canciones en el catálogo como"Sin Disco".
                 </div>
               </div>
@@ -74,14 +74,14 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
                 onDeleteAlbumAndSongs(data.albumName);
                 onClose();
               }}
-              className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 transition-all cursor-pointer group flex items-center gap-3"
+              className="w-full text-left p-3.5 rounded-[var(--r-m)] bg-[var(--alert)]/10 hover:bg-[var(--alert)]/20 transition-ui cursor-pointer group flex items-center gap-3"
             >
-              <div className="p-2 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--alert)] group-hover:scale-105 transition-transform shrink-0">
+              <div className="p-2 rounded-[var(--r-s)] bg-[var(--alert)]/20 text-[var(--alert)] transition-transform shrink-0">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>
                 <div className="text-xs font-bold text-[var(--ink-2)]">Eliminar disco y todas sus canciones</div>
-                <div className="text-[11px] text-[var(--ink)]/70 mt-0.5">
+                <div className="text-xs text-[var(--ink)]/70 mt-0.5">
                   Elimina permanentemente el disco y sus {data.songCount} canciones del catálogo y repertorios.
                 </div>
               </div>
@@ -92,7 +92,7 @@ export function ConfirmDeleteAlbumModal({ data, onClose, onUnassignSongs, onDele
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-[var(--r-m)] text-xs font-bold text-[var(--ink-2)] hover:text-[var(--ink)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 transition-ui cursor-pointer"
             >
               Cancelar
             </button>

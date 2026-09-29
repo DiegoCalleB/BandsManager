@@ -140,7 +140,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             <p className="font-semibold flex items-center gap-1.5">
               <Wand2 className="w-3.5 h-3.5 text-[var(--acc)]" /> Creación de Ideas Avanzadas
             </p>
-            <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               ¿Te has quedado estancado en el local de ensayo? Nuestro músico virtual analiza la tonalidad (
               {song.tonalidad || 'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de"{song.titulo}" para proponerte arreglos
               profesionales, melodías, puentes o variaciones armónicas originales.
@@ -228,7 +228,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               type="button"
               onClick={handleGenerateIdea}
               disabled={isGenerating}
-              className="w-full py-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+              className="w-full py-3 rounded-[var(--r-m)] bg-[var(--acc)]  hover:bg-[var(--acc)] text-[var(--ink)] font-sans text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-ui active:scale-[0.97] disabled:opacity-50"
             >
               {isGenerating ? (
                 <>
@@ -248,17 +248,17 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
               <div className="mt-4 p-4 rounded-[var(--r-m)] bg-[var(--acc)]/20 space-y-3 animate-in fade-in duration-200">
                 <div className="flex items-center justify-between/30 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] font-sans text-[10px] font-bold">
+                    <span className="px-2 py-0.5 rounded bg-[var(--acc)]/30 text-[var(--acc)] font-sans text-micro font-bold">
                       {generatedIdea.instrumentoRol}
                     </span>
                     <h4 className="font-bold text-sm text-[var(--ink)]">{generatedIdea.tituloIdea}</h4>
                   </div>
-                  <span className="text-[10px] text-[var(--ink-2)] font-sans">Sugerencia IA Lista</span>
+                  <span className="text-micro text-[var(--ink-2)] font-sans">Sugerencia IA Lista</span>
                 </div>
 
                 <div className="text-xs text-[var(--ink-2)] space-y-2">
                   <div>
-                    <strong className="text-[var(--acc)] font-sans block text-[11px] mb-0.5">Propuesta de Arreglo:</strong>
+                    <strong className="text-[var(--acc)] font-sans block text-xs mb-0.5">Propuesta de Arreglo:</strong>
                     <p className="leading-relaxed whitespace-pre-line bg-[var(--sunken)] p-2.5 rounded-[var(--r-s)] font-sans text-[var(--ink-2)]">
                       {generatedIdea.descripcionArreglo}
                     </p>
@@ -266,8 +266,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
                   {generatedIdea.tablaturaOAcordes && (
                     <div>
-                      <strong className="text-[var(--acc)]/70 font-sans block text-[11px] mb-0.5">Tablatura / Acordes / Guía:</strong>
-                      <pre className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-[11px] font-sans text-[var(--ink)] overflow-x-auto shrink-0">
+                      <strong className="text-[var(--acc)]/70 font-sans block text-xs mb-0.5">Tablatura / Acordes / Guía:</strong>
+                      <pre className="p-2 rounded-[var(--r-s)] bg-[var(--sunken)] text-xs font-sans text-[var(--ink)] overflow-x-auto shrink-0">
                         {generatedIdea.tablaturaOAcordes}
                       </pre>
                     </div>
@@ -275,8 +275,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
 
                   {generatedIdea.notasParaBanda && (
                     <div>
-                      <strong className="text-[var(--ink-2)] font-sans block text-[11px] mb-0.5">Consejo de Estudio:</strong>
-                      <p className="text-[11px] text-[var(--ink)]/90 italic">"{generatedIdea.notasParaBanda}"</p>
+                      <strong className="text-[var(--ink-2)] font-sans block text-xs mb-0.5">Consejo de Estudio:</strong>
+                      <p className="text-xs text-[var(--ink)]/90 italic">"{generatedIdea.notasParaBanda}"</p>
                     </div>
                   )}
                 </div>
@@ -286,14 +286,14 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
                     type="button"
                     onClick={handleGenerateIdea}
                     disabled={isGenerating}
-                    className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-sans font-bold text-[var(--ink-2)] transition-all cursor-pointer"
+                    className="px-3 py-2 rounded-[var(--r-m)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-xs font-sans font-bold text-[var(--ink-2)] transition-ui cursor-pointer"
                   >
                     🔄 Probar otra idea
                   </button>
                   <button
                     type="button"
                     onClick={handleAcceptAndAddIdea}
-                    className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                    className="px-4 py-2 rounded-[var(--r-m)] bg-[var(--ok)]  hover:bg-[var(--ok)] text-xs font-sans font-bold text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-ui active:scale-[0.97]"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Añadir como Nueva Idea al Tema</span>

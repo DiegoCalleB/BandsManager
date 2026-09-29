@@ -194,7 +194,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               <span className="font-extrabold tracking-tight text-[var(--ink)] font-sans text-base flex items-center gap-0.5">
                 BandManager<span className="text-[var(--acc)]">.io</span>
               </span>
-              <span className="text-[10px] font-sans text-[var(--acc)]/80 block -mt-1">
+              <span className="text-micro font-sans text-[var(--acc)]/80 block -mt-1">
                 IA Agéntica para tu Banda
               </span>
             </div>
@@ -211,7 +211,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 key={lang.code}
                 type="button"
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-all ${
+                className={`w-8 h-8 rounded-[var(--r-s)] text-base flex items-center justify-center transition-ui ${
                   currentLang === lang.code
                     ? "bg-[var(--acc)]/20 text-[var(--acc)]  scale-105"
                     : "bg-[var(--surface)]/60  hover:opacity-70 hover:opacity-100"
@@ -244,7 +244,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             </div>
             <button
               onClick={handleBackToOrigin}
-              className="text-[11px] underline hover:text-[var(--ink)] flex items-center gap-1 font-bold"
+              className="text-xs underline hover:text-[var(--ink)] flex items-center gap-1 font-bold"
             >
               <ArrowLeft className="w-3 h-3" />
               {t.backToOrigin.replace(
@@ -260,7 +260,7 @@ export const PublicMusiciansLanding: React.FC = () => {
           {/* Official BandManager Brand Logo */}
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-[var(--acc)]/30  rounded-[var(--r-xl)] blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-1 bg-[var(--acc)]/30  rounded-[var(--r-xl)] blur-md opacity-70 group-hover:opacity-100 transition duration-300" />
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[var(--r-l)] overflow-hidden bg-[var(--surface)] p-1 flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
@@ -295,7 +295,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* FEATURE CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-all space-y-2.5">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
               <QrCode className="w-5 h-5" />
             </div>
@@ -307,7 +307,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-all space-y-2.5">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
               <FileText className="w-5 h-5" />
             </div>
@@ -319,7 +319,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-all space-y-2.5">
+          <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)]/70  transition-ui space-y-2.5">
             <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]/10 flex items-center justify-center text-[var(--acc)]">
               <Music className="w-5 h-5" />
             </div>
@@ -387,7 +387,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 )}
                 <a
                   href="/"
-                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans text-xs font-black transition hover:brightness-110 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans text-xs font-bold transition hover:brightness-110 flex items-center justify-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   {t.successExploreApp}
@@ -422,9 +422,9 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Band Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelBandName}</span>
-                        <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">
+                        <span className="text-[var(--acc)] text-micro font-normal lowercase tracking-normal">
                           imprescindible
                         </span>
                       </label>
@@ -445,9 +445,9 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelEmail}</span>
-                        <span className="text-[var(--acc)] text-[10px] font-normal lowercase tracking-normal">
+                        <span className="text-[var(--acc)] text-micro font-normal lowercase tracking-normal">
                           imprescindible
                         </span>
                       </label>
@@ -467,9 +467,9 @@ export const PublicMusiciansLanding: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Instagram */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelInstagram}</span>
-                        <span className="text-[var(--ink-2)] text-[10px] font-normal lowercase tracking-normal">
+                        <span className="text-[var(--ink-2)] text-micro font-normal lowercase tracking-normal">
                           recomendado
                         </span>
                       </label>
@@ -489,9 +489,9 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Contact Person Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)] flex items-center justify-between">
                         <span>{t.labelContactName}</span>
-                        <span className="text-[var(--ink-2)] text-[10px] font-normal lowercase tracking-normal">
+                        <span className="text-[var(--ink-2)] text-micro font-normal lowercase tracking-normal">
                           opcional
                         </span>
                       </label>
@@ -537,14 +537,14 @@ export const PublicMusiciansLanding: React.FC = () => {
                 {/* 3. CAMPOS OPCIONALES DESPLEGABLES */}
                 {showOptionalDetails && (
                   <div className="p-4 rounded-[var(--r-l)] bg-[var(--surface)]/90 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <p className="text-[11px] font-sans text-[var(--ink-2)] -mt-1">
+                    <p className="text-xs font-sans text-[var(--ink-2)] -mt-1">
                       {t.moreInfoSubtitle}
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Music Genre */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelGenre}
                         </label>
                         <input
@@ -560,7 +560,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                       {/* City */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelCity}
                         </label>
                         <input
@@ -578,7 +578,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Phone / WhatsApp */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelPhone}
                         </label>
                         <input
@@ -597,7 +597,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                       {/* Music link */}
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
+                        <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                           {t.labelMusicLink}
                         </label>
                         <input
@@ -617,7 +617,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Priority Feature */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                         {t.labelMainInterest}
                       </label>
                       <select
@@ -642,7 +642,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
                     {/* Notes */}
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold font-sans text-[var(--ink-2)]">
+                      <label className="text-xs font-bold font-sans text-[var(--ink-2)]">
                         {t.labelNotes}
                       </label>
                       <textarea
@@ -683,7 +683,7 @@ export const PublicMusiciansLanding: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-black text-sm hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full py-4 rounded-[var(--r-m)] bg-[var(--acc)]  text-[var(--ink)] font-sans font-bold text-sm hover:brightness-110 active:scale-[0.97] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {loading ? (
                     <>
@@ -700,7 +700,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               </form>
 
               <div className="pt-2 text-center">
-                <p className="text-[11px] font-sans text-[var(--ink-2)] flex items-center justify-center gap-1.5">
+                <p className="text-xs font-sans text-[var(--ink-2)] flex items-center justify-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
                   <span>
                     Tus datos se tratan con total privacidad y nunca se ceden a

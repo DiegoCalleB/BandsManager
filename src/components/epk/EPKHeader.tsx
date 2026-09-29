@@ -110,7 +110,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             <button
               type="button"
               onClick={() => setShowHealthDetails((prev) => !prev)}
-              className="mt-0.5 text-[10px] font-sans flex items-center gap-1 cursor-pointer transition text-[var(--ink-2)] hover:text-[var(--acc)]/70"
+              className="mt-0.5 text-micro font-sans flex items-center gap-1 cursor-pointer transition text-[var(--ink-2)] hover:text-[var(--acc)]/70"
             >
               <span
                 className={
@@ -134,7 +134,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             <button
               type="button"
               onClick={onSave}
-              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
+              className="px-3 py-1.5 bg-[var(--acc)] active:bg-[var(--acc)]/60 text-[var(--ink)] font-bold text-xs rounded-[var(--r-s)] flex items-center gap-1.5 transition active:scale-[0.97] cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Guardar</span>
@@ -227,7 +227,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
         {/* DESGLOSE DESPLEGABLE DE SALUD */}
         {showHealthDetails && (
-          <div className="pt-2/80 flex flex-wrap gap-1 text-[10px] font-sans">
+          <div className="pt-2/80 flex flex-wrap gap-1 text-micro font-sans">
             {healthItems.map((item) => (
               <button
                 key={item.key}
@@ -256,7 +256,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           type="button"
           onClick={() => prevBlock && onSelectBlock(prevBlock.id)}
           disabled={!prevBlock}
-          className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
+          className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
           title="Bloque anterior"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -287,7 +287,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           type="button"
           onClick={() => nextBlock && onSelectBlock(nextBlock.id)}
           disabled={!nextBlock}
-          className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-95 transition"
+          className="p-2 rounded-[var(--r-s)] bg-[var(--surface)]/80 text-[var(--ink-2)]/80 disabled:opacity-25 disabled:pointer-events-none active:scale-[0.97] transition"
           title="Siguiente bloque"
         >
           <ChevronRight className="w-4 h-4" />
@@ -300,13 +300,13 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
       <div className="hidden sm:flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)]">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-[10px] font-sans font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/10 text-[var(--acc)] text-micro font-sans font-bold">
               Kit de Prensa & EPK
             </span>
-            <span className="text-[11px] text-[var(--ink-2)] hidden sm:inline">
+            <span className="text-xs text-[var(--ink-2)] hidden sm:inline">
               •
             </span>
-            <span className="text-[11px] text-[var(--ink-2)] hidden sm:inline">
+            <span className="text-xs text-[var(--ink-2)] hidden sm:inline">
               Gestor Modular del Dossier
             </span>
           </div>
@@ -327,7 +327,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
               id="tutorial-trigger-epk"
               type="button"
               onClick={onOpenTutorial}
-              className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer active:scale-95"
+              className="px-3 py-2 bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/20 text-[var(--tentative)]/80 text-xs font-sans font-bold rounded-[var(--r-m)] flex items-center gap-1.5 transition cursor-pointer active:scale-[0.97]"
               title="Abrir guía interactiva del Dossier EPK"
             >
               <HelpCircle className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
@@ -375,8 +375,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
       {/* STATUS & HEALTH BAR ESCRITORIO (>= sm) */}
       <div className="hidden sm:flex items-center justify-between gap-3 px-3 sm:px-4 py-2 bg-[var(--surface)] rounded-[var(--r-m)] text-xs">
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto shrink-0 scrollbar-none py-0.5 text-[11px] font-sans">
-          <span className="text-[var(--ink-2)] text-[10px] shrink-0 font-bold">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto shrink-0 scrollbar-none py-0.5 text-xs font-sans">
+          <span className="text-[var(--ink-2)] text-micro shrink-0 font-bold">
             Estado:
           </span>
 
@@ -479,7 +479,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
           <button
             type="button"
             onClick={() => setShowAiNotice(!showAiNotice)}
-            className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-[11px] font-semibold flex items-center gap-1.5 transition ${
+            className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-[var(--r-s)] text-xs font-semibold flex items-center gap-1.5 transition ${
               showAiNotice
                 ? "bg-[var(--acc)]/20 text-[var(--acc)]/70 "
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70"
@@ -505,7 +505,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
             <p className="font-bold text-[var(--acc)]/70 text-xs">
               Conexión Automática con Agentes de IA y Chatbot
             </p>
-            <p className="text-[var(--ink-2)] leading-relaxed text-[11px]">
+            <p className="text-[var(--ink-2)] leading-relaxed text-xs">
               Toda la información del dossier (biografía, integrantes, PDF
               oficial, rider técnico y cifras) se sincroniza en el servidor. El
               Chatbot y los Agentes autónomos de Redacción de Emails la

@@ -121,7 +121,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" /> Motor de
               Audio Generativo IA
             </p>
-            <p className="text-[11px] text-[var(--ink-2)] leading-relaxed">
+            <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               Genera bandas sonoras originales, jingles corporativos o música de
               fondo para teasers de redes sociales y directos usando el estilo
               musical, ideología y letras de tu banda.
@@ -187,7 +187,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
                 {generatedLyrics && (
                   <div className="p-2.5 rounded-[var(--r-s)] bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)] max-h-32 overflow-y-auto whitespace-pre-line">
-                    <p className="text-[10px] text-[var(--acc)] font-bold mb-1">
+                    <p className="text-micro text-[var(--acc)] font-bold mb-1">
                       Notas / Letra generada:
                     </p>
                     {generatedLyrics}
